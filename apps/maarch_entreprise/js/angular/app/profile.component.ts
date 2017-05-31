@@ -20,7 +20,9 @@ export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
 
-    user                        : any       = {};
+    user                        : any       = {
+        lang                    : {}
+    };
     passwordModel               : any       = {
         currentPassword         : "",
         newPassword             : "",
@@ -58,6 +60,7 @@ export class ProfileComponent implements OnInit {
         $j('#menunav').hide();
         $j('#divList').remove();
         $j('#magicContactsTable').remove();
+        $j('#manageBasketsOrderTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();

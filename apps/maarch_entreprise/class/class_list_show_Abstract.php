@@ -1556,11 +1556,10 @@ class list_show_Abstract extends functions
 ?>
 
         <script>
-            $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
-            $$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
-            $$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
-            // $$('table#test')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');
-            $$('table.listing')[0].setAttribute('style', 'width: 100%; min-width: 900px;');
+            $j('#container').attr('style', 'width: 90%; min-width: 1000px;');
+            $j('#content').attr('style', 'width: auto; min-width: 1000px;');
+            $j('#inner_content').attr('style', 'width: auto; min-width: 1000px;');
+            $j('table.listing').attr('style', 'width: 100%; min-width: 900px;');
         </script>
 
 <?php

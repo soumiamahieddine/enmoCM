@@ -101,6 +101,7 @@ $default_year = date('Y');
 $where_date = '';
 $arrayPDO = array();
 $date_title = '';
+$has_data = true;
 
 if($period_type == 'period_year')
 {
@@ -256,12 +257,10 @@ else
 		{
 			$data = array();
 		}
-		$has_data = false;
 
 		$totalDocTypes = count($doctypes);
 
-
-		for($i=0; $i<count($doctypes);$i++)
+		for($i=0; $i<$totalDocTypes;$i++)
 		{
 			$arrayPDO = array_merge($arrayPDO, array(":doctypeId" => $doctypes[$i]['ID']));
 			$stmt = $db->query("SELECT doctypes_second_level_label,".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view
@@ -286,15 +285,11 @@ else
 				if ($nbDoc == 0) $nbDoc = 1;
 				if($report_type == 'graph')
 				{
-					array_push($val_an, (string)round($tmp / $nbDoc,0));
+					array_push($val_an, (string)round($tmp / $nbDoc, 1));
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,0)));
-				}
-				if($tmp / $nbDoc > 0)
-				{
-					$has_data = true;
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => functions::show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc, 1)));
 				}
 			}
 			else
@@ -348,7 +343,7 @@ else
 
 		
 
-		if ( $has_data)
+		if ($has_data)
 		{
 			if($report_type == 'graph')
 			{
@@ -359,8 +354,8 @@ else
 			}
 			elseif($report_type == 'array')
 			{
-				$data2=urlencode(json_encode($data));
-				$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+				$_SESSION['export_data_stat'] = $data;
+				$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 				echo $form;
 
 				$graph->show_stats_array($title, $data);
@@ -369,7 +364,7 @@ else
 		else
 		{
 			$error = _NO_DATA_MESSAGE;
-echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
+			echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		}
 
 	}
@@ -424,15 +419,11 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 					if ($nbDoc == 0) $nbDoc = 1;
 					if($report_type == 'graph')
 					{
-						array_push($val_an, (string)round($tmp / $nbDoc,0));
+						array_push($val_an, (string)round($tmp / $nbDoc, 1));
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,0)));
-					}
-					if($tmp / $nbDoc > 0)
-					{
-						$has_data = true;
+						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc, 1)));
 					}
 				}
 				else
@@ -506,7 +497,6 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 					{
 						array_push($data, array('LABEL' => $i, 'VALUE' => (string) $tmp / $nbDoc));
 					}
-					$has_data = true;
 				}
 				else
 				{
@@ -559,8 +549,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 			}
 				elseif($report_type  == 'array')
 				{
-					$data2=urlencode(json_encode($data));
-					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+					$_SESSION['export_data_stat'] = $data;
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 					echo $form;
 
 					$graph->show_stats_array($title1, $data);
@@ -578,8 +568,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 				}
 				elseif($report_type == 'array')
 				{
-					$data2=urlencode(json_encode($data));
-					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+					$_SESSION['export_data_stat'] = $data;
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 					echo $form;
 
 					$graph->show_stats_array($title2, $data);
@@ -595,9 +585,7 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		}
 		else if($id_report == 'mail_typology')
 		{
-			$has_data = false;
-			//$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
-			
+
 			if (!$_REQUEST['doctypes_chosen']){
 		    	$stmt = $db->query("SELECT type_id, description FROM ".$_SESSION['tablename']['doctypes']." WHERE enabled = 'Y' order by description");
 			}else{
@@ -640,10 +628,6 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 					array_push($totalCourrier, $res->total);
 				}
 
-				if($res->total > 0)
-				{
-					$has_data = true;
-				}
 				$totalDocTypes=$z++;
 			}
 
@@ -691,8 +675,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 				}
 				elseif($report_type == 'array')
 				{
-					$data2=urlencode(json_encode($data));
-					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+					$_SESSION['export_data_stat'] = $data;
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 					echo $form;
 
 					$graph->show_stats_array($title, $data);
@@ -707,8 +691,7 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 		}
 		else if($id_report == 'mail_vol_by_cat')
 		{
-			$has_data = false;
-			//$title = _MAIL_VOL_BY_CAT_REPORT.' '.$date_title ;
+
 			if($report_type == 'graph')
 			{
 				$vol_an = array();
@@ -742,10 +725,6 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 						array_push($totalCourrier, $res->total);
 					}
 
-					if($res->total > 0)
-					{
-						$has_data = true;
-					}
 				}
 			}
 
@@ -786,8 +765,8 @@ echo "{status : 2, error_txt : '".addslashes(functions::xssafe($error))."'}";
 				}
 				elseif($report_type == 'array')
 				{
-					$data2 = urlencode(json_encode($data));
-					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \",\"".$data2."\")' style='float:right;'/>";
+					$_SESSION['export_data_stat'] = $data;
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"" . $_SESSION['config']['businessappurl']."index.php?display=true&dir=reports&page=record_data \")' style='float:right;'/>";
 					echo $form;
 					
 					$graph->show_stats_array($title, $data);

@@ -513,7 +513,7 @@ function display_up_check($user_id)
     $pageId = "users";
     $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
     /***********************************************************/
-
+    $_SESSION['info'] = _USER_UPDATED;
     if (isset($_POST['user_id'])) {
         $old_user=$_POST['id'];
         $new_user=$_POST['user_id'];
@@ -622,25 +622,6 @@ function display_up_check($user_id)
                     $arrayPDO = array($old_user,$entity);
                     $db->query($query, $arrayPDO);
 
-                    //FIX AND RESET POS AND MODE VISA CIRCUIT
-                    /*$query = "SELECT item_id FROM listmodels WHERE object_id = ? AND object_type = 'VISA_CIRCUIT' ORDER BY item_mode DESC, sequence ASC";
-                    $arrayPDO = array($entity);
-                    $stmt = $db->query($query, $arrayPDO);
-                    $nbRes = $stmt->rowCount();
-                    $i = 1;
-                    
-                    while ($res = $stmt->fetchObject()) {
-                        if ($i == $nbRes) {
-                            $query = "UPDATE listmodels SET SEQUENCE = '0', item_mode = 'sign' WHERE item_id = ? AND object_id = ? AND object_type = 'VISA_CIRCUIT'";
-                            $arrayPDO = array($res->item_id,$entity);
-                            $db->query($query, $arrayPDO);
-                        } else {
-                            $query = "UPDATE listmodels SET SEQUENCE = ?, item_mode = 'visa' WHERE item_id = ? AND object_id = ? AND object_type = 'VISA_CIRCUIT'";
-                            $arrayPDO = array($i-1,$entity,$res->item_id);
-                            $db->query($query, $arrayPDO);
-                        }
-                        $i++;
-                    }*/
                 }
 
                 //CHECK VISA_CIRCUIT
@@ -657,14 +638,38 @@ function display_up_check($user_id)
                 //UDPATE listinstance
                 $query = "UPDATE listinstance SET item_id = ?, process_comment = '[DEL] supprimé - changement d’entité', process_date = CURRENT_TIMESTAMP WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT' and process_date is null";
                 $arrayPDO = array($old_user,$res_id,$old_user);
-                $db->query($query, $arrayPDO);
+                $db->query($query, $arrayPDO);  
 
-                //ADD history entry
-                $query = "SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_id = ? AND difflist_type = 'VISA_CIRCUIT'";
+                $query = "SELECT l.listinstance_id,r.status FROM listinstance l INNER JOIN res_letterbox r ON l.res_id = r.res_id WHERE l.res_id = ? AND l.item_id = ? AND l.difflist_type = 'VISA_CIRCUIT'";
                 $arrayPDO = array($res_id,$old_user);
                 $stmt =  $db->query($query, $arrayPDO);
                 $res = $stmt->fetchObject();
                 $listinstance_id = $res->listinstance_id;
+                $status = $res->status;
+
+                //Update status to ESIG if necessary
+                include_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+                if ($status == 'EVIS') {
+                    
+                    $visa = new visa();
+                    $visa->setStatusVisa($res_id, 'letterbox_coll');
+
+                }
+
+                //Update status to EVIS if necessary
+                if ($status == 'ESIG') {
+                    
+                    $visa = new visa();
+                    $visa->setStatusVisa($res_id, 'letterbox_coll');
+
+                    //UDPATE listinstance to reset previous visa user
+                    $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
+                    $arrayPDO = array($res_id);
+                    $db->query($query, $arrayPDO);  
+
+                }
+
+                //ADD history entry
                 include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php';
                 $hist = new history();
                 $hist->add(
@@ -719,7 +724,6 @@ function display_up_check($user_id)
             }
 
         }
-        $_SESSION['info'] = _USER_UPDATED;
         //echo '<script type="text/javascript">window.top.location=\''.$_SESSION['config']['businessappurl'] .'index.php?page=users_management_controler&admin=users&id='.$old_user.'&mode=up\'</script>';
         echo '<script type="text/javascript">window.top.location=\''.$_SESSION['config']['businessappurl'] .'index.php?page=users_management_controler&admin=users&mode=list\'</script>';
     }
@@ -731,7 +735,7 @@ function display_up_check($user_id)
     $frm .= '<div class="block">';
 
     //INFO BLOCK
-    $frm .= '<h3 style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER.' <i class="fa fa-info-circle"></i></h3>';
+    $frm .= '<h3 style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER.'</h3>';
 
     //RESLIST
     $frm .= '<br/>';
@@ -762,13 +766,13 @@ function display_up_check($user_id)
     $frm .= '<br/>';
 
     //WARNING BLOCK
-    $frm .= '<p style="text-align:center;color:red;"><i class="fa fa-warning"></i> '._WARNING_MESSAGE_UPDATE_USER.' <i class="fa fa-warning"></i></p>';
-    $frm .= '<p style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER2.' <i class="fa fa-info-circle"></i></p>';
+    $frm .= '<p style="text-align:center;color:red;"><i class="fa fa-warning"></i> '._WARNING_MESSAGE_UPDATE_USER.'</p>';
+    $frm .= '<p style="text-align:center;"><i class="fa fa-info-circle"></i> '._INFO_MESSAGE_UPDATE_USER2.'</p>';
 
     //ACTIONS BUTTONS
     $frm .= '<p class="buttons">';
     $frm .= '<input type="submit" value="'._DEL_AND_REAFFECT.'" name="valid" class="button" onclick="if (!confirm(\''. _REALLY_CONTINUE .' ?\')){return false;}" />';
-    $frm .= ' <input type="button" value="'._NO_REAFFECT.'" class="button" onclick="if (confirm(\''. _REALLY_CONTINUE .' ?\')){window.location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&mode=up&admin=users&id='.$user_id.'&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'].'\';}" />';
+    $frm .= ' <input type="button" value="'._NO_REAFFECT.'" class="button" onclick="if (confirm(\''. _REALLY_CONTINUE .' ?\')){window.location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&mode=list&admin=users&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'].'\';}" />';
     $frm .= '</p>';
 
     $frm .= '</form>';
@@ -908,7 +912,14 @@ function validate_user_submit()
     }
     for ($i=0;$i<count($entitiesUserCheck);$i++) {
         if (!in_array($entitiesUserCheck[$i]['ENTITY_ID'], $newUserEntitiesList)) {
-            $query = "SELECT count(distinct(r.res_id)) FROM res_view_letterbox r INNER JOIN listinstance l ON r.res_id = l.res_id WHERE ((dest_user = ? and item_id = ?) OR (item_id = ? AND difflist_type = 'entity_id' AND process_comment is null) OR (item_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date is null)) AND closing_date is null AND confidentiality = 'Y' AND destination = ?";
+            $query = "SELECT count(distinct(r.res_id)) 
+                        FROM res_view_letterbox r 
+                        INNER JOIN listinstance l ON r.res_id = l.res_id WHERE (
+                        (dest_user = ? and item_id = ?) OR 
+                        (item_id = ? AND difflist_type = 'entity_id' AND (process_comment is null or process_comment = '')) OR 
+                        (item_id = ? AND difflist_type = 'VISA_CIRCUIT' AND process_date is null)
+                        ) 
+                        AND closing_date is null AND confidentiality = 'Y' AND destination = ?";
             $arrayPDO = array($_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$_REQUEST['user_id'],$entitiesUserCheck[$i]['ENTITY_ID']);
             $stmt =  $db->query($query, $arrayPDO);
             $res = $stmt->fetchObject();   

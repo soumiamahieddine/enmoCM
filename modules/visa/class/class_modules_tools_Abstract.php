@@ -31,7 +31,7 @@
 define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
 require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
-use Core\Models\AttachmentModel;
+use Attachments\Models\AttachmentsModel;
 
 abstract class visa_Abstract extends Database
 {
@@ -72,6 +72,8 @@ abstract class visa_Abstract extends Database
 		
 		$_SESSION['modules_loaded']['visa']['width_blocsign'] = (string) $conf->width_blocsign;
 		$_SESSION['modules_loaded']['visa']['height_blocsign'] = (string) $conf->height_blocsign;
+
+		$_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] = (string) $conf->confirm_sign_by_email;
 		
 		$routing_template = (string) $conf->routing_template;
 		
@@ -224,7 +226,7 @@ abstract class visa_Abstract extends Database
 	public function checkResponseProject($res_id, $coll_id) {
 		$this->errorMessageVisa = null;
 
-		$attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+		$attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
 
 		$noSignableAttachments = [];
 		foreach ($attachmentTypes as $key => $value) {
@@ -1323,4 +1325,3 @@ Array
 )
 
 */
-?>

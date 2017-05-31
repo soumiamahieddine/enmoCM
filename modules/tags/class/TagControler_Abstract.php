@@ -74,7 +74,7 @@ abstract class tag_controler_Abstract extends ObjectControler
          * Return a complete list of tags in Maarch
          */
           
-        $return = array();
+        $return     = array();
         $where_what = array();
   
         $db = new Database(); 
@@ -140,9 +140,9 @@ abstract class tag_controler_Abstract extends ObjectControler
       
         if($stmt->rowCount() > 0){
             while($tag=$stmt->fetchObject()){
-                $tougue['tag_id'] = $tag->tag_id;
+                $tougue['tag_id']    = $tag->tag_id;
                 $tougue['tag_label'] = $tag->tag_label;
-                $tougue['coll_id'] = $tag->coll_id;
+                $tougue['coll_id']   = $tag->coll_id;
                 array_push($return, $tougue);
             }
             return $return;

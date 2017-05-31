@@ -19,50 +19,24 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once __DIR__ . '/DOMTemplateProcessor.php';
+require_once __DIR__ . '/AbstractMessage.php';
+
 class Acknowledgement {
 
 	public function __construct()
 	{
 	}
 
-	public function send($fileName, $comments = "")
+	public function send($data, $resIds)
 	{
-		$xml = simplexml_load_file($fileName);
-		$messageObject = new stdClass();
+	    $abstractMessage = new AbstractMessage();
+        $abstractMessage->saveXml($data,"Acknowledgement", ".txt");
 
-		if ($comments) {
-			$messageObject->comment = [];
-			if (is_array($comments)) {
-				foreach ($comments as $comment) {
-					$messageObject->comment[] = $comment;
-				}
-			} else {
-				$messageObject->comment[] = $comments;
-			}
-		}
-		
-		$messageIdentifier = (string) $xml->MessageIdentifier;
-		$messageObject->date = date('Y-m-d h:i:s');
-		$messageObject->messageIdentifier =  $messageIdentifier . "_Acknowledgement";
-		//$messageObject->signature =  "";
-		$messageObject->messageReceivedIdentifier = $messageIdentifier;
-		$messageObject->sender = $xml->ArchivalAgency->Identifier;
-		$messageObject->receiver = $xml->TransferringAgency->Identifier;
-
-		$this->sendXml($messageObject);
+		foreach ($resIds as $resId) {
+            $abstractMessage->addAttachment($data->messageIdentifier->value, $resId, $data->messageIdentifier->value.".txt", "txt", "Accusé de reception",1);
+        }
 	}
 
-	public function sendXml($messageObject)
-	{
-		$DOMTemplate = new DOMDocument();
-		$DOMTemplate->load(__DIR__.DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'Acknowledgement.xml');
-		$DOMTemplateProcessor = new DOMTemplateProcessor($DOMTemplate);
-		$DOMTemplateProcessor->setSource('Acknowledgement', $messageObject);
-		$DOMTemplateProcessor->merge();
-		$DOMTemplateProcessor->removeEmptyNodes();
 
-        file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$messageObject->messageReceivedIdentifier.'_Acknowledgement.xml', $DOMTemplate->saveXML());
-
-		return $xml;
-	}
 }

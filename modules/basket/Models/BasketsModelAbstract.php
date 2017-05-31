@@ -15,13 +15,16 @@
 
 namespace Baskets\Models;
 
+use Core\Models\UserModel;
+
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
 class BasketsModelAbstract extends \Apps_Table_Service 
 {
 
-    public static function getResListById(array $aArgs = []) 
+    public static function getResListById(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
@@ -29,7 +32,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
         $aBasket = static::select(
             [
-            'select'    => ['basket_clause'],
+            'select'    => ['basket_clause', 'basket_res_order'],
             'table'     => ['baskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
@@ -48,14 +51,15 @@ class BasketsModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => [$where],
-            'order_by'  => empty($aArgs['order_by']) ? ['creation_date DESC'] : $aArgs['order_by'],
+            'order_by'  => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : $aBasket[0]['basket_res_order'],
             ]
         );
 
         return $aResList;
     }
 
-    public static function getActionByActionId(array $aArgs = []) 
+    public static function getActionByActionId(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['actionId']);
         static::checkNumeric($aArgs, ['actionId']);
@@ -73,7 +77,8 @@ class BasketsModelAbstract extends \Apps_Table_Service
         return $aAction[0];
     }
 
-    public static function getActionIdById(array $aArgs = []) 
+    public static function getActionIdById(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);

@@ -39,10 +39,13 @@
 			<div class="pswp__item"></div>
 			<div class="pswp__item"></div>
 		</div>
-
-		<div class="pswp__ui pswp__ui--hidden">
+		<?php 
+		if (count($tab_tnl) == 1) $style_bar = 'pswp__ui--idle';
+		else  $style_bar = '';
+		?>
+		<div class="pswp__ui pswp__ui--hidden <?php echo $style_bar; ?>">
 			<div class="pswp__top-bar">
-				<div class="pswp__counter"></div>
+				<div class="pswp__counter " ></div>
 				<!--<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>-->
 				<button class="pswp__button pswp__button--share" title="Share"></button>
 				<!--<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>-->

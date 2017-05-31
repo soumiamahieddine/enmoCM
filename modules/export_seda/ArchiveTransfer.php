@@ -21,6 +21,7 @@
 
 require_once __DIR__ . '/RequestSeda.php';
 require_once __DIR__ . '/DOMTemplateProcessor.php';
+require_once __DIR__ . '/AbstractMessage.php';
 
 class ArchiveTransfer
 {
@@ -41,11 +42,14 @@ class ArchiveTransfer
         $messageObject = new stdClass();
         $messageObject = $this->initMessage($messageObject);
 
-        $result = [];
+        $result = '';
         foreach ($listResId as $resId) {
-            $result .= $resId . '#';
+            if (!empty($result)) {
+                $result .= ',';
+            }
+            $result .= $resId;
 
-            $letterbox = $this->db->getCourrier($resId);
+            $letterbox = $this->db->getLetter($resId);
             $attachments = $this->db->getAttachments($letterbox->res_id);
 
             $archiveUnitId = uniqid();
@@ -72,38 +76,22 @@ class ArchiveTransfer
             }
         }
 
-        $res = $this->db->insertMessage($messageObject, $listResId);
+        $messageId = $this->db->insertMessage($messageObject, "ArchiveTransfer");
 
-        if ($res) {
-            $this->sendXml($messageObject);
+        foreach ($listResId as $resId) {
+            $this->db->insertUnitIdentifier($messageId, "res_letterbox", $resId);
+        }
+
+        if ($messageId) {
+            $abstractMessage = new AbstractMessage();
+            $abstractMessage->saveXml($messageObject,"ArchiveTransfer",".xml");
+
+            $this->sendAttachment($messageObject);
         } else {
-            return $res;
+            return false;
         }
 
         return $result;
-    }
-
-    public function sendXml($messageObject)
-    {
-        $DOMTemplate = new DOMDocument();
-        $DOMTemplate->load(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'ArchiveTransfer.xml');
-        $DOMTemplateProcessor = new DOMTemplateProcessor($DOMTemplate);
-        $DOMTemplateProcessor->setSource('ArchiveTransfer', $messageObject);
-        $DOMTemplateProcessor->merge();
-        $DOMTemplateProcessor->removeEmptyNodes();
-
-        if (!is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'seda2')) {
-            mkdir(__DIR__ . DIRECTORY_SEPARATOR . 'seda2', 0777, true);
-        }
-
-        $messageId = $messageObject->messageIdentifier->value;
-        if (!is_dir(__DIR__ . DIRECTORY_SEPARATOR . 'seda2' . DIRECTORY_SEPARATOR . $messageId)) {
-            mkdir(__DIR__ . DIRECTORY_SEPARATOR . 'seda2' . DIRECTORY_SEPARATOR . $messageId, 0777, true);
-        }
-
-        file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . 'seda2' . DIRECTORY_SEPARATOR . $messageId . DIRECTORY_SEPARATOR . $messageId . '.xml', $DOMTemplate->saveXML());
-
-        $this->sendAttachment($messageObject);
     }
 
     public function deleteMessage($listResId)
@@ -121,11 +109,9 @@ class ArchiveTransfer
 
 
         foreach ($resIds as $resId) {
-            $unitIdentifiers = $this->db->getUnitIdentifierByResId($resId);
-            foreach ($unitIdentifiers as $unitIdentifier) {
-                $this->db->deleteSeda($unitIdentifier->message_id);
-                $this->db->deleteUnitIdentifier($unitIdentifier->message_id);
-            }
+            $unitIdentifier = $this->db->getUnitIdentifierByResId($resId);
+            $this->db->deleteMessage($unitIdentifier->message_id);
+            $this->db->deleteUnitIdentifier($resId);
         }
 
         return true;
@@ -174,7 +160,7 @@ class ArchiveTransfer
 
                 $messageObject->archivalAgreement->value = $entitie->archival_agreement;
             } else {
-                // TODO return error;
+                $_SESSION['error'] .= _NO_ENTITIES;
             }
         }
 
@@ -299,10 +285,11 @@ class ArchiveTransfer
             }
         }
 
-        // A CHANGER !!!
-        $content->originatingAgency = new stdClass();
-        $content->originatingAgency->identifier = new stdClass();
-        $content->originatingAgency->identifier->value = "org_987654321_DGS_SF";
+        if (isset($object->initiator)) {
+            $content->originatingAgency = new stdClass();
+            $content->originatingAgency->identifier = new stdClass();
+            $content->originatingAgency->identifier->value = $this->db->getEntitie($object->initiator)->business_id;
+        }
 
         /*$notes = $this->getNotes($letterbox->res_id);
         $content->custodialHistory = new stdClass();
@@ -371,7 +358,7 @@ class ArchiveTransfer
 
         if ($type == "entitie") {
             $keyword->keywordType = "corpname";
-            $keyword->keywordContent = $informations->business_id;
+            $keyword->keywordContent->value = $informations->business_id;
         } else if ($informations->is_corporate_person == "Y") {
             $keyword->keywordType = "corpname";
             $keyword->keywordContent->value = $informations->society;
@@ -409,5 +396,81 @@ class ArchiveTransfer
         $custodialHistoryItem->when = $note->date_note;
 
         return $custodialHistoryItem;
+    }
+
+    private function getEntitie($entityId, $param) {
+        $entitie = $this->db->getEntitie($entityId);
+
+        if (!$entitie) {
+            return false;
+        }
+
+        if (!$entitie->business_id) {
+            $businessId = $this->getEntitieParent($entitie->parent_entity_id,'business_id');
+
+            if (!$businessId) {
+                return false;
+            }
+
+            $entitie->business_id = $businessId;
+        }
+
+        if (!$entitie->archival_agreement) {
+            $archivalAgreement = $this->getEntitieParent($entitie->parent_entity_id,'archival_agreement');
+
+            if (!$archivalAgreement) {
+                return false;
+            }
+
+            $entitie->archival_agreement = $archivalAgreement;
+        }
+
+        if (!$entitie->archival_agency) {
+            $archivalAgency = $this->getEntitieParent($entitie->parent_entity_id,'archival_agency');
+
+            if (!$archivalAgency) {
+                return false;
+            }
+
+            $entitie->archival_agency = $archivalAgency;
+        }
+
+        return $entitie;
+    }
+
+    private function getEntitieParent($parentId,$param) {
+        $entitie = $this->db->getEntitie($parentId);
+
+        if (!$entitie) {
+            return false;
+        }
+
+        $res = false;
+
+        if ($param == 'business_id') {
+            if (!$entitie->business_id) {
+                $res = $this->getEntitieParent($entitie->parent_entity_id,'business_id');
+            } else {
+                $res = $entitie->business_id;
+            }
+        }
+
+        if ($param == 'archival_agreement') {
+            if (!$entitie->archival_agreement) {
+                $res = $this->getEntitieParent($entitie->parent_entity_id,'archival_agreement');
+            } else {
+                $res = $entitie->archival_agreement;
+            }
+        }
+
+        if ($param == 'archival_agency') {
+            if (!$entitie->archival_agency) {
+                $res = $this->getEntitieParent($entitie->parent_entity_id,'archival_agency');
+            } else {
+                $res = $entitie->archival_agency;
+            }
+        }
+
+        return $res;
     }
 }
