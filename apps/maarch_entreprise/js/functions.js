@@ -258,24 +258,24 @@ var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minC
         });
 };
 
-/**
-* List used for autocompletion and set id in hidden input
-*
-*/
-var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li){
-                $(new_value).value = li.id;
-            }
-        });
-};
+    /**
+    * List used for autocompletion
+    *
+    */
+    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    $j('#'+new_value).value = li.id; 
+                }
+            });
+    };
 
 var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
 {
@@ -296,43 +296,43 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
         });
 };
 
-var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li){
-                var str = li.id;
-                var res = str.split(",");
-                $(new_value).value = res[0];
-                $(actual_value).value = res[1];
-                $('country').value = 'FRANCE';
-            }
-        });
-};
 
-var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            callback: function (element, entry){
-                return entry + "&"+previous_name+"=" + $(previous_field).value;
-            },
-            afterUpdateElement: function (text, li){
-                $(new_value).value = li.id;
-            }
-        });
-};
+    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    var str = li.id;
+                    var res = str.split(",");
+                    $j("#"+new_value).value = res[0];
+                    $j("#"+actual_value).value = res[1];
+                    $j('#country').value = 'FRANCE';
+                }
+            });
+    };
 
+    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                callback: function (element, entry){
+                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).value; 
+                },
+                afterUpdateElement: function (text, li){
+                    $j("#"+new_value).value = li.id;
+                }
+            });
+    };
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -454,7 +454,7 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
 
     }
     function showCalender(ele) {
-        if($('basis')) { removeCalender() }
+        if($j('#basis')[0]) { removeCalender() }
         else {
             target=$(ele.id.replace(/for_/,''));
             var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
@@ -561,10 +561,10 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
 
     function ShowHideMenu(menu,onouoff) {
         if (typeof($) == 'function') {
-            monmenu = $(menu);
-            mondivmenu = $("menu");
-            monadmin = $("admin");
-            monhelp = $("aide");
+            monmenu = $j("#"+menu)[0];
+            mondivmenu = $j("#menu")[0];
+            monadmin = $j("#admin")[0];
+            monhelp = $j("#aide")[0];
         }
         else if(document.all) {
             monmenu = document.all[menu];
@@ -602,6 +602,7 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
             }
         }
     }
+
 
 
 /****************************************/
@@ -3214,6 +3215,52 @@ function resetSelect(id) {
     $j('#'+id).val("");
     Event.fire($(id), "chosen:updated");
 }
+
+function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){
+    var minus;
+    if($j('#'+branch_id+' i').first().prop('class')==closed)
+    {
+        minus=false;
+    }
+    else{
+        minus =true;
+        
+    }
+    $j.ajax({
+        url: path_manage_script, 
+        type: 'POST',
+        data: {branch_id : branch_id},
+        success: function(result){
+                var branch = $j('#'+branch_id);
+                if(minus){
+                    BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                    $j('#'+branch_id+' i').first().prop('class',closed);
+                }
+                else{
+                    if(result!=''){
+                        BootstrapTree.addNode($j('#'+branch_id),$j(result), opened, closed);
+                        BootstrapTree.init($j('#'+treeDiv),opened,closed);
+                        $j('#'+branch_id+' > ul').first().find('li').hide();
+                        $j('#'+branch_id+' > ul').first().find('li').show('fast');
+                        $j('#'+branch_id+' i').first().prop('class',opened);
+                    }
+                    else{
+                        $j('#'+branch_id+' i').first().prop('class','emptyNode');
+                    }
+                }
+            }
+        });
+    }
+
+// Exemple appel service
+// function testService(){
+//     $j.ajax({
+//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
+//         success: function(result){
+//             console.log(result);
+//         }
+//     });
+// }
 
 function titleWithTooltipster(id){
     $j(document).ready(function() {

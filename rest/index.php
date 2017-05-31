@@ -149,4 +149,22 @@ $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
+//parameters
+$app->get('/parameters', \Core\Controllers\ParametersController::class . ':getList');
+$app->get('/parameters/{id}', \Core\Controllers\ParametersController::class . ':getById');
+$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
+$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
+$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+
+//priorities
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
+$app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
+
+//actions
+$app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');
+$app->get('/actions/{id}', \Core\Controllers\ActionsController::class . ':getById');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
 $app->run();

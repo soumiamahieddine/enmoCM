@@ -70,8 +70,15 @@ $_SESSION['origin'] = "search_folder_tree";
             echo _FOLDER;
             ?> :</label></td>
                             <td class="indexing_field">
-                                <input type="text" name="folder" id="folder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
-                                <div id="show_folder" class="autocomplete" style="color:#666;"></div>
+                                <div class="typeahead__container">
+                                    <div class="typeahead__field">
+                                        <span class="typeahead__query">
+                                        <input type="text" class="folderTest" name="folder[query]" id="folder" size="45" autocomplete="off" type="search" onKeyPress="if(event.keyCode == 13) submitForm();" />
+                                        </span>
+                                        <div id="show_folder" class="autocomplete" style="color:#666;"></div>
+                                    </div>
+                                </div>
+            
                             </td>
                             <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER;?> :</label></td>
                             <td>
@@ -111,12 +118,49 @@ $_SESSION['origin'] = "search_folder_tree";
     </div>
     <!-- Display the layout of search_folder_tree -->
 </div>
+<form id="form-country_v1" name="form-country_v1">
+    <div class="typeahead__container">
+        <div class="typeahead__field">
+ 
+            <span class="typeahead__query">
+                <input class="js-typeahead-country_v1" name="country_v1[query]" placeholder="Search" autocomplete="off" type="search">
+            </span>
+            <span class="typeahead__button">
+                <button type="submit">
+                    <i class="typeahead__search-icon"></i>
+                </button>
+            </span>
+ 
+        </div>
+    </div>
+</form>
 <script type="text/javascript">
 
-    initList('folder', 'show_folder', '<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 
-        'Input', '2');
+    $j.typeahead({
+        input: '.folderTest',
+        order: "desc",
+        dynamic: true,
+        debug: false,
+        source: {
+            ajax: function(query){
+            return{
+                    type : 'POST',
+                    url: '<?php
+                    echo $_SESSION['config']['businessappurl'];
+                    ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',
+                    data: {
+                        Input: "{{query}}"
+                    }
+                }
+            }
+        },
+        callback: {
+            onInit: function (node) {
+                console.log('Typeahead Initiated on ' + node.selector);
+            },
+            
+        }
+    });
     function submitForm()
     {
         var folder = $('folder').value;
@@ -413,9 +457,9 @@ $_SESSION['origin'] = "search_folder_tree";
         }
 
 </script>
-<script type="text/javascript" src="<?php
-echo $_SESSION['config']['businessappurl'] . 'tools/'
+<!--<script type="text/javascript" src="<?php
+//echo $_SESSION['config']['businessappurl'] . 'tools/'
 ?>MaarchJS/dist/maarch.js"></script>
 <script type="text/javascript" src="<?php
-echo $_SESSION['config']['businessappurl'] . 'js/'
-?>search_customer.js"></script>
+//echo $_SESSION['config']['businessappurl'] . 'js/'
+?>search_customer.js"></script>-->

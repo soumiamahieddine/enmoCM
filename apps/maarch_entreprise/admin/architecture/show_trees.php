@@ -41,6 +41,8 @@ if(isset($_SESSION['doctypes_chosen_tree']))
     $nb_trees = count($_SESSION['doctypes_chosen_tree']);
 }
 $core_tools->load_html();
+$core_tools->load_js();
+
 $core_tools->load_header('', true, false);
 $f_level = array();
 $folder_module = $core_tools->is_module_loaded('folder');
@@ -60,15 +62,13 @@ else
     	) || ! $folder_module)
     {
         ?>
-        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
-        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
-        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
         <?php
         $search_customer_results = array();
         $f_level = array();
         if($folder_module)
         {
             $query="SELECT d.doctypes_first_level_id, d.doctypes_first_level_label FROM ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." g, ".$_SESSION['tablename']['doctypes_first_level']." d WHERE g.foldertype_id = ? and g.doctypes_first_level_id = d.doctypes_first_level_id and d.enabled = 'Y' order by d.doctypes_first_level_label";
+        
             $stmt = $db->query($query, array($_SESSION['doctypes_chosen_tree']));
         }
         else
@@ -107,95 +107,70 @@ else
         {
             array_push($search_customer_results, array('folder_id' => _TREE_ROOT, 'content' => $f_level));
         }
-        //$core_tools->show_array($search_customer_results);
+        
         ?>
-        <script type="text/javascript">
-
-            var BASE_URL = '<?php echo $_SESSION['config']['businessappurl'];?>';
-            function funcOpen(branch, response) {
-                // Ici tu peux traiter le retour et retourner true si
-                // tu veux ins�rer les enfants, false si tu veux pas
-                //MyClick(branch);
-                return true;
-            }
-
-            function myClick(branch) {
-
-            }
-
-            function MyOpen(branch)
+        <script type="text/javascript">            
+        
+            function treeHtml (struct)
             {
-                if(branch.struct.script != '' && branch.struct.script != 'default')
-                {
-                    var parents = [];
-                    parents = branch.getParents();
-                    var str = '';
-                    for(var i=0; i < (parents.length -1) ;i++)
-                    {
-                        str = str + '&parent_id[]=' + parents[i].getId();
+                for (var i=0;i<struct.length;i++){
+
+                    treeConcat='<ul>';
+                    treeConcat+='<li>';
+                    treeConcat+='<span class="root">';
+                    treeConcat+='<i class ="fa">';
+                    treeConcat+='</i>';
+                    treeConcat+=struct[i].txt;
+                    treeConcat+='</span>';
+
+                    for(var j=0;j<struct[i].items.length;j++){
+
+                        treeConcat+='<ul>';
+                        treeConcat+='<li>';
+                        treeConcat+='<span class="node">';
+                        treeConcat+='<i class ="fa">';
+                        treeConcat+='</i>';
+                        treeConcat+=struct[i].items[j].txt;
+                        treeConcat+='</span>';
+                        treeConcat+='<ul>';
+                        
+                        for(var k=0;k<struct[i].items[j].items.length;k++){
+                          
+                            treeConcat+='<li id="childs-'+j+'-'+k+'"'+'>';
+                            treeConcat+='<span class="node">';
+                            treeConcat+='<i class ="fa" >';
+                            treeConcat+='</i>';
+                            treeConcat+= struct[i].items[j].items[k].txt;
+                            treeConcat+='</span>';
+                            treeConcat+='<ul>';
+
+                            for(var l=0;l<struct[i].items[j].items[k].items.length;l++){
+                                
+                                treeConcat+='<li>';
+                                treeConcat+= struct[i].items[j].items[k].items[l].txt;
+                                treeConcat+='</li>';
+                            }
+
+                            treeConcat+='</ul>';
+                            treeConcat+='</li>';
+                        }
+                       
+                        treeConcat+='</ul>';
+                        treeConcat+='</ul>';
+
                     }
-                    var str_children  = '';
-                    var children = branch.getChildren();
-                    for(var i=0; i < (children.length -1) ;i++)
-                    {
-                        str_children = str_children + '&children_id[]=' + children[i].getId();
-                    }
+                    treeConcat+='</li>';
+                        treeConcat+='</li>';
+
+                    treeConcat+='</ul>';
                 }
-                return true;
+                return treeConcat;
             }
-
-            function MyClose(branch)
-            {
-                var parents = branch.getParents();
-                var branch_id = branch.getId();
-                if(current_branch_id != null)
-                {
-                    var branch2 = tree.getBranchById(current_branch_id);
-                    if(current_branch_id == branch_id )
-                    {
-                        current_branch_id = branch.getNextOpenedBranch;
-                    }
-                    else if(branch2 && branch2.isChild(branch_id))
-                    {
-                        current_branch_id = branch.getNextOpenedBranch;
-                    }
-                }
-                branch.collapse();
-                branch.openIt(false);
-            }
-
-            function MyBeforeOpen(branch, opened)
-            {
-                if(opened == true)
-                {
-                    MyClose(branch);
-                }
-                else
-                {
-                    current_branch_id = branch.getId();
-                    MyOpen(branch);
-                    return true;
-                }
-            }
-
-            function myMouseOver (branch)
-            {
-                document.body.style.cursor='pointer';
-            }
-
-            function myMouseOut (branch)
-            {
-                document.body.style.cursor='auto';
-            }
-
-            var tree = null;
-            var current_branch_id = null;
-
-            function TafelTreeInit ()
+            
+            function TreeInit ()
             {
                 var struct = [
                 <?php
-
                     for($i=0;$i<count($search_customer_results);$i++)
                     {
                             ?>
@@ -256,25 +231,25 @@ else
 
                                 ?>
                             ];
-                tree = new TafelTree('trees_div', struct, {
-                    'generate' : true,
-                    'imgBase' : '<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
-                    'defaultImg' : 'folder.gif',
-                    //'defaultImg' : 'page.gif',
-                    'defaultImgOpen' : 'folderopen.gif',
-                    'defaultImgClose' : 'folder.gif',
-                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php functions::xecho($_SESSION['doctypes_chosen_tree']);?>']
-                });
+                            
+                document.getElementById('trees_div').innerHTML = treeHtml(struct);
+            }
 
-                //open all branches
-                tree.expend();
-            };
         </script>
-        <div id="trees_div"></div>
+       
+        <div id="trees_div" class="tree">
+           
+        </div>
+
+        <script type="text/javascript">
+
+            TreeInit();
+            BootstrapTree.init($j('#trees_div'),'fa fa-minus-square','fa fa-plus-square');
+       
+        </script>
         <?php
     }
 }
-$core_tools->load_js();
 ?>
 </body>
 </html>

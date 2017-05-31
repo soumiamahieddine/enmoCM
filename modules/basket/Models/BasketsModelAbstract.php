@@ -20,10 +20,11 @@ use Core\Models\UserModel;
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends \Apps_Table_Service
+class BasketsModelAbstract extends \Apps_Table_Service 
 {
 
     public static function getResListById(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
@@ -58,6 +59,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
     }
 
     public static function getActionByActionId(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['actionId']);
         static::checkNumeric($aArgs, ['actionId']);
@@ -76,6 +78,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
     }
 
     public static function getActionIdById(array $aArgs = [])
+
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
@@ -97,46 +100,36 @@ class BasketsModelAbstract extends \Apps_Table_Service
         return $aAction[0]['id_action'];
     }
 
-    public static function getBasketsByUserId(array $aArgs = [])
+    public static function getTemplateById(array $aArgs = []) 
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
-
-        $rawUserGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
-        $userGroups = [];
-        foreach ($rawUserGroups as $value) {
-            $userGroups[] = $value['group_id'];
-        }
-
-        $aRawBaskets = static::select(
+        $aAction = static::select(
             [
-                'select'    => ['DISTINCT basket_id'],
-                'table'     => ['groupbasket'],
-                'where'     => ['group_id in (?)'],
-                'data'      => [$userGroups]
+            'select'    => ['result_page'],
+            'table'     => ['groupbasket'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['basketId']]
             ]
         );
 
-        $basketIds = [];
-        foreach ($aRawBaskets as $value) {
-            $basketIds[] = $value['basket_id'];
-        }
-
-        $aBaskets = static::select(
-            [
-                'select'    => ['basket_id','basket_name'],
-                'table'     => ['baskets'],
-                'where'     => ['basket_id in (?)'],
-                'data'      => [$basketIds],
-                'order_by'  => 'basket_order, basket_name'
-            ]
-        );
-
-        if (empty($aBaskets)) {
+        if (empty($aAction)) {
             return '';
         }
 
-        return $aBaskets;
+        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/mdoules/basket/xml/basketpage.xml')) {
+            $path = 'custom/' .$_SESSION['custom_override_id']. '/modules/basket/xml/basketpage.xml';
+        } else {
+            $path = 'modules/basket/xml/basketpage.xml';
+        }
+
+        $xmlfile = simplexml_load_file($path);
+        $name = '';
+        foreach ($xmlfile as $basket) {
+            if ($basket->ID == $aAction[0]["result_page"]) {
+                $name = (string)$basket->NAME;
+            } 
+        }
+        return $name;
     }
+    
 
 }
