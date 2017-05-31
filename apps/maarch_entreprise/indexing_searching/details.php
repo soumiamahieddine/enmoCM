@@ -564,6 +564,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             </div>
             <br/>
             <div class="whole-panel" id="tabricator1">
+
             <?php 
                 if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){
                                 $style = 'visibility:hidden;"';
@@ -575,6 +576,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                 <div class="fa fa-tachometer detailsTab DetailsTabFunc TabSelected  " id="DetailstachometerTab" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>" onclick="tabClicked('DetailstachometerTab',false);">
                 <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></div>
+
                
              <?php
                                 //SERVICE TO VIEW TECHNICAL INDEX
@@ -779,6 +781,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     $toolbarBagde_script = 'index.php?display=true&page=load_toolbar_links&resId='.$s_id.'&collId='.$coll_id;
                                     $uniqueString .='<script>loadToolbarBadge(\'links_tab\',\''.$toolbarBagde_script.'\');</script>';
                                     echo $uniqueString;
+
                  ?>
                
                 <div class="detailsDisplayDiv" id = "home-panel">
@@ -960,6 +963,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     ?>
                                     <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($data[$key]['show_value']);?>" size="40"  title="<?php functions::xecho($data[$key]['show_value']);?>" alt="<?php functions::xecho($data[$key]['show_value']);?>" onclick="showCalender(this);" />
                                      <?php
+
                                 }
                                 else if ($data[$key]['field_type'] == 'select')
                                 {
@@ -1324,6 +1328,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 ?> 
             </dl>
        </div>
+
     <?php
 }
 ?> 

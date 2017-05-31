@@ -1,3 +1,9 @@
+/**
+ * Fill the Folder field in indexing page (basing on the subfolder field value)
+ *
+ * @param path_to_script String Path to the Ajax script
+ **/
+
 function valid_viewfolder(url)
 {
 	var type_choice = '';
@@ -43,25 +49,27 @@ function valid_viewfolder(url)
 		{
 			datefin = datefin_item.value;
 		}
-	}
-	else
-	{
+	} else {
 		error = 'empty_type_choice';
 	}
+
 	if(type_choice  != '' && url && error == '' )
 	{
-		new Ajax.Request(url,
-		{
-		    method:'post',
-		    parameters: {
+		$j.ajax({
+			url: url,
+			type: 'POST',
+			data: {
 				type_report : type_choice,
 				user : user_id,
 				date_start : datestart,
 				date_fin : datefin
-						},
-		        onSuccess: function(answer){
-				var div_to_fill = $('result_folderviewstat');
-				div_to_fill.innerHTML = answer.responseText;
+			},
+			success: function (answer) {
+				var div_to_fill = $j('#result_folderviewstat');
+				div_to_fill.html(answer);
+			},
+			error: function (error) {
+				alert(error);
 			}
 		});
 	}
@@ -75,7 +83,6 @@ function valid_viewfolder(url)
  **/
 function get_folder_index(url, foldertype, id_div)
 {
-
 	if(url && foldertype) {		
 		$j.ajax({
 			url: url,
@@ -98,7 +105,6 @@ function get_folder_index(url, foldertype, id_div)
 
 function search_change_coll(url, id_coll)
 {
-
     if(url && id_coll)
     {
         var search_div = $j('#folder_search_div');
@@ -130,8 +136,11 @@ function search_change_coll(url, id_coll)
 			}
 
     	});
+
     }
 }
+
+
 
 function get_ft_opt_index(url)
 {
@@ -145,6 +154,7 @@ function get_ft_opt_index(url)
 				if(div_to_fill) {
 					div_to_fill.html(answer);
 				}
+
 			},
 			error: function (error) {
 				alert(error);
@@ -164,6 +174,7 @@ function checkSubFolder(folderId)
 	}
 
 }
+
 
 function tabClick (TabId){
         
