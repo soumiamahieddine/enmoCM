@@ -142,9 +142,67 @@ if (isset($_POST['delete_folder'])) {
             .'index.php?page=search_adv_folder_result&module=folder';?>" class="back"><i class="fa fa-backward fa-2x" title="<?php echo _BACK;?>"></i></a>
         	</div>
         <br/>
-        <dl id="tabricator2">
-            <dt><?php echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
-            <dd>
+        <div class="panel-folder">
+            <div id="index-folder" onclick="tabClick('index-folder')" class="folder-tab folder-tab-open"><?php echo _FOLDER_DETAILLED_PROPERTIES;?></div>
+            <?php
+            if (trim($_SESSION['current_folder_id']) <> '' && ! empty($view)) {
+                $select2 = array();
+                $select2[$view] = array();
+                $tab2 = array();
+                array_push($select2[$view], "res_id", "type_label");
+                $tab2 = $request->PDOselect(
+                    $select2, "folders_system_id = ? and status <> 'DEL'", array($_SESSION['current_folder_id']), " order by type_label ",
+                    $_SESSION['config']['databasetype'], "500", false
+                );
+                for ($i = 0; $i < count($tab2); $i ++) {
+                    for ($j = 0; $j < count($tab2[$i]); $j ++) {
+                        foreach (array_keys($tab2[$i][$j]) as $value) {
+                            if ($tab2[$i][$j][$value] == 'res_id') {
+                                $tab2[$i][$j]['res_id'] = $tab2[$i][$j]['value'];
+                                $tab2[$i][$j]["label"] = _GED_NUM;
+                                $tab2[$i][$j]["size"] = "10";
+                                $tab2[$i][$j]["label_align"] = "left";
+                                $tab2[$i][$j]["align"] = "right";
+                                $tab2[$i][$j]["valign"] = "bottom";
+                                $tab2[$i][$j]["show"] = false;
+                            }
+                            if ($tab2[$i][$j][$value] == "type_label") {
+                                $tab2[$i][$j]["value"] = $request->show_string(
+                                    $tab2[$i][$j]["value"]
+                                );
+                                $tab2[$i][$j]["label"] = _TYPE;
+                                $tab2[$i][$j]["size"] = "40";
+                                $tab2[$i][$j]["label_align"] = "left";
+                                $tab2[$i][$j]["align"] = "left";
+                                $tab2[$i][$j]["valign"] = "bottom";
+                                $tab2[$i][$j]["show"] = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (count($tab2) > 0 ) $nbr_docs = ' ('.count($tab2).')';  else $nbr_docs = '';
+            ?>
+            <div id="archived-doc" onclick="tabClick('archived-doc')" class="folder-tab"><?php echo _ARCHIVED_DOC.$nbr_docs;?></div>
+            <?php
+                if($core->is_module_loaded('notes'))
+                {
+                    require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+                        . "class" . DIRECTORY_SEPARATOR
+                        . "class_modules_tools.php";
+                    $notes_tools    = new notes();
+                    
+                    //Count notes
+                    $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], 'folders');
+                    if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
+                    //Notes iframe
+                    ?>
+                    <div id="notes" onclick="tabClick('notes')" class="folder-tab"><?php echo _NOTES.$nbr_notes;?></div>
+                    <?php
+                }
+            ?> 
+            <div id="folder-history" onclick="tabClick('folder-history')" class="folder-tab"><?php echo _FOLDER_HISTORY;?></div>
+            <div id="frame-index-folder" class="frame-targ">
             <form method="post" name="index_folder" id="index_folder" action="index.php?page=show_folder&module=folder&id=<?php functions::xecho($_SESSION['current_folder_id']) ?>">
                 <h2><span class="date"><b><?php echo _FOLDER_DETAILLED_PROPERTIES;?></b></span></h2>
                 <br/>
@@ -334,48 +392,8 @@ if (isset($_POST['delete_folder'])) {
                          } ?>
                 </p>
                 </form>
-            </dd>
-            <?php
-            if (trim($_SESSION['current_folder_id']) <> '' && ! empty($view)) {
-                $select2 = array();
-                $select2[$view] = array();
-                $tab2 = array();
-                array_push($select2[$view], "res_id", "type_label");
-                $tab2 = $request->PDOselect(
-                    $select2, "folders_system_id = ? and status <> 'DEL'", array($_SESSION['current_folder_id']), " order by type_label ",
-                    $_SESSION['config']['databasetype'], "500", false
-                );
-                for ($i = 0; $i < count($tab2); $i ++) {
-                    for ($j = 0; $j < count($tab2[$i]); $j ++) {
-                        foreach (array_keys($tab2[$i][$j]) as $value) {
-                            if ($tab2[$i][$j][$value] == 'res_id') {
-                                $tab2[$i][$j]['res_id'] = $tab2[$i][$j]['value'];
-                                $tab2[$i][$j]["label"] = _GED_NUM;
-                                $tab2[$i][$j]["size"] = "10";
-                                $tab2[$i][$j]["label_align"] = "left";
-                                $tab2[$i][$j]["align"] = "right";
-                                $tab2[$i][$j]["valign"] = "bottom";
-                                $tab2[$i][$j]["show"] = false;
-                            }
-                            if ($tab2[$i][$j][$value] == "type_label") {
-                                $tab2[$i][$j]["value"] = $request->show_string(
-                                    $tab2[$i][$j]["value"]
-                                );
-                                $tab2[$i][$j]["label"] = _TYPE;
-                                $tab2[$i][$j]["size"] = "40";
-                                $tab2[$i][$j]["label_align"] = "left";
-                                $tab2[$i][$j]["align"] = "left";
-                                $tab2[$i][$j]["valign"] = "bottom";
-                                $tab2[$i][$j]["show"] = true;
-                            }
-                        }
-                    }
-                }
-            }
-             if (count($tab2) > 0 ) $nbr_docs = ' ('.count($tab2).')';  else $nbr_docs = '';
-            ?>
-            <dt><?php echo _ARCHIVED_DOC.$nbr_docs;?></dt>
-            <dd>
+            </div>
+            <div id="frame-archived-doc" class="frame-targ">
                 <table width="100%" border="0">
                     <tr>
                         <td width="50%"valign="top">
@@ -422,47 +440,27 @@ if (isset($_POST['delete_folder'])) {
                     </td>
                 </tr>
             </table>
-            </dd>
-            
-            <?php
-            if($core->is_module_loaded('notes'))
-            {
-                require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-                    . "class" . DIRECTORY_SEPARATOR
-                    . "class_modules_tools.php";
-                $notes_tools    = new notes();
-                
-                //Count notes
-                $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], 'folders');
-                if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-                //Notes iframe
-                ?>
-                <dt><?php echo _NOTES.$nbr_notes;?></dt>
-                <dd>
+            </div>
+            <div id="frame-notes" class="frame-targ">
                     <h2><?php echo _NOTES;?></h2>
                     <iframe name="notes_folder" id="notes_folder" src="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
                         echo $_SESSION['current_folder_id'];?>&origin=folder&load&size=full" 
                         frameborder="0" scrolling="no" width="100%" height="560px"></iframe>
-                </dd> 
-                <?php
-            }
-            ?>            
-            <dt><?php echo _FOLDER_HISTORY;?></dt>
-            <dd>
+            </div>
+             <div id="frame-folder-history" class="frame-targ">
                 <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&module=folder&page=folder_history&load&size=full&id=<?php 
                     echo $_SESSION['current_folder_id'];?>" frameborder="0" scrolling="no" width="100%" height="590px"></iframe>
-            </dd>
-        </dl>
+            </div> 
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
     var item  = $('details_div');
-    var tabricator2 = new Tabricator('tabricator2', 'DT');
     if(item)
     {
         item.style.display='block';
