@@ -45,7 +45,7 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/jquery.typeahead.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/jquery.typeahead.min.css';
 
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');

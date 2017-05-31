@@ -140,6 +140,7 @@ $_SESSION['origin'] = "search_folder_tree";
         input: '.folderTest',
         order: "desc",
         dynamic: true,
+        debug: false,
         source: {
             ajax: function(query){
             return{

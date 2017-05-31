@@ -1511,7 +1511,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
             success: function(answer){
                 eval("response = " + answer);
 
-                if(response$j.ajax.status == 0 ) {
+                if(response.status == 0 ) {
                     var page_result = response.page_result;
 
                     if(response.action_status != '' && response.action_status != 'NONE') {
@@ -3170,11 +3170,9 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
-        },
-        success: function(answer){
-                console.log(answer) ;
 
-            //console.log(answer.responseText);
+            },
+        success: function(answer){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
@@ -3183,7 +3181,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
             document.getElementById('show_tab').innerHTML = answer;
-
         }
     });
  

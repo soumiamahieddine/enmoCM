@@ -654,7 +654,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<td class="indexing_field">';
     //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-    $frmStr .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'type_contact_external_icon\').css(\'color\',\'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
+    $frmStr .=' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#009DC5\');$j(\'#type_contact_external_icon\').css(\'color\',\'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
 
     $frmStr .=' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#009DC5\');"></i>';
  
