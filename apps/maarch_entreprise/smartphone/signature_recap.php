@@ -94,7 +94,7 @@ $subject = $res->subject;
     <span class="btn_recap" onclick="save_sign();" style="margin-left:10px;cursor:pointer;" id="linkSaveSign"><i class="fa fa-save"></i> Enregistrer signature</span>
     <span class="btn_recap"><i class="fa fa-ellipsis-v"></i> Détails signature</span>
     <span class="btn_recap"><a href="view_attachments.php?id=<?php echo $_SESSION['doc_id'];?>"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> Signer un autre courrier</a></span>
-    <input type="hidden" id="current_basket" value="<?php echo $_SESSION['current_basket']['id']; ?>" />
+
     <div class="error">
         <?php
         if (isset($_SESSION['error'])) {

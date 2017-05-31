@@ -21,7 +21,7 @@
 
 
 
-if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v17.06");
+if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v1.7");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined("_ID_TO_DISPLAY")) define("_ID_TO_DISPLAY", "chrono_number"); // value res_id || chrono_number
@@ -234,7 +234,7 @@ if (!defined("_CHARACTER")) define("_CHARACTER", "caractère");
 if (!defined("_CHARACTERS")) define("_CHARACTERS", "caractères");
 if (!defined("MUST_BE_LESS_THAN")) define("MUST_BE_LESS_THAN", "ne doit pas faire plus de");
 if (!defined("_WRONG_FORMAT")) define("_WRONG_FORMAT", "n'est pas dans le bon format");
-if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch Courrier !");
+if (!defined("_WELCOME")) define("_WELCOME", "Bienvenue sur Maarch !");
 if (!defined("_WELCOME_TITLE")) define("_WELCOME_TITLE", "Accueil");
 if (!defined("_HELP")) define("_HELP", "Aide");
 if (!defined("_SEARCH_ADV_SHORT")) define("_SEARCH_ADV_SHORT", "Recherche Avancée");
@@ -1829,7 +1829,6 @@ if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","C
 if (!defined("_DESTROY")) define("_DESTROY","Destruction");
 if (!defined("_KEEP")) define("_KEEP","Conservation");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de conservation");
-if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée de conservation");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 

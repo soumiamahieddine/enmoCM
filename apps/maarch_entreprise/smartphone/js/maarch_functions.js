@@ -263,10 +263,13 @@ function clean(){
         document.getElementById('notes').parentNode.removeChild(document.getElementById('notes'));
     }
     else if(document.getElementById('signature_recap')){ 
-          document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
+           document.getElementById('signature_recap').parentNode.removeChild(document.getElementById('signature_recap'));
     }
     else if(document.getElementById('sign_main_panel')){ 
-          document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
+           document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
+    }
+    else if(document.getElementById('sign_main_panel')){ 
+           document.getElementById('sign_main_panel').parentNode.removeChild(document.getElementById('sign_main_panel'));
     }
     else if(document.getElementById('details')){
         document.getElementById('details').parentNode.removeChild(document.getElementById('details'));
@@ -531,6 +534,7 @@ function loadSignPad(){
                 method:'post',
                 parameters: { 'imageData' : data_img, 'res_id' : document.getElementById("res_id_master").value, 'res_id_attach' : document.getElementById("res_id_attach").value },
                 onSuccess: function(answer){
+                  console.log("test");
                   document.getElementById("loading_sign").style.display = 'none';
                   eval("response = "+answer.responseText);
                   if (response.status == 1) {

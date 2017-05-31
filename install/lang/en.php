@@ -66,7 +66,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis' target=\"_blank\"> Architecture and requirements</A> for details");
+    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/1.5/fr/Install/Prerequis' target=\"_blank\"> Architecture and requirements</A> for details");
 }
 if (!defined('_LANG')) {
     define('_LANG', "Lang");
@@ -145,6 +145,9 @@ if (!defined('_PGSQL')) {
 if (!defined('_GD')) {
     define('_GD', "gd library");
 }
+if (!defined('_SVN')) {
+    define('_SVN', "svn library");
+}
 if (!defined('_IMAP')) {
     define('_IMAP', "imap library");
 }
@@ -179,10 +182,13 @@ if (!defined('_ERROR_REPORTING')) {
         define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors=On");
+    define('_DISPLAY_ERRORS', "display_errors (On)");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags=On");
+    define('_SHORT_OPEN_TAGS', "short_open_tags (On)");
+}
+if (!defined('_MAGIC_QUOTES_GPC')) {
+    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc (Off)");
 }
 
 if (!defined('_MUST_FIX')) {

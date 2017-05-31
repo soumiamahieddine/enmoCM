@@ -181,12 +181,7 @@ var SignatureBookComponent = (function () {
     };
     SignatureBookComponent.prototype.changeRightViewer = function (index) {
         this.showAttachmentPanel = false;
-        if (this.signatureBook.attachments[index]) {
-            this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
-        }
-        else {
-            this.rightViewerLink = "";
-        }
+        this.rightViewerLink = this.signatureBook.attachments[index].viewerLink;
         this.rightSelectedThumbnail = index;
     };
     SignatureBookComponent.prototype.changeLeftViewer = function (index) {
@@ -223,7 +218,7 @@ var SignatureBookComponent = (function () {
             else {
                 this.rightContentWidth = "44%";
                 this.leftContentWidth = "44%";
-                if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
+                if (this.signatureBook.resList.length == 0) {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
                         .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
@@ -471,9 +466,6 @@ var SignatureBookComponent = (function () {
                     _this.signatureBook.resList = data.resList;
                     valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', _this.signatureBook.currentAction.id, _this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
                 });
-            }
-            else {
-                valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', this.signatureBook.currentAction.id, this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
             }
         }
         else {

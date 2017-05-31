@@ -109,9 +109,6 @@ function updateVisaWorkflow(resId) {
                 parent.$('main_info').style.display = 'table-cell';
                 parent.Element.hide.delay(5, 'main_info');
                 eval(response.exec_js);
-                if(parent.$j('.contentShow iframe').length){
-                    parent.$j('.contentShow iframe')[0].contentWindow.location.reload(true);
-                }
             } else if (response.status != 1) {
                 alert(response.error_txt)
             }

@@ -99,7 +99,6 @@
       <parameter name="mandatory_fields" type="identifier" />
       <parameter name="retention_final_disposition" type="string" />
       <parameter name="retention_rule" type="identifier" />
-      <parameter name="duration_current_use" type="integer" />
     </validationRule>
 
     <validationRule name="admin_docserver_location" extends="standardForm" mode="error">

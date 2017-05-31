@@ -95,8 +95,6 @@ class Install extends functions
         return '<img src="img/orange_light.png"  width="20px"/>';
     }
 
-    
-
     public function checkAllNeededPrerequisites()
     {
         if (!$this->isPhpVersion()) {
@@ -109,9 +107,6 @@ class Install extends functions
             return false;
         }
         if (!$this->isMaarchPathWritable()) {
-            return false;
-        }
-        if (!$this->isDependenciesExist()) {
             return false;
         }
         if (!$this->isPhpRequirements('gd')) {
@@ -138,9 +133,9 @@ class Install extends functions
         if (!$this->isIniShortOpenTagRequirements()) {
             return false;
         }
-        // if (!$this->isIniMagicQuotesGpcRequirements()) {
-        //     return false;
-        // }
+        if (!$this->isIniMagicQuotesGpcRequirements()) {
+            return false;
+        }
         
         if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')){
             return false;
@@ -222,14 +217,14 @@ class Install extends functions
         }
     }
 
-    // public function isIniMagicQuotesGpcRequirements()
-    // {
-    //     if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
-    //         return false;
-    //     } else {
-    //         return true;
-    //     }
-    // }
+    public function isIniMagicQuotesGpcRequirements()
+    {
+        if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public function getProgress(
         $stepNb,
