@@ -28,41 +28,17 @@
 * @ingroup install
 */
 
-$_REQUEST['docserverRoot'] = str_replace("/", DIRECTORY_SEPARATOR, $_REQUEST['docserverRoot']);
+//CONTROLLER
+    //TITLES
+        $shortTitle = _LANGUAGE;
+        $longTitle = _CHOOSE_LANGUAGE;
 
-$checkDocserverRoot = $Class_Install->checkPathRoot(
-    $_REQUEST['docserverRoot']
-);
+    //ALLOWED LANGUAGES
+        $listLang = $Class_Install->getLangList();
 
-if ($checkDocserverRoot !== true) {
-    $return['status'] = 0;
-    $return['text'] = $checkDocserverRoot;
+    //PROGRESS
+        $stepNb = 1;
+        $stepNbTotal = 6;
 
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-if (!$Class_Install->createDocservers($_REQUEST['docserverRoot'])) {
-    $return['status'] = 0;
-    $return['text'] = _CAN_NOT_CREATE_SUB_DOCSERVERS;
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
-}
-
-$updateDocserversDB = $Class_Install->updateDocserversDB(
-    $_REQUEST['docserverRoot']
-);
-$Class_Install->updateDocserverForXml($_REQUEST['docserverRoot']);
-
-$return['status'] = 1;
-$return['text'] = '';
-
-$jsonReturn = json_encode($return);
-
-echo $jsonReturn;
-exit;
+//VIEW
+    $view = 'update_language';

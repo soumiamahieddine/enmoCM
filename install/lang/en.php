@@ -18,7 +18,7 @@ if (!defined('_DESC_INSTALL')) {
                     <br />
                     Maarch is a full free software for Document Management, Content Management, Mail Management, Colaborative and legal archiving/record management capabilities. It allows to follow multichannel administrative information (postals mails, mails, forms, phones calls) and classify the documents to find effectively in time. The software offers supports tools for writing and to validate outgoing mails. Maarch Courrier is distributed under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />
-                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
+                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
 					<br>
 					<br><b>Important : we are looking for english speaking partners to promote Maarch around the world. Don't hesitate to contact us directly at info@maarch.org for a win-win partnership !");
 }
@@ -203,14 +203,14 @@ if (!defined('_DOCSERVER_ROOT')) {
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', "Validate");
 }
-if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
-    define('_MUST_CHOOSE_DOCSERVERS_ROOT', "You must choose the docservers root directory");
+if (!defined('_MUST_CHOOSE_PATH_ROOT')) {
+    define('_MUST_CHOOSE_PATH_ROOT', "You must choose the path root directory");
 }
-if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
-    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Path of docserver is unapproachable");
+if (!defined('_PATH_UNAPPROACHABLE')) {
+    define('_PATH_UNAPPROACHABLE', "Path is unapproachable");
 }
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The docservers does not have the adequate rights");
+if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The path does not have the adequate rights");
 }
 
 //DATABASE
@@ -431,3 +431,10 @@ if (!defined('_DEPENDENCIES_ON_WIKI')) {
     define('_DEPENDENCIES_ON_WIKI', "Or follow the wiki documentation");
 }
 
+if (!defined('_ZIP')) {
+    define('_ZIP', "zip library");
+}
+
+if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
+    define('_INSTALL_ZIP_LIB_FIRST', "Install zip lib first to deploy dependencies automatically");
+}
