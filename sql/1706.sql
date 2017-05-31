@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
---        THIS SCRIPT IS USE TO PASS FROM MAARCH 1.6 TO MAARCH 1.7          --
+-- Model migration script - 1.6 to 17.06          --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -282,13 +282,17 @@ INSERT INTO user_signatures (user_id, signature_label, signature_path, signature
 
 UPDATE parameters SET param_value_int = '1706' WHERE id = 'database_version';
 
+/** ADD NEW COLUMN FOR ORDER RES IN BASKETS **/
+ALTER TABLE baskets DROP COLUMN IF EXISTS basket_res_order;
+ALTER TABLE baskets ADD COLUMN basket_res_order character varying(255);
+
 /** DELETES OLD TABLES **/
 DROP TABLE IF EXISTS adr_business;
 DROP TABLE IF EXISTS adr_log;
 DROP TABLE IF EXISTS adr_rm;
 DROP TABLE IF EXISTS ar_boxes;
 DROP TABLE IF EXISTS ar_containers;
-DROP TABLE IF EXISTS ar_containers_types;
+DROP TABLE IF EXISTS ar_container_types;
 DROP TABLE IF EXISTS ar_deposits;
 DROP TABLE IF EXISTS ar_header;
 DROP TABLE IF EXISTS ar_natures;
