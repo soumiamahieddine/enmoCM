@@ -822,7 +822,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
        $frmStr .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-
+    
     $frmStr .= '</table>';
     
     $frmStr .= '</div>';
