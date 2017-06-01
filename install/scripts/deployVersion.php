@@ -48,7 +48,8 @@ if (empty($finalVersionPath)) {
 if (!$Class_Install->copy_dir(
         $finalVersionPath . DIRECTORY_SEPARATOR,
         //'/opt/maarch/test' . DIRECTORY_SEPARATOR
-        $_SESSION['config']['corepath']
+        $_SESSION['config']['corepath'],
+        'xml'
     )
 ) {
     $return['status'] = 0;
