@@ -88,12 +88,17 @@ foreach ($tags as $key => $value) {
         $cptCurrentTags++;
     }
     //echo $tagNumeric . '<br />';
-
 }
 //var_dump($allCurrentTags);
-
 ?>
-<table>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<table align="center">
     <tr>
         <td>
             <?php echo _YOUR_VERSION;?>
@@ -104,12 +109,16 @@ foreach ($tags as $key => $value) {
         <td>
             <?php echo _BRANCH_VERSION . ':' . $currentVersion->param_value_int 
                 . ' ' . _TAG_VERSION . ':' . $currentVersion->param_value_string;?>
-            
         </td>
     </tr>
     <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
         <td>
-            <?php echo _CHOOSE_VERSION_TO_UPDATE;?>
+            <?php echo _AVAILABLE_VERSION_TO_UPDATE;?>
         </td>
         <td>
             :
@@ -152,16 +161,44 @@ foreach ($tags as $key => $value) {
             ?>
         </td>
     </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+            <?php
+            if (!$isAnyAvailableTag) {
+                echo _NO_AVAILABLE_TAG_TO_UPDATE . '<br />';
+            }?>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+            <?php
+            if ($isAnyAvailableVersion) {
+                echo _NEW_MAJOR_VERSION_AVAILABLE . ':';
+                for ($j=0;$j<count($allNextTags);$j++) {
+                    echo $allNextTags[$j] . '<br />';
+                }
+            }?>
+        </td>
+    </tr>
 </table>
-
-<?php
-if (!$isAnyAvailableTag) {
-    echo _NO_AVAILABLE_TAG_TO_UPDATE . '<br />';
-}
-
-if ($isAnyAvailableVersion) {
-    echo _NEW_MAJOR_VERSION_AVAILABLE . '<br />';
-    for ($j=0;$j<count($allNextTags);$j++) {
-        echo $allNextTags[$j] . '<br />';
-    }
-}
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
