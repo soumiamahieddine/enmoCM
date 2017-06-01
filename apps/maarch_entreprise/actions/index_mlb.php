@@ -827,6 +827,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     
     $frmStr .= '</div>';
     $frmStr .= '</div>';
+    }
     
     /*** CUSTOM INDEXES ***/
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
