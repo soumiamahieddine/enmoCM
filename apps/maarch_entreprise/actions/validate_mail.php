@@ -858,15 +858,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     }
 
-    if(count($statuses) > 0) {
+    if (count($statuses) > 0) {
         //load current status
-        $stmt = $db->query("SELECT status FROM " 
-            . $view 
+        $stmt = $db->query("SELECT status FROM "
+            . $view
             . " WHERE res_id = ?", array($res_id));
         $statusObj = $stmt->fetchObject();
         $current_status = $statusObj->status;
         if ($current_status <> '') {
-            $stmt = $db->query("SELECT label_status FROM " . STATUS_TABLE 
+            $stmt = $db->query("SELECT label_status FROM " . STATUS_TABLE
                 . " WHERE id = ?", array($current_status));
             $statusObjLabel = $stmt->fetchObject();
             $current_status_label = $statusObjLabel->label_status;
@@ -879,7 +879,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'id="status" onchange="clear_error(\'frm_error_' . $id_action
                 . '\');">';
         if ($current_status <> '') {
-            $frm_str .= '<option value="' . $current_status . '">' . _CHOOSE_CURRENT_STATUS 
+            $frm_str .= '<option value="' . $current_status . '">' . _CHOOSE_CURRENT_STATUS
                 . ' : ' . $current_status_label . '(' . $current_status . ')</option>';
         } else {
             $frm_str .= '<option value="">' . _CHOOSE_CURRENT_STATUS . ')</option>';
@@ -895,8 +895,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
         $frm_str .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-
-
+    }
 
     $frm_str .= '</table>';
 
