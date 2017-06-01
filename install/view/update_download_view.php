@@ -105,7 +105,7 @@ $currentVersion = $stmt->fetchObject();
                                         <option value="default">Select a version</option>
                                         <?php
                                         foreach ($tags as $key => $value) {
-                                            echo $tags[$key]['name'] . '<br />';
+                                            //echo $tags[$key]['name'] . '<br />';
                                             echo '<option ';
                                             echo 'value="' . $tags[$key]['name'] . '"';
                                             echo '>';
@@ -116,9 +116,7 @@ $currentVersion = $stmt->fetchObject();
                                     </select>
                                     <?php
                                 } else {
-                                    ?>
-                                    No version available for update
-                                    <?php
+                                    echo _NO_AVAILABLE_VERSION_TO_UPDATE;
                                 }
                                 ?>
                                 
