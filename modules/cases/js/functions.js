@@ -32,3 +32,9 @@ function tabClickCases (TabId){
     $j('#frame-'+TabId).css('display','block');
 
 }
+function tabClickedCases(TabId, Iframe) {
+    $j(".detailsCasesIframe").css("display","none");    
+	$j("#"+Iframe).css("display","");
+    $j(".detailsCasesButton").removeClass("detailsCasesClicked");
+    $j("#"+TabId).addClass("detailsCasesClicked");
+}
