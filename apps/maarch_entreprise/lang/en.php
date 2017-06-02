@@ -1943,6 +1943,8 @@ if (!defined('_LAST_RELEASE_DETAILS'))
     define('_LAST_RELEASE_DETAILS', 'Available minor versions');
 if (!defined('_CHOOSE_VERSION_TO_UPDATE'))
     define('_CHOOSE_VERSION_TO_UPDATE', 'Choose the version');
+if (!defined('_DOWNLOAD_VERSION'))
+    define('_DOWNLOAD_VERSION', 'Download the version');
 if (!defined('_UPDATE_DEPLOY'))
     define('_UPDATE_DEPLOY', 'Deploiement');
 if (!defined('_UPDATE_DEPLOY_INFOS'))

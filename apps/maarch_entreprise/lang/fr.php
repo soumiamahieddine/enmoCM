@@ -1952,6 +1952,8 @@ if (!defined('_LAST_RELEASE_DETAILS'))
     define('_LAST_RELEASE_DETAILS', 'Détails des versions mineures disponibles');
 if (!defined('_CHOOSE_VERSION_TO_UPDATE'))
     define('_CHOOSE_VERSION_TO_UPDATE', 'Choisissez la version');
+if (!defined('_DOWNLOAD_VERSION'))
+    define('_DOWNLOAD_VERSION', 'Télécharger la version');
 if (!defined('_UPDATE_DEPLOY'))
     define('_UPDATE_DEPLOY', 'Déploiement');
 if (!defined('_UPDATE_DEPLOY_INFOS'))
