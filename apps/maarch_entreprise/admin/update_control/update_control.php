@@ -27,7 +27,7 @@ if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
 
 $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
                . 'update_control&admin=update_control';
-$pageLabel = _UPDATE_CONTROL;
+$pageLabel = _ADMIN_UPDATE_CONTROL;
 $pageId = 'update_control';
 $level = '';
 if (isset($_REQUEST['level'])
@@ -91,6 +91,7 @@ foreach ($tags as $key => $value) {
 }
 //var_dump($allCurrentTags);
 ?>
+<h1><?php echo _ADMIN_UPDATE_CONTROL;?></h1>
 <br/>
 <br/>
 <br/>
@@ -128,7 +129,7 @@ foreach ($tags as $key => $value) {
             if (count($tags)>0) {
                 ?>
                 <select id="version" id="name">
-                    <option value="default"><?php echo _SELECT_A_VERSION;?></option>
+                    <!--option value="default"><?php echo _SELECT_A_VERSION;?></option-->
                     <?php
                     for ($i=0;$i<count($allCurrentTags);$i++) {
                         if ($allCurrentTags[$i]['enabled']) {
@@ -187,7 +188,7 @@ foreach ($tags as $key => $value) {
         <td>
             <?php
             if ($isAnyAvailableVersion) {
-                echo _NEW_MAJOR_VERSION_AVAILABLE . ':';
+                echo '<b>' . _NEW_MAJOR_VERSION_AVAILABLE . '</b>:';
                 for ($j=0;$j<count($allNextTags);$j++) {
                     echo $allNextTags[$j] . '<br />';
                 }
