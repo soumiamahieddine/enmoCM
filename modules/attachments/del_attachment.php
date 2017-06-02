@@ -1,22 +1,12 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-/*
-*   Copyright 2008-2015 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+* @brief   del_attachment
+* @author  dev <dev@maarch.org>
+* @ingroup attachments
 */
 
 require_once "core/class/class_security.php";
@@ -36,50 +26,50 @@ $db = new Database();
 $info_doc = $ac->getAttachmentInfos($_REQUEST['id']);
 
 if ($_REQUEST['relation'] == 1) {
-    $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']) );
-	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
-	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
-	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
-	$document_relation = $document->relation;
-	$attach_type = $_SESSION['attachment_types'][$document->attachment_type];
-	if($document_relation == 1){
-		$target_table = "res_attachments";
-		$document_id = $document->res_id;
-		$is_version = 0;
+    $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($_REQUEST['id']));
+    $pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
+    if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
+    $document = $ac->getCorrespondingDocument($_REQUEST['id']);
+    $document_relation = $document->relation;
+    $attach_type = $_SESSION['attachment_types'][$document->attachment_type];
+    if ($document_relation == 1) {
+        $target_table = "res_attachments";
+        $document_id = $document->res_id;
+        $is_version = 0;
 
-	}else{
-		$target_table = "res_version_attachments";
-		$document_id = $document->res_id_version;
-		$is_version = 1;
-	}
+    } else {
+        $target_table = "res_version_attachments";
+        $document_id = $document->res_id_version;
+        $is_version = 1;
+    }
 
-	if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
-	
+    if (isset($document_id) && $document_id != 0) $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+    
 } else {
-    $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']) );
+    $stmt = $db->query("SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']));
     $res=$stmt->fetchObject();
-    $stmt = $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master) );
+    $stmt = $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master));
     $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($res->attachment_id_master));
-	
-	$pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
-	if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
-	$document = $ac->getCorrespondingDocument($_REQUEST['id']);
-	$document_id = $document->res_id;
-	$document_relation = $document->relation;
-	$attach_type = $_SESSION['attachment_types'][$document->attachment_type];
-	
-	if($document_relation == 1){
-		$target_table = "res_attachments";
-		$document_id = $document->res_id;
+    
+    $pdf_id = $ac->getCorrespondingPdf($_REQUEST['id']);
+    if (isset($pdf_id) && $pdf_id != 0) $stmt = $db->query("UPDATE " . RES_ATTACHMENTS_TABLE . " SET status = 'DEL' WHERE res_id = ?", array($pdf_id));
+    $document = $ac->getCorrespondingDocument($_REQUEST['id']);
+    $document_id = $document->res_id;
+    $document_relation = $document->relation;
+    $attach_type = $_SESSION['attachment_types'][$document->attachment_type];
+    
+    if ($document_relation == 1) {
+        $target_table = "res_attachments";
+        $document_id = $document->res_id;
 
-	}else{
-		$target_table = "res_version_attachments";
-		$document_id = $document->res_id_version;
-	}
+    } else {
+        $target_table = "res_version_attachments";
+        $document_id = $document->res_id_version;
+    }
 
-	if (isset($document_id) && $document_id != 0){
-		$stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
-	} 
+    if (isset($document_id) && $document_id != 0) {
+        $stmt = $db->query("UPDATE " . $target_table . " SET status = 'A_TRA' WHERE res_id = ?", array($document_id));
+    } 
 }
 
 if ($_SESSION['history']['attachdel'] == "true") {
@@ -110,13 +100,13 @@ if ($_SESSION['history']['attachdel'] == "true") {
     );
 }
 
-if(!empty($_REQUEST['rest'])) {
-	echo '{"status" : "ok"}';
-	exit;
+if (!empty($_REQUEST['rest'])) {
+    echo '{"status" : "ok"}';
+    exit;
 }
 
 if ($_REQUEST['relation'] == 1) {
-    $stmt = $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = ?",array($_REQUEST['id']));
+    $stmt = $db->query("SELECT res_id_master FROM " . RES_ATTACHMENTS_TABLE . " WHERE res_id = ?", array($_REQUEST['id']));
 } else {
     $stmt = $db->query("SELECT res_id_master FROM res_version_attachments WHERE res_id = ?", array($_REQUEST['id']));
 }
@@ -124,14 +114,14 @@ if ($_REQUEST['relation'] == 1) {
 $res = $stmt->fetchObject();
 $resIdMaster = $res->res_id_master;
 $query = "SELECT title FROM res_view_attachments WHERE status NOT IN ('DEL','OBS','TMP') and res_id_master = ?";
-    if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
-        $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'signed_response' and attachment_type <> 'converted_pdf' and attachment_type <> 'outgoing_mail' and attachment_type <> 'print_folder' and attachment_type <> 'aihp')";
-    } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){
-        $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail' or attachment_type = 'signed_response' or attachment_type = 'aihp')";
-    }
-	else{
-		$query .= " and attachment_type NOT IN ('converted_pdf','print_folder')";
-	}
+if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
+    $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'signed_response' and attachment_type <> 'converted_pdf' and attachment_type <> 'outgoing_mail' and attachment_type <> 'print_folder' and attachment_type <> 'aihp')";
+} else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response') {
+    $query .= " and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed' or attachment_type = 'outgoing_mail' or attachment_type = 'signed_response' or attachment_type = 'aihp')";
+
+} else {
+    $query .= " and attachment_type NOT IN ('converted_pdf','print_folder')";
+}
 $stmt = $db->query($query, array($resIdMaster));
 if ($stmt->rowCount() > 0) {
     $new_nb_attach = $stmt->rowCount();
@@ -140,49 +130,19 @@ if ($stmt->rowCount() > 0) {
 }
 ?>
 <script type="text/javascript">
-	if (window.parent.top.document.getElementById('cur_resId')){
-		function get_num_rep(res_id){
-			trig_elements = window.parent.top.document.getElementsByClassName('trig');
-			for (i=0; i<trig_elements.length; i++){
-				var id = trig_elements[i].id;
-				var splitted_id = id.split("_");
-				if (splitted_id.length == 3 && splitted_id[0] == 'ans' && splitted_id[2] == res_id) return splitted_id[1];
-			}
-			return 0;
-		}
-		
-		var res_id_doc = <?php functions::xecho($_REQUEST['id']); ?>;
-		var num_rep = get_num_rep(res_id_doc);
-		var document_type = '<?php functions::xecho($info_doc['attachment_type']); ?>';
-		var is_version = '<?php functions::xecho($is_version); ?>';
 
-		if(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc)) {
-			var tab = window.parent.top.document.getElementById('tabricatorRight');
-			
-			if(document_type == 'signed_response'){
-				window.parent.top.document.getElementById('viewframevalidRep'+num_rep+'_'+res_id_doc).src = '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master=<?php echo $resIdMaster; ?>&id=<?php echo $document_id; ?>';
-
-				window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc).id = 'content_'+num_rep+'_<?php echo $document_id; ?>';
-
-				window.parent.top.document.getElementById('viewframevalidRep'+num_rep+'_'+res_id_doc).id = 'viewframevalidRep'+num_rep+'_<?php echo $document_id; ?>';
-
-			}else{
-				tab.removeChild(window.parent.top.document.getElementById('content_'+num_rep+'_'+res_id_doc));
-			}
-			
-		}
-
-	}
-	
-	var eleframe1 =  parent.document.getElementsByName('list_attach');
-        console.log(eleframe1);
-	var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
-	<?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
-		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';?>";
-	<?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response'){ ?>
-		eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';?>";
-	<?php } else { ?>
-		parent.document.getElementById('list_attach').src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
-	<?php } ?>
+    var eleframe1 =  parent.document.getElementsByName('list_attach');
+    if(eleframe1[0] === undefined){
+        eleframe1 =  parent.document.getElementsByName('responses_iframe');
+    }
+    console.log(eleframe1);
+    var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
+    <?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
+        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';?>";
+    <?php } else if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response') { ?>
+        eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response';?>";
+    <?php } else { ?>
+        parent.document.getElementById('list_attach').src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&template_selected=documents_list_attachments_simple&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder';?>";
+    <?php } ?>
 
 </script>
