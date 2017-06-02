@@ -1906,3 +1906,63 @@ if (!defined('_UPDATED_EMAIL_SIGNATURE'))
 if (!defined('_DELETED_EMAIL_SIGNATURE'))
     define('_DELETED_EMAIL_SIGNATURE', 'Signature de mail supprimée');
 /***** Profile *****/
+
+/**** admin update control ****/
+if (!defined('_ADMIN_UPDATE_CONTROL'))
+    define('_ADMIN_UPDATE_CONTROL', 'Vérification mise à jour');
+if (!defined('_ADMIN_UPDATE_CONTROL_DESC'))
+    define('_ADMIN_UPDATE_CONTROL_DESC', 'Vérification mise à jour');
+if (!defined('_YOUR_VERSION'))
+    define('_YOUR_VERSION', 'Votre version');
+if (!defined('_AVAILABLE_VERSION_TO_UPDATE'))
+    define('_AVAILABLE_VERSION_TO_UPDATE', 'Versions disponibles');
+if (!defined('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT'))
+    define('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT', 'Cliquez ici pour commencer la procédure de mise à jour');
+if (!defined('_NEW_MAJOR_VERSION_AVAILABLE'))
+    define('_NEW_MAJOR_VERSION_AVAILABLE', 'Nouvelle version majeure disponible');
+if (!defined('_BRANCH_VERSION'))
+    define('_BRANCH_VERSION', 'Branche');
+if (!defined('_TAG_VERSION'))
+    define('_TAG_VERSION', 'Tag');
+if (!defined('_CONNECT_YOU_IN_SUPERADMIN'))
+    define('_CONNECT_YOU_IN_SUPERADMIN', 'Vous devez être connecté en superadmin pour accéder à la procédure de mise à jour');
+if (!defined('_UPDATE_WELCOME'))
+    define('_UPDATE_WELCOME', 'Mise à jour');
+if (!defined('_UPDATE_WELCOME_INSTALL'))
+    define('_UPDATE_WELCOME_INSTALL', 'Procédure de mise à jour');
+if (!defined('_UPDATE_DESC_INSTALL'))
+    define('_UPDATE_DESC_INSTALL', 'Procédure de mise à jour de MaarchCourrier (versions mineures uniquement)');
+if (!defined('_UPDATE_BACKUP'))
+    define('_UPDATE_BACKUP', 'Sauvegarde');
+if (!defined('_UPDATE_BACKUP_INFOS'))
+    define('_UPDATE_BACKUP_INFOS', 'Sauvegarde de votre version actuelle');
+if (!defined('_UPDATE_BACKUP_DETAILS'))
+    define('_UPDATE_BACKUP_DETAILS', 'Procédure de sauvegarde de votre version actuelle afin de pouvoir la restaurer si besoin');
+if (!defined('_ACTUAL_VERSION_PATH'))
+    define('_ACTUAL_VERSION_PATH', 'Chemin de votre installation');
+if (!defined('_UPDATE_BACKUP_PATH'))
+    define('_UPDATE_BACKUP_PATH', 'Chemin de votre sauvegarde');
+if (!defined('_BACKUP_ACTUAL_VERSION'))
+    define('_BACKUP_ACTUAL_VERSION', 'Sauvegarder votre version');
+if (!defined('_UPDATE_DOWNLOAD'))
+    define('_UPDATE_DOWNLOAD', 'Téléchargement');
+if (!defined('_LAST_RELEASE_INFOS'))
+    define('_LAST_RELEASE_INFOS', 'Téléchargement de la dernière version mineure');
+if (!defined('_LAST_RELEASE_DETAILS'))
+    define('_LAST_RELEASE_DETAILS', 'Détails des versions mineures disponibles');
+if (!defined('_CHOOSE_VERSION_TO_UPDATE'))
+    define('_CHOOSE_VERSION_TO_UPDATE', 'Choisissez la version');
+if (!defined('_DOWNLOAD_VERSION'))
+    define('_DOWNLOAD_VERSION', 'Télécharger la version');
+if (!defined('_UPDATE_DEPLOY'))
+    define('_UPDATE_DEPLOY', 'Déploiement');
+if (!defined('_UPDATE_DEPLOY_INFOS'))
+    define('_UPDATE_DEPLOY_INFOS', 'Déploiement de la version téléchargée');
+if (!defined('_UPDATE_DEPLOY_DETAILS'))
+    define('_UPDATE_DEPLOY_DETAILS', 'Déploiement de la version téléchargée');
+if (!defined('_DEPLOY_VERSION'))
+    define('_DEPLOY_VERSION', 'Déployer la version');
+if (!defined('_UPDATE_END'))
+    define('_UPDATE_END', 'Mise à jour réussi');
+if (!defined('_UPDATE_DESC_END'))
+    define('_UPDATE_DESC_END', 'Mise à jour réussi');

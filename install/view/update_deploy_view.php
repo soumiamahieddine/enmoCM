@@ -15,6 +15,11 @@
 * @version $Revision$
 * @ingroup install
 */
+if ($_SESSION['user']['UserId'] <> 'superadmin') {
+    header('location: ' . $_SESSION['config']['businessappurl']
+        . 'index.php?page=update_control&admin=update_control');
+    exit();
+}
 ?>
 <script>
     function launchProcess(
@@ -38,13 +43,13 @@
     <div class="blockWrapper">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <?php echo _LAST_RELEASE_INFOS;?>
+                <?php echo _UPDATE_DEPLOY_INFOS;?>
             </h2>
         </div>
         <div class="contentBlock" id="database">
             <p>
                 <h6>
-                    <?php echo _LAST_RELEASE_DETAILS;?>
+                    <?php echo _UPDATE_DEPLOY_DETAILS;?>
                 </h6>
                 <form>
                     <table>
