@@ -45,11 +45,12 @@ if (empty($finalVersionPath)) {
     exit;
 }
 
+$excludeExt = ['xml','sh'];
 if (!$Class_Install->copy_dir(
         $finalVersionPath . DIRECTORY_SEPARATOR,
         //'/opt/maarch/test' . DIRECTORY_SEPARATOR
         $_SESSION['config']['corepath'],
-        'xml'
+        $excludeExt
     )
 ) {
     $return['status'] = 0;

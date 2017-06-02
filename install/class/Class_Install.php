@@ -2161,9 +2161,11 @@ class Install extends functions
             // Si oui, on l'ouvre
             if ($dh = opendir($dir2copy))
             {
+                $copyIt = true;
                 // On liste les dossiers et fichiers de $dir2copy
                 while (($file = readdir($dh)) !== false)
                 {
+                    $copyIt = true;
                     // Si le dossier dans lequel on veut coller n'existe pas, on le cree
                     if (!is_dir($dir_paste)) {
                         mkdir ($dir_paste, 0777);
@@ -2172,7 +2174,15 @@ class Install extends functions
                     if (is_dir($dir2copy.$file) && $file != '..' && $file != '.') {
                         $this->copy_dir($dir2copy.$file.'/' , $dir_paste.$file.'/', $excludeExt);  
                     } elseif ($file != '..' && $file != '.') {
-                        if (strtolower($excludeExt) <> strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                        if (count($excludeExt>0) && is_array($excludeExt)) {
+                            $copyIt = true;
+                            foreach ($excludeExt as $key => $value) {
+                                if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                                    $copyIt = false;
+                                } 
+                            }
+                        }
+                        if ($copyIt) {
                             copy($dir2copy.$file, $dir_paste.$file);
                         }
                     }

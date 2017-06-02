@@ -375,4 +375,14 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+ <SERVICE>
+   <id>admin_update_control</id>
+   <name>_ADMIN_UPDATE_CONTROL</name>
+   <comment>_ADMIN_UPDATE_CONTROL_DESC</comment>
+   <servicepage>index.php?page=update_control&amp;admin=update_control</servicepage>
+   <servicetype>admin</servicetype>
+   <system_service>true</system_service>
+   <style>fa fa-thumbs-o-up</style>
+   <enabled>true</enabled>
+ </SERVICE>
 </root>

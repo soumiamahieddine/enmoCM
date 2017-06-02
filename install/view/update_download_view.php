@@ -15,7 +15,11 @@
 * @version $Revision$
 * @ingroup install
 */
-
+if ($_SESSION['user']['UserId'] <> 'superadmin') {
+    header('location: ' . $_SESSION['config']['businessappurl']
+        . 'index.php?page=update_control&admin=update_control');
+    exit();
+}
 
 //retrives tags
 $client = new \Gitlab\Client('https://labs.maarch.org/api/v4/');
@@ -33,6 +37,42 @@ $query = "select param_value_int, param_value_string from parameters where id = 
 $stmt = $db->query($query, []);
 $currentVersion = $stmt->fetchObject();
 // var_dump($currentVersion);
+$currentVersionNumeric = preg_replace("/[^0-9,]/", "", $currentVersion->param_value_int);
+if (!empty($currentVersion->param_value_string)) {
+    $currentVersionTagNumeric = preg_replace("/[^0-9,]/", "", $currentVersion->param_value_string);
+}
+
+$allTagsNumeric = [];
+$allCurrentTags = [];
+$allNextTags = [];
+$cptCurrentTags = 0;
+$isAnyAvailableTag = false;
+$isAnyAvailableVersion = false;
+
+foreach ($tags as $key => $value) {
+    //echo $tags[$key]['name'] . ' ' . preg_replace("/[^0-9,]/", "", $tags[$key]['name']) . '<br />';
+    $tagNumeric = preg_replace("/[^0-9,]/", "", $tags[$key]['name']);
+    $allTagsNumeric[] = $tagNumeric;
+    $pos = strpos($tagNumeric, $currentVersionNumeric);
+    if ($pos === false) {
+        //echo 'tag not in currentVersion:';
+        $isAnyAvailableVersion = true;
+        $allNextTags[] = $tags[$key]['name'];
+    } else {
+        //echo 'tag in currentVersion:';
+        $allCurrentTags[$cptCurrentTags] = [];
+        $allCurrentTags[$cptCurrentTags]['name'] = $tags[$key]['name'];
+        $allCurrentTags[$cptCurrentTags]['numeric'] = $tagNumeric;
+        if ($tagNumeric > $currentVersionTagNumeric) {
+            $allCurrentTags[$cptCurrentTags]['enabled'] = true;
+            $isAnyAvailableTag = true;
+        } else {
+            $allCurrentTags[$cptCurrentTags]['enabled'] = false;
+        }
+        $cptCurrentTags++;
+    }
+    //echo $tagNumeric . '<br />';
+}
 
 ?>
 <script>
@@ -102,32 +142,32 @@ $currentVersion = $stmt->fetchObject();
                                 if (count($tags)>0) {
                                     ?>
                                     <select id="version" id="name">
-                                        <option value="default">Select a version</option>
+                                        <!--option value="default"><?php echo _SELECT_A_VERSION;?></option-->
                                         <?php
-                                        foreach ($tags as $key => $value) {
-                                            echo $tags[$key]['name'] . '<br />';
-                                            echo '<option ';
-                                            echo 'value="' . $tags[$key]['name'] . '"';
-                                            echo '>';
-                                                echo $tags[$key]['name'];
-                                            echo '</option>';
+                                        for ($i=0;$i<count($allCurrentTags);$i++) {
+                                            if ($allCurrentTags[$i]['enabled']) {
+                                                echo '<option ';
+                                                echo 'value="' . $allCurrentTags[$i]['name'] . '"';
+                                                echo '>';
+                                                    echo $allCurrentTags[$i]['name'];
+                                                echo '</option>';
+                                            } else {
+                                                echo '<option ';
+                                                echo 'value="' . $allCurrentTags[$i]['name'] . '"';
+                                                echo ' disabled>';
+                                                    echo $allCurrentTags[$i]['name'];
+                                                echo '</option>';
+                                            }
                                         }
                                         ?>
                                     </select>
                                     <?php
                                 } else {
-                                    ?>
-                                    No version available for update
-                                    <?php
+                                    echo _NO_AVAILABLE_TAG_TO_UPDATE . '<br />';
                                 }
                                 ?>
                                 
                             </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td></td>
@@ -138,6 +178,39 @@ $currentVersion = $stmt->fetchObject();
                                   name="Submit" id="ajaxReturn_button"  value="<?php echo _DOWNLOAD_VERSION;?>"
                                   onClick="$(this).css('display', 'none');launchProcess($('#version').val());"
                                 />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <?php
+                                if (!$isAnyAvailableTag) {
+                                    echo _NO_AVAILABLE_TAG_TO_UPDATE . '<br />';
+                                }?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <?php
+                                if ($isAnyAvailableVersion) {
+                                    echo '<b>' . _NEW_MAJOR_VERSION_AVAILABLE . '</b>:';
+                                    for ($j=0;$j<count($allNextTags);$j++) {
+                                        echo $allNextTags[$j] . '<br />';
+                                    }
+                                }?>
                             </td>
                         </tr>
                     </table>
