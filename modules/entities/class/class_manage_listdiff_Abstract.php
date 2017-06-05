@@ -123,12 +123,12 @@ abstract class diffusion_list_Abstract extends functions
                 array_push(
                     $listmodel[$role_id]['users'],
                     array(
-                        'user_id' => functions::show_string($user->item_id),
-                        'lastname' => functions::show_string($user->lastname),
-                        'firstname' => functions::show_string($user->firstname),
-                        'entity_id' => functions::show_string($user->entity_id),
-                        'entity_label' => functions::show_string($user->entity_label),
-                        'visible' => $user->visible,
+                        'user_id'         => functions::show_string($user->item_id),
+                        'lastname'        => functions::show_string($user->lastname),
+                        'firstname'       => functions::show_string($user->firstname),
+                        'entity_id'       => functions::show_string($user->entity_id),
+                        'entity_label'    => functions::show_string($user->entity_label),
+                        'visible'         => $user->visible,
                         'process_comment' => $user->process_comment
                     )
                 );
@@ -156,9 +156,9 @@ abstract class diffusion_list_Abstract extends functions
                 array_push(
                     $listmodel[$role_id]['entities'],
                     array(
-                        'entity_id' => functions::show_string($entity->item_id),
+                        'entity_id'    => functions::show_string($entity->item_id),
                         'entity_label' => functions::show_string($entity->entity_label),
-                        'visible' => $entity->visible
+                        'visible'      => $entity->visible
                     )
                 );
             }
@@ -407,13 +407,13 @@ abstract class diffusion_list_Abstract extends functions
             
             $cptUsers = count($diffList[$role_id]['users']);
             for ($i=0;$i<$cptUsers;$i++) {
-                $userFound = false;
-                $userId = trim($diffList[$role_id]['users'][$i]['user_id']);
+                $userFound      = false;
+                $userId         = trim($diffList[$role_id]['users'][$i]['user_id']);
                 $processComment = trim($diffList[$role_id]['users'][$i]['process_comment']);
-                $processDate = trim($diffList[$role_id]['users'][$i]['process_date']);
-                $visible = $diffList[$role_id]['users'][$i]['visible'];
-                $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
-                $cptOldUsers = count($oldListInst[$role_id]['users']);
+                $processDate    = trim($diffList[$role_id]['users'][$i]['process_date']);
+                $visible        = $diffList[$role_id]['users'][$i]['visible'];
+                $viewed         = (integer)$diffList[$role_id]['users'][$i]['viewed'];
+                $cptOldUsers    = count($oldListInst[$role_id]['users']);
                 for ($h=0;$h<$cptOldUsers;$h++) {
                     if ($userId == $oldListInst[$role_id]['users'][$h]['user_id']) {
                         $userFound = true;
@@ -656,15 +656,15 @@ abstract class diffusion_list_Abstract extends functions
             array_push(
                 $listinstance[$role_id]['users'],
                 array(
-                    'user_id' => functions::show_string($res->item_id),
-                    'lastname' => functions::show_string($res->lastname),
-                    'firstname' => functions::show_string($res->firstname),
-                    'entity_id' => functions::show_string($res->entity_id),
-                    'entity_label' => functions::show_string($res->entity_label),
-                    'visible' => functions::show_string($res->visible),
-                    'viewed' => functions::show_string($res->viewed),
-                    'difflist_type' => functions::show_string($res->difflist_type),
-                    'process_date' => functions::show_string($res->process_date),
+                    'user_id'         => functions::show_string($res->item_id),
+                    'lastname'        => functions::show_string($res->lastname),
+                    'firstname'       => functions::show_string($res->firstname),
+                    'entity_id'       => functions::show_string($res->entity_id),
+                    'entity_label'    => functions::show_string($res->entity_label),
+                    'visible'         => functions::show_string($res->visible),
+                    'viewed'          => functions::show_string($res->viewed),
+                    'difflist_type'   => functions::show_string($res->difflist_type),
+                    'process_date'    => functions::show_string($res->process_date),
                     'process_comment' => functions::show_string($res->process_comment)
                 )
             );
@@ -690,13 +690,13 @@ abstract class diffusion_list_Abstract extends functions
             array_push(
                 $listinstance[$role_id]['entities'],
                 array(
-                    'entity_id' => functions::show_string($res->item_id),
-                    'entity_label' => functions::show_string($res->entity_label),
-                    'visible' => functions::show_string($res->visible),
-                    'viewed' => functions::show_string($res->viewed),
-                    'difflist_type' => functions::show_string($res->difflist_type),
-					 'process_date' => functions::show_string($res->process_date),
-                    'process_comment' => functions::show_string($res->process_comment)
+                     'entity_id'       => functions::show_string($res->item_id),
+                     'entity_label'    => functions::show_string($res->entity_label),
+                     'visible'         => functions::show_string($res->visible),
+                     'viewed'          => functions::show_string($res->viewed),
+                     'difflist_type'   => functions::show_string($res->difflist_type),
+                     'process_date'    => functions::show_string($res->process_date),
+                     'process_comment' => functions::show_string($res->process_comment)
                 )
             );
         }
@@ -737,29 +737,6 @@ abstract class diffusion_list_Abstract extends functions
     public function list_difflist_roles() 
     {
         $roles = array();
-        
-        require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
-        
-        /*$query = 
-            "SELECT distinct ug.group_id, ug.group_desc "
-            . " FROM " . USERGROUPS_TABLE . " ug "
-            . " LEFT JOIN " . USERGROUP_CONTENT_TABLE . " ugc "
-                . " ON ug.group_id = ugc.group_id "
-            . " WHERE ug.enabled = 'Y'";
-        
-        if($user_id)
-            $query .= " AND ugc.user_id = ?";
-        
-        $query .= " GROUP BY ug.group_id, ug.group_desc";
-        $query .= " ORDER BY ug.group_desc ASC";
-        
-        $db = new Database();
-        
-        if ($user_id) {
-            $stmt = $db->query($query,array($user_id));
-        } else {
-            $stmt = $db->query($query);
-        }*/
 
         //load roles difflist
         if (file_exists(
@@ -779,27 +756,113 @@ abstract class diffusion_list_Abstract extends functions
                   . DIRECTORY_SEPARATOR . 'roles.xml';
         }
 
-
         $xmlroles = simplexml_load_file($path);
 
-        foreach ($xmlroles->ROLES as $key => $value) {
-            foreach ($value as $key2 => $role) {
+        foreach ($xmlroles->ROLES as $value) {
+            foreach ($value as $role) {
                 $id = (string)$role->id;
                 $label = (string)$role->label;
                 if (!empty($label) && defined($label) && constant($label) <> NULL) {
-                $label = constant($label);
-            }
+                    $label = constant($label);
+                }
                 $roles[$id] = $label;
             }
         }
-
-		
-       /* while($usergroup = $stmt->fetchObject()) {
-            $group_id = $usergroup->group_id;
-            $roles[$group_id] = $usergroup->group_desc;
-        }*/
         
         return $roles;
+    }
+
+    public function list_difflist_roles_to_keep($resId, $collId, $objectType, $newDiffList) 
+    {
+        $roles = array();
+
+        //load roles difflist
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'roles.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'roles.xml';
+        } else {
+            $path = 'modules' . DIRECTORY_SEPARATOR . 'entities'
+                  . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'roles.xml';
+        }
+
+        $xmlroles = simplexml_load_file($path);
+
+        foreach ($xmlroles->ROLES as $value) {
+            foreach ($value as $role) {
+                $id          = (string)$role->id;
+                $keep_string = (string)$role->keep_in_diffusion_list;
+                $keep        = $keep_string === 'true' ? true: false;
+                $roles[$id]  = $keep;
+            }
+        }
+
+        $aCurrentDiffList = diffusion_list::get_listinstance($resId, false, $collId, $objectType);
+        if(!empty($aCurrentDiffList)){
+            // On regarde les roles a conserver
+            foreach ($aCurrentDiffList as $roleId => $listDiffItemId) {
+                if($roles[$roleId]){
+                    $aRolesToKeep[$roleId] = $listDiffItemId;
+                }
+            }
+
+            if(!empty($aRolesToKeep['dest']['users'][0]['user_id']) && !empty($newDiffList['dest']['users'][0]['user_id']) ){
+                if($newDiffList['dest']['users'][0]['user_id'] != $aRolesToKeep['dest']['users'][0]['user_id']) {
+                    // On passe le dest en copie car il ne peut y avoir qu'un dest.
+                    $aRolesToKeep['copy']['users'][] = $aRolesToKeep['dest']['users'][0];
+                }
+                unset($aRolesToKeep['dest']);
+            }
+
+            // Si c'est parametre, on reinjecte les anciens roles dans la nouvelle liste de diffusion
+            if(!empty($aRolesToKeep)){
+                foreach ($aRolesToKeep as $roleId => $listDiffItemId) {
+                    // On injecte le user s il n'existe pas encore
+                    if(isset($listDiffItemId['users'])){
+                        if(!isset($newDiffList[$roleId]['users']) && isset($listDiffItemId['users'])){
+                            $newDiffList[$roleId]['users'] = [];
+                        }
+                        foreach ($listDiffItemId['users'] as $value) {
+                            if(!diffusion_list::in_array_r($value['user_id'], $newDiffList[$roleId]['users'])){
+                                $newDiffList[$roleId]['users'][] = $value;
+                            }
+                        }
+                    }
+
+                    // On injecte l entite si elle n'existe pas encore
+                    if(isset($listDiffItemId['entities'])){
+                        if(!isset($newDiffList[$roleId]['entities']) && isset($listDiffItemId['entities'])){
+                            $newDiffList[$roleId]['entities'] = [];
+                        }
+                        foreach ($listDiffItemId['entities'] as $value) {
+                            if(!diffusion_list::in_array_r($value['entity_id'], $newDiffList[$roleId]['entities'])){
+                                $newDiffList[$roleId]['entities'][] = $value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $newDiffList;
+    }
+
+    public function in_array_r($needle, $haystack, $strict = false) {
+        foreach ($haystack as $item) {
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && diffusion_list::in_array_r($needle, $item, $strict))) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     #**************************************************************************
@@ -811,7 +874,7 @@ abstract class diffusion_list_Abstract extends functions
     {
         $db = new Database();
         $stmt = $db->query('select * from ' . ENT_DIFFLIST_TYPES);
-        //$this->show();
+
         $types = array();
                         
         while ($type = $stmt->fetchObject()) { 

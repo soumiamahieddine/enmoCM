@@ -1,24 +1,26 @@
 <?php
+
 /**
-* File : change_doctype.php
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-* Script called by an ajax object to process the document type change during
-* indexing (index_mlb.php)
-*
-* @package  maarch
-* @version 1
-* @since 10/2005
-* @license GPL v3
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Cyril Vazquez  <dev@maarch.org>
 */
+
+/**
+* File : load_listinstance.php
+*
+* @license GPL v3
+* @author  dev <dev@maarch.org>
+*/
+
 require_once 'modules/entities/class/class_manage_listdiff.php';
 
-$db = new Database();
-$core = new core_tools();
+$db       = new Database();
+$core     = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
-$origin = $_REQUEST['origin'];
+$origin   = $_REQUEST['origin'];
 $category = $_REQUEST['category'];
 
 if (empty($_REQUEST['origin'])) {
@@ -59,7 +61,6 @@ $specific_role = $_REQUEST['specific_role'];
 
 $onlyCC = false;
 
-
 if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process') 
     || ($core->test_service('add_copy_in_indexing_validation', 'entities', false) && ($_REQUEST['origin'] == 'indexing' || $_REQUEST['origin'] == 'redirect')) ){
     $onlyCC = true;
@@ -70,7 +71,7 @@ if( ($core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST[
 // }
 
 $objectType = $_REQUEST['objectType'];
-$objectId = $_REQUEST['objectId'];
+$objectId   = $_REQUEST['objectId'];
 
 // Get listmodel_parameters
 $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
@@ -85,8 +86,8 @@ if ($objectId <> '') {
     if ($objectType == 'entity_id') {
         
         $query = "SELECT entity_label FROM entities WHERE entity_id = ?";
-        $stmt = $db->query($query,array($objectId));
-        $res = $stmt->fetchObject();
+        $stmt  = $db->query($query, array($objectId));
+        $res   = $stmt->fetchObject();
         if ($res->entity_label <> '') {
             $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
         }
@@ -95,21 +96,17 @@ if ($objectId <> '') {
 
 if(($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin]['diff_list'])){
     $diff_list = new diffusion_list();
-    $res_id = $_SESSION['doc_id'];
+    $res_id    = $_SESSION['doc_id'];
     $_SESSION[$origin]['diff_list'] = $diff_list->get_listinstance($res_id);
-
 }
 
 $content = '';
-if (! $onlyCC) {
-    if (isset($_SESSION['validStep']) && $_SESSION['validStep'] == 'ok') {
-        $content .= "";
-    } else {
-        //$content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
-    }
-}
+
 if(!empty($_SESSION[$origin]['diff_list'])) {
-    $roles = $diffList->list_difflist_roles();
+
+    $_SESSION[$origin]['diff_list'] = $diffList->list_difflist_roles_to_keep($_SESSION['doc_id'], $_REQUEST['collId'], $objectType, $_SESSION[$origin]['diff_list']);
+
+    $roles    = $diffList->list_difflist_roles();
     $difflist = $_SESSION[$origin]['diff_list'];
     
     # Get content from buffer of difflist_display 
@@ -129,7 +126,7 @@ if ($onlyCC) {
     $arg .= '&only_cc';
 }
 
-if($origin != 'process' && $origin != 'details'){
+if ($origin != 'process' && $origin != 'details') {
     $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
     $content_standard .= '<span class="button" >';
     $content_standard .= '<small><input type="button" style="margin-top:0px;" class="button" title="'.$labelButton.'" value="'.$labelButton.'" '
@@ -144,9 +141,9 @@ if($origin != 'process' && $origin != 'details'){
     $content_standard .= '</span></center>';
     $full_content = $content_standard . $content;
     
-}else if($origin == 'details'){
+} else if ($origin == 'details') {
     $full_content =$content;
-}else{
+} else {
     $content_standard .= '<div class="block" style="margin-top:-2px;">';
     $content_standard .= '<h2 style="text-align:center;">' . _DIFF_LIST . '</h2>';
     $content_standard .= '<div style="text-align:center;">';
@@ -160,6 +157,7 @@ if($origin != 'process' && $origin != 'details'){
 
     $full_content = $content_standard . $content. '</div>';
 }
+
 echo "{status : 0, div_content : '" . addslashes($full_content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();
