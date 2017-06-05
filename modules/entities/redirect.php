@@ -64,10 +64,9 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
             	$values_str .= $values[$i].', ';
 
 		    } else if (_ID_TO_DISPLAY == 'chrono_number'){
-				$values_str .= $values[$i].', ';
-				$chrono_number = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
-				$chrono_number_str .= $chrono_number.', ';
-				$values_str_chrn .= $chrono_number_str;
+                $values_str      .= $values[$i].', ';
+                $chrono_number   = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
+                $values_str_chrn .= $chrono_number.', ';
 		    }
         }
     }else{ 
@@ -81,8 +80,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
 		    	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
 
 		         $chrono_number = $cr7->get_chrono_number($_SESSION['stockCheckbox'][$i], 'res_view_letterbox');
-		         $chrono_number_str .= $chrono_number.', ';
-		         $values_str_chrn .= $chrono_number_str;
+		         $values_str_chrn .= $chrono_number.', ';
 		    }
         }
     }
@@ -104,8 +102,8 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
     {
       
         $EntitiesIdExclusion = array();
-        $entities = $entity_ctrl->getAllEntities();
-        $countEntities = count($entities);
+        $entities            = $entity_ctrl->getAllEntities();
+        $countEntities       = count($entities);
 
         for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
             if (!is_integer(array_search($entities[$cptAllEnt]->__get('entity_id'), $servicesCompare))) {
@@ -113,7 +111,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
             }
         }
         
-        $allEntitiesTree= array();
+        $allEntitiesTree = array();
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
@@ -395,10 +393,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id,$table,$userIdTypist,$content_note,$coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id, $table, $userIdTypist, $content_note, $coll_id)
                 );
             }
-            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId,$res_id)); 
+            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId, $res_id)); 
+        }
+
+        // Si on redirige en masse plusieurs courriers, on récupère automatiquement les roles persistent
+        if(count($arr_id) > 1){
+            $new_difflist = $diffList->list_difflist_roles_to_keep($res_id, $coll_id, $new_difflist['difflist_type'], $new_difflist);
         }
         
         # If feature activated, put old dest in copy
@@ -407,7 +410,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $stmt = $db->query(
                 "select * "
                 . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$res_id)
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id, $res_id)
             );
 
             $old_dest = $stmt->fetchObject();
@@ -447,10 +450,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     array_push(
                         $new_difflist['copy']['users'], 
                         array(
-						'user_id' => $old_dest->item_id, 
-						'viewed' => (integer)$old_dest->viewed,
-						'visible' => 'Y',
-						'difflist_type' => $new_difflist['difflist_type']
+                        'user_id'       => $old_dest->item_id, 
+                        'viewed'        => (integer)$old_dest->viewed,
+                        'visible'       => 'Y',
+                        'difflist_type' => $new_difflist['difflist_type']
                         )
                     );
                 }
