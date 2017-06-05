@@ -831,7 +831,7 @@ abstract class diffusion_list_Abstract extends functions
                             $newDiffList[$roleId]['users'] = [];
                         }
                         foreach ($listDiffItemId['users'] as $value) {
-                            if(!diffusion_list::in_array_r($value['user_id'], $newDiffList[$roleId]['users'])){
+                            if(!diffusion_list::in_array_r($value['user_id'], $newDiffList[$roleId]['users'], true)){
                                 $newDiffList[$roleId]['users'][] = $value;
                             }
                         }
@@ -843,7 +843,7 @@ abstract class diffusion_list_Abstract extends functions
                             $newDiffList[$roleId]['entities'] = [];
                         }
                         foreach ($listDiffItemId['entities'] as $value) {
-                            if(!diffusion_list::in_array_r($value['entity_id'], $newDiffList[$roleId]['entities'])){
+                            if(!diffusion_list::in_array_r($value['entity_id'], $newDiffList[$roleId]['entities'], true)){
                                 $newDiffList[$roleId]['entities'][] = $value;
                             }
                         }
