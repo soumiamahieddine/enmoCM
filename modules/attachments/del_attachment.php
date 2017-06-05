@@ -135,7 +135,6 @@ if ($stmt->rowCount() > 0) {
     if(eleframe1[0] === undefined){
         eleframe1 =  parent.document.getElementsByName('responses_iframe');
     }
-    console.log(eleframe1);
     var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
     <?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
         eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments';?>";
