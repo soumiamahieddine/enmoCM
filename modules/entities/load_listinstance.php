@@ -103,8 +103,16 @@ if(($specific_role <> null || $specific_role <> '') && empty($_SESSION[$origin][
 $content = '';
 
 if(!empty($_SESSION[$origin]['diff_list'])) {
-
-    $_SESSION[$origin]['diff_list'] = $diffList->list_difflist_roles_to_keep($_SESSION['doc_id'], $_REQUEST['collId'], $objectType, $_SESSION[$origin]['diff_list']);
+    // Si on redirige en masse plusieurs courriers, on ne récupère pas les roles persistent
+    if(empty($_SESSION['stockCheckbox']) || count($_SESSION['stockCheckbox']) == 1){
+        if(!empty($_SESSION['stockCheckbox']) && count($_SESSION['stockCheckbox']) == 1){
+            // Cas où on redirige en masse un courrier
+            $res_id = $_SESSION['stockCheckbox'][0];
+        } else {
+            $res_id = $_SESSION['doc_id'];
+        }
+        $_SESSION[$origin]['diff_list'] = $diffList->list_difflist_roles_to_keep($res_id, $_REQUEST['collId'], $objectType, $_SESSION[$origin]['diff_list']);
+    }
 
     $roles    = $diffList->list_difflist_roles();
     $difflist = $_SESSION[$origin]['diff_list'];
