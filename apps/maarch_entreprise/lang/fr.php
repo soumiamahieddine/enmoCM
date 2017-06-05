@@ -1829,7 +1829,7 @@ if (!defined("_CHOOSE_FINAL_DISPOSITION")) define("_CHOOSE_FINAL_DISPOSITION","C
 if (!defined("_DESTROY")) define("_DESTROY","Destruction");
 if (!defined("_KEEP")) define("_KEEP","Conservation");
 if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Règle de conservation");
-if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée de conservation");
+if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée d'utilité courante");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 
