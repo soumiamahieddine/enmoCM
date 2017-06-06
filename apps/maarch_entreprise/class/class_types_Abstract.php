@@ -83,7 +83,7 @@ abstract class types_Abstract extends database
                 );
                 $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] = $line->retention_rule;
                 $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] = $line->retention_final_disposition;
-                $_SESSION['m_admin']['doctypes']['_DURATION_CURRENT_USE'] = $line->duration_current_use;
+                $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] = $line->duration_current_use;
                 $_SESSION['m_admin']['doctypes']['SUB_FOLDER'] = $line->doctypes_second_level_id;
                 $_SESSION['m_admin']['doctypes']['VALIDATE'] = $line->enabled;
                 $_SESSION['m_admin']['doctypes']['TABLE'] = $line->coll_id;
@@ -200,15 +200,15 @@ abstract class types_Abstract extends database
                 <select name="retention_final_disposition" id="retention_final_disposition">
                     <option value =""><?php echo _CHOOSE_FINAL_DISPOSITION ?></option>
                     <?php if (!$_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION']) { ?>
-                    <option value="<?php echo _DESTROY ?>"><?php echo _DESTROY ?></option>
-                    <option value="<?php echo _KEEP ?>"><?php echo _KEEP ?></option>
+                    <option value="<?php echo strtolower(_DESTROY) ?>"><?php echo _DESTROY ?></option>
+                    <option value="<?php echo strtolower(_KEEP) ?>"><?php echo _KEEP ?></option>
                     <?php } else {
                         if ($_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] == strtolower(_DESTROY)) { ?>
-                            <option value="<?php echo _DESTROY ?>" selected="selected" ><?php echo _DESTROY ?></option>
-                            <option value="<?php echo _KEEP ?>"><?php echo _KEEP ?></option>
+                            <option value="<?php echo strtolower(_DESTROY) ?>" selected="selected" ><?php echo _DESTROY ?></option>
+                            <option value="<?php echo strtolower(_KEEP) ?>"><?php echo _KEEP ?></option>
                     <?php } else { ?>
-                            <option value="<?php echo _DESTROY ?>"><?php echo _DESTROY ?></option>
-                            <option value="<?php echo _KEEP ?>" selected="selected"><?php echo _KEEP ?></option>
+                            <option value="<?php echo strtolower(_DESTROY) ?>"><?php echo _DESTROY ?></option>
+                            <option value="<?php echo strtolower(_KEEP) ?>" selected="selected"><?php echo _KEEP ?></option>
                     <?php }
                     } ?>
                 </select>
@@ -225,11 +225,11 @@ abstract class types_Abstract extends database
             </p>
             <p>
                 <label for="duration_current_use"><?php echo _DURATION_CURRENT_USE;?> : </label>
-                <?php if ($_SESSION['m_admin']['doctypes']['date_current_use']) {
+                <?php if ($_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE']) {
                     ?>
-                    <input type="number" name="duration_current_use" value="<?php echo $_SESSION['m_admin']['doctypes']['duration_current_use'] ?>" min="0" step="1">
+                    <input type="text" name="duration_current_use" value="<?php echo $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] ?>"><?php echo _MONTH;?>
                 <?php } else { ?>
-                    <input type="number" name="duration_current_use" min="0" step="1"> <?php echo _MONTH;?>
+                    <input type="text" name="duration_current_use"> <?php echo _MONTH;?>
                 <?php } ?>
 
             </p>
@@ -344,6 +344,9 @@ abstract class types_Abstract extends database
             $_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
             $_SESSION['m_admin']['doctypes']['indexes'] = array();
             $_SESSION['m_admin']['doctypes']['mandatory_indexes'] = array();
+            $_SESSION['m_admin']['doctypes']['RETENTION_RULE'] = $_REQUEST['retention_rule'];
+            $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'] = $_REQUEST['retention_final_disposition'];
+            $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'] = $_REQUEST['duration_current_use'];
             if (isset($_REQUEST['fields'])) {
                 for ($i = 0; $i < count($_REQUEST['fields']); $i ++) {
                     array_push(
@@ -438,10 +441,12 @@ abstract class types_Abstract extends database
         } else {
             if ($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add") {
                 $db->query(
-                    "UPDATE " . DOCTYPES_TABLE . " SET description = ? , doctypes_first_level_id = ?, doctypes_second_level_id = ?, enabled = 'Y', coll_id = ? 
+                    "UPDATE " . DOCTYPES_TABLE . " SET description = ? , doctypes_first_level_id = ?, doctypes_second_level_id = ?, retention_final_disposition = ?, retention_rule = ?, duration_current_use = ?, enabled = 'Y', coll_id = ?  
                     WHERE type_id = ?",
-                    array($_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'], 
-                        $_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID'])
+                    array($_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'],
+                        $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'], $_SESSION['m_admin']['doctypes']['RETENTION_RULE'],
+                        $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'], $_SESSION['m_admin']['doctypes']['COLL_ID'],
+                        $_SESSION['m_admin']['doctypes']['TYPE_ID'] )
                 );
 
                 $db->query(
@@ -507,8 +512,9 @@ abstract class types_Abstract extends database
                     $db->query(
                         "INSERT INTO " . DOCTYPES_TABLE . " (coll_id, "
                         ." description, doctypes_first_level_id, "
-                        . "doctypes_second_level_id,  enabled ) VALUES (?, ?, ?, ?, 'Y' )",
-                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'])
+                        . "doctypes_second_level_id, retention_final_disposition, retention_rule, duration_current_use, enabled ) VALUES (?, ?, ?, ?,?,?,? 'Y' )",
+                        array($_SESSION['m_admin']['doctypes']['COLL_ID'], $tmp, $_SESSION['m_admin']['doctypes']['STRUCTURE'], $_SESSION['m_admin']['doctypes']['SUB_FOLDER'],
+                            $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'], $_SESSION['m_admin']['doctypes']['RETENTION_RULE'], $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'])
                     );
                     //$this->show();
                     $stmt = $db->query(
@@ -534,10 +540,11 @@ abstract class types_Abstract extends database
                         }
                         $db->query(
                             "INSERT INTO " . DOCTYPES_INDEXES_TABLE
-                            . " (coll_id, type_id, field_name, mandatory) "
-                            . "values(?, ?, ?, ?)",
+                            . " (coll_id, type_id, field_name, mandatory, retention_final_disposition, retention_rule, duration_current_use) "
+                            . "values(?, ?, ?, ?, ?, ?, ?)",
                             array($_SESSION['m_admin']['doctypes']['COLL_ID'], $_SESSION['m_admin']['doctypes']['TYPE_ID']
-                                , $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory)
+                                , $_SESSION['m_admin']['doctypes']['indexes'][$i], $mandatory, $_SESSION['m_admin']['doctypes']['RETENTION_FINAL_DISPOSITION'], $_SESSION['m_admin']['doctypes']['RETENTION_RULE'],
+                                $_SESSION['m_admin']['doctypes']['DURATION_CURRENT_USE'])
                         );
                     }
 

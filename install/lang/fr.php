@@ -445,3 +445,7 @@ if (!defined('_ZIP_LIB')) {
 if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
     define('_INSTALL_ZIP_LIB_FIRST', "Installez la librairie zip pour déployer automatiquement les dépendances");
 }
+
+if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
+    define('_NO_AVAILABLE_TAG_TO_UPDATE', "Pas de tag disponible pour une mise à jour");
+}

@@ -442,3 +442,7 @@ if (!defined('_ZIP_LIB')) {
 if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
     define('_INSTALL_ZIP_LIB_FIRST', "Install zip lib first to deploy dependencies automatically");
 }
+
+if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
+    define('_NO_AVAILABLE_TAG_TO_UPDATE', "No available tag to update");
+}
