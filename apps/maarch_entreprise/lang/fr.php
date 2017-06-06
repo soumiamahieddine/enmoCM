@@ -1966,3 +1966,5 @@ if (!defined('_UPDATE_END'))
     define('_UPDATE_END', 'Mise à jour réussi');
 if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Mise à jour réussi');
+if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
+    define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucun tag de disponible pour une mise à jour');

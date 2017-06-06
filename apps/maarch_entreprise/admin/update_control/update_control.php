@@ -150,9 +150,9 @@ foreach ($tags as $key => $value) {
                 </select>
                 <?php
                 if ($_SESSION['user']['UserId'] == 'superadmin') {
-                    ?>
-                    <a href="<?php echo $_SESSION['config']['coreurl'];?>install/index.php?step=update_welcome"><?php echo ' ' . _CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT;?></a>
-                    <?php
+                    if($isAnyAvailableTag) {
+                        echo '<a href="'.$_SESSION['config']['coreurl'].'install/index.php?step=update_welcome">' . _CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT.'</a>';
+                    }
                 } else {
                     echo _CONNECT_YOU_IN_SUPERADMIN;
                 }

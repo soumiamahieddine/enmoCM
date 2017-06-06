@@ -1957,3 +1957,5 @@ if (!defined('_UPDATE_END'))
     define('_UPDATE_END', 'Update sucessful');
 if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Update sucessful');
+if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
+    define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
