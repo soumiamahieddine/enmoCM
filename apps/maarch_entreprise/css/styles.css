@@ -5,7 +5,6 @@ html {
     height: 100%;
 }
 
-
 .detailsDisplayDiv {
     background: #fff;
     border-top: 1px solid #666;
@@ -35,21 +34,10 @@ padding: 10px;*/
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-    /*.tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}*/
 }
+
 .detailsTab {
-background: #deedf3;
+    background: #deedf3;
     border: 1px solid #666;
     border-bottom: 0;
     cursor: pointer;
@@ -60,19 +48,6 @@ background: #deedf3;
     position: relative;
     font-size: 14px;
     display: block;
-
-/*.tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}*/
 }
 
 .whole-panel{ 
@@ -107,12 +82,8 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-    
-    
 }
  
- 
-
 .print-folder {
 
 
@@ -129,7 +100,6 @@ background: #deedf3;
 }
 
 
-
 .visa-circuit{
     background: #deedf3;
     border: 1px solid #666;
@@ -141,20 +111,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-    /* 
-            .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
- */
 }
 
 .opinion-circuit {
@@ -168,21 +124,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-
-/* 
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-*/
 }
 
 .attached-files {
@@ -196,20 +137,7 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-/*
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
 }
-*/}
 
 .answers-done{
     background: #deedf3;
@@ -222,20 +150,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-    /*
-        .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-    */
 }
 
 .history{
@@ -249,22 +163,8 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-    /*
-        .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
 }
-    */
-    
-    }
+
 .notes {
     background: #deedf3;
     border: 1px solid #666;
@@ -276,19 +176,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-/* 
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}*/
 }
 
 .matter{
@@ -302,20 +189,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-/*
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-*/
 }
 
 .email{
@@ -329,20 +202,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
- /*
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
- */
 }
 
 .versions{
@@ -356,20 +215,6 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-/*
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-*/
 }
 
 .links {
@@ -383,28 +228,15 @@ background: #deedf3;
     padding: 2px 5px;
     position: relative;
     font-size: 14px;
-/*
-    .tabricator .trig {
-    background: #deedf3;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
 }
-*/
-}
-.border_on
-{
+
+.border_on {
     border-style:solid;
     border-color:#003399;
     border-width:thin;
     margin-top: 10px;
 }
+
 body {
     color: #666;
     /*background: white url(static.php?filename=bg_body.gif) top center repeat-y;*/
@@ -3192,60 +3024,6 @@ hr{
     width: 80%;
     text-align: center;
 }
-
-/**** TABRICATOR ****/
-.tabricator
-{
-    background:                #009DC5;
-    border:                    1px solid #000;
-    display:                   inline-block;
-    /*height:                    auto!important;*/
-    height: 650px;
-    min-width : 995px;
-    margin:                    0 auto 1em;
-    /*max-width:                 40em;*/
-    padding:                   5px 0 0 5px;
-}
-
-.tabricator {
-    display:                   block;
-}
-.tabricator .trig {
-    background:                #deedf3;
-    border:                    1px solid #666;
-    border-bottom:             0;
-    cursor:                    pointer;
-    display:                   inline;
-    float:                     right;
-    margin:                    2px 0 0 -1px;
-    padding:                   2px 5px;
-    position:                  relative;
-    font-size: 14px;
-}
-.tabricator .trig:hover {
-    background:                #f5f5f5;
-}
-.tabricator .open,
-.tabricator .open:hover {
-    background:                #fff;
-    margin-top:                0;
-    margin-bottom:             -3px;
-    padding-bottom:            5px;
-    position:                  relative;
-    z-index:                   1;
-}
-.tabricator .targ {
-    background:                #fff;
-    border-top:                1px solid #666;
-    clear:                     both;
-    margin:                    0 0 0 -5px;
-    overflow:                  auto;
-    padding:                   5px;
-    height:  92%;
-    /*width: 99.5%;*/
-    width:                      auto;
-}
-
 
 /***** PROTOHUDS *****/
 .protohud {

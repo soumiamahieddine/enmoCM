@@ -546,7 +546,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </b>&nbsp;
             </div>
             <br/>
-            <div class="whole-panel" id="tabricator1">
+            <div class="whole-panel">
 
             <?php 
                 if($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){

@@ -19,25 +19,12 @@
 	float: left;
 }
 
-#tabricatorLeft{
-	height:99.5%;
-	min-width:0;
-	width:99.5%;
-	margin-bottom:0px;
-}
-
 #visa_right{
 	/*border:1px solid green;*/
 	height:95%;
 	width:41%;
 	margin-left:1%;
 	float: left;
-}
-
-#tabricatorRight{
-	height:90%;
-	min-width:0;
-	width:99.5%;
 }
 
 #visa_listDoc .toolbar{
