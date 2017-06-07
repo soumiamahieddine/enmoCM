@@ -55,9 +55,7 @@ $core->manage_location_bar(
 
 $_SESSION['origin'] = "search_folder_tree";
 ?>
-<script type="text/javascript" >
-    BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
-</script>
+
 <h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE;?></h1>
 <div id="inner_content" align="center">
     <div class="block">
@@ -142,22 +140,15 @@ $_SESSION['origin'] = "search_folder_tree";
             ajax: function(query){
             return{
                     type : 'POST',
-                    url: '<?php
-                    echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',
-                    data: {
+                    url  : 'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',
+                    data : {
                         Input: "{{query}}"
                     }
                 }
             }
-        },
-        callback: {
-            onInit: function (node) {
-                console.log('Typeahead Initiated on ' + node.selector);
-            },
-            
         }
     });
+
     function submitForm()
     {
         var folder = $('folder').value;
@@ -166,7 +157,7 @@ $_SESSION['origin'] = "search_folder_tree";
             $('myTree').innerHTML="";
         }
         // Get tree parameters from an ajax script (get_tree_info.php)
-        new Ajax.Request(BASE_URL+'index.php?display=true&module=folder&page=get_tree_info&display=true',{
+        new Ajax.Request('index.php?display=true&module=folder&page=get_tree_info&display=true',{
             method: 'post',
             parameters: {
                 tree_id: 'myTree',
@@ -194,7 +185,7 @@ $_SESSION['origin'] = "search_folder_tree";
     {
 
             if($(''+folders_system_id).hasClassName('mt_fopened')){
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -220,7 +211,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 });
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -258,10 +249,10 @@ $_SESSION['origin'] = "search_folder_tree";
                 $('autofolders').style.listStyleImage= 'url(static.php?filename=folder.gif)';
                 $('autofolders').removeClassName('link_open');
                 $('autofolders').removeClassName('mt_fopened');
-                $('autofolders').src = BASE_URL+'static.php?filename=folder.gif';
+                $('autofolders').src = 'static.php?filename=folder.gif';
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -287,8 +278,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_autofolder_folders(id, folder_level,id_folder,path_folder,desc_tree)
@@ -303,7 +293,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 $(''+id_folder).removeClassName('mt_fopened');
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -342,8 +332,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_autofolder_folder_docs(id, folder_level,id_folder,path_folder)
@@ -358,7 +347,7 @@ $_SESSION['origin'] = "search_folder_tree";
 
             }else{
 
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -385,14 +374,13 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_folder_docs(folders_system_id)
         {
             if($(''+folders_system_id).hasClassName('mt_fopened')){
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -417,7 +405,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 });
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
