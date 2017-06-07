@@ -1,5 +1,12 @@
 <?php
 
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+
 if (isset($_POST['branch_id'])) {
     require_once('modules/entities/class/class_manage_entities.php');
     require("modules/entities/entities_tables.php");
@@ -25,12 +32,12 @@ if (isset($_POST['branch_id'])) {
             array_push(
                 $children, 
                 array(
-                    'id' => $res->entity_id, 
-                    'tree' => $_SESSION['entities_chosen_tree'], 
-                    'key_value' => $res->entity_id, 
-                    'label_value' => functions::show_string($res->entity_id, true) . ' - ' . $labelValue, 
+                    'id'              => $res->entity_id, 
+                    'tree'            => $_SESSION['entities_chosen_tree'], 
+                    'key_value'       => $res->entity_id, 
+                    'label_value'     => functions::show_string($res->entity_id, true) . ' - ' . $labelValue, 
                     'canhavechildren' => $canhavechildren, 
-                    'is_entity' => 'true'
+                    'is_entity'       => 'true'
                 )
             );
         }
@@ -44,7 +51,7 @@ if (isset($_POST['branch_id'])) {
         while ($res = $stmt->fetchObject()) {
             $canhavechildren = 'canhavechildren:false, ';
             if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
-                //Condition qui v�rifie si l'utilisateur est actif ou pas. Si pas actif, il est affich� en rouge 
+                //Condition qui verifie si l'utilisateur est actif ou pas. Si pas actif, il est affich� en rouge 
                 if($res->enabled == 'N'){
                     $labelValue = '<span class="entity_tree_element_ok">' . functions::show_string('<a style="color:red;" href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
@@ -58,10 +65,10 @@ if (isset($_POST['branch_id'])) {
             array_push(
                 $children, 
                 array(
-                    'id' => $res->user_id . '_' . $_POST['branch_id'], 
-                    'tree' => $_SESSION['entities_chosen_tree'], 
-                    'key_value' => $res->user_id, 
-                    'label_value' => $res->user_id . ' - ' . $labelValue, 
+                    'id'              => $res->user_id . '_' . $_POST['branch_id'], 
+                    'tree'            => $_SESSION['entities_chosen_tree'], 
+                    'key_value'       => $res->user_id, 
+                    'label_value'     => $res->user_id . ' - ' . $labelValue, 
                     'canhavechildren' => '', 'is_entity' => 'false'
                 )
             );
@@ -84,12 +91,12 @@ if (isset($_POST['branch_id'])) {
                 array_push(
                     $children, 
                     array(
-                        'id' => $res->user_id . '_' . $_POST['branch_id'], 
-                        'tree' => $_SESSION['entities_chosen_tree'], 
-                        'key_value' => $res->user_id, 
-                        'label_value' => $res->user_id . ' - ' . $labelValue, 
+                        'id'              => $res->user_id . '_' . $_POST['branch_id'], 
+                        'tree'            => $_SESSION['entities_chosen_tree'], 
+                        'key_value'       => $res->user_id, 
+                        'label_value'     => $res->user_id . ' - ' . $labelValue, 
                         'canhavechildren' => '', 
-                        'is_entity' => 'false'
+                        'is_entity'       => 'false'
                     )
                 );
             }
@@ -102,15 +109,13 @@ if (isset($_POST['branch_id'])) {
             if($children[$i]['is_entity']=='false'){
                 echo '<li id="'.$children[$i]['id'].'"> <span class="user"><i class="fa fa-user" ></i>'.$children[$i]['label_value'].'</span>'.
                 '</li>';
-            }
-            else{
+            } else {
                 echo '<li id="'.$children[$i]['id'].'"> <span class="node"><span class=icon><i class="fa" onclick="getChildrenHtml(\''.$children[$i]['id'].'\',\'divTree\',\'index.php?display=true&module=entities&page=get_tree_childs\',\'fa fa-minus-square\',\'fa fa-plus-square\')"></i></span>'.$children[$i]['label_value'].'</span>'.
                 '<ul></ul>'.
                 '</li>';
             }
         }
         echo '</ul>';
-
     } else {
         echo null;
     }
