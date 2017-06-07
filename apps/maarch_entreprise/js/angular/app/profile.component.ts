@@ -14,7 +14,7 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals.profileView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 

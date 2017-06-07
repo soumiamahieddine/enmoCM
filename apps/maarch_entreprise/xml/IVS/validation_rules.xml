@@ -98,7 +98,7 @@
       <parameter name="fields_attachments" type="identifier" />
       <parameter name="mandatory_fields" type="identifier" />
       <parameter name="retention_final_disposition" type="string" />
-      <parameter name="retention_rule" type="identifier" />
+      <parameter name="retention_rule" type="string" />
       <parameter name="duration_current_use" type="integer" />
     </validationRule>
 

@@ -15,6 +15,7 @@ $listLang = $Class_Install->loadLang();
 
 if (!empty($_REQUEST['myVar'])) {
     $version = $_REQUEST['myVar'];
+    $_SESSION['lastTagVersion'] = $version;
 } else {
     $return['status'] = 0;
     $return['text'] = _VERSION_EMPTY;

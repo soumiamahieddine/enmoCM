@@ -402,7 +402,7 @@ var ProfileComponent = (function () {
 ProfileComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals.profileView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'js/angular/app/Css/profile.component.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
 ], ProfileComponent);

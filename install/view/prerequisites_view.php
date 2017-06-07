@@ -164,12 +164,24 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
+                                'curl'
+                            )
+                        );?>
+                    </td>
+                    <td>
+                        <?php echo _CURL;?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
                                 'zip'
                             )
                         );?>
                     </td>
                     <td>
-                        <?php echo _ZIP;?>
+                        <?php echo _ZIP_LIB;?>
                     </td>
                 </tr>
                 <tr>

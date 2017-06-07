@@ -1628,24 +1628,22 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
         }
 }
 
-function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page)
+function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status, page)
 {
-    if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
-              && tablename != '' &&  id_coll != '')
-    {
+    if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page') && tablename != '' &&  id_coll != '') {
 
         $j.ajax({
             cache    : false,
             url      : path_manage_script,
             type     : 'POST',
-            dataType : 'json',
-            data: { values : res_id_values,
-                    mode : mode_req,
-                    req : 'change_status',
-                    table : tablename,
-                    coll_id : id_coll,
-                    new_status : status,
-                  },
+            data: {
+                values : res_id_values,
+                mode : mode_req,
+                req : 'change_status',
+                table : tablename,
+                coll_id : id_coll,
+                new_status : status
+            },
             success: function(answer) {
 
                 setTimeout(function(){
