@@ -49,7 +49,7 @@ class MergedJsAbstract {
 		//TODO clean
 
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
+		echo "\n";
 //		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
 
 		echo "\n";
