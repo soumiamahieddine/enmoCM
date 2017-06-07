@@ -63,7 +63,12 @@ class MergedJsAbstract {
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
+		
+		echo "\n";
+		
+		readfile('node_modules/datatables.net/js/jquery.dataTables.js');
 
+		echo "\n";
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
@@ -79,10 +84,9 @@ class MergedJsAbstract {
 
 		echo "\n";
 
-		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
-
-		
-        echo "\n";
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');		
+        
+		echo "\n";
 
 	}
 

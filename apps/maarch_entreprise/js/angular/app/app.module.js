@@ -11,6 +11,7 @@ var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
+//import { DataTablesModule } from '../../../../../node_modules/angular-datatables';
 var app_component_1 = require("./app.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
@@ -24,17 +25,20 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
+            //DataTablesModule,
             forms_1.FormsModule,
             router_1.RouterModule.forRoot([
                 { path: 'profile', component: profile_component_1.ProfileComponent },
                 { path: 'parameter/create', component: parameter_component_1.ParameterComponent },
                 { path: 'parameter/update/:id', component: parameter_component_1.ParameterComponent },
+                { path: 'parameter/list', component: parameter_component_1.ParameterComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
             http_1.HttpModule
         ],
         declarations: [app_component_1.AppComponent, profile_component_1.ProfileComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        providers: [],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);

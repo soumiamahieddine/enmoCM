@@ -4055,3 +4055,18 @@ background: #deedf3;
     display: block;
 }
 
+table.dataTable thead .sorting {
+  background-image: url(static.php?filename=)!important;
+}
+table.dataTable thead .sorting_asc {
+  background-image: url(static.php?filename=sort_asc.png)!important;
+}
+table.dataTable thead .sorting_desc {
+  background-image: url(static.php?filename=sort_desc.png)!important;
+}
+table.dataTable thead .sorting_asc_disabled {
+  background-image: url(static.php?filename=sort_asc_disabled.png)!important;
+}
+table.dataTable thead .sorting_desc_disabled {
+  background-image: url(static.php?filename=sort_desc_disabled.png)!important;
+}
