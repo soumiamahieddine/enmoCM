@@ -26,7 +26,7 @@
         //$listSql = $Class_Install->getDataList();
 
     //PROGRESS
-        $stepNb = 3;
+        $stepNb = 2;
         $stepNbTotal = 6;
 
 //VIEW

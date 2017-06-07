@@ -434,10 +434,18 @@ if (!defined('_DEPENDENCIES_ON_WIKI')) {
     define('_DEPENDENCIES_ON_WIKI', "Ou suivez la procédure sur notre wiki");
 }
 
-if (!defined('_ZIP')) {
-    define('_ZIP', "librairie zip");
+if (!defined('_CURL')) {
+    define('_CURL', "librairie curl");
+}
+
+if (!defined('_ZIP_LIB')) {
+    define('_ZIP_LIB', "librairie zip");
 }
 
 if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
     define('_INSTALL_ZIP_LIB_FIRST', "Installez la librairie zip pour déployer automatiquement les dépendances");
+}
+
+if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
+    define('_NO_AVAILABLE_TAG_TO_UPDATE', "Pas de tag disponible pour une mise à jour");
 }

@@ -15,6 +15,11 @@
 * @version $Revision$
 * @ingroup install
 */
+if ($_SESSION['user']['UserId'] <> 'superadmin') {
+    header('location: ' . $_SESSION['config']['businessappurl']
+        . 'index.php?page=update_control&admin=update_control');
+    exit();
+}
 ?>
 <script>
     function launchProcess(

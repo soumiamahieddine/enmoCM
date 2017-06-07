@@ -23,7 +23,7 @@
         $longTitle = _UPDATE_DEPLOY;
 
     //PROGRESS
-        $stepNb = 5;
+        $stepNb = 4;
         $stepNbTotal = 6;
 
 //VIEW

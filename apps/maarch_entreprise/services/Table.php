@@ -24,7 +24,6 @@ require_once 'core/services/Abstract.php';
 require_once 'core/core_tables.php';
 require_once 'core/class/class_functions.php';
 require_once 'core/class/class_db_pdo.php';
-require_once 'core/services/Logs.php';
 
 /**
  * Fonctions pour réaliser le CRUD sur la base de donnees

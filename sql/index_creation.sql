@@ -11,7 +11,13 @@ CREATE INDEX res_letterbox_docserver_id_idx ON res_letterbox (docserver_id);
 CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
 
 -- res_attachments
+CREATE INDEX res_id_idx ON res_attachments (res_id);
 CREATE INDEX res_id_master_idx ON res_attachments (res_id_master);
+
+-- res_version_attachments
+CREATE INDEX res_id_version_attachments_idx ON res_version_attachments (res_id);
+CREATE INDEX res_id_master_version_attachments_idx ON res_version_attachments (res_id_master);
+CREATE INDEX attachment_id_master_idx ON res_version_attachments (attachment_id_master);
 
 -- mlb_coll_ext
 CREATE INDEX category_id_idx ON mlb_coll_ext (category_id);
@@ -47,16 +53,22 @@ CREATE INDEX description_idx ON doctypes (description);
 
 -- entities
 CREATE INDEX entity_label_idx ON entities (entity_label);
+CREATE INDEX entity_id_idx ON entities (entity_id);
 
 -- folders
+CREATE INDEX folders_system_id_folders_idx ON folders (folders_system_id);
+CREATE INDEX parent_id_folders_idx ON folders (parent_id);
 CREATE INDEX folder_name_idx ON folders (folder_name);
 CREATE INDEX subject_idx ON folders (subject);
+
+-- foldertypes
+CREATE INDEX foldertype_id_foldertypes_idx ON foldertypes (foldertype_id);
 
 -- groupbasket_redirect
 CREATE INDEX groupbasket_redirect_group_id_idx ON groupbasket_redirect (group_id);
 CREATE INDEX groupbasket_redirect_basket_id_idx ON groupbasket_redirect (basket_id);
-CREATE INDEX groupbasket_redirect_action_id_idx ON groupbasket_redirect (action_id);
-CREATE INDEX groupbasket_redirect_entity_id_idx ON groupbasket_redirect (entity_id);
+-- CREATE INDEX groupbasket_redirect_action_id_idx ON groupbasket_redirect (action_id);
+-- CREATE INDEX groupbasket_redirect_entity_id_idx ON groupbasket_redirect (entity_id);
 
 -- history
 CREATE INDEX table_name_idx ON history (table_name);
@@ -73,3 +85,15 @@ CREATE INDEX user_id_queries_idx ON saved_queries (user_id);
 
 -- users
 CREATE INDEX lastname_users_idx ON users (lastname);
+
+-- listinstance_history_details
+CREATE INDEX listinstance_history_id_idx ON listinstance_history_details (listinstance_history_id);
+
+-- res_mark_as_read
+CREATE INDEX user_id_res_mark_as_read_idx ON res_mark_as_read (user_id);
+
+-- listmodels
+CREATE INDEX object_id_listmodels_idx ON listmodels (object_id);
+
+-- contact_addresses
+CREATE INDEX contact_id_contact_addresses_idx ON contact_addresses (contact_id);

@@ -45,10 +45,12 @@ if (empty($finalVersionPath)) {
     exit;
 }
 
+$excludeExt = ['xml','sh'];
 if (!$Class_Install->copy_dir(
         $finalVersionPath . DIRECTORY_SEPARATOR,
         //'/opt/maarch/test' . DIRECTORY_SEPARATOR
-        $_SESSION['config']['corepath']
+        $_SESSION['config']['corepath'],
+        $excludeExt
     )
 ) {
     $return['status'] = 0;
@@ -59,6 +61,12 @@ if (!$Class_Install->copy_dir(
     echo $jsonReturn;
     exit;
 } else {
+    require_once "core/class/class_functions.php";
+    require_once "core/class/class_db_pdo.php";
+    $db = new Database();
+    $query = "UPDATE parameters SET param_value_string = ? where id = 'database_version'";
+    $stmt = $db->query($query, [$_SESSION['lastTagVersion']]);
+
     include_once 'core/docservers_tools.php';
     Ds_washTmp($versionPath);
     echo '{"status":1}';

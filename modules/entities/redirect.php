@@ -1,4 +1,5 @@
 <?php
+
 $confirm = false;
 $etapes = array('form');
 $frm_width='400px';
@@ -7,7 +8,6 @@ require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once('modules/entities/class/class_manage_entities.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
-
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
@@ -64,10 +64,9 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
             	$values_str .= $values[$i].', ';
 
 		    } else if (_ID_TO_DISPLAY == 'chrono_number'){
-				$values_str .= $values[$i].', ';
-				$chrono_number = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
-				$chrono_number_str .= $chrono_number.', ';
-				$values_str_chrn .= $chrono_number_str;
+                $values_str      .= $values[$i].', ';
+                $chrono_number   = $cr7->get_chrono_number($values[$i], 'res_view_letterbox');
+                $values_str_chrn .= $chrono_number.', ';
 		    }
         }
     }else{ 
@@ -81,8 +80,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
 		    	$values_str .= $_SESSION['stockCheckbox'][$i].', ';
 
 		         $chrono_number = $cr7->get_chrono_number($_SESSION['stockCheckbox'][$i], 'res_view_letterbox');
-		         $chrono_number_str .= $chrono_number.', ';
-		         $values_str_chrn .= $chrono_number_str;
+		         $values_str_chrn .= $chrono_number.', ';
 		    }
         }
     }
@@ -104,16 +102,16 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
     {
       
         $EntitiesIdExclusion = array();
-        $entities = $entity_ctrl->getAllEntities();
-        $countEntities = count($entities);
-        //var_dump($entities);
+        $entities            = $entity_ctrl->getAllEntities();
+        $countEntities       = count($entities);
+
         for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
             if (!is_integer(array_search($entities[$cptAllEnt]->__get('entity_id'), $servicesCompare))) {
                 array_push($EntitiesIdExclusion, $entities[$cptAllEnt]->__get('entity_id'));
             }
         }
         
-        $allEntitiesTree= array();
+        $allEntitiesTree = array();
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
@@ -160,8 +158,6 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
                                 $frm_str .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
                                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                                     $frm_str .= ' disabled="disabled" class="disabled_entity"';
-                                } else {
-                                     //$frm_str .= ' style="font-weight:bold;"';
                                 }
                                 $frm_str .=  '>' 
                                     .  $ent->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
@@ -336,7 +332,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     #   - get entity_id that will update destination
     elseif(isset($formValues['redirect_dep'])) {
         $entityId = $formValues['department'];
-        //$message = _REDIRECT_TO_DEP_OK . " " . $entityId;
 
         $stmt = $db->query("SELECT entity_label FROM entities WHERE entity_id = ?", array($entityId));
         $list = $stmt->fetchObject();
@@ -369,7 +364,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $content_note = str_replace(";", ".", $content_note);
                 $content_note = str_replace("--", "-", $content_note);
                 $content_note = $content_note;
-                //$date = $db->current_datetime();
+
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
                             . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id,$table,$userIdTypist,$content_note,$coll_id)
@@ -400,74 +395,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 
                 $stmt = $db->query(
                     "INSERT INTO notes (identifier, tablename, user_id, "
-                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id,$table,$userIdTypist,$content_note,$coll_id)
+                            . "date_note, note_text, coll_id ) VALUES (?,?,?,CURRENT_TIMESTAMP,?,?)",array($res_id, $table, $userIdTypist, $content_note, $coll_id)
                 );
             }
-            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId,$res_id)); 
+            $stmt = $db->query("update ".$table." set destination = ? where res_id = ?",array($entityId, $res_id)); 
         }
-		
-		# Put all existing copies in copy
-		# Get old copies for users
-		$stmt = $db->query(
-			"select * "
-			. " from " . $_SESSION['tablename']['ent_listinstance'] 
-			. " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'cc'",array($coll_id,$res_id)
-		);
-		if (!is_array($new_difflist['copy'])) {
-			$new_difflist['copy'] = array();
-		}
-		if (!is_array($new_difflist['copy']['users'])) {
-			$new_difflist['copy']['users'] = array();
-		}
-		if (!is_array($new_difflist['copy']['entities'])) {
-			$new_difflist['copy']['entities'] = array();
-		}
-		while ($old_copiesU = $stmt->fetchObject()) {
-			$found = false;
-			for ($cptU=0;$cptU<count($new_difflist['copy']['users']);$cptU++) {
-				if ($new_difflist['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
-					$found = true;
-					break;
-				}
-			}
-			//if not found, add the old copy in the new diff list
-			if (!$found) {
-				array_push(
-					$new_difflist['copy']['users'], 
-					array(
-						'user_id' => $old_copiesU->item_id, 
-						'viewed' => (integer)$old_copiesU->viewed,
-						'visible' => 'Y',
-						'difflist_type' => $new_difflist['difflist_type']
-					)
-				);
-			}
-		}
-		# Get old copies for entities
-		$stmt = $db->query(
-			"select * "
-			. " from " . $_SESSION['tablename']['ent_listinstance'] 
-			. " where coll_id = ? and res_id = ? and item_type = 'entity_id' and item_mode = 'cc'",array($coll_id,$res_id)
-		);
-		while ($old_copiesE = $stmt->fetchObject()) {
-			$found = false;
-			for ($cptE=0;$cptE<count($new_difflist['copy']['entities']);$cptE++) {
-				if ($new_difflist['copy']['entities'][$cptE]['entity_id'] == $old_copiesE->item_id) {
-					$found = true;
-					break;
-				}
-			}
-			//if not found, add the old copy in the new diff list
-			if (!$found) {
-				array_push(
-					$new_difflist['copy']['entities'], 
-					array(
-						'entity_id' => $old_copiesE->item_id, 
-						'visible' => 'Y',
-					)
-				);
-			}
-		}
+
+        // Si on redirige en masse plusieurs courriers, on récupère automatiquement les roles persistent
+        if(count($arr_id) > 1){
+            $new_difflist = $diffList->list_difflist_roles_to_keep($res_id, $coll_id, $new_difflist['difflist_type'], $new_difflist);
+        }
         
         # If feature activated, put old dest in copy
         if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
@@ -475,10 +412,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $stmt = $db->query(
                 "select * "
                 . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$res_id)
+                . " where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id, $res_id)
             );
-            //$db->show();
-            //exit();
+
             $old_dest = $stmt->fetchObject();
             
             if($old_dest && isset($new_difflist['copy']['users'])) {
@@ -516,10 +452,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     array_push(
                         $new_difflist['copy']['users'], 
                         array(
-						'user_id' => $old_dest->item_id, 
-						'viewed' => (integer)$old_dest->viewed,
-						'visible' => 'Y',
-						'difflist_type' => $new_difflist['difflist_type']
+                        'user_id'       => $old_dest->item_id, 
+                        'viewed'        => (integer)$old_dest->viewed,
+                        'visible'       => 'Y',
+                        'difflist_type' => $new_difflist['difflist_type']
                         )
                     );
                 }
@@ -584,7 +520,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $lastDestViewed = 0;
                     // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
                     $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$arr_id[$i]));
-                    //$db->show();
+ 
                     $res = $stmt->fetchObject();
                     if($res->viewed <> "")
                     {
@@ -630,7 +566,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 }
                 // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
                 $stmt = $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = ? and res_id = ? and item_type = 'user_id' and item_mode = 'dest'",array($coll_id,$arr_id[$i]));
-                //$db->show();
+
                 $res = $stmt->fetchObject();
                 $lastDestViewed = 0;
                 if($res->viewed <> "")

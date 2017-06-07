@@ -216,4 +216,9 @@ echo '<form id="formlogin" method="post" action="'
             echo '</div>';
           echo '</div>';
         echo '</form>';
+        /*require_once('core/class/class_core_tools.php');
+        $core = new core_tools();
+        echo '<br /><br /><br /><br /><br /><br /><br /><br /><br /><p id="footer">';
+        $core->load_footer();
+        echo '</p>';*/
 }

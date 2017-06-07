@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
+
+/**
+ * @brief Core Controller
+ * @author dev@maarch.org
+ * @ingroup core
+ */
+
 require_once dirname(__file__) . '/class/Url.php';
 //dynamic session name
 $sessionName = str_replace("\\","/", dirname(__file__));
@@ -66,8 +79,11 @@ if (isset($_SESSION['custom_override_id'])
     );
 }
 
+
 if(file_exists('installed.lck')) {
+
     require_once 'vendor/autoload.php';
+
 }
 
 

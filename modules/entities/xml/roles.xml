@@ -4,6 +4,7 @@
 		<ROLE>
 			<id>avis</id>
 			<label>_AVIS_USER</label>
+            <!-- <keep_in_diffusion_list>true</keep_in_diffusion_list> -->
 		</ROLE>
 		<ROLE>
 			<id>avis_copy</id>
@@ -20,6 +21,7 @@
 		<ROLE>
 			<id>copy</id>
 			<label>_TO_CC</label>
+            <keep_in_diffusion_list>true</keep_in_diffusion_list>
 		</ROLE>
 		<ROLE>
 			<id>visa</id>
