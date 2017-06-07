@@ -1,23 +1,10 @@
 <?php
 
-
-/*
-*   Copyright 2008-2015 Maarch
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -55,14 +42,14 @@ if (file_exists(
 include_once $path;
 
 //INSTANTIATE
-$core = new core_tools();
-$hist = new history();
+$core     = new core_tools();
+$hist     = new history();
 $security = new security();
-$func = new functions();
-$request= new request;
-$type = new types();
-$is = new indexing_searching_app();
-$db = new Database();
+$func     = new functions();
+$request  = new request;
+$type     = new types();
+$is       = new indexing_searching_app();
+$db       = new Database();
 
 //INITIALIZE
 $core->test_user();
@@ -161,7 +148,6 @@ $page_label = _DETAILS;
 $page_id = 'details';
 $core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-
 
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -284,18 +270,18 @@ $nbContacts = 0;
 $frameContacts = "";
 $frameContacts = "{";
 while ($res = $stmt->fetchObject()) {
-    $nbContacts = $nbContacts + 1;
+    $nbContacts        = $nbContacts + 1;
     $contact_firstname = str_replace("'", "\'", $res->contact_firstname);
     $contact_firstname = str_replace('"', " ", $contact_firstname);
-    $contact_lastname = str_replace("'", "\'", $res->contact_lastname);
-    $contact_lastname = str_replace('"', " ", $contact_lastname);
-    $firstname = str_replace("'", "\'", $res->firstname);
-    $firstname = str_replace('"', " ", $firstname);
-    $lastname = str_replace("'", "\'", $res->lastname);
-    $lastname = str_replace('"', " ", $lastname);
-    $society = str_replace("'", "\'", $res->society);
-    $society = str_replace('"', " ", $society);
-    $frameContacts .= "'contact " . $nbContacts . "' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
+    $contact_lastname  = str_replace("'", "\'", $res->contact_lastname);
+    $contact_lastname  = str_replace('"', " ", $contact_lastname);
+    $firstname         = str_replace("'", "\'", $res->firstname);
+    $firstname         = str_replace('"', " ", $firstname);
+    $lastname          = str_replace("'", "\'", $res->lastname);
+    $lastname          = str_replace('"', " ", $lastname);
+    $society           = str_replace("'", "\'", $res->society);
+    $society           = str_replace('"', " ", $society);
+    $frameContacts    .= "'contact " . $nbContacts . "' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
 }
 $query = "SELECT u.firstname, u.lastname, u.user_id ";
 $query .= "FROM users u, contacts_res cres  ";
@@ -306,10 +292,10 @@ $stmt = $db->query($query, array($_REQUEST['id']));
 
 while($res = $stmt->fetchObject()){
     $nbContacts = $nbContacts + 1;
-    $firstname = str_replace("'","\'", $res->firstname);
-    $firstname = str_replace('"'," ", $firstname);
-    $lastname = str_replace("'","\'", $res->lastname);
-    $lastname = str_replace('"'," ", $lastname);
+    $firstname  = str_replace("'","\'", $res->firstname);
+    $firstname  = str_replace('"'," ", $firstname);
+    $lastname   = str_replace("'","\'", $res->lastname);
+    $lastname   = str_replace('"'," ", $lastname);
     $frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
 }
 $frameContacts = substr($frameContacts, 0, -2);
@@ -411,52 +397,51 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             }
     
             $param_data = array(
-                'img_category_id' => true,
-                'img_priority' => true,
-                'img_type_id' => true,
-                'img_doc_date' => true,
-                'img_admission_date' => true,
-                'img_nature_id' => true,
-                'img_reference_number' => true,
-                'img_subject' => true,
+                'img_category_id'        => true,
+                'img_priority'           => true,
+                'img_type_id'            => true,
+                'img_doc_date'           => true,
+                'img_admission_date'     => true,
+                'img_nature_id'          => true,
+                'img_reference_number'   => true,
+                'img_subject'            => true,
                 'img_process_limit_date' => true,
-                'img_author' => true,
-                'img_destination' => true,
-                'img_folder' => true,
-                'img_contact' => true,
-                'img_confidentiality' => true,
+                'img_author'             => true,
+                'img_destination'        => true,
+                'img_folder'             => true,
+                'img_contact'            => true,
+                'img_confidentiality'    => true,
                 );
 
-            $typist = $res->typist;
-            $format = $res->format;
-            $filesize = $res->filesize;
-            $creation_date = functions::format_date_db($res->creation_date, false);
-            $chrono_number = $res->alt_identifier;
-            $initiator = $res->initiator;
-            $fingerprint = $res->fingerprint;
-            $work_batch = $res->work_batch;
-            $destination = $res->destination;
-            $page_count = $res->page_count;
-            $is_paper = $res->is_paper;
-            $scan_date = functions::format_date_db($res->scan_date);
-            $scan_user = $res->scan_user;
-            $scan_location = $res->scan_location;
+            $typist         = $res->typist;
+            $format         = $res->format;
+            $filesize       = $res->filesize;
+            $creation_date  = functions::format_date_db($res->creation_date, false);
+            $chrono_number  = $res->alt_identifier;
+            $initiator      = $res->initiator;
+            $fingerprint    = $res->fingerprint;
+            $work_batch     = $res->work_batch;
+            $destination    = $res->destination;
+            $page_count     = $res->page_count;
+            $is_paper       = $res->is_paper;
+            $scan_date      = functions::format_date_db($res->scan_date);
+            $scan_user      = $res->scan_user;
+            $scan_location  = $res->scan_location;
             $scan_wkstation = $res->scan_wkstation;
-            $scan_batch = $res->scan_batch;
-            $doc_language = $res->doc_language;
-            $closing_date = functions::format_date_db($res->closing_date, false);
-            $indexes = $type->get_indexes($type_id, $coll_id);
-            $entityLabel = $res->entity_label;
+            $scan_batch     = $res->scan_batch;
+            $doc_language   = $res->doc_language;
+            $closing_date   = functions::format_date_db($res->closing_date, false);
+            $indexes        = $type->get_indexes($type_id, $coll_id);
+            $entityLabel    = $res->entity_label;
 
-            $queryUser = "SELECT firstname, lastname FROM users WHERE user_id = ?";
-            $stmt = $db->query($queryUser, array($typist));
+            $queryUser  = "SELECT firstname, lastname FROM users WHERE user_id = ?";
+            $stmt       = $db->query($queryUser, array($typist));
             $resultUser = $stmt->fetchObject();
 
-            $queryEntities = "SELECT entity_label FROM entities WHERE entity_id = ?";
-            $stmt = $db->query($queryEntities, array($initiator));
+            $queryEntities  = "SELECT entity_label FROM entities WHERE entity_id = ?";
+            $stmt           = $db->query($queryEntities, array($initiator));
             $resultEntities = $stmt->fetchObject();
-            $entities = $resultEntities->entity_label;
-
+            $entities       = $resultEntities->entity_label;
 
             if ($resultUser->lastname <> '') {
                 $typistLabel = $resultUser->firstname . ' ' . $resultUser->lastname;
@@ -471,7 +456,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $case_properties = $case->get_case_info($res->case_id);
             }
 
-            //$db->show_array($indexes);
             foreach (array_keys($indexes) as $key) {
                 if (preg_match('/^custom/', $key)) {
                     $tmp = 'doc_' . $key;
@@ -489,7 +473,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $indexes[$key]['show_value'] = functions::format_date_db($res->{$tmp}, true);
                 }
             }
-            //$db->show_array($indexes);
+
             $process_data = $is->get_process_data($coll_id, $s_id);
             $status = $res->status;
             if (!empty($status))
@@ -526,8 +510,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 }
             }
             $data = get_general_data($coll_id, $s_id, $mode_data, $param_data );
-            //$data = array_merge($data, $indexes);
-            //$db->show_array($indexes);
+
             $detailsExport = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
             $detailsExport .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
             $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/><meta http-equiv='cache-control' content='no-cache'/><meta http-equiv='pragma' content='no-cache'><meta http-equiv='Expires' content='0'></head>";
@@ -714,7 +697,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                         $pathScriptTab = 'index.php?display=true&module=sendmail&page=sendmail&identifier='. $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium';    
                                         $uniqueString .= '<div id="sendmail_tab" class="fa fa-envelope  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._SENDED_EMAILS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'sendmail_tab\',true);"> <sup id="sendmail_tab_badge"></sup></div>';
                                         //LOAD TOOLBAR BADGE
-                                        $toolbarBagde_script =  'index.php?display=true&module=uniqueString&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
+                                        $toolbarBagde_script =  'index.php?display=true&module=sendmail&page=load_toolbar_sendmail&resId='.$s_id.'&collId='.$coll_id;
                                         $uniqueString .='<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
                                     }
                                     /// LINKS
