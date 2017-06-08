@@ -1,5 +1,18 @@
 <?php
 
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+
+/**
+* @brief Parameters Controller
+* @author dev@maarch.org
+* @ingroup core
+*/
+
     namespace Core\Controllers;
 
 use Psr\Http\Message\RequestInterface;
@@ -28,15 +41,15 @@ use Core\Models\ParametersModel;
         }
         public function create(RequestInterface $request, ResponseInterface $response)
         {
-            $datas = $request->getParams();
-
-            $errors = $this->control($request, 'create',$datas);
+            $errors = $this->control($request, 'create');
 
             if (!empty($errors)) {
                 return $response
                     ->withJson(['errors' => $errors]);
             }           
             
+            $datas = $request->getQueryParams();
+
             $return = ParametersModel::create($datas);
 
             if ($return) {
@@ -52,18 +65,17 @@ use Core\Models\ParametersModel;
             return $response->withJson($obj);
         }
 
-        public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+        public function update(RequestInterface $request, ResponseInterface $response)
         {
-            $datas = $request->getParams();
-
-            $errors = $this->control($request, 'update',$datas);
+            $errors = $this->control($request, 'update');
 
             if (!empty($errors)) {
                 return $response
                     ->withJson(['errors' => $errors]);
             }      
 
-            $return = ParametersModel::update($datas);
+            $aArgs = $request->getQueryParams();
+            $return = ParametersModel::update($aArgs);
 
             if ($return) {
                 $obj = ParametersModel::getById([
@@ -84,14 +96,14 @@ use Core\Models\ParametersModel;
             return $response->withJson($obj);
         }
 
-        protected function control($request, $mode, $aArgs)
+        protected function control($request, $mode)
         {
             $errors = [];
 
             if ($mode == 'update') {
                 $obj = ParametersModel::getById([
-                    'id' => $aArgs['id'],
-                    'param_value_int' => $aArgs['param_value_int']
+                    'id' => $request->getParam('id'),
+                    'param_value_int' => $request->getParam('param_value_int')
                 ]);
                 if (empty($obj)) {
                     array_push(
@@ -101,7 +113,7 @@ use Core\Models\ParametersModel;
                 }
                 
             }
-            if (!Validator::notEmpty()->validate($aArgs['id'])) {
+            if (!Validator::notEmpty()->validate($request->getParam('id'))) {
                 array_push($errors, '_ID_IS_EMPTY_CONTROLLER');
             } elseif ($mode == 'create') {  
                 if(!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))){
@@ -114,7 +126,7 @@ use Core\Models\ParametersModel;
                     array_push($errors,'PARAM STRING INVALIDE');
                 }
                 $obj = ParametersModel::getById([
-                    'id' => $aArgs['id']
+                    'id' => $request->getParam('id')
                 ]);
                 if (!empty($obj)) {
                     array_push(
@@ -123,17 +135,17 @@ use Core\Models\ParametersModel;
                     );
                 }
             }
-            if ($aArgs['param_value_date']!=null) {
-                if (date('Y-m-d H:i:s', strtotime($aArgs['param_value_date'])) != $aArgs['param_value_date']) {
+            if ($request->getParam('param_value_date')!=null) {
+                if (date('Y-m-d H:i:s', strtotime($request->getParam('param_value_date'))) != $request->getParam('param_value_date')) {
                     array_push(
                             $errors,
                             'PARAMETRE DATE INVALIDE.'
                         );
                 }
             }
-            if ($mode=='create'&&!Validator::notEmpty()->validate($aArgs['param_value_int'])&&
-            !Validator::notEmpty()->validate($aArgs['param_value_string'])&&
-            !Validator::notEmpty()->validate($aArgs['param_value_date'])
+            if ($mode=='create'&&!Validator::notEmpty()->validate($request->getParam('param_value_int'))&&
+            !Validator::notEmpty()->validate($request->getParam('param_value_string'))&&
+            !Validator::notEmpty()->validate($request->getParam('param_value_date'))
             ) {
                 array_push($errors, '_PARAM_VALUE_IS_EMPTY');
             }          
@@ -142,5 +154,3 @@ use Core\Models\ParametersModel;
         }
 
     }
-
-?>
