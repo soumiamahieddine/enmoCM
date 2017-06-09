@@ -26,9 +26,7 @@ class ResExtController
 {
     public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!empty($aArgs)) {
-            $aArgs = $aArgs;
-        } else {
+        if(empty($aArgs)){
             $aArgs = $request->getQueryParams();
             $aArgs['data'] = json_decode($aArgs['data']);
             $aArgs['data'] = $this->object2array($aArgs['data']);

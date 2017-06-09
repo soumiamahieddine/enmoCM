@@ -168,7 +168,6 @@ class AttachmentsController
             }
 
             if (strtoupper($data[$i]['type']) == 'STRING') {
-               $data[$i]['value'] = $data[$i]['value'];
                $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
                $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }
