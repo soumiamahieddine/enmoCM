@@ -48,7 +48,7 @@ use Core\Models\ParametersModel;
                     ->withJson(['errors' => $errors]);
             }           
             
-            $datas = $request->getQueryParams();
+            $datas = $request->getParams();
 
             $return = ParametersModel::create($datas);
 
@@ -74,7 +74,7 @@ use Core\Models\ParametersModel;
                     ->withJson(['errors' => $errors]);
             }      
 
-            $aArgs = $request->getQueryParams();
+            $aArgs = $request->getParams();
             $return = ParametersModel::update($aArgs);
 
             if ($return) {
