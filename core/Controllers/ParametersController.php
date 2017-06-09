@@ -65,7 +65,7 @@ use Core\Models\ParametersModel;
             return $response->withJson($obj);
         }
 
-        public function update(RequestInterface $request, ResponseInterface $response)
+        public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
         {
             $errors = $this->control($request, 'update');
 

@@ -20,73 +20,59 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
         $query .= 'param_value_string=abcd&';
         $query .= 'description=papa';
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'POST',
-                'QUERY_STRING'   => $query,
-            ]
-        );
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
+        ]);
 
         $parameter = new \Core\Controllers\ParametersController();
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response  = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $compare = '[{"id":"TEST",'
                     .'"description":"papa",'
                     .'"param_value_string":"abcd",'
                     .'"param_value_int":null,'
                     .'"param_value_date":null}]';
-        $this->assertSame($compare,(string)$response->getBody());
 
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $_SESSION['config']['coreurl'] . 'rest/parameters',
-            // You can set any number of default request options.
-            'timeout'  => 2.0,
-            ]);
+        $this->assertSame($compare,(string)$response->getBody());
        
         //TEST EXISTE DEJA
-        $aArgs = [
-            'id'                 => 'TEST',
-            'description'        => null,
-            'param_value_string' => null,
-            'param_value_int'    => 1234,
-            'param_value_date'   => null                
-        ];
 
-        $response = $client->request('POST', $_SESSION['config']['coreurl'] . 'rest/parameters', [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
-        ]);
+        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $compare = '{"errors":["Identifiant TEST existe d\u00e9j\u00e0 !"]}';
         
         $this->assertSame($compare,(string)$response->getBody());
 
         //AUCUN PARAMETRE
-        
-        $aArgs = [
-            'id'                 => 'TEST3',
-            'description'        => null,
-            'param_value_string' => null,
-            'param_value_int'    => null,
-            'param_value_date'   => null                
-        ];
-        
-        $response = $client->request('POST', $_SESSION['config']['coreurl'] . 'rest/parameters', [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+
+        $query  = 'id=TEST3&';
+        $query .= 'param_value_string=&';
+        $query .= 'param_value_int=&';
+        $query .= 'param_value_date=&';
+        $query .= 'description=';
+
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
         ]);
+
+        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $compare = '{"errors":["_PARAM_VALUE_IS_EMPTY"]}';
         
         $this->assertSame($compare,(string)$response->getBody());
 
         //AUCUN ARGUMENTS
-        $aArgs = [ ];
 
-        $response = $client->request('POST', $_SESSION['config']['coreurl'] . 'rest/parameters', [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+        $query  = '';
+
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
         ]);
+
+        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $compare = '{"errors":["_ID_IS_EMPTY_CONTROLLER","_PARAM_VALUE_IS_EMPTY"]}';
 
@@ -94,38 +80,38 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         //DATE MAUVAIS FORMAT
 
-        $aArgs = [
-            'id'                 => 'TEST4',
-            'description'        => null,
-            'param_value_string' => null,
-            'param_value_int'    => null,
-            'param_value_date'   => '123456'                
-        ];
+        $query  = 'id=TEST4&';
+        $query .= 'param_value_string=&';
+        $query .= 'param_value_int=&';
+        $query .= 'param_value_date=123456&';
+        $query .= 'description=';
 
-        $response = $client->request('POST', $_SESSION['config']['coreurl'] . 'rest/parameters', [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
         ]);
+
+        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $compare = '{"errors":["PARAMETRE DATE INVALIDE."]}';
         $this->assertSame($compare,(string)$response->getBody());
 
         //TEST ID MAUVAIS FORMAT (REGEX)
 
-        $aArgs = [
-            'id'                 => 'A*-#==',
-            'description'        => "*///*//",
-            'param_value_string' => "//-//**",
-            'param_value_int'    => null,
-            'param_value_date'   => null                
-        ];
+        $query  = 'id=A*-#==&';
+        $query .= 'param_value_string=//-//**&';
+        $query .= 'param_value_int=&';
+        $query .= 'param_value_date=&';
+        $query .= 'description=*///*//';
 
-        $response = $client->request('POST', $_SESSION['config']['coreurl'] . 'rest/parameters', [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
         ]);
 
-        $compare ='{"errors":["ID INVALIDE","DESCRIPTION INVALIDE","PARAM STRING INVALIDE"]}';
+        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+
+        $compare = '{"errors":["ID INVALIDE","DESCRIPTION INVALIDE","PARAM STRING INVALIDE"]}';
         $this->assertSame($compare,(string)$response->getBody());            
     }
 
@@ -133,42 +119,35 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
     {
         $parameters = new \Core\Controllers\ParametersController();
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-            ]
-        );
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'GET'
+        ]);
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $parameters->getList($request, $response);
+        $response = $parameters->getList(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $this->assertNotNull((string)$response->getBody());
     }
     
     public function testGetById()
-    {           
+    {
+        $query = 'id=TEST';
 
-        $aArgs = [
-            'id' => 'TEST'
-        ];
-
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $_SESSION['config']['coreurl'] . 'rest/parameters',
-            // You can set any number of default request options.
-            'timeout'  => 2.0,
-            ]);
-
-        $response = $client->request('GET', $_SESSION['config']['coreurl'] . 'rest/parameters/'.$aArgs['id'], [
-            'auth'=> ['superadmin','superadmin']
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'QUERY_STRING'   => $query,
         ]);
-        $compare = '[[{"id":"TEST",'
-                    .'"description":null,'
+
+        $parameters = new \Core\Controllers\ParametersController();
+        $response = $parameters->getById(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(), ['id' => 'TEST']);
+
+        $compare = '[{"id":"TEST",'
+                    .'"description":"papa",'
                     .'"param_value_string":"abcd",'
                     .'"param_value_int":null,'
-                    .'"param_value_date":null}]]';
+                    .'"param_value_date":null}]';
 
         $this->assertNotNull((string)$response->getBody());
+        $this->assertSame($compare,(string)$response->getBody()); 
     }
 
     public function testUpdate()
@@ -177,39 +156,31 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
         $query  = 'id=TEST&';
         $query .= 'description=TEST AFTER UP';
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'PUT',
-                'QUERY_STRING'   => $query,
-            ]
-        );
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'QUERY_STRING'   => $query,
+        ]);
 
         $parameter = new \Core\Controllers\ParametersController();
-        $response = $parameter->update(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->update(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(), ['id' => 'TEST']);
 
-            $compare = '[{"id":"TEST",'
-                        .'"description":"TEST AFTER UP",'
-                        .'"param_value_string":"abcd",'
-                        .'"param_value_int":null,'
-                        .'"param_value_date":null}]';
+        $compare = '[{"id":"TEST",'
+                    .'"description":"TEST AFTER UP",'
+                    .'"param_value_string":"abcd",'
+                    .'"param_value_int":null,'
+                    .'"param_value_date":null}]';
         
         $this->assertSame((string)$response->getBody(), $compare);
 
         //TEST ID NULL
+        $query = 'id=NEWWW';
 
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $_SESSION['config']['coreurl'] . 'rest/parameters',
-            // You can set any number of default request options.
-            'timeout'  => 2.0,
-            ]);
-
-        $aArgs = [
-            'id' => 'NEW'
-        ];
-        $response = $client->request('PUT', $_SESSION['config']['coreurl'] . 'rest/parameters/'.$aArgs['id'], [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'QUERY_STRING'   => $query,
         ]);
+
+        $response = $parameter->update(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(), ['id' => 'NEWWW']);
 
         $compare = '{"errors":["Identifiant n\'existe pas"]}';
         
@@ -219,24 +190,18 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $aArgs = [
-            'id'=> 'TEST'
-        ];
+        $query = 'id=TEST';
 
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $_SESSION['config']['coreurl'] . 'rest/parameters',
-            // You can set any number of default request options.
-            'timeout'  => 2.0,
-            ]);
-
-        $response = $client->request('DELETE', $_SESSION['config']['coreurl'] . 'rest/parameters/'.$aArgs['id'], [
-            'auth'        => ['superadmin','superadmin'],
-            'form_params' => $aArgs
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'QUERY_STRING'   => $query,
         ]);
+
+        $parameter = new \Core\Controllers\ParametersController();
+        $response = $parameter->delete(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(), ['id' => 'TEST']);
+
         $compare = 'true';
         $this->assertSame($compare,(string)$response->getBody());
     }
 
 }
-
-?>
