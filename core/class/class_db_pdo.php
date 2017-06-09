@@ -24,6 +24,7 @@
  */
 
 require_once 'class_functions.php';
+require_once 'class_db_pdo_statement.php';
 
 class Database extends functions
 {
@@ -162,11 +163,22 @@ class Database extends functions
         }
 
         // Set DSN
-        $this->dsn = $this->driver 
-            . ':host=' . $this->server
-            . ';port=' . $this->port
-            . ';dbname=' . $this->database
-        ;
+        if ($this->driver == 'oci') {
+            $tns = "(DESCRIPTION = "
+                    . "(ADDRESS_LIST ="
+                        . "(ADDRESS = (PROTOCOL = TCP)(HOST = " . $this->server . ")(PORT = " . $this->port . "))"
+                    . ")"
+                    . "(CONNECT_DATA ="
+                        . "(SERVICE_NAME = " . $this->database . ")"
+                    . ")"
+                . ")";
+            $this->dsn = "oci:dbname=" . $tns;
+        } else
+            $this->dsn = $this->driver
+                . ':host=' . $this->server
+                . ';port=' . $this->port
+                . ';dbname=' . $this->database;
+
 
         if (!isset(self::$preparedStmt[$this->dsn])) {
             self::$preparedStmt[$this->dsn] = array();
@@ -357,8 +369,10 @@ class Database extends functions
                 }
             }
         }
-        return $this->stmt;
 
+        $myPdoStatement = new MyPDOStatement($this->stmt);
+        $myPdoStatement->queryArgs = $parameters;
+        return $myPdoStatement;
     }
 
     public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
