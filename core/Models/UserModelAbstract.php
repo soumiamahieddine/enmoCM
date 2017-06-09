@@ -19,6 +19,18 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
 {
+    public static function get()
+    {
+        $aUsers = static::select([
+            'select'    => ['firstname', 'lastname', 'user_id'],
+            'table'     => ['users'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+        ]);
+
+        return $aUsers;
+    }
+
     public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -340,6 +352,26 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aReturn[0]['process_comment'];
     }
 
+    public static function getPrimaryGroupById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aGroup = static::select([
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroup_content.primary_group = ?'],
+            'data'      => [$aArgs['userId'], 'Y']
+        ]);
+
+        if (empty($aGroup[0])) {
+            return [];
+        }
+
+        return $aGroup[0];
+    }
+
     public static function getGroupsById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -370,5 +402,23 @@ class UserModelAbstract extends \Apps_Table_Service
         ]);
 
         return $aEntities;
+    }
+
+    public static function activateAbsenceById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'status'    => 'ABS'
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return true;
     }
 }

@@ -140,13 +140,14 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->get('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':getCurrentUserBasketsForAbsence');
+$app->post('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':setCurrentUserBasketsRedirectionForAbsence');
 $app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
 $app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
 $app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+$app->post('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

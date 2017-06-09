@@ -114,7 +114,6 @@ abstract class basket_Abstract extends Database
         }
         //secondary baskets
         $db = new Database();
-        $checkedBasket = false;
         $query = "select ubs.group_id, ubs.basket_id, ug.group_desc"
                . " from user_baskets_secondary ubs, usergroups ug"
                . " where ubs.group_id = ug.group_id and ubs.user_id = ? order by ug.group_desc";
@@ -132,10 +131,6 @@ abstract class basket_Abstract extends Database
                $_SESSION['user']['baskets'], $absBasketsArr
             );
         }
-        /*echo '<pre>';
-        print_r($_SESSION['user']['baskets']);
-        echo '</pre>';
-        exit;*/
     }
 
     /**

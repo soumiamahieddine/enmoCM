@@ -48,7 +48,7 @@ class Apps_Table_Service extends Core_Abstract_Service {
      *  - string/array where : WHERE [where]
      *  - data : for remplace ? on query
      *  - array conditions : [condition => valeur]
-     * @return type       [description]
+     * @return array       [description]
      */
     public static function select(array $args=[]){
         // Table :
