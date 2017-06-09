@@ -1905,6 +1905,13 @@ if (!defined('_UPDATED_EMAIL_SIGNATURE'))
     define('_UPDATED_EMAIL_SIGNATURE', 'Signature de mail modifiée');
 if (!defined('_DELETED_EMAIL_SIGNATURE'))
     define('_DELETED_EMAIL_SIGNATURE', 'Signature de mail supprimée');
+
+if (!defined('_UNDEFINED_USER'))
+    define('_UNDEFINED_USER', 'Utilisateur non répertorié');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activer mon absence');
+if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
+    define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
 
 /**** admin update control ****/

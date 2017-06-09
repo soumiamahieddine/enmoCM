@@ -21,7 +21,8 @@ export class ProfileComponent implements OnInit {
     coreUrl                     : string;
 
     user                        : any       = {
-        lang                    : {}
+        lang                    : {},
+        baskets                 : []
     };
     passwordModel               : any       = {
         currentPassword         : "",
@@ -41,6 +42,7 @@ export class ProfileComponent implements OnInit {
         htmlBody                : "",
         title                   : "",
     };
+    userAbsenceModel            : any[]     = [];
 
     showPassword                : boolean   = false;
     selectedSignature           : number    = -1;
@@ -121,6 +123,23 @@ export class ProfileComponent implements OnInit {
             .subscribe((data) => {
                 this.user = data;
 
+                this.user.baskets.forEach((value: any, index: number) => {
+                    this.user.baskets[index]['disabled'] = false;
+                });
+
+                setTimeout(() => {
+                    $j("#absenceUser").typeahead({
+                        order: "asc",
+                        source: {
+                            ajax: {
+                                type: "POST",
+                                dataType: "json",
+                                url: this.coreUrl + "rest/users/autocompleter",
+                            }
+                        }
+                    });
+                }, 0);
+
                 this.loading = false;
             });
     }
@@ -194,11 +213,41 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    getAbsenceInfos() {
-        this.http.get(this.coreUrl + 'rest/currentUser/baskets/absence')
+    addBasketRedirection() {
+        var index = $j("#selectBasketAbsenceUser option:selected").index();
+
+        if (index > 0) {
+            this.userAbsenceModel.push({
+                "basketId"      : this.user.baskets[index - 1].basket_id,
+                "basketName"    : this.user.baskets[index - 1].basket_name,
+                "virtual"       : this.user.baskets[index - 1].is_virtual,
+                "basketOwner"   : this.user.baskets[index - 1].basket_owner,
+                "newUser"       : $j("#absenceUser")[0].value,
+                "index"         : index - 1
+            });
+            this.user.baskets[index - 1].disabled = true;
+            $j('#selectBasketAbsenceUser option:eq(0)').prop('selected', true);
+            $j("#absenceUser")[0].value = "";
+        }
+    }
+
+    delBasketRedirection(index: number) {
+        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
+        this.userAbsenceModel.splice(index, 1);
+    }
+
+    activateAbsence() {
+        this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', this.userAbsenceModel)
             .map(res => res.json())
-            .subscribe((data) => {
-                this.loading = false;
+            .subscribe(() => {
+                location.hash = "";
+                location.search = "?display=true&page=logout&abs_mode";
+            }, (err) => {
+                this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                    $j("#resultInfo").slideUp(500);
+                });
             });
     }
 
@@ -417,10 +466,5 @@ export class ProfileComponent implements OnInit {
             }, (error) => {
                 alert(error.statusText);
             });
-    }
-
-    absenceModal() {
-        createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     }
 }

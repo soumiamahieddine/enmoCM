@@ -1896,6 +1896,13 @@ if (!defined('_UPDATED_EMAIL_SIGNATURE'))
     define('_UPDATED_EMAIL_SIGNATURE', 'Mail signature updated');
 if (!defined('_DELETED_EMAIL_SIGNATURE'))
     define('_DELETED_EMAIL_SIGNATURE', 'Mail signature deleted');
+
+if (!defined('_UNDEFINED_USER'))
+    define('_UNDEFINED_USER', 'Undefined user');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activate my absence');
+if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
+    define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
 
 /**** admin update control ****/
