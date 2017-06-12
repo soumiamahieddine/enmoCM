@@ -46,7 +46,7 @@ if ($whereSecurityOnEntities == '') {
 
 $db = new Database();
 $stmt = $db->query(
-    "SELECT DISTINCT(users.user_id), CONCAT(users.lastname,' ',users.firstname) as tag FROM users, users_entities "
+    "SELECT DISTINCT(users.user_id), users.lastname || ' ' || users.firstname as tag FROM users, users_entities "
     . " WHERE ("
         . "lower(users.lastname) like lower(:what) "
         . " or lower(users.user_id) like lower(:what) "
