@@ -167,13 +167,17 @@ $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserControlle
 //$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 //parameters
+$app->get('/parameters/lang',\Core\Controllers\ParametersController::class . ':getLang');
 $app->get('/parameters', \Core\Controllers\ParametersController::class . ':getList');
 $app->get('/parameters/{id}', \Core\Controllers\ParametersController::class . ':getById');
 $app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
 $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
 
+
+
 //priorities
+
 $app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
 $app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
 

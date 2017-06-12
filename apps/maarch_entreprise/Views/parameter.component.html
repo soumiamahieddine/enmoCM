@@ -1,34 +1,40 @@
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
 </div>
-<h1 id="pageTitle"></h1>
-<div id="add" *ngIf="mode == 'add' ">
+<div id="create" *ngIf="mode == 'create' ">
     <div class="block">
         <div id="parameter" class="forms" style="width:400px;margin:auto;">
     
     <datalist id="messages"><option id="_ID_IS_MANDATORY" value="Identifiant obligatoire"></option><option id="_VALUE_IS_MANDATORY" value="Valeur obligatoire"></option><option id="_INVALID_PARAMETER_ID" value="Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés"></option></datalist><input name="mode" id="mode" value="add" type="hidden"><p></p>
         <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
             <p>      
-                <label for="id" >Identifiant</label>
+                <label for="id" >{{this.lang.identifier}}</label>
                 <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required><span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <label for="type">Type</label>
-                <select name="type" id="type"  ><option value="string" [(ngValue)]="string">Chaine de caractères</option><option value="int" [(ngValue)]="int">Nombre entier</option><option value="date" [(ngValue)]="date">Date</option></select><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                <label for="type">{{this.lang.type}}</label>
+                <select name="type" id="type" [(ngModel)]="type" >
+                    <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
+                    <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
+                    <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
+                </select>
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <label for="param_value_string">Valeur</label>
-                <input name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string"><input name="param_value_int" id="param_value_int" style="display:none" type="text" [(ngModel)]="parameter.param_value_int" ><input name="param_value_date" id="param_value_date" style="display:none" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date"></p>
+                <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
+                <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
+                <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
+
+                <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
+                <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
+                <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
+            </p>
             <p>
-                <label for="description">Description</label>
+                <label for="description">{{this.lang.description}}</label>
                 <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
-            <p class="buttons" style="text-align:center;">
-                <input value="Valider" class="button" onclick="save_parameter();" type="button">&nbsp;
-                <input value="Annuler" id="cancel" class="button" onclick="goTo('index.php?admin=parameters&amp;page=admin_parameters');" type="button">
-            </p>
             <p class="button" style="text-align:center">
-                <button class="btn btn-default" type="submit">submit</button>
-                <button class="btn btn-default" (click)="changeMode('list')">Annuler</button>
+                <button class="btn btn-default" type="submit">{{this.lang.validate}}</button>
+                <button class="btn btn-default" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
             </p>
         
         </form>     
@@ -41,102 +47,35 @@
     <datalist id="messages"><option id="_ID_IS_MANDATORY" value="Identifiant obligatoire"></option><option id="_VALUE_IS_MANDATORY" value="Valeur obligatoire"></option><option id="_INVALID_PARAMETER_ID" value="Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés"></option></datalist><input name="mode" id="mode" value="add" type="hidden"><p></p>
         <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
             <p>      
-                <label for="id" >Identifiant</label>
+                <label for="id" >{{this.lang.identifier}}</label>
                 <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required readonly><span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <label for="type">Type</label>
-                <select name="type" id="type" [(ngModel)]="type" ><option value="string" [(ngValue)]="string">Chaine de caractères</option><option value="int" [(ngValue)]="int">Nombre entier</option><option value="date" [(ngValue)]="date">Date</option></select><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                <label for="type">{{this.lang.type}}</label>
+                <select name="type" id="type" [(ngModel)]="type" >
+                    <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
+                    <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
+                    <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
+                </select><span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <label for="param_value_string">Valeur</label>
-                <input name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string"><input name="param_value_int" id="param_value_int" style="display:none" type="text" [(ngModel)]="parameter.param_value_int" ><input name="param_value_date" id="param_value_date" style="display:none" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date"></p>
+                <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
+                <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
+                <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
+
+                <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
+                <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
+                <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
+            </p>
             <p>
-                <label for="description">Description</label>
+                <label for="description">{{this.lang.description}}</label>
                 <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
-            <p class="buttons" style="text-align:center;">
-                <input value="Valider" class="button" onclick="save_parameter();" type="button">&nbsp;
-                <input value="Annuler" id="cancel" class="button" onclick="goTo('index.php?admin=parameters&amp;page=admin_parameters');" type="button">
-            </p>
             <p class="button" style="text-align:center">
-                <button class="btn btn-default" type="submit">Valider</button>
-                <button class="btn btn-default" (click)="changeMode('list')">Annuler</button>
+                <button class="btn btn-default" type="submit">{{this.lang.validate}}</button>
+                <button class="btn btn-default" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
             </p>
         
         </form>     
     </div>
     </div>
-</div>
-<div *ngIf="mode == 'list' ">
-    <table id ="paramsTable" class="display" summary="" style="width: 100%; min-width: 900px;" width="100%" cellspacing="0" border="0">
-            <thead>
-                <tr>
-                    <th style="width:20%;" valign="bottom" align="left"><span>&nbsp;Identifiant                         </span></th>
-                    <th style="width:30%;" valign="bottom" align="left"><span>&nbsp;Description                         </span></th>
-                    <th style="width:30%;" valign="bottom" align="left"><span>&nbsp;Valeur                         </span></th>
-                    <th><span>&nbsp;                         </span></th>
-                    <th><span>&nbsp;                         </span></th>
-                </tr>
-            </thead>
-            <!--<tfoot>
-                <tr>
-                    <td colspan="9" class="price">
-                        <!--<span class="add clearfix">
-                            <a href="http://localhost/maarch_courrier/cs_Maarch/apps/maarch_entreprise/index.php?page=admin_parameter&amp;mode=add&amp;admin=parameters&amp;start=0&amp;order=asc&amp;order_field=&amp;what=">
-                                <span>
-                                    Nouveau paramètre                                    </span>
-                            </a>
-                        </span>
-                        <a href="http://localhost/maarch_courrier/cs_Maarch/apps/maarch_entreprise/index.php?page=admin_parameter&amp;mode=add&amp;admin=parameters&amp;start=0&amp;order=asc&amp;order_field=&amp;what=">
-                            <i class="fa fa-plus-square fa-3x" title="Nouveau paramètre"></i>
-                        </a>
-                    </td>
-                </tr>
-            </tfoot>-->
-                
-                    <tbody>
-                        <tr *ngFor="let parameter of parametersList">
-                                <td> {{parameter.id}} </td>
-                                <td> {{parameter.description}} </td>
-                                <td> {{parameter.param_value_string || parameter.param_value_int || parameter.param_value_date}} </td>
-                                <td><i style ="cursor:pointer" (click)="updateParameter(parameter.id)" class="fa fa-edit fa-2x" title="Modifier"></i></td>
-                                <td><i style ="cursor:pointer" (click)="deleteParameter(parameter.id)" class="fa fa-remove fa-2x" title="Supprimer"></i></td>
-                        </tr>
-                    </tbody>
-    </table>
-    <i (click)="changeMode('add')" class="fa fa-plus-square fa-3x" style="cursor:pointer" title="Nouveau paramètre"></i>
-    
-   <!-- <table>
-        <thead>
-            <tr>
-                <th>th1</th>
-                <th>th2</th>
-                <th>th3</th>
-                <th>th4</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td>f1</td>
-                <td>f2</td>
-                <td>f3</td>
-                <td>f4</td>
-                <td>f4</td>
-            </tr>
-        </tfoot>
-        <tbody>
-            <tr>
-                <td>td1</td>
-                <td>td2</td>
-                <td>td3</td>
-                <td>td4</td>
-            </tr>
-            <tr>
-                <td>td1</td>
-                <td>td2</td>
-                <td>td3</td>
-                <td>td4</td>
-            </tr>
-        </tbody>
-    </table>-->
 </div>

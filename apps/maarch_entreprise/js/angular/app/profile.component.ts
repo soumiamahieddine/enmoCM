@@ -120,7 +120,7 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 this.user = data;
-
+                console.log(this.user);
                 this.loading = false;
             });
     }

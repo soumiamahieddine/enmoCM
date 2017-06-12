@@ -17,6 +17,7 @@ namespace Core\Models;
 
 class LangModelAbstract
 {
+
     public static function getProfileLang()
     {
         $aLang = [
@@ -52,9 +53,42 @@ class LangModelAbstract
             'clickOn'               => _CLICK_ON,
             'toSignature'           => _TO_ADD_SIGNATURE,
             'toUpdateSignature'     => _TO_UPDATE_SIGNATURE,
-            'cancel'                => _CANCEL
+            'cancel'                => _CANCEL           
         ];
 
+        return $aLang;
+    }
+
+    public static function getParametersLang(){
+        $aLang = $aLang = [
+                'parameter'             =>  _PARAMETER,
+                'identifier'            =>  _PARAMETER_IDENTIFIER,
+                'description'           =>  _DESCRIPTION,
+                'value'                 =>  _VALUE,
+                'type'                  =>  _TYPE,
+                'string'                =>  _STRING,
+                'integer'               =>  _INTEGER,
+                'date'                  =>  _DATE,
+                'validate'              =>  _VALIDATE,
+                'cancel'                =>  _CANCEL,
+                'modifyParameter'       =>  _MODIFY_PARAMETER,
+                'deleteParameter'       =>  _DELETE_PARAMETER,
+                'page'                  =>  _PAGE,
+                'outOf'                 =>  _OUT_OF,
+                'search'                =>  _SEARCH,
+                'recordsPerPage'        =>  _RECORDS_PER_PAGE,
+                'display'               =>  _DISPLAY,
+                'noRecords'             =>  _NO_RECORDS,
+                'available'             =>  _AVAILABLE,
+                'filteredFrom'          =>  _FILTERED_FROM,
+                'records'               =>  _RECORDS,
+                'first'                 =>  _FIRST,
+                'last'                  =>  _LAST,
+                'next'                  =>  _NEXT,
+                'previous'              =>  _PREVIOUS
+
+
+            ];
         return $aLang;
     }
 

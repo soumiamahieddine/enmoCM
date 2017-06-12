@@ -5,6 +5,7 @@
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Core\Models\LangModel;
 use Core\Models\ParametersModel;
 
     require_once 'core/class/class_db_pdo.php';
@@ -13,18 +14,35 @@ use Core\Models\ParametersModel;
     class ParametersController
     {
 
+        /*public function getLang(RequestInterface $request, ResponseInterface $response){
+            $datas = [];
+            $datas = LangModel::getParameterLang();
+            return $response->withJson($datas);
+        }*/
+
         public function getList(RequestInterface $request, ResponseInterface $response)
         {
-            $obj = ParametersModel::getList();
-            
+
+            $obj = [
+                    'parametersList'    =>  ParametersModel::getList(),
+                    'lang'              =>  ParametersModel::getParametersLang()
+            ];
+            //var_dump($response->withJson($obj));
+            //exit;
+            return $response->withJson($obj);
+        }
+
+        public function getLang(RequestInterface $request, ResponseInterface $response){
+            $obj = ParametersModel::getParametersLang();
             return $response->withJson($obj);
         }
 
         public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
         {
-
+                    
             $obj = ParametersModel::getById(['id' => $aArgs['id']]);
             return $response->withJson($obj);
+             
         }
         public function create(RequestInterface $request, ResponseInterface $response)
         {
@@ -111,7 +129,10 @@ use Core\Models\ParametersModel;
                     array_push($errors,'DESCRIPTION INVALIDE');
                 }
                 if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('param_value_string'))&&$request->getParam('param_value_string')!=null) {
-                    array_push($errors,'PARAM STRING INVALIDE');
+                    array_push($errors,'Chaine de caractère invalide');
+                }
+                if (!Validator::regex('/^[0-9]*$/')->validate($request->getParam('param_value_int')) && $request->getParam('param_value_int')!=null){
+                    array_push($errors,'Entier non valide');
                 }
                 $obj = ParametersModel::getById([
                     'id' => $aArgs['id']

@@ -15,6 +15,7 @@ var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
+var parameters_component_1 = require("./parameters.component");
 var signature_book_component_1 = require("./signature-book.component");
 var AppModule = (function () {
     function AppModule() {
@@ -31,13 +32,14 @@ AppModule = __decorate([
                 { path: 'profile', component: profile_component_1.ProfileComponent },
                 { path: 'parameter/create', component: parameter_component_1.ParameterComponent },
                 { path: 'parameter/update/:id', component: parameter_component_1.ParameterComponent },
-                { path: 'parameter/list', component: parameter_component_1.ParameterComponent },
+                { path: 'parameter/delete/:id', component: parameter_component_1.ParameterComponent },
+                { path: 'parameter/list', component: parameters_component_1.ParametersComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        declarations: [app_component_1.AppComponent, profile_component_1.ProfileComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [app_component_1.AppComponent, profile_component_1.ProfileComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
         providers: [],
         bootstrap: [app_component_1.AppComponent]
     })

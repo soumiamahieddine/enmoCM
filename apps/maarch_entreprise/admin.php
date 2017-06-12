@@ -51,7 +51,7 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><i class="fa fa-cogs fa-2x"></i> <?php echo _ADMIN;?></h1>
+<h1 id='pageTitle'><i class="fa fa-cogs fa-2x"></i> <?php echo _ADMIN;?></h1>
 <div id="inner_content" class="clearfix">
 <?php
 $admin->display_app_admin_services($_SESSION['app_services']);

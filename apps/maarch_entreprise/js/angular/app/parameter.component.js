@@ -14,10 +14,10 @@ var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
 var router_1 = require("@angular/router");
 var ParameterComponent = (function () {
-    function ParameterComponent(http, route) {
+    function ParameterComponent(http, route, router) {
         this.http = http;
         this.route = route;
-        this.test = 'test';
+        this.router = router;
         this.mode = null;
         this.parametersList = null;
         this.parameter = {
@@ -27,80 +27,40 @@ var ParameterComponent = (function () {
             param_value_date: null,
             description: null
         };
+        this.lang = "";
         this.resultInfo = "";
     }
     ParameterComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //this.dtOptions= {
-        //};
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareParameter();
-        this.route.params.subscribe(function (params) {
-            if (_this.route.toString().includes('list')) {
-                _this.changeMode('list');
-            }
-        });
-    };
-    ParameterComponent.prototype.loadParametersList = function () {
-        var _this = this;
-        this.http.get(this.coreUrl + 'rest/parameters')
+        this.http.get(this.coreUrl + 'rest/parameters/lang')
+            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.parametersList = JSON.parse(data.text());
-            _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètres : " + Object.keys(_this.parametersList).length + " paramètre(s)";
-            $j('#pageTitle').html(_this.pageTitle);
-            //this.dtTrigger.next();
-            setTimeout((function () {
-                $j('#paramsTable').DataTable();
-            }), 0);
-            _this.parameter = {
-                id: null,
-                param_value_string: null,
-                param_value_int: null,
-                param_value_date: null,
-                description: null
-            };
+            _this.lang = data;
+        });
+        this.route.params.subscribe(function (params) {
+            if (_this.route.toString().includes('update')) {
+                _this.mode = 'update';
+                _this.paramId = params['id'];
+                _this.getParameterInfos(_this.paramId);
+            }
+            else if (_this.route.toString().includes('create')) {
+                _this.mode = 'create';
+                _this.type = 'string';
+            }
         });
     };
     ParameterComponent.prototype.prepareParameter = function () {
         $j('#inner_content').remove();
     };
+    ParameterComponent.prototype.updateBreadcrumb = function (applicationName) {
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+    };
     ParameterComponent.prototype.getParameterInfos = function (paramId) {
         var _this = this;
+        console.log(paramId);
         this.http.get(this.coreUrl + 'rest/parameters/' + paramId)
-            .subscribe(function (data) {
-            var infoParam = JSON.parse(data.text());
-            _this.parameter.id = infoParam[0].id;
-            if (infoParam[0].param_value_string != null) {
-                _this.parameter.param_value_string = infoParam[0].param_value_string;
-                _this.type = "string";
-            }
-            else if (infoParam[0].param_value_int != null) {
-                _this.parameter.param_value_int = infoParam[0].param_value_int;
-                _this.type = "int";
-            }
-            else if (infoParam[0].param_value_date != null) {
-                _this.parameter.param_value_date = infoParam[0].param_value_date;
-                _this.type = "date";
-            }
-            _this.parameter.description = infoParam[0].description;
-            _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
-            $j('#pageTitle').html(_this.pageTitle);
-        });
-    };
-    ParameterComponent.prototype.changeMode = function (mode) {
-        this.mode = mode;
-        if (mode == 'list') {
-            this.loadParametersList();
-        }
-    };
-    ParameterComponent.prototype.updateParameter = function (paramId) {
-        this.paramId = paramId;
-        this.changeMode('update');
-        this.getParameterInfos(paramId);
-    };
-    ParameterComponent.prototype.deleteParameter = function (paramId) {
-        var _this = this;
-        this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -111,18 +71,29 @@ var ParameterComponent = (function () {
                 });
             }
             else {
-                _this.resultInfo = "Paramètre supprimé avec succès";
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-                _this.loadParametersList();
+                var infoParam = data;
+                _this.parameter.id = infoParam[0].id;
+                if (infoParam[0].param_value_string != null) {
+                    _this.parameter.param_value_string = infoParam[0].param_value_string;
+                    _this.type = "string";
+                }
+                else if (infoParam[0].param_value_int != null) {
+                    _this.parameter.param_value_int = infoParam[0].param_value_int;
+                    _this.type = "int";
+                }
+                else if (infoParam[0].param_value_date != null) {
+                    _this.parameter.param_value_date = infoParam[0].param_value_date;
+                    _this.type = "date";
+                }
+                _this.parameter.description = infoParam[0].description;
+                _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
+                $j('#pageTitle').html(_this.pageTitle);
             }
         });
     };
     ParameterComponent.prototype.submitParameter = function () {
         var _this = this;
-        if (this.mode == 'add') {
+        if (this.mode == 'create') {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
@@ -132,6 +103,9 @@ var ParameterComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
+                    _this.parameter.param_value_date = null;
+                    _this.parameter.param_value_int = null;
+                    _this.parameter.param_value_string = null;
                 }
                 else {
                     _this.resultInfo = "Paramètre créé avec succès";
@@ -139,7 +113,7 @@ var ParameterComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.changeMode('list');
+                    _this.router.navigate(['/parameter/list']);
                 }
             });
         }
@@ -160,7 +134,7 @@ var ParameterComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.changeMode('list');
+                    _this.router.navigate(['/parameter/list']);
                 }
             });
         }
@@ -170,8 +144,8 @@ var ParameterComponent = (function () {
 ParameterComponent = __decorate([
     core_1.Component({
         templateUrl: 'Views/parameter.component.html',
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameter.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute])
+    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], ParameterComponent);
 exports.ParameterComponent = ParameterComponent;

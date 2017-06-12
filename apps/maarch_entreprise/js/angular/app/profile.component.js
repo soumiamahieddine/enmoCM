@@ -105,6 +105,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
+            console.log(_this.user);
             _this.loading = false;
         });
     };

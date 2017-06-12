@@ -134,7 +134,7 @@
                 'form_params' => $aArgs
             ]);
 
-            $compare ='{"errors":["ID INVALIDE","DESCRIPTION INVALIDE","PARAM STRING INVALIDE"]}';
+            $compare ='{"errors":["ID INVALIDE","DESCRIPTION INVALIDE","Chaine de caract\u00e8re invalide"]}';
             $this->assertSame($compare,(string)$response->getBody());            
         }
 

@@ -15,6 +15,10 @@
             return $aReturn;
         }
         
+        public static function getParametersLang(){
+            $aLang = LangModel::getParametersLang();
+            return $aLang;
+        }
 
         public static function getById(array $aArgs = [])
         {
