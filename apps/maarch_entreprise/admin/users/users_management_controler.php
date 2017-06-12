@@ -223,7 +223,7 @@ function display_list()
     $arrayPDO = array();
     if (isset($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
         $arrayPDO = array($what.'%', $what.'%', $what);
     }
 
@@ -256,7 +256,7 @@ function display_list()
         $what = '';
         if (isset($_REQUEST['what'])) {
             $what = $_REQUEST['what'];
-            $where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+            $where .= " and (lower(lastname) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
             $arrayPDO = array($what.'%',$what);
         }
 
