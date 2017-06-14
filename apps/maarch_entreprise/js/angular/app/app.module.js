@@ -11,7 +11,6 @@ var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
-//import { DataTablesModule } from '../../../../../node_modules/angular-datatables';
 var app_component_1 = require("./app.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
