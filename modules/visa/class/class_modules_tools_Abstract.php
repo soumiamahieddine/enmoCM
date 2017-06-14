@@ -360,7 +360,7 @@ abstract class visa_Abstract extends Database
 		$stepDetails = array();
 		$db = new Database();
 		$order = "ORDER by listinstance_id ASC";
-		$where = "res_id= ? and coll_id = ? and difflist_type = ? and sequence = ? "
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and sequence = ? ";
 		$query = $db->limit_select(0, 1, '*', 'listinstance', $where, '', '', $order);
 
 		$stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $sequence));
@@ -388,7 +388,7 @@ abstract class visa_Abstract extends Database
 	public function myPosVisa($res_id, $coll_id, $listDiffType){
 		$db = new Database();
 		$order = "ORDER by listinstance_id ASC";
-		$where = "res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL"
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL";
 		$query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
 
 		$stmt = $db->query($select, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
@@ -491,7 +491,7 @@ abstract class visa_Abstract extends Database
 		$where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
         $order = "ORDER BY listinstance_id ASC";
         $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
-        
+
 		$stmt = $db->query($query, array($res_id, $coll_id, 'VISA_CIRCUIT'));
 		$resListDiffVisa = $stmt->fetchObject();
 
