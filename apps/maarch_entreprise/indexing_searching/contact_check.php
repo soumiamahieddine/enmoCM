@@ -42,15 +42,17 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 
 	//IF EXTERNAL CONTACT
 	if (is_numeric($_POST['contact_id'])) {
-		$where = "status <> 'DEL' AND contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "status <> 'DEL' AND contact_id = ? AND address_id = ? AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']
+			." AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
+		$wherePDO = "status <> 'DEL' AND contact_id = ? AND address_id = ? AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
 		$arrayPDO = array($_POST['contact_id'], $_POST['address_id']);
 	//IF INTERNAL CONTACT
 	} else {
-		$where = "status <> 'DEL' AND (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
+		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
 		$arrayPDO = array($_POST['contact_id'], $_POST['contact_id']);
 	}
+	echo $wherePDO;
 
 	//MERGE GLOBAL SECURITY WITH QUERY DOC
 	$wherePDO = $wherePDO . ' AND ('.$whereSec.')';

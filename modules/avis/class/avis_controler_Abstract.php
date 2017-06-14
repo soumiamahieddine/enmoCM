@@ -44,7 +44,7 @@ abstract class avis_controler_Abstract
             $stmt = $db->query($query, array($recommendation_limit_date, $resId));
         }
 
-        $query = "UPDATE res_letterbox SET modification_date = CURRENT_DATE where res_id = ?";
+        $query = "UPDATE res_letterbox SET modification_date = " . $db->current_datetime() . " where res_id = ?";
         $stmt = $db->query($query, array($resId));
     }
 
