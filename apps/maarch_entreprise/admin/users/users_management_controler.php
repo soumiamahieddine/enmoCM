@@ -663,9 +663,25 @@ function display_up_check($user_id)
                     $visa->setStatusVisa($res_id, 'letterbox_coll');
 
                     //UDPATE listinstance to reset previous visa user
-                    $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
+                    // $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
+                    // $arrayPDO = array($res_id);
+                    // $db->query($query, $arrayPDO);
+                    
+                    $whereSub = "res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT'";
+                    $orderSub = "ORDER BY sequence DESC";
+                    $subQuery = $db->limit_select(0, 1, 'listinstance_id', 'listinstance', $whereSub, '', '', $orderSub);
+                    //echo $subQuery . '<br/>';
                     $arrayPDO = array($res_id);
-                    $db->query($query, $arrayPDO);  
+                    $stmt = $db->query($subQuery, $arrayPDO);
+                    while ($resSub = $stmt->fetchObject()) {
+                        $listinstanceIDs[] = $resSub->listinstance_id;
+                    }
+                    if (count($listinstanceIDs) > 0) {
+                        //var_dump($listinstanceIDs);
+                        $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id in (?)";
+                        $db->query($query, $listinstanceIDs);
+                        //echo $query . '<br/>';
+                    }
 
                 }
 
