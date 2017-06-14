@@ -284,3 +284,15 @@ if(!defined('_PARAM_UPDATED_SUCCESS'))
 
 if(!defined('_DELETE_CONFIRM'))
     define('_DELETE_CONFIRM','Voulez-vous vraiment supprimer le paramètre');
+
+if(!defined('_ID_IS_MANDATORY'))
+    define('_ID_IS_MANDATORY','Identifiant obligatoire');
+
+if(!defined('_VALUE_IS_MANDATORY'))
+    define('_VALUE_IS_MANDATORY','Valeur obligatoire');
+
+if(!defined('_INVALID_PARAMETER_ID'))
+    define('_INVALID_PARAMETER_ID','Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés');
+
+if(!defined('_CONTROL_TECHNICAL_PARAMS'))
+    define('_CONTROL_TECHNICAL_PARAMS','Contrôler les paramètres techniques');
