@@ -64,7 +64,14 @@ abstract class admin_Abstract extends functions
 				    && $_SESSION['user']['services'][$app_services[$i]['id']]
 				) {
 						if($app_services[$i]['id']=='admin_parameters'){?>
-							<div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="triggerAngular(false, '#/parameter/list')">  <!-- triggerAngular(false, '#/parameter') -->
+							<?php
+								if (PROD_MODE) {
+									echo '<div class="admin_item" title="<?php functions::xecho($app_services[$i][\'comment\']);?>" onclick="triggerAngular(true, \'#/parameter/list\')">';
+								
+								} else {
+									echo '<div class="admin_item" title="<?php functions::xecho($app_services[$i][\'comment\']);?>" onclick="triggerAngular(false, \'#/parameter/list\')">';
+								}
+							?>
 							<div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
 							<div <?php functions::xecho($debug_style);?>>
 

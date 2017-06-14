@@ -7,7 +7,8 @@ var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
         'profile',
-        'signature-book'
+        'signature-book',
+        'parameters'
     ];
 
     $j.ajax({
