@@ -3249,39 +3249,36 @@ function resetSelect(id) {
 
 function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){
     var minus;
-    if($j('#'+branch_id+' i').first().prop('class')==closed)
-    {
-        minus=false;
+    if($j('#'+branch_id+' i').first().prop('class')==closed) {
+        minus = false;
+    } else {
+        minus = true;
     }
-    else{
-        minus =true;
-        
-    }
+
     $j.ajax({
-        url: path_manage_script, 
-        type: 'POST',
-        data: {branch_id : branch_id},
+        url  : path_manage_script, 
+        type : 'POST',
+        data : {
+            branch_id : branch_id
+        },
         success: function(result){
-                var branch = $j('#'+branch_id);
-                if(minus){
-                    BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
-                    $j('#'+branch_id+' i').first().prop('class',closed);
-                }
-                else{
-                    if(result!=''){
-                        BootstrapTree.addNode($j('#'+branch_id),$j(result), opened, closed);
-                        BootstrapTree.init($j('#'+treeDiv),opened,closed);
-                        $j('#'+branch_id+' > ul').first().find('li').hide();
-                        $j('#'+branch_id+' > ul').first().find('li').show('fast');
-                        $j('#'+branch_id+' i').first().prop('class',opened);
-                    }
-                    else{
-                        $j('#'+branch_id+' i').first().prop('class','emptyNode');
-                    }
+            if(minus) {
+                BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                $j('#'+branch_id+' i').first().prop('class',closed);
+            } else {
+                if(result!=''){
+                    BootstrapTree.addNode($j('#'+branch_id), $j(result), opened, closed);
+                    BootstrapTree.init($j('#'+treeDiv), opened, closed);
+                    $j('#'+branch_id+' > ul').first().find('li').hide();
+                    $j('#'+branch_id+' > ul').first().find('li').show('fast');
+                    $j('#'+branch_id+' i').first().prop('class',opened);
+                } else{
+                    $j('#'+branch_id+' i').first().prop('class','emptyNode');
                 }
             }
-        });
-    }
+        }
+    });
+}
 
 // Exemple appel service
 // function testService(){

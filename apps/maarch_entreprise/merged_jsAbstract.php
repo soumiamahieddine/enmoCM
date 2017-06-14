@@ -49,10 +49,10 @@ class MergedJsAbstract {
 		//TODO clean
 
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
+		echo "\n";
 //		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
-		readfile('apps/maarch_entreprise/js/tabricator.js');
 
+		echo "\n";
 		//Dependencies
 		readfile('node_modules/jquery/dist/jquery.min.js');
 		readfile('node_modules/core-js/client/shim.js');
@@ -62,6 +62,7 @@ class MergedJsAbstract {
 		readfile('node_modules/tinymce/tinymce.min.js');
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
 		
 		echo "\n";
@@ -77,7 +78,6 @@ class MergedJsAbstract {
 		//Maarch
 		include('apps/maarch_entreprise/js/functions.js');
 		include('apps/maarch_entreprise/js/indexing.js');
-		include('apps/maarch_entreprise/js/jquery.typeahead.min.js');
 //		include('apps/maarch_entreprise/js/RSVP.js');
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
