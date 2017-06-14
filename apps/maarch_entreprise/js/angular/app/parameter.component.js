@@ -171,7 +171,7 @@ var ParameterComponent = (function () {
 }());
 ParameterComponent = __decorate([
     core_1.Component({
-        templateUrl: 'Views/parameter.component.html',
+        templateUrl: angularGlobals.parameterView,
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameter.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])

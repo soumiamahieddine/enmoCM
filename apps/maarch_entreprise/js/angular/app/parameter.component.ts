@@ -7,7 +7,7 @@ declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 @Component({
-    templateUrl : 'Views/parameter.component.html',
+    templateUrl : angularGlobals.parameterView,
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameter.component.css']
 })
 export class ParameterComponent implements OnInit {
@@ -27,7 +27,7 @@ export class ParameterComponent implements OnInit {
     paramDateTemp   :string;
     lang        : any = "";
 
-    resultInfo = "";
+    resultInfo : string = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {

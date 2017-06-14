@@ -8,7 +8,8 @@ function triggerAngular(prodmode, locationToGo) {
     var views = [
         'profile',
         'signature-book',
-        'parameters'
+        'parameters',
+        'parameter'
     ];
 
     $j.ajax({

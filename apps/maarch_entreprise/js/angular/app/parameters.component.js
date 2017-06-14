@@ -75,10 +75,7 @@ var ParametersComponent = (function () {
     ParametersComponent.prototype.deleteParameter = function (paramId) {
         var _this = this;
         var resp = confirm(this.lang.deleteConfirm + ' ' + paramId + '?');
-        if (!resp) {
-            return;
-        }
-        else {
+        if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
@@ -113,7 +110,7 @@ var ParametersComponent = (function () {
 }());
 ParametersComponent = __decorate([
     core_1.Component({
-        templateUrl: 'Views/parameters.component.html',
+        templateUrl: angularGlobals.parametersView,
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameter.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
