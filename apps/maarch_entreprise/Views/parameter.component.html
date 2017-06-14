@@ -5,7 +5,7 @@
     <div class="block">
         <div id="parameter" class="forms" style="width:400px;margin:auto;">
     
-    <datalist id="messages"><option id="_ID_IS_MANDATORY" value="Identifiant obligatoire"></option><option id="_VALUE_IS_MANDATORY" value="Valeur obligatoire"></option><option id="_INVALID_PARAMETER_ID" value="Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés"></option></datalist><input name="mode" id="mode" value="add" type="hidden"><p></p>
+        <datalist id="messages"><option id="_ID_IS_MANDATORY" value="{{lang.idIsMandatory}}"></option><option id="_VALUE_IS_MANDATORY" value="{{lang.valueIsMandatory}}"></option><option id="_INVALID_PARAMETER_ID" value="{{lang.invalidParameterId}}"></option></datalist><input name="mode" id="mode" value="add" type="hidden"><p></p>
         <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
             <p>      
                 <label for="id" >{{this.lang.identifier}}</label>

@@ -2,7 +2,7 @@
     {{resultInfo}}
 </div>
 <div>
-    <input style="margin : 10px" class="btn btn-default" value="Contrôler les paramètres techniques" onclick="window.location.href = 'http://localhost/maarch_courrier/cs_Maarch/apps/maarch_entreprise/index.php?admin=parameters&amp;page=control_param_technic';" type="button">
+    <input style="margin : 10px" class="btn btn-default" value="{{lang.controlTechnicalParams}}" onclick="window.location.href = 'http://localhost/maarch_courrier/cs_Maarch/apps/maarch_entreprise/index.php?admin=parameters&amp;page=control_param_technic';" type="button">
     <table id ="paramsTable" class="display" summary="" style="width: 100%; min-width: 900px;" width="100%" cellspacing="0" border="0">
             <thead>
                 <tr>
@@ -13,16 +13,16 @@
                     <th><span>&nbsp;                         </span></th>
                 </tr>
             </thead>
-                <tbody>
-                    <tr *ngFor="let parameter of parametersList" id="{{parameter.id}}">
-                            <td> {{parameter.id}} </td>
-                            <td> {{parameter.description}} </td>
-                            <td> {{parameter.param_value_string || parameter.param_value_int || parameter.param_value_date}} </td>
-                            <td><a routerLink="/parameter/update/{{parameter.id}}"><i style ="cursor:pointer"  class="fa fa-edit fa-2x" title="{{lang.modifyParameter}}"></i></a></td>
-                            <td><i (click)="deleteParameter(parameter.id)"  style ="cursor:pointer; color: #D9534F" class="fa fa-trash fa-2x" title="{{lang.deleteParameter}} {{parameter.id}}"></i></td>
+            <tbody>
+                <tr *ngFor="let parameter of parametersList" id="{{parameter.id}}">
+                        <td> {{parameter.id}} </td>
+                        <td> {{parameter.description}} </td>
+                        <td> {{parameter.param_value_string || parameter.param_value_int || parameter.param_value_date}} </td>
+                        <td><a routerLink="/parameter/update/{{parameter.id}}"><i style ="cursor:pointer"  class="fa fa-edit fa-2x" title="{{lang.modifyParameter}}"></i></a></td>
+                        <td><i (click)="deleteParameter(parameter.id)"  style ="cursor:pointer; color: #D9534F" class="fa fa-trash fa-2x" title="{{lang.deleteParameter}} {{parameter.id}}"></i></td>
 
-                    </tr>
-                </tbody>
+                </tr>
+            </tbody>
     </table>
     <i routerLink="/parameter/create" class="fa fa-plus-square fa-3x" style="cursor:pointer; position: absolute; right: 25px; color : #337AB7" title="Nouveau paramètre"></i>
 </div>

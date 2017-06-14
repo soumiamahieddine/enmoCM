@@ -88,7 +88,11 @@ class LangModelAbstract
                 'previous'              =>  _PREVIOUS,
                 'paramCreatedSuccess'   =>  _PARAM_CREATED_SUCCESS,
                 'paramUpdatedSuccess'   =>  _PARAM_UPDATED_SUCCESS,
-                'deleteConfirm'         => _DELETE_CONFIRM
+                'deleteConfirm'         =>  _DELETE_CONFIRM,
+                'idIsMandatory'         =>  _ID_IS_MANDATORY,
+                'valueIsMandatory'      =>  _VALUE_IS_MANDATORY,
+                'invalidParameterId'    =>  _INVALID_PARAMETER_ID,
+                'controlTechnicalParams'=>  _CONTROL_TECHNICAL_PARAMS
             ];
         return $aLang;
     }
