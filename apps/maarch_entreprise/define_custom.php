@@ -20,5 +20,5 @@
 
 // Write your custom define
 if (!defined('PROD_MODE')) {
-	define('PROD_MODE', false);
+	define('PROD_MODE', true);
 }
