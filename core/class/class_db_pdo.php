@@ -375,31 +375,31 @@ class Database extends functions
         return $myPdoStatement;
     }
 
-    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
+    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='', $order_by = '')
     {
             
         // LIMIT
         if($count || $start) 
         {
             switch($_SESSION['config']['databasetype']) {
-            case 'MYSQL' : 
-                $limit_clause = 'LIMIT ' . $start . ',' . $count;
-                break;
-                
-            case 'POSTGRESQL' : 
-                $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
-                break;
-                
-            case 'SQLSERVER' : 
-                $select_opts .= ' TOP ' . $count;
-                break;
-                
-            case 'ORACLE' : 
-                if($where_def) $where_def .= ' AND ';
-                $where_def .= ' ROWNUM <= ' . $count;
-                break;
-                
-            default : 
+                case 'MYSQL' : 
+                    $limit_clause = 'LIMIT ' . $start . ',' . $count;
+                    break;
+                    
+                case 'POSTGRESQL' : 
+                    $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
+                    break;
+                    
+                case 'SQLSERVER' : 
+                    $select_opts .= ' TOP ' . $count;
+                    break;
+                    
+                case 'ORACLE' : 
+                    if($where_def) $where_def .= ' AND ';
+                    $where_def .= ' ROWNUM <= ' . $count;
+                    break;
+                    
+                default : 
                  $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
                 break;
             }
@@ -415,6 +415,26 @@ class Database extends functions
             ' WHERE ' . $where_def .
             ' ' . $other_clauses .
             ' ' . $limit_clause;
+
+        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
+            $query = 'SELECT' . 
+                ' ' . $select_opts . 
+                ' ' . $select_expr . 
+                ' FROM ' . $table_refs .
+                ' WHERE ' . $where_def .
+                ' ' . $other_clauses .
+                ' ' . $limit_clause .
+                ' ' . $order_by;
+        } else {
+            $query = 'SELECT' . 
+                ' ' . $select_opts . 
+                ' ' . $select_expr . 
+                ' FROM ' . $table_refs .
+                ' WHERE ' . $where_def .
+                ' ' . $other_clauses .
+                ' ' . $order_by .
+                ' ' . $limit_clause;
+        }
         
         return $query;
         

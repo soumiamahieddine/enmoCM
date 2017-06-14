@@ -68,7 +68,7 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 	}
 
 	$order = " ORDER by creation_date DESC";
-	$query = $db->limit_select(0, 1, 'res_id', 'res_view_letterbox', $wherePDO . $order);
+	$query = $db->limit_select(0, 1, 'res_id', 'res_view_letterbox', $wherePDO, '', '', $order);
 
 	$stmt = $db->query($query, $arrayPDO);
 
