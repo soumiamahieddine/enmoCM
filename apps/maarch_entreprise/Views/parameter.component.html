@@ -33,8 +33,8 @@
                 <label for="description">{{this.lang.description}}</label>
                 <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
             <p class="button" style="text-align:center">
-                <button class="btn btn-default" type="submit">{{this.lang.validate}}</button>
-                <button class="btn btn-default" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
+                <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
+                <button class="btn btn-warning" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
             </p>
         
         </form>     
@@ -48,7 +48,7 @@
         <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
             <p>      
                 <label for="id" >{{this.lang.identifier}}</label>
-                <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required readonly><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required disabled><span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
                 <label for="type">{{this.lang.type}}</label>
@@ -71,8 +71,8 @@
                 <label for="description">{{this.lang.description}}</label>
                 <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
             <p class="button" style="text-align:center">
-                <button class="btn btn-default" type="submit">{{this.lang.validate}}</button>
-                <button class="btn btn-default" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
+                <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
+                <button class="btn btn-warning" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
             </p>
         
         </form>     

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
-//import { Subject } from 'rxjs/Rx';
 
 declare function $j(selector: any) : any;
 
@@ -25,7 +24,7 @@ export class ParameterComponent implements OnInit {
         param_value_date    : null,
         description         : null
     };
-    
+    paramDateTemp   :string;
     lang        : any = "";
 
     resultInfo = "";
@@ -47,9 +46,11 @@ export class ParameterComponent implements OnInit {
             if(this.route.toString().includes('update')){
                 this.mode='update';
                 this.paramId = params['id'];
-                this.getParameterInfos(this.paramId);
+                this.getParameterInfos(this.paramId);                
             } else if (this.route.toString().includes('create')){
                 this.mode = 'create';
+                this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
+                $j('#pageTitle').html(this.pageTitle);
                 this.type = 'string';
             }
         });
@@ -65,7 +66,6 @@ export class ParameterComponent implements OnInit {
     }
 
     getParameterInfos(paramId : string){
-        console.log(paramId);
         this.http.get(this.coreUrl + 'rest/parameters/'+paramId)
                 .map(res => res.json())
                 .subscribe((data) => {
@@ -90,13 +90,28 @@ export class ParameterComponent implements OnInit {
                             }
                             this.parameter.description = infoParam[0].description;
                             this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : "+this.parameter.id;
-                            $j('#pageTitle').html(this.pageTitle)
+                            $j('#pageTitle').html(this.pageTitle);
                         }
                     });                
     }
     
     submitParameter() {
+
         if(this.mode == 'create'){
+            if(this.type=='date'){
+                //Résolution bug calendrier
+                this.parameter.param_value_date = $j("#param_value_date").val();
+                this.parameter.param_value_int=null;
+                this.parameter.param_value_string=null;
+            }
+            else if(this.type == 'int'){
+                this.parameter.param_value_date=null;
+                this.parameter.param_value_string=null;
+            }
+            else if (this.type == 'string'){
+                this.parameter.param_value_date=null;
+                this.parameter.param_value_int=null;
+            }
                 this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
                 .map(res => res.json())
                 .subscribe((data) => {
@@ -110,7 +125,7 @@ export class ParameterComponent implements OnInit {
                         this.parameter.param_value_int=null;
                         this.parameter.param_value_string=null;
                     } else {
-                        this.resultInfo = "Paramètre créé avec succès";
+                        this.resultInfo = this.lang.paramCreatedSuccess;
                         $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                         $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                             $j("#resultInfo").slideUp(500);
@@ -120,8 +135,22 @@ export class ParameterComponent implements OnInit {
                     
                 });
         } else if(this.mode == "update"){
+            if(this.type=='date'){
+                this.parameter.param_value_date = $j("#param_value_date").val();
+                this.parameter.param_value_int=null;
+                this.parameter.param_value_string=null;
+            }
+            else if(this.type == 'int'){
+                this.parameter.param_value_date=null;
+                this.parameter.param_value_string=null;
+            }
+            else if (this.type == 'string'){
+                this.parameter.param_value_date=null;
+                this.parameter.param_value_int=null;
+            }
+
             this.http.put(this.coreUrl+'rest/parameters/'+this.paramId,this.parameter)
-            .map(res => res.json())            
+            .map(res => res.json())             
             .subscribe((data) => {
                 if(data.errors){
                     this.resultInfo = data.errors;
@@ -130,7 +159,7 @@ export class ParameterComponent implements OnInit {
                         $j("#resultInfo").slideUp(500);
                     });
                 } else {
-                    this.resultInfo = "Mise à jour effectuée";
+                    this.resultInfo = this.lang.paramUpdatedSuccess;
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);

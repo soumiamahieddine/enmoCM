@@ -272,3 +272,15 @@ if(!defined('_PREVIOUS'))
 
 if(!defined('_PARAMETER'))
     define('_PARAMETER','paramètre');
+
+if(!defined('_ID_IS_EMPTY_CONTROLLER'))
+    define('_ID_IS_EMPTY_CONTROLLER','L\'identifiant est vide');
+
+if(!defined('_PARAM_CREATED_SUCCESS'))
+    define('_PARAM_CREATED_SUCCESS','Paramètre créé avec succès');
+
+if(!defined('_PARAM_UPDATED_SUCCESS'))
+    define('_PARAM_UPDATED_SUCCESS','Mise à jour effectuée');
+
+if(!defined('_DELETE_CONFIRM'))
+    define('_DELETE_CONFIRM','Voulez-vous vraiment supprimer le paramètre');

@@ -85,9 +85,10 @@ class LangModelAbstract
                 'first'                 =>  _FIRST,
                 'last'                  =>  _LAST,
                 'next'                  =>  _NEXT,
-                'previous'              =>  _PREVIOUS
-
-
+                'previous'              =>  _PREVIOUS,
+                'paramCreatedSuccess'   =>  _PARAM_CREATED_SUCCESS,
+                'paramUpdatedSuccess'   =>  _PARAM_UPDATED_SUCCESS,
+                'deleteConfirm'         => _DELETE_CONFIRM
             ];
         return $aLang;
     }

@@ -626,12 +626,12 @@ a.prev {
     padding-left: 10px;
 }
 
-a.next {
+/*a.next {
     background-image: url(static.php?filename=puce_next.gif);
     background-position: center right;
     padding-left: 0;
     padding-right: 10px;
-}
+}*/
 
 a.change, a.suspend, a.delete, a.authorize, a.up, a.down, a.view {
     padding: 5px 0 5px 20px;

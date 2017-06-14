@@ -1970,3 +1970,25 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Mise à jour réussi');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucun tag de disponible pour une mise à jour');
+
+//PARAMETERS
+if(!defined('_ID_IS_EMPTY_CONTROLLER'))
+    define('_ID_IS_EMPTY_CONTROLLER',' L\'identifiant est vide');
+
+if(!defined('_PARAM_VALUE_IS_EMPTY'))
+    define('_PARAM_VALUE_IS_EMPTY',' La valeur du paramètre est vide');
+
+if(!defined('_INVALID_PARAM_DATE'))
+    define('_INVALID_PARAM_DATE',' Paramètre date invalide');
+
+if(!defined('_INVALID_INTEGER'))
+    define('_INVALID_INTEGER','Entier non valide');
+
+if(!defined('_INVALID_STRING'))
+    define('_INVALID_STRING','Chaine de caractère invalide');
+
+if(!defined('_INVALID_DESCRIPTION'))
+    define('_INVALID_DESCRIPTION','Description invalide');
+
+if(!defined('_INVALID_ID'))
+    define('_INVALID_ID','Identifiant invalide');

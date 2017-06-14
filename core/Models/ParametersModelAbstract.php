@@ -2,15 +2,27 @@
     namespace Core\Models;
 
     require_once 'apps/maarch_entreprise/services/Table.php';
+    require_once 'core/class/class_functions.php';
+
+    
 
     class ParametersModelAbstract extends \Apps_Table_Service
     {
         public static function getList()
         {
+            $func = new \functions();
+
             $aReturn = static::select([
                 'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
                 'table'     => ['parameters'],
             ]);
+
+            foreach($aReturn as $key => $parameter)
+            {
+                if($parameter['param_value_date'] != null){
+                    $aReturn[$key]['param_value_date'] = $func->format_date($aReturn[$key]['param_value_date']);
+                }                
+            }
 
             return $aReturn;
         }
@@ -22,6 +34,7 @@
 
         public static function getById(array $aArgs = [])
         {
+            $func = new \functions();
             static::checkRequired($aArgs, ['id']);
             static::checkString($aArgs,['id']);
 
@@ -31,7 +44,10 @@
                 'where'     => ['id = ?'],
                 'data'      => [$aArgs['id']]
             ]);
-
+            if ($aReturn[0]['param_value_date']!=null) {
+                $aReturn[0]['param_value_date']=$func->format_date($aReturn[0]['param_value_date']);
+            }
+            
             return $aReturn;
 
         }

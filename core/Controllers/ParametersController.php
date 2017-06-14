@@ -14,12 +14,6 @@ use Core\Models\ParametersModel;
     class ParametersController
     {
 
-        /*public function getLang(RequestInterface $request, ResponseInterface $response){
-            $datas = [];
-            $datas = LangModel::getParameterLang();
-            return $response->withJson($datas);
-        }*/
-
         public function getList(RequestInterface $request, ResponseInterface $response)
         {
 
@@ -27,8 +21,6 @@ use Core\Models\ParametersModel;
                     'parametersList'    =>  ParametersModel::getList(),
                     'lang'              =>  ParametersModel::getParametersLang()
             ];
-            //var_dump($response->withJson($obj));
-            //exit;
             return $response->withJson($obj);
         }
 
@@ -38,11 +30,9 @@ use Core\Models\ParametersModel;
         }
 
         public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
-        {
-                    
+        {                    
             $obj = ParametersModel::getById(['id' => $aArgs['id']]);
-            return $response->withJson($obj);
-             
+            return $response->withJson($obj);             
         }
         public function create(RequestInterface $request, ResponseInterface $response)
         {
@@ -79,7 +69,7 @@ use Core\Models\ParametersModel;
             if (!empty($errors)) {
                 return $response
                     ->withJson(['errors' => $errors]);
-            }      
+            }
 
             $return = ParametersModel::update($datas);
 
@@ -120,19 +110,19 @@ use Core\Models\ParametersModel;
                 
             }
             if (!Validator::notEmpty()->validate($aArgs['id'])) {
-                array_push($errors, '_ID_IS_EMPTY_CONTROLLER');
+                array_push($errors, _ID_IS_EMPTY_CONTROLLER);
             } elseif ($mode == 'create') {  
                 if(!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))){
-                    array_push($errors,'ID INVALIDE');
+                    array_push($errors,_INVALID_ID);
                 }
                 if(!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('description'))&&$request->getParam('description')!=null){
-                    array_push($errors,'DESCRIPTION INVALIDE');
+                    array_push($errors,_INVALID_DESCRIPTION);
                 }
                 if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('param_value_string'))&&$request->getParam('param_value_string')!=null) {
-                    array_push($errors,'Chaine de caractère invalide');
+                    array_push($errors,_INVALID_STRING);
                 }
                 if (!Validator::regex('/^[0-9]*$/')->validate($request->getParam('param_value_int')) && $request->getParam('param_value_int')!=null){
-                    array_push($errors,'Entier non valide');
+                    array_push($errors,_INVALID_INTEGER);
                 }
                 $obj = ParametersModel::getById([
                     'id' => $aArgs['id']
@@ -145,18 +135,18 @@ use Core\Models\ParametersModel;
                 }
             }
             if ($aArgs['param_value_date']!=null) {
-                if (date('Y-m-d H:i:s', strtotime($aArgs['param_value_date'])) != $aArgs['param_value_date']) {
+                if (date('d-m-Y', strtotime($aArgs['param_value_date'])) != $aArgs['param_value_date']) {
                     array_push(
                             $errors,
-                            'PARAMETRE DATE INVALIDE.'
+                            _INVALID_PARAM_DATE
                         );
                 }
             }
-            if ($mode=='create'&&!Validator::notEmpty()->validate($aArgs['param_value_int'])&&
+            if (!Validator::notEmpty()->validate($aArgs['param_value_int'])&&
             !Validator::notEmpty()->validate($aArgs['param_value_string'])&&
             !Validator::notEmpty()->validate($aArgs['param_value_date'])
             ) {
-                array_push($errors, '_PARAM_VALUE_IS_EMPTY');
+                array_push($errors, _PARAM_VALUE_IS_EMPTY);
             }          
 
             return $errors;

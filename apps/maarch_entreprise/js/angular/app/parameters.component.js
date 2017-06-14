@@ -20,14 +20,6 @@ var ParametersComponent = (function () {
         this.route = route;
         this.router = router;
         this.lang = "";
-        this.mode = null;
-        this.parameter = {
-            id: null,
-            param_value_string: null,
-            param_value_int: null,
-            param_value_date: null,
-            description: null
-        };
         this.resultInfo = "";
     }
     ParametersComponent.prototype.ngOnInit = function () {
@@ -82,34 +74,40 @@ var ParametersComponent = (function () {
     };
     ParametersComponent.prototype.deleteParameter = function (paramId) {
         var _this = this;
-        this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                var list = _this.parametersList;
-                for (var i = 0; i < list.length; i++) {
-                    if (list[i].id == paramId) {
-                        list.splice(i, 1);
-                    }
+        var resp = confirm(this.lang.deleteConfirm + ' ' + paramId + '?');
+        if (!resp) {
+            return;
+        }
+        else {
+            this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
                 }
-                parametersDataTable.row($j("#" + paramId)).remove().draw();
-                _this.resultInfo = "Paramètre supprimé avec succès";
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-                _this.nbParameters = Object.keys(_this.parametersList).length;
-                _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbParameters + " " + _this.lang.parameter + "(s)";
-                $j('#pageTitle').html(_this.pageTitle);
-            }
-        });
+                else {
+                    var list = _this.parametersList;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].id == paramId) {
+                            list.splice(i, 1);
+                        }
+                    }
+                    parametersDataTable.row($j("#" + paramId)).remove().draw();
+                    _this.resultInfo = "Paramètre supprimé avec succès";
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                    _this.nbParameters = Object.keys(_this.parametersList).length;
+                    _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbParameters + " " + _this.lang.parameter + "(s)";
+                    $j('#pageTitle').html(_this.pageTitle);
+                }
+            });
+        }
     };
     return ParametersComponent;
 }());
