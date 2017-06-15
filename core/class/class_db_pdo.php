@@ -201,6 +201,8 @@ class Database extends functions
             $this->xecho('Database connection failed');
         } elseif ($this->error && $_SESSION['config']['debug'] == 'true') {
             print_r('SQL ERROR:' . $this->error);
+        } elseif ($this->driver == 'oci') {
+            $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
     }
 
