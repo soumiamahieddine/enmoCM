@@ -276,7 +276,7 @@ if (isset($_POST['put_doc_on_validation'])) {
 //Load multicontacts
 $query = "SELECT c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society 
         FROM view_contacts c, contacts_res cres 
-        WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
+        WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id 
         GROUP BY c.firstname, c.lastname, c.society, c.contact_firstname, c.contact_lastname";
 
 $stmt = $db->query($query, array($_REQUEST['id']));
@@ -299,7 +299,7 @@ while ($res = $stmt->fetchObject()) {
 }
 $query = "SELECT u.firstname, u.lastname, u.user_id ";
 $query .= "FROM users u, contacts_res cres  ";
-$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
+$query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id ";
 $query .= "GROUP BY u.firstname, u.lastname, u.user_id";
 
 $stmt = $db->query($query, array($_REQUEST['id']));
