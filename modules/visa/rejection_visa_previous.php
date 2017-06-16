@@ -139,8 +139,11 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
     $_SESSION['action_error'] = '';
     $res_id = $arr_id[0];
 
-    $stmt = $db->query('SELECT listinstance_id FROM listinstance WHERE res_id = ? and difflist_type = ? AND process_date IS NOT NULL ORDER BY process_date DESC LIMIT 1',
-        [$res_id, 'VISA_CIRCUIT']);
+    $where = "res_id = ? and difflist_type = ? AND process_date IS NOT NULL";
+    $order = "ORDER BY process_date DESC";
+    $query = $db->limit_select(0, 1, 'listinstance_id', 'listinstance', $where, '', '', $order);
+
+    $stmt = $db->query($query,[$res_id, 'VISA_CIRCUIT']);
 
     if ($stmt->rowCount() < 1) {
         $newStatus = 'AREV';

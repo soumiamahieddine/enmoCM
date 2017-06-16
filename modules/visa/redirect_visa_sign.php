@@ -231,7 +231,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $circuit = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
 
         if (count($circuit['sign']) > 0) {
-            // $up_request = "UPDATE listinstance SET sequence = ".count($circuit['visa']).", item_mode = 'visa', process_date = CURRENT_TIMESTAMP WHERE res_id = ".$res_id." AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT' AND process_date ISNULL ";
+            // $up_request = "UPDATE listinstance SET sequence = ".count($circuit['visa']).", item_mode = 'visa', process_date = CURRENT_TIMESTAMP WHERE res_id = ".$res_id." AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT' AND process_date IS NULL ";
             // $db->query($up_request);
             $current_timestamp = date("Y-m-d H:i:s");
             $circuit['sign']['users'][0]['process_date'] = $current_timestamp;

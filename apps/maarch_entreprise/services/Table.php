@@ -167,14 +167,22 @@ class Apps_Table_Service extends Core_Abstract_Service {
             }
             $limit = ' LIMIT '.$args['limit'];
         }
-        // Query :
-        $queryExt = "SELECT $select FROM $tablename $where $group_by $order_by $limit";
-        //Core_Logs_Service::debug(['message'=>'Requête:'.$queryExt]); 
-        //echo "the query " . $queryExt . PHP_EOL;var_export($data). PHP_EOL;
+
         if(!isset($GLOBALS['configFile'])){
             $GLOBALS['configFile'] = null;
         }
         $db = new Database($GLOBALS['configFile']);
+        
+        // Query :
+        if ($limit <> '') {
+            $queryExt = $db->limit_select(0, $limit, $select, $tablename, $where, $group_by, '', $order_by);
+        } else {
+            $queryExt = "SELECT $select FROM $tablename $where $group_by $order_by";
+        }
+        
+        //Core_Logs_Service::debug(['message'=>'Requête:'.$queryExt]); 
+        //echo "the query " . $queryExt . PHP_EOL;var_export($data). PHP_EOL;
+        
         $stmt = empty($data) ? $db->query($queryExt) : $db->query($queryExt, $data);
 
         $rowset = [];

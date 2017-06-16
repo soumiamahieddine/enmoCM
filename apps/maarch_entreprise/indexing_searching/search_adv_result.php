@@ -242,7 +242,7 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
             {
                 $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
-                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
+                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar(128)) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }

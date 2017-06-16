@@ -3059,7 +3059,6 @@ function linkDuplicate(id_form) {
         if(document.forms[id_form][i].type == 'radio' && document.forms[id_form][i].checked == true){
             master = document.forms[id_form][i].value;
             master_address = document.getElementById('master_address_fusion_id_'+document.forms[id_form][i].value).value
-            //console.log(document.forms[id_form][i].value);
         }
     }
     var index = slave.indexOf(master);
@@ -3074,8 +3073,12 @@ function linkDuplicate(id_form) {
         alert('Aucun contact Maitre sélectionné !');
         return false;
     }
-    console.log(slave);
-    if(confirm('Vous etes sur le point de substituer les contacts suivants : '+slave.join()+'\navec le contact : '+master+' (Les adresses suivantes seront effacées : '+address_del.join())){
+    var address_del_string = '';
+    address_del_string = address_del.join();
+    if(address_del_string != ''){
+        address_del_string = '(Les adresses suivantes seront effacées : ' + address_del_string + ')';
+    }
+    if(confirm('Vous êtes sur le point de substituer les contacts suivants : '+slave.join()+'\navec le contact : '+master+' '+ address_del_string)){
         var path_manage_script = 'index.php?admin=contacts&page=fusionContact&display=true';
         new Ajax.Request(path_manage_script,
         {
@@ -3095,8 +3098,8 @@ function linkDuplicate(id_form) {
                 }
             }
         });
+        alert('Opération terminée!');
     }
-    alert('Opération terminé!');
 }
 
 function loadTab(resId,collId,titleTab,pathScriptTab,module){

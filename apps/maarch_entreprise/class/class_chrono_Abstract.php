@@ -228,11 +228,11 @@ abstract class chrono_Abstract
     {
         $db = new Database();
         //Get res_id of document
-        if($res_id==''){
-            $stmt = $db->query(
-                "SELECT res_id FROM res_letterbox ORDER BY res_id DESC LIMIT 1"
-            );
-        }else{
+        if ($res_id=='') {
+            $order = "ORDER by res_id DESC";
+            $query = $db->limit_select(0, 1, 'res_id', 'res_letterbox', '', '', '', $order);
+            $stmt = $db->query($query);
+        } else {
             $stmt = $db->query(
                 "SELECT res_id FROM res_letterbox WHERE res_id=?",
                 array($res_id)

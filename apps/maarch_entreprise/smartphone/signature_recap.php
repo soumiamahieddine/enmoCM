@@ -77,7 +77,12 @@ $subject = $res->subject;
     <?php
       // echo "<pre>".print_r($_SESSION['config'],true)."</pre>";
       $db = new Database();
-      $stmt = $db->query("SELECT * from res_view_attachments WHERE res_id_master = ? AND attachment_type IN ('signed_response') ORDER BY creation_date desc LIMIT 1", array($_SESSION['doc_id']));
+      //$query = "SELECT * from res_view_attachments WHERE res_id_master = ? AND attachment_type IN ('signed_response') ORDER BY creation_date desc LIMIT 1";
+      $where = "res_id_master = ? AND attachment_type IN ('signed_response')";
+      $order = " ORDER by creation_date DESC";
+      $query = $db->limit_select(0, 1, '*', 'res_view_attachments', $where, '', '', $order);
+      
+      $stmt = $db->query($query, array($_SESSION['doc_id']));
         //$_SESSION['tmpFilenameSign']
       echo '<table>';
       while($line = $stmt->fetchObject()){

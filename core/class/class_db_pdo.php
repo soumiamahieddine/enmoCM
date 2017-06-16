@@ -201,6 +201,8 @@ class Database extends functions
             $this->xecho('Database connection failed');
         } elseif ($this->error && $_SESSION['config']['debug'] == 'true') {
             print_r('SQL ERROR:' . $this->error);
+        } elseif ($this->driver == 'oci') {
+            $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
     }
 
@@ -362,6 +364,18 @@ class Database extends functions
                         //echo $queryString;
                         //var_export($parameters);
                         $file = fopen('queries_error.log', a);
+                        fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                        $param = explode('?', $queryString);
+                        $paramNew = [];
+                        $paramQuery = '';
+                        for ($i=1;$i<count($param);$i++) {
+                            if ($i==(count($param)-1)) {
+                                $paramQuery .= "'" . $parameters[$i-1] . "'";
+                            } else {
+                                $paramQuery .= "'" . $parameters[$i-1] . "', ";
+                            }
+                        }
+                        $queryString = $param[0] . ' ' . $paramQuery . ' ' . $param[count($param)-1];
                         fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
                         fclose($file);
                     }

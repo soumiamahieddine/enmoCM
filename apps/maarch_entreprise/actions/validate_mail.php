@@ -248,7 +248,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $query = "SELECT c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
     $query .= "FROM view_contacts c, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id";			
     $stmt = $db->query($query, array($res_id));  
 	
     while($res = $stmt->fetchObject()){
@@ -286,7 +286,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //USERS
     $query = "SELECT u.firstname, u.lastname, u.user_id ";
     $query .= "FROM users u, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";			
     $stmt = $db->query($query, array($res_id));
 
     while($res = $stmt->fetchObject()){
