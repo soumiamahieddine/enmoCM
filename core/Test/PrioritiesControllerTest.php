@@ -9,31 +9,30 @@
         public function testUpdatePriorities()
         {
 
-            //TEST TOUT OK
+            $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+            $request     = \Slim\Http\Request::createFromEnvironment($environment);
+
             $aArgs = [
                 'priority1'=> [
-                                'label' => 'labelTest',
-                                'number'=> 123,
-                                'wdays' => 'true'
-                    ],
+                    'label' => 'labelTest',
+                    'number'=> '123',
+                    'wdays' => 'true'
+                ],
                 'priority2' => [
-                                'label' => 'labelTest2',
-                                'number'=> 123,
-                                'wdays' => 'true'
+                    'label' => 'labelTest2',
+                    'number'=> '123',
+                    'wdays' => 'true'
                 ]
             ];
+            
+            $request = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-            $client = new \GuzzleHttp\Client([
-                'base_uri' => 'http://127.0.0.1/maarch_courrier/cs_Maarch/rest/priorities',
-                'timeout'  => 2.0
-            ]);
+            $priority = new \Core\Controllers\PrioritiesController();
+            $response = $priority->updatePriorities($request, new \Slim\Http\Response(), []);
 
-            $response = $client->request('PUT','http://127.0.0.1/maarch_courrier/cs_Maarch/rest/priorities',
-            ['auth' =>['superadmin','superadmin'],
-            'form_params' => $aArgs
-            ]);
-            $compare ="OK";
-            $this->assertSame($compare,(string)$response->getBody());
+            //TEST TOUT OK
+            $compare = "OK";
+            $this->assertSame($compare, $response);
 
             //TEST INFOS VIDES
             $aArgs = [
