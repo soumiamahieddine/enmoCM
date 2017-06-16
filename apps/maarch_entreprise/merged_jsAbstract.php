@@ -50,7 +50,6 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
 		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
-//		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
 		readfile('apps/maarch_entreprise/js/tabricator.js');
 
 		//Dependencies
