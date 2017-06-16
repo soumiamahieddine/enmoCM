@@ -290,18 +290,9 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
         }
     }*/
 
-    public function updatePriorities(array $aArgs){
-        //$aArgs;
-        $priorities=[];      
-        foreach($aArgs as $priority)
-        {
-           $priorities[] =['label' => $priority['label'],
-                            'number' => $priority['priority'],
-                            'wdays'  => $priority['working'],
-                            'color' => $priority['color']];
-        }
-
-        return 'OK';
+    public function updatePriorities(array $aArgs = []){
+        var_dump($aArgs);
+        return $aArgs;
 
     }
 
