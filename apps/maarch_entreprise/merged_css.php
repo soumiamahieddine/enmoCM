@@ -44,6 +44,11 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
+
+//Views
+readfile('apps/maarch_entreprise/css/administration.component.css');
+
+//Dependencies
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
 readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');

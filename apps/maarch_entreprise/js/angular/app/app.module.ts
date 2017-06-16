@@ -4,8 +4,9 @@ import { RouterModule }     from '@angular/router';
 import { HttpModule }       from '@angular/http';
 import { FormsModule }      from '@angular/forms';
 
-import { AppComponent }     from './app.component';
-import { ProfileComponent } from './profile.component';
+import { AppComponent }                         from './app.component';
+import { AdministrationComponent }              from './administration.component';
+import { ProfileComponent }                     from './profile.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 
 @NgModule({
@@ -13,13 +14,14 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       BrowserModule,
       FormsModule,
       RouterModule.forRoot([
+          { path: 'administration', component: AdministrationComponent },
           { path: 'profile', component: ProfileComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
   ],
-  declarations: [ AppComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
+  declarations: [ AppComponent, AdministrationComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
   bootstrap:    [ AppComponent]
 })
 export class AppModule { }
