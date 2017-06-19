@@ -29,10 +29,9 @@ AppModule = __decorate([
             forms_1.FormsModule,
             router_1.RouterModule.forRoot([
                 { path: 'profile', component: profile_component_1.ProfileComponent },
-                { path: 'parameter/create', component: parameter_component_1.ParameterComponent },
-                { path: 'parameter/update/:id', component: parameter_component_1.ParameterComponent },
-                { path: 'parameter/delete/:id', component: parameter_component_1.ParameterComponent },
-                { path: 'parameter/list', component: parameters_component_1.ParametersComponent },
+                { path: 'administration/parameter/create', component: parameter_component_1.ParameterComponent },
+                { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
+                { path: 'parameters', component: parameters_component_1.ParametersComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),

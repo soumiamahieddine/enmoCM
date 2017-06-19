@@ -17,10 +17,9 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       FormsModule,
       RouterModule.forRoot([
           { path: 'profile', component: ProfileComponent },
-          { path: 'parameter/create', component: ParameterComponent },
-          { path: 'parameter/update/:id', component: ParameterComponent },
-          { path: 'parameter/delete/:id', component: ParameterComponent },
-          { path: 'parameter/list', component: ParametersComponent },
+          { path: 'administration/parameter/create', component: ParameterComponent },
+          { path: 'administration/parameter/update/:id', component: ParameterComponent },
+          { path: 'parameters', component: ParametersComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),

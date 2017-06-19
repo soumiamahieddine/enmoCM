@@ -252,18 +252,22 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
     }
 
     protected static function  checkPriorities($array) {
+        $errors = [];
         if (empty($array))
-            return false;
+            //return false;;
         foreach ($array as $value) {
             if (empty($value['label']) || empty($value['number']) || empty($value['wdays'])) {
-                return false;
+                array_push($errors,'Valeur vide');
+                //return false;
             } elseif ($value['wdays'] != 'true' && $value['wdays'] != 'false') {
-                return false;
+                array_push($errors,'Valeur wdays invalide');
+                //return false;
             } elseif ($value['number'] === '*') {
             } elseif (!ctype_digit($value['number'])) {
-                return false;
+                array_push($errors,'Valeur non numérique');
+                //return false;
             } elseif ((int)$value['number'] < 0) {
-                return false;
+                //return false;
             }
         }
         return true;
@@ -290,18 +294,17 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
         }
     }*/
 
-    public function updatePriorities(array $aArgs){
-        //$aArgs;
-        $priorities=[];      
-        foreach($aArgs as $priority)
-        {
-           $priorities[] =['label' => $priority['label'],
-                            'number' => $priority['priority'],
-                            'wdays'  => $priority['working'],
-                            'color' => $priority['color']];
+    public function updatePriorities(array $aArgs = []){
+        if(self::checkPriorities($aArgs)){
+            var_dump('Checked');
+            self::setXML($aArgs);
+            self::updateSession();
+            return $aArgs;
+        } else {
+            var_dump('Errors');
+            return 'errors';
         }
-
-        return 'OK';
+        
 
     }
 
