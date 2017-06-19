@@ -178,37 +178,37 @@ ALTER TABLE res_mark_as_read ALTER COLUMN user_id TYPE character varying(128);
 DROP TABLE IF EXISTS seda;
 CREATE TABLE seda
 (
-  "message_id" text NOT NULL,
-  "schema" text,
-  "type" text NOT NULL,
-  "status" text NOT NULL,
-  
-  "date" timestamp NOT NULL,
-  "reference" text NOT NULL,
-  
-  "account_id" text,
-  "sender_org_identifier" text NOT NULL,
-  "sender_org_name" text,
-  "recipient_org_identifier" text NOT NULL,
-  "recipient_org_name" text,
+  "message_id" character varying(255) NOT NULL,
+  "schema" character varying(16),
+  "type" character varying(128) NOT NULL,
+  "status" character varying(128) NOT NULL,
 
-  "archival_agreement_reference" text,
-  "reply_code" text,
+  "date" timestamp NOT NULL,
+  "reference" character varying(255) NOT NULL,
+
+  "account_id" character varying(128),
+  "sender_org_identifier" character varying(255) NOT NULL,
+  "sender_org_name" character varying(255),
+  "recipient_org_identifier" character varying(255) NOT NULL,
+  "recipient_org_name" character varying(255),
+
+  "archival_agreement_reference" character varying(255),
+  "reply_code" character varying(255),
   "operation_date" timestamp,
   "reception_date" timestamp,
-  
-  "related_reference" text,
-  "request_reference" text,
-  "reply_reference" text,
-  "derogation" boolean,
-  
+
+  "related_reference" character varying(255),
+  "request_reference" character varying(255),
+  "reply_reference" character varying(255),
+  "derogation" character(1),
+
   "data_object_count" integer,
   "size" numeric,
-  
+
   "data" text,
-  
-  "active" boolean,
-  "archived" boolean,
+
+  "active" character(1),
+  "archived" character(1),
 
   PRIMARY KEY ("message_id")
 )
@@ -219,9 +219,9 @@ WITH (
 DROP TABLE IF EXISTS unit_identifier;
 CREATE TABLE unit_identifier
 (
-  "message_id" text NOT NULL,
-  "tablename" text NOT NULL,
-  "res_id" text NOT NULL
+  "message_id" character varying(255) NOT NULL,
+  "tablename" character varying(255) NOT NULL,
+  "res_id" character varying(255) NOT NULL
 );
 
 /*************DIS UPDATE***************/

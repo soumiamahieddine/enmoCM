@@ -216,13 +216,31 @@ if (isset($_GET['what_services'])
     $PDOarray = array_merge($PDOarray, array(":whatEntity" => "%" . $what_services . "%"));
     
 }
-$users_query = 
+/*$users_query = 
     "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
     . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
     . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
     . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr 
-    . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc limit 50";
+    . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc limit 50";*/
+
+
+$where = "u.status <> 'DEL' and u.enabled = 'Y' and"
+    . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
+    . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr;
+$order = "order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
+
+$users_query = $db->limit_select(
+    0, 
+    50, 
+    'u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label', 
+    $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue", 
+    $where, 
+    '', 
+    '', 
+    $order
+);
+//echo $users_query;exit;
 
 if ($user_expr == '' && $entity_expr == '') {
     //no query
@@ -249,6 +267,22 @@ $entity_query =
         . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
         . "e.enabled = 'Y' " . $user_expr . $entity_expr 
         . " group by e.entity_id, e.entity_label order by e.entity_label asc limit 50";
+
+$where = "u.status <> 'DEL' and u.enabled = 'Y'" . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and " 
+        . "e.enabled = 'Y' " . $user_expr . $entity_expr;
+$order = "ORDER by entity_label ASC";
+$entity_query = $db->limit_select(
+    0, 
+    50, 
+    'e.entity_id,  e.entity_label', 
+    $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue",  
+    $where,
+    'group by e.entity_id, e.entity_label', 
+    '',
+    $order
+);
+//echo $entity_query;exit;
+
 if ($user_expr == '' && $entity_expr == '') {
     //no query
 } else {

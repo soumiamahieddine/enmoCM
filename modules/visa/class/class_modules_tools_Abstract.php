@@ -333,7 +333,11 @@ abstract class visa_Abstract extends Database
 	
 	public function getCurrentStep($res_id, $coll_id, $listDiffType){
 		$db = new Database();
-		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType));
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
+        $order = "ORDER BY listinstance_id ASC";
+        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+
+		$stmt = $db->query($query, array($res_id, $coll_id, $listDiffType));
 		$res = $stmt->fetchObject();
 		if ($res->item_mode == 'sign'){
 			return $this->nbVisa($res_id, $coll_id);
@@ -355,11 +359,11 @@ abstract class visa_Abstract extends Database
 	{
 		$stepDetails = array();
 		$db = new Database();
-		$stmt = $db->query("SELECT * "
-			. "from listinstance WHERE res_id= ? and coll_id = ? "
-			. "and difflist_type = ? and sequence = ? "
-			. "ORDER BY listinstance_id ASC LIMIT 1", 
-			array($res_id, $coll_id, $listDiffType, $sequence));
+		$order = "ORDER by listinstance_id ASC";
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and sequence = ? ";
+		$query = $db->limit_select(0, 1, '*', 'listinstance', $where, '', '', $order);
+
+		$stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $sequence));
 		
 		$res = $stmt->fetchObject();
 		$stepDetails['listinstance_id']   = $res->listinstance_id;
@@ -383,7 +387,11 @@ abstract class visa_Abstract extends Database
 	
 	public function myPosVisa($res_id, $coll_id, $listDiffType){
 		$db = new Database();
-		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
+		$order = "ORDER by listinstance_id ASC";
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL";
+		$query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+
+		$stmt = $db->query($select, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
 		
 		$res = $stmt->fetchObject();
 		if ($res->item_mode == 'sign'){
@@ -480,7 +488,11 @@ abstract class visa_Abstract extends Database
 		$curr_visa_wf = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
 
 		$db = new Database();
-		$stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, 'VISA_CIRCUIT'));
+		$where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
+        $order = "ORDER BY listinstance_id ASC";
+        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+
+		$stmt = $db->query($query, array($res_id, $coll_id, 'VISA_CIRCUIT'));
 		$resListDiffVisa = $stmt->fetchObject();
 
 		// If there is only one step in the visa workflow, we set status to ESIG

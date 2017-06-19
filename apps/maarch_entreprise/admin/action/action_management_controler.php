@@ -70,20 +70,19 @@ $statusController = new Maarch_Core_Class_StatusControler();
 if ($mode == "up" || $mode == "add") {
     $statusArray = array();
     $statusArray = $statusController->getAllInfos();
-    //var_dump($statusArray);
 }
 
 function init_session()
 {
-    $_SESSION['m_admin']['action'] = array();
-    $_SESSION['m_admin']['action']['ID'] = '';
-    $_SESSION['m_admin']['action']['LABEL'] = '';
-    $_SESSION['m_admin']['action']['ID_STATUS'] = '';
-    $_SESSION['m_admin']['action']['ACTION_PAGE'] = '';
-    $_SESSION['m_admin']['action']['KEYWORD'] = '';
-    $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
-    $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
-    $_SESSION['m_admin']['action']['categories'] = '';
+    $_SESSION['m_admin']['action']                       = array();
+    $_SESSION['m_admin']['action']['ID']                 = '';
+    $_SESSION['m_admin']['action']['LABEL']              = '';
+    $_SESSION['m_admin']['action']['ID_STATUS']          = '';
+    $_SESSION['m_admin']['action']['ACTION_PAGE']        = '';
+    $_SESSION['m_admin']['action']['KEYWORD']            = '';
+    $_SESSION['m_admin']['action']['HISTORY']            = 'Y';
+    $_SESSION['m_admin']['action']['IS_FOLDER_ACTION']   = 'N';
+    $_SESSION['m_admin']['action']['categories']         = '';
     $_SESSION['m_admin']['action']['categoriesSelected'] = '';
 }
 
@@ -131,10 +130,10 @@ if (isset($_REQUEST['action_submit'])) {
     $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 
         functions::wash($_REQUEST['is_folder_action'], 'no', _IS_FOLDER_ACTION . ' ');
 
-    $_SESSION['m_admin']['action']['order'] = $_REQUEST['order'];
+    $_SESSION['m_admin']['action']['order']       = $_REQUEST['order'];
     $_SESSION['m_admin']['action']['order_field'] = $_REQUEST['order_field'];
-    $_SESSION['m_admin']['action']['what'] = $_REQUEST['what'];
-    $_SESSION['m_admin']['action']['start'] = $_REQUEST['start'];
+    $_SESSION['m_admin']['action']['what']        = $_REQUEST['what'];
+    $_SESSION['m_admin']['action']['start']       = $_REQUEST['start'];
 
     if ($mode == 'add' 
         && ActionControler::actionExists($_SESSION['m_admin']['action']['ID'])
@@ -168,15 +167,15 @@ if (isset($_REQUEST['action_submit'])) {
         }
     } else {
         $action_value = array(
-            'id' => $_SESSION['m_admin']['action']['ID'], 
-            'label_action' => $_SESSION['m_admin']['action']['LABEL'], 
-            'keyword' => $_SESSION['m_admin']['action']['KEYWORD'],
-            'create_id' => $_SESSION['m_admin']['action']['FLAG_CREATE'],
-            'history' => $_SESSION['m_admin']['action']['HISTORY'],
+            'id'               => $_SESSION['m_admin']['action']['ID'], 
+            'label_action'     => $_SESSION['m_admin']['action']['LABEL'], 
+            'keyword'          => $_SESSION['m_admin']['action']['KEYWORD'],
+            'create_id'        => $_SESSION['m_admin']['action']['FLAG_CREATE'],
+            'history'          => $_SESSION['m_admin']['action']['HISTORY'],
             'is_folder_action' => $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'],
-            'action_page' => $_SESSION['m_admin']['action']['ACTION_PAGE'],
-            'id_status' => $_SESSION['m_admin']['action']['ID_STATUS'],
-            //'category_id' => $_SESSION['m_admin']['action']['CATEGORY_ID']
+            'action_page'      => $_SESSION['m_admin']['action']['ACTION_PAGE'],
+            'id_status'        => $_SESSION['m_admin']['action']['ID_STATUS'],
+            //'category_id'    => $_SESSION['m_admin']['action']['CATEGORY_ID']
         );
 
         $action = new Action();
@@ -192,8 +191,9 @@ if (isset($_REQUEST['action_submit'])) {
         ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
-            $db = new Database();
-            $stmt = $db->query("SELECT id FROM actions ORDER BY id desc limit 1");
+            $db          = new Database();
+            $query       = $db->limit_select(0, 1, "id", "actions", "", "ORDER BY id desc");
+            $stmt        = $db->query($query);
             $last_insert = $stmt->fetchObject();
 
             require_once('core/class/class_history.php');
@@ -295,26 +295,26 @@ if ($mode == 'up') {
                 if ($tab[$i][$j][$value] == 'id') {
                     $load = core_tools::is_action_defined($tab[$i][$j]['value']);
 
-                    $tab[$i][$j]['id'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['label'] = _ID;
-                    $tab[$i][$j]['size'] = '10';
+                    $tab[$i][$j]['id']          = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label']       = _ID;
+                    $tab[$i][$j]['size']        = '10';
                     $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = true;
-                    $tab[$i][$j]['order'] = 'id';
+                    $tab[$i][$j]['align']       = 'left';
+                    $tab[$i][$j]['valign']      = 'bottom';
+                    $tab[$i][$j]['show']        = true;
+                    $tab[$i][$j]['order']       = 'id';
                 }
                 if ($tab[$i][$j][$value] == 'label_action') {
                     $tab[$i][$j]['value'] = 
                         functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]['label_action'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['label'] = _DESC;
-                    $tab[$i][$j]['size'] = '30';
-                    $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = true;
-                    $tab[$i][$j]['order'] = 'label_action';
+                    $tab[$i][$j]['label']        = _DESC;
+                    $tab[$i][$j]['size']         = '30';
+                    $tab[$i][$j]['label_align']  = 'left';
+                    $tab[$i][$j]['align']        = 'left';
+                    $tab[$i][$j]['valign']       = 'bottom';
+                    $tab[$i][$j]['show']         = true;
+                    $tab[$i][$j]['order']        = 'label_action';
                 }
                 if ($tab[$i][$j][$value] == 'is_system') {
                     if ($tab[$i][$j]['value'] == 'Y') {
@@ -330,41 +330,41 @@ if ($mode == 'up') {
                             'label' => _DESC,'show' => false)
                         );
                     }
-                    $tab[$i][$j]['is_system'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['label'] =_IS_SYSTEM;
-                    $tab[$i][$j]['size'] = '10';
+                    $tab[$i][$j]['is_system']   = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['label']       =_IS_SYSTEM;
+                    $tab[$i][$j]['size']        = '10';
                     $tab[$i][$j]['label_align'] = 'left';
-                    $tab[$i][$j]['align'] = 'left';
-                    $tab[$i][$j]['valign'] = 'bottom';
-                    $tab[$i][$j]['show'] = true;
-                    $tab[$i][$j]['order'] = 'is_system';
+                    $tab[$i][$j]['align']       = 'left';
+                    $tab[$i][$j]['valign']      = 'bottom';
+                    $tab[$i][$j]['show']        = true;
+                    $tab[$i][$j]['order']       = 'is_system';
                 }
                 if (core_tools::is_module_loaded('folder')) {
                     if ($tab[$i][$j][$value] == 'is_folder_action') {
                         ($tab[$i][$j]['value'] == 'Y')? $tab[$i][$j]['value'] = _YES : $tab[$i][$j]['value'] = _NO;
-                        $tab[$i][$j]['is_system'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['label'] =_IS_FOLDER_ACTION;
-                        $tab[$i][$j]['size'] = '10';
+                        $tab[$i][$j]['is_system']   = $tab[$i][$j]['value'];
+                        $tab[$i][$j]['label']       =_IS_FOLDER_ACTION;
+                        $tab[$i][$j]['size']        = '10';
                         $tab[$i][$j]['label_align'] = 'left';
-                        $tab[$i][$j]['align'] = 'left';
-                        $tab[$i][$j]['valign'] = 'bottom';
-                        $tab[$i][$j]['show'] = true;
-                        $tab[$i][$j]['order'] = 'is_system';
+                        $tab[$i][$j]['align']       = 'left';
+                        $tab[$i][$j]['valign']      = 'bottom';
+                        $tab[$i][$j]['show']        = true;
+                        $tab[$i][$j]['order']       = 'is_system';
                     }
                 }
             }
         }
     }
 
-    $page_name = 'action_management_controler&mode=list';
-    $page_name_up = 'action_management_controler&mode=up';
+    $page_name     = 'action_management_controler&mode=list';
+    $page_name_up  = 'action_management_controler&mode=up';
     $page_name_del = 'action_management_controler&mode=del';
-    $page_name_val= '';
+    $page_name_val = '';
     $page_name_ban = '';
     $page_name_add = 'action_management_controler&mode=add';
-    $label_add = _ADD_ACTION;
+    $label_add     = _ADD_ACTION;
     $_SESSION['m_admin']['init'] = true;
-    $title = _ACTION_LIST . ' : ' . count($tab) . ' ' . _ACTIONS;
+    $title         = _ACTION_LIST . ' : ' . count($tab) . ' ' . _ACTIONS;
 
     $autoCompletionArray = array();
     $autoCompletionArray['list_script_url'] = 

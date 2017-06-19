@@ -19,19 +19,31 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
 {
+    public static function get()
+    {
+        $aUsers = static::select([
+            'select'    => ['firstname', 'lastname', 'user_id'],
+            'table'     => ['users'],
+            'where'     => ['enabled = ?'],
+            'data'      => ['Y'],
+        ]);
+
+        return $aUsers;
+    }
+
     public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
-        $aReturn = static::select([
+        $aUser = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
         ]);
 
-        return $aReturn[0];
+        return $aUser[0];
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -39,7 +51,7 @@ class UserModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['mail']);
         static::checkString($aArgs, ['mail']);
 
-        $aReturn = static::select([
+        $aUser = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['mail = ? and status = ?'],
@@ -47,7 +59,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'limit'     => 1,
         ]);
 
-        return $aReturn;
+        return $aUser;
     }
 
     public static function update(array $aArgs = [])
@@ -241,7 +253,7 @@ class UserModelAbstract extends \Apps_Table_Service
             $extension = $extension[count($extension) - 1];
             $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
             $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
-            if (copy($pathToSignature, $filePathOnTmp)) {
+            if (file_exists($pathToSignature) && copy($pathToSignature, $filePathOnTmp)) {
                 $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; // TODO No Session
             } else {
                 $aReturn[$key]['pathToSignatureOnTmp'] = '';
@@ -340,6 +352,26 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aReturn[0]['process_comment'];
     }
 
+    public static function getPrimaryGroupById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aGroup = static::select([
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroup_content.primary_group = ?'],
+            'data'      => [$aArgs['userId'], 'Y']
+        ]);
+
+        if (empty($aGroup[0])) {
+            return [];
+        }
+
+        return $aGroup[0];
+    }
+
     public static function getGroupsById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -370,5 +402,39 @@ class UserModelAbstract extends \Apps_Table_Service
         ]);
 
         return $aEntities;
+    }
+
+    public static function getServicesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aServices = static::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services'],
+            'where'     => ['usergroup_content.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aServices;
+    }
+
+    public static function activateAbsenceById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'status'    => 'ABS'
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return true;
     }
 }

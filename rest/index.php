@@ -99,6 +99,9 @@ $app = new \Slim\App([
 //Initialize
 $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
 
+//Administration
+$app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
+
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
@@ -119,7 +122,7 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
-//visa
+//Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
@@ -140,13 +143,13 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->get('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':getCurrentUserBasketsForAbsence');
+$app->post('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':setCurrentUserBasketsRedirectionForAbsence');
 $app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
 $app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
 $app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
-//$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
+$app->post('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
 
 $app->run();
