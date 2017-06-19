@@ -1,4 +1,15 @@
 <?php
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   get_entity_vol
+* @author  dev <dev@maarch.org>
+* @ingroup entities
+*/
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
@@ -13,7 +24,6 @@ $req   = new request();
 $sec   = new security();
 $db    = new Database();
 
-//var_dump($_POST['entities_chosen']);
 $entities_chosen = explode("#", $_POST['entities_chosen']);
 if($_REQUEST['sub_entities'] == 'true'){
 	$sub_entities = [];
@@ -201,9 +211,6 @@ else
 	exit();
 }
 
-//$title = _ENTITY_PROCESS_DELAY.' '.$date_title ;
-$db = new Database();
-
 if($report_type == 'graph')
 {
     $val_an = array();
@@ -216,8 +223,7 @@ elseif($report_type == 'array')
 $has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
-
-$where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
+$where_clause = $sec->get_where_clause_from_coll_id_and_basket('letterbox_coll');
 
 if ($where_clause)
     $where_clause = " and ".$where_clause;
@@ -317,4 +323,3 @@ if($report_type == 'graph') {
 }
 
 exit();
-
