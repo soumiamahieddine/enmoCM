@@ -223,7 +223,7 @@ function display_list()
     $arrayPDO = array();
     if (isset($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
         $arrayPDO = array($what.'%', $what.'%', $what);
     }
 
@@ -256,7 +256,7 @@ function display_list()
         $what = '';
         if (isset($_REQUEST['what'])) {
             $what = $_REQUEST['what'];
-            $where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
+            $where .= " and (lower(lastname) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
             $arrayPDO = array($what.'%',$what);
         }
 
@@ -661,11 +661,20 @@ function display_up_check($user_id)
                     
                     $visa = new visa();
                     $visa->setStatusVisa($res_id, 'letterbox_coll');
+                    
+                    $whereSub = "res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT'";
+                    $orderSub = "ORDER BY sequence DESC";
+                    $subQuery = $db->limit_select(0, 1, 'listinstance_id', 'listinstance', $whereSub, '', '', $orderSub);
 
-                    //UDPATE listinstance to reset previous visa user
-                    $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
                     $arrayPDO = array($res_id);
-                    $db->query($query, $arrayPDO);  
+                    $stmt = $db->query($subQuery, $arrayPDO);
+                    while ($resSub = $stmt->fetchObject()) {
+                        $listinstanceIDs[] = $resSub->listinstance_id;
+                    }
+                    if (count($listinstanceIDs) > 0) {
+                        $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id in (?)";
+                        $db->query($query, $listinstanceIDs);
+                    }
 
                 }
 
