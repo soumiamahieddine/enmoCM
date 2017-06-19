@@ -37,6 +37,8 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
                     .'"param_value_date":null}]';
 
         $this->assertSame($compare,(string)$response->getBody());
+
+        //TEST ENTIER NON VALIDE
        
         //TEST EXISTE DEJA
 
@@ -44,6 +46,23 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         $compare = '{"errors":["Identifiant TEST existe d\u00e9j\u00e0 !"]}';
         
+        $this->assertSame($compare,(string)$response->getBody());
+
+        //TEST ENTIER NON VALIDE
+        $query  = 'id=TEST23&';
+        $query .= 'param_value_int=abcd&';
+        $query .= 'description=papa';
+
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   => $query,
+        ]);
+
+        $parameter = new \Core\Controllers\ParametersController();
+        $response  = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+
+        $compare = '{"errors":["Entier non valide"]}';
+
         $this->assertSame($compare,(string)$response->getBody());
 
         //AUCUN PARAMETRE
@@ -61,7 +80,7 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
-        $compare = '{"errors":["_PARAM_VALUE_IS_EMPTY"]}';
+        $compare = '{"errors":[" La valeur du param\u00e8tre est vide"]}';
         
         $this->assertSame($compare,(string)$response->getBody());
 
@@ -76,7 +95,7 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
-        $compare = '{"errors":["_ID_IS_EMPTY_CONTROLLER","_PARAM_VALUE_IS_EMPTY"]}';
+        $compare = '{"errors":[" L\'identifiant est vide"," La valeur du param\u00e8tre est vide"]}';
 
         $this->assertSame($compare,(string)$response->getBody());
 
@@ -95,7 +114,7 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
-        $compare = '{"errors":["PARAMETRE DATE INVALIDE."]}';
+        $compare = '{"errors":[" Param\u00e8tre date invalide"]}';
         $this->assertSame($compare,(string)$response->getBody());
 
         //TEST ID MAUVAIS FORMAT (REGEX)
@@ -113,7 +132,7 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
         $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
-        $compare = '{"errors":["ID INVALIDE","DESCRIPTION INVALIDE","PARAM STRING INVALIDE"]}';
+        $compare = '{"errors":["Identifiant invalide","Description invalide","Chaine de caract\u00e8re invalide"]}';
         $this->assertSame($compare,(string)$response->getBody());            
     }
 
@@ -128,6 +147,48 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
         $response = $parameters->getList(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
 
         $this->assertNotNull((string)$response->getBody());
+    }
+
+    public function testGetLang(){
+        $parameters = new \Core\Controllers\ParametersController();
+
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'GET'
+        ]);
+
+        $response = $parameters->getLang(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $compare = '{"parameter":"Param\u00e8tre",';
+        $compare .='"identifier":"Identifiant",';
+        $compare .='"description":"Description",';
+        $compare .='"value":"Valeur",';
+        $compare .='"type":"Type",';
+        $compare .='"string":"Chaine de caract\u00e8res",';
+        $compare .='"integer":"Entier",';
+        $compare .='"date":"Date",';
+        $compare .='"validate":"Valider",';
+        $compare .='"cancel":"Annuler",';
+        $compare .='"modifyParameter":"Modifier param\u00e8tre",';
+        $compare .='"deleteParameter":"Supprimer param\u00e8tre",';
+        $compare .='"page":"Page",';
+        $compare .='"outOf":"sur",';
+        $compare .='"search":"Rechercher",';
+        $compare .='"recordsPerPage":"r\u00e9sultats par page",';
+        $compare .='"display":"Affichage",';
+        $compare .='"noRecords":"Aucun r\u00e9sultat",';
+        $compare .= '"available":"disponible",';
+        $compare .='"filteredFrom":"filtr\u00e9 sur un ensemble de ",';
+        $compare .='"records":"r\u00e9sultats",';
+        $compare .='"first":"premier",';
+        $compare .='"last":"dernier",';
+        $compare .='"next":"Suivante",';
+        $compare .='"previous":"Pr\u00e9c\u00e9dente",';
+        $compare .='"paramCreatedSuccess":"Param\u00e8tre cr\u00e9\u00e9 avec succ\u00e8s",';
+        $compare .='"paramUpdatedSuccess":"Mise \u00e0 jour effectu\u00e9e",';
+        $compare .='"deleteConfirm":"Voulez-vous vraiment supprimer le param\u00e8tre",';
+        $compare .='"controlTechnicalParams":"Contr\u00f4ler les param\u00e8tres techniques"}';
+
+        $this->assertSame($compare, (string)$response->getBody());
+
     }
     
     public function testGetById()
@@ -155,7 +216,8 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $query  = 'id=TEST&';
-        $query .= 'description=TEST AFTER UP';
+        $query .= 'description=TEST AFTER UP&';
+        $query .= 'param_value_string=abcd';
 
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -171,10 +233,11 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
                     .'"param_value_int":null,'
                     .'"param_value_date":null}]';
         
-        $this->assertSame((string)$response->getBody(), $compare);
+        $this->assertSame($compare,(string)$response->getBody());
 
         //TEST ID NULL
-        $query = 'id=NEWWW';
+        $query = 'id=NEWWW&';
+        $query .= 'param_value_string=abcd';
 
         $environment = \Slim\Http\Environment::mock([
             'REQUEST_METHOD' => 'PUT',

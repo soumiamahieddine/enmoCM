@@ -114,10 +114,7 @@ use Core\Models\ParametersModel;
                     'param_value_int' => $request->getParam('param_value_int')
                 ]);
                 if (empty($obj)) {
-                    array_push(
-                        $errors,
-                        _ID . ' '. _NOT_EXISTS
-                    );                    
+                    array_push($errors, _ID . ' '. _NOT_EXISTS);                    
                 }
                 
             }
@@ -140,18 +137,12 @@ use Core\Models\ParametersModel;
                     'id' => $request->getParam('id')
                 ]);
                 if (!empty($obj)) {
-                    array_push(
-                        $errors,
-                        _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
-                    );
+                    array_push($errors,_ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS);
                 }
             }
             if ($request->getParam('param_value_date')!=null) {
                 if (date('d-m-Y', strtotime($request->getParam('param_value_date'))) != $request->getParam('param_value_date')) {
-                    array_push(
-                            $errors,
-                            _INVALID_PARAM_DATE
-                        );
+                    array_push($errors,_INVALID_PARAM_DATE);
                 }
             }
             if (!Validator::notEmpty()->validate($request->getParam('param_value_int'))&&
