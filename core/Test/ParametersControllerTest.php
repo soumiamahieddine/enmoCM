@@ -18,7 +18,8 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
     {
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $parameter   = new \Core\Controllers\ParametersController();
 
         $aArgs = [
             'id'                 => 'TEST',
@@ -27,7 +28,6 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $parameter = new \Core\Controllers\ParametersController();
         $response  = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '[{"id":"TEST",'
