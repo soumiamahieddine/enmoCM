@@ -36,14 +36,14 @@ class UserModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
-        $aReturn = static::select([
+        $aUser = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']],
         ]);
 
-        return $aReturn[0];
+        return $aUser[0];
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -51,7 +51,7 @@ class UserModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['mail']);
         static::checkString($aArgs, ['mail']);
 
-        $aReturn = static::select([
+        $aUser = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['mail = ? and status = ?'],
@@ -59,7 +59,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'limit'     => 1,
         ]);
 
-        return $aReturn;
+        return $aUser;
     }
 
     public static function update(array $aArgs = [])
@@ -402,6 +402,22 @@ class UserModelAbstract extends \Apps_Table_Service
         ]);
 
         return $aEntities;
+    }
+
+    public static function getServicesById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $aServices = static::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services'],
+            'where'     => ['usergroup_content.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aServices;
     }
 
     public static function activateAbsenceById(array $aArgs = [])

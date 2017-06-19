@@ -99,6 +99,9 @@ $app = new \Slim\App([
 //Initialize
 $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
 
+//Administration
+$app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
+
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
@@ -119,7 +122,7 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
-//visa
+//Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
 $app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
@@ -148,6 +151,5 @@ $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->post('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-//$app->put('/user/{id}', \Core\Controllers\UserController::class . ':update');
 
 $app->run();

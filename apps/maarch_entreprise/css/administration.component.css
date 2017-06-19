@@ -1,0 +1,20 @@
+.administrationTitle {
+    background-color: #009DC5 !important;
+    color: white !important;
+    margin-top: -10px !important;
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+    padding: 10px !important;
+    font-size: 20px !important;
+    text-align:center;
+}
+
+.servicesDiv {
+    margin-top: 1%;
+    background-color: #CEE9F1;
+    border-left:solid 1px white;
+    border-right:solid 1px white;
+    border-top: solid 2px #FDD16C;
+    border-bottom: solid 2px #FDD16C;
+    padding:10px;
+}

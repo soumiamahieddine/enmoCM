@@ -223,7 +223,7 @@ function display_list()
     $arrayPDO = array();
     if (isset($_REQUEST['what'])) {
         $what = $_REQUEST['what'];
-        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
+        $where .= " and (lower(lastname) like lower(?) or lower(users.user_id) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
         $arrayPDO = array($what.'%', $what.'%', $what);
     }
 
@@ -256,7 +256,7 @@ function display_list()
         $what = '';
         if (isset($_REQUEST['what'])) {
             $what = $_REQUEST['what'];
-            $where .= " and (lower(lastname) like lower(?) or (users.lastname || ' ' || users.firstname) like ?)";
+            $where .= " and (lower(lastname) like lower(?) or CONCAT(users.lastname,' ',users.firstname) like ?)";
             $arrayPDO = array($what.'%',$what);
         }
 
@@ -663,25 +663,9 @@ function display_up_check($user_id)
                     $visa->setStatusVisa($res_id, 'letterbox_coll');
 
                     //UDPATE listinstance to reset previous visa user
-                    // $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
-                    // $arrayPDO = array($res_id);
-                    // $db->query($query, $arrayPDO);
-                    
-                    $whereSub = "res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT'";
-                    $orderSub = "ORDER BY sequence DESC";
-                    $subQuery = $db->limit_select(0, 1, 'listinstance_id', 'listinstance', $whereSub, '', '', $orderSub);
-                    //echo $subQuery . '<br/>';
+                    $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id = (SELECT listinstance_id FROM listinstance WHERE res_id = ? AND item_mode = 'visa' AND difflist_type = 'VISA_CIRCUIT' order by sequence DESC LIMIT 1)";
                     $arrayPDO = array($res_id);
-                    $stmt = $db->query($subQuery, $arrayPDO);
-                    while ($resSub = $stmt->fetchObject()) {
-                        $listinstanceIDs[] = $resSub->listinstance_id;
-                    }
-                    if (count($listinstanceIDs) > 0) {
-                        //var_dump($listinstanceIDs);
-                        $query = "UPDATE listinstance SET process_comment = null, process_date = null WHERE listinstance_id in (?)";
-                        $db->query($query, $listinstanceIDs);
-                        //echo $query . '<br/>';
-                    }
+                    $db->query($query, $arrayPDO);  
 
                 }
 
@@ -1062,6 +1046,14 @@ function validate_user_submit()
                     );
 
     if (isset($_SESSION['m_admin']['users']['groups'])) {
+            $query       = $db->limit_select(0, 1, 'id', 'user_signatures', 'user_id = ? order by id desc ');
+            $stmt        = $db->query($query, array($user->{'user_id'}));
+            $id_user_signature = $stmt->fetchObject();
+            if ($id_user_signature && isset($user->{'signature_path'})) {
+                $db->query('UPDATE user_signatures SET signature_label = ?, signature_path = ?, signature_file_name = ? WHERE user_id = ? and id = ?', ['', $user->{'signature_path'}, $user->{'signature_file_name'}, $user->{'user_id'}, $id_user_signature->id]);
+            } elseif(isset($user->{'signature_path'})) {
+                $db->query('INSERT INTO user_signatures (user_id, signature_label, signature_path, signature_file_name) VALUES (?, ?, ?, ?)', [$user->{'user_id'}, '', $user->{'signature_path'}, $user->{'signature_file_name'}]);
+            }
         $control = $uc->save($user, $_SESSION['m_admin']['users']['groups'], $mode, $params);
     }
     if (!empty($entitiesUserToRedirect)) {
