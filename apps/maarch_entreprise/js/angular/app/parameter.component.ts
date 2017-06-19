@@ -130,7 +130,7 @@ export class ParameterComponent implements OnInit {
                         $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                             $j("#resultInfo").slideUp(500);
                         });
-                        this.router.navigate(['/parameter/list']);
+                        this.router.navigate(['/parameters']);
                     }
                     
                 });
@@ -164,7 +164,7 @@ export class ParameterComponent implements OnInit {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
                     });
-                    this.router.navigate(['/parameter/list']);                    
+                    this.router.navigate(['/parameters']);                    
                 }
             });
         }
