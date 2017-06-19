@@ -12,57 +12,125 @@ use Core\Models\PrioritiesModel;
 
 class PrioritiesController
 {
-    public function updatePriorities(RequestInterface $request, ResponseInterface $response, $aArgs){
-        $datas = $request->getParams();
-        $datas = json_decode($datas['priorities'],true);
-        $errors = self::control($request,'update',$datas);        
-        if(!empty($errors)){
-            return $response->withJson(['errors'=>$errors]);
-        }
-        var_dump($datas);
-        $return = PrioritiesModel::updatePriorities($datas);
-        if(!empty($return)){
-            return $response->withJson($return);
-        }       
 
-    }
-
-    public function deletePriority(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getList(RequestInterface $request, ResponseInterface $response)
     {
-        $datas= $request->getParams();
-        //$errors = self::control($request,'delete',$datas);
-        $obj = PrioritiesModel::deletePriority(['id' => $aArgs['id']]);
+
+        $obj =[
+                    'prioritiesList'    =>  PrioritiesModel::getList(),
+                    'lang'              =>  null
+            ];
         return $response->withJson($obj);
     }
 
-    protected static function control($request, $mode, $aArgs){
-        $errors = [];
-        if($mode == 'update'){
-            if (empty($aArgs))
-                array_push($errors,'PRIORITE TABLEAU VIDE');
-            var_dump($aArgs);
-            foreach ($aArgs as $priority) {
-                var_dump($priority);
-                /*foreach($priority as $value){
-                    if (empty($value['label']) || empty($value['number']) || empty($value['wdays'])) {
-                        array_push($errors,'INFOS VIDES');
-                        //return false;
-                    } 
-                    if ($value['wdays'] != 'true' && $value['wdays'] != 'false') {
-                        array_push($errors,'INFOS wdays INVALIDE');
-                        //return false;
-                    } 
-                    if ($value['number'] === '*') {
-                    } elseif (!ctype_digit($value['number'])) {
-                        array_push($errors, 'NUMERO INVALIDE');
-                        //return false;
-                    } elseif ((int)$value['number'] < 0) {
-                        array_push($errors, 'NUMERO INFERIEUR A 0');
-                    }
-                }*/
+    public function getLang(RequestInterface $request, ResponseInterface $response){
+        $obj = PrioritiesModel::getPrioritiesLang();
+        return $response->withJson($obj);
+    }
 
-            }
+    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {                    
+        $obj = PrioritiesModel::getById(['id' => $aArgs['id']]);
+        return $response->withJson($obj);             
+    }
+
+    public function create(RequestInterface $request, ResponseInterface $response)
+    {        
+        $errors = $this->control($request, 'create');
+
+        if (!empty($errors)) {
+            return $response
+                ->withJson(['errors' => $errors]);
+        }           
+        
+        $datas = $request->getParams();
+
+        $return = PrioritiesModel::create($datas);
+        if ($return) {
+            $obj = PrioritiesModel::getById(['id' => $return]);
+        } else {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => _NOT_CREATE]);
         }
+        return $response->withJson($obj);
+    }
+
+    public function update(RequestInterface $request, ResponseInterface $response, $aArgs){
+        $errors = $this->control($request, 'update');
+
+        if (!empty($errors)) {
+            return $response
+                ->withJson(['errors' => $errors]);
+        }
+
+           
+        $aArgs = $request->getParams();
+        $checkExist = PrioritiesModel::getById([
+                'id'    => $aArgs['id']
+            ]);
+            if($checkExist){
+                $return = PrioritiesModel::update($aArgs);
+                if($return) {
+                    $obj = PrioritiesModel::getById([
+                        'id'    => $aArgs['id']
+                    ]);
+                } else {
+                    return $response
+                        ->withStatus(500)
+                        ->withJson(['errors'    => _NOT_UPDATE]);
+                }
+            } else {
+                array_push($errors,'Cette priorité n\'existe pas');
+                return $response
+                    ->withJson(['errors' => $errors]);
+            }
+        $return = PrioritiesModel::update($aArgs);
+        //var_dump($return);
+        
+        
+
+        return $response->withJson($obj);
+    }
+
+    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        
+        $obj = PrioritiesModel::delete(['id' => $aArgs['id']]);
+        return $response->withJson($obj);
+    }
+
+    protected static function control( $request, $mode){
+        $errors = [];
+        //if($mode == 'update'){
+        $errors = [];
+        if (empty($request))
+            array_push($errors,'Tableau d\'arguments vide');
+
+        if (!Validator::notEmpty()->validate($request->getParam('label_priority'))){
+            array_push($errors,'Valeur label vide');
+            //return false;
+        } 
+        if (!Validator::notEmpty()->validate($request->getParam('delays'))){
+            array_push($errors,'Delai vide');
+        }
+        if (!Validator::notEmpty()->validate($request->getParam('working_days'))){
+            array_push($errors,'jours vide');
+        }
+        if ($request->getParam('working_days')!= 'Y' && $request->getParam('working_days') != 'N') {
+            array_push($errors,'Valeur working_days invalide');
+            //return false;
+        } /*elseif ($request->getParam(['number'] === '*') {
+            array_push($errors,'Valeur');
+        } */elseif (!ctype_digit($request->getParam('delays'))) {
+            array_push($errors,'Valeur non numérique');
+            //return false;
+        } elseif ((int)$request->getParam('delays') < 0) {
+            array_push($errors,'Valeur négative');
+            //return false;
+        }
+
+        //}
         return $errors;
     }
 }
