@@ -158,7 +158,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //Load multicontacts
     $query = "SELECT c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ";
     $query .= "FROM view_contacts c, contacts_res cres  ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id ";
     $query .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id";
 
     $stmt = $db->query($query, array($res_id));
@@ -179,7 +179,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $query = "select u.firstname, u.lastname, u.user_id ";
     $query .= "from users u, contacts_res cres  ";
-    $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id ";
+    $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id ";
     $query .= "GROUP BY u.firstname, u.lastname, u.user_id";
             
     $stmt = $db->query($query, array($res_id));

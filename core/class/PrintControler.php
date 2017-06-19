@@ -645,12 +645,12 @@ class PrintFunctions
         $db = new Database();
         $queryContacts = "select c.firstname, c.lastname, c.society, c.contact_id, cres.address_id ";
 		$queryContacts .= "from view_contacts c, contacts_res cres  ";
-		$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id AND ca_id = cres.address_id ";
+		$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar(128)) = cres.contact_id AND ca_id = cres.address_id ";
 		$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, cres.address_id";
 			
         $queryUsers = "select u.firstname, u.lastname, u.user_id ";
         $queryUsers .= "from users u, contacts_res cres  ";
-        $queryUsers .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (u.user_id as varchar) = cres.contact_id ";
+        $queryUsers .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (u.user_id as varchar(128)) = cres.contact_id ";
         $queryUsers .= "GROUP BY u.firstname, u.lastname, u.user_id";
         
         $i = 0;

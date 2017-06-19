@@ -1007,7 +1007,7 @@ if (!defined("_ID_CONTACT_TYPE_PB")) define("_ID_CONTACT_TYPE_PB","There is a is
 if (!defined("_THE_CONTACT_TYPE")) define("_THE_CONTACT_TYPE","The contact type");
 if (!defined("_CONTACT_TYPE_DEL")) define("_CONTACT_TYPE_DEL","Contact type deletion");
 if (!defined("_DELETED_CONTACT_TYPE")) define("_DELETED_CONTACT_TYPE","Deleted contact type");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Warning :<br> the contact type deletion leads to contacts reallocation to a new contact type.;");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Warning : the contact type deletion leads to contacts reallocation to a new contact type.;");
 if (!defined("_CONTACT_TYPE_REAFFECT")) define("_CONTACT_TYPE_REAFFECT","Contacts reallocation");
 if (!defined("_ALL")) define("_ALL","All");
 if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts already existing");
@@ -1029,7 +1029,7 @@ if (!defined("_THE_CONTACT_PURPOSE")) define("_THE_CONTACT_PURPOSE","The denomin
 if (!defined("_CONTACT_PURPOSE_DEL")) define("_CONTACT_PURPOSE_DEL","Deletion of a denomination");
 if (!defined("_DELETED_CONTACT_PURPOSE")) define("_DELETED_CONTACT_PURPOSE","Deleted denomination");
 if (!defined("_CONTACT_PURPOSE_REAFFECT")) define("_CONTACT_PURPOSE_REAFFECT","Addresses reallocation");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Warning :<br> The denomination deletion leads to addresses reallocation to a new denomination.");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Warning : The denomination deletion leads to addresses reallocation to a new denomination.");
 if (!defined("_CONTACT_PURPOSE_WILL_BE_CREATED")) define("_CONTACT_PURPOSE_WILL_BE_CREATED","This denomination doesn't exist. It will automatically be created.");
 
 if (!defined("_SEARCH_CONTACTS")) define("_SEARCH_CONTACTS","Search a contact");
@@ -1898,6 +1898,13 @@ if (!defined('_UPDATED_EMAIL_SIGNATURE'))
     define('_UPDATED_EMAIL_SIGNATURE', 'Mail signature updated');
 if (!defined('_DELETED_EMAIL_SIGNATURE'))
     define('_DELETED_EMAIL_SIGNATURE', 'Mail signature deleted');
+
+if (!defined('_UNDEFINED_USER'))
+    define('_UNDEFINED_USER', 'Undefined user');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activate my absence');
+if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
+    define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
 
 /**** admin update control ****/
@@ -1960,4 +1967,5 @@ if (!defined('_UPDATE_END'))
 if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Update sucessful');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
-    define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
+
+define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');

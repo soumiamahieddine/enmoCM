@@ -24,6 +24,7 @@
  */
 
 require_once 'class_functions.php';
+require_once 'class_db_pdo_statement.php';
 
 class Database extends functions
 {
@@ -162,11 +163,22 @@ class Database extends functions
         }
 
         // Set DSN
-        $this->dsn = $this->driver 
-            . ':host=' . $this->server
-            . ';port=' . $this->port
-            . ';dbname=' . $this->database
-        ;
+        if ($this->driver == 'oci') {
+            $tns = "(DESCRIPTION = "
+                    . "(ADDRESS_LIST ="
+                        . "(ADDRESS = (PROTOCOL = TCP)(HOST = " . $this->server . ")(PORT = " . $this->port . "))"
+                    . ")"
+                    . "(CONNECT_DATA ="
+                        . "(SERVICE_NAME = " . $this->database . ")"
+                    . ")"
+                . ")";
+            $this->dsn = "oci:dbname=" . $tns;
+        } else
+            $this->dsn = $this->driver
+                . ':host=' . $this->server
+                . ';port=' . $this->port
+                . ';dbname=' . $this->database;
+
 
         if (!isset(self::$preparedStmt[$this->dsn])) {
             self::$preparedStmt[$this->dsn] = array();
@@ -189,6 +201,8 @@ class Database extends functions
             $this->xecho('Database connection failed');
         } elseif ($this->error && $_SESSION['config']['debug'] == 'true') {
             print_r('SQL ERROR:' . $this->error);
+        } elseif ($this->driver == 'oci') {
+            $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
     }
 
@@ -351,41 +365,55 @@ class Database extends functions
                         //var_export($parameters);
                         $file = fopen('queries_error.log', a);
                         fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
+                        $param = explode('?', $queryString);
+                        $paramNew = [];
+                        $paramQuery = '';
+                        for ($i=1;$i<count($param);$i++) {
+                            if ($i==(count($param)-1)) {
+                                $paramQuery .= "'" . $parameters[$i-1] . "'";
+                            } else {
+                                $paramQuery .= "'" . $parameters[$i-1] . "', ";
+                            }
+                        }
+                        $queryString = $param[0] . ' ' . $paramQuery . ' ' . $param[count($param)-1];
+                        fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $queryString . PHP_EOL);
                         fclose($file);
                     }
                     throw $PDOException;
                 }
             }
         }
-        return $this->stmt;
 
+        $myPdoStatement = new MyPDOStatement($this->stmt);
+        $myPdoStatement->queryArgs = $parameters;
+        return $myPdoStatement;
     }
 
-    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
+    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='', $order_by = '')
     {
             
         // LIMIT
         if($count || $start) 
         {
             switch($_SESSION['config']['databasetype']) {
-            case 'MYSQL' : 
-                $limit_clause = 'LIMIT ' . $start . ',' . $count;
-                break;
-                
-            case 'POSTGRESQL' : 
-                $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
-                break;
-                
-            case 'SQLSERVER' : 
-                $select_opts .= ' TOP ' . $count;
-                break;
-                
-            case 'ORACLE' : 
-                if($where_def) $where_def .= ' AND ';
-                $where_def .= ' ROWNUM <= ' . $count;
-                break;
-                
-            default : 
+                case 'MYSQL' : 
+                    $limit_clause = 'LIMIT ' . $start . ',' . $count;
+                    break;
+                    
+                case 'POSTGRESQL' : 
+                    $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
+                    break;
+                    
+                case 'SQLSERVER' : 
+                    $select_opts .= ' TOP ' . $count;
+                    break;
+                    
+                case 'ORACLE' : 
+                    if($where_def) $where_def .= ' AND ';
+                    $where_def .= ' ROWNUM <= ' . $count;
+                    break;
+                    
+                default : 
                  $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
                 break;
             }
@@ -401,6 +429,26 @@ class Database extends functions
             ' WHERE ' . $where_def .
             ' ' . $other_clauses .
             ' ' . $limit_clause;
+
+        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
+            $query = 'SELECT' . 
+                ' ' . $select_opts . 
+                ' ' . $select_expr . 
+                ' FROM ' . $table_refs .
+                ' WHERE ' . $where_def .
+                ' ' . $other_clauses .
+                ' ' . $limit_clause .
+                ' ' . $order_by;
+        } else {
+            $query = 'SELECT' . 
+                ' ' . $select_opts . 
+                ' ' . $select_expr . 
+                ' FROM ' . $table_refs .
+                ' WHERE ' . $where_def .
+                ' ' . $other_clauses .
+                ' ' . $order_by .
+                ' ' . $limit_clause;
+        }
         
         return $query;
         

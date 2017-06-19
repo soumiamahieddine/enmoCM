@@ -42,20 +42,22 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 
 	//IF EXTERNAL CONTACT
 	if (is_numeric($_POST['contact_id'])) {
-		$where = "status <> 'DEL' AND contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "status <> 'DEL' AND contact_id = ? AND address_id = ? AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND contact_id = ".$_POST['contact_id']." AND address_id = ".$_POST['address_id']
+			." AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
+		$wherePDO = "status <> 'DEL' AND contact_id = ? AND address_id = ? AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
 		$arrayPDO = array($_POST['contact_id'], $_POST['address_id']);
 	//IF INTERNAL CONTACT
 	} else {
-		$where = "status <> 'DEL' AND (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
-		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+		$where = "status <> 'DEL' AND (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
+		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
 		$arrayPDO = array($_POST['contact_id'], $_POST['contact_id']);
 	}
+	//echo $wherePDO;
 
 	//MERGE GLOBAL SECURITY WITH QUERY DOC
 	$wherePDO = $wherePDO . ' AND ('.$whereSec.')';
 	
-	$query = "SELECT res_id FROM res_view_letterbox WHERE ".$wherePDO;
+	//$query = "SELECT res_id FROM res_view_letterbox WHERE ".$wherePDO;
 
 	//EXCLUDE OWN RES_ID
 	if($_POST['res_id'] != "none"){
@@ -65,7 +67,9 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 		$_SESSION['excludeId'] = $_POST['res_id'];
 	}
 
-	$query .= "  ORDER by creation_date DESC limit 1";
+	$order = "ORDER by creation_date DESC";
+	$query = $db->limit_select(0, 1, 'res_id', 'res_view_letterbox', $wherePDO, '', '', $order);
+
 	$stmt = $db->query($query, $arrayPDO);
 
 	if ($stmt->rowCount() > 0){

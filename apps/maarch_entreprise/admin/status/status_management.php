@@ -1,4 +1,12 @@
 <?php
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
+
 /*Récupération de status*/
 require_once 'core/class/class_manage_status.php';
 if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."apps".DIRECTORY_SEPARATOR."maarch_entreprise"
@@ -19,21 +27,8 @@ if ($xmlconfig <> false) {
 } 
 
 $status_obj = new manage_status();
-$db = new Database();
-
-$status_tab = array();
 $i=0;
-$status_query = "SELECT DISTINCT ON (img_filename) img_filename, id FROM status WHERE img_filename <> '' and img_filename <> 'Y' ";
-$stmt = $db->query($status_query);
-while ($line = $stmt->fetchObject()) {
-  array_push(
-    $status_tab,
-    array(
-        'IMG_FILENAME'  => $line->img_filename,
-        'ID' => $line->id
-        )
-    );
-}
+
 /* Affichage */
 if ($mode == 'list') {
     $list = new list_show();
@@ -172,20 +167,20 @@ if ($mode == 'up') {
                 <ul style="  width: auto;text-align: left;float: left;margin-left: 40px;height: auto;overflow: auto;">
                     <?php 
                     $nb_status=count($status_img);
-                    for ($i=0;$i<count($status_img);$i++) {  ?>  
-                    <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php functions::xecho($status_img[$i]);?>" onclick="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')"> 	
-                      <input type="radio" style="visibility:hidden;" id="radio_<?php functions::xecho($i);?>" class="check" name="img_related" value="<?php functions::xecho($status_img[$i])?>" 
-                      <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')" /><?php
-                      $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>";
-                      if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) {
-                        $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;color:#009dc5;'></i></label>";
-                    }else{
-                     $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>"; 
-                 }
+                    for ($i=0;$i<$nb_status;$i++) {  ?>  
+                        <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php functions::xecho($status_img[$i]);?>" onclick="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')"> 	
+                          <input type="radio" style="visibility:hidden;" id="radio_<?php functions::xecho($i);?>" class="check" name="img_related" value="<?php functions::xecho($status_img[$i])?>" 
+                          <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')" /><?php
+                          $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>";
+                          if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) {
+                            $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;color:#009dc5;'></i></label>";
+                        }else{
+                            $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>"; 
+                        }
 
-                 echo $img;
-                 echo "</li>";
-             } ?>
+                        echo $img;
+                        echo "</li>";
+                    } ?>
          </ul>
      </div>	
      

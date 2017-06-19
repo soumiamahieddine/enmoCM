@@ -47,10 +47,9 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/controls.js');
 
 		//TODO clean
-
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		echo "\n";
-//		readfile('apps/maarch_entreprise/js/keypress.js'); // TODO Remove after test
+
+		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
 
 		echo "\n";
 		//Dependencies
