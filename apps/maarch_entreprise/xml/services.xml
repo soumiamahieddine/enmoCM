@@ -337,11 +337,12 @@
    <id>admin_parameters</id>
    <name>_ADMIN_PARAMETERS</name>
    <comment>_ADMIN_PARAMETERS</comment>
-   <servicepage>index.php?page=admin_parameters&amp;admin=parameters</servicepage>
+   <servicepage>/administration/parameters</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-wrench</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <SERVICE>
     <id>admin_priorities</id>

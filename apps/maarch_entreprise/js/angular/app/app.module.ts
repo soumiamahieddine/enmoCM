@@ -19,7 +19,7 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
           { path: 'profile', component: ProfileComponent },
           { path: 'administration/parameter/create', component: ParameterComponent },
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
-          { path: 'parameters', component: ParametersComponent },
+          { path: 'administration/parameters', component: ParametersComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),

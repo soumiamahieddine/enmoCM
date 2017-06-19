@@ -128,7 +128,7 @@ var ParameterComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.router.navigate(['/parameters']);
+                    _this.router.navigate(['administration/parameters']);
                 }
             });
         }
@@ -162,7 +162,7 @@ var ParameterComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.router.navigate(['/parameters']);
+                    _this.router.navigate(['administration/parameters']);
                 }
             });
         }
