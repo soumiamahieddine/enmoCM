@@ -3,6 +3,7 @@
 </div>
 <div id="create" *ngIf="mode == 'create' ">
     <div class="block">
+        CUSTOM
         <div id="parameter" class="forms" style="width:400px;margin:auto;">    
             <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
                 <p>      
@@ -31,8 +32,8 @@
                     <label for="description">{{this.lang.description}}</label>
                     <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
                 <p class="button" style="text-align:center">
-                    <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
-                    <button class="btn btn-warning" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
+<button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
+                    <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
                 </p>
             
             </form>     
@@ -69,7 +70,7 @@
                     <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
                 <p class="button" style="text-align:center">
                     <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
-                    <button class="btn btn-warning" routerLink='/parameter/list'>{{this.lang.cancel}}</button>
+                    <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
                 </p>
             
             </form>     
