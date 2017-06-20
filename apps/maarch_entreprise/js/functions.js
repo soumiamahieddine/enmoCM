@@ -7,6 +7,7 @@ var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
         'administration',
+        'users-administration',
         'profile',
         'signature-book'
     ];
@@ -24,16 +25,26 @@ function triggerAngular(prodmode, locationToGo) {
             if (prodmode) {
                 $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
-                var head = document.getElementsByTagName('head')[0];
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = "js/angular/main.bundle.min.js";
+                var alreadyLoaded = false;
+                $j('script').each(function(i, element) {
+                    if (element.src == (answer.coreUrl + "apps/maarch_entreprise/js/angular/main.bundle.min.js")) {
+                        alreadyLoaded = true;
+                    }
+                });
+                if (!alreadyLoaded) {
+                    var head = document.getElementsByTagName('head')[0];
+                    var script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = "js/angular/main.bundle.min.js";
 
-                script.onreadystatechange = changeLocationToAngular(locationToGo);
-                script.onload = changeLocationToAngular(locationToGo);
+                    script.onreadystatechange = changeLocationToAngular(locationToGo);
+                    script.onload = changeLocationToAngular(locationToGo);
 
-                // Fire the loading
-                head.appendChild(script);
+                    // Fire the loading
+                    head.appendChild(script);
+                } else {
+                    location.href = locationToGo;
+                }
             } else {
                 System.import('js/angular/main.js').catch(function(err){ console.error(err); });
                 location.href = locationToGo;

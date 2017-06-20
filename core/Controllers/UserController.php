@@ -17,6 +17,7 @@ namespace Core\Controllers;
 
 use Baskets\Models\BasketsModel;
 use Core\Models\LangModel;
+use Entities\Models\EntitiesModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -321,7 +322,11 @@ class UserController
 
     public function getUsersForAutocompletion(RequestInterface $request, ResponseInterface $response)
     {
-        $users = UserModel::get();
+        $users = UserModel::get([
+            'select'    => ['user_id', 'firstname', 'lastname'],
+            'where'     => ['enabled = ?', 'user_id != ?'],
+            'data'      => ['Y', 'superadmin']
+        ]);
 
         $formattedUsers = [];
         foreach ($users as $value) {
@@ -329,6 +334,26 @@ class UserController
         }
 
         return $response->withJson($formattedUsers);
+    }
+
+    public function getUsersForAdministration(RequestInterface $request, ResponseInterface $response)
+    {
+
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $users = UserModel::get([
+                'select'    => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'where'     => ['user_id != ?'],
+                'data'      => ['superadmin']
+            ]);
+        } else {
+            $entities = EntitiesModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'entities'  => $entities
+            ]);
+        }
+
+        return $response->withJson($users);
     }
 
     private function checkNeededParameters($aArgs = [])
