@@ -348,7 +348,7 @@ function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $c
 {
     $db = new Database();
     for ($i=0; $i<count($arr_id);$i++) {
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ?",array($arr_id[$i]));
+        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ?", array($arr_id[$i]));
 
         if (!$req) {
 
@@ -371,7 +371,7 @@ function get_value_fields($values, $field)
     for ($i=0; $i<count($values);$i++) {
 
         if ($values[$i]['ID'] == $field) {
-            
+
             return  $values[$i]['VALUE'];
         }
     }
