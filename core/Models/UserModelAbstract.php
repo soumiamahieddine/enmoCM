@@ -19,13 +19,16 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
 {
-    public static function get()
+    public static function get(array $aArgs = [])
     {
+        static::checkRequired($aArgs, ['where', 'data']);
+        static::checkArray($aArgs, ['where', 'data']);
+
         $aUsers = static::select([
-            'select'    => ['firstname', 'lastname', 'user_id'],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
-            'where'     => ['enabled = ?'],
-            'data'      => ['Y'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
         ]);
 
         return $aUsers;
@@ -40,10 +43,25 @@ class UserModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']],
+            'data'      => [$aArgs['userId']]
         ]);
 
         return $aUser[0];
+    }
+
+    public static function getByEntities(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['entities']);
+        static::checkArray($aArgs, ['entities']);
+
+        $aUsers = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users, users_entities'],
+            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
+            'data'      => $aArgs['entities']
+        ]);
+
+        return $aUsers;
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -56,7 +74,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => ['users'],
             'where'     => ['mail = ? and status = ?'],
             'data'      => [$aArgs['mail'], 'OK'],
-            'limit'     => 1,
+            'limit'     => 1
         ]);
 
         return $aUser;

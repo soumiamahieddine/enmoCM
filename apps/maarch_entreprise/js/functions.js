@@ -7,6 +7,7 @@ var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
         'administration',
+        'users-administration',
         'profile',
         'signature-book'
     ];
