@@ -94,21 +94,21 @@ var ParameterComponent = (function () {
     };
     ParameterComponent.prototype.submitParameter = function () {
         var _this = this;
+        if (this.type == 'date') {
+            //Résolution bug calendrier
+            this.parameter.param_value_date = $j("#param_value_date").val();
+            this.parameter.param_value_int = null;
+            this.parameter.param_value_string = null;
+        }
+        else if (this.type == 'int') {
+            this.parameter.param_value_date = null;
+            this.parameter.param_value_string = null;
+        }
+        else if (this.type == 'string') {
+            this.parameter.param_value_date = null;
+            this.parameter.param_value_int = null;
+        }
         if (this.mode == 'create') {
-            if (this.type == 'date') {
-                //Résolution bug calendrier
-                this.parameter.param_value_date = $j("#param_value_date").val();
-                this.parameter.param_value_int = null;
-                this.parameter.param_value_string = null;
-            }
-            else if (this.type == 'int') {
-                this.parameter.param_value_date = null;
-                this.parameter.param_value_string = null;
-            }
-            else if (this.type == 'string') {
-                this.parameter.param_value_date = null;
-                this.parameter.param_value_int = null;
-            }
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
@@ -133,19 +133,6 @@ var ParameterComponent = (function () {
             });
         }
         else if (this.mode == "update") {
-            if (this.type == 'date') {
-                this.parameter.param_value_date = $j("#param_value_date").val();
-                this.parameter.param_value_int = null;
-                this.parameter.param_value_string = null;
-            }
-            else if (this.type == 'int') {
-                this.parameter.param_value_date = null;
-                this.parameter.param_value_string = null;
-            }
-            else if (this.type == 'string') {
-                this.parameter.param_value_date = null;
-                this.parameter.param_value_int = null;
-            }
             this.http.put(this.coreUrl + 'rest/parameters/' + this.paramId, this.parameter)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {

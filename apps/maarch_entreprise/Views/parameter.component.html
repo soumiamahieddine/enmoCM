@@ -1,81 +1,51 @@
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
 </div>
-<div id="create" *ngIf="mode == 'create' ">
-    <div class="block">
-        <div id="parameter" class="forms" style="width:400px;margin:auto;">    
-            <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
-                <p>      
+
+<div class="block">
+    <div id="parameter" class="forms" style="width:400px;margin:auto;">    
+        <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
+
+            <div id="create" *ngIf="mode == 'create' ">
+                <p>
                     <label for="id" >{{this.lang.identifier}}</label>
                     <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required><span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
+            </div>
+            <div id = "update" *ngIf = "mode == 'update'">
                 <p>
-                    <label for="type">{{this.lang.type}}</label>
-                    <select name="type" id="type" [(ngModel)]="type" >
-                        <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
-                        <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
-                        <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
-                    </select>
-                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
-                </p>
-                <p>
-                    <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
-                    <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
-                    <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
-
-                    <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
-                    <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
-                    <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
-                </p>
-                <p>
-                    <label for="description">{{this.lang.description}}</label>
-                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
-                </p>
-                <p class="button" style="text-align:center">
-                    <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
-                    <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
-                </p>
-            
-            </form>     
-        </div>
-    </div>
-</div>
-<div id = "update" *ngIf = "mode == 'update'">
-    <div class="block">
-        <div id="parameter" class="forms" style="width:400px;margin:auto;">
-            <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
-                <p>      
                     <label for="id" >{{this.lang.identifier}}</label>
                     <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required disabled><span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
-                <p>
-                    <label for="type">{{this.lang.type}}</label>
-                    <select name="type" id="type" [(ngModel)]="type" >
-                        <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
-                        <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
-                        <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
-                    </select>
-                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
-                </p>
-                <p>
-                    <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
-                    <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
-                    <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
+            </div>
 
-                    <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
-                    <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
-                    <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
-                </p>
-                <p>
-                    <label for="description">{{this.lang.description}}</label>
-                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
-                </p>
-                <p class="button" style="text-align:center">
-                    <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
-                    <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
-                </p>
-            
-            </form>     
-        </div>
+            <p>
+                <label for="type">{{this.lang.type}}</label>
+                <select name="type" id="type" [(ngModel)]="type" >
+                    <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
+                    <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
+                    <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
+                </select>
+                <span class="red_asterisk"><i class="fa fa-star"></i></span>
+            </p>
+            <p>
+                <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
+                <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
+                <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
+
+                <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
+                <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
+                <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
+            </p>
+            <p>
+                <label for="description">{{this.lang.description}}</label>
+                <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
+            </p>
+            <p class="button" style="text-align:center">
+                <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
+                <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
+            </p>
+        
+        </form>     
     </div>
 </div>
