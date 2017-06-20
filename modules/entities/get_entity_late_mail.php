@@ -67,9 +67,6 @@ $report_type   = $_REQUEST['report_type'];
 $core_tools    = new core_tools();
 $core_tools->load_lang();
 
-//$title = _ENTITY_LATE_MAIL.' '.$date_title ;
-$db = new Database();
-
 //Récupération de l'ensemble des types de documents
 if (!$_REQUEST['entities_chosen']){
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
@@ -78,7 +75,6 @@ if (!$_REQUEST['entities_chosen']){
 }else{
     $stmt = $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
 }
-//$db->show();
 
 $entities = array();
 while($res = $stmt->fetchObject())
@@ -227,9 +223,8 @@ elseif($report_type == 'array')
 $has_data = true;
 
 //Utilisation de la clause de sécurité de Maarch
+$where_clause = $sec->get_where_clause_from_coll_id_and_basket('letterbox_coll');
 
-$where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
-//var_dump($where_clause);
 if ($where_clause)
     $where_clause = " and ".$where_clause;
 	
@@ -245,7 +240,6 @@ for($i=0; $i<$totalEntities;$i++)
 
         $stmt = $db->query("SELECT count(res_id) AS total FROM ".$view
                     ." WHERE destination = ? and status not in ('DEL','BAD') and date(process_limit_date) <= date(now()) and closing_date is null".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
-        //$db->show();
 
         if( $stmt->rowCount() > 0)
         {
@@ -295,14 +289,10 @@ if($report_type == 'graph')
     }
 
     $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title;
-    for($i=0;$i<count($_SESSION['labels1']);$i++)
-    {
-        //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
-    }
+
     $_SESSION['GRAPH']['VALUES']='';
     for($i=0;$i<count($vol);$i++)
     {
-        //$src1 .= "&values[]=".$vol[$i];
         $_SESSION['GRAPH']['VALUES'][$i]=$vol[$i];
     }
 }

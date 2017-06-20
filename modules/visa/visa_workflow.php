@@ -42,7 +42,7 @@ $confirm = true;
 // $error_visa_workflow = false;
 
 // $db = new Database();
-// $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL", array($_POST['values'], 'letterbox_coll', 'VISA_CIRCUIT'));
+// $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL", array($_POST['values'], 'letterbox_coll', 'VISA_CIRCUIT'));
 
 // if ($stmt->rowCount() < 2) {
 //     $error_visa_workflow = true;

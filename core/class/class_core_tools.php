@@ -474,7 +474,7 @@ class core_tools extends functions
     public function build_menu($menu, $myProfil = true, $logout = true)
     {
         //menu tri
-        $i=0;
+        $i = 0;
         foreach ($menu as $key => $row) {
             $label[$i] = $row['libconst'];
             $i++;
@@ -484,32 +484,42 @@ class core_tools extends functions
         array_multisort($label, SORT_ASC, $label, SORT_ASC, $menu);
 
         // Browses the menu items
-        for($i=0;$i<count($menu);$i++) {
-            if($menu[$i]['show'] == true)
-            {
-                $tmp = $menu[$i]['url'];
+        for ($i=0;$i<count($menu);$i++) {
 
-                if(preg_match('/php$/', $tmp))
-                {
-                    $tmp .= "?reinit=true";
-                }
-                else
-                {
-                    $tmp .= "&reinit=true";
-                }
-                $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
-                ?>
-                <li onmouseover="this.className='on';" onmouseout="this.className='';">
-                <a href="#" onclick="window.open('<?php echo($tmp);?>', '<?php
-                    if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
-                        echo $menu[$i]['target'];
+            if($menu[$i]['show'] == true) {
+                if ($menu[$i]['id'] == 'admin') {
+                    if (PROD_MODE) {
+                        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(true, \'#/administration\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
                     } else {
-                        echo '_self';
-                    }?>');"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="<?php 
-                        echo $menu[$i]['style'] . ' fa-2x';
-                        ?>"></i></span><span><?php 
-                        echo trim($menu[$i]['libconst']);?></span></span></a></li>
-                <?php
+                        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(false, \'#/administration\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
+                    }
+                    echo "<i class='{$menu[$i]['style']} fa-2x'></i></span><span>{$menu[$i]['libconst']}</span></span></a></li>";
+                } else {
+                    $tmp = $menu[$i]['url'];
+
+                    if(preg_match('/php$/', $tmp))
+                    {
+                        $tmp .= "?reinit=true";
+                    }
+                    else
+                    {
+                        $tmp .= "&reinit=true";
+                    }
+                    $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
+                    ?>
+                    <li onmouseover="this.className='on';" onmouseout="this.className='';">
+                    <a href="#" onclick="window.open('<?php echo($tmp);?>', '<?php
+                        if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
+                            echo $menu[$i]['target'];
+                        } else {
+                            echo '_self';
+                        }?>');"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="<?php
+                            echo $menu[$i]['style'] . ' fa-2x';
+                            ?>"></i></span><span><?php
+                            echo trim($menu[$i]['libconst']);?></span></span></a></li>
+                    <?php
+                }
+
             }
         }
 
@@ -675,47 +685,51 @@ class core_tools extends functions
         echo '<div style="width: 85%;margin: auto;">';
         for ($i=0;$i<count($arrTmpQuicklaunch);$i++) {
             if ($arrTmpQuicklaunch[$i]['show'] == true) {
-                $tmp = $arrTmpQuicklaunch[$i]['url'];
-                if (preg_match('/php$/', $tmp)) {
-                    $tmp .= "?reinit=true";
+                if ($arrTmpQuicklaunch[$i]['id'] == 'admin') {
+                    if (PROD_MODE) {
+                        echo '<a onClick="triggerAngular(true, \'#/administration\')" style="display: inline-block;width: 45%;float:left;cursor: pointer">';
+                    } else {
+                        echo '<a onClick="triggerAngular(false, \'#/administration\')" style="display: inline-block;width: 45%;float:left;cursor: pointer">';
+                    }
                 } else {
-                    $tmp .= "&reinit=true";
-                }
-                $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes
-                ?>
-                <a href="#" style="display: inline-block;width: 45%;float:left;" onclick="window.open('<?php 
-                        echo $tmp;
-                        ?>', '<?php 
-                        if(
-                            isset($arrTmpQuicklaunch[$i]['target']) 
-                            && $arrTmpQuicklaunch[$i]['target'] <> ''
-                        ) {
-                            echo $arrTmpQuicklaunch[$i]['target'];
-                        } else {
-                            echo '_self';
-                        }?>');">
+                    $tmp = $arrTmpQuicklaunch[$i]['url'];
+                    if (preg_match('/php$/', $tmp)) {
+                        $tmp .= "?reinit=true";
+                    } else {
+                        $tmp .= "&reinit=true";
+                    }
+                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes
+                    ?>
+                    <a href="#" style="display: inline-block;width: 45%;float:left;" onclick="window.open('<?php
+                            echo $tmp;
+                            ?>', '<?php
+                            if(
+                                isset($arrTmpQuicklaunch[$i]['target'])
+                                && $arrTmpQuicklaunch[$i]['target'] <> ''
+                            ) {
+                                echo $arrTmpQuicklaunch[$i]['target'];
+                            } else {
+                                echo '_self';
+                            }?>');">
+                <?php } ?>
+                    <span>
+                        <span style="width:30px;height:30px;display:inline-block;text-align:center;" id="<?php
+                            echo $arrTmpQuicklaunch[$i]['style'];
+                            ?>" >
+                            <i style="width:30px;height:30px;" class="<?php
+                                echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
+                                ;?> mCdarkGrey"></i>
+                        </span>
                         <span>
-                <span style="width:30px;height:30px;display:inline-block;text-align:center;" id="<?php 
-                    echo $arrTmpQuicklaunch[$i]['style'];
-                    ?>" >
-                    <i style="width:30px;height:30px;" class="<?php 
-                        echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
-                        ;?> mCdarkGrey"></i>
-                </span>
-                <span>
-                       
-                            <?php 
+                            <?php
                             echo trim($arrTmpQuicklaunch[$i]['libconst']);
                             ?>
-                    
-                </span>
-                </span>
+                        </span>
+                    </span>
                 </a>
                 <?php
-            } else {
-                //$this->show_array($arrTmpQuicklaunch[$i]);
             }
-            if($i%2){
+            if($i % 2){
                 echo '<div style="clear:both;"></div>';
             }
             

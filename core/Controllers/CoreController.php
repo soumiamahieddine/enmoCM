@@ -18,6 +18,7 @@ namespace Core\Controllers;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Core\Models\ServiceModel;
 
 include_once 'core/class/class_portal.php';
 
@@ -25,10 +26,6 @@ class CoreController
 {
     public function initialize(RequestInterface $request, ResponseInterface $response)
     {
-        if (empty($_SESSION['user']['UserId'])) {
-            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
-        }
-
         $data = $request->getParams();
 
         $aInit = [];
@@ -45,5 +42,18 @@ class CoreController
         }
 
         return $response->withJson($aInit);
+    }
+
+    public static function getAdministration(RequestInterface $request, ResponseInterface $response)
+    {
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $administration = [];
+            $administration['application'] = ServiceModel::getApplicationAdministrationServicesByXML();
+            $administration['modules'] = ServiceModel::getModulesAdministrationServicesByXML();
+        } else {
+            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $_SESSION['user']['UserId']]);
+        }
+
+        return $response->withJson($administration);
     }
 }

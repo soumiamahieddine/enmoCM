@@ -28,7 +28,7 @@
 * @ingroup admin
 */
 
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
+require_once 'core/class/class_request.php';
 $db = new Database();
 
 if (isset($_GET['mode']) && $_GET['mode'] == 'up') {
@@ -37,13 +37,34 @@ if (isset($_GET['mode']) && $_GET['mode'] == 'up') {
 } else if (isset($_GET['contactid']) && $_GET['contactid'] <> '' && isset($_GET['addressid']) && $_GET['addressid'] <> ''){
 	$extra = ' AND contact_id = ? and ca_id = ? ';
 	$arrayPDO = array($_GET['contactid'], $_GET['addressid']);
-} 
-else {
-	$extra = ' ORDER BY ca_id DESC limit 1';
+} else {
+	$orderBy = "ORDER BY ca_id DESC";
 	$arrayPDO = array();
+	$specific = true;
 }
 
-$stmt = $db->query("SELECT is_corporate_person, 
+if ($specific) {
+	$select = "is_corporate_person, 
+					contact_lastname, 
+					contact_firstname, 
+					society, 
+					society_short, 
+					contact_id, 
+					ca_id, 
+					lastname,
+					firstname,
+					address_num,
+					address_street,
+					address_town,
+					address_postal_code,
+					creation_date,
+					contact_purpose_label,
+					departement,
+					update_date";
+    $query = $db->limit_select(0, 1, $select, 'view_contacts', '', '', '', $orderBy);
+    $stmt = $db->query($query);
+} else {
+	$stmt = $db->query("SELECT is_corporate_person, 
 					contact_lastname, 
 					contact_firstname, 
 					society, 
@@ -62,6 +83,9 @@ $stmt = $db->query("SELECT is_corporate_person,
 					update_date 
 			FROM view_contacts 
 			WHERE 1=1 " . $extra, $arrayPDO);
+}
+
+
 // $stmt->DebugDumpParams();
 $res = $stmt->fetchObject();
 

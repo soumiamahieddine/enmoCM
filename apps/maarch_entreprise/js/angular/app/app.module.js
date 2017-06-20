@@ -15,6 +15,7 @@ var app_component_1 = require("./app.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
 var parameters_component_1 = require("./parameters.component");
+var administration_component_1 = require("./administration.component");
 var signature_book_component_1 = require("./signature-book.component");
 var AppModule = (function () {
     function AppModule() {
@@ -28,6 +29,7 @@ AppModule = __decorate([
             //DataTablesModule,
             forms_1.FormsModule,
             router_1.RouterModule.forRoot([
+                { path: 'administration', component: administration_component_1.AdministrationComponent },
                 { path: 'profile', component: profile_component_1.ProfileComponent },
                 { path: 'administration/parameter/create', component: parameter_component_1.ParameterComponent },
                 { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
@@ -37,7 +39,7 @@ AppModule = __decorate([
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        declarations: [app_component_1.AppComponent, profile_component_1.ProfileComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, profile_component_1.ProfileComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
         providers: [],
         bootstrap: [app_component_1.AppComponent]
     })

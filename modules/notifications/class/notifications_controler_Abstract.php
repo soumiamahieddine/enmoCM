@@ -194,7 +194,11 @@ abstract class notifications_controler_Abstract extends ObjectControler implemen
             } else { //mode == add
                 if ($this->insert($notification)) {
                     $dbConn = new Database();
-                    $stmt = $dbConn->query("SELECT notification_sid FROM notifications ORDER BY notification_sid DESC limit 1");
+                    $where = "";
+                    $order = "ORDER BY notification_sid DESC";
+                    $query = $dbConn->limit_select(0, 1, 'notification_sid', 'notifications', $where, '', '', $order);
+
+                    $stmt = $dbConn->query($query);
                     $result_sid = $stmt->fetchObject(); 
                     $control = array('status' => 'ok',
                                      'value'  => $result_sid->notification_sid);

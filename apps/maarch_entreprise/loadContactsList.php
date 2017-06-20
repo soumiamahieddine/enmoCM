@@ -35,7 +35,7 @@ if (isset($_REQUEST['res_id'])) {
                       
                 $query = "SELECT c.is_corporate_person, c.is_private, c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.society_short, c.contact_purpose_label, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country, cres.mode ";
                         $query .= "FROM view_contacts c, contacts_res cres  ";
-                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ORDER BY cres.mode ASC";
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id ORDER BY cres.mode ASC";
                 $arrayPDO = array($_REQUEST['res_id']);
                 $stmt = $db->query($query, $arrayPDO);
 
@@ -88,7 +88,7 @@ if (isset($_REQUEST['res_id'])) {
                       
                 $query = "SELECT u.firstname, u.lastname, u.user_id, cres.mode ";
                         $query .= "FROM users u, contacts_res cres  ";
-                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar) = cres.contact_id";
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";
                 $arrayPDO = array($_REQUEST['res_id']);
                 $stmt = $db->query($query, $arrayPDO);
 

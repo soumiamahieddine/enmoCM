@@ -16,18 +16,19 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        
-        $query  = 'id=TEST&';
-        $query .= 'param_value_string=abcd&';
-        $query .= 'description=papa';
 
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'id'                 => 'TEST',
+            'param_value_string' => 'abcd',
+            'description'        => 'papa'
+        ];
+        $request = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $parameter = new \Core\Controllers\ParametersController();
-        $response  = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response  = $parameter->create($request, new \Slim\Http\Response());
 
         $compare = '[{"id":"TEST",'
                     .'"description":"papa",'
@@ -41,7 +42,7 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
        
         //TEST EXISTE DEJA
 
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->create($request, new \Slim\Http\Response());
 
         $compare = '{"errors":["Identifiant TEST existe d\u00e9j\u00e0 !"]}';
         

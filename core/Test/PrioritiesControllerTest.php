@@ -20,6 +20,7 @@ class PrioritiesControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
+
         $query = 'label_priority=priorityCreated&';
         $query .='color_priority=#ffffff&';
         $query .='working_days=Y&';

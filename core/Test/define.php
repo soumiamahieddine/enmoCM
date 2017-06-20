@@ -75,3 +75,20 @@ if ($_SESSION['error']) {
     echo $_SESSION['error'];
     exit();
 }
+
+
+class httpRequestCustom
+{
+    public static function addContentInBody($aArgs, $request){
+        $json = json_encode($aArgs);
+               
+        $stream = fopen('php://memory', 'r+');
+        fputs($stream, $json);        
+        rewind($stream);
+        $httpStream = new \Slim\Http\Stream($stream);
+        $request = $request->withBody($httpStream);
+        $request = $request->withHeader('Content-Type', 'application/json');
+
+        return $request;
+    }
+}

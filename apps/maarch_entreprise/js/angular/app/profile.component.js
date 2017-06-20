@@ -18,7 +18,8 @@ var ProfileComponent = (function () {
         this.http = http;
         this.zone = zone;
         this.user = {
-            lang: {}
+            lang: {},
+            baskets: []
         };
         this.passwordModel = {
             currentPassword: "",
@@ -38,6 +39,7 @@ var ProfileComponent = (function () {
             htmlBody: "",
             title: "",
         };
+        this.userAbsenceModel = [];
         this.showPassword = false;
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
@@ -53,6 +55,7 @@ var ProfileComponent = (function () {
         $j('#divList').remove();
         $j('#magicContactsTable').remove();
         $j('#manageBasketsOrderTable').remove();
+        $j('#controlParamTechnicTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
@@ -105,7 +108,21 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
-            console.log(_this.user);
+            _this.user.baskets.forEach(function (value, index) {
+                _this.user.baskets[index]['disabled'] = false;
+            });
+            setTimeout(function () {
+                $j("#absenceUser").typeahead({
+                    order: "asc",
+                    source: {
+                        ajax: {
+                            type: "POST",
+                            dataType: "json",
+                            url: _this.coreUrl + "rest/users/autocompleter",
+                        }
+                    }
+                });
+            }, 0);
             _this.loading = false;
         });
     };
@@ -168,12 +185,39 @@ var ProfileComponent = (function () {
             this.mailSignatureModel.title = "";
         }
     };
-    ProfileComponent.prototype.getAbsenceInfos = function () {
+    ProfileComponent.prototype.addBasketRedirection = function () {
+        var index = $j("#selectBasketAbsenceUser option:selected").index();
+        if (index > 0) {
+            this.userAbsenceModel.push({
+                "basketId": this.user.baskets[index - 1].basket_id,
+                "basketName": this.user.baskets[index - 1].basket_name,
+                "virtual": this.user.baskets[index - 1].is_virtual,
+                "basketOwner": this.user.baskets[index - 1].basket_owner,
+                "newUser": $j("#absenceUser")[0].value,
+                "index": index - 1
+            });
+            this.user.baskets[index - 1].disabled = true;
+            $j('#selectBasketAbsenceUser option:eq(0)').prop('selected', true);
+            $j("#absenceUser")[0].value = "";
+        }
+    };
+    ProfileComponent.prototype.delBasketRedirection = function (index) {
+        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
+        this.userAbsenceModel.splice(index, 1);
+    };
+    ProfileComponent.prototype.activateAbsence = function () {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/currentUser/baskets/absence')
+        this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', this.userAbsenceModel)
             .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            _this.loading = false;
+            .subscribe(function () {
+            location.hash = "";
+            location.search = "?display=true&page=logout&abs_mode";
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
         });
     };
     ProfileComponent.prototype.updatePassword = function () {
@@ -393,10 +437,6 @@ var ProfileComponent = (function () {
         }, function (error) {
             alert(error.statusText);
         });
-    };
-    ProfileComponent.prototype.absenceModal = function () {
-        createModal(this.user.absence, 'modal_redirect', 'auto', '950px');
-        autocomplete(this.user.countBasketsForAbsence, 'index.php?display=true&module=basket&page=autocomplete_users_list');
     };
     return ProfileComponent;
 }());

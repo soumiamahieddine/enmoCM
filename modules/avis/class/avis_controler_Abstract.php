@@ -44,7 +44,7 @@ abstract class avis_controler_Abstract
             $stmt = $db->query($query, array($recommendation_limit_date, $resId));
         }
 
-        $query = "UPDATE res_letterbox SET modification_date = CURRENT_DATE where res_id = ?";
+        $query = "UPDATE res_letterbox SET modification_date = " . $db->current_datetime() . " where res_id = ?";
         $stmt = $db->query($query, array($resId));
     }
 
@@ -274,11 +274,15 @@ abstract class avis_controler_Abstract
     public function myPosAvis($res_id, $coll_id, $listDiffType)
     {
         $db = new Database();
-        $stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date ISNULL ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
+        $where = "res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL";
+        $order = " ORDER by listinstance_id ASC";
+        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+
+        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
         $res = $stmt->fetchObject();
         /* if ($res->item_mode == 'sign'){
-          return $this->nbAvis($res_id, $coll_id);
-          } */
+            return $this->nbAvis($res_id, $coll_id);
+        } */
         return $res->sequence;
     }
 
@@ -311,7 +315,11 @@ abstract class avis_controler_Abstract
         } else {
             $order = 'ASC';
         }
-        $stmt = $db->query("SELECT sequence, item_mode from listinstance WHERE res_id= ? and coll_id = ? and difflist_type = ? and process_date ISNULL ORDER BY listinstance_id " . $order . " LIMIT 1", array($res_id, $coll_id, $listDiffType));
+        $where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
+        $order = "ORDER by listinstance_id " . $order;
+        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+
+        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType));
         $res = $stmt->fetchObject();
         /* if ($res->item_mode == 'avis'){
           return $this->nbAvis($res_id, $coll_id);
@@ -323,10 +331,10 @@ abstract class avis_controler_Abstract
     {
         $stepDetails = array();
         $db = new Database();
-        $stmt = $db->query("SELECT * "
-                . "from listinstance WHERE res_id= ? and coll_id = ? "
-                . "and difflist_type = ? and sequence = ? "
-                . "ORDER BY listinstance_id ASC LIMIT 1", array($res_id, $coll_id, $listDiffType, $sequence));
+        $where = "res_id= ? and coll_id = ? and difflist_type = ? and sequence = ?";
+        $order = " ORDER by listinstance_id ASC";
+        $query = $db->limit_select(0, 1, '*', 'listinstance', $where, '', '', $order);
+        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $sequence));
         $res = $stmt->fetchObject();
         $stepDetails['listinstance_id'] = $res->listinstance_id;
         $stepDetails['coll_id'] = $res->coll_id;

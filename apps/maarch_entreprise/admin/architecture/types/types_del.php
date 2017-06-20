@@ -58,11 +58,12 @@ if($stmt->rowCount() == 0)
 }
 else
 {
-    $stmt=$db->query("SELECT coll_id FROM doctypes WHERE type_id = ?", array($s_id));
+    $stmt   = $db->query("SELECT coll_id FROM doctypes WHERE type_id = ?", array($s_id));
     $collId = $stmt->fetchObject();
-    $table = $sec->retrieve_table_from_coll($collId->coll_id);
+    $table  = $sec->retrieve_table_from_coll($collId->coll_id);
 
-    $stmt = $db->query("SELECT res_id FROM ". $table ." WHERE type_id = ? limit 1", array($s_id));
+    $query = $db->limit_select(0, 1, 'res_id', $table, 'type_id = ?');
+    $stmt  = $db->query($query, array($s_id));
 
     if($stmt->rowCount() == 0)
     {

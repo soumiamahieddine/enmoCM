@@ -25,28 +25,34 @@ $list       = new lists();
 //Include definition fields
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php';
 
-//Keep some parameters
-$parameters = '';
-
-//URL extra parameters
-$urlParameters = '';
-
 $db = new Database();
 
-$stmt = $db->query(
-    "SELECT ir.record_id as res_id, ir.subject, ir.doc_date, ir.event_date, ir.creation_date, ir.alt_identifier"
-    ." FROM"
-    ." (SELECT DISTINCT ON (h.record_id) h.record_id, h.event_date, r.subject, r.doc_date, r.creation_date, r.alt_identifier FROM history h, res_view_letterbox r"
-    ." WHERE h.user_id = ?" 
-    ." AND event_id !='linkup' AND event_id NOT LIKE 'attach%'"
-    ." AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')"
-    ." AND h.record_id <> 'none'"
-    ." AND CAST(h.record_id AS INT) = r.res_id"
-    ." AND r.status <> 'DEL'"
-    ." ORDER BY h.record_id, h.event_date desc) AS ir"
-    ." ORDER BY ir.event_date desc"
-    ." LIMIT 5", array($_SESSION['user']['UserId'])
-);
+$selectQuery = 'ir.record_id as res_id, ir.subject, ir.doc_date, ir.event_date, ir.creation_date, ir.alt_identifier';
+
+$tableQuery = "(
+WITH summary AS (
+    SELECT h.record_id, h.event_date, r.subject, r.doc_date, r.creation_date, r.alt_identifier,
+           ROW_NUMBER() OVER(PARTITION BY h.record_id
+                                 ORDER BY h.record_id, h.event_date desc) AS rk
+      FROM history h, res_view_letterbox r
+WHERE h.user_id = ?
+AND event_id !='linkup' AND event_id NOT LIKE 'attach%'
+AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')
+AND h.record_id <> 'none'
+AND CAST(h.record_id AS INT) = r.res_id
+AND r.status <> 'DEL'
+ORDER BY h.record_id, h.event_date desc)
+SELECT s.*
+  FROM summary s
+ WHERE s.rk = 1) ir";
+
+$whereQuery = '';
+$orderQuery = "ORDER BY ir.event_date DESC";
+
+$query = $db->limit_select(0, 5, $selectQuery, $tableQuery, $whereQuery, $orderQuery);
+
+$stmt = $db->query($query, array($_SESSION['user']['UserId']));
+
 $i=0;
 $j=0;
 $x=0;
