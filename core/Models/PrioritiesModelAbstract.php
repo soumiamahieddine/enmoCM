@@ -188,7 +188,7 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
     public static function getById(array $aArgs = []){
         //var_dump($aArgs);
         static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs,['id']);
+        static::checkNumeric($aArgs, ['id']);
         
         $aReturn = static::select([
                 'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -215,7 +215,7 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = []){
         static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkNumeric($aArgs, ['id']);
 
         $where['id'] = $aArgs['id'];
 
@@ -229,7 +229,7 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = []){
         static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['idd']);
+        static::checkNumeric($aArgs, ['id']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'priorities',

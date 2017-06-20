@@ -110,14 +110,21 @@ class PrioritiesController
         if (!Validator::notEmpty()->validate($request->getParam('label_priority'))){
             array_push($errors,'Valeur label vide');
             //return false;
-        } 
+        }
+        if (!Validator::notEmpty()->validate($request->getParam('label_priority'))) {
+            array_push($errors, 'Aucune Couleur assignée');
+        }
+        else if(!Validator::regex('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/')->validate($request->getParam('color_priority'))){
+            array_push($errors,'Format couleur invalide');
+            var_dump('PC : '.$request->getParam('priority_color'));
+        }
         if (!Validator::notEmpty()->validate($request->getParam('delays'))){
             array_push($errors,'Delai vide');
         }
         if (!Validator::notEmpty()->validate($request->getParam('working_days'))){
             array_push($errors,'jours vide');
         }
-        if ($request->getParam('working_days')!= 'Y' && $request->getParam('working_days') != 'N') {
+        else if ($request->getParam('working_days')!= 'Y' && $request->getParam('working_days') != 'N') {
             array_push($errors,'Valeur working_days invalide');
             //return false;
         } /*elseif ($request->getParam(['number'] === '*') {

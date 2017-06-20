@@ -40,7 +40,6 @@ class PrioritiesControllerTest extends \PHPUnit_Framework_TestCase
             'table'     => ['priorities'],
             'orderby'      => 'id'
         ]);
-        var_dump($tabPriorities);
         end($tabPriorities);
         $key =key($tabPriorities);
         $id = $tabPriorities[$key]['id'];
@@ -48,10 +47,10 @@ class PrioritiesControllerTest extends \PHPUnit_Framework_TestCase
         $compare = '[{"id":'.$id.',"label_priority":"priorityCreated","color_priority":"#ffffff","working_days":"Y","delays":"2"}]';
         $this->assertSame($compare,(string)$response->getBody());
 
-
-        $query = 'label_priority=priorityError&';
-        $query .='color_priority=#ffffff&';
-        $query .='working_days=Y&';
+        //TEST AUCUN ARGUMENT
+        $query = 'label_priority=&';
+        $query .='color_priority=&';
+        $query .='working_days=&';
         $query .='delays=';
 
         $environment = \Slim\Http\Environment::mock([
@@ -61,6 +60,26 @@ class PrioritiesControllerTest extends \PHPUnit_Framework_TestCase
 
         $priorities = new \Core\Controllers\PrioritiesController();
         $response = $priorities->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(),null);
+
+        $compare = '{"errors":["Valeur label vide","Aucune Couleur assign\u00e9e","Delai vide","jours vide"]}';
+        $this->assertSame($compare,(string)$response->getBody());
+        
+        //Test Couleur mauvais format 
+        $query = 'label_priority=priorityError&';
+        $query .='color_priority=#ff&';
+        $query .='working_days=Y&';
+        $query .='delays=12';
+
+        $environment = \Slim\Http\Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'QUERY_STRING'   =>$query 
+        ]);
+
+        $priorities = new \Core\Controllers\PrioritiesController();
+        $response = $priorities->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response(),null);
+
+        $compare = '{"errors":["Delai vide","jours vide"]}';
+        $this->assertSame($compare,(string)$response->getBody());
     }
     public function testUpdate()
     {
