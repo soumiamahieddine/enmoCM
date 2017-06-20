@@ -66,6 +66,9 @@ var ParametersComponent = (function () {
             }
         });
     };
+    ParametersComponent.prototype.goUrl = function () {
+        location.href = 'index.php?admin=parameters&page=control_param_technic';
+    };
     ParametersComponent.prototype.prepareParameter = function () {
         $j('#inner_content').remove();
     };

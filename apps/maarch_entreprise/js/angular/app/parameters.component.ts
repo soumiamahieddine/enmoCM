@@ -67,6 +67,10 @@ export class ParametersComponent implements OnInit {
                 }
             });
     }
+
+    goUrl(){
+        location.href = 'index.php?admin=parameters&page=control_param_technic';
+    }
     
     prepareParameter() {
         $j('#inner_content').remove();
