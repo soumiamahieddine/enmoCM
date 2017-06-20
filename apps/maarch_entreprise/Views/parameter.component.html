@@ -3,7 +3,6 @@
 </div>
 <div id="create" *ngIf="mode == 'create' ">
     <div class="block">
-        CUSTOM
         <div id="parameter" class="forms" style="width:400px;margin:auto;">    
             <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
                 <p>      
@@ -17,7 +16,7 @@
                         <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
                         <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
                     </select>
-                        <span class="red_asterisk"><i class="fa fa-star"></i></span>
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
                 <p>
                     <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
@@ -30,14 +29,15 @@
                 </p>
                 <p>
                     <label for="description">{{this.lang.description}}</label>
-                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
+                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
+                </p>
                 <p class="button" style="text-align:center">
-<button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
+                    <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
                     <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
                 </p>
             
             </form>     
-    </div>
+        </div>
     </div>
 </div>
 <div id = "update" *ngIf = "mode == 'update'">
@@ -54,7 +54,8 @@
                         <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
                         <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
                         <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
-                    </select><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                    </select>
+                    <span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
                 <p>
                     <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
@@ -67,13 +68,14 @@
                 </p>
                 <p>
                     <label for="description">{{this.lang.description}}</label>
-                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea></p>
+                    <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
+                </p>
                 <p class="button" style="text-align:center">
                     <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
                     <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
                 </p>
             
             </form>     
-    </div>
+        </div>
     </div>
 </div>
