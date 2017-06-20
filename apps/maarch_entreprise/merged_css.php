@@ -57,7 +57,6 @@ readfile('node_modules/datatables/media/css/jquery.dataTables.min.css');
 readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
-readfile('node_modules/datatables.net-dt/css/jquery.dataTables.css');
 readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 
 ob_end_flush();

@@ -64,10 +64,6 @@ class MergedJsAbstract {
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
-		
-		echo "\n";
-		
-		readfile('node_modules/datatables.net/js/jquery.dataTables.js');
 
 		echo "\n";
 
