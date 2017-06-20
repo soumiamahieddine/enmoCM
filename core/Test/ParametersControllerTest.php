@@ -18,17 +18,17 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
     {
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $parameter   = new \Core\Controllers\ParametersController();
 
         $aArgs = [
             'id'                 => 'TEST',
             'param_value_string' => 'abcd',
             'description'        => 'papa'
         ];
-        $request = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $parameter = new \Core\Controllers\ParametersController();
-        $response  = $parameter->create($request, new \Slim\Http\Response());
+        $response  = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '[{"id":"TEST",'
                     .'"description":"papa",'
@@ -37,100 +37,80 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
                     .'"param_value_date":null}]';
 
         $this->assertSame($compare,(string)$response->getBody());
-
-        //TEST ENTIER NON VALIDE
        
         //TEST EXISTE DEJA
-
-        $response = $parameter->create($request, new \Slim\Http\Response());
+        $response = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":["Identifiant TEST existe d\u00e9j\u00e0 !"]}';
-        
+
         $this->assertSame($compare,(string)$response->getBody());
 
         //TEST ENTIER NON VALIDE
-        $query  = 'id=TEST23&';
-        $query .= 'param_value_int=abcd&';
-        $query .= 'description=papa';
+        $aArgs = [
+            'id'              => 'TEST23',
+            'param_value_int' => 'abcd',
+            'description'     => 'papa'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
-
-        $parameter = new \Core\Controllers\ParametersController();
-        $response  = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response  = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":["Entier non valide"]}';
 
         $this->assertSame($compare,(string)$response->getBody());
 
         //AUCUN PARAMETRE
+        $aArgs = [
+            'id'                 => 'TEST23',
+            'param_value_string' => '',
+            'param_value_int'    => '',
+            'param_value_date'   => '',
+            'description'        => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $query  = 'id=TEST3&';
-        $query .= 'param_value_string=&';
-        $query .= 'param_value_int=&';
-        $query .= 'param_value_date=&';
-        $query .= 'description=';
-
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
-
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":[" La valeur du param\u00e8tre est vide"]}';
         
         $this->assertSame($compare,(string)$response->getBody());
 
-        //AUCUN ARGUMENTS
+        //AUCUN ARGUMENT
+        $aArgs = [];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $query  = '';
-
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
-
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":[" L\'identifiant est vide"," La valeur du param\u00e8tre est vide"]}';
 
         $this->assertSame($compare,(string)$response->getBody());
 
         //DATE MAUVAIS FORMAT
+        $aArgs = [
+            'id'                 => 'TEST4',
+            'param_value_string' => '',
+            'param_value_int'    => '',
+            'param_value_date'   => '123456',
+            'description'        => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $query  = 'id=TEST4&';
-        $query .= 'param_value_string=&';
-        $query .= 'param_value_int=&';
-        $query .= 'param_value_date=123456&';
-        $query .= 'description=';
-
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
-
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":[" Param\u00e8tre date invalide"]}';
         $this->assertSame($compare,(string)$response->getBody());
 
         //TEST ID MAUVAIS FORMAT (REGEX)
+        $aArgs = [
+            'id'                 => 'A*-#==',
+            'param_value_string' => '//-//**',
+            'param_value_int'    => '',
+            'param_value_date'   => '',
+            'description'        => '*///*//'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $query  = 'id=A*-#==&';
-        $query .= 'param_value_string=//-//**&';
-        $query .= 'param_value_int=&';
-        $query .= 'param_value_date=&';
-        $query .= 'description=*///*//';
-
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING'   => $query,
-        ]);
-
-        $response = $parameter->create(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
+        $response = $parameter->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '{"errors":["Identifiant invalide","Description invalide","Chaine de caract\u00e8re invalide"]}';
         $this->assertSame($compare,(string)$response->getBody());            
@@ -140,12 +120,10 @@ class ParametersControllerTest extends \PHPUnit_Framework_TestCase
     {
         $parameters = new \Core\Controllers\ParametersController();
 
-        $environment = \Slim\Http\Environment::mock([
-            'REQUEST_METHOD' => 'GET'
-        ]);
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response = $parameters->getList(\Slim\Http\Request::createFromEnvironment($environment), new \Slim\Http\Response());
-
+        $response = $parameters->getList($request, new \Slim\Http\Response());
         $this->assertNotNull((string)$response->getBody());
     }
 
