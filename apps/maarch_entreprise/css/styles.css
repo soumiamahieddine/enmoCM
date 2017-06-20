@@ -3768,16 +3768,13 @@ input.button {
 width:auto;
 }
 
-
 .TabSelected{
-
-background: #fff !important;
-margin-top: 0 !important;
-margin-bottom: -3px !important;
-padding-bottom: 5px !important;
-position: relative !important;
-z-index: 1 !important;
-
+    background: #fff !important;
+    margin-top: 0 !important;
+    margin-bottom: -3px !important;
+    padding-bottom: 5px !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 .detailsDisplayDiv {
@@ -3789,11 +3786,9 @@ z-index: 1 !important;
     padding: 5px;
     height: 92%;
     width: auto;
-    
 }
 
 .DetailsTabFunc  {
-
     background: #deedf3;
     border: 1px solid #666;
     border-bottom: 0;
@@ -3807,7 +3802,7 @@ z-index: 1 !important;
 }
 
 .detailsTab {
-background: #deedf3;
+    background: #deedf3;
     border: 1px solid #666;
     border-bottom: 0;
     cursor: pointer;
@@ -3818,8 +3813,6 @@ background: #deedf3;
     position: relative;
     font-size: 14px;
     display: block;
-
-
 }
 
 .whole-panel{ 
@@ -3834,17 +3827,17 @@ background: #deedf3;
 }
 
 table.dataTable thead .sorting {
-  background-image: url(static.php?filename=)!important;
+    background-image: url("../../node_modules/datatables/media/images/sort_both.png")!important;
 }
 table.dataTable thead .sorting_asc {
-  background-image: url(static.php?filename=sort_asc.png)!important;
+    background-image: url("../../node_modules/datatables/media/images/sort_asc.png")!important;
 }
 table.dataTable thead .sorting_desc {
-  background-image: url(static.php?filename=sort_desc.png)!important;
+    background-image: url("../../node_modules/datatables/media/images/sort_desc.png")!important;
 }
 table.dataTable thead .sorting_asc_disabled {
-  background-image: url(static.php?filename=sort_asc_disabled.png)!important;
+    background-image: url("../../node_modules/datatables/media/images/sort_asc_disabled.png")!important;
 }
 table.dataTable thead .sorting_desc_disabled {
-  background-image: url(static.php?filename=sort_desc_disabled.png)!important;
+    background-image: url("../../node_modules/datatables/media/images/sort_desc_disabled.png")!important;
 }

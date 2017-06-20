@@ -15,6 +15,8 @@
 
 namespace Entities\Models;
 
+use Core\Models\UserModel;
+
 require_once 'apps/maarch_entreprise/services/Table.php';
 
 class EntitiesModelAbstract extends \Apps_Table_Service
@@ -50,5 +52,40 @@ class EntitiesModelAbstract extends \Apps_Table_Service
         ]);
 
         return $aReturn;
+    }
+
+    private static function getEntityChilds(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['entityId']);
+        static::checkString($aArgs, ['entityId']);
+
+        $aReturn = static::select([
+            'select'    => ['entity_id'],
+            'table'     => ['entities'],
+            'where'     => ['parent_entity_id = ?'],
+            'data'      => [$aArgs['entityId']]
+        ]);
+
+        $entities = [$aArgs['entityId']];
+        foreach ($aReturn as $value) {
+            $entities = array_merge($entities, static::getEntityChilds(['entityId' => $value['entity_id']]));
+        }
+
+        return $entities;
+    }
+
+    public static function getAllEntitiesByUserId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aReturn = UserModel::getEntitiesById(['userId' => $aArgs['userId']]);
+
+        $entities = [];
+        foreach ($aReturn as $value) {
+            $entities = array_merge($entities, static::getEntityChilds(['entityId' => $value['entity_id']]));
+        }
+        
+        return array_unique($entities);
     }
 }

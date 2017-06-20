@@ -53,6 +53,7 @@ readfile('apps/maarch_entreprise/css/administration.component.css');
 
 //Dependencies
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
+readfile('node_modules/datatables/media/css/jquery.dataTables.min.css');
 readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');

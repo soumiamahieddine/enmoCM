@@ -59,6 +59,7 @@ class MergedJsAbstract {
 		readfile('node_modules/bootstrap/dist/js/bootstrap.min.js');
 		readfile('node_modules/chart.js/Chart.min.js');
 		readfile('node_modules/tinymce/tinymce.min.js');
+		readfile('node_modules/datatables/media/js/jquery.dataTables.min.js');
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
