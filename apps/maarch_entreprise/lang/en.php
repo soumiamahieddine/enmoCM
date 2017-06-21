@@ -1308,6 +1308,7 @@ if (!defined("_TITLE_STATS_CHOICE_PERIOD"))  define("_TITLE_STATS_CHOICE_PERIOD"
 /******************** Authentification method  ************/
 
 if (!defined("_STANDARD_LOGIN")) define("_STANDARD_LOGIN", "Maarch's authentication");
+if (!defined("_CAS_LOGIN")) define("_CAS_LOGIN", "CAS authentication");
 if (!defined("_ACTIVEX_LOGIN")) define("_ACTIVEX_LOGIN", "Authentification Ms Internet Explorer - ActiveX");
 if (!defined("_HOW_CAN_I_LOGIN")) define("_HOW_CAN_I_LOGIN", "I can not log on...");
 if (!defined("_CONNECT")) define("_CONNECT", "To log on");
