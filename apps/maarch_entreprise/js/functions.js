@@ -8,6 +8,7 @@ function triggerAngular(prodmode, locationToGo) {
     var views = [
         'administration',
         'users-administration',
+        'user-administration',
         'status-administration',
         'status-list-administration',
         'profile',

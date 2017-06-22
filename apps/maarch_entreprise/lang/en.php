@@ -1912,6 +1912,11 @@ if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
 
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification of user');
+/***** User Administration *****/
+
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))
     define('_ADMIN_UPDATE_CONTROL', 'Verify update');

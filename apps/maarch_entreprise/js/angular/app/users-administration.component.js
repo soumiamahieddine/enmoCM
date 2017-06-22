@@ -60,6 +60,8 @@ var UsersAdministrationComponent = (function () {
                 $j(".datatablesRight").css({ "float": "right" });
             }, 0);
             _this.loading = false;
+        }, function (err) {
+            location.href = "index.php";
         });
     };
     return UsersAdministrationComponent;

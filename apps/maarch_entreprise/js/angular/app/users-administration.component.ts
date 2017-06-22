@@ -70,6 +70,8 @@ export class UsersAdministrationComponent implements OnInit {
                 }, 0);
 
                 this.loading = false;
+            }, (err) => {
+                location.href = "index.php";
             });
     }
 }

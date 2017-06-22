@@ -1921,6 +1921,13 @@ if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
 
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
+if (!defined('_ADDED_GROUP'))
+    define('_ADDED_GROUP', 'Groupe ajouté');
+/***** User Administration *****/
+
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))
     define('_ADMIN_UPDATE_CONTROL', 'Vérification mise à jour');

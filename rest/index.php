@@ -102,6 +102,7 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
+$app->get('/administration/user/{userId}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');
@@ -143,7 +144,11 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 //Users
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
+$app->put('/user/{userId}', \Core\Controllers\UserController::class . ':update');
+$app->post('/user/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':addGroup');
+$app->delete('/user/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
+$app->put('/user/{userId}/password', \Core\Controllers\UserController::class . ':reinitializePassword');
 $app->post('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':setCurrentUserBasketsRedirectionForAbsence');
 $app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
 $app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
