@@ -352,8 +352,9 @@ class UserController
                 'entities'  => $entities
             ]);
         }
-
-        return $response->withJson($users);
+        $return['lang'] = LangModel::getUsersForAdministrationLang();
+        $return['users'] = $users;        
+        return $response->withJson($return);
     }
 
     private function checkNeededParameters($aArgs = [])

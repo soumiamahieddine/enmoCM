@@ -16,6 +16,7 @@ var UsersAdministrationComponent = (function () {
     function UsersAdministrationComponent(http) {
         this.http = http;
         this.users = [];
+        this.lang = {};
         this.resultInfo = "";
         this.loading = false;
     }
@@ -32,9 +33,31 @@ var UsersAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/users')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.users = data;
+            _this.users = data.users;
+            _this.lang = data.lang;
             setTimeout(function () {
-                $j('#usersTable').DataTable({});
+                $j('#usersTable').DataTable({
+                    "dom": '<"datatablesLeft"p><"datatablesRight"f>rt<"datatablesCenter"i><"clear">',
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ records per page",
+                        "sZeroRecords": _this.lang.noResult,
+                        "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
+                        "sSearch": "",
+                        "oPaginate": {
+                            "sFirst": "<<",
+                            "sLast": ">>",
+                            "sNext": _this.lang.next + " <i class='fa fa-caret-right'></i>",
+                            "sPrevious": "<i class='fa fa-caret-left'></i> " + _this.lang.previous
+                        },
+                        "sInfoEmpty": _this.lang.noRecord,
+                        "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
+                    }
+                });
+                $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
+                $j('dataTables_filter input').addClass('form-control');
+                $j(".datatablesLeft").css({ "float": "left" });
+                $j(".datatablesCenter").css({ "text-align": "center" });
+                $j(".datatablesRight").css({ "float": "right" });
             }, 0);
             _this.loading = false;
         });
@@ -44,7 +67,7 @@ var UsersAdministrationComponent = (function () {
 UsersAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["users-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['css/users-administration.component.css', '../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.Http])
 ], UsersAdministrationComponent);

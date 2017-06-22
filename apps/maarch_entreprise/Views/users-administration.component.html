@@ -5,16 +5,32 @@
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-cogs fa-2x"></i> Administration des utilisateurs : {{users.length}} utilisateurs</h1>
+    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{lang.admin}} {{lang.users}} : {{users.length}} {{lang.users}}</h1>
+    <nav class="navbar navbar-default" style="font-size:17px !important;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.php" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="cursor: pointer" routerLink="/administration">
+                        <a data-toggle="modal" data-target="#manageSign" title="{{lang.addUser}}"><i class="fa fa-user-plus"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="col-md-12" style="margin-top: 1%">
-        <table id="usersTable" class="display" style="width: 100%" cellspacing="0" border="0">
+        <table id="usersTable" class="display toto" style="width: 100%" cellspacing="0" border="0">
             <thead>
                 <tr>
-                    <th style="width:15%;" valign="bottom" align="left"><span>Identifiant</span></th>
-                    <th style="width:20%;" valign="bottom" align="left"><span>Nom</span></th>
-                    <th style="width:20%;" valign="bottom" align="left"><span>Prénom</span></th>
-                    <th style="width:5%;" valign="bottom" align="left"><span>Statut</span></th>
-                    <th style="width:20%;" valign="bottom" align="left"><span>Courriel</span></th>
+                    <th style="width:15%;" valign="bottom" align="left"><span>{{lang.identifier}}</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.lastname}}</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.firstname}}</span></th>
+                    <th style="width:5%;" valign="bottom" align="left"><span>{{lang.status}}</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.mail}}</span></th>
                     <th style="width:20%;"><span>&nbsp;</span></th>
                 </tr>
             </thead>
@@ -23,18 +39,31 @@
                     <td>{{user.user_id}}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{user.firstname}}</td>
-                    <td>{{user.status}}</td>
-                    <td>{{user.mail}}</td>
                     <td>
-                        <a><i routerLink="/administration" style="cursor:pointer" class="fa fa-edit fa-2x"></i></a>
-                        <a *ngIf="user.enabled == 'Y'"><i class="fa fa-pause fa-2x"></i></a>
-                        <a *ngIf="user.enabled == 'N'"><i class="fa fa-check fa-2x"></i></a>
-                        <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash fa-2x"></i></a>
+                        <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.enabled}}</span>
+                        <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.absent}}</span>
+                        <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.disabled}}</span>
+                    </td>
+                    <td>{{user.mail}}</td>
+                    <td style="text-align:right;">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button type="button" class="btn btn-default" title="{{lang.edit}}">
+                                <a><i routerLink="/administration" style="cursor:pointer" class="fa fa-edit"></i></a>
+                            </button>
+                            <button type="button" class="btn btn-default" title="{{lang.suspend}}" *ngIf="user.enabled == 'Y'">
+                                <a><i style="cursor:pointer;color: #f0ad4e"class="fa fa-pause"></i></a>
+                            </button>
+                            <button type="button" class="btn btn-default" title="{{lang.reactivate}}" *ngIf="user.enabled == 'N'">
+                                <a><i style="cursor:pointer;color: #5cb85c" class="fa fa-check"></i></a>
+                            </button>
+                            <button type="button" class="btn btn-default" title="{{lang.delete}}">
+                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <i routerLink="/administration" class="fa fa-plus-square fa-3x" style="cursor:pointer; position: absolute; right: 25px; color : #337AB7" title="Nouveau paramètre"></i>
     </div>
 </div>
 

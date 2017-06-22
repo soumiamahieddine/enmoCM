@@ -73,13 +73,19 @@ if (!defined("_MODE"))    define("_MODE", "Mode");
 /************** Lists **************/
 if (!defined("_GO_TO_PAGE"))    define("_GO_TO_PAGE", "Go on page");
 if (!defined("_NEXT"))    define("_NEXT", "Next");
+if (!defined("_NEXT_PAGE"))    define("_NEXT_PAGE", "Next");
 if (!defined("_PREVIOUS"))    define("_PREVIOUS", "Previous");
+if (!defined("_PREVIOUS_PAGE"))    define("_PREVIOUS_PAGE", "Previous");
 if (!defined("_ALPHABETICAL_LIST"))    define("_ALPHABETICAL_LIST", "Alphabetical list");
 if (!defined("_ASC_SORT"))    define("_ASC_SORT", "Ancestor sorting");
 if (!defined("_DESC_SORT"))    define("_DESC_SORT", "Descendent sorting");
 if (!defined("_ACCESS_LIST_STANDARD"))    define("_ACCESS_LIST_STANDARD", " Simple lists display");
 if (!defined("_ACCESS_LIST_EXTEND"))    define("_ACCESS_LIST_EXTEND", " Extended lists display");
 if (!defined("_DISPLAY"))    define("_DISPLAY", "Display ");
+if (!defined('_NO_RECORD'))
+    define('_NO_RECORD', 'No record');
+if (!defined('_RECORD'))
+    define('_RECORD', 'record(s)');
 
 /************** Actions **************/
 if (!defined("_DELETE"))    define("_DELETE", "Delete");
