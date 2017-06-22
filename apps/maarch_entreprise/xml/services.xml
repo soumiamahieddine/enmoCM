@@ -96,10 +96,11 @@
    <id>admin_status</id>
    <name>_ADMIN_STATUS</name>
    <comment>_ADMIN_STATUS_DESC</comment>
-   <servicepage>index.php?page=status_management_controler&amp;mode=list&amp;admin=status</servicepage>
+   <servicepage>/administration/statusList</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-check-circle</style>
    <system_service>false</system_service>
+   <angular>true</angular>
    <enabled>true</enabled>
  </SERVICE>
   <SERVICE>

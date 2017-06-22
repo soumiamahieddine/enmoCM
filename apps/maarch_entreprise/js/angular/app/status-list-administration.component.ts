@@ -6,17 +6,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
-var parametersDataTable : any;
+var statusDataTable : any;
 @Component({
     templateUrl : angularGlobals['status-list-administrationView'],
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
 export class StatusListAdministrationComponent implements OnInit {
     coreUrl         : string;
-    nbParameters    : number;
+    nbStatus        : number;
     pageTitle       : string ;
     lang            : any   = "";
-    parametersList  : any;
+    statusList      : any;
 
     resultInfo :string = "";
 
@@ -26,9 +26,9 @@ export class StatusListAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-        this.prepareParameter();
+        this.prepareStatus();
         this.updateBreadcrumb(angularGlobals.applicationName);
-        this.http.get(this.coreUrl + 'rest/parameters')
+        this.http.get(this.coreUrl + 'rest/status')
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors){
@@ -37,16 +37,15 @@ export class StatusListAdministrationComponent implements OnInit {
                         $j("#resultInfo").slideUp(500);
                     });
                 } else {                        
-                    this.parametersList=data.parametersList;
-                    this.lang = data.lang;
-                    var list = this.parametersList;
-                    this.nbParameters = Object.keys(this.parametersList).length;                
-                    this.pageTitle = this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.parameter + "s : "+this.nbParameters+" "+this.lang.parameter+"(s)";
+                    this.statusList = data.statusList;
+                    this.lang       = data.lang;
+                    this.nbStatus = Object.keys(this.statusList).length;                
+                    this.pageTitle = this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.status + "s : "+this.nbStatus+" "+this.lang.status+"(s)";
                     $j('#pageTitle').html(this.pageTitle);
-                    var test= this.parametersList;
+                    var test= this.statusList;
                     var tempLang = this.lang;
                     setTimeout(function() {
-                        parametersDataTable = $j('#paramsTable').DataTable({
+                        statusDataTable = $j('#paramsTable').DataTable({
                                 "language": {
                                     "lengthMenu":   tempLang.display + " _MENU_ " + tempLang.recordsPerPage,
                                     "zeroRecords": tempLang.noRecords,
@@ -67,50 +66,46 @@ export class StatusListAdministrationComponent implements OnInit {
                 }
             });
     }
-
-    goUrl(){
-        location.href = 'index.php?admin=parameters&page=control_param_technic';
-    }
     
-    prepareParameter() {
+    prepareStatus() {
         $j('#inner_content').remove();
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Statuts");
     }
 
-    deleteParameter(paramId : string){
-        var resp =confirm(this.lang.deleteConfirm+' '+paramId+'?');
+    deleteStatus(statusId : string){
+        var resp =confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
-                this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
-                    .map(res => res.json())
-                    .subscribe((data) => {
-                        if(data.errors){
-                            this.resultInfo = data.errors;
-                                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                    $j("#resultInfo").slideUp(500);
-                                });
-                        } else{
-                            var list = this.parametersList;
-                            for(var i = 0; i<list.length;i++){
-                                if(list[i].id==paramId){
-                                    list.splice(i,1);
-                                }
+            this.http.delete(this.coreUrl + 'rest/status/'+statusId)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if(data.errors){
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    } else{
+                        var list = this.statusList;
+                        for(var i = 0; i<list.length;i++){
+                            if(list[i].id==statusId){
+                                list.splice(i, 1);
                             }
-                            parametersDataTable.row($j("#"+paramId)).remove().draw();
-                            this.resultInfo = "Paramètre supprimé avec succès";
-                        
-                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                    $j("#resultInfo").slideUp(500);
-                                });
-                            this.nbParameters = Object.keys(this.parametersList).length;                
-                            this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.parameter + "s : "+this.nbParameters+" "+this.lang.parameter+"(s)";
-                            $j('#pageTitle').html(this.pageTitle);
                         }
-                    });
+                        statusDataTable.row($j("#"+statusId)).remove().draw();
+                        this.resultInfo = "Statut supprimé avec succès";
+                    
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                        this.nbStatus = Object.keys(this.statusList).length;                
+                        this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.parameter + "s : "+this.nbStatus+" "+this.lang.parameter+"(s)";
+                        $j('#pageTitle').html(this.pageTitle);
+                    }
+                });
         }
     }
 

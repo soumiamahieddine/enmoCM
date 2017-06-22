@@ -27,7 +27,7 @@ class StatusController
         $obj = StatusModel::getList();
         
         $datas = [
-            $obj,
+            'statusList' => $obj,
         ];
         
         return $response->withJson($datas);

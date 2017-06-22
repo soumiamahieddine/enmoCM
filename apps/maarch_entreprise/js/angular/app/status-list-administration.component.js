@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
 var router_1 = require("@angular/router");
-var parametersDataTable;
+var statusDataTable;
 var StatusListAdministrationComponent = (function () {
     function StatusListAdministrationComponent(http, route, router) {
         this.http = http;
@@ -25,9 +25,9 @@ var StatusListAdministrationComponent = (function () {
     StatusListAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
-        this.prepareParameter();
+        this.prepareStatus();
         this.updateBreadcrumb(angularGlobals.applicationName);
-        this.http.get(this.coreUrl + 'rest/parameters')
+        this.http.get(this.coreUrl + 'rest/status')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -37,16 +37,15 @@ var StatusListAdministrationComponent = (function () {
                 });
             }
             else {
-                _this.parametersList = data.parametersList;
+                _this.statusList = data.statusList;
                 _this.lang = data.lang;
-                var list = _this.parametersList;
-                _this.nbParameters = Object.keys(_this.parametersList).length;
-                _this.pageTitle = _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbParameters + " " + _this.lang.parameter + "(s)";
+                _this.nbStatus = Object.keys(_this.statusList).length;
+                _this.pageTitle = _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.status + "s : " + _this.nbStatus + " " + _this.lang.status + "(s)";
                 $j('#pageTitle').html(_this.pageTitle);
-                var test = _this.parametersList;
+                var test = _this.statusList;
                 var tempLang = _this.lang;
                 setTimeout(function () {
-                    parametersDataTable = $j('#paramsTable').DataTable({
+                    statusDataTable = $j('#paramsTable').DataTable({
                         "language": {
                             "lengthMenu": tempLang.display + " _MENU_ " + tempLang.recordsPerPage,
                             "zeroRecords": tempLang.noRecords,
@@ -66,20 +65,17 @@ var StatusListAdministrationComponent = (function () {
             }
         });
     };
-    StatusListAdministrationComponent.prototype.goUrl = function () {
-        location.href = 'index.php?admin=parameters&page=control_param_technic';
-    };
-    StatusListAdministrationComponent.prototype.prepareParameter = function () {
+    StatusListAdministrationComponent.prototype.prepareStatus = function () {
         $j('#inner_content').remove();
     };
     StatusListAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Statuts");
     };
-    StatusListAdministrationComponent.prototype.deleteParameter = function (paramId) {
+    StatusListAdministrationComponent.prototype.deleteStatus = function (statusId) {
         var _this = this;
-        var resp = confirm(this.lang.deleteConfirm + ' ' + paramId + '?');
+        var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
+            this.http.delete(this.coreUrl + 'rest/status/' + statusId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -90,20 +86,20 @@ var StatusListAdministrationComponent = (function () {
                     });
                 }
                 else {
-                    var list = _this.parametersList;
+                    var list = _this.statusList;
                     for (var i = 0; i < list.length; i++) {
-                        if (list[i].id == paramId) {
+                        if (list[i].id == statusId) {
                             list.splice(i, 1);
                         }
                     }
-                    parametersDataTable.row($j("#" + paramId)).remove().draw();
-                    _this.resultInfo = "Paramètre supprimé avec succès";
+                    statusDataTable.row($j("#" + statusId)).remove().draw();
+                    _this.resultInfo = "Statut supprimé avec succès";
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.nbParameters = Object.keys(_this.parametersList).length;
-                    _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbParameters + " " + _this.lang.parameter + "(s)";
+                    _this.nbStatus = Object.keys(_this.statusList).length;
+                    _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbStatus + " " + _this.lang.parameter + "(s)";
                     $j('#pageTitle').html(_this.pageTitle);
                 }
             });
