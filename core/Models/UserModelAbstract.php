@@ -418,7 +418,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
 
         $aGroups = static::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group'],
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role'],
             'table'     => ['usergroup_content, usergroups'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?'],
             'data'      => [$aArgs['userId']]

@@ -23,7 +23,7 @@ var UserAdministrationComponent = (function () {
     }
     UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Utilisateurs";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Liste utilisateurs</a> > Modification";
         }
     };
     UserAdministrationComponent.prototype.ngOnInit = function () {
@@ -71,7 +71,7 @@ var UserAdministrationComponent = (function () {
 UserAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["user-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['css/user-administration.component.css', '../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute])
 ], UserAdministrationComponent);

@@ -10,7 +10,7 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["user-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    styleUrls   : ['css/user-administration.component.css','../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
 export class UserAdministrationComponent implements OnInit {
 
@@ -28,7 +28,7 @@ export class UserAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Utilisateurs";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Liste utilisateurs</a> > Modification";
         }
     }
 
