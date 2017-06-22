@@ -29,6 +29,11 @@ class StatusModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
+    public static function getStatusLang(){
+        $aLang = LangModel::getStatusLang();
+        return $aLang;
+    }
+
     public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['id']);

@@ -96,4 +96,15 @@ class LangModelAbstract
 
         return $aLang;
     }
+
+    public static function getStatusLang()
+    {
+        $aLang = [
+            'id'          => _IDENTIFIANT,
+            'description' => _DESCRIPTION,
+        ];
+
+        return $aLang;
+    }
+
 }
