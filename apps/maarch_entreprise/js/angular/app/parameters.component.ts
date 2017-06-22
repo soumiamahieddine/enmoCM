@@ -7,10 +7,12 @@ declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 var parametersDataTable : any;
+
 @Component({
     templateUrl : angularGlobals.parametersView,
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameter.component.css']
 })
+
 export class ParametersComponent implements OnInit {
     coreUrl         : string;
     nbParameters    : number;
@@ -43,7 +45,7 @@ export class ParametersComponent implements OnInit {
                     this.nbParameters = Object.keys(this.parametersList).length;                
                     this.pageTitle = this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.parameter + "s : "+this.nbParameters+" "+this.lang.parameter+"(s)";
                     $j('#pageTitle').html(this.pageTitle);
-                    var test= this.parametersList;
+                    this.parametersList;
                     var tempLang = this.lang;
                     setTimeout(function() {
                         parametersDataTable = $j('#paramsTable').DataTable({

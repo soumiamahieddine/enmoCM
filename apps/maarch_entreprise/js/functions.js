@@ -10,6 +10,8 @@ function triggerAngular(prodmode, locationToGo) {
         'profile',
         'signature-book',
         'parameters',
+        'priorities',
+        'priority',
         'parameter'
     ];
 
