@@ -199,3 +199,28 @@ if (!defined('_DELETE_ATTACHMENT'))
 if (!defined('_DISPLAY_ATTACHMENTS'))
     define('_DISPLAY_ATTACHMENTS', 'Afficher la liste des pièces jointes');
 /***** Signature Book *****/
+
+
+if(!defined('_PAGE'))
+    define('_PAGE','Page');
+
+if(!defined('_OUT_OF'))
+    define('_OUT_OF','sur');
+
+if(!defined('_RECORDS_PER_PAGE'))
+    define('_RECORDS_PER_PAGE','résultats par page');
+
+if(!defined('_DISPLAY'))
+    define('_DISPLAY','Afficher');
+
+if(!defined('_NO_RECORDS'))
+    define('_NO_RECORDS','Aucun résultat');
+
+if(!defined('_AVAILABLE'))
+    define('_AVAILABLE','disponible');
+
+if(!defined('_FILTERED_FROM'))
+    define('_FILTERED_FROM','filtré sur un ensemble de ');
+
+if(!defined('_RECORDS'))
+    define('_RECORDS','résultats');

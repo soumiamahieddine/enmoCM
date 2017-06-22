@@ -143,6 +143,34 @@ class LangModelAbstract
         return $aLang;
     }
 
+    public static function getStatusLang()
+    {
+        $aLang = [
+            'description'     => _DESCRIPTION,
+            'noResult'        => _NO_RESULTS,
+            'noRecord'        => _NO_RECORD,
+            'previous'        => _PREVIOUS_PAGE,
+            'next'            => _NEXT_PAGE,
+            'record'          => _RECORD,
+            'search'          => _SEARCH,
+            'identifier'      => _ID,
+            'edit'            => _MODIFY,
+            'delete'          => _DELETE,
+            'newStatus'       => _NEW_STATUS,
+            'status'          => _STATUS,
+            'statusListTitle' => _STATUS_LIST,
+            'page'            => _PAGE,
+            'outOf'           => _OUT_OF,
+            'recordsPerPage'  => _RECORDS_PER_PAGE,
+            'display'         => _DISPLAY,
+            'noRecords'       => _NO_RECORDS,
+            'available'       => _AVAILABLE,
+            'filteredFrom'    => _FILTERED_FROM,
+            'records'         => _RECORDS,
+        ];
+        return $aLang;
+    }
+
     public static function getUsersForAdministrationLang()
     {
         $aLang = [
@@ -172,4 +200,5 @@ class LangModelAbstract
 
         return $aLang;
     }
+
 }

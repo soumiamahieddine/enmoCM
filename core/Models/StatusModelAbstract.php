@@ -22,11 +22,16 @@ class StatusModelAbstract extends \Apps_Table_Service
     public static function getList()
     {
         $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => '*',
             'table'     => ['status'],
         ]);
 
         return $aReturn;
+    }
+
+    public static function getStatusLang(){
+        $aLang = LangModel::getStatusLang();
+        return $aLang;
     }
 
     public static function getById(array $aArgs = [])
