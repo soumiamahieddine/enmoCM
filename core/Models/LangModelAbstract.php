@@ -159,6 +159,14 @@ class LangModelAbstract
             'newStatus'       => _NEW_STATUS,
             'status'          => _STATUS,
             'statusListTitle' => _STATUS_LIST,
+            'page'            => _PAGE,
+            'outOf'           => _OUT_OF,
+            'recordsPerPage'  => _RECORDS_PER_PAGE,
+            'display'         => _DISPLAY,
+            'noRecords'       => _NO_RECORDS,
+            'available'       => _AVAILABLE,
+            'filteredFrom'    => _FILTERED_FROM,
+            'records'         => _RECORDS,
         ];
         return $aLang;
     }
