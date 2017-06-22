@@ -454,7 +454,7 @@ export class ProfileComponent implements OnInit {
                         $j("#resultInfo").slideUp(500);
                     });
                             
-                }else{
+                } else {
                     this.resultInfo = data.success;
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     //auto close

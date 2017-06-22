@@ -74,13 +74,19 @@ if (!defined("_MODE"))    define("_MODE", "Mode");
 /************** Listes **************/
 if (!defined("_GO_TO_PAGE"))    define("_GO_TO_PAGE", "Aller à la page");
 if (!defined("_NEXT"))    define("_NEXT", "Suivante");
+if (!defined("_NEXT_PAGE"))    define("_NEXT_PAGE", "Suivant");
 if (!defined("_PREVIOUS"))    define("_PREVIOUS", "Précédente");
+if (!defined("_PREVIOUS_PAGE"))    define("_PREVIOUS_PAGE", "Précédent");
 if (!defined("_ALPHABETICAL_LIST"))    define("_ALPHABETICAL_LIST", "Liste alphabétique");
 if (!defined("_ASC_SORT"))    define("_ASC_SORT", "Tri ascendant");
 if (!defined("_DESC_SORT"))    define("_DESC_SORT", "Tri descendant");
 if (!defined("_ACCESS_LIST_STANDARD"))    define("_ACCESS_LIST_STANDARD", "Affichage des listes simples");
 if (!defined("_ACCESS_LIST_EXTEND"))    define("_ACCESS_LIST_EXTEND", "Affichage des listes étendues");
 if (!defined("_DISPLAY"))    define("_DISPLAY", "Affichage");
+if (!defined('_NO_RECORD'))
+    define('_NO_RECORD', 'Aucun élément');
+if (!defined('_RECORD'))
+    define('_RECORD', 'élément(s)');
 /************** Actions **************/
 if (!defined("_DELETE"))    define("_DELETE", "Supprimer");
 if (!defined("_ADD"))    define("_ADD", "Ajouter");
@@ -1914,6 +1920,13 @@ if (!defined('_ACTIVATE_ABSENCE'))
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
+
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
+if (!defined('_ADDED_GROUP'))
+    define('_ADDED_GROUP', 'Groupe ajouté');
+/***** User Administration *****/
 
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))

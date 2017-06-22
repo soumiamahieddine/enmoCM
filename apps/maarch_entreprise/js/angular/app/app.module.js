@@ -14,6 +14,7 @@ var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
+var user_administration_component_1 = require("./user-administration.component");
 var status_list_administration_component_1 = require("./status-list-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var profile_component_1 = require("./profile.component");
@@ -31,6 +32,7 @@ AppModule = __decorate([
             router_1.RouterModule.forRoot([
                 { path: 'administration', component: administration_component_1.AdministrationComponent },
                 { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
+                { path: 'administration/user/:userId', component: user_administration_component_1.UserAdministrationComponent },
                 { path: 'administration/status/create', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/update/:id', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/statusList', component: status_list_administration_component_1.StatusListAdministrationComponent },
@@ -40,7 +42,17 @@ AppModule = __decorate([
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, status_administration_component_1.StatusAdministrationComponent, status_list_administration_component_1.StatusListAdministrationComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [
+            app_component_1.AppComponent,
+            administration_component_1.AdministrationComponent,
+            users_administration_component_1.UsersAdministrationComponent,
+            user_administration_component_1.UserAdministrationComponent,
+            status_administration_component_1.StatusAdministrationComponent,
+            status_list_administration_component_1.StatusListAdministrationComponent,
+            profile_component_1.ProfileComponent,
+            signature_book_component_1.SignatureBookComponent,
+            signature_book_component_1.SafeUrlPipe
+        ],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);
