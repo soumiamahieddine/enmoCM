@@ -146,8 +146,19 @@ class LangModelAbstract
     public static function getStatusLang()
     {
         $aLang = [
-            'id'          => _IDENTIFIANT,
-            'description' => _DESCRIPTION,
+            'description'     => _DESCRIPTION,
+            'noResult'        => _NO_RESULTS,
+            'noRecord'        => _NO_RECORD,
+            'previous'        => _PREVIOUS_PAGE,
+            'next'            => _NEXT_PAGE,
+            'record'          => _RECORD,
+            'search'          => _SEARCH,
+            'identifier'      => _ID,
+            'edit'            => _MODIFY,
+            'delete'          => _DELETE,
+            'newStatus'       => _NEW_STATUS,
+            'status'          => _STATUS,
+            'statusListTitle' => _STATUS_LIST,
         ];
         return $aLang;
     }

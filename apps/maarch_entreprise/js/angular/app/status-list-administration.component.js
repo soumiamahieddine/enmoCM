@@ -40,12 +40,9 @@ var StatusListAdministrationComponent = (function () {
                 _this.statusList = data.statusList;
                 _this.lang = data.lang;
                 _this.nbStatus = Object.keys(_this.statusList).length;
-                _this.pageTitle = _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.status + "s : " + _this.nbStatus + " " + _this.lang.status + "(s)";
-                $j('#pageTitle').html(_this.pageTitle);
-                var test = _this.statusList;
                 var tempLang = _this.lang;
                 setTimeout(function () {
-                    statusDataTable = $j('#paramsTable').DataTable({
+                    statusDataTable = $j('#statusTable').DataTable({
                         "language": {
                             "lengthMenu": tempLang.display + " _MENU_ " + tempLang.recordsPerPage,
                             "zeroRecords": tempLang.noRecords,
@@ -59,7 +56,11 @@ var StatusListAdministrationComponent = (function () {
                                 "next": tempLang.next,
                                 "previous": tempLang.previous
                             }
-                        }
+                        },
+                        "columnDefs": [
+                            { "orderable": false, "targets": 2 },
+                            { "orderable": false, "targets": 3 },
+                        ]
                     });
                 }, 0);
             }
@@ -99,8 +100,6 @@ var StatusListAdministrationComponent = (function () {
                         $j("#resultInfo").slideUp(500);
                     });
                     _this.nbStatus = Object.keys(_this.statusList).length;
-                    _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbStatus + " " + _this.lang.parameter + "(s)";
-                    $j('#pageTitle').html(_this.pageTitle);
                 }
             });
         }

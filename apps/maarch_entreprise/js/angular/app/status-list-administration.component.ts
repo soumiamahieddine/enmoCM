@@ -18,7 +18,7 @@ export class StatusListAdministrationComponent implements OnInit {
     lang            : any   = "";
     statusList      : any;
 
-    resultInfo :string = "";
+    resultInfo : string = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
@@ -40,28 +40,28 @@ export class StatusListAdministrationComponent implements OnInit {
                     this.statusList = data.statusList;
                     this.lang       = data.lang;
                     this.nbStatus = Object.keys(this.statusList).length;                
-                    this.pageTitle = this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.status + "s : "+this.nbStatus+" "+this.lang.status+"(s)";
-                    $j('#pageTitle').html(this.pageTitle);
-                    var test= this.statusList;
                     var tempLang = this.lang;
                     setTimeout(function() {
-                        statusDataTable = $j('#paramsTable').DataTable({
-                                "language": {
-                                    "lengthMenu":   tempLang.display + " _MENU_ " + tempLang.recordsPerPage,
-                                    "zeroRecords": tempLang.noRecords,
-                                    "info": tempLang.page + " _PAGE_ "+ tempLang.outOf +" _PAGES_",
-                                    "infoEmpty": tempLang.noRecords + " " + tempLang.available,
-                                    "infoFiltered": "(" + tempLang.filteredFrom + " _MAX_ " + tempLang.records + ")",
-                                    "search" : tempLang.search,
-                                    "paginate" : {
-                                        "first" : tempLang.first,
-                                        "last"  : tempLang.last,
-                                        "next"  : tempLang.next,
-                                        "previous" : tempLang.previous
-                                    }
+                        statusDataTable = $j('#statusTable').DataTable({
+                            "language": {
+                                "lengthMenu":   tempLang.display + " _MENU_ " + tempLang.recordsPerPage,
+                                "zeroRecords": tempLang.noRecords,
+                                "info": tempLang.page + " _PAGE_ "+ tempLang.outOf +" _PAGES_",
+                                "infoEmpty": tempLang.noRecords + " " + tempLang.available,
+                                "infoFiltered": "(" + tempLang.filteredFrom + " _MAX_ " + tempLang.records + ")",
+                                "search" : tempLang.search,
+                                "paginate" : {
+                                    "first" : tempLang.first,
+                                    "last"  : tempLang.last,
+                                    "next"  : tempLang.next,
+                                    "previous" : tempLang.previous
                                 }
-                            }
-                        );
+                            },
+                            "columnDefs":[
+                                {"orderable":false, "targets":2},
+                                {"orderable":false, "targets":3},
+                            ]
+                        });
                     }, 0);
                 }
             });
@@ -76,7 +76,7 @@ export class StatusListAdministrationComponent implements OnInit {
     }
 
     deleteStatus(statusId : string){
-        var resp =confirm(this.lang.deleteConfirm+' '+statusId+'?');
+        var resp = confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
             this.http.delete(this.coreUrl + 'rest/status/'+statusId)
                 .map(res => res.json())
@@ -101,13 +101,10 @@ export class StatusListAdministrationComponent implements OnInit {
                         $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                             $j("#resultInfo").slideUp(500);
                         });
-                        this.nbStatus = Object.keys(this.statusList).length;                
-                        this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + this.lang.parameter + "s : "+this.nbStatus+" "+this.lang.parameter+"(s)";
-                        $j('#pageTitle').html(this.pageTitle);
+                        this.nbStatus = Object.keys(this.statusList).length;
                     }
                 });
         }
     }
-
  
 }
