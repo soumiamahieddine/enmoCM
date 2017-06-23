@@ -106,11 +106,12 @@
    <id>admin_actions</id>
    <name>_ADMIN_ACTIONS</name>
    <comment>_ADMIN_ACTIONS_DESC</comment>
-   <servicepage>index.php?page=action_management_controler&amp;mode=list&amp;admin=action</servicepage>
+   <servicepage>/administration/actions</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-exchange</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <SERVICE>
    <id>param_mlb_doctypes</id>

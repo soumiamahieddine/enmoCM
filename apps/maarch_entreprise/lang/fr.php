@@ -177,6 +177,8 @@ if (!defined("_RESSOURCES_COLLECTION"))    define("_RESSOURCES_COLLECTION","Coll
 if (!defined("_RECIPIENT"))    define("_RECIPIENT", "Destinataire");
 if (!defined("_START"))    define("_START", "Début");
 if (!defined("_END"))    define("_END", "Fin");
+if (!defined("_NOT_VALID")) define("_NOT_VALID", "non valide");
+
 
 if (!defined("_KEYWORD"))    define("_KEYWORD", "Mot clé");
 

@@ -20,6 +20,8 @@ var priorities_component_1 = require("./priorities.component");
 var priority_component_1 = require("./priority.component");
 var administration_component_1 = require("./administration.component");
 var signature_book_component_1 = require("./signature-book.component");
+var action_component_1 = require("./action.component");
+var actions_component_1 = require("./actions.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -42,12 +44,15 @@ AppModule = __decorate([
                 { path: 'administration/priority/update/:id', component: priority_component_1.PriorityComponent },
                 { path: 'administration/priority/create', component: priority_component_1.PriorityComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
+                { path: 'administration/actions', component: actions_component_1.ActionsComponent },
+                { path: 'administration/actions/create', component: action_component_1.ActionComponent },
+                { path: 'administration/actions/:id', component: action_component_1.ActionComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
             http_1.HttpModule
         ],
         providers: [],
-        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, priorities_component_1.PrioritiesComponent, priority_component_1.PriorityComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [app_component_1.AppComponent, actions_component_1.ActionsComponent, action_component_1.ActionComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, priorities_component_1.PrioritiesComponent, priority_component_1.PriorityComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);

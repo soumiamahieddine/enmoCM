@@ -63,35 +63,27 @@ abstract class admin_Abstract extends functions
 				    && isset($_SESSION['user']['services'][$app_services[$i]['id']])
 				    && $_SESSION['user']['services'][$app_services[$i]['id']]
 				) {
-						if($app_services[$i]['id']=='admin_parameters'){?>
-							<?php
-								if (PROD_MODE) {
-									echo '<div class="admin_item" title="<?php functions::xecho($app_services[$i][\'comment\']);?>" onclick="triggerAngular(true, \'#/parameter/list\')">';
-								
-								} else {
-									echo '<div class="admin_item" title="<?php functions::xecho($app_services[$i][\'comment\']);?>" onclick="triggerAngular(false, \'#/parameter/list\')">';
-								}
-							?>
-							<div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
-							<div <?php functions::xecho($debug_style);?>>
+                    if($app_services[$i]['name']=='Actions'){
+                        ?>
+                        <div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="triggerAngular(false, '#/administration/actions')">
+                    <?php
+                    }
+                    else {
+                    ?>
+                        <div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="window.top.location='<?php echo($app_services[$i]['servicepage']);?>';">
+                    <?php
+                        }
 
-									<strong><?php functions::xecho($app_services[$i]['name']);?></strong>
 
-							</div>
-						</div>
-						<?php
-						}else{
-						?>
-						<div class="admin_item" title="<?php functions::xecho($app_services[$i]['comment']);?>" onclick="window.top.location='<?php echo($app_services[$i]['servicepage']);?>';">
-							<div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
-							<div <?php functions::xecho($debug_style);?>>
+					?>
+	                    <div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
+	                    <div <?php functions::xecho($debug_style);?>>
 
-									<strong><?php functions::xecho($app_services[$i]['name']);?></strong>
+	                            <strong><?php functions::xecho($app_services[$i]['name']);?></strong>
 
-							</div>
-						</div>
-						<?php
-					}
+	                    </div>
+	                </div>
+	                <?php
 				}
 			}
 			echo '<div class="clearfix"></div>';
