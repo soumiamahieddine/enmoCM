@@ -129,9 +129,9 @@ $app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::clas
 *
 **/
 //admin_reports
-$app->get('/report/groups', \Core\Controllers\AdminReportsController::class . ':getList');
-$app->get('/report/groups/{id}', \Core\Controllers\AdminReportsController::class . ':getReportsTypesByXML');
-$app->put('/report/groups/{id}', \Core\Controllers\AdminReportsController::class . ':update');
+$app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
+$app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
+$app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
 
 
 

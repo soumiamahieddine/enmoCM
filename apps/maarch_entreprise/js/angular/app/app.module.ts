@@ -12,6 +12,8 @@ import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
 import { AdministrationComponent }              from './administration.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
+import { ReportsComponent } from './reports.component';
+
 
 @NgModule({
   imports:      [
@@ -25,14 +27,13 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
           { path: 'administration/parameter/create', component: ParameterComponent },
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
           { path: 'administration/parameters', component: ParametersComponent },
+          { path : 'administration/reports', component : ReportsComponent},
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
   ],
-
-  declarations: [ AppComponent, AdministrationComponent, UsersAdministrationComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
-
+  declarations: [ AppComponent, AdministrationComponent, UsersAdministrationComponent, ParametersComponent, ParameterComponent, ReportsComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
   bootstrap:    [ AppComponent]
 })
 export class AppModule { }

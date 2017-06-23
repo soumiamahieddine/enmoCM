@@ -299,7 +299,7 @@ function islockForSignatureBook(resId, basketId, prodmode){
                 alert("Courrier verouillé par " + response.lockBy);
             } else {
                 if (prodmode) {
-                    triggerAngular(true, "#/" + basketId + "/signatureBook/" + resId);
+                    triggerAngular(false, "#/" + basketId + "/signatureBook/" + resId);
                 } else {
                     triggerAngular(false, "#/" + basketId + "/signatureBook/" + resId);
                 }

@@ -82,4 +82,16 @@ if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC"))
     define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC", "Permet d'afficher le délai (en jour) de la création jusqu'à la clôture d'un courrier.");
 if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE"))
     define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE", "Délai moyen de traitement par type de courrier");
+/****************************************************************************************************************************/
+
+if (!defined("_FOLDER"))
+    define("_FOLDER","Dossiers");
+if (!defined("_ENTITIES"))
+    define("_ENTITIES","Entités");
+if (!defined("_MAARCH_APPLICATION"))
+    define("_MAARCH_APPLICATION","Application Maarch");
+if (!defined("_GROUP"))
+    define("_GROUP","Groupes");
+if (!defined("_SELECT_GROUP"))
+    define("_SELECT_GROUP","Choisir un groupe");
 ?>

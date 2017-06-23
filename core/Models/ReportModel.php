@@ -15,7 +15,7 @@
 
 namespace Core\Models;
 
-class AdminReportsModel extends AdminReportsModelAbstract
+class ReportModel extends ReportModelAbstract
 {
     // Do your stuff in this class
 }

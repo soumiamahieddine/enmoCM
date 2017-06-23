@@ -132,4 +132,20 @@ class LangModelAbstract
 
         return $aLang;
     }
+    public static function getReportsLang(){
+        
+        $aLang = [
+            'folder'               => _FOLDER,
+            'entities'             => _ENTITIES,
+            'mappli'               => _MAARCH_APPLICATION,
+            'group'                => _GROUP,
+            'selectGroup'          => _SELECT_GROUP,
+            'validate'             => _VALIDATE,
+            'cancel'               => _CANCEL
+
+            ];
+
+        return $aLang;
+    }
+
 }

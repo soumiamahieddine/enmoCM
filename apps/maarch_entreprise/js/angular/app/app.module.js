@@ -18,6 +18,7 @@ var parameter_component_1 = require("./parameter.component");
 var parameters_component_1 = require("./parameters.component");
 var administration_component_1 = require("./administration.component");
 var signature_book_component_1 = require("./signature-book.component");
+var reports_component_1 = require("./reports.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -36,12 +37,13 @@ AppModule = __decorate([
                 { path: 'administration/parameter/create', component: parameter_component_1.ParameterComponent },
                 { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
                 { path: 'administration/parameters', component: parameters_component_1.ParametersComponent },
+                { path: 'administration/reports', component: reports_component_1.ReportsComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, reports_component_1.ReportsComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);

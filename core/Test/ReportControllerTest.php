@@ -11,7 +11,7 @@ namespace MaarchTest;
 
 require_once __DIR__.'/define.php';
 
-class AdminReportsTest extends \PHPUnit_Framework_TestCase
+class ReportsTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetList()
     {
@@ -46,30 +46,6 @@ class AdminReportsTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($decoded_response);
 
     }
-
-  /*  public function testGetUserByGroupId()
-    {
-        $action = new \Core\Controllers\AdminReportsController();
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-            ]
-        );
-
-        $aArgs = [
-            'id'=> 'NEW'
-        ];
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->getUserByGroupId($request, $response, $aArgs);
-        $compare = '[[{"user_id":"NEW","group_id":"Nouveau",'
-            . '"primary_group":"Y","role":"N"}]]';
-
-        $this->assertSame((string)$response->getBody(), $compare);
-    }
-*/
 
     public function testUpdate()
     {

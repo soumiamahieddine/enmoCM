@@ -80,4 +80,18 @@ if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT"))
     define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT", "Handling medium time");
 if (!defined("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE"))
     define("_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE", "Handling medium time by kind of mail");
+    /******************************************************************************************************/
+if (!defined("_FOLDER"))
+    define("_FOLDER","Folders");
+if (!defined("_ENTITIES"))
+    define("_ENTITIES","Entities");
+if (!defined("_MAARCH_APPLICATION"))
+    define("_MAARCH_APPLICATION","Maarch Application");
+if (!defined("_GROUP"))
+    define("_GROUP","Groups");
+if (!defined("_SELECT_GROUP"))
+    define("_SELECT_GROUP","Choose a group");
+
+            
+
 ?>

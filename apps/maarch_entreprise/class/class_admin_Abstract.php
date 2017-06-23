@@ -123,9 +123,23 @@ abstract class admin_Abstract extends functions
 						echo '<h2 style="text-align:center;">Modules</h2>';
 						echo '<div class="content" id="admin_modules">';
 					}
-					$nb ++;
-					?>
-					<div class="admin_item" title="<?php echo 'Module '
+					
+						if($modules_services[$value][$i]['name'] == "Etats et éditions"){
+							?>
+						<div class="admin_item" title="<?php echo 'Module '
+					. functions::xssafe($value) .' : ' 
+					. functions::xssafe($modules_services[$value][$i]['comment']);?>" onclick="triggerAngular(false,'#/reports');">
+						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
+						<div <?php functions::xecho($debug_style);?> >
+
+								<strong><?php functions::xecho($modules_services[$value][$i]['name']);?></strong>
+						</div>
+					</div>
+					<?php
+                    }
+                    else {
+						?>
+						<div class="admin_item" title="<?php echo 'Module '
 					. functions::xssafe($value) .' : ' 
 					. functions::xssafe($modules_services[$value][$i]['comment']);?>" onclick="window.top.location='<?php echo($modules_services[$value][$i]['servicepage']);?>';">
 						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
@@ -135,6 +149,11 @@ abstract class admin_Abstract extends functions
 						</div>
 					</div>
 					<?php
+                        }
+
+					$nb ++;
+					
+					
 				}
 			}
 		}
