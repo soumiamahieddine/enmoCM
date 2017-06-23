@@ -27,7 +27,8 @@ class StatusController
         $obj = StatusModel::getList();
         
         $datas = [
-            $obj,
+            'statusList' => $obj,
+            'lang'       =>  StatusModel::getStatusLang()
         ];
         
         return $response->withJson($datas);

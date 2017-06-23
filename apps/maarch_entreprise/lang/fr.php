@@ -74,13 +74,19 @@ if (!defined("_MODE"))    define("_MODE", "Mode");
 /************** Listes **************/
 if (!defined("_GO_TO_PAGE"))    define("_GO_TO_PAGE", "Aller à la page");
 if (!defined("_NEXT"))    define("_NEXT", "Suivante");
+if (!defined("_NEXT_PAGE"))    define("_NEXT_PAGE", "Suivant");
 if (!defined("_PREVIOUS"))    define("_PREVIOUS", "Précédente");
+if (!defined("_PREVIOUS_PAGE"))    define("_PREVIOUS_PAGE", "Précédent");
 if (!defined("_ALPHABETICAL_LIST"))    define("_ALPHABETICAL_LIST", "Liste alphabétique");
 if (!defined("_ASC_SORT"))    define("_ASC_SORT", "Tri ascendant");
 if (!defined("_DESC_SORT"))    define("_DESC_SORT", "Tri descendant");
 if (!defined("_ACCESS_LIST_STANDARD"))    define("_ACCESS_LIST_STANDARD", "Affichage des listes simples");
 if (!defined("_ACCESS_LIST_EXTEND"))    define("_ACCESS_LIST_EXTEND", "Affichage des listes étendues");
 if (!defined("_DISPLAY"))    define("_DISPLAY", "Affichage");
+if (!defined('_NO_RECORD'))
+    define('_NO_RECORD', 'Aucun élément');
+if (!defined('_RECORD'))
+    define('_RECORD', 'élément(s)');
 /************** Actions **************/
 if (!defined("_DELETE"))    define("_DELETE", "Supprimer");
 if (!defined("_ADD"))    define("_ADD", "Ajouter");
@@ -155,7 +161,7 @@ if (!defined("_WARNING_MESSAGE_DEL_USER"))
 if (!defined("_INFO_MESSAGE_UPDATE_USER"))
     define("_INFO_MESSAGE_UPDATE_USER", "Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur");
 if (!defined("_INFO_MESSAGE_UPDATE_USER2"))
-    define("_INFO_MESSAGE_UPDATE_USER2", "Les courriers confidentiels que vous avez créé ne seront pas affectés");
+    define("_INFO_MESSAGE_UPDATE_USER2", "Les courriers confidentiels que vous avez créés ne seront pas affectés");
 if (!defined("_WARNING_MESSAGE_UPDATE_USER"))
     define("_WARNING_MESSAGE_UPDATE_USER", "Si vous choisissez \"AUCUN REMPLACEMENT\" et que l'utilisateur actuel est en destinataire, celui-ci ne sera pas supprimé !");
 if (!defined("_MESSAGE_REAFFECT_USER_LISTMODEL"))
@@ -991,6 +997,7 @@ if (!defined("_VIEW_TREE_CONTACTS")) define("_VIEW_TREE_CONTACTS","Arborescence 
 
 if (!defined("_ADDRESSES_LIST")) define("_ADDRESSES_LIST","Liste des adresses");
 if (!defined("_SEARCH_ADDRESSES")) define("_SEARCH_ADDRESSES","Rechercher Nom/Adresse");
+if (!defined("_ADDRESS_NB")) define("_ADDRESS_NB","Nombre d'adresse");
 
 if (!defined("_CONTACT_TYPES_LIST")) define("_CONTACT_TYPES_LIST","Liste des types de contact");
 if (!defined("_DESC_CONTACT_TYPES")) define("_DESC_CONTACT_TYPES","Type de contact");
@@ -1007,7 +1014,7 @@ if (!defined("_ID_CONTACT_TYPE_PB")) define("_ID_CONTACT_TYPE_PB","Il y a un pro
 if (!defined("_THE_CONTACT_TYPE")) define("_THE_CONTACT_TYPE","Le type de contact");
 if (!defined("_CONTACT_TYPE_DEL")) define("_CONTACT_TYPE_DEL","Suppression du type de contact");
 if (!defined("_DELETED_CONTACT_TYPE")) define("_DELETED_CONTACT_TYPE","Type de contact supprimé");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Avertissement :<br> La suppression d'un type de contact entraine la réaffectation des contacts à un nouveau type de contact.");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Avertissement : La suppression d'un type de contact entraine la réaffectation des contacts à un nouveau type de contact.");
 if (!defined("_CONTACT_TYPE_REAFFECT")) define("_CONTACT_TYPE_REAFFECT","Réaffectation des contacts");
 if (!defined("_ALL")) define("_ALL","Tous");
 if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts déjà existants");
@@ -1029,7 +1036,7 @@ if (!defined("_THE_CONTACT_PURPOSE")) define("_THE_CONTACT_PURPOSE","La dénomin
 if (!defined("_CONTACT_PURPOSE_DEL")) define("_CONTACT_PURPOSE_DEL","Suppression d'une dénomination");
 if (!defined("_DELETED_CONTACT_PURPOSE")) define("_DELETED_CONTACT_PURPOSE","Dénomination supprimée");
 if (!defined("_CONTACT_PURPOSE_REAFFECT")) define("_CONTACT_PURPOSE_REAFFECT","Réaffectation des adresses");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Avertissement :<br> La suppression d'une dénomination entraine la réaffectation des adresses à une nouvelle dénomination.");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Avertissement : La suppression d'une dénomination entraine la réaffectation des adresses à une nouvelle dénomination.");
 if (!defined("_CONTACT_PURPOSE_WILL_BE_CREATED")) define("_CONTACT_PURPOSE_WILL_BE_CREATED","Cette dénomination n'existe pas. Elle sera créée automatiquement.");
 
 if (!defined("_SEARCH_CONTACTS")) define("_SEARCH_CONTACTS","Rechercher un contact");
@@ -1311,6 +1318,7 @@ if (!defined("_TITLE_STATS_CHOICE_PERIOD"))  define("_TITLE_STATS_CHOICE_PERIOD"
 /******************** Authentification method  ************/
 
 if (!defined("_STANDARD_LOGIN")) define("_STANDARD_LOGIN", "Authentification Maarch");
+if (!defined("_CAS_LOGIN")) define("_CAS_LOGIN", "Authentification CAS");
 if (!defined("_ACTIVEX_LOGIN")) define("_ACTIVEX_LOGIN", "Authentification Ms Internet Explorer - ActiveX");
 if (!defined("_HOW_CAN_I_LOGIN")) define("_HOW_CAN_I_LOGIN", "Je n'arrive pas à me connecter...");
 if (!defined("_CONNECT")) define("_CONNECT", "Se connecter");
@@ -1769,7 +1777,7 @@ if (!defined("_SAVE_MODIFICATION")) define("_SAVE_MODIFICATION", "Enregistrer le
 
 if (!defined("_CONFIDENTIALITY")) define("_CONFIDENTIALITY", "Confidentiel");
 if (!defined("_CONFIDENTIAL")) define("_CONFIDENTIAL", "Confidentiel");
-if (!defined("_CONFIDENTIAL_DOCUMENTS")) define("_CONFIDENTIAL_DOCUMENTS", "courrier(s) confidentiel");
+if (!defined("_CONFIDENTIAL_DOCUMENTS")) define("_CONFIDENTIAL_DOCUMENTS", "courrier(s) confidentiel(s)");
 
 
 if (!defined("_SIGNATORY_NAME")) define("_SIGNATORY_NAME", "Nom du signataire");
@@ -1913,6 +1921,13 @@ if (!defined('_ACTIVATE_ABSENCE'))
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
+
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
+if (!defined('_ADDED_GROUP'))
+    define('_ADDED_GROUP', 'Groupe ajouté');
+/***** User Administration *****/
 
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))

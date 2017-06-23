@@ -19,13 +19,16 @@ require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
 {
-    public static function get()
+    public static function get(array $aArgs = [])
     {
+        static::checkRequired($aArgs, ['where', 'data']);
+        static::checkArray($aArgs, ['where', 'data']);
+
         $aUsers = static::select([
-            'select'    => ['firstname', 'lastname', 'user_id'],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
-            'where'     => ['enabled = ?'],
-            'data'      => ['Y'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
         ]);
 
         return $aUsers;
@@ -40,10 +43,29 @@ class UserModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
             'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']],
+            'data'      => [$aArgs['userId']]
         ]);
 
+        if (empty($aUser)) {
+            return [];
+        }
+
         return $aUser[0];
+    }
+
+    public static function getByEntities(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['entities']);
+        static::checkArray($aArgs, ['entities']);
+
+        $aUsers = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users, users_entities'],
+            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
+            'data'      => $aArgs['entities']
+        ]);
+
+        return $aUsers;
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -56,7 +78,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => ['users'],
             'where'     => ['mail = ? and status = ?'],
             'data'      => [$aArgs['mail'], 'OK'],
-            'limit'     => 1,
+            'limit'     => 1
         ]);
 
         return $aUser;
@@ -94,6 +116,23 @@ class UserModelAbstract extends \Apps_Table_Service
             'table'     => 'users',
             'set'       => [
                 'password'  => SecurityModel::getPasswordHash($aArgs['password'])
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $isUpdated;
+    }
+
+    public static function reinitializePassword(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $isUpdated = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'password'  => SecurityModel::getPasswordHash('maarch')
             ],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']]
@@ -320,7 +359,7 @@ class UserModelAbstract extends \Apps_Table_Service
         static::checkString($aArgs, ['id']);
 
 
-        $rawUser = self::getById(['userId' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
+        $rawUser = static::getById(['userId' => $aArgs['id'], 'select' => ['firstname', 'lastname']]);
 
         $labelledUser = '';
         if (!empty($rawUser)) {
@@ -379,7 +418,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
 
         $aGroups = static::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group'],
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role'],
             'table'     => ['usergroup_content, usergroups'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?'],
             'data'      => [$aArgs['userId']]
@@ -433,6 +472,40 @@ class UserModelAbstract extends \Apps_Table_Service
             ],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']]
+        ]);
+
+        return true;
+    }
+
+    public static function addGroup(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkString($aArgs, ['userId', 'groupId', 'role']);
+
+
+        parent::insertInto(
+            [
+                'user_id'       => $aArgs['userId'],
+                'group_id'      => $aArgs['groupId'],
+                'role'          => $aArgs['role'],
+                'primary_group' => 'Y'
+            ],
+            'usergroup_content'
+        );
+
+        return true;
+    }
+
+    public static function deleteGroup(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'groupId']);
+        static::checkString($aArgs, ['userId', 'groupId']);
+
+
+        parent::deleteFrom([
+            'table'     => 'usergroup_content',
+            'where'     => ['group_id = ?', 'user_id = ?'],
+            'data'      => [$aArgs['groupId'], $aArgs['userId']]
         ]);
 
         return true;

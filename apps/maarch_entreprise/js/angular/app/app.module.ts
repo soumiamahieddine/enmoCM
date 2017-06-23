@@ -6,6 +6,10 @@ import { FormsModule }      from '@angular/forms';
 
 import { AppComponent }                         from './app.component';
 import { AdministrationComponent }              from './administration.component';
+import { UsersAdministrationComponent }         from './users-administration.component';
+import { UserAdministrationComponent }          from './user-administration.component';
+import { StatusListAdministrationComponent }    from './status-list-administration.component';
+import { StatusAdministrationComponent }        from './status-administration.component';
 import { ProfileComponent }                     from './profile.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 
@@ -15,13 +19,28 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       FormsModule,
       RouterModule.forRoot([
           { path: 'administration', component: AdministrationComponent },
+          { path: 'administration/users', component: UsersAdministrationComponent },
+          { path: 'administration/user/:userId', component: UserAdministrationComponent },
+          { path: 'administration/status/create', component: StatusAdministrationComponent },
+          { path: 'administration/status/update/:id', component: StatusAdministrationComponent },
+          { path: 'administration/statusList', component: StatusListAdministrationComponent },
           { path: 'profile', component: ProfileComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
   ],
-  declarations: [ AppComponent, AdministrationComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
+  declarations: [
+      AppComponent,
+      AdministrationComponent,
+      UsersAdministrationComponent,
+      UserAdministrationComponent,
+      StatusAdministrationComponent,
+      StatusListAdministrationComponent,
+      ProfileComponent,
+      SignatureBookComponent,
+      SafeUrlPipe
+  ],
   bootstrap:    [ AppComponent]
 })
 export class AppModule { }

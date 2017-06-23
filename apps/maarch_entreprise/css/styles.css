@@ -3595,3 +3595,95 @@ a.actionList {
 input.button {
 width:auto;
 }
+
+table.dataTable thead .sorting {
+    background-image: url("../../node_modules/datatables/media/images/sort_both.png")!important;
+}
+table.dataTable thead .sorting_asc {
+    background-image: url("../../node_modules/datatables/media/images/sort_asc.png")!important;
+}
+table.dataTable thead .sorting_desc {
+    background-image: url("../../node_modules/datatables/media/images/sort_desc.png")!important;
+}
+table.dataTable thead .sorting_asc_disabled {
+    background-image: url("../../node_modules/datatables/media/images/sort_asc_disabled.png")!important;
+}
+table.dataTable thead .sorting_desc_disabled {
+    background-image: url("../../node_modules/datatables/media/images/sort_desc_disabled.png")!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
+    background:#FDD16C !important;
+    border:none !important;
+    color:white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover :not(.disabled) :not(.current){
+    background: white !important;
+    border:solid 1px white !important;
+    border-radius: 2px !important;
+    color:#333 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:active{
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover :not(.disabled) :not(.current) i{
+    color: #009DC5 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:active :not(.disabled) :not(.current) i{
+    color: #FDD16C !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button .disabled:hover{
+    background: none !important;
+    border:solid 1px white !important;
+    border-radius: 2px !important;
+}
+
+table.dataTable.display tbody tr.odd {
+    background-color: #DEEDF3 !important;
+}
+table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr.even:hover{
+    background-color: #fff !important;
+}
+
+table.dataTable.hover tbody tr.odd:hover, table.dataTable.display tbody tr.odd:hover{
+    background-color: #DEEDF3 !important;
+}
+
+table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+    background-color: #DEEDF3 !important;
+}
+
+table.dataTable.display tbody tr.even > .sorting_1, table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+    background-color: #DEEDF3 !important;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    border-bottom: 1px solid #009DC5 !important;
+}
+
+table.dataTable.no-footer {
+    border-bottom: 1px solid #009DC5 !important;
+}
+
+table.dataTable thead th, table.dataTable tfoot th {
+    color: #009DC5 !important;
+}
+
+a.next{
+    background-image: none !important;
+}
+
+.dataTables_info{
+    float: none !important;
+    font-weight: bold !important;
+    color:#666 !important;
+}
+.dataTables_filter input{
+    font-size: inherit;
+}

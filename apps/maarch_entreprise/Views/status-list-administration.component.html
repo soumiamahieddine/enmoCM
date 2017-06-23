@@ -1,0 +1,31 @@
+<div id="resultInfo" class="fade" style="display:none;">
+    {{resultInfo}}
+</div>
+
+<h1 style="margin-top: 0"><i class="fa fa-check-circle fa-2x"></i> {{lang.statusListTitle}} : {{nbStatus}} {{lang.status}}(s)</h1>
+
+<div style="margin-top:15px">
+    <table id="statusTable">
+        <thead>
+            <tr>
+                <th><span>{{lang.identifier}}</span></th>
+                <th><span>{{lang.description}}</span></th>
+                <th><span>&nbsp;</span></th>
+                <th><span>&nbsp;</span></th>
+            </tr>
+        </thead> 
+        <tbody>
+            <tr *ngFor="let status of statusList" id="{{status.id}}">
+                <td>{{status.id}}</td>
+                <td>{{status.label_status}}</td>
+                <td>
+                    <a routerLink="/administration/status/update/{{status.id}}"><i style ="cursor:pointer" class="fa fa-edit fa-2x" title="{{lang.edit}}"></i></a>
+                </td>
+                <td>
+                    <i (click)="deleteStatus(status.id)" style ="cursor:pointer; color: #D9534F" class="fa fa-trash fa-2x" title="{{lang.delete}} {{status.id}}"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <i routerLink="/administration/status/create" class="fa fa-plus-square fa-3x" style="cursor:pointer; position: absolute; right: 25px; color : #337AB7" title="{{lang.newStatus}}"></i>
+</div>

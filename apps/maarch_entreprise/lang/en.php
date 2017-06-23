@@ -73,13 +73,19 @@ if (!defined("_MODE"))    define("_MODE", "Mode");
 /************** Lists **************/
 if (!defined("_GO_TO_PAGE"))    define("_GO_TO_PAGE", "Go on page");
 if (!defined("_NEXT"))    define("_NEXT", "Next");
+if (!defined("_NEXT_PAGE"))    define("_NEXT_PAGE", "Next");
 if (!defined("_PREVIOUS"))    define("_PREVIOUS", "Previous");
+if (!defined("_PREVIOUS_PAGE"))    define("_PREVIOUS_PAGE", "Previous");
 if (!defined("_ALPHABETICAL_LIST"))    define("_ALPHABETICAL_LIST", "Alphabetical list");
 if (!defined("_ASC_SORT"))    define("_ASC_SORT", "Ancestor sorting");
 if (!defined("_DESC_SORT"))    define("_DESC_SORT", "Descendent sorting");
 if (!defined("_ACCESS_LIST_STANDARD"))    define("_ACCESS_LIST_STANDARD", " Simple lists display");
 if (!defined("_ACCESS_LIST_EXTEND"))    define("_ACCESS_LIST_EXTEND", " Extended lists display");
 if (!defined("_DISPLAY"))    define("_DISPLAY", "Display ");
+if (!defined('_NO_RECORD'))
+    define('_NO_RECORD', 'No record');
+if (!defined('_RECORD'))
+    define('_RECORD', 'record(s)');
 
 /************** Actions **************/
 if (!defined("_DELETE"))    define("_DELETE", "Delete");
@@ -1006,7 +1012,7 @@ if (!defined("_ID_CONTACT_TYPE_PB")) define("_ID_CONTACT_TYPE_PB","There is a is
 if (!defined("_THE_CONTACT_TYPE")) define("_THE_CONTACT_TYPE","The contact type");
 if (!defined("_CONTACT_TYPE_DEL")) define("_CONTACT_TYPE_DEL","Contact type deletion");
 if (!defined("_DELETED_CONTACT_TYPE")) define("_DELETED_CONTACT_TYPE","Deleted contact type");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Warning :<br> the contact type deletion leads to contacts reallocation to a new contact type.;");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_TYPE")) define("_WARNING_MESSAGE_DEL_CONTACT_TYPE","Warning : the contact type deletion leads to contacts reallocation to a new contact type.;");
 if (!defined("_CONTACT_TYPE_REAFFECT")) define("_CONTACT_TYPE_REAFFECT","Contacts reallocation");
 if (!defined("_ALL")) define("_ALL","All");
 if (!defined("_CONTACT_ALREADY_CREATED")) define("_CONTACT_ALREADY_CREATED","Contacts already existing");
@@ -1028,7 +1034,7 @@ if (!defined("_THE_CONTACT_PURPOSE")) define("_THE_CONTACT_PURPOSE","The denomin
 if (!defined("_CONTACT_PURPOSE_DEL")) define("_CONTACT_PURPOSE_DEL","Deletion of a denomination");
 if (!defined("_DELETED_CONTACT_PURPOSE")) define("_DELETED_CONTACT_PURPOSE","Deleted denomination");
 if (!defined("_CONTACT_PURPOSE_REAFFECT")) define("_CONTACT_PURPOSE_REAFFECT","Addresses reallocation");
-if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Warning :<br> The denomination deletion leads to addresses reallocation to a new denomination.");
+if (!defined("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE")) define("_WARNING_MESSAGE_DEL_CONTACT_PURPOSE","Warning : The denomination deletion leads to addresses reallocation to a new denomination.");
 if (!defined("_CONTACT_PURPOSE_WILL_BE_CREATED")) define("_CONTACT_PURPOSE_WILL_BE_CREATED","This denomination doesn't exist. It will automatically be created.");
 
 if (!defined("_SEARCH_CONTACTS")) define("_SEARCH_CONTACTS","Search a contact");
@@ -1308,6 +1314,7 @@ if (!defined("_TITLE_STATS_CHOICE_PERIOD"))  define("_TITLE_STATS_CHOICE_PERIOD"
 /******************** Authentification method  ************/
 
 if (!defined("_STANDARD_LOGIN")) define("_STANDARD_LOGIN", "Maarch's authentication");
+if (!defined("_CAS_LOGIN")) define("_CAS_LOGIN", "CAS authentication");
 if (!defined("_ACTIVEX_LOGIN")) define("_ACTIVEX_LOGIN", "Authentification Ms Internet Explorer - ActiveX");
 if (!defined("_HOW_CAN_I_LOGIN")) define("_HOW_CAN_I_LOGIN", "I can not log on...");
 if (!defined("_CONNECT")) define("_CONNECT", "To log on");
@@ -1905,6 +1912,11 @@ if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
 
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification of user');
+/***** User Administration *****/
+
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))
     define('_ADMIN_UPDATE_CONTROL', 'Verify update');
@@ -1966,3 +1978,5 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Update sucessful');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
+
+if (!defined("_ADDRESS_NB")) define("_ADDRESS_NB","Address number");
