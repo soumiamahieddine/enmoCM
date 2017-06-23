@@ -10,7 +10,7 @@ import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
 import { PrioritiesComponent }                  from './priorities.component';
-//import { PriorityComponent }                    from './priority.component';
+import { PriorityComponent }                    from './priority.component';
 
 import { AdministrationComponent }              from './administration.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
@@ -27,13 +27,15 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
           { path: 'administration/parameters', component: ParametersComponent },
           { path: 'administration/priorities', component : PrioritiesComponent },
+          { path: 'administration/priority/update/:id', component : PriorityComponent },
+          { path: 'administration/priority/create', component : PriorityComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
   ],
 
-  declarations: [ AppComponent, AdministrationComponent, PrioritiesComponent,/* PriorityComponent,*/ ProfileComponent, ParametersComponent, ParameterComponent, SignatureBookComponent, SafeUrlPipe ],
+  declarations: [ AppComponent, AdministrationComponent, PrioritiesComponent,PriorityComponent,ProfileComponent, ParametersComponent, ParameterComponent, SignatureBookComponent, SafeUrlPipe ],
   providers: [],
 
   bootstrap:    [ AppComponent]

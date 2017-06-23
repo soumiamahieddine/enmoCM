@@ -9,8 +9,8 @@
                     <th style="width:20%;" valign="bottom" align="left"><span>{{lang.identifier}}</span></th>
                     <th style="width:30%;" valign="bottom" align="left"><span> {{lang.description}} </span></th>
                     <th style="width:30%;" valign="bottom" align="left"><span> {{lang.value}} </span></th>
-                    <th><span>&nbsp;                         </span></th>
-                    <th><span>&nbsp;                         </span></th>
+                    <th><span></span></th>
+                    <th><span></span></th>
                 </tr>
             </thead>
             <tbody>
@@ -20,7 +20,6 @@
                         <td> {{parameter.param_value_string || parameter.param_value_int || parameter.param_value_date}} </td>
                         <td><a routerLink="/parameter/update/{{parameter.id}}"><i style ="cursor:pointer"  class="fa fa-edit fa-2x" title="{{lang.modifyParameter}}"></i></a></td>
                         <td><i (click)="deleteParameter(parameter.id)"  style ="cursor:pointer; color: #D9534F" class="fa fa-trash fa-2x" title="{{lang.deleteParameter}} {{parameter.id}}"></i></td>
-
                 </tr>
             </tbody>
     </table>

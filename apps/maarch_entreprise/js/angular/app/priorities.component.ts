@@ -38,10 +38,36 @@ export class PrioritiesComponent implements OnInit {
                 } else {
                     this.prioritiesList = data.prioritiesList;
                     setTimeout(function(){
-                        prioritiesDataTable = $j('#prioritiesTable');
+                        prioritiesDataTable = $j('#prioritiesTable').DataTable();
                     } ,0);
                 }
             })
+    }
+
+    deletePriority(priorityId: string){
+        var resp = confirm('Confirmer?');
+        if(resp){
+            var intId = parseInt(priorityId);
+            this.http.delete(this.coreUrl + 'rest/priorities/'+intId)
+            .map(res => res.json())
+            .subscribe((data) => {
+                if(data.errors){
+                    this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                                    $j("#resultInfo").slideUp(500);
+                    });
+                } else {
+                    var list = this.prioritiesList;
+                    for(var i=0;i<list.length;i++){
+                        if(list[i].id==priorityId){
+                            list.splice(i,1)
+                        }                        
+                    }
+                    prioritiesDataTable.row($j('#'+priorityId)).remove().draw();
+                }
+            })
+        }
     }
 
     preparePriorities() {

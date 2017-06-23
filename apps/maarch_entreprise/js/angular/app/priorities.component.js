@@ -38,10 +38,37 @@ var PrioritiesComponent = (function () {
             else {
                 _this.prioritiesList = data.prioritiesList;
                 setTimeout(function () {
-                    prioritiesDataTable = $j('#prioritiesTable');
+                    prioritiesDataTable = $j('#prioritiesTable').DataTable();
                 }, 0);
             }
         });
+    };
+    PrioritiesComponent.prototype.deletePriority = function (priorityId) {
+        var _this = this;
+        var resp = confirm('Confirmer?');
+        if (resp) {
+            var intId = parseInt(priorityId);
+            this.http.delete(this.coreUrl + 'rest/priorities/' + intId)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    var list = _this.prioritiesList;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].id == priorityId) {
+                            list.splice(i, 1);
+                        }
+                    }
+                    prioritiesDataTable.row($j('#' + priorityId)).remove().draw();
+                }
+            });
+        }
     };
     PrioritiesComponent.prototype.preparePriorities = function () {
         $j('#inner_content').remove();

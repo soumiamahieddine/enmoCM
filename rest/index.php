@@ -180,11 +180,11 @@ $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class .
 
 
 //priorities
-$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
-$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
-$app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
 $app->get('/priorities', \Core\Controllers\PrioritiesController::class . ':getList');
 $app->get('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':getById');
+$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
+$app->put('/priorities/{id}',\Core\Controllers\PrioritiesController::class . ':update');
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':delete');
 
 //actions
 $app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');

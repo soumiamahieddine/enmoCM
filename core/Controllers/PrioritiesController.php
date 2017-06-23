@@ -31,8 +31,7 @@ class PrioritiesController
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {                    
         $obj = PrioritiesModel::getById(['id' => $aArgs['id']]);
-        if(empty($obj)){
-            
+        if(empty($obj)){            
             return $response->withJson( ['errors' => 'Aucune priorité trouvée']);
         }
         return $response->withJson($obj);             
@@ -48,7 +47,7 @@ class PrioritiesController
         }           
         
         $datas = $request->getParams();
-
+        unset($datas['id']);
         $return = PrioritiesModel::create($datas);
         if ($return) {
             $obj = PrioritiesModel::getById(['id' => $return]);
@@ -102,8 +101,6 @@ class PrioritiesController
 
     protected static function control( $request, $mode){
         $errors = [];
-        //if($mode == 'update'){
-        $errors = [];
         if (empty($request))
             array_push($errors,'Tableau d\'arguments vide');
         
@@ -113,7 +110,7 @@ class PrioritiesController
         if (!Validator::notEmpty()->validate($request->getParam('color_priority'))) {
             array_push($errors, 'Aucune Couleur assignée');
         }
-        else if(!Validator::regex('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/')->validate($request->getParam('color_priority')) && Validator::notEmpty()->validate($request->getParam('color_priority'))){
+        else if(!Validator::regex('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/')->validate($request->getParam('color_priority')) && Validator::notEmpty()->validate($request->getParam('color_priority')) || $request->getParam('color_priority')=='#ffffff'){
             array_push($errors,'Format couleur invalide');
         }
         if (!Validator::notEmpty()->validate($request->getParam('delays'))){
@@ -125,11 +122,11 @@ class PrioritiesController
         else if ($request->getParam('working_days')!= 'Y' && $request->getParam('working_days') != 'N') {
             array_push($errors,'Valeur working_days invalide');
             //return false;
-        } /*elseif ($request->getParam(['number'] === '*') {
-            array_push($errors,'Valeur');
-        } */if (!ctype_digit($request->getParam('delays'))&&Validator::notEmpty()->validate($request->getParam('delays'))) {
-            array_push($errors,'Valeur delays non numérique');
-        } if ((int)$request->getParam('delays') < 0) {
+        }
+        if ($request->getParam('delays') !== '*' &&!ctype_digit($request->getParam('delays'))&&Validator::notEmpty()->validate($request->getParam('delays'))) {
+            array_push($errors,'Valeur delays invalide');
+        }
+        if ((int)$request->getParam('delays') < 0) {
             array_push($errors,'Valeur négative');
         }
         return $errors;

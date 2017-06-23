@@ -1,16 +1,18 @@
 <div id="resultInfo" class="fade" style="display:none;">
     {{resultInfo}}
 </div>
-
-<div>
+<h1>Priorités</h1>
+<div><!--
     <table id="prioritiesTable">
         <thead>
-            <th style="width:20%;" valign="bottom" align="left">Label</th>
-            <th style="width:20%;" valign="bottom" align="left">Couleur</th>
-            <th style="width:20%;" valign="bottom" align="left">Délai de traitement</th>
-            <th style="width:20%;" valign="bottom" align="left">Méthode de calcul</th>
-            <th><span></span></th>
-            <th><span></span></th>
+            <tr>
+                <th style="width:20%;" valign="bottom" align="left"><span>Label</span></th>
+                <th style="width:20%;" valign="bottom" align="left"><span>Couleur</span></th>
+                <th style="width:20%;" valign="bottom" align="left"><span>Délai de traitement</span></th>
+                <th style="width:20%;" valign="bottom" align="left"><span>Méthode de calcul</span></th>
+                <th><span></span></th>
+                <th><span></span></th>
+            </tr>
         </thead>
             <tbody>
                 <tr *ngFor="let priority of prioritiesList">
@@ -21,4 +23,29 @@
                 </tr>
             </tbody>
     </table>
+    -->
+    <table id ="prioritiesTable" class="display" summary="" style="width: 100%; min-width: 900px;" width="100%" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th style="width:20%;" valign="bottom" align="left"><span>Label</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>Couleur</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>Délai de traitement</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>Méthode de calcul</span></th>
+                    <th><span></span></th>
+                    <th><span></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let priority of prioritiesList" id="{{priority.id}}">
+                        <td>{{priority.label_priority}}</td>
+                        <td><input type="color" value="{{priority.color_priority}}" style="background:none;border:none;width:45px;" disabled></td>
+                        <td>{{priority.delays}}</td>
+                        <td *ngIf="priority.working_days =='Y'">Jours ouvrés</td>
+                        <td *ngIf="priority.working_days =='N'">Jours calendaires</td>
+                        <td><a routerLink="/administration/priority/update/{{priority.id}}"><i style ="cursor:pointer"  class="fa fa-edit fa-2x" title=""></i></a></td>
+                        <td><i (click)="deletePriority(priority.id)"  style ="cursor:pointer; color: #D9534F" class="fa fa-trash fa-2x" title="{{priority.id}}"></i></td>
+                </tr>
+            </tbody>
+    </table>
+    <i routerLink="/administration/priority/create" class="fa fa-plus-square fa-3x" style="cursor:pointer; position: absolute; right: 25px; color : #337AB7" title="Nouvelle priorité"></i>
 </div>
