@@ -52,7 +52,6 @@ var PriorityComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                console.log("errors");
                 _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {

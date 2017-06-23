@@ -25,7 +25,6 @@ export class PrioritiesComponent implements OnInit {
 
     ngOnInit(): void{
         this.coreUrl = angularGlobals.coreUrl;
-        console.log(this.coreUrl);
         this.preparePriorities();
         this.http.get(this.coreUrl + 'rest/priorities')
             .map(res => res.json())

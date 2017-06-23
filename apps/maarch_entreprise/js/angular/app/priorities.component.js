@@ -24,7 +24,6 @@ var PrioritiesComponent = (function () {
     PrioritiesComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
-        console.log(this.coreUrl);
         this.preparePriorities();
         this.http.get(this.coreUrl + 'rest/priorities')
             .map(function (res) { return res.json(); })
