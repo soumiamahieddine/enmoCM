@@ -12,12 +12,14 @@ var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
-var users_administration_component_1 = require("./users-administration.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
 var parameters_component_1 = require("./parameters.component");
-var administration_component_1 = require("./administration.component");
 var signature_book_component_1 = require("./signature-book.component");
+var action_component_1 = require("./action.component");
+var actions_component_1 = require("./actions.component");
+var administration_component_1 = require("./administration.component");
+var users_administration_component_1 = require("./users-administration.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -37,11 +39,15 @@ AppModule = __decorate([
                 { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
                 { path: 'administration/parameters', component: parameters_component_1.ParametersComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
+                { path: 'administration/actions', component: actions_component_1.ActionsComponent },
+                { path: 'administration/actions/create', component: action_component_1.ActionComponent },
+                { path: 'administration/actions/:id', component: action_component_1.ActionComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        declarations: [app_component_1.AppComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, app_component_1.AppComponent, actions_component_1.ActionsComponent, action_component_1.ActionComponent, profile_component_1.ProfileComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        providers: [],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);
