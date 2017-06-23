@@ -20,21 +20,19 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\ActionsModel;
 use Core\Models\StatusModel;
+use Core\Models\LangModel;
 
 class ActionsController
 {
-    public function getList(RequestInterface $request, ResponseInterface $response)
-    {
-        $obj = ActionsModel::getList();
+    public function getForAdministration(RequestInterface $request, ResponseInterface $response){
         
-        $datas = [
-            $obj,
-        ];
-        
-        return $response->withJson($datas);
+        $obj['lang'] = LangModel::getActionsLang();
+        $obj ['actions']= ActionsModel::getList();
+       
+        return $response->withJson($obj);
     }
 
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getByIdForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
@@ -46,12 +44,16 @@ class ActionsController
                 ->withStatus(500)
                 ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
         }
-        
-        $datas = [
-            $obj,
-        ];
 
-        return $response->withJson($datas);
+        $obj['coll_categories']=ActionsModel:: getLettersBoxCategories();
+        $obj['statuts']=StatusModel::getList();
+        array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+        array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _CHOOSE_STATUS]);
+        $obj['tab_action_page']=ActionsModel::getAction_pages();
+        $obj['keywords']=ActionsModel::getKeywords();
+        $obj['lang'] = LangModel::getActionsLang();
+  
+        return $response->withJson($obj);
     }
 
     public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -59,6 +61,7 @@ class ActionsController
         $errors = [];
 
         $aArgs = $request->getParams();
+        $aArgs['is_system'] = 'N';
 
         $errors = $this->control($aArgs, 'create');
         
@@ -74,7 +77,7 @@ class ActionsController
         if ($return) {
             $id = $aArgs['id'];
 
-            $obj = end(ActionsModel::getList());
+            $obj = max(ActionsModel::getList());
         } else {
             return $response
                 ->withStatus(500)
@@ -155,10 +158,7 @@ class ActionsController
         }
        
         if(!(in_array($aArgs['id_status'], $status))){
-            $errors[]=_STATUS. ' ' . _NOT . ' ' . _VALID;
-        }
-        if (!Validator::regex('/^[\w ]+$/')->validate($aArgs['keyword'])) {
-            $errors[]= _KEYWORD. ' ' . _NOT . ' ' . _VALID;
+            $errors[]=_STATUS. ' ' . _NOT_VALID;
         }
 
         if ($mode == 'update') {
@@ -203,5 +203,21 @@ class ActionsController
         }
 
         return $errors;
+    }
+
+    public function initAction(RequestInterface $request, ResponseInterface $response)
+    {
+        $obj['history']='Y';
+        $obj['is_folder_action']='N';
+        $obj['coll_categories']=ActionsModel:: getLettersBoxCategories();
+        $obj['statuts']=StatusModel::getList();
+        array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+        array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _CHOOSE_STATUS]);
+        $obj['tab_action_page']=ActionsModel::getAction_pages();
+        $obj['keywords']=ActionsModel::getKeywords();
+        $obj['lang'] = LangModel::getActionsLang();
+        
+        return $response->withJson($obj);
+
     }
 }

@@ -186,7 +186,6 @@ abstract class PrioritiesModelAbstract extends \Apps_Table_Service
     }
 
     public static function getById(array $aArgs = []){
-        //var_dump($aArgs);
         static::checkRequired($aArgs, ['id']);
         static::checkNumeric($aArgs, ['id']);
         

@@ -181,15 +181,16 @@ $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class .
 
 
 //priorities
-$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
-$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':deletePriority');
-$app->put('/priorities',\Core\Controllers\PrioritiesController::class . ':updatePriorities');
 $app->get('/priorities', \Core\Controllers\PrioritiesController::class . ':getList');
 $app->get('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':getById');
+$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
+$app->put('/priorities/{id}',\Core\Controllers\PrioritiesController::class . ':update');
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':delete');
 
 //actions
-$app->get('/actions', \Core\Controllers\ActionsController::class . ':getList');
-$app->get('/actions/{id}', \Core\Controllers\ActionsController::class . ':getById');
+$app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
+$app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
+$app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::class . ':getByIdForAdministration');
 $app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
 $app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
 $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');

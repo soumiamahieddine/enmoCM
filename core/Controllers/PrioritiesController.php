@@ -31,6 +31,9 @@ class PrioritiesController
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {                    
         $obj = PrioritiesModel::getById(['id' => $aArgs['id']]);
+        if(empty($obj)){            
+            return $response->withJson( ['errors' => 'Aucune priorité trouvée']);
+        }
         return $response->withJson($obj);             
     }
 
@@ -44,7 +47,7 @@ class PrioritiesController
         }           
         
         $datas = $request->getParams();
-
+        unset($datas['id']);
         $return = PrioritiesModel::create($datas);
         if ($return) {
             $obj = PrioritiesModel::getById(['id' => $return]);
@@ -86,10 +89,6 @@ class PrioritiesController
                     ->withJson(['errors' => $errors]);
             }
         $return = PrioritiesModel::update($aArgs);
-        //var_dump($return);
-        
-        
-
         return $response->withJson($obj);
     }
 
@@ -102,21 +101,17 @@ class PrioritiesController
 
     protected static function control( $request, $mode){
         $errors = [];
-        //if($mode == 'update'){
-        $errors = [];
         if (empty($request))
             array_push($errors,'Tableau d\'arguments vide');
-
+        
         if (!Validator::notEmpty()->validate($request->getParam('label_priority'))){
             array_push($errors,'Valeur label vide');
-            //return false;
         }
-        if (!Validator::notEmpty()->validate($request->getParam('label_priority'))) {
+        if (!Validator::notEmpty()->validate($request->getParam('color_priority'))) {
             array_push($errors, 'Aucune Couleur assignée');
         }
-        else if(!Validator::regex('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/')->validate($request->getParam('color_priority'))){
+        else if(!Validator::regex('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/')->validate($request->getParam('color_priority')) && Validator::notEmpty()->validate($request->getParam('color_priority')) || $request->getParam('color_priority')=='#ffffff'){
             array_push($errors,'Format couleur invalide');
-            var_dump('PC : '.$request->getParam('priority_color'));
         }
         if (!Validator::notEmpty()->validate($request->getParam('delays'))){
             array_push($errors,'Delai vide');
@@ -127,17 +122,13 @@ class PrioritiesController
         else if ($request->getParam('working_days')!= 'Y' && $request->getParam('working_days') != 'N') {
             array_push($errors,'Valeur working_days invalide');
             //return false;
-        } /*elseif ($request->getParam(['number'] === '*') {
-            array_push($errors,'Valeur');
-        } */elseif (!ctype_digit($request->getParam('delays'))) {
-            array_push($errors,'Valeur non numérique');
-            //return false;
-        } elseif ((int)$request->getParam('delays') < 0) {
-            array_push($errors,'Valeur négative');
-            //return false;
         }
-
-        //}
+        if ($request->getParam('delays') !== '*' &&!ctype_digit($request->getParam('delays'))&&Validator::notEmpty()->validate($request->getParam('delays'))) {
+            array_push($errors,'Valeur delays invalide');
+        }
+        if ((int)$request->getParam('delays') < 0) {
+            array_push($errors,'Valeur négative');
+        }
         return $errors;
     }
 }

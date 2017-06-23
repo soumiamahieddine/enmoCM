@@ -10,9 +10,16 @@ import { UsersAdministrationComponent }          from './users-administration.co
 import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
+import { PrioritiesComponent }                  from './priorities.component';
+import { PriorityComponent }                    from './priority.component';
+
 import { AdministrationComponent }              from './administration.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { ReportsComponent } from './reports.component';
+
+
+import { ActionComponent } from './action.component';
+import {ActionsComponent} from "./actions.component";
 
 
 @NgModule({
@@ -28,12 +35,22 @@ import { ReportsComponent } from './reports.component';
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
           { path: 'administration/parameters', component: ParametersComponent },
           { path : 'administration/reports', component : ReportsComponent},
+          { path: 'administration/priorities', component : PrioritiesComponent },
+          { path: 'administration/priority/update/:id', component : PriorityComponent },
+          { path: 'administration/priority/create', component : PriorityComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
+          { path: 'administration/actions', component: ActionsComponent },
+          { path: 'administration/actions/create', component: ActionComponent },
+          { path: 'administration/actions/:id', component: ActionComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
   ],
-  declarations: [ AppComponent, AdministrationComponent, UsersAdministrationComponent, ParametersComponent, ParameterComponent, ReportsComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
+
+
+  providers: [],
+  declarations: [ AppComponent,ActionsComponent,ActionComponent, AdministrationComponent, UsersAdministrationComponent,PrioritiesComponent,PriorityComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
+
   bootstrap:    [ AppComponent]
 })
 export class AppModule { }

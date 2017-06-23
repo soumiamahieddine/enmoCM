@@ -39,11 +39,9 @@ var ParametersComponent = (function () {
             else {
                 _this.parametersList = data.parametersList;
                 _this.lang = data.lang;
-                var list = _this.parametersList;
                 _this.nbParameters = Object.keys(_this.parametersList).length;
                 _this.pageTitle = _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i>" + _this.lang.parameter + "s : " + _this.nbParameters + " " + _this.lang.parameter + "(s)";
                 $j('#pageTitle').html(_this.pageTitle);
-                var test = _this.parametersList;
                 var tempLang = _this.lang;
                 setTimeout(function () {
                     parametersDataTable = $j('#paramsTable').DataTable({

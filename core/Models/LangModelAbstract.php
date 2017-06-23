@@ -148,4 +148,48 @@ class LangModelAbstract
         return $aLang;
     }
 
+
+    public static function getActionsLang(){
+        $aLang = [
+            'id'                                => _ID,
+            'desc'                              => _DESC,
+            'is_folder_action'                  => _IS_FOLDER_ACTION,
+            'is_system'                         => _IS_SYSTEM,
+            'new_action'                        => _NEW_ACTION,
+            'next'                              => _NEXT,
+            'previous'                          => _PREVIOUS,
+            'recordsPerPage'                    =>  _RECORDS_PER_PAGE,
+            'display'                           =>  _DISPLAY,
+            'noRecords'                         =>  _NO_RECORDS,
+            'page'                              =>  _PAGE,
+            'outOf'                             =>  _OUT_OF,
+            'available'                         =>  _AVAILABLE,
+            'filteredFrom'                      =>  _FILTERED_FROM,
+            'records'                           =>  _RECORDS,
+            'last'                              =>  _LAST,
+            'modify'                            =>  _MODIFY,
+            'delete'                            =>  _DELETE,
+            'do_not_modify_unless_expert'       =>  _DO_NOT_MODIFY_UNLESS_EXPERT,
+            'associated_status'                 =>  _ASSOCIATED_STATUS,
+            'yes'                               => _YES,
+            'no'                                => _NO,
+            'action_page'                       =>  _ACTION_PAGE,
+            'action_history'                    =>  _ACTION_HISTORY,
+            'choose_category_association'       =>  _CHOOSE_CATEGORY_ASSOCIATION,
+            'choose_category_association_help'  =>  _CHOOSE_CATEGORY_ASSOCIATION_HELP,
+            'add'                               =>  _ADD,
+            'remove'                            =>  _REMOVE,
+            'infos_actions'                     =>  _INFOS_ACTIONS,
+            'keyword'                           =>  _KEYWORD,
+            'system_parameters'                 =>  _SYSTEM_PARAMETERS,
+            'delete_action'                     =>  _DEL_ACTION,
+            'action_modified'                   =>  _ACTION_MODIFIED,
+            'action_added'                      =>  _ACTION_ADDED,
+            'validate'                          =>  _VALIDATE,
+            'cancel'                            =>  _CANCEL,
+            'search'                            =>  _SEARCH
+
+        ];
+        return $aLang;
+    }
 }
