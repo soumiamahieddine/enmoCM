@@ -34,7 +34,7 @@ import {ActionsComponent} from "./actions.component";
           { path: 'administration/parameter/create', component: ParameterComponent },
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
           { path: 'administration/parameters', component: ParametersComponent },
-          { path : 'administration/reports', component : ReportsComponent},
+          { path: 'administration/reports', component : ReportsComponent},
           { path: 'administration/priorities', component : PrioritiesComponent },
           { path: 'administration/priority/update/:id', component : PriorityComponent },
           { path: 'administration/priority/create', component : PriorityComponent },
@@ -49,7 +49,7 @@ import {ActionsComponent} from "./actions.component";
 
 
   providers: [],
-  declarations: [ AppComponent,ActionsComponent,ActionComponent, AdministrationComponent, UsersAdministrationComponent,PrioritiesComponent,PriorityComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
+  declarations: [ AppComponent,ActionsComponent,ActionComponent, AdministrationComponent,ReportsComponent, UsersAdministrationComponent,PrioritiesComponent,PriorityComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
 
   bootstrap:    [ AppComponent]
 })

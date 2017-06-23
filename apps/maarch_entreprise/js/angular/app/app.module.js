@@ -54,7 +54,7 @@ AppModule = __decorate([
             http_1.HttpModule
         ],
         providers: [],
-        declarations: [app_component_1.AppComponent, actions_component_1.ActionsComponent, action_component_1.ActionComponent, administration_component_1.AdministrationComponent, users_administration_component_1.UsersAdministrationComponent, priorities_component_1.PrioritiesComponent, priority_component_1.PriorityComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [app_component_1.AppComponent, actions_component_1.ActionsComponent, action_component_1.ActionComponent, administration_component_1.AdministrationComponent, reports_component_1.ReportsComponent, users_administration_component_1.UsersAdministrationComponent, priorities_component_1.PrioritiesComponent, priority_component_1.PriorityComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);
