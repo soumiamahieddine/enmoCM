@@ -130,6 +130,12 @@ var UsersAdministrationComponent = (function () {
                     });
                 }
                 else {
+                    for (var i = 0; i < _this.users.length; i++) {
+                        if (_this.users[i].user_id == id) {
+                            _this.users.splice(i, 1);
+                        }
+                    }
+                    _this.table.row($j("#" + id)).remove().draw();
                     _this.resultInfo = data.success;
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {

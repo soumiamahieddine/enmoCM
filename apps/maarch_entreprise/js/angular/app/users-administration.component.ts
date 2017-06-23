@@ -140,6 +140,12 @@ export class UsersAdministrationComponent implements OnInit {
                             $j("#resultInfo").slideUp(500);
                         });
                     } else {
+                        for(var i = 0;i<this.users.length;i++){
+                            if(this.users[i].user_id == id){
+                                this.users.splice(i,1);
+                            }
+                        }
+                        this.table.row($j("#"+id)).remove().draw();
                         this.resultInfo = data.success;
                         $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                         $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
