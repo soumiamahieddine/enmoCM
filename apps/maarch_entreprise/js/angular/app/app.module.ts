@@ -6,6 +6,7 @@ import { FormsModule }      from '@angular/forms';
 
 
 import { AppComponent }                         from './app.component';
+import { UsersAdministrationComponent }          from './users-administration.component';
 import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
@@ -22,6 +23,7 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       FormsModule,
       RouterModule.forRoot([
           { path: 'administration', component: AdministrationComponent },
+          { path: 'administration/users', component: UsersAdministrationComponent },
           { path: 'profile', component: ProfileComponent },
           { path: 'administration/parameter/create', component: ParameterComponent },
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
@@ -35,8 +37,8 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       HttpModule
   ],
 
-  declarations: [ AppComponent, AdministrationComponent, PrioritiesComponent,PriorityComponent,ProfileComponent, ParametersComponent, ParameterComponent, SignatureBookComponent, SafeUrlPipe ],
   providers: [],
+  declarations: [ AppComponent, AdministrationComponent, UsersAdministrationComponent,PrioritiesComponent,PriorityComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
 
   bootstrap:    [ AppComponent]
 })

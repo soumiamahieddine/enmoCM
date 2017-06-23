@@ -101,6 +101,7 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
+$app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 
 //status
 $app->get('/status', \Core\Controllers\StatusController::class . ':getList');

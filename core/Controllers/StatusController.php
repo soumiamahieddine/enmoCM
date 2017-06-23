@@ -53,7 +53,7 @@ class StatusController
         return $response->withJson($datas);
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function create(RequestInterface $request, ResponseInterface $response)
     {
         $errors = [];
 
@@ -65,7 +65,7 @@ class StatusController
                 ->withJson(['errors' => $errors]);
         }
 
-        $aArgs = $request->getQueryParams();
+        $aArgs = $request->getParams();
 
         $return = StatusModel::create($aArgs);
 
@@ -87,7 +87,7 @@ class StatusController
         return $response->withJson($datas);
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(RequestInterface $request, ResponseInterface $response)
     {
         $errors = [];
 
@@ -99,7 +99,7 @@ class StatusController
                 ->withJson(['errors' => $errors]);
         }
 
-        $aArgs = $request->getQueryParams();
+        $aArgs = $request->getParams();
 
         $return = StatusModel::update($aArgs);
 

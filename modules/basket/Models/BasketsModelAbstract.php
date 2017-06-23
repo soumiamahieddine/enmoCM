@@ -20,11 +20,10 @@ use Core\Models\UserModel;
 require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends \Apps_Table_Service 
+class BasketsModelAbstract extends \Apps_Table_Service
 {
 
     public static function getResListById(array $aArgs = [])
-
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
@@ -59,7 +58,6 @@ class BasketsModelAbstract extends \Apps_Table_Service
     }
 
     public static function getActionByActionId(array $aArgs = [])
-
     {
         static::checkRequired($aArgs, ['actionId']);
         static::checkNumeric($aArgs, ['actionId']);
@@ -78,7 +76,6 @@ class BasketsModelAbstract extends \Apps_Table_Service
     }
 
     public static function getActionIdById(array $aArgs = [])
-
     {
         static::checkRequired($aArgs, ['basketId']);
         static::checkString($aArgs, ['basketId']);
@@ -100,9 +97,8 @@ class BasketsModelAbstract extends \Apps_Table_Service
         return $aAction[0]['id_action'];
     }
 
-    public static function getTemplateById(array $aArgs = []) 
+    public static function getBasketsByUserId(array $aArgs = [])
     {
-
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
@@ -116,8 +112,9 @@ class BasketsModelAbstract extends \Apps_Table_Service
             ]
         );
 
-        if (empty($aAction)) {
-            return '';
+        $basketIds = [];
+        foreach ($aRawBaskets as $value) {
+            $basketIds[] = $value['basket_id'];
         }
 
         $aBaskets = [];
@@ -180,16 +177,8 @@ class BasketsModelAbstract extends \Apps_Table_Service
             $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['id' => $value['user_abs']]);
         }
 
-        $xmlfile = simplexml_load_file($path);
-        $name = '';
-        foreach ($xmlfile as $basket) {
-            if ($basket->ID == $aAction[0]["result_page"]) {
-                $name = (string)$basket->NAME;
-            } 
-        }
-        return $name;
+        return $aBaskets;
     }
-    
 
     public static function setBasketsRedirection(array $aArgs = [])
     {
