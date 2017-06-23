@@ -36,10 +36,11 @@ var UsersAdministrationComponent = (function () {
             _this.users = data.users;
             _this.lang = data.lang;
             setTimeout(function () {
-                $j('#usersTable').DataTable({
-                    "dom": '<"datatablesLeft"p><"datatablesRight"f>rt<"datatablesCenter"i><"clear">',
+                _this.table = $j('#usersTable').DataTable({
+                    "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
+                    "lengthMenu": [10, 25, 50, 75, 100],
                     "oLanguage": {
-                        "sLengthMenu": "Display _MENU_ records per page",
+                        "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
                         "sZeroRecords": _this.lang.noResult,
                         "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
                         "sSearch": "",
@@ -63,6 +64,80 @@ var UsersAdministrationComponent = (function () {
         }, function (err) {
             location.href = "index.php";
         });
+    };
+    UsersAdministrationComponent.prototype.suspendUser = function (user) {
+        var _this = this;
+        var r = confirm(this.lang.suspendMsg + ' ?');
+        if (r) {
+            user.enabled = 'N';
+            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+            });
+        }
+    };
+    UsersAdministrationComponent.prototype.activateUser = function (user) {
+        var _this = this;
+        var r = confirm(this.lang.authorizeMsg + ' ?');
+        if (r) {
+            user.enabled = 'Y';
+            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+            });
+        }
+    };
+    UsersAdministrationComponent.prototype.deleteUser = function (id) {
+        var _this = this;
+        var r = confirm(this.lang.deleteMsg + ' ?');
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/user/' + id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    _this.resultInfo = data.errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+                else {
+                    _this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }
+            });
+        }
     };
     return UsersAdministrationComponent;
 }());

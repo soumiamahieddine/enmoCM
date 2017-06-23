@@ -47,16 +47,16 @@
                     <td>{{user.mail}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" class="btn btn-default" title="{{lang.edit}}">
-                                <a><i routerLink="/administration" style="cursor:pointer" class="fa fa-edit"></i></a>
+                            <button routerLink="/administration/user/{{user.user_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.suspend}}" *ngIf="user.enabled == 'Y'">
+                            <button type="button" class="btn btn-default" title="{{lang.suspend}}" *ngIf="user.enabled == 'Y'" (click)="suspendUser(user)">
                                 <a><i style="cursor:pointer;color: #f0ad4e"class="fa fa-pause"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.reactivate}}" *ngIf="user.enabled == 'N'">
+                            <button type="button" class="btn btn-default" title="{{lang.reactivate}}" *ngIf="user.enabled == 'N'" (click)="activateUser(user)">
                                 <a><i style="cursor:pointer;color: #5cb85c" class="fa fa-check"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.delete}}">
+                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user.user_id)">
                                 <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                             </button>
                         </div>

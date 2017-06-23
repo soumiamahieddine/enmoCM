@@ -88,7 +88,7 @@ class UserModelAbstract extends \Apps_Table_Service
     {
         static::checkRequired($aArgs, ['user', 'userId']);
         static::checkRequired($aArgs['user'], ['firstname', 'lastname']);
-        static::checkString($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
+        static::checkString($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'status', 'enabled']);
 
         $isUpdated = parent::update([
             'table'     => 'users',
@@ -98,7 +98,26 @@ class UserModelAbstract extends \Apps_Table_Service
                 'mail'          => $aArgs['user']['mail'],
                 'phone'         => $aArgs['user']['phone'],
                 'initials'      => $aArgs['user']['initials'],
+                'status'        => $aArgs['user']['status'],
+                'enabled'       => $aArgs['user']['enabled'],
                 'thumbprint'    => $aArgs['user']['thumbprint']
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $isUpdated;
+    }
+
+    public static function delete(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $isUpdated = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'status'        => 'DEL',
             ],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']]

@@ -403,8 +403,8 @@ class UserController
         if ($_SESSION['user']['UserId'] == 'superadmin') {
             $users = UserModel::get([
                 'select'    => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                'where'     => ['user_id != ?'],
-                'data'      => ['superadmin']
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
             ]);
         } else {
             $entities = EntitiesModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
@@ -439,7 +439,7 @@ class UserController
                 return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
             }
         }
-        $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint']]);
         $user['signatures'] = UserModel::getSignaturesById(['userId' => $aArgs['userId']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $aArgs['userId']]);
         $user['groups'] = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
@@ -473,6 +473,25 @@ class UserController
         return $response->withJson(['success' => _ADDED_GROUP]);
     }
 
+    public function deleteUser(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(UserModel::getById(['userId' => $aArgs['userId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        $r = UserModel::delete(['userId' => $aArgs['userId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Delete Error']);
+        }
+
+        return $response->withJson(['success' => _DELETED_USER]);
+    }
+
     public function deleteGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
@@ -483,7 +502,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $r = UserModel::addGroup(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId']]);
+        $r = UserModel::deleteGroup(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId']]);
 
         if (!$r) {
             return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);

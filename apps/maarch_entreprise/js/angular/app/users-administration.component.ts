@@ -17,7 +17,7 @@ export class UsersAdministrationComponent implements OnInit {
 
     users                       : any[]     = [];
     lang                        : any       = {};
-    
+    table                       : any
 
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
@@ -45,10 +45,11 @@ export class UsersAdministrationComponent implements OnInit {
                 this.lang = data.lang;
 
                 setTimeout(() => {
-                    $j('#usersTable').DataTable({
-                        "dom": '<"datatablesLeft"p><"datatablesRight"f>rt<"datatablesCenter"i><"clear">',
+                    this.table = $j('#usersTable').DataTable({
+                        "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
+                        "lengthMenu": [ 10, 25, 50, 75, 100 ],
                         "oLanguage": {
-                            "sLengthMenu": "Display _MENU_ records per page",
+                            "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
                             "sZeroRecords": this.lang.noResult,
                             "sInfo": "_START_ - _END_ / _TOTAL_ "+this.lang.record,
                             "sSearch": "",
@@ -73,5 +74,79 @@ export class UsersAdministrationComponent implements OnInit {
             }, (err) => {
                 location.href = "index.php";
             });
+    }
+
+    suspendUser(user: any) {
+        let r = confirm(this.lang.suspendMsg+' ?');
+
+        if (r) {
+            user.enabled = 'N';
+            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.errors) {
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    } else {
+                        this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                });
+        }
+    }
+
+    activateUser(user: any) {
+        let r = confirm(this.lang.authorizeMsg+' ?');
+
+        if (r) {
+            user.enabled = 'Y';
+            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.errors) {
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    } else {
+                        this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                });
+        }
+    }
+
+    deleteUser(id: string) {
+        let r = confirm(this.lang.deleteMsg+' ?');
+
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/user/' + id)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    if (data.errors) {
+                        this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    } else {
+                        this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                });
+        }
     }
 }

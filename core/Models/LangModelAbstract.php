@@ -166,7 +166,7 @@ class LangModelAbstract
             'noRecords'       => _NO_RECORDS,
             'available'       => _AVAILABLE,
             'filteredFrom'    => _FILTERED_FROM,
-            'records'         => _RECORDS,
+            'records'         => _RECORDS
         ];
         return $aLang;
     }
@@ -195,7 +195,10 @@ class LangModelAbstract
             'previous'              => _PREVIOUS_PAGE,
             'next'                  => _NEXT_PAGE,
             'record'                => _RECORD,
-            'search'                => _SEARCH
+            'search'                => _SEARCH,
+            'deleteMsg'             => _REALLY_DELETE,
+            'suspendMsg'            => _REALLY_SUSPEND,
+            'authorizeMsg'          => _REALLY_AUTHORIZE
         ];
 
         return $aLang;
