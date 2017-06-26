@@ -5,7 +5,14 @@
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}}</h1>
+    <h1 style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}} 
+        <sup>
+            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary" title="Actif" >Actif</span>
+            <span *ngIf="user.status == 'ABS'" class="label label-warning" title="Absent" >Absent</span>
+            <span *ngIf="user.enabled == 'N'" class="label label-danger" title="Inactif" >Inactif</span>
+        </sup>
+    </h1>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -87,42 +94,38 @@
             </form>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myGroups}}</h2>
+            <h2>{{user.lang.myGroups}} <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
             <div *ngFor="let group of user.groups" class="col-sm-12 form-group">
                 <div class="input-group">
-                    <span *ngIf="group.primary_group == 'Y'" class="input-group-addon label-primary" id="group_desc" style="color:white;">{{group.group_desc}}</span>
-                    <span *ngIf="group.primary_group == 'N'" class="input-group-addon label-default" id="group_desc" style="background-color:#eee;">{{group.group_desc}}</span>
-                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{group.role}}">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
-<span class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                        <li *ngIf="group.primary_group == 'N'"><a href="#">Passer en groupe primaire</a></li>
-                        <li><a href="#">Enregistrer les modifications</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Supprimer</a></li>
+                        <button *ngIf="group.primary_group == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
+                        <button *ngIf="group.primary_group == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li *ngIf="group.primary_group == 'N'"><a href="#">Passer en groupe primaire</a></li>
+                            <li><a href="#">Enregistrer les modifications</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Supprimer</a></li>
                         </ul>
                     </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{group.role}}">
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myEntities}}</h2>
+            <h2>{{user.lang.myEntities}} <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité" ></i></h2>
             <div *ngFor="let entity of user.entities" class="col-sm-12 form-group">
                 <div class="input-group">
-                    <span *ngIf="entity.primary_entity == 'Y'" class="input-group-addon label-primary" id="group_desc" style="color:white;">{{entity.entity_label}}</span>
-                    <span *ngIf="entity.primary_entity == 'N'" class="input-group-addon label-default" id="group_desc" style="background-color:#eee;">{{entity.entity_label}}</span>
-                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{entity.entity_role}}">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
-<span class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                        <li *ngIf="entity.primary_entity == 'N'"><a href="#">Passer en entité primaire</a></li>
-                        <li><a href="#">Enregistrer les modifications</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Supprimer</a></li>
+                        <button *ngIf="entity.primary_entity == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{entity.entity_label}} <span class="caret"></span></button>
+                        <button *ngIf="entity.primary_entity == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{entity.entity_label}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li *ngIf="entity.primary_entity == 'N'"><a href="#">Passer en entité primaire</a></li>
+                            <li><a href="#">Enregistrer les modifications</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Supprimer</a></li>
                         </ul>
                     </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{entity.entity_role}}">
                 </div>
             </div>
         </div>

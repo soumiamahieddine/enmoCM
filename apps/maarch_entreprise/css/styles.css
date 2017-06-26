@@ -3681,9 +3681,12 @@ a.next{
 
 .dataTables_info{
     float: none !important;
-    font-weight: bold !important;
     color:#666 !important;
 }
 .dataTables_filter input{
     font-size: inherit;
+}
+
+.dataTables_length{
+    float:none !important;
 }

@@ -145,6 +145,7 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 $app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/user/{userId}', \Core\Controllers\UserController::class . ':update');
+$app->delete('/user/{userId}', \Core\Controllers\UserController::class . ':deleteUser');
 $app->post('/user/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':addGroup');
 $app->delete('/user/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
