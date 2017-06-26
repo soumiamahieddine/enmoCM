@@ -3690,3 +3690,7 @@ a.next{
 .dataTables_length{
     float:none !important;
 }
+
+#frmsearch2 .autocomplete, #frmcontact .autocomplete{
+    top:auto !important;
+}
