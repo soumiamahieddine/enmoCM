@@ -12,19 +12,19 @@ declare var angularGlobals : any;
 })
 export class StatusAdministrationComponent implements OnInit {
     coreUrl         : string;
-    pageTitle       : string ;
+    pageTitle       : string = "" ;
     mode            : string = null;
-    paramId         : string;
+    statusId        : string;
     type            : string;
-    parametersList : any = null;
-    parameter   : any   = {
-        id                  : null,
-        param_value_string  : null,
-        param_value_int     : null,
-        param_value_date    : null,
-        description         : null
+    status   : any   = {
+        id              : null,
+        description     : null,
+        can_be_searched : null,
+        can_be_modified : null,
+        is_folder_status : null,
+        img_related     : null
     };
-    paramDateTemp   :string;
+    paramDateTemp   : string;
     lang        : any = "";
 
     resultInfo : string = "";
@@ -34,39 +34,37 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // this.coreUrl = angularGlobals.coreUrl;
-        // this.prepareParameter();
-        // this.http.get(this.coreUrl + 'rest/parameters/lang')
-        // .map(res => res.json())
-        // .subscribe((data) => {
-        //     this.lang = data;
-        // });
+        this.coreUrl = angularGlobals.coreUrl;
+        this.prepareStatus();
 
-        // this.route.params.subscribe((params) => {
-        //     if(this.route.toString().includes('update')){
-        //         this.mode='update';
-        //         this.paramId = params['id'];
-        //         this.getParameterInfos(this.paramId);                
-        //     } else if (this.route.toString().includes('create')){
-        //         this.mode = 'create';
-        //         this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-        //         $j('#pageTitle').html(this.pageTitle);
-        //         this.type = 'string';
-        //     }
-        // });
-               
+        this.route.params.subscribe((params) => {
+            if(this.route.toString().includes('update')){
+                this.mode     = 'update';
+                this.statusId = params['id'];
+                this.getStatusInfos(this.statusId);                
+            } else if (this.route.toString().includes('create')){
+                this.http.get(this.coreUrl + 'rest/administration/status/lang')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.lang      = data;
+                    this.mode      = 'create';
+                    this.pageTitle = this.lang.newStatus;
+                });
+            }
+        });
+
     }
 
-    prepareParameter() {
+    prepareStatus() {
         $j('#inner_content').remove();
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration Statut</a>");
     }
 
-    getParameterInfos(paramId : string){
-        this.http.get(this.coreUrl + 'rest/parameters/'+paramId)
+    getStatusInfos(statusId : string){
+        this.http.get(this.coreUrl + 'rest/administration/status/'+statusId)
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors){
@@ -75,45 +73,18 @@ export class StatusAdministrationComponent implements OnInit {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
                     });
-                } else{
-                    var infoParam=data; 
-                    this.parameter.id = infoParam[0].id;
-                    if(infoParam[0].param_value_string != null){
-                        this.parameter.param_value_string = infoParam[0].param_value_string
-                        this.type = "string";
-                    } else if(infoParam[0].param_value_int != null){
-                        this.parameter.param_value_int = infoParam[0].param_value_int;
-                        this.type = "int";
-                    } else if(infoParam[0].param_value_date != null) {
-                        this.parameter.param_value_date = infoParam[0].param_value_date;
-                        this.type = "date";
-                    }
-                    this.parameter.description = infoParam[0].description;
-                    this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : "+this.parameter.id;
-                    $j('#pageTitle').html(this.pageTitle);
+                } else {
+                    this.status    = data['status'][0];
+                    this.lang      = data['lang'];
+                    this.pageTitle = " Statut : " + this.status.id;
                 }
             });                
     }
     
-    submitParameter() {
-
-        if(this.type=='date'){
-            //Résolution bug calendrier
-            this.parameter.param_value_date = $j("#param_value_date").val();
-            this.parameter.param_value_int=null;
-            this.parameter.param_value_string=null;
-        }
-        else if(this.type == 'int'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_string=null;
-        }
-        else if (this.type == 'string'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_int=null;
-        }
+    submitStatus() {
 
         if(this.mode == 'create'){
-            this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
+            this.http.post(this.coreUrl + 'rest/administration/status', this.status)
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors) {
@@ -122,22 +93,19 @@ export class StatusAdministrationComponent implements OnInit {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
                     });
-                    this.parameter.param_value_date=null;
-                    this.parameter.param_value_int=null;
-                    this.parameter.param_value_string=null;
                 } else {
                     this.resultInfo = this.lang.paramCreatedSuccess;
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
                     });
-                    this.router.navigate(['administration/parameters']);
+                    this.router.navigate(['administration/status']);
                 }
                 
             });
         } else if(this.mode == "update"){
 
-            this.http.put(this.coreUrl+'rest/parameters/'+this.paramId,this.parameter)
+            this.http.put(this.coreUrl+'rest/administration/status/'+this.statusId, this.status)
             .map(res => res.json())             
             .subscribe((data) => {
                 if(data.errors){
@@ -152,7 +120,7 @@ export class StatusAdministrationComponent implements OnInit {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
                     });
-                    this.router.navigate(['administration/parameters']);                    
+                    this.router.navigate(['administration/status']);                    
                 }
             });
         }

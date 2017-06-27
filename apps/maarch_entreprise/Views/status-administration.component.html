@@ -2,48 +2,53 @@
     {{resultInfo}}
 </div>
 
+<h1 style="margin-top: 0"><i class="fa fa-check-circle fa-2x"></i> {{pageTitle}}</h1>
+
 <div class="block">
-    <div id="parameter" class="forms" style="width:400px;margin:auto;">    
-        <form (ngSubmit)="submitParameter()" #signatureForm="ngForm">
+    <div id="status" class="forms" style="width:40%;margin:auto;">    
+        <form (ngSubmit)="submitStatus()" #signatureForm="ngForm">
 
             <div id="create" *ngIf="mode == 'create' ">
                 <p>
-                    <label for="id" >{{this.lang.identifier}}</label>
-                    <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                    <label for="id" >{{lang.identifier}}</label>
+                    <input name="id" id="id" type="text" [(ngModel)]="status.id" required><span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
             </div>
             <div id = "update" *ngIf = "mode == 'update'">
                 <p>
-                    <label for="id" >{{this.lang.identifier}}</label>
-                    <input name="id" id="id" type="text" [(ngModel)]="parameter.id" required disabled><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                    <label for="id" >{{lang.identifier}}</label>
+                    <input name="id" id="id" type="text" [(ngModel)]="status.id" required disabled><span class="red_asterisk"><i class="fa fa-star"></i></span>
                 </p>
             </div>
 
             <p>
-                <label for="type">{{this.lang.type}}</label>
-                <select name="type" id="type" [(ngModel)]="type" >
-                    <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
-                    <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
-                    <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
-                </select>
-                <span class="red_asterisk"><i class="fa fa-star"></i></span>
+                <label for="label_status">{{lang.description}}</label>
+                <textarea name="label_status" id="label_status" [(ngModel)]="status.label_status" ></textarea>
             </p>
-            <p>
-                <label *ngIf="type == 'string'" for="param_value_string">{{this.lang.value}}</label>
-                <label *ngIf="type == 'int'" for="param_value_int">{{this.lang.value}}</label>
-                <label *ngIf="type == 'date'" for="param_value_date">{{this.lang.value}}</label>
 
-                <input *ngIf = "type == 'string'" name="param_value_string" id="param_value_string" style="display: block;" type="text" [(ngModel)]="parameter.param_value_string">
-                <input *ngIf = "type == 'int'" name="param_value_int" id="param_value_int" style="display:block" type="text" [(ngModel)]="parameter.param_value_int" >
-                <input *ngIf = "type == 'date'" name="param_value_date" id="param_value_date" style="display:block" onclick="showCalender(this);" type="text" [(ngModel)]="parameter.param_value_date">
-            </p>
             <p>
-                <label for="description">{{this.lang.description}}</label>
-                <textarea name="description" id="description" [(ngModel)]="parameter.description" ></textarea>
+                <label for="can_be_searched">{{lang.can_be_searched}}</label>
+                <textarea name="can_be_searched" id="can_be_searched" [(ngModel)]="status.can_be_searched" ></textarea>
             </p>
+
+            <p>
+                <label for="can_be_modified">{{lang.can_be_modified}}</label>
+                <textarea name="can_be_modified" id="can_be_modified" [(ngModel)]="status.can_be_modified" ></textarea>
+            </p>
+
+            <p>
+                <label for="is_folder_status">{{lang.is_folder_status}}</label>
+                <textarea name="is_folder_status" id="is_folder_status" [(ngModel)]="status.is_folder_status" ></textarea>
+            </p>            
+
+            <p>
+                <label for="img_related">{{lang.img_related}}</label>
+                <textarea name="img_related" id="img_related" [(ngModel)]="status.img_related" ></textarea>
+            </p>
+
             <p class="button" style="text-align:center">
-                <button class="btn btn-success" type="submit">{{this.lang.validate}}</button>
-                <button class="btn btn-warning" routerLink='/administration/parameters'>{{this.lang.cancel}}</button>
+                <button class="btn btn-success" type="submit">{{lang.validate}}</button>
+                <button class="btn btn-warning" routerLink='/administration/statusList'>{{lang.cancel}}</button>
             </p>
         
         </form>     

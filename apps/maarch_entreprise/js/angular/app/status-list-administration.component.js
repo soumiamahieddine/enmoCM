@@ -27,7 +27,7 @@ var StatusListAdministrationComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
         this.updateBreadcrumb(angularGlobals.applicationName);
-        this.http.get(this.coreUrl + 'rest/status')
+        this.http.get(this.coreUrl + 'rest/administration/status')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -76,7 +76,7 @@ var StatusListAdministrationComponent = (function () {
         var _this = this;
         var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/status/' + statusId)
+            this.http.delete(this.coreUrl + 'rest/administration/status/' + statusId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {

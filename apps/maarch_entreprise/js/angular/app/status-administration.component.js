@@ -18,50 +18,53 @@ var StatusAdministrationComponent = (function () {
         this.http = http;
         this.route = route;
         this.router = router;
+        this.pageTitle = "";
         this.mode = null;
-        this.parametersList = null;
-        this.parameter = {
+        // parametersList : any = null;
+        this.status = {
             id: null,
-            param_value_string: null,
-            param_value_int: null,
-            param_value_date: null,
-            description: null
+            description: null,
+            can_be_searched: null,
+            can_be_modified: null,
+            is_folder_status: null,
+            img_related: null
         };
         this.lang = "";
         this.resultInfo = "";
     }
     StatusAdministrationComponent.prototype.ngOnInit = function () {
-        // this.coreUrl = angularGlobals.coreUrl;
-        // this.prepareParameter();
-        // this.http.get(this.coreUrl + 'rest/parameters/lang')
-        // .map(res => res.json())
-        // .subscribe((data) => {
-        //     this.lang = data;
-        // });
-        // this.route.params.subscribe((params) => {
-        //     if(this.route.toString().includes('update')){
-        //         this.mode='update';
-        //         this.paramId = params['id'];
-        //         this.getParameterInfos(this.paramId);                
-        //     } else if (this.route.toString().includes('create')){
-        //         this.mode = 'create';
-        //         this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-        //         $j('#pageTitle').html(this.pageTitle);
-        //         this.type = 'string';
-        //     }
-        // });
+        var _this = this;
+        this.coreUrl = angularGlobals.coreUrl;
+        this.prepareStatus();
+        this.route.params.subscribe(function (params) {
+            if (_this.route.toString().includes('update')) {
+                _this.mode = 'update';
+                _this.statusId = params['id'];
+                _this.getStatusInfos(_this.statusId);
+            }
+            else if (_this.route.toString().includes('create')) {
+                _this.http.get(_this.coreUrl + 'rest/administration/status/lang')
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.lang = data;
+                    _this.mode = 'create';
+                    _this.pageTitle = _this.lang.newStatus;
+                });
+            }
+        });
     };
-    StatusAdministrationComponent.prototype.prepareParameter = function () {
+    StatusAdministrationComponent.prototype.prepareStatus = function () {
         $j('#inner_content').remove();
     };
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration Statut</a>");
     };
-    StatusAdministrationComponent.prototype.getParameterInfos = function (paramId) {
+    StatusAdministrationComponent.prototype.getStatusInfos = function (statusId) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/parameters/' + paramId)
+        this.http.get(this.coreUrl + 'rest/administration/status/' + statusId)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
+            console.log(data);
             if (data.errors) {
                 _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
@@ -70,44 +73,16 @@ var StatusAdministrationComponent = (function () {
                 });
             }
             else {
-                var infoParam = data;
-                _this.parameter.id = infoParam[0].id;
-                if (infoParam[0].param_value_string != null) {
-                    _this.parameter.param_value_string = infoParam[0].param_value_string;
-                    _this.type = "string";
-                }
-                else if (infoParam[0].param_value_int != null) {
-                    _this.parameter.param_value_int = infoParam[0].param_value_int;
-                    _this.type = "int";
-                }
-                else if (infoParam[0].param_value_date != null) {
-                    _this.parameter.param_value_date = infoParam[0].param_value_date;
-                    _this.type = "date";
-                }
-                _this.parameter.description = infoParam[0].description;
-                _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
-                $j('#pageTitle').html(_this.pageTitle);
+                _this.status = data['status'][0];
+                _this.lang = data['lang'];
+                _this.pageTitle = " Statut : " + _this.status.id;
             }
         });
     };
-    StatusAdministrationComponent.prototype.submitParameter = function () {
+    StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
-        if (this.type == 'date') {
-            //Résolution bug calendrier
-            this.parameter.param_value_date = $j("#param_value_date").val();
-            this.parameter.param_value_int = null;
-            this.parameter.param_value_string = null;
-        }
-        else if (this.type == 'int') {
-            this.parameter.param_value_date = null;
-            this.parameter.param_value_string = null;
-        }
-        else if (this.type == 'string') {
-            this.parameter.param_value_date = null;
-            this.parameter.param_value_int = null;
-        }
         if (this.mode == 'create') {
-            this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
+            this.http.post(this.coreUrl + 'rest/administration/status', this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -116,9 +91,6 @@ var StatusAdministrationComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.parameter.param_value_date = null;
-                    _this.parameter.param_value_int = null;
-                    _this.parameter.param_value_string = null;
                 }
                 else {
                     _this.resultInfo = _this.lang.paramCreatedSuccess;
@@ -126,12 +98,12 @@ var StatusAdministrationComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.router.navigate(['administration/parameters']);
+                    _this.router.navigate(['administration/status']);
                 }
             });
         }
         else if (this.mode == "update") {
-            this.http.put(this.coreUrl + 'rest/parameters/' + this.paramId, this.parameter)
+            this.http.put(this.coreUrl + 'rest/administration/status/' + this.statusId, this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -147,7 +119,7 @@ var StatusAdministrationComponent = (function () {
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                         $j("#resultInfo").slideUp(500);
                     });
-                    _this.router.navigate(['administration/parameters']);
+                    _this.router.navigate(['administration/status']);
                 }
             });
         }

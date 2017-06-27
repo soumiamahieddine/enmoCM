@@ -14,7 +14,6 @@ var statusDataTable : any;
 export class StatusListAdministrationComponent implements OnInit {
     coreUrl         : string;
     nbStatus        : number;
-    pageTitle       : string ;
     lang            : any   = "";
     statusList      : any;
 
@@ -28,7 +27,7 @@ export class StatusListAdministrationComponent implements OnInit {
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
         this.updateBreadcrumb(angularGlobals.applicationName);
-        this.http.get(this.coreUrl + 'rest/status')
+        this.http.get(this.coreUrl + 'rest/administration/status')
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors){
@@ -78,7 +77,7 @@ export class StatusListAdministrationComponent implements OnInit {
     deleteStatus(statusId : string){
         var resp = confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
-            this.http.delete(this.coreUrl + 'rest/status/'+statusId)
+            this.http.delete(this.coreUrl + 'rest/administration/status/'+statusId)
                 .map(res => res.json())
                 .subscribe((data) => {
                     if(data.errors){
