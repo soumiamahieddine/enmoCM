@@ -58,8 +58,8 @@ var StatusListAdministrationComponent = (function () {
                             }
                         },
                         "columnDefs": [
-                            { "orderable": false, "targets": 2 },
-                            { "orderable": false, "targets": 3 },
+                            // {"orderable":false, "targets":2},
+                            { "orderable": false, "targets": 3 }
                         ]
                     });
                 }, 0);

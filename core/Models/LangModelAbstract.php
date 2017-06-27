@@ -166,7 +166,8 @@ class LangModelAbstract
             'noRecords'       => _NO_RECORDS,
             'available'       => _AVAILABLE,
             'filteredFrom'    => _FILTERED_FROM,
-            'records'         => _RECORDS
+            'records'         => _RECORDS,
+            'img_related'     => _IMG_RELATED
         ];
         return $aLang;
     }
