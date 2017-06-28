@@ -28,22 +28,25 @@
 
             <p>
                 <label for="can_be_searched">{{lang.can_be_searched}}</label>
-                <textarea name="can_be_searched" id="can_be_searched" [(ngModel)]="status.can_be_searched" ></textarea>
+                <input type="radio" name="can_be_searched" class="check" value="Y" [(ngModel)]="status.can_be_searched">Oui    
+                <input type="radio" name="can_be_searched" class="check" value="N" [(ngModel)]="status.can_be_searched">Non
             </p>
 
             <p>
                 <label for="can_be_modified">{{lang.can_be_modified}}</label>
-                <textarea name="can_be_modified" id="can_be_modified" [(ngModel)]="status.can_be_modified" ></textarea>
+                <input type="radio" name="can_be_modified" class="check" value="Y" [(ngModel)]="status.can_be_modified"checked="checked">Oui    
+                <input type="radio" name="can_be_modified" class="check" value="N" [(ngModel)]="status.can_be_modified">Non 
             </p>
 
             <p>
                 <label for="is_folder_status">{{lang.is_folder_status}}</label>
-                <textarea name="is_folder_status" id="is_folder_status" [(ngModel)]="status.is_folder_status" ></textarea>
+                <input type="radio" name="is_folder_status" class="check" value="Y" [(ngModel)]="status.is_folder_status">Oui                    
+                <input type="radio" name="is_folder_status" class="check" value="N" [(ngModel)]="status.is_folder_status">Non
             </p>            
 
             <p>
-                <label for="img_related">{{lang.img_related}}</label>
-                <textarea name="img_related" id="img_related" [(ngModel)]="status.img_related" ></textarea>
+                <label for="img_filename">{{lang.img_related}}</label>
+                <textarea name="img_filename" id="img_filename" [(ngModel)]="status.img_filename" ></textarea>
             </p>
 
             <p class="button" style="text-align:center">

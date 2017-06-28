@@ -109,7 +109,7 @@ $app->get('/administration/status', \Core\Controllers\StatusController::class . 
 $app->get('/status/lang', \Core\Controllers\StatusController::class . ':getLang');
 $app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/status', \Core\Controllers\StatusController::class . ':update');
+$app->put('/status/{id}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
 //docserver

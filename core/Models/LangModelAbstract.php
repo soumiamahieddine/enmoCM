@@ -170,6 +170,7 @@ class LangModelAbstract
             'yes'              => _YES,
             'no'               => _NO,
             'modify_status'    => _MODIFY_STATUS,
+            'deleteConfirm'    => _REALLY_DELETE,
         ];
         return $aLang;
     }

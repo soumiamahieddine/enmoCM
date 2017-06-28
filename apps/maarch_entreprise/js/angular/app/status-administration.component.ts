@@ -18,11 +18,11 @@ export class StatusAdministrationComponent implements OnInit {
     type            : string;
     status   : any   = {
         id              : null,
-        description     : null,
+        label_status     : null,
         can_be_searched : null,
         can_be_modified : null,
         is_folder_status : null,
-        img_related     : null
+        img_filename     : null
     };
     paramDateTemp   : string;
     lang        : any = "";
