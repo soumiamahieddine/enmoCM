@@ -15,3 +15,7 @@ h2{
 .btn-default:focus.label-primary ,.btn-default:hover.label-primary ,.btn-default.active.label-primary, .btn-default:active.label-primary, .open > .dropdown-toggle.btn-default.label-primary{
     background: #337ab7 !important;
 }
+
+.userAdministrationClickable li {
+    cursor: pointer;
+}

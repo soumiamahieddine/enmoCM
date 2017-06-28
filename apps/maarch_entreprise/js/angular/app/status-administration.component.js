@@ -20,7 +20,6 @@ var StatusAdministrationComponent = (function () {
         this.router = router;
         this.pageTitle = "";
         this.mode = null;
-        // parametersList : any = null;
         this.status = {
             id: null,
             description: null,
@@ -64,7 +63,6 @@ var StatusAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/status/' + statusId)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            console.log(data);
             if (data.errors) {
                 _this.resultInfo = data.errors;
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');

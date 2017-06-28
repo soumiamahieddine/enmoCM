@@ -39,7 +39,7 @@ class GroupModelAbstract extends \Apps_Table_Service
         $aGroups = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['group_id'],
+            'where'     => ['group_id = ?'],
             'data'      => [$aArgs['groupId']]
         ]);
 

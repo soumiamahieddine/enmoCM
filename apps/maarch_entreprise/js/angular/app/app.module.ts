@@ -20,7 +20,7 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       RouterModule.forRoot([
           { path: 'administration', component: AdministrationComponent },
           { path: 'administration/users', component: UsersAdministrationComponent },
-          { path: 'administration/user/:userId', component: UserAdministrationComponent },
+          { path: 'administration/users/:userId', component: UserAdministrationComponent },
           { path: 'administration/status/create', component: StatusAdministrationComponent },
           { path: 'administration/status/update/:id', component: StatusAdministrationComponent },
           { path: 'administration/statusList', component: StatusListAdministrationComponent },
