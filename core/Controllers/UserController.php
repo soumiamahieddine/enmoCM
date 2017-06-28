@@ -24,6 +24,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\UserModel;
+use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
 include_once 'core/class/class_history.php';
@@ -101,6 +102,49 @@ class UserController
         }
 
         return $response->withJson(['success' => _DELETED_USER]);
+    }
+    
+    public function suspendUser(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        if ($_SESSION['user']['UserId'] != 'superadmin') {
+            $entities = EntitiesModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['users.user_id'],
+                'entities'  => $entities
+            ]);
+            $allowed = false;
+            foreach ($users as $value) {
+                if ($value['user_id'] == $aArgs['userId']) {
+                    $allowed = true;
+                }
+            }
+            if (!$allowed) {
+                return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
+            }
+        } else {
+            $user = UserModel::getById(['userId' => $aArgs['userId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+        }
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
+            || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
+            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        //update user
+        $r = UserModel::update(['userId' => $aArgs['userId'], 'user' => $data]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
+        }
+
+        return $response->withJson(['success' => _USER_UPDATED]);
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
@@ -408,6 +452,22 @@ class UserController
         return $response->withJson($users);
     }
 
+    public function getUsersForAutocompletionWithExclusion(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $excludeUsers = ['superadmin',$aArgs['userId']];
+        $users = UserModel::get([
+            'select'    => ['user_id', 'firstname', 'lastname'],
+            'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
+            'data'      => ['Y', 'DEL', $excludeUsers]
+        ]);
+
+        foreach ($users as $key => $value) {
+            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
+        }
+
+        return $response->withJson($users);
+    }
+
     public function getUsersForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -426,6 +486,28 @@ class UserController
                 'entities'  => $entities
             ]);
         }
+
+        $usersId = [];
+        foreach ($users as $value) {
+            $usersId[] = $value['user_id'];
+        }
+
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => 'item_id', 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']); 
+        
+        $usersListModels = [];
+        foreach ($listModels as $value) {
+            $usersListModels[] = $value['item_id'];
+        }
+        
+        foreach ($users as $key => $value) {
+
+            if (in_array($value['user_id'], $usersListModels)) {
+                $users[$key]['inDiffListDest'] = 'Y';
+            } else {
+                $users[$key]['inDiffListDest'] = 'N';
+            }
+        }
+
         $return['lang'] = LangModel::getUsersForAdministrationLang();
         $return['users'] = $users;        
         return $response->withJson($return);

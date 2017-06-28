@@ -16,6 +16,8 @@ var UsersAdministrationComponent = (function () {
     function UsersAdministrationComponent(http) {
         this.http = http;
         this.users = [];
+        this.userDestRedirect = {};
+        this.userDestRedirectModels = [];
         this.lang = {};
         this.resultInfo = "";
         this.loading = false;
@@ -62,18 +64,76 @@ var UsersAdministrationComponent = (function () {
             }, 0);
             _this.loading = false;
         }, function (err) {
+            console.log(err);
             location.href = "index.php";
         });
     };
     UsersAdministrationComponent.prototype.suspendUser = function (user) {
         var _this = this;
+        if (user.inDiffListDest == 'Y') {
+            user.mode = 'up';
+            this.userDestRedirect = user;
+            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.userDestRedirectModels = data.listModels;
+                setTimeout(function () {
+                    $j(".redirectDest").typeahead({
+                        order: "asc",
+                        display: "formattedUser",
+                        templateValue: "{{user_id}}",
+                        source: {
+                            ajax: {
+                                type: "GET",
+                                dataType: "json",
+                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
+                            }
+                        }
+                    });
+                }, 0);
+            }, function (err) {
+                console.log(err);
+                location.href = "index.php";
+            });
+        }
+        else {
+            var r = confirm(this.lang.suspendMsg + ' ?');
+            if (r) {
+                user.enabled = 'N';
+                this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    if (data.errors) {
+                        user.enabled = 'Y';
+                        _this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                    else {
+                        _this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                });
+            }
+        }
+    };
+    UsersAdministrationComponent.prototype.suspendUserModal = function (user) {
+        var _this = this;
         var r = confirm(this.lang.suspendMsg + ' ?');
         if (r) {
             user.enabled = 'N';
-            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+            user.redirectListModels = this.userDestRedirectModels;
+            //first, update listModels
+            this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
+                    user.enabled = 'Y';
                     _this.resultInfo = data.errors;
                     $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -81,12 +141,41 @@ var UsersAdministrationComponent = (function () {
                     });
                 }
                 else {
-                    _this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
+                    //then suspend user
+                    _this.http.put(_this.coreUrl + 'rest/users/' + user.user_id, user)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        if (data.errors) {
+                            user.enabled = 'Y';
+                            _this.resultInfo = data.errors;
+                            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                                $j("#resultInfo").slideUp(500);
+                            });
+                        }
+                        else {
+                            user.inDiffListDest = 'N';
+                            $j('#changeDiffListDest').modal('hide');
+                            _this.resultInfo = data.success;
+                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                                $j("#resultInfo").slideUp(500);
+                            });
+                        }
+                    }, function (err) {
+                        _this.resultInfo = JSON.parse(err._body).errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                            $j("#resultInfo").slideUp(500);
+                        });
                     });
                 }
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             });
         }
     };
@@ -95,10 +184,11 @@ var UsersAdministrationComponent = (function () {
         var r = confirm(this.lang.authorizeMsg + ' ?');
         if (r) {
             user.enabled = 'Y';
-            this.http.put(this.coreUrl + 'rest/user/' + user.user_id, user)
+            this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
+                    user.enabled = 'N';
                     _this.resultInfo = data.errors;
                     $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -112,14 +202,81 @@ var UsersAdministrationComponent = (function () {
                         $j("#resultInfo").slideUp(500);
                     });
                 }
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             });
         }
     };
-    UsersAdministrationComponent.prototype.deleteUser = function (id) {
+    UsersAdministrationComponent.prototype.deleteUser = function (user) {
+        var _this = this;
+        if (user.inDiffListDest == 'Y') {
+            user.mode = 'del';
+            this.userDestRedirect = user;
+            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.userDestRedirectModels = data.listModels;
+                setTimeout(function () {
+                    $j(".redirectDest").typeahead({
+                        order: "asc",
+                        source: {
+                            ajax: {
+                                type: "GET",
+                                dataType: "json",
+                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
+                            }
+                        }
+                    });
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            });
+        }
+        else {
+            var r = confirm(this.lang.deleteMsg + ' ?');
+            if (r) {
+                this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    if (data.errors) {
+                        _this.resultInfo = data.errors;
+                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                    else {
+                        for (var i = 0; i < _this.users.length; i++) {
+                            if (_this.users[i].user_id == user.user_id) {
+                                _this.users.splice(i, 1);
+                            }
+                        }
+                        _this.table.row($j("#" + user.user_id)).remove().draw();
+                        _this.resultInfo = data.success;
+                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                            $j("#resultInfo").slideUp(500);
+                        });
+                    }
+                });
+            }
+        }
+    };
+    UsersAdministrationComponent.prototype.deleteUserModal = function (user) {
         var _this = this;
         var r = confirm(this.lang.deleteMsg + ' ?');
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/user/' + id)
+            user.redirectListModels = this.userDestRedirectModels;
+            //first, update listModels
+            this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -130,18 +287,40 @@ var UsersAdministrationComponent = (function () {
                     });
                 }
                 else {
-                    for (var i = 0; i < _this.users.length; i++) {
-                        if (_this.users[i].user_id == id) {
-                            _this.users.splice(i, 1);
+                    //then delete user
+                    _this.http.delete(_this.coreUrl + 'rest/users/' + user.user_id)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        if (data.errors) {
+                            _this.resultInfo = data.errors;
+                            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                                $j("#resultInfo").slideUp(500);
+                            });
                         }
-                    }
-                    _this.table.row($j("#" + id)).remove().draw();
-                    _this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
+                        else {
+                            user.inDiffListDest = 'N';
+                            $j('#changeDiffListDest').modal('hide');
+                            for (var i = 0; i < _this.users.length; i++) {
+                                if (_this.users[i].user_id == user.user_id) {
+                                    _this.users.splice(i, 1);
+                                }
+                            }
+                            _this.table.row($j("#" + user.user_id)).remove().draw();
+                            _this.resultInfo = data.success;
+                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                                $j("#resultInfo").slideUp(500);
+                            });
+                        }
                     });
                 }
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             });
         }
     };

@@ -125,6 +125,10 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
+//ListModels
+$app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
+$app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':updateListModelsDiffListDestByUserId');
+
 //Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
@@ -144,10 +148,11 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
+$app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserController::class . ':getUsersForAutocompletionWithExclusion');
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');
-$app->delete('/user/{userId}', \Core\Controllers\UserController::class . ':delete');
+$app->delete('/users/{userId}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':addGroup');
 $app->put('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');

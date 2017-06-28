@@ -47,16 +47,24 @@
                     <td>{{user.mail}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/user/{{user.user_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                            <button routerLink="/administration/users/{{user.user_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.suspend}}" *ngIf="user.enabled == 'Y'" (click)="suspendUser(user)">
-                                <a><i style="cursor:pointer;color: #f0ad4e"class="fa fa-pause"></i></a>
+
+                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
+                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.reactivate}}" *ngIf="user.enabled == 'N'" (click)="activateUser(user)">
-                                <a><i style="cursor:pointer;color: #5cb85c" class="fa fa-check"></i></a>
+                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
+                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user.user_id)">
+
+                            <button *ngIf="user.enabled == 'N'" type="button" class="btn btn-default" title="{{lang.authorize}}" (click)="activateUser(user)">
+                                <a><i style="cursor:pointer;color:#5cb85c;" class="fa fa-check"></i></a>
+                            </button>
+                            <button *ngIf="user.inDiffListDest == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest" (click)="deleteUser(user)">
+                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                            </button>
+                            <button *ngIf="user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user)">
                                 <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                             </button>
                         </div>
@@ -67,3 +75,35 @@
     </div>
 </div>
 
+<div class="modal fade" id="changeDiffListDest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Changement de destinataire des modèles de liste de diffusion</h4>
+            </div>
+            <form (ngSubmit)="onSubmit()" #changeDiffListDestForm="ngForm">
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <b>{{this.userDestRedirect.firstname}} {{this.userDestRedirect.lastname}}</b> est en <b>destinataire</b> des modèles liste de difffusion suivante, veuillez choisir un utilisateur de <b>remplacement</b> :
+                    </div>
+                    <div *ngFor="let userDestRedirectModel of userDestRedirectModels" id="{{userDestRedirectModel.object_id}}" class="form-group">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-share-alt-square"></i> {{userDestRedirectModel.object_id}} - {{userDestRedirectModel.description}}</span>
+                            <div class="form-group typeahead__container" style="margin-bottom:0px;">
+                                <div class="typeahead__field">
+                                    <input name="redirectDest_{{userDestRedirectModel.object_id}}" [(ngModel)]="userDestRedirectModel.redirectUserId"  type="text" class="form-control redirectDest" placeholder="Utilisateur" autocomplete="off" aria-describedby="sizing-addon1" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button *ngIf="userDestRedirect.mode == 'del'" type="button" class="btn btn-danger" (click)="deleteUserModal(userDestRedirect)" [disabled]="!changeDiffListDestForm.form.valid">{{lang.delete}} {{lang.user}}</button>
+                    <button *ngIf="userDestRedirect.mode == 'up'" type="button" class="btn btn-warning" (click)="suspendUserModal(userDestRedirect)" [disabled]="!changeDiffListDestForm.form.valid">{{lang.suspend}} {{lang.user}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -17,3 +17,32 @@ nav{
     margin-top:10px !important;
     margin-bottom: 0px !important;
 }
+
+.modal-content{
+    background-color: #009DC5 !important;
+}
+.modal-header h4{
+    color: white !important;
+
+}
+
+.modal-body{
+    background-color: white;
+    padding:10px;
+    max-height: 70vh;
+    overflow: auto;
+
+}
+
+.modal-body .list-group li{
+    /*border-color: #009DC5 !important;*/
+    font-weight: bold;
+}
+
+.modal-footer{
+    background:white;
+}
+
+button:disabled{
+    opacity:0.3 !important;
+}

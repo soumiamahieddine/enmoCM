@@ -189,6 +189,7 @@ class LangModelAbstract
             'absent'                => _MISSING,
             'edit'                  => _MODIFY,
             'suspend'               => _SUSPEND,
+            'authorize'             => _AUTHORIZE,
             'delete'                => _DELETE,
             'users'                 => _USERS,
             'admin'                 => _ADMIN,
@@ -200,7 +201,9 @@ class LangModelAbstract
             'search'                => _SEARCH,
             'deleteMsg'             => _REALLY_DELETE,
             'suspendMsg'            => _REALLY_SUSPEND,
-            'authorizeMsg'          => _REALLY_AUTHORIZE
+            'authorizeMsg'          => _REALLY_AUTHORIZE,
+            'checkListDiffMsg'      => _PLEASE_CHECK_LISTDIFF,
+            'user'                  => _USER
         ];
 
         return $aLang;
