@@ -117,7 +117,7 @@ export class ProfileComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/user/profile')
+        this.http.get(this.coreUrl + 'rest/users/profile')
             .map(res => res.json())
             .subscribe((data) => {
                 this.user = data;
@@ -444,7 +444,7 @@ export class ProfileComponent implements OnInit {
     }
 
     onSubmit() {
-        this.http.put(this.coreUrl + 'rest/user/profile', this.user)
+        this.http.put(this.coreUrl + 'rest/users/profile', this.user)
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {

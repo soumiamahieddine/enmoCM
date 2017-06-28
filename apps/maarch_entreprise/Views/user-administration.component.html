@@ -21,18 +21,18 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-key" title=""></i> Réinitialiser le mot de passe </a>
+                <ul class="nav navbar-nav navbar-right userAdministrationClickable">
+                    <li>
+                        <a (click)="resetPassword()"><i class="fa fa-key"></i> {{user.lang.reinitPassword}}</a>
                     </li>
-                    <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-inbox" title=""></i> Gérer mes bannettes </a>
+                    <li>
+                        <a><i class="fa fa-inbox"></i> {{user.lang.manageBaskets}}</a>
                     </li>
-                    <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times" title=""></i> {{user.lang.manageAbsences}} </a>
+                    <li>
+                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times"></i> {{user.lang.manageAbsences}}</a>
                     </li>
-                    <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{user.lang.manageSignatures}} </a>
+                    <li>
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{user.lang.manageSignatures}}</a>
                     </li>
                 </ul>
             </div>
@@ -40,7 +40,7 @@
     </nav>
     <div class="row row-eq-height">
         <div class="col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myInformations}}</h2>
+            <h2>Informations</h2>
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
@@ -94,39 +94,43 @@
             </form>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myGroups}} <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
+            <h2>Groupes <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
             <div *ngFor="let group of user.groups" class="col-sm-12 form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button *ngIf="group.primary_group == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
-                        <button *ngIf="group.primary_group == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li *ngIf="group.primary_group == 'N'"><a href="#">Passer en groupe primaire</a></li>
-                            <li><a href="#">Enregistrer les modifications</a></li>
+                        <button type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu userAdministrationClickable">
+                            <li><a (click)="updateGroup(group)">{{user.lang.saveModification}}</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Supprimer</a></li>
+                            <li><a (click)="deleteGroup(group)">Supprimer</a></li>
                         </ul>
                     </div>
-                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{group.role}}">
+                    <input type="text" class="form-control" aria-describedby="group_desc" placeholder="rôle" [(ngModel)]="group.role">
                 </div>
+            </div>
+            <div *ngIf="user.groups.length == 0" class="col-sm-12 form-group">
+                L'utilisateur n'appartient à aucun groupe.
             </div>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myEntities}} <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité" ></i></h2>
+            <h2>Entités <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité"></i></h2>
             <div *ngFor="let entity of user.entities" class="col-sm-12 form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button *ngIf="entity.primary_entity == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{entity.entity_label}} <span class="caret"></span></button>
-                        <button *ngIf="entity.primary_entity == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{entity.entity_label}} <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li *ngIf="entity.primary_entity == 'N'"><a href="#">Passer en entité primaire</a></li>
-                            <li><a href="#">Enregistrer les modifications</a></li>
+                        <button *ngIf="entity.primary_entity == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [title]="entity.entity_label">{{entity.entity_id}} <span class="caret"></span></button>
+                        <button *ngIf="entity.primary_entity == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [title]="entity.entity_label">{{entity.entity_id}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu userAdministrationClickable">
+                            <li *ngIf="entity.primary_entity == 'N'"><a (click)="updatePrimaryEntity(entity)">Passer en entité primaire</a></li>
+                            <li><a (click)="updateEntity(entity)">{{user.lang.saveModification}}</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Supprimer</a></li>
+                            <li><a (click)="deleteEntity(entity)">Supprimer</a></li>
                         </ul>
                     </div>
-                    <input type="text" class="form-control" id="basic-url" aria-describedby="group_desc" placeholder="rôle" value="{{entity.entity_role}}">
+                    <input type="text" class="form-control" aria-describedby="group_desc" placeholder="rôle" [(ngModel)]="entity.user_role">
                 </div>
+            </div>
+            <div *ngIf="user.entities.length == 0" class="col-sm-12 form-group">
+                L'utilisateur n'appartient à aucune entité.
             </div>
         </div>
     </div>

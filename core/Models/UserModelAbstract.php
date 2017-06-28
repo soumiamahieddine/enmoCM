@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use Entities\Models\EntityModel;
+
 require_once 'apps/maarch_entreprise/services/Table.php';
 
 class UserModelAbstract extends \Apps_Table_Service
@@ -62,7 +64,7 @@ class UserModelAbstract extends \Apps_Table_Service
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users, users_entities'],
             'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
-            'data'      => $aArgs['entities']
+            'data'      => [$aArgs['entities']]
         ]);
 
         return $aUsers;
@@ -143,7 +145,7 @@ class UserModelAbstract extends \Apps_Table_Service
         return $isUpdated;
     }
 
-    public static function reinitializePassword(array $aArgs = [])
+    public static function resetPassword(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
@@ -430,6 +432,25 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aGroup[0];
     }
 
+    public static function getPrimaryEntityById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $aEntity = static::select([
+            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'table'     => ['users_entities, entities'],
+            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?', 'users_entities.primary_entity = ?'],
+            'data'      => [$aArgs['userId'], 'Y']
+        ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
+
+        return $aEntity[0];
+    }
+
     public static function getGroupsById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
@@ -453,10 +474,11 @@ class UserModelAbstract extends \Apps_Table_Service
 
 
         $aEntities = static::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.primary_entity'],
+            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
             'table'     => ['users_entities, entities'],
             'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'data'      => [$aArgs['userId']],
+            'order_by'  => 'users_entities.primary_entity DESC'
         ]);
 
         return $aEntities;
@@ -515,6 +537,24 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function updateGroup(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkString($aArgs, ['userId', 'groupId', 'role']);
+
+
+        parent::update([
+            'table'     => 'usergroup_content',
+            'set'       => [
+                'role'      => $aArgs['role']
+            ],
+            'where'     => ['user_id = ?', 'group_id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['groupId']]
+        ]);
+
+        return true;
+    }
+
     public static function deleteGroup(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId', 'groupId']);
@@ -529,4 +569,111 @@ class UserModelAbstract extends \Apps_Table_Service
 
         return true;
     }
+
+    public static function addEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
+        static::checkString($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
+
+
+        parent::insertInto(
+            [
+                'user_id'           => $aArgs['userId'],
+                'entity_id'         => $aArgs['entityId'],
+                'user_role'         => $aArgs['role'],
+                'primary_entity'    => $aArgs['primaryEntity']
+            ],
+            'users_entities'
+        );
+
+        return true;
+    }
+
+    public static function updateEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId', 'role']);
+        static::checkString($aArgs, ['userId', 'entityId', 'role']);
+
+
+        parent::update([
+            'table'     => 'users_entities',
+            'set'       => [
+                'user_role'      => $aArgs['role']
+            ],
+            'where'     => ['user_id = ?', 'entity_id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['entityId']]
+        ]);
+
+        return true;
+    }
+
+    public static function updatePrimaryEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId']);
+        static::checkString($aArgs, ['userId', 'entityId']);
+
+
+        $entities = EntityModel::getByUserId(['userId' => $aArgs['userId']]);
+        foreach ($entities as $entity) {
+            if ($entity['primary_entity'] == 'Y') {
+                parent::update([
+                    'table'     => 'users_entities',
+                    'set'       => [
+                        'primary_entity'    => 'N'
+                    ],
+                    'where'     => ['user_id = ?', 'entity_id = ?'],
+                    'data'      => [$aArgs['userId'], $entity['entity_id']]
+                ]);
+            }
+        }
+
+        parent::update([
+            'table'     => 'users_entities',
+            'set'       => [
+                'primary_entity'    => 'Y'
+            ],
+            'where'     => ['user_id = ?', 'entity_id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['entityId']]
+        ]);
+
+        return true;
+    }
+
+    public static function reassignPrimaryEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+
+        $entities = EntityModel::getByUserId(['userId' => $aArgs['userId']]);
+
+        if (!empty($entities[0])) {
+            parent::update([
+                'table'     => 'users_entities',
+                'set'       => [
+                    'primary_entity'    => 'Y'
+                ],
+                'where'     => ['user_id = ?', 'entity_id = ?'],
+                'data'      => [$aArgs['userId'], $entities[0]['entity_id']]
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function deleteEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId']);
+        static::checkString($aArgs, ['userId', 'entityId']);
+
+
+        parent::deleteFrom([
+            'table'     => 'users_entities',
+            'where'     => ['entity_id = ?', 'user_id = ?'],
+            'data'      => [$aArgs['entityId'], $aArgs['userId']]
+        ]);
+
+        return true;
+    }
+
 }
