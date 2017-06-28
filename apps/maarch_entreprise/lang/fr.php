@@ -1842,8 +1842,8 @@ if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée d'
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 
 /***** Profile *****/
-if (!defined('_MANAGE_SIGNATURES'))
-    define('_MANAGE_SIGNATURES', 'Gérer mes signatures');
+if (!defined('_MANAGE_MY_SIGNATURES'))
+    define('_MANAGE_MY_SIGNATURES', 'Gérer mes signatures');
 if (!defined('_MY_GROUPS'))
     define('_MY_GROUPS', 'Mes Groupes');
 if (!defined('_PRIMARY_GROUP'))
@@ -1927,6 +1927,24 @@ if (!defined('_ADMIN_USER_MODIFICATION'))
     define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
 if (!defined('_ADDED_GROUP'))
     define('_ADDED_GROUP', 'Groupe ajouté');
+if (!defined('_UPDATED_GROUP'))
+    define('_UPDATED_GROUP', 'Groupe modifié');
+if (!defined('_DELETED_GROUP'))
+    define('_DELETED_GROUP', 'Groupe supprimé');
+if (!defined('_ADDED_ENTITY'))
+    define('_ADDED_ENTITY', 'Entité ajoutée');
+if (!defined('_UPDATED_ENTITY'))
+    define('_UPDATED_ENTITY', 'Entité modifiée');
+if (!defined('_DELETED_ENTITY'))
+    define('_DELETED_ENTITY', 'Entité supprimé');
+if (!defined('_MANAGE_SIGNATURES'))
+    define('_MANAGE_SIGNATURES', 'Gérer les signatures');
+if (!defined('_MANAGE_ABSENCES'))
+    define('_MANAGE_ABSENCES', 'Gérer les absences');
+if (!defined('_REINITIALIZE_PASSWORD'))
+    define('_REINITIALIZE_PASSWORD', 'Réinitialiser le mot de passe');
+if (!defined('_RESET_PASSWORD'))
+    define('_RESET_PASSWORD', 'Mot de passe réinitialisé');
 /***** User Administration *****/
 
 /**** admin update control ****/

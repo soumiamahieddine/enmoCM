@@ -33,7 +33,7 @@ var UserAdministrationComponent = (function () {
         this.loading = true;
         this.route.params.subscribe(function (params) {
             _this.userId = params['userId'];
-            _this.http.get(_this.coreUrl + 'rest/administration/user/' + _this.userId)
+            _this.http.get(_this.coreUrl + 'rest/administration/users/' + _this.userId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user = data;
@@ -43,9 +43,126 @@ var UserAdministrationComponent = (function () {
             });
         });
     };
+    UserAdministrationComponent.prototype.resetPassword = function () {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/password", {})
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        });
+    };
+    UserAdministrationComponent.prototype.updateGroup = function (group) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        });
+    };
+    UserAdministrationComponent.prototype.deleteGroup = function (group) {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de ce groupe ?');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.user['groups'] = data.groups;
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            });
+        }
+    };
+    UserAdministrationComponent.prototype.updateEntity = function (entity) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id, entity)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        });
+    };
+    UserAdministrationComponent.prototype.updatePrimaryEntity = function (entity) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id + "/primaryEntity", {})
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.user['entities'] = data.entities;
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        });
+    };
+    UserAdministrationComponent.prototype.deleteEntity = function (entity) {
+        var _this = this;
+        var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.user['entities'] = data.entities;
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            });
+        }
+    };
     UserAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.http.put(this.coreUrl + 'rest/user/' + this.userId, this.user)
+        this.http.put(this.coreUrl + 'rest/users/' + this.userId, this.user)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -71,7 +188,7 @@ var UserAdministrationComponent = (function () {
 UserAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["user-administrationView"],
-        styleUrls: ['css/user-administration.component.css', '../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute])
 ], UserAdministrationComponent);

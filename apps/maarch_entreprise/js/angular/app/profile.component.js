@@ -104,7 +104,7 @@ var ProfileComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/user/profile')
+        this.http.get(this.coreUrl + 'rest/users/profile')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
@@ -416,7 +416,7 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.http.put(this.coreUrl + 'rest/user/profile', this.user)
+        this.http.put(this.coreUrl + 'rest/users/profile', this.user)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {

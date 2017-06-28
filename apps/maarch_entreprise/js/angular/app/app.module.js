@@ -32,7 +32,7 @@ AppModule = __decorate([
             router_1.RouterModule.forRoot([
                 { path: 'administration', component: administration_component_1.AdministrationComponent },
                 { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
-                { path: 'administration/user/:userId', component: user_administration_component_1.UserAdministrationComponent },
+                { path: 'administration/users/:userId', component: user_administration_component_1.UserAdministrationComponent },
                 { path: 'administration/status/create', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/update/:id', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/statusList', component: status_list_administration_component_1.StatusListAdministrationComponent },
