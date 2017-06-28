@@ -143,7 +143,7 @@ $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . '
 $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
-$app->post('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
+$app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');

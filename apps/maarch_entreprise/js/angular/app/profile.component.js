@@ -114,9 +114,11 @@ var ProfileComponent = (function () {
             setTimeout(function () {
                 $j("#absenceUser").typeahead({
                     order: "asc",
+                    display: "formattedUser",
+                    templateValue: "{{user_id}}",
                     source: {
                         ajax: {
-                            type: "POST",
+                            type: "GET",
                             dataType: "json",
                             url: _this.coreUrl + "rest/users/autocompleter",
                         }
