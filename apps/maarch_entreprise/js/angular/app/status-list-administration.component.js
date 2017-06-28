@@ -76,7 +76,7 @@ var StatusListAdministrationComponent = (function () {
         var _this = this;
         var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/administration/status/' + statusId)
+            this.http.delete(this.coreUrl + 'rest/status/' + statusId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -108,7 +108,7 @@ var StatusListAdministrationComponent = (function () {
 }());
 StatusListAdministrationComponent = __decorate([
     core_1.Component({
-        templateUrl: angularGlobals['status-list-administrationView'],
+        templateUrl: angularGlobals['statuses-administrationView'],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])

@@ -8,7 +8,7 @@ declare function $j(selector: any) : any;
 declare var angularGlobals : any;
 var statusDataTable : any;
 @Component({
-    templateUrl : angularGlobals['status-list-administrationView'],
+    templateUrl : angularGlobals['statuses-administrationView'],
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
 export class StatusListAdministrationComponent implements OnInit {
@@ -77,7 +77,7 @@ export class StatusListAdministrationComponent implements OnInit {
     deleteStatus(statusId : string){
         var resp = confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
-            this.http.delete(this.coreUrl + 'rest/administration/status/'+statusId)
+            this.http.delete(this.coreUrl + 'rest/status/'+statusId)
                 .map(res => res.json())
                 .subscribe((data) => {
                     if(data.errors){

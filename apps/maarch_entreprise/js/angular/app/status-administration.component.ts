@@ -43,7 +43,7 @@ export class StatusAdministrationComponent implements OnInit {
                 this.statusId = params['id'];
                 this.getStatusInfos(this.statusId);                
             } else if (this.route.toString().includes('create')){
-                this.http.get(this.coreUrl + 'rest/administration/status/lang')
+                this.http.get(this.coreUrl + 'rest/status/lang')
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.lang      = data;
@@ -60,11 +60,11 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration Statut</a>");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration des statuts</a>");
     }
 
     getStatusInfos(statusId : string){
-        this.http.get(this.coreUrl + 'rest/administration/status/'+statusId)
+        this.http.get(this.coreUrl + 'rest/status/'+statusId)
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors){
@@ -76,7 +76,7 @@ export class StatusAdministrationComponent implements OnInit {
                 } else {
                     this.status    = data['status'][0];
                     this.lang      = data['lang'];
-                    this.pageTitle = " Statut : " + this.status.id;
+                    this.pageTitle = this.lang.modify_status + ' : ' + this.status.id;
                 }
             });                
     }
@@ -84,7 +84,7 @@ export class StatusAdministrationComponent implements OnInit {
     submitStatus() {
 
         if(this.mode == 'create'){
-            this.http.post(this.coreUrl + 'rest/administration/status', this.status)
+            this.http.post(this.coreUrl + 'rest/status', this.status)
             .map(res => res.json())
             .subscribe((data) => {
                 if(data.errors) {
@@ -105,7 +105,7 @@ export class StatusAdministrationComponent implements OnInit {
             });
         } else if(this.mode == "update"){
 
-            this.http.put(this.coreUrl+'rest/administration/status/'+this.statusId, this.status)
+            this.http.put(this.coreUrl+'rest/status/'+this.statusId, this.status)
             .map(res => res.json())             
             .subscribe((data) => {
                 if(data.errors){

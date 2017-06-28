@@ -169,6 +169,7 @@ class LangModelAbstract
             'is_folder_status' => _IS_FOLDER_STATUS,
             'yes'              => _YES,
             'no'               => _NO,
+            'modify_status'    => _MODIFY_STATUS,
         ];
         return $aLang;
     }

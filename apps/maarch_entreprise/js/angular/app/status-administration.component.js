@@ -42,7 +42,7 @@ var StatusAdministrationComponent = (function () {
                 _this.getStatusInfos(_this.statusId);
             }
             else if (_this.route.toString().includes('create')) {
-                _this.http.get(_this.coreUrl + 'rest/administration/status/lang')
+                _this.http.get(_this.coreUrl + 'rest/status/lang')
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data;
@@ -56,11 +56,11 @@ var StatusAdministrationComponent = (function () {
         $j('#inner_content').remove();
     };
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration Statut</a>");
+        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration des statuts</a>");
     };
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusId) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/administration/status/' + statusId)
+        this.http.get(this.coreUrl + 'rest/status/' + statusId)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -73,14 +73,14 @@ var StatusAdministrationComponent = (function () {
             else {
                 _this.status = data['status'][0];
                 _this.lang = data['lang'];
-                _this.pageTitle = " Statut : " + _this.status.id;
+                _this.pageTitle = _this.lang.modify_status + ' : ' + _this.status.id;
             }
         });
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
         if (this.mode == 'create') {
-            this.http.post(this.coreUrl + 'rest/administration/status', this.status)
+            this.http.post(this.coreUrl + 'rest/status', this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
@@ -101,7 +101,7 @@ var StatusAdministrationComponent = (function () {
             });
         }
         else if (this.mode == "update") {
-            this.http.put(this.coreUrl + 'rest/administration/status/' + this.statusId, this.status)
+            this.http.put(this.coreUrl + 'rest/status/' + this.statusId, this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {

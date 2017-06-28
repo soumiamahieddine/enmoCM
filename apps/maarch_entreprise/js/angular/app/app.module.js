@@ -35,7 +35,7 @@ AppModule = __decorate([
                 { path: 'administration/users/:userId', component: user_administration_component_1.UserAdministrationComponent },
                 { path: 'administration/status/create', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/update/:id', component: status_administration_component_1.StatusAdministrationComponent },
-                { path: 'administration/statusList', component: status_list_administration_component_1.StatusListAdministrationComponent },
+                { path: 'administration/status', component: status_list_administration_component_1.StatusListAdministrationComponent },
                 { path: 'profile', component: profile_component_1.ProfileComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },

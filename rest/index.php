@@ -106,11 +106,11 @@ $app->get('/administration/users/{userId}', \Core\Controllers\UserController::cl
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
-$app->get('/administration/status/lang', \Core\Controllers\StatusController::class . ':getLang');
-$app->get('/administration/status/{id}', \Core\Controllers\StatusController::class . ':getById');
-$app->post('/administration/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/administration/status', \Core\Controllers\StatusController::class . ':update');
-$app->delete('/administration/status/{id}', \Core\Controllers\StatusController::class . ':delete');
+$app->get('/status/lang', \Core\Controllers\StatusController::class . ':getLang');
+$app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
+$app->post('/status', \Core\Controllers\StatusController::class . ':create');
+$app->put('/status', \Core\Controllers\StatusController::class . ':update');
+$app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
 //docserver
 $app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList');
