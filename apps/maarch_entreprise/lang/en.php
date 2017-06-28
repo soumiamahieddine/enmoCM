@@ -1906,6 +1906,8 @@ if (!defined('_DELETED_EMAIL_SIGNATURE'))
 
 if (!defined('_UNDEFINED_USER'))
     define('_UNDEFINED_USER', 'Undefined user');
+if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
+    define('_CHOOSE_BASKET_TO_REDIRECT', 'Choose a basket');
 if (!defined('_ACTIVATE_ABSENCE'))
     define('_ACTIVATE_ABSENCE', 'Activate my absence');
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))

@@ -1916,6 +1916,8 @@ if (!defined('_DELETED_EMAIL_SIGNATURE'))
 
 if (!defined('_UNDEFINED_USER'))
     define('_UNDEFINED_USER', 'Utilisateur non répertorié');
+if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
+    define('_CHOOSE_BASKET_TO_REDIRECT', 'Choisissez une bannette');
 if (!defined('_ACTIVATE_ABSENCE'))
     define('_ACTIVATE_ABSENCE', 'Activer mon absence');
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))

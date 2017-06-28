@@ -10,7 +10,7 @@
 /**
 * @brief purge letter
 * @author dev@maarch.org
-* @ingroup export
+* @ingroup export seda
 */
 
 /**
@@ -50,7 +50,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $values_str .= $_SESSION['stockCheckbox'][$i] . ', ';
         }
     }
-    $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export";
+    $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export_seda";
 
     $values_str = preg_replace('/, $/', '', $values_str);
     $frm_str ='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.$labelAction.' ?</b></center><br/>';

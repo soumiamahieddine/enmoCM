@@ -192,12 +192,10 @@ class UserController
             if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
                 return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
             }
-            $newUser = strrchr($value['newUser'], '(');
-            $newUser = str_replace(['(', ')'], '', $newUser);
-            if (!empty($newUser)) {
-                $check = UserModel::getById(['userId' => $newUser, 'select' => ['1']]);
-            }
-            if (empty($newUser) || empty($check)) {
+
+            $check = UserModel::getById(['userId' => $value['newUser'], 'select' => ['1']]);
+
+            if (empty($check)) {
                 return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
             }
         }
@@ -399,16 +397,15 @@ class UserController
     {
         $users = UserModel::get([
             'select'    => ['user_id', 'firstname', 'lastname'],
-            'where'     => ['enabled = ?', 'user_id != ?'],
-            'data'      => ['Y', 'superadmin']
+            'where'     => ['enabled = ?', 'status != ?', 'user_id != ?'],
+            'data'      => ['Y', 'DEL', 'superadmin']
         ]);
 
-        $formattedUsers = [];
-        foreach ($users as $value) {
-            $formattedUsers[] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
+        foreach ($users as $key => $value) {
+            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
         }
 
-        return $response->withJson($formattedUsers);
+        return $response->withJson($users);
     }
 
     public function getUsersForAdministration(RequestInterface $request, ResponseInterface $response)
@@ -436,24 +433,9 @@ class UserController
 
     public function getUserForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-        if ($_SESSION['user']['UserId'] != 'superadmin') {
-            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
-            $users = UserModel::getByEntities([
-                'select'    => ['users.user_id'],
-                'entities'  => $entities
-            ]);
-            $allowed = false;
-            foreach ($users as $value) {
-                if ($value['user_id'] == $aArgs['userId']) {
-                    $allowed = true;
-                }
-            }
-            if (!$allowed) {
-                return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
-            }
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
         $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint']]);
         $user['signatures'] = UserModel::getSignaturesById(['userId' => $aArgs['userId']]);

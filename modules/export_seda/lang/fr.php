@@ -1,10 +1,10 @@
 <?php
 
-if (!defined("_EXPORT_COMMENT"))
-    define("_EXPORT_COMMENT", "Export");
+if (!defined("_EXPORTSEDA_COMMENT"))
+    define("_EXPORT_SEDA_COMMENT", "Export");
 
-if (!defined("_EXPORT"))
-    define("_EXPORT","Transferer vos courriers");
+if (!defined("_EXPORT_SEDA"))
+    define("_EXPORT_SEDA","Transferer vos courriers");
 if (!defined("_CHECK_ACKNOWLEDGEMENT"))
     define("_CHECK_ACKNOWLEDGEMENT","Vérification de l'accusé de reception");
 if (!defined("_CHECK_REPLY"))
@@ -15,8 +15,8 @@ if (!defined("_RESET_LETTER"))
     define("_RESET_LETTER","Remise à zéro du circuit de traitement");
 
 
-if (!defined("_EXPORT_VIEW"))
-    define("_EXPORT_VIEW", "Voir le bordereau");
+if (!defined("_EXPORT_SEDA_VIEW"))
+    define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
 
 if (!defined("_INFORMATION_MESSAGE"))
     define("_INFORMATION_MESSAGE", "Information bordereau");

@@ -31,8 +31,6 @@
             <ul class="list-group" >
                 <li class="list-group-item" *ngFor="let group of user.groups">
                     <i class="fa fa-users"></i> {{group.group_desc}}
-                    <span *ngIf="group.primary_group == 'Y'" class="label label-primary">{{user.lang.primaryGroup}}</span>
-                    <span *ngIf="group.primary_group != 'Y'" class="label label-default">{{user.lang.secondaryGroup}}</span>
                 </li>
             </ul>
         </div>
@@ -151,7 +149,7 @@
                         <form class="navbar-form navbar-left">
                             <div class="form-group">
                                 <select id="selectBasketAbsenceUser" class="form-control">
-                                    <option>Bannette(s) à rediriger</option>
+                                    <option>{{user.lang.basketToRedirect}}</option>
                                     <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
                                         {{basket.basket_name}}
                                         <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>

@@ -327,8 +327,8 @@ class RequestSeda
 			$queryParams[] = $messageObject->replyCode->value; //ReplyCode
 			$queryParams[] = 0; // size
 			$queryParams[] = json_encode($messageObject);//$messageObject; // Data
-			$queryParams[] = "Y"; // active
-			$queryParams[] = "N"; // archived
+			$queryParams[] = 1; // active
+			$queryParams[] = 0; // archived
 
 			$res = $this->db->query($query,$queryParams);
 
