@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <CONFIG>
-        <name>export</name>
-        <comment>_EXPORT_COMMENT</comment>
+        <name>export_seda</name>
+        <comment>_EXPORT_SEDA_COMMENT</comment>
         <file_prefix>seda</file_prefix>
         <loaded>true</loaded>
         <sae>MaarchRM</sae>

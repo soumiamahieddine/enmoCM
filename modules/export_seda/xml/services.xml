@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <root>
     <SERVICE>
-       <id>export_view</id>
-       <name>_EXPORT_VIEW</name>
-       <comment>_EXPORT_DESC</comment>
-       <servicepage>export_view.php</servicepage>
+       <id>export_seda_view</id>
+       <name>_EXPORT_SEDA_VIEW</name>
+       <comment>_EXPORT_SEDA_DESC</comment>
+       <servicepage>export_seda_view.php</servicepage>
        <servicetype>use</servicetype>
        <system_service>false</system_service>
        <enabled>true</enabled>

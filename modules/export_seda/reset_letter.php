@@ -8,9 +8,9 @@
  */
 
 /**
- * @brief Acknowledgement letter
+ * @brief reset letter
  * @author dev@maarch.org
- * @ingroup export
+ * @ingroup export seda
  */
 
 /**
@@ -50,7 +50,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $values_str .= $_SESSION['stockCheckbox'][$i] . ', ';
         }
     }
-    $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export";
+    $path_to_script = $_SESSION['config']['businessappurl']."index.php?display=true&module=export_seda";
 
     $values_str = preg_replace('/, $/', '', $values_str);
     $frm_str ='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.$labelAction.' ?</b></center><br/>';
@@ -61,7 +61,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='</form>';
     $frm_str .='</div>';
     $frm_str .='<div align="center">';
-    $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="actionValidation(\''.$path_to_script.'&page=Ajax_validation&type=acknowledgement&reference='.$values_str.'\');" />';
+    $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="actionValidation(\''.$path_to_script.'&page=Ajax_validation&type=reset&reference='.$values_str.'\');" />';
     $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();actions_status.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
 
