@@ -94,7 +94,7 @@
             </form>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>Groupes <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
+            <h2>Groupes <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addGroupModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
             <div *ngFor="let group of user.groups" class="col-sm-12 form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
@@ -113,7 +113,7 @@
             </div>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>Entités <i class="fa fa-plus pull-right" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité"></i></h2>
+            <h2>Entités <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addEntityModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité"></i></h2>
             <div *ngFor="let entity of user.entities" class="col-sm-12 form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
@@ -132,6 +132,68 @@
             <div *ngIf="user.entities.length == 0" class="col-sm-12 form-group">
                 L'utilisateur n'appartient à aucune entité.
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD GROUP -->
+<div class="modal fade" id="addGroupModal" tabindex="-1" role="dialog" aria-labelledby="addGroupModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addGroupModalLabel">Ajouter un groupe</h4>
+            </div>
+            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select class="form-control" placeholder="Choisissez un groupe">
+                                    <option>test</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" >Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ADD ENTITY -->
+<div class="modal fade" id="addEntityModal" tabindex="-1" role="dialog" aria-labelledby="addEntityModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addEntityModalLabel">Ajouter une entité</h4>
+            </div>
+            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select class="form-control" placeholder="Choisissez une entité">
+                                    <option>test</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" >Valider</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
