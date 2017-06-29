@@ -6,10 +6,10 @@
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{lang.admin}} {{lang.users}} : {{users.length}} {{lang.users}}</h1>
-    <nav class="navbar navbar-default" style="font-size:17px !important;">
+    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="index.php" style="cursor: pointer">
+                <a class="navbar-brand" href="index.php#/administration" style="cursor: pointer">
                     <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
                 </a>
             </div>

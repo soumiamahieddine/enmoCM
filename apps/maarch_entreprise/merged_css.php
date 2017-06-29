@@ -56,5 +56,8 @@ readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
 readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 
+//Custom CSS for V2
+readfile('apps/maarch_entreprise/css/engine.css');
+
 ob_end_flush();
 
