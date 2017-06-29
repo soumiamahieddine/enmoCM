@@ -1919,8 +1919,8 @@ if (!defined('_UNDEFINED_USER'))
     define('_UNDEFINED_USER', 'Utilisateur non répertorié');
 if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
     define('_CHOOSE_BASKET_TO_REDIRECT', 'Choisissez une bannette');
-if (!defined('_ACTIVATE_ABSENCE'))
-    define('_ACTIVATE_ABSENCE', 'Activer mon absence');
+if (!defined('_ACTIVATE_MY_ABSENCE'))
+    define('_ACTIVATE_MY_ABSENCE', 'Activer mon absence');
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
@@ -1948,6 +1948,10 @@ if (!defined('_REINITIALIZE_PASSWORD'))
     define('_REINITIALIZE_PASSWORD', 'Réinitialiser le mot de passe');
 if (!defined('_RESET_PASSWORD'))
     define('_RESET_PASSWORD', 'Mot de passe réinitialisé');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activer l\'absence');
+if (!defined('_ABSENCE_ACTIVATED'))
+    define('_ABSENCE_ACTIVATED', 'L\'utilisateur est maintenant considéré comme absent');
 /***** User Administration *****/
 
 /**** admin update control ****/

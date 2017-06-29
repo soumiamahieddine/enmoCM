@@ -102,58 +102,27 @@ class BasketsModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
-        $userGroup = UserModel::getPrimaryGroupById(['userId' => $aArgs['userId']]);
-        $aRawBaskets = static::select(
+        $userGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+        $groupIds = [];
+        foreach ($userGroups as $value) {
+            $groupIds[] = $value['group_id'];
+        }
+
+        $aBaskets = static::select(
             [
-                'select'    => ['DISTINCT basket_id'],
-                'table'     => ['groupbasket'],
-                'where'     => ['group_id = ?'],
-                'data'      => [$userGroup['group_id']]
+                'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
+                'table'     => ['groupbasket, baskets'],
+                'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
+                'data'      => [$groupIds],
+                'order_by'  => 'group_id, basket_order, basket_name'
             ]
         );
 
-        $basketIds = [];
-        foreach ($aRawBaskets as $value) {
-            $basketIds[] = $value['basket_id'];
-        }
-
-        $aBaskets = [];
-        if (!empty($basketIds)) {
-            $aBaskets = static::select(
-                [
-                    'select'    => ['basket_id', 'basket_name'],
-                    'table'     => ['baskets'],
-                    'where'     => ['basket_id in (?)'],
-                    'data'      => [$basketIds],
-                    'order_by'  => 'basket_order, basket_name'
-                ]
-            );
-        }
-
-        $aBaskets = array_merge($aBaskets, self::getSecondaryBasketsByUserId(['userId' => $aArgs['userId']]));
         foreach ($aBaskets as $key => $value) {
             $aBaskets[$key]['is_virtual'] = 'N';
             $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
         }
         $aBaskets = array_merge($aBaskets, self::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
-
-        return $aBaskets;
-    }
-
-    public static function getSecondaryBasketsByUserId(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
-
-        $aBaskets = static::select(
-            [
-                'select'    => ['ba.basket_id', 'ba.basket_name'],
-                'table'     => ['baskets ba, user_baskets_secondary ubs'],
-                'where'     => ['ubs.user_id = ?', 'ubs.basket_id = ba.basket_id'],
-                'data'      => [$aArgs['userId']],
-                'order_by'  => 'ba.basket_order, ba.basket_name'
-            ]
-        );
 
         return $aBaskets;
     }

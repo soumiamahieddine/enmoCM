@@ -161,13 +161,13 @@ $app->put('/users/{userId}/entities/{entityId}', \Core\Controllers\UserControlle
 $app->put('/users/{userId}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
 $app->put('/users/{userId}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->post('/users/{userId}/signature', \Core\Controllers\UserController::class . ':addSignature');
+$app->put('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':updateSignature');
+$app->delete('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':deleteSignature');
+$app->post('/users/{userId}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
 
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->post('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':setCurrentUserBasketsRedirectionForAbsence');
-$app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
-$app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
-$app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');

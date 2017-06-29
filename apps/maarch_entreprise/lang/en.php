@@ -1908,8 +1908,8 @@ if (!defined('_UNDEFINED_USER'))
     define('_UNDEFINED_USER', 'Undefined user');
 if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
     define('_CHOOSE_BASKET_TO_REDIRECT', 'Choose a basket');
-if (!defined('_ACTIVATE_ABSENCE'))
-    define('_ACTIVATE_ABSENCE', 'Activate my absence');
+if (!defined('_ACTIVATE_MY_ABSENCE'))
+    define('_ACTIVATE_MY_ABSENCE', 'Activer mon absence');
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
@@ -1937,6 +1937,10 @@ if (!defined('_REINITIALIZE_PASSWORD'))
     define('_REINITIALIZE_PASSWORD', 'Reset the user password');
 if (!defined('_RESET_PASSWORD'))
     define('_RESET_PASSWORD', 'Password reset');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activate absence');
+if (!defined('_ABSENCE_ACTIVATED'))
+    define('_ABSENCE_ACTIVATED', 'The user is now off');
 /***** User Administration *****/
 
 /**** admin update control ****/
