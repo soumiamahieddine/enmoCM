@@ -22,11 +22,11 @@ var StatusAdministrationComponent = (function () {
         this.mode = null;
         this.status = {
             id: null,
-            description: null,
+            label_status: null,
             can_be_searched: null,
             can_be_modified: null,
             is_folder_status: null,
-            img_related: null
+            img_filename: null
         };
         this.lang = "";
         this.resultInfo = "";

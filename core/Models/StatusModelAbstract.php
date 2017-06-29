@@ -22,7 +22,7 @@ class StatusModelAbstract extends \Apps_Table_Service
     public static function getList()
     {
         $aReturn = static::select([
-            'select'    => '*',
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
         ]);
 

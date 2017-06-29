@@ -73,7 +73,7 @@ class StatusController
                 ->withJson(['errors' => $errors]);
         }
 
-        $aArgs = $request->getQueryParams();
+        $aArgs = $request->getParams();
 
         $return = StatusModel::create($aArgs);
 
@@ -107,7 +107,7 @@ class StatusController
                 ->withJson(['errors' => $errors]);
         }
 
-        $aArgs = $request->getQueryParams();
+        $aArgs = $request->getParams();
 
         $return = StatusModel::update($aArgs);
 
