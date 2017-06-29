@@ -64,7 +64,11 @@ export class UsersAdministrationComponent implements OnInit {
                             },
                             "sInfoEmpty": this.lang.noRecord,
                             "sInfoFiltered": "(filtré de _MAX_ "+this.lang.record+")"
-                        }
+                        },
+                        "order": [[ 1, "asc" ]],
+                        "columnDefs": [
+                            { "orderable": false, "targets": [3,5] }
+                        ]
                     });
                     $j('.dataTables_filter input').attr("placeholder", this.lang.search);
                     $j('dataTables_filter input').addClass('form-control');

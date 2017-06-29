@@ -54,7 +54,11 @@ var UsersAdministrationComponent = (function () {
                         },
                         "sInfoEmpty": _this.lang.noRecord,
                         "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                    }
+                    },
+                    "order": [[1, "asc"]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [3, 5] }
+                    ]
                 });
                 $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
                 $j('dataTables_filter input').addClass('form-control');
