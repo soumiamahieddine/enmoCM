@@ -6,6 +6,7 @@ page_result_final = '';
 var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
+        'header',
         'administration',
         'users-administration',
         'user-administration',

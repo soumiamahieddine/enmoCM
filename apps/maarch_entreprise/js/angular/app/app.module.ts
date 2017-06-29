@@ -5,6 +5,7 @@ import { HttpModule }       from '@angular/http';
 import { FormsModule }      from '@angular/forms';
 
 import { AppComponent }                         from './app.component';
+import { HeaderComponent }                      from './header.component';
 import { AdministrationComponent }              from './administration.component';
 import { UsersAdministrationComponent }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
@@ -31,6 +32,7 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
       HttpModule
   ],
   declarations: [
+      HeaderComponent,
       AppComponent,
       AdministrationComponent,
       UsersAdministrationComponent,

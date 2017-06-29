@@ -1,0 +1,113 @@
+#headerV2{
+    height:74px;
+    border-radius:0px;
+    margin-left: -10px;
+    margin-top: 0px;
+    margin-right: -10px;
+    border: solid 2px #009DC5;
+    background: #009DC5;
+    color:white;
+}
+#headerV2 .breadcrumb{
+    padding:0px;
+    margin-bottom:0px;
+    background:none;
+    position:initial;
+}
+#ariane{
+    position:initial;
+}
+#headerV2 .divider{
+    background-color: #009DC5 !important;
+}
+#headerPos{
+    margin-top: 3px;
+}
+#menuList{
+    font-size:20px;
+    height: 40px;
+}
+#menuList .dropdown-toggle{
+    padding-bottom: 8px;
+    color:white;
+    font-weight:bold;
+}
+#menuListContent{
+    background-color: #CEE9F1;
+    border: solid 2px #009DC5;
+    box-shadow: none;
+    width: 247px;
+    padding-bottom: 0px;
+}
+
+#menuListContent a{
+    color: #0094D0;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+}
+
+#headerPos .navbar-text{
+    position: absolute;
+    margin: 0px;
+    padding: 15px;
+    padding-top: 5px;
+    background: #f2f2f2;
+    width: 80%;
+    height: 44px;
+    top: 26px;
+    border-top-left-radius: 3px;
+    left: 262px;
+    color: #009dc5;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+#headerLogoPos{
+    background-color:#f2f2f2;
+    margin-right:-30px;
+    margin-top:-34px;
+}
+#headerLogo div a{
+    float: right;
+    right: 0px;
+    position: absolute;
+    margin: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    height: 76px;
+    width: 236px;
+    background: url(static.php?filename=default_nav_logo_maarch.gif) #f2f2f2;
+    background-size: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#menuListContentInfoUser{
+    background-color: #1B91BA;
+    height: 15px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 0px;
+    border-top: 2px solid #FFFFFF;
+    position: relative;
+    bottom: 0;
+}
+
+#menuListContentInfoUser span{
+    float:left;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+#menuListContentInfoUser a{
+    float:right;
+    font-weight: bold;
+    font-size: 0.8em;
+    clear: none;
+    color: white;
+    padding: 0px;
+}
+#menuListContentInfoUser a:hover,#menuListContentInfoUser a:focus{
+    background-color: initial;
+}

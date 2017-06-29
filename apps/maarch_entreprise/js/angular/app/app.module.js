@@ -12,6 +12,7 @@ var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
+var header_component_1 = require("./header.component");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
@@ -43,6 +44,7 @@ AppModule = __decorate([
             http_1.HttpModule
         ],
         declarations: [
+            header_component_1.HeaderComponent,
             app_component_1.AppComponent,
             administration_component_1.AdministrationComponent,
             users_administration_component_1.UsersAdministrationComponent,
