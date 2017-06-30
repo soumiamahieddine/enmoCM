@@ -61,7 +61,7 @@ class StatusController
         return $response->withJson($datas);
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function create(RequestInterface $request, ResponseInterface $response)
     {
         $errors = [];
 
@@ -95,7 +95,7 @@ class StatusController
         return $response->withJson($datas);
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(RequestInterface $request, ResponseInterface $response)
     {
         $errors = [];
 
