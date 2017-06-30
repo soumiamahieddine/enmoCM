@@ -11,6 +11,7 @@ import { UsersAdministrationComponent }         from './users-administration.com
 import { UserAdministrationComponent }          from './user-administration.component';
 import { StatusListAdministrationComponent }    from './status-list-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
+import { ActionsAdministrationComponent }       from './actions-administration.component';
 import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
@@ -23,8 +24,6 @@ import { ReportsComponent } from './reports.component';
 
 
 import { ActionComponent } from './action.component';
-import {ActionsComponent} from "./actions.component";
-
 
 @NgModule({
   imports:      [
@@ -47,7 +46,7 @@ import {ActionsComponent} from "./actions.component";
           { path: 'administration/priority/update/:id', component : PriorityComponent },
           { path: 'administration/priority/create', component : PriorityComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
-          { path: 'administration/actions', component: ActionsComponent },
+          { path: 'administration/actions', component: ActionsAdministrationComponent },
           { path: 'administration/actions/create', component: ActionComponent },
           { path: 'administration/actions/:id', component: ActionComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
@@ -58,7 +57,7 @@ import {ActionsComponent} from "./actions.component";
       HeaderComponent,
       AppComponent,
       ActionComponent,
-      ActionsComponent,
+      ActionsAdministrationComponent,
       AdministrationComponent,
       ReportsComponent,
       UsersAdministrationComponent,

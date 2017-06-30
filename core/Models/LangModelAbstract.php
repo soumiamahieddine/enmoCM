@@ -191,7 +191,7 @@ class LangModelAbstract
     }
 
 
-    public static function getActionsLang()
+    public static function getActionsForAdministrationLang()
     {
         $aLang = [
             'id'                                => _ID,
@@ -199,8 +199,6 @@ class LangModelAbstract
             'is_folder_action'                  => _IS_FOLDER_ACTION,
             'is_system'                         => _IS_SYSTEM,
             'new_action'                        => _NEW_ACTION,
-            'next'                              => _NEXT,
-            'previous'                          => _PREVIOUS,
             'recordsPerPage'                    =>  _RECORDS_PER_PAGE,
             'display'                           =>  _DISPLAY,
             'noRecords'                         =>  _NO_RECORDS,
@@ -230,7 +228,16 @@ class LangModelAbstract
             'action_added'                      =>  _ACTION_ADDED,
             'validate'                          =>  _VALIDATE,
             'cancel'                            =>  _CANCEL,
-            'search'                            =>  _SEARCH
+            'noResult'                          => _NO_RESULTS,
+            'noRecord'                          => _NO_RECORD,
+            'previous'                          => _PREVIOUS_PAGE,
+            'next'                              => _NEXT_PAGE,
+            'record'                            => _RECORD,
+            'search'                            => _SEARCH,
+            'actions'                           => _ACTIONS,
+            'admin'                             => _ADMIN,
+            'deleteMsg'                         => _REALLY_DELETE
+            
 
         ];
         return $aLang;

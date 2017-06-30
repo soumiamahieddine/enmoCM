@@ -26,7 +26,7 @@ class ActionsController
 {
     public function getForAdministration(RequestInterface $request, ResponseInterface $response){
         
-        $obj['lang'] = LangModel::getActionsLang();
+        $obj['lang'] = LangModel::getActionsForAdministrationLang();
         $obj ['actions']= ActionsModel::getList();
        
         return $response->withJson($obj);
@@ -51,7 +51,7 @@ class ActionsController
         array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _CHOOSE_STATUS]);
         $obj['tab_action_page']=ActionsModel::getAction_pages();
         $obj['keywords']=ActionsModel::getKeywords();
-        $obj['lang'] = LangModel::getActionsLang();
+        $obj['lang'] = LangModel::getActionsForAdministrationLang();
   
         return $response->withJson($obj);
     }
@@ -215,7 +215,7 @@ class ActionsController
         array_unshift($obj['statuts'], ['id'=>'_NOSTATUS_','label_status'=> _CHOOSE_STATUS]);
         $obj['tab_action_page']=ActionsModel::getAction_pages();
         $obj['keywords']=ActionsModel::getKeywords();
-        $obj['lang'] = LangModel::getActionsLang();
+        $obj['lang'] = LangModel::getActionsForAdministrationLang();
         
         return $response->withJson($obj);
 

@@ -17,6 +17,7 @@ var users_administration_component_1 = require("./users-administration.component
 var user_administration_component_1 = require("./user-administration.component");
 var status_list_administration_component_1 = require("./status-list-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
+var actions_administration_component_1 = require("./actions-administration.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
 var parameters_component_1 = require("./parameters.component");
@@ -26,7 +27,6 @@ var administration_component_1 = require("./administration.component");
 var signature_book_component_1 = require("./signature-book.component");
 var reports_component_1 = require("./reports.component");
 var action_component_1 = require("./action.component");
-var actions_component_1 = require("./actions.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -54,7 +54,7 @@ AppModule = __decorate([
                 { path: 'administration/priority/update/:id', component: priority_component_1.PriorityComponent },
                 { path: 'administration/priority/create', component: priority_component_1.PriorityComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
-                { path: 'administration/actions', component: actions_component_1.ActionsComponent },
+                { path: 'administration/actions', component: actions_administration_component_1.ActionsAdministrationComponent },
                 { path: 'administration/actions/create', component: action_component_1.ActionComponent },
                 { path: 'administration/actions/:id', component: action_component_1.ActionComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
@@ -65,7 +65,7 @@ AppModule = __decorate([
             header_component_1.HeaderComponent,
             app_component_1.AppComponent,
             action_component_1.ActionComponent,
-            actions_component_1.ActionsComponent,
+            actions_administration_component_1.ActionsAdministrationComponent,
             administration_component_1.AdministrationComponent,
             reports_component_1.ReportsComponent,
             users_administration_component_1.UsersAdministrationComponent,
