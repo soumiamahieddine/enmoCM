@@ -18,6 +18,9 @@
     box-shadow: 0px 0px 5px 0px #656565;
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
 }
+form .form-group{
+    margin-bottom: 15px;  
+}
 
 /* toolbox in admin */
 #toolBox{
@@ -124,4 +127,33 @@ a.next{
 }
 .dataTables_length{
     float:none !important;
+}
+
+.tooltipster-sidetip.tooltipster-maarch .tooltipster-box {
+	background: white;
+	border: solid 2px #009DC5;
+	border-radius: 3px;
+	box-shadow: 5px 5px 2px 0 rgba(0,0,0,0.4);
+    width: 300px;
+}
+
+.tooltipster-sidetip.tooltipster-maarch .tooltipster-content {
+	color: #666;
+	padding: 8px;
+}
+
+.help{
+    background: none !important;
+    border: none !important;
+}
+.help:active,.help:hover{
+    background: none !important;
+    border: none !important;
+}
+
+.help i{
+    font-size: 10px;
+    position: relative;
+    top: -6px;
+    right: -6px;
 }

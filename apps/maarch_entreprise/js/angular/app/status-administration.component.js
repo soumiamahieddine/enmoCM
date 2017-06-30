@@ -29,12 +29,15 @@ var StatusAdministrationComponent = (function () {
             img_filename: null
         };
         this.lang = "";
+        this.loading = false;
         this.resultInfo = "";
     }
     StatusAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
             if (_this.route.toString().includes('update')) {
                 _this.mode = 'update';
@@ -50,13 +53,20 @@ var StatusAdministrationComponent = (function () {
                     _this.pageTitle = _this.lang.newStatus;
                 });
             }
+            setTimeout(function () {
+                $j(".help").tooltipster({
+                    theme: 'tooltipster-maarch',
+                    interactive: true
+                });
+            }, 0);
         });
+        this.loading = false;
     };
     StatusAdministrationComponent.prototype.prepareStatus = function () {
         $j('#inner_content').remove();
     };
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration des statuts</a>");
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>Statuts</a> > Modification";
     };
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusId) {
         var _this = this;
@@ -72,8 +82,27 @@ var StatusAdministrationComponent = (function () {
             }
             else {
                 _this.status = data['status'][0];
+                if (_this.status.can_be_searched == 'Y') {
+                    _this.status.can_be_searched = true;
+                }
+                else {
+                    _this.status.can_be_searched = false;
+                }
+                if (_this.status.can_be_modified == 'Y') {
+                    _this.status.can_be_modified = true;
+                }
+                else {
+                    _this.status.can_be_modified = false;
+                }
+                if (_this.status.is_folder_status == 'Y') {
+                    _this.status.is_folder_status = true;
+                }
+                else {
+                    _this.status.is_folder_status = false;
+                }
                 _this.lang = data['lang'];
                 _this.pageTitle = _this.lang.modify_status + ' : ' + _this.status.id;
+                console.log(_this.status);
             }
         });
     };
@@ -127,7 +156,7 @@ var StatusAdministrationComponent = (function () {
 StatusAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals['status-administrationView'],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], StatusAdministrationComponent);
