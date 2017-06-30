@@ -144,25 +144,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addGroupModalLabel">Ajouter un groupe</h4>
             </div>
-            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <select class="form-control" placeholder="Choisissez un groupe">
-                                    <option>test</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
-                            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <select id="groupsSelect" class="form-control">
+                                <option>Choisissez un groupe</option>
+                                <option *ngFor="let group of user.allGroups" [disabled]="group.disabled">{{group.group_desc}}</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" >Valider</button>
-                </div>
-            </form>
+                        <div class="col-sm-6">
+                            <input id="groupRole" class="form-control" placeholder="Rôle" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="addGroup()" type="button" class="btn btn-default">{{user.lang.validate}}</button>
+            </div>
         </div>
     </div>
 </div>
@@ -175,25 +174,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addEntityModalLabel">Ajouter une entité</h4>
             </div>
-            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <select class="form-control" placeholder="Choisissez une entité">
-                                    <option>test</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
-                            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <select id="entitiesSelect" class="form-control">
+                                <option>Choisissez une entité</option>
+                                <option *ngFor="let entity of user.allEntities" [disabled]="entity.disabled">{{entity.entity_label}}</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" >Valider</button>
-                </div>
-            </form>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="entityRole" placeholder="Rôle" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="addEntity()" type="button" class="btn btn-default" >{{user.lang.validate}}</button>
+            </div>
         </div>
     </div>
 </div>

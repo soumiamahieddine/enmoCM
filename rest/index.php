@@ -153,10 +153,10 @@ $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurre
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');
 $app->delete('/users/{userId}', \Core\Controllers\UserController::class . ':delete');
-$app->post('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':addGroup');
+$app->post('/users/{userId}/groups', \Core\Controllers\UserController::class . ':addGroup');
 $app->put('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
 $app->delete('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
-$app->post('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':addEntity');
+$app->post('/users/{userId}/entities', \Core\Controllers\UserController::class . ':addEntity');
 $app->put('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
 $app->put('/users/{userId}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');

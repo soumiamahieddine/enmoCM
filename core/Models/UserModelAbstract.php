@@ -518,9 +518,25 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function hasGroup(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'groupId']);
+        static::checkString($aArgs, ['userId', 'groupId']);
+
+
+        $groups = self::getGroupsById(['userId' => $aArgs['userId']]);
+        foreach ($groups as $value) {
+            if ($value['group_id'] == $aArgs['groupId']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function addGroup(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'groupId']);
         static::checkString($aArgs, ['userId', 'groupId', 'role']);
 
 
@@ -539,7 +555,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function updateGroup(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'groupId']);
         static::checkString($aArgs, ['userId', 'groupId', 'role']);
 
 
@@ -570,9 +586,25 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function hasEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId']);
+        static::checkString($aArgs, ['userId', 'entityId']);
+
+
+        $entities = self::getEntitiesById(['userId' => $aArgs['userId']]);
+        foreach ($entities as $value) {
+            if ($value['entity_id'] == $aArgs['entityId']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function addEntity(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
+        static::checkRequired($aArgs, ['userId', 'entityId', 'primaryEntity']);
         static::checkString($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
 
 
@@ -591,7 +623,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function updateEntity(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'entityId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'entityId']);
         static::checkString($aArgs, ['userId', 'entityId', 'role']);
 
 

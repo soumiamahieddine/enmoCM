@@ -24,7 +24,7 @@ class GroupModelAbstract extends \Apps_Table_Service
         $aGroups = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['enabled'],
+            'where'     => ['enabled = ?'],
             'data'      => ['Y']
         ]);
 
@@ -49,4 +49,30 @@ class GroupModelAbstract extends \Apps_Table_Service
 
         return $aGroups[0];
     }
+
+    public static function getAvailableGroupsByUserId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $rawUserGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+
+        $userGroups = [];
+        foreach ($rawUserGroups as $value) {
+            $userGroups[] = $value['group_id'];
+        }
+
+        $allGroups = self::get(['select' => ['group_id', 'group_desc']]);
+
+        foreach ($allGroups as $key => $value) {
+            if (in_array($value['group_id'], $userGroups)) {
+                $allGroups[$key]['disabled'] = true;
+            } else {
+                $allGroups[$key]['disabled'] = false;
+            }
+        }
+
+        return $allGroups;
+    }
+
 }

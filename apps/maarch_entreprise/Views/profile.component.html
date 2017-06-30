@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group">
                         <div style="text-align:center;">
-                            <button type="button" (click)="updatePassword()" [disabled]="!passwordModel.currentPassword || !passwordModel.newPassword || !passwordModel.reNewPassword" class="btn btn-default">{{user.lang.changePsw}}</button>
+                            <button type="button" (click)="updatePassword()" [disabled]="!passwordModel.currentPassword || !passwordModel.newPassword || !passwordModel.reNewPassword || (passwordModel.newPassword != passwordModel.reNewPassword)" class="btn btn-default">{{user.lang.changePsw}}</button>
                         </div>
                     </div>
                     <hr style="background-color: grey; height: 1px">
