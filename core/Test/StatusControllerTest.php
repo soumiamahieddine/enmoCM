@@ -1,7 +1,5 @@
 <?php
 
-namespace MaarchTest;
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,75 +7,51 @@ namespace MaarchTest;
 *
 */
 
+namespace MaarchTest;
+
 require_once __DIR__.'/define.php';
 
 class StatusControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetList()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-                //'REQUEST_URI' => '/status',
-                //'QUERY_STRING'=>'foo=bar',
-            ]
-        );
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->getList($request, $response, []);
+        $response  = $status->getList($request, new \Slim\Http\Response());
 
         $this->assertNotNull((string)$response->getBody());
     }
 
     public function testGetById()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-            ]
-        );
-
-        $aArgs = [
-            'id'=> 'NEW'
-        ];
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->getById($request, $response, $aArgs);
-        $compare = '[[{"id":"NEW","label_status":"Nouveau",'
+        $response = $status->getById($request, new \Slim\Http\Response(), ['id' => 'NEW']);
+        $compare = '{"id":"NEW","label_status":"Nouveau",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":'
             . '"fm-letter-status-new","maarch_module":"apps",'
-            . '"can_be_searched":"Y","can_be_modified":"Y"}]]';
-
-        $this->assertSame((string)$response->getBody(), $compare);
+            . '"can_be_searched":"Y","can_be_modified":"Y"}';
+            
+        $this->assertSame(json_encode(json_decode((string)$response->getBody())->status[0]), $compare);
     }
 
     public function testCreate()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $query  = 'id=TEST&';
-        $query .= 'label_status=TEST';
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'POST',
-                'QUERY_STRING'=> $query,
-            ]
-        );
-        
         $aArgs = [
-            'id'=> 'NEW'
+            'id'           => 'TEST',
+            'label_status' => 'TEST'
         ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->create($request, $response, $aArgs);
+        $response = $status->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '[[{"id":"TEST","label_status":"TEST",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
@@ -89,25 +63,17 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $query  = 'id=TEST&';
-        $query .= 'label_status=TEST AFTER UP';
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'PUT',
-                'QUERY_STRING'=> $query,
-            ]
-        );
-        
         $aArgs = [
-            'id'=> 'NEW'
+            'id'           => 'TEST',
+            'label_status' => 'TEST AFTER UP'
         ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->update($request, $response, $aArgs);
+        $response = $status->update($fullRequest, new \Slim\Http\Response());
 
         $compare = '[[{"id":"TEST","label_status":"TEST AFTER UP",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
@@ -119,22 +85,13 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'DELETE',
-            ]
-        );
+        $response = $status->delete($request, new \Slim\Http\Response(), ['id'=> 'TEST']);
 
-        $aArgs = [
-            'id'=> 'TEST'
-        ];
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->delete($request, $response, $aArgs);
-        
         $this->assertSame((string)$response->getBody(), '[true]');
     }
 }
