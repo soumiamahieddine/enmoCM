@@ -140,6 +140,35 @@ var UserAdministrationComponent = (function () {
             });
         }
     };
+    UserAdministrationComponent.prototype.addGroup = function () {
+        var _this = this;
+        var index = $j("#groupsSelect option:selected").index();
+        if (index > 0) {
+            var group = {
+                "groupId": this.user.allGroups[index - 1].group_id,
+                "role": $j("#groupRole")[0].value
+            };
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/groups", group)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.user.groups = data.groups;
+                _this.user.allGroups = data.allGroups;
+                _this.resultInfo = data.success;
+                $j("#groupRole")[0].value = "";
+                $j('#addGroupModal').modal('hide');
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            });
+        }
+    };
     UserAdministrationComponent.prototype.updateGroup = function (group) {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
@@ -165,8 +194,38 @@ var UserAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                _this.user['groups'] = data.groups;
+                _this.user.groups = data.groups;
+                _this.user.allGroups = data.allGroups;
                 _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            });
+        }
+    };
+    UserAdministrationComponent.prototype.addEntity = function () {
+        var _this = this;
+        var index = $j("#entitiesSelect option:selected").index();
+        if (index > 0) {
+            var entity = {
+                "entityId": this.user.allEntities[index - 1].entity_id,
+                "role": $j("#entityRole")[0].value
+            };
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/entities", entity)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.user.entities = data.entities;
+                _this.user.allEntities = data.allEntities;
+                _this.resultInfo = data.success;
+                $j("#entityRole")[0].value = "";
+                $j('#addEntityModal').modal('hide');
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
                     $j("#resultInfo").slideUp(500);
@@ -224,7 +283,8 @@ var UserAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                _this.user['entities'] = data.entities;
+                _this.user.entities = data.entities;
+                _this.user.allEntities = data.allEntities;
                 _this.resultInfo = data.success;
                 $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                 $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
@@ -312,7 +372,7 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.addBasketRedirection = function () {
         var index = $j("#selectBasketAbsenceUser option:selected").index();
-        if (index > 0) {
+        if (index > 0 && $j("#absenceUser")[0].value != "") {
             this.userAbsenceModel.push({
                 "basketId": this.user.baskets[index - 1].basket_id,
                 "basketName": this.user.baskets[index - 1].basket_name,

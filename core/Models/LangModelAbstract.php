@@ -45,6 +45,7 @@ class LangModelAbstract
             'clickOn'               => _CLICK_ON,
             'toSignature'           => _TO_ADD_SIGNATURE,
             'toUpdateSignature'     => _TO_UPDATE_SIGNATURE,
+            'validate'              => _VALIDATE,
             'cancel'                => _CANCEL,
             'to'                    => _TO,
             'activateAbs'           => _ACTIVATE_ABSENCE,

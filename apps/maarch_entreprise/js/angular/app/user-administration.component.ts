@@ -157,6 +157,37 @@ export class UserAdministrationComponent implements OnInit {
         }
     }
 
+    addGroup() {
+        var index = $j("#groupsSelect option:selected").index();
+
+        if (index > 0) {
+            var group = {
+                "groupId"   : this.user.allGroups[index - 1].group_id,
+                "role"      : $j("#groupRole")[0].value
+            };
+
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/groups", group)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.user.groups = data.groups;
+                    this.user.allGroups = data.allGroups;
+                    this.resultInfo = data.success;
+                    $j("#groupRole")[0].value = "";
+                    $j('#addGroupModal').modal('hide');
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }, (err) => {
+                    this.resultInfo = JSON.parse(err._body).errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
+                });
+        }
+    }
+
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
             .map(res => res.json())
@@ -182,8 +213,40 @@ export class UserAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.user['groups'] = data.groups;
+                    this.user.groups = data.groups;
+                    this.user.allGroups = data.allGroups;
                     this.resultInfo = data.success;
+                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
+                }, (err) => {
+                    this.resultInfo = JSON.parse(err._body).errors;
+                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
+                        $j("#resultInfo").slideUp(500);
+                    });
+                });
+        }
+    }
+
+    addEntity() {
+        var index = $j("#entitiesSelect option:selected").index();
+
+        if (index > 0) {
+            var entity = {
+                "entityId"   : this.user.allEntities[index - 1].entity_id,
+                "role"      : $j("#entityRole")[0].value
+            };
+
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/entities", entity)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.user.entities = data.entities;
+                    this.user.allEntities = data.allEntities;
+                    this.resultInfo = data.success;
+                    $j("#entityRole")[0].value = "";
+                    $j('#addEntityModal').modal('hide');
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
                         $j("#resultInfo").slideUp(500);
@@ -243,7 +306,8 @@ export class UserAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.user['entities'] = data.entities;
+                    this.user.entities = data.entities;
+                    this.user.allEntities = data.allEntities;
                     this.resultInfo = data.success;
                     $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
@@ -335,7 +399,7 @@ export class UserAdministrationComponent implements OnInit {
     addBasketRedirection() {
         var index = $j("#selectBasketAbsenceUser option:selected").index();
 
-        if (index > 0) {
+        if (index > 0 && $j("#absenceUser")[0].value != "") {
             this.userAbsenceModel.push({
                 "basketId"      : this.user.baskets[index - 1].basket_id,
                 "basketName"    : this.user.baskets[index - 1].basket_name,
