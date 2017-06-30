@@ -64,6 +64,7 @@ AppModule = __decorate([
         declarations: [
             header_component_1.HeaderComponent,
             app_component_1.AppComponent,
+            action_component_1.ActionComponent,
             actions_component_1.ActionsComponent,
             administration_component_1.AdministrationComponent,
             reports_component_1.ReportsComponent,

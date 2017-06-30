@@ -29,15 +29,12 @@ var ActionComponent = (function () {
             category_id: [],
             coll_categories: [],
         };
-        this.user = {
-            lang: {}
-        };
         this.statuts = [];
         this.tabAction_page = {
             module: "",
             action: [],
         };
-        this.lang = [];
+        this.lang = {};
         this.keywords = [];
         this.leftCategories = [];
         this.rightCategories = [];

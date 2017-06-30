@@ -104,7 +104,8 @@ class LangModelAbstract
         return $aLang;
     }
 
-    public static function getParametersLang(){
+    public static function getParametersLang()
+    {
         $aLang = [
                 'parameter'             =>  _PARAMETER,
                 'identifier'            =>  _PARAMETER_IDENTIFIER,
@@ -172,7 +173,8 @@ class LangModelAbstract
 
         return $aLang;
     }
-    public static function getReportsLang(){
+    public static function getReportsLang()
+    {
         
         $aLang = [
             'folder'               => _FOLDER,
@@ -189,7 +191,8 @@ class LangModelAbstract
     }
 
 
-    public static function getActionsLang(){
+    public static function getActionsLang()
+    {
         $aLang = [
             'id'                                => _ID,
             'desc'                              => _DESC,

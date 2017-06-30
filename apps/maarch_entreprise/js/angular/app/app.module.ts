@@ -57,6 +57,7 @@ import {ActionsComponent} from "./actions.component";
   declarations: [
       HeaderComponent,
       AppComponent,
+      ActionComponent,
       ActionsComponent,
       AdministrationComponent,
       ReportsComponent,

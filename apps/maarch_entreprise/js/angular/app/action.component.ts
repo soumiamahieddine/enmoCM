@@ -15,32 +15,28 @@ declare var angularGlobals : any;
 })
 export class ActionComponent implements OnInit {
 
-    coreUrl: string;
-    resultInfo: string;
-    actions: any = {
-        id: "",
-        history: "",
-        id_status: "",
-        action_page: "",
-        keyword: "",
-        is_folder_action: "",
-        label_action: "",
-        category_id: [],
-        coll_categories: [],
-    };
-    user: any = {
-        lang: {}
-    };
-
-    statuts: any[] = [];
-    tabAction_page: any = {
-        module: "",
-        action: [],
-    };
-    lang  : any[] = [];
-    keywords:  any[] = [];
-    leftCategories:  any[] = [];
-    rightCategories:  any[] = [];
+    coreUrl                     : string;
+    resultInfo                  : string;
+    actions                     : any       = {
+                                                id: "",
+                                                history: "",
+                                                id_status: "",
+                                                action_page: "",
+                                                keyword: "",
+                                                is_folder_action: "",
+                                                label_action: "",
+                                                category_id: [],
+                                                coll_categories: [],
+                                                };
+    statuts                     : any[]     = [];
+    tabAction_page              : any       = {
+                                                module: "",
+                                                action: [],
+                                                };
+    lang                        : any       = {};
+    keywords                    : any[]     = [];
+    leftCategories              : any[]     = [];
+    rightCategories             : any[]     = [];
 
     constructor(public http: Http,private route: ActivatedRoute, private router: Router){
     }
