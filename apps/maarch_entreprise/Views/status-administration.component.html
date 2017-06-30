@@ -26,7 +26,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hashtag" title="{{lang.identifier}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input [(ngModel)]="status.id" required class="form-control" [disabled]="mode == 'update'" name="id" id="id" title="{{lang.identifier}}" type="text" required>
+                    <input [(ngModel)]="status.id" class="form-control" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.identifier}}" type="text" required>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{lang.description}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input class="form-control" name="label_status" id="label_status" [(ngModel)]="status.label_status" title="{{lang.description}}" type="text" required>
+                    <input class="form-control" name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.description}}" type="text" required>
                 </div>
             </div>
         </div>

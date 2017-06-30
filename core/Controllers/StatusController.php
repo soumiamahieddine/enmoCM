@@ -19,16 +19,19 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\StatusModel;
+use Core\Models\ServiceModel;
 
 class StatusController
 {
     public function getList(RequestInterface $request, ResponseInterface $response)
     {
-        $obj = StatusModel::getList();
-        
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $datas = [
-            'statusList' => $obj,
-            'lang'       =>  StatusModel::getStatusLang()
+            'statusList' => StatusModel::getList(),
+            'lang'       => StatusModel::getStatusLang()
         ];
         
         return $response->withJson($datas);
@@ -41,37 +44,33 @@ class StatusController
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+        if (!empty($aArgs['id'])) {
             $obj = StatusModel::getById([
-                'id' => $id
+                'id' => $aArgs['id']
             ]);
 
-            $datas = [
+            if (empty($obj)) {
+                return $response->withStatus(404)->withJson(['errors' => 'Id not found']);
+            }
+
+            return $response->withJson([
                 'status' => $obj,
-                'lang'       =>  StatusModel::getStatusLang()
-            ];
+                'lang'   =>  StatusModel::getStatusLang()
+            ]);
 
         } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+            return $response->withStatus(400)->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
         }
 
-        return $response->withJson($datas);
     }
 
     public function create(RequestInterface $request, ResponseInterface $response)
     {
-        $errors = [];
-
-        $errors = $this->control($request, 'create');
-
-        if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
+        $this->control($request, 'create');
 
         $aArgs = $request->getParams();
 
@@ -82,30 +81,20 @@ class StatusController
             $obj = StatusModel::getById([
                 'id' => $id
             ]);
+            return $response->withJson([$obj]);
+
         } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_CREATE]);
+            return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
         }
-
-        $datas = [
-            $obj,
-        ];
-
-        return $response->withJson($datas);
     }
 
     public function update(RequestInterface $request, ResponseInterface $response)
     {
-        $errors = [];
-
-        $errors = $this->control($request, 'update');
-
-        if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
+        $this->control($request, 'update');
 
         $aArgs = $request->getParams();
 
@@ -116,21 +105,22 @@ class StatusController
             $obj = StatusModel::getById([
                 'id' => $id
             ]);
+
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
-        $datas = [
-            $obj,
-        ];
-
-        return $response->withJson($datas);
+        return $response->withJson([$obj]);
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
             $obj = StatusModel::delete([
@@ -141,12 +131,8 @@ class StatusController
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
         }
-        
-        $datas = [
-            $obj,
-        ];
 
-        return $response->withJson($datas);
+        return $response->withJson([$obj]);
     }
 
     protected function control($request, $mode)
@@ -179,72 +165,60 @@ class StatusController
             }
         }
 
-        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))) {
+        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id')) ||
+            !Validator::length(null, 10)->validate($request->getParam('id'))) {
             array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('label_status'))) {
+        if (!Validator::notEmpty()->validate($request->getParam('label_status')) ||
+            !Validator::length(null, 50)->validate($request->getParam('label_status'))) {
             array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('is_system')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('is_system')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('is_system'))
+        if ( Validator::notEmpty()->validate($request->getParam('is_system')) &&
+            !Validator::contains('Y')->validate($request->getParam('is_system')) &&
+            !Validator::contains('N')->validate($request->getParam('is_system'))
         ) {
             array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('is_folder_status'))
+        if ( Validator::notEmpty()->validate($request->getParam('is_folder_status')) &&
+            !Validator::contains('Y')->validate($request->getParam('is_folder_status')) &&
+            !Validator::contains('N')->validate($request->getParam('is_folder_status'))
         ) {
             array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('img_filename')) &&
-            (!Validator::regex('/^[\w-.]+$/')
-                ->validate($request->getParam('img_filename')) ||
-            !Validator::length(null, 255)
-                ->validate($request->getParam('img_filename')))
+        if ( Validator::notEmpty()->validate($request->getParam('img_filename')) &&
+            (!Validator::regex('/^[\w-.]+$/')->validate($request->getParam('img_filename')) ||
+            !Validator::length(null, 255)->validate($request->getParam('img_filename')))
         ) {
             array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('maarch_module')) &&
-            !Validator::length(null, 255)
-                ->validate($request->getParam('maarch_module'))
+        if ( Validator::notEmpty()->validate($request->getParam('maarch_module')) &&
+            !Validator::length(null, 255)->validate($request->getParam('maarch_module'))
         ) {
             array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('can_be_searched'))
+        if ( Validator::notEmpty()->validate($request->getParam('can_be_searched')) &&
+            !Validator::contains('Y')->validate($request->getParam('can_be_searched')) &&
+            !Validator::contains('N')->validate($request->getParam('can_be_searched'))
         ) {
             array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
         }
 
-        if (Validator::notEmpty()
-                ->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('Y')
-                ->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('N')
-                ->validate($request->getParam('can_be_modified'))
+        if ( Validator::notEmpty()->validate($request->getParam('can_be_modified')) &&
+            !Validator::contains('Y')->validate($request->getParam('can_be_modified')) &&
+            !Validator::contains('N')->validate($request->getParam('can_be_modified'))
         ) {
             array_push($errors, _CAN_BE_MODIFIED . ' ' . _NOT . ' ' . _VALID);
         }
 
-        return $errors;
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
+
     }
 }
