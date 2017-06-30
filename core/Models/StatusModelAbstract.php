@@ -51,7 +51,7 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
+        static::checkRequired($aArgs, ['id', 'label_status']);
         static::checkString($aArgs, ['id']);
 
         $aReturn = static::insertInto($aArgs, 'status');
@@ -61,7 +61,7 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
+        static::checkRequired($aArgs, ['id', 'label_status']);
         static::checkString($aArgs, ['id']);
 
         $where['id'] = $aArgs['id'];

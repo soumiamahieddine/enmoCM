@@ -46,7 +46,7 @@
                     </span>
                     <label class="form-control" for="can_be_searched">{{lang.can_be_searched}}</label>
                     <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_searched" [checked]="status.can_be_searched == 'Y'" name="can_be_searched" id="can_be_searched" type="checkbox">
+                        <input [(ngModel)]="status.can_be_searched" name="can_be_searched" id="can_be_searched" type="checkbox">
                     </span>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                     </span>
                     <label class="form-control" for="can_be_modified">{{lang.can_be_modified}}</label>
                     <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_modified" [checked]="status.can_be_modified == 'Y'" type="checkbox" name="can_be_modified" id="can_be_modified">
+                        <input [(ngModel)]="status.can_be_modified" type="checkbox" name="can_be_modified" id="can_be_modified">
                     </span>
                 </div>
             </div>

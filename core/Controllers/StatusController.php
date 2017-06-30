@@ -70,7 +70,11 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $this->control($request, 'create');
+        $errors = $this->control($request, 'create');
+
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
 
         $aArgs = $request->getParams();
 
@@ -94,7 +98,11 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $this->control($request, 'update');
+        $errors = $this->control($request, 'update');
+
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
 
         $aArgs = $request->getParams();
 
@@ -166,59 +174,57 @@ class StatusController
         }
 
         if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id')) ||
-            !Validator::length(null, 10)->validate($request->getParam('id'))) {
-            array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
+            !Validator::length(1, 10)->validate($request->getParam('id'))) {
+            array_push($errors, 'id not valid');
         }
 
         if (!Validator::notEmpty()->validate($request->getParam('label_status')) ||
-            !Validator::length(null, 50)->validate($request->getParam('label_status'))) {
-            array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
+            !Validator::length(1, 50)->validate($request->getParam('label_status'))) {
+            array_push($errors, 'label_status not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('is_system')) &&
             !Validator::contains('Y')->validate($request->getParam('is_system')) &&
             !Validator::contains('N')->validate($request->getParam('is_system'))
         ) {
-            array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'is_system not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('is_folder_status')) &&
             !Validator::contains('Y')->validate($request->getParam('is_folder_status')) &&
             !Validator::contains('N')->validate($request->getParam('is_folder_status'))
         ) {
-            array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'is_folder_status not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('img_filename')) &&
             (!Validator::regex('/^[\w-.]+$/')->validate($request->getParam('img_filename')) ||
-            !Validator::length(null, 255)->validate($request->getParam('img_filename')))
+            !Validator::length(1, 255)->validate($request->getParam('img_filename')))
         ) {
-            array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'img_filename not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('maarch_module')) &&
             !Validator::length(null, 255)->validate($request->getParam('maarch_module'))
         ) {
-            array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'maarch_module not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('can_be_searched')) &&
             !Validator::contains('Y')->validate($request->getParam('can_be_searched')) &&
             !Validator::contains('N')->validate($request->getParam('can_be_searched'))
         ) {
-            array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'can_be_searched not valid');
         }
 
         if ( Validator::notEmpty()->validate($request->getParam('can_be_modified')) &&
             !Validator::contains('Y')->validate($request->getParam('can_be_modified')) &&
             !Validator::contains('N')->validate($request->getParam('can_be_modified'))
         ) {
-            array_push($errors, _CAN_BE_MODIFIED . ' ' . _NOT . ' ' . _VALID);
+            array_push($errors, 'can_be_modified');
         }
 
-        if (!empty($errors)) {
-            return $response->withStatus(500)->withJson(['errors' => $errors]);
-        }
+        return $errors;
 
     }
 }
