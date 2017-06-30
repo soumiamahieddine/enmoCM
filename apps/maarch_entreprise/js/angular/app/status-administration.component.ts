@@ -8,34 +8,37 @@ declare function $j(selector: any) : any;
 declare var angularGlobals : any;
 @Component({
     templateUrl : angularGlobals['status-administrationView'],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
 })
 export class StatusAdministrationComponent implements OnInit {
-    coreUrl         : string;
-    pageTitle       : string = "" ;
-    mode            : string = null;
-    statusId        : string;
-    type            : string;
-    status   : any   = {
-        id              : null,
-        label_status     : null,
-        can_be_searched : null,
-        can_be_modified : null,
-        is_folder_status : null,
-        img_filename     : null
-    };
-    paramDateTemp   : string;
-    lang        : any = "";
+    coreUrl             : string;
+    pageTitle           : string            = "" ;
+    mode                : string            = null;
+    statusId            : string;
+    type                : string;
+    status              : any               = {
+                                                id              : null,
+                                                label_status     : null,
+                                                can_be_searched : null,
+                                                can_be_modified : null,
+                                                is_folder_status : null,
+                                                img_filename     : null
+                                            };
+    paramDateTemp       : string;
+    lang                : any               = "";
 
-    resultInfo : string = "";
+    loading             : boolean           = false;
+    resultInfo          : string            = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
+        this.updateBreadcrumb(angularGlobals.applicationName);
 
         this.route.params.subscribe((params) => {
             if(this.route.toString().includes('update')){
@@ -51,8 +54,14 @@ export class StatusAdministrationComponent implements OnInit {
                     this.pageTitle = this.lang.newStatus;
                 });
             }
+            setTimeout(() => {
+                $j(".help").tooltipster({
+                    theme: 'tooltipster-maarch',
+                    interactive: true
+                });
+            }, 0);
         });
-
+        this.loading = false;
     }
 
     prepareStatus() {
@@ -60,7 +69,7 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration des statuts</a>");
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>Statuts</a> > Modification";
     }
 
     getStatusInfos(statusId : string){
@@ -75,8 +84,24 @@ export class StatusAdministrationComponent implements OnInit {
                     });
                 } else {
                     this.status    = data['status'][0];
+                    if(this.status.can_be_searched == 'Y'){
+                        this.status.can_be_searched = true;
+                    }else{
+                        this.status.can_be_searched = false;
+                    }
+                    if(this.status.can_be_modified == 'Y'){
+                        this.status.can_be_modified = true;
+                    }else{
+                        this.status.can_be_modified = false;
+                    }
+                    if(this.status.is_folder_status == 'Y'){
+                        this.status.is_folder_status = true;
+                    }else{
+                        this.status.is_folder_status = false;
+                    }
                     this.lang      = data['lang'];
                     this.pageTitle = this.lang.modify_status + ' : ' + this.status.id;
+                    console.log(this.status);
                 }
             });                
     }
