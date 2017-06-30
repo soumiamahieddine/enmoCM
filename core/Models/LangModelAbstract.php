@@ -50,6 +50,7 @@ class LangModelAbstract
             'activateAbs'           => _ACTIVATE_ABSENCE,
             'user'                  => _USER,
             'delete'                => _DELETE,
+            'basketToRedirect'      => _CHOOSE_BASKET_TO_REDIRECT,
             'autoLogout'            => _AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS
         ];
 
@@ -93,7 +94,7 @@ class LangModelAbstract
             'toUpdateSignature'     => _TO_UPDATE_SIGNATURE,
             'cancel'                => _CANCEL,
             'to'                    => _TO,
-            'activateAbs'           => _ACTIVATE_ABSENCE,
+            'activateAbs'           => _ACTIVATE_MY_ABSENCE,
             'user'                  => _USER,
             'delete'                => _DELETE,
             'basketToRedirect'      => _CHOOSE_BASKET_TO_REDIRECT,

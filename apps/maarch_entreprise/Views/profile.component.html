@@ -152,6 +152,7 @@
                                     <option>{{user.lang.basketToRedirect}}</option>
                                     <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
                                         {{basket.basket_name}}
+                                        <span *ngIf="basket.group_id">({{basket.group_id}})</span>
                                         <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
                                     </option>
                                 </select>
