@@ -38,11 +38,10 @@ function actionValidation($path,$type) {
             onSuccess: function(answer) {
                 eval("response = "+answer.responseText);
                 if(response.status == 0){
-                    alert(response.content);
+                    //alert(response.content);
                 } else {
                     alert(response.error);
                 }
-                $("cancel").click();
                 location.reload();
             }
         });

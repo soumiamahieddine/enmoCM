@@ -71,7 +71,7 @@ if ($_REQUEST['reference']) {
 
         $reset = new Reset();
         foreach ($resIds as $id) {
-            $reset->reset($id);
+            $res = $reset->reset($id);
 
             if ($res == false) {
                 $status = 1;

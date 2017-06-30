@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Entities Model
+* @brief Entity Model
 * @author dev@maarch.org
 * @ingroup entities
 */
 
 namespace Entities\Models;
 
-class EntitiesModel extends EntitiesModelAbstract
+class EntityModel extends EntityModelAbstract
 {
     // Do your stuff in this class
 }

@@ -102,12 +102,14 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
+$app->get('/administration/users/{userId}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 
 //status
-$app->get('/status', \Core\Controllers\StatusController::class . ':getList');
+$app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
+$app->get('/status/lang', \Core\Controllers\StatusController::class . ':getLang');
 $app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/status', \Core\Controllers\StatusController::class . ':update');
+$app->put('/status/{id}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
 
 //docserver
@@ -140,6 +142,10 @@ $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class 
 $app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
 $app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
 
+//ListModels
+$app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
+$app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':updateListModelsDiffListDestByUserId');
+
 //Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
@@ -158,17 +164,30 @@ $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . '
 $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
-$app->get('/user/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
-$app->put('/user/profile', \Core\Controllers\UserController::class . ':updateProfile');
+$app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
+$app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserController::class . ':getUsersForAutocompletionWithExclusion');
+$app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
+$app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
+$app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');
+$app->delete('/users/{userId}', \Core\Controllers\UserController::class . ':delete');
+$app->post('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':addGroup');
+$app->put('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
+$app->delete('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
+$app->post('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':addEntity');
+$app->put('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
+$app->put('/users/{userId}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
+$app->delete('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
+$app->put('/users/{userId}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->post('/users/{userId}/signature', \Core\Controllers\UserController::class . ':addSignature');
+$app->put('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':updateSignature');
+$app->delete('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':deleteSignature');
+$app->post('/users/{userId}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
+
+//CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->post('/currentUser/baskets/absence', \Core\Controllers\UserController::class . ':setCurrentUserBasketsRedirectionForAbsence');
-$app->post('/currentUser/signature', \Core\Controllers\UserController::class . ':createCurrentUserSignature');
-$app->put('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserSignature');
-$app->delete('/currentUser/signature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserSignature');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
-$app->post('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
 
 //parameters
 $app->get('/parameters/lang',\Core\Controllers\ParametersController::class . ':getLang');

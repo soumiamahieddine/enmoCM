@@ -6,7 +6,11 @@ import { FormsModule }      from '@angular/forms';
 
 
 import { AppComponent }                         from './app.component';
-import { UsersAdministrationComponent }          from './users-administration.component';
+import { HeaderComponent }                      from './header.component';
+import { UsersAdministrationComponent }         from './users-administration.component';
+import { UserAdministrationComponent }          from './user-administration.component';
+import { StatusListAdministrationComponent }    from './status-list-administration.component';
+import { StatusAdministrationComponent }        from './status-administration.component';
 import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
@@ -30,6 +34,10 @@ import {ActionsComponent} from "./actions.component";
       RouterModule.forRoot([
           { path: 'administration', component: AdministrationComponent },
           { path: 'administration/users', component: UsersAdministrationComponent },
+          { path: 'administration/users/:userId', component: UserAdministrationComponent },
+          { path: 'administration/status/create', component: StatusAdministrationComponent },
+          { path: 'administration/status/update/:id', component: StatusAdministrationComponent },
+          { path: 'administration/status', component: StatusListAdministrationComponent },
           { path: 'profile', component: ProfileComponent },
           { path: 'administration/parameter/create', component: ParameterComponent },
           { path: 'administration/parameter/update/:id', component: ParameterComponent },
@@ -46,11 +54,24 @@ import {ActionsComponent} from "./actions.component";
       ], { useHash: true }),
       HttpModule
   ],
-
-
-  providers: [],
-  declarations: [ AppComponent,ActionsComponent,ActionComponent, AdministrationComponent,ReportsComponent, UsersAdministrationComponent,PrioritiesComponent,PriorityComponent, ParametersComponent, ParameterComponent, ProfileComponent, SignatureBookComponent, SafeUrlPipe ],
-
+  declarations: [
+      HeaderComponent,
+      AppComponent,
+      ActionsComponent,
+      AdministrationComponent,
+      ReportsComponent,
+      UsersAdministrationComponent,
+      UserAdministrationComponent,
+      StatusAdministrationComponent,
+      StatusListAdministrationComponent,
+      PrioritiesComponent,
+      PriorityComponent,
+      ParametersComponent,
+      ParameterComponent,
+      ProfileComponent,
+      SignatureBookComponent,
+      SafeUrlPipe
+  ],
   bootstrap:    [ AppComponent]
 })
 export class AppModule { }

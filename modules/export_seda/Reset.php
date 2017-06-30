@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/RequestSeda.php';
+require_once __DIR__ . '/RequestSeda.php';
 
 Class Reset{
     public function __construct()
@@ -42,6 +42,6 @@ Class Reset{
         $this->db->deleteMessage($message->message_id);
         $this->db->deleteMessage($messageReply->message_id);
 
-        return true;
+        return $resId;
     }
 }

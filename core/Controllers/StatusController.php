@@ -27,10 +27,16 @@ class StatusController
         $obj = StatusModel::getList();
         
         $datas = [
-            $obj,
+            'statusList' => $obj,
+            'lang'       =>  StatusModel::getStatusLang()
         ];
         
         return $response->withJson($datas);
+    }
+
+    public function getLang(RequestInterface $request, ResponseInterface $response){
+        $obj = StatusModel::getStatusLang();
+        return $response->withJson($obj);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -40,15 +46,17 @@ class StatusController
             $obj = StatusModel::getById([
                 'id' => $id
             ]);
+
+            $datas = [
+                'status' => $obj,
+                'lang'       =>  StatusModel::getStatusLang()
+            ];
+
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
         }
-        
-        $datas = [
-            $obj,
-        ];
 
         return $response->withJson($datas);
     }

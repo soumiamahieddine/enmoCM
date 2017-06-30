@@ -73,13 +73,19 @@ if (!defined("_MODE"))    define("_MODE", "Mode");
 /************** Lists **************/
 if (!defined("_GO_TO_PAGE"))    define("_GO_TO_PAGE", "Go on page");
 if (!defined("_NEXT"))    define("_NEXT", "Next");
+if (!defined("_NEXT_PAGE"))    define("_NEXT_PAGE", "Next");
 if (!defined("_PREVIOUS"))    define("_PREVIOUS", "Previous");
+if (!defined("_PREVIOUS_PAGE"))    define("_PREVIOUS_PAGE", "Previous");
 if (!defined("_ALPHABETICAL_LIST"))    define("_ALPHABETICAL_LIST", "Alphabetical list");
 if (!defined("_ASC_SORT"))    define("_ASC_SORT", "Ancestor sorting");
 if (!defined("_DESC_SORT"))    define("_DESC_SORT", "Descendent sorting");
 if (!defined("_ACCESS_LIST_STANDARD"))    define("_ACCESS_LIST_STANDARD", " Simple lists display");
 if (!defined("_ACCESS_LIST_EXTEND"))    define("_ACCESS_LIST_EXTEND", " Extended lists display");
 if (!defined("_DISPLAY"))    define("_DISPLAY", "Display ");
+if (!defined('_NO_RECORD'))
+    define('_NO_RECORD', 'No record');
+if (!defined('_RECORD'))
+    define('_RECORD', 'record(s)');
 
 /************** Actions **************/
 if (!defined("_DELETE"))    define("_DELETE", "Delete");
@@ -1310,6 +1316,7 @@ if (!defined("_TITLE_STATS_CHOICE_PERIOD"))  define("_TITLE_STATS_CHOICE_PERIOD"
 /******************** Authentification method  ************/
 
 if (!defined("_STANDARD_LOGIN")) define("_STANDARD_LOGIN", "Maarch's authentication");
+if (!defined("_CAS_LOGIN")) define("_CAS_LOGIN", "CAS authentication");
 if (!defined("_ACTIVEX_LOGIN")) define("_ACTIVEX_LOGIN", "Authentification Ms Internet Explorer - ActiveX");
 if (!defined("_HOW_CAN_I_LOGIN")) define("_HOW_CAN_I_LOGIN", "I can not log on...");
 if (!defined("_CONNECT")) define("_CONNECT", "To log on");
@@ -1828,8 +1835,8 @@ if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
 
 /***** Profile *****/
-if (!defined('_MANAGE_SIGNATURES'))
-    define('_MANAGE_SIGNATURES', 'Manage my signatures');
+if (!defined('_MANAGE_MY_SIGNATURES'))
+    define('_MANAGE_MY_SIGNATURES', 'Manage my signatures');
 if (!defined('_MY_GROUPS'))
     define('_MY_GROUPS', 'My Groups');
 if (!defined('_PRIMARY_GROUP'))
@@ -1899,7 +1906,45 @@ if (!defined('_UPDATED_EMAIL_SIGNATURE'))
     define('_UPDATED_EMAIL_SIGNATURE', 'Mail signature updated');
 if (!defined('_DELETED_EMAIL_SIGNATURE'))
     define('_DELETED_EMAIL_SIGNATURE', 'Mail signature deleted');
+
+if (!defined('_UNDEFINED_USER'))
+    define('_UNDEFINED_USER', 'Undefined user');
+if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
+    define('_CHOOSE_BASKET_TO_REDIRECT', 'Choose a basket');
+if (!defined('_ACTIVATE_MY_ABSENCE'))
+    define('_ACTIVATE_MY_ABSENCE', 'Activer mon absence');
+if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
+    define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
+
+/***** User Administration *****/
+if (!defined('_ADMIN_USER_MODIFICATION'))
+    define('_ADMIN_USER_MODIFICATION', 'Modification of user');
+if (!defined('_ADDED_GROUP'))
+    define('_ADDED_GROUP', 'Group created');
+if (!defined('_UPDATED_GROUP'))
+    define('_UPDATED_GROUP', 'Group updated');
+if (!defined('_DELETED_GROUP'))
+    define('_DELETED_GROUP', 'Group deleted');
+if (!defined('_ADDED_ENTITY'))
+    define('_ADDED_ENTITY', 'Entity created');
+if (!defined('_UPDATED_ENTITY'))
+    define('_UPDATED_ENTITY', 'Entity updated');
+if (!defined('_DELETED_ENTITY'))
+    define('_DELETED_ENTITY', 'Entity deleted');
+if (!defined('_MANAGE_SIGNATURES'))
+    define('_MANAGE_SIGNATURES', 'Manage signatures');
+if (!defined('_MANAGE_ABSENCES'))
+    define('_MANAGE_ABSENCES', 'Manage absences');
+if (!defined('_REINITIALIZE_PASSWORD'))
+    define('_REINITIALIZE_PASSWORD', 'Reset the user password');
+if (!defined('_RESET_PASSWORD'))
+    define('_RESET_PASSWORD', 'Password reset');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activate absence');
+if (!defined('_ABSENCE_ACTIVATED'))
+    define('_ABSENCE_ACTIVATED', 'The user is now off');
+/***** User Administration *****/
 
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))
@@ -1962,3 +2007,5 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Update sucessful');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
+
+if (!defined("_ADDRESS_NB")) define("_ADDRESS_NB","Address number");

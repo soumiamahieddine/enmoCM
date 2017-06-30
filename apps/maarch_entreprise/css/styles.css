@@ -3768,6 +3768,7 @@ input.button {
 width:auto;
 }
 
+<<<<<<< HEAD
 .TabSelected{
     background: #fff !important;
     margin-top: 0 !important;
@@ -3841,3 +3842,8 @@ table.dataTable thead .sorting_asc_disabled {
 table.dataTable thead .sorting_desc_disabled {
     background-image: url("../../node_modules/datatables/media/images/sort_desc_disabled.png")!important;
 }
+=======
+#frmsearch2 .autocomplete, #frmcontact .autocomplete{
+    top:auto !important;
+}
+>>>>>>> develop

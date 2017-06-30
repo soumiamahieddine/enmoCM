@@ -19,8 +19,38 @@ use Core\Models\UserModel;
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
-class EntitiesModelAbstract extends \Apps_Table_Service
+class EntityModelAbstract extends \Apps_Table_Service
 {
+    public static function get(array $aArgs = [])
+    {
+        $aEntities = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['enabled'],
+            'data'      => ['Y']
+        ]);
+
+        return $aEntities;
+    }
+
+    public static function getById(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['entityId']);
+        static::checkString($aArgs, ['entityId']);
+
+        $aEntity = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['entity_id = ?'],
+            'data'      => [$aArgs['entityId']]
+        ]);
+
+        if (empty($aEntity[0])) {
+            return [];
+        }
+
+        return $aEntity[0];
+    }
 
     public static function getByEmail(array $aArgs = [])
     {
@@ -30,7 +60,7 @@ class EntitiesModelAbstract extends \Apps_Table_Service
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
-            'where'     => ['email = ? and enabled = ?'],
+            'where'     => ['email = ?', 'enabled = ?'],
             'data'      => [$aArgs['email'], 'Y'],
             'limit'     => 1,
         ]);
@@ -40,15 +70,14 @@ class EntitiesModelAbstract extends \Apps_Table_Service
 
     public static function getByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['user_id']);
-        static::checkString($aArgs, ['user_id']);
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users_entities'],
-            'where'     => ['user_id = ? and primary_entity = ?'],
-            'data'      => [$aArgs['user_id'], 'Y'],
-            'limit'     => 1,
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
         ]);
 
         return $aReturn;

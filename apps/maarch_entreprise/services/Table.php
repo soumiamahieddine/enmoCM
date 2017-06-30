@@ -159,29 +159,30 @@ class Apps_Table_Service extends Core_Abstract_Service {
             $order_by = ' ORDER BY '.$args['order_by'];
         }
         // Limit :
-        if ( empty($args['limit']) ) {
+        if (empty($args['limit'])) {
             $limit = '';
         } else {
-            if ( ! is_numeric($args['limit']) ) {
+            if (!is_numeric($args['limit'])) {
                 throw new Core_MaarchException_Service('limit must be : numeric');
             }
-            $limit = ' LIMIT '.$args['limit'];
+            $limit = $args['limit'];
         }
 
-        if(!isset($GLOBALS['configFile'])){
+        if (!isset($GLOBALS['configFile'])) {
             $GLOBALS['configFile'] = null;
         }
         $db = new Database($GLOBALS['configFile']);
         
         // Query :
-        if ($limit <> '') {
+        if (!empty($limit)) {
+            $where = empty($aWhere) ? '' : ' '.implode(' AND ', $aWhere);
+
             $queryExt = $db->limit_select(0, $limit, $select, $tablename, $where, $group_by, '', $order_by);
         } else {
-            $queryExt = "SELECT $select FROM $tablename $where $group_by $order_by";
+            $where = empty($aWhere) ? '' : ' WHERE '.implode(' AND ', $aWhere);
+
+            $queryExt = "SELECT {$select} FROM {$tablename} {$where} {$group_by} {$order_by}";
         }
-        
-        //Core_Logs_Service::debug(['message'=>'Requête:'.$queryExt]); 
-        //echo "the query " . $queryExt . PHP_EOL;var_export($data). PHP_EOL;
         
         $stmt = empty($data) ? $db->query($queryExt) : $db->query($queryExt, $data);
 

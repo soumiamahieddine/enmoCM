@@ -31,12 +31,12 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
         $status      = new \Core\Controllers\StatusController();
 
         $response = $status->getById($request, new \Slim\Http\Response(), ['id' => 'NEW']);
-        $compare = '[[{"id":"NEW","label_status":"Nouveau",'
+        $compare = '{"id":"NEW","label_status":"Nouveau",'
             . '"is_system":"Y","is_folder_status":"N","img_filename":'
             . '"fm-letter-status-new","maarch_module":"apps",'
-            . '"can_be_searched":"Y","can_be_modified":"Y"}]]';
-
-        $this->assertSame((string)$response->getBody(), $compare);
+            . '"can_be_searched":"Y","can_be_modified":"Y"}';
+            
+        $this->assertSame(json_encode(json_decode((string)$response->getBody())->status[0]), $compare);
     }
 
     public function testCreate()

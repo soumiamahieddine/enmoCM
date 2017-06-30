@@ -6,7 +6,7 @@
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{user.lang.myProfile}}</h1>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" id="toolBox">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="index.php" style="cursor: pointer">
@@ -34,8 +34,6 @@
             <ul class="list-group" >
                 <li class="list-group-item" *ngFor="let group of user.groups">
                     <i class="fa fa-users"></i> {{group.group_desc}}
-                    <span *ngIf="group.primary_group == 'Y'" class="label label-primary">{{user.lang.primaryGroup}}</span>
-                    <span *ngIf="group.primary_group != 'Y'" class="label label-default">{{user.lang.secondaryGroup}}</span>
                 </li>
             </ul>
         </div>
@@ -141,33 +139,52 @@
 </div>
 
 <div id="manageAbs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">{{user.lang.manageAbsences}}</h4>
-      </div>
-        <div class="modal-body">
-            <div class="alert alert-danger" role="alert">Vous allez être <strong>automatiquement déconnecté</strong> après avoir défini vos redirections de bannettes</div>
-            <nav class="navbar navbar-default">
-               <div class="container-fluid">
-                     <form class="navbar-form navbar-left">
-                        <div class="form-group">
-                            <select class="form-control" placeholder="Bannette(s) à rediriger"><option>Courrier à signer</option></select>
-
-                            <span>&nbsp;vers&nbsp;</span>
-                            <input type="text" class="form-control" placeholder="Utilisateur">
-                        </div>
-                    </form>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#" title="Sauvegarder la modification"><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                </div>
-            </nav>
-            <ul class="list-group">
-                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à traiter <span class="pull-right"><span class="label label-primary">Barbarain BAIN</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
-                <li class="list-group-item"><i class="fa fa-tasks"></i> Mes courriers à viser <span class="pull-right"><span class="label label-primary">Patricia PETIT</span> <a href="#" title="Supprimer"><i class="fa fa-trash" style="color:red;"></i></a></span></li>
-            </ul>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{user.lang.manageAbsences}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">{{user.lang.autoLogout}}</div>
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <form class="navbar-form navbar-left">
+                            <div class="form-group">
+                                <select id="selectBasketAbsenceUser" class="form-control">
+                                    <option>{{user.lang.basketToRedirect}}</option>
+                                    <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
+                                        {{basket.basket_name}}
+                                        <span *ngIf="basket.group_id">({{basket.group_id}})</span>
+                                        <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
+                                    </option>
+                                </select>
+                                <span>&nbsp;{{user.lang.to}}&nbsp;</span>
+                            </div>
+                            <div class="form-group typeahead__container">
+                                <div class="typeahead__field">
+                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{user.lang.user}}" autocomplete="off">
+                                </div>
+                            </div>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right" (click)="addBasketRedirection()" style="cursor: pointer">
+                            <li><a title="{{user.lang.saveModification}}"><i class="fa fa-plus"></i></a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let uam of userAbsenceModel; let i = index">
+                        <i class="fa fa-tasks" title="{{uam.basketId}}"></i> {{uam.basketName}}
+                        <span class="pull-right">
+                            <span class="label label-primary">{{uam.newUser}}</span>
+                            <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{user.lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" (click)="activateAbsence()" class="btn btn-default">{{user.lang.activateAbs}}</button>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default">Activer mon absence</button>

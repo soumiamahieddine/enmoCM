@@ -46,7 +46,7 @@ Class Purge{
             $this->db->deleteMessage($message->message_id);
         }
 
-        return true;
+        return $resId;
     }
 
     private function purgeResource($resId)

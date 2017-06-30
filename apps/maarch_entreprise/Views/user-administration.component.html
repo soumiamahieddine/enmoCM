@@ -1,0 +1,356 @@
+<div id="resultInfo" class="fade" style="display:none;">
+    {{resultInfo}}
+</div>
+<div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <h1 style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}} 
+        <sup>
+            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary" title="Actif" >Actif</span>
+            <span *ngIf="user.status == 'ABS'" class="label label-warning" title="Absent" >Absent</span>
+            <span *ngIf="user.enabled == 'N'" class="label label-danger" title="Inactif" >Inactif</span>
+        </sup>
+    </h1>
+    <nav class="navbar navbar-default" id="toolBox">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a routerLink="/administration/users" class="navbar-brand" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="{{user.lang.back}}"></i>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right userAdministrationClickable">
+                    <li>
+                        <a (click)="resetPassword()"><i class="fa fa-key"></i> {{user.lang.reinitPassword}}</a>
+                    </li>
+                    <!--<li>-->
+                        <!--<a><i class="fa fa-inbox"></i> {{user.lang.manageBaskets}}</a>-->
+                    <!--</li>-->
+                    <li *ngIf="user.status == 'OK'">
+                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times"></i> {{user.lang.manageAbsences}}</a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{user.lang.manageSignatures}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row row-eq-height">
+        <div class="col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>Informations</h2>
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="userId" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5" style="font-weight:bold;">
+                        <input type="text" class="form-control" id="lastname" name="lastname" title="{{user.lang.lastname}}" placeholder="{{user.lang.lastname}}" [(ngModel)]="user.lastname" required>
+                    </div>
+                    <div class="col-sm-5" style="font-weight:bold;">
+                        <input type="text" class="form-control" id="firstname" name="firstname" title="{{user.lang.firstname}}" placeholder="{{user.lang.firstname}}" [(ngModel)]="user.firstname" required>
+                    </div>
+                    <div class="col-sm-2" style="font-style:italic;">
+                        <input type="text" class="form-control" id="initials" name="initials" title="{{user.lang.initials}}" placeholder="{{user.lang.initials}}" [(ngModel)]="user.initials">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+                            <input type="tel" class="form-control" id="phone" name="phone" title="{{user.lang.phoneNumber}}" placeholder="{{user.lang.phoneNumber}}" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d?\d?\s?)[1-9]([\.\-\s]?\d\d){4}([\.\-\s]?\d?\d?)$">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+                            <input type="email" class="form-control" id="mail" name="mail" title="{{user.lang.email}}"  placeholder="{{user.lang.email}}" [(ngModel)]="user.mail" pattern="[^@\s]+@[^@\s]+">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="{{user.lang.fingerprint}}" placeholder="{{user.lang.fingerprint}}" [(ngModel)]="user.thumbprint">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-default" [disabled]="!profileForm.form.valid">{{user.lang.saveModification}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>Groupes <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addGroupModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
+            <div *ngFor="let group of user.groups" class="col-sm-12 form-group">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{group.group_desc}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu userAdministrationClickable">
+                            <li><a (click)="updateGroup(group)">{{user.lang.saveModification}}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a (click)="deleteGroup(group)">Supprimer</a></li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="group_desc" placeholder="rôle" [(ngModel)]="group.role">
+                </div>
+            </div>
+            <div *ngIf="user.groups.length == 0" class="col-sm-12 form-group">
+                L'utilisateur n'appartient à aucun groupe.
+            </div>
+        </div>
+        <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>Entités <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addEntityModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité"></i></h2>
+            <div *ngFor="let entity of user.entities" class="col-sm-12 form-group">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button *ngIf="entity.primary_entity == 'Y'" type="button" style="color:white;" class="btn btn-default dropdown-toggle label-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [title]="entity.entity_label">{{entity.entity_id}} <span class="caret"></span></button>
+                        <button *ngIf="entity.primary_entity == 'N'" type="button" style="background-color:#eee;" class="btn btn-default dropdown-toggle label-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [title]="entity.entity_label">{{entity.entity_id}} <span class="caret"></span></button>
+                        <ul class="dropdown-menu userAdministrationClickable">
+                            <li *ngIf="entity.primary_entity == 'N'"><a (click)="updatePrimaryEntity(entity)">Passer en entité primaire</a></li>
+                            <li><a (click)="updateEntity(entity)">{{user.lang.saveModification}}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a (click)="deleteEntity(entity)">Supprimer</a></li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="group_desc" placeholder="rôle" [(ngModel)]="entity.user_role">
+                </div>
+            </div>
+            <div *ngIf="user.entities.length == 0" class="col-sm-12 form-group">
+                L'utilisateur n'appartient à aucune entité.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD GROUP -->
+<div class="modal fade" id="addGroupModal" tabindex="-1" role="dialog" aria-labelledby="addGroupModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addGroupModalLabel">Ajouter un groupe</h4>
+            </div>
+            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select class="form-control" placeholder="Choisissez un groupe">
+                                    <option>test</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" >Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ADD ENTITY -->
+<div class="modal fade" id="addEntityModal" tabindex="-1" role="dialog" aria-labelledby="addEntityModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addEntityModalLabel">Ajouter une entité</h4>
+            </div>
+            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select class="form-control" placeholder="Choisissez une entité">
+                                    <option>test</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" >Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="manageAbs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{user.lang.manageAbsences}}</h4>
+            </div>
+            <div class="modal-body">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <form class="navbar-form navbar-left">
+                            <div class="form-group">
+                                <select id="selectBasketAbsenceUser" class="form-control">
+                                    <option>{{user.lang.basketToRedirect}}</option>
+                                    <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
+                                        {{basket.basket_name}}
+                                        <span *ngIf="basket.group_id">({{basket.group_id}})</span>
+                                        <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
+                                    </option>
+                                </select>
+                                <span>&nbsp;{{user.lang.to}}&nbsp;</span>
+                            </div>
+                            <div class="form-group typeahead__container">
+                                <div class="typeahead__field">
+                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{user.lang.user}}" autocomplete="off">
+                                </div>
+                            </div>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right" (click)="addBasketRedirection()" style="cursor: pointer">
+                            <li><a title="{{user.lang.saveModification}}"><i class="fa fa-plus"></i></a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let uam of userAbsenceModel; let i = index">
+                        <i class="fa fa-tasks" title="{{uam.basketId}}"></i> {{uam.basketName}}
+                        <span class="pull-right">
+                            <span class="label label-primary">{{uam.newUser}}</span>
+                            <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{user.lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" (click)="activateAbsence()" class="btn btn-default">{{user.lang.activateAbs}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="manageSign" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{user.lang.manageSignatures}}</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <!--<li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">{{user.lang.emailSignatures}}</a></li>-->
+                    <li role="presentation" class="active"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">{{user.lang.sbSignatures}}</a></li>
+                </ul>
+                <div class="tab-content">
+                    <!--<div role="tabpanel" class="tab-pane active" id="mailSign">-->
+                        <!--<form (ngSubmit)="submitEmailSignature()" #emailSignatureForm="ngForm">-->
+                            <!--<div class="row" style="margin-top:5px;">-->
+                                <!--<div class="col-md-5">-->
+                                    <!--<select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">-->
+                                        <!--<option>{{user.lang.newSignature}}</option>-->
+                                        <!--<option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-5">-->
+                                    <!--<input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="{{user.lang.signatureLabel}}" class="form-control" required>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-1 col-md-offset-1" *ngIf="mailSignatureModel.selected == 0">-->
+                                    <!--<button type="submit" class="form-control btn btn-sm btn-success" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-plus"></i></button>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">-->
+                                    <!--<button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="{{user.lang.updateSignature}}"><i class="fa fa-pencil"></i></button>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">-->
+                                    <!--<button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="{{user.lang.deleteSignature}}"><i class="fa fa-trash"></i></button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="row" style="margin-top:5px;">-->
+                                <!--<div class="col-md-12">-->
+                                    <!--<div id="html_mode" style="display: block; width:100%;">-->
+                                        <!--<textarea name="emailSignature" id="emailSignature" style="width:100%" rows="15" cols="60"></textarea>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</form>-->
+                    <!--</div>-->
+                    <div role="tabpanel" class="tab-pane active" id="signatureBookSign">
+                        <div class="row" style="margin-top:5px;">
+                            <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
+                                <div class="col-md-11">
+                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="{{user.lang.signatureLabel}}" class="form-control" required>
+                                    <div class="form-inline hide">
+                                        <div class="form-group">
+                                            <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="margin-bottom:5px;">
+                                    <button class="form-control btn btn-sm btn-success" type="submit" [disabled]="!signatureForm.form.valid || !signatureModel.size">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
+                                    <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
+                                        {{user.lang.clickOn}} <i class="fa fa-upload fa-2x"></i>
+                                        <span *ngIf="!signatureModel.size">{{user.lang.toSignature}}</span>
+                                        <span *ngIf="signatureModel.size">{{user.lang.toUpdateSignature}}</span>
+                                        (< 2MB)
+                                    </div>
+                                </div>
+                                <div class="col-md-2" *ngIf="signatureModel.size">
+                                    <img  id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Image non valide" style="width: 100%;">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row" id="signList">
+                            <div *ngFor="let signature of user.signatures; let i = index" class="col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
+                                    <div class="caption" style="margin-bottom:0px;">
+                                        <div *ngIf="selectedSignature != i">
+                                            <p title="{{signature.signature_label}}" style="text-overflow: ellipsis;">{{signature.signature_label}}</p>
+                                            <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="{{user.lang.updateSignature}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="{{user.lang.deleteSignature}}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="selectedSignature == i">
+                                            <input type="text" [(ngModel)]="selectedSignatureLabel" name="selectedSignatureLabel" placeholder="{{user.lang.signatureLabel}}" class="form-control" style="margin-bottom: 10px; font-size: 12px;height:28px">
+                                            <button (click)="updateSignature()" type="button" class="btn btn-success" [disabled]="!selectedSignatureLabel" title="{{user.lang.updateSignature}}">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button (click)="selectedSignature = -1" type="button" class="btn btn-warning" title="{{user.lang.cancel}}">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

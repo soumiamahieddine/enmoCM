@@ -19,8 +19,8 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once __DIR__ . '/RequestSeda.php';
-require_once __DIR__ . '/DOMTemplateProcessor.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'../RequestSeda.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'../DOMTemplateProcessor.php';
 require_once __DIR__ . '/AbstractMessage.php';
 
 class ArchiveTransfer
@@ -123,7 +123,7 @@ class ArchiveTransfer
 
         foreach ($messageObject->dataObjectPackage->binaryDataObject as $binaryDataObject) {
             $basename = basename($binaryDataObject->uri);
-            $dest = __DIR__ . DIRECTORY_SEPARATOR . 'seda2' . DIRECTORY_SEPARATOR . $messageId . DIRECTORY_SEPARATOR . $basename;
+            $dest = __DIR__ . DIRECTORY_SEPARATOR . '..'. DIRECTORY_SEPARATOR.'message' . DIRECTORY_SEPARATOR . $messageId . DIRECTORY_SEPARATOR . $basename;
 
             copy($binaryDataObject->uri, $dest);
         }

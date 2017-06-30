@@ -16,12 +16,15 @@
 namespace Core\Controllers;
 
 use Baskets\Models\BasketsModel;
+use Core\Models\GroupModel;
 use Core\Models\LangModel;
-use Entities\Models\EntitiesModel;
+use Core\Models\ServiceModel;
+use Entities\Models\EntityModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\UserModel;
+use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
 include_once 'core/class/class_history.php';
@@ -31,37 +34,117 @@ class UserController
 {
     public function getCurrentUserInfos(RequestInterface $request, ResponseInterface $response)
     {
-        if (empty($_SESSION['user']['UserId'])) {
-            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
-        }
-
-
         $user = UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
         $user['signatures'] = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['groups'] = UserModel::getGroupsById(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
-        $user['lang'] = LangModel::getProfileLang();
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['lang'] = LangModel::getProfileLang();
 
         return $response->withJson($user);
     }
 
     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        if ($_SESSION['user']['UserId'] != 'superadmin') {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['users.user_id'],
+                'entities'  => $entities
+            ]);
+            $allowed = false;
+            foreach ($users as $value) {
+                if ($value['user_id'] == $aArgs['userId']) {
+                    $allowed = true;
+                }
+            }
+            if (!$allowed) {
+                return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
+            }
+        } else {
+            $user = UserModel::getById(['userId' => $aArgs['userId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+        }
         $data = $request->getParams();
 
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])) {
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
+            || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
+            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $r = UserModel::update(['userId' => $aArgs['id'] ,'user' => $data]);
+        $r = UserModel::update(['userId' => $aArgs['userId'], 'user' => $data]);
 
         if (!$r) {
             return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
         }
 
-        return $response->withJson(['success' => _UPDATED_PROFILE]);
+        return $response->withJson(['success' => _USER_UPDATED]);
+    }
+
+    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $r = UserModel::delete(['userId' => $aArgs['userId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Delete Error']);
+        }
+
+        return $response->withJson(['success' => _DELETED_USER]);
+    }
+    
+    public function suspendUser(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        if ($_SESSION['user']['UserId'] != 'superadmin') {
+            $entities = EntitiesModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['users.user_id'],
+                'entities'  => $entities
+            ]);
+            $allowed = false;
+            foreach ($users as $value) {
+                if ($value['user_id'] == $aArgs['userId']) {
+                    $allowed = true;
+                }
+            }
+            if (!$allowed) {
+                return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
+            }
+        } else {
+            $user = UserModel::getById(['userId' => $aArgs['userId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+        }
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
+            || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
+            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        //update user
+        $r = UserModel::update(['userId' => $aArgs['userId'], 'user' => $data]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
+        }
+
+        return $response->withJson(['success' => _USER_UPDATED]);
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
@@ -81,6 +164,42 @@ class UserController
         }
 
         return $response->withJson(['success' => _UPDATED_PROFILE]);
+    }
+
+    public function resetPassword(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        if ($_SESSION['user']['UserId'] != 'superadmin') {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['users.user_id'],
+                'entities'  => $entities
+            ]);
+            $allowed = false;
+            foreach ($users as $value) {
+                if ($value['user_id'] == $aArgs['userId']) {
+                    $allowed = true;
+                }
+            }
+            if (!$allowed) {
+                return $response->withStatus(403)->withJson(['errors' => 'UserId out of perimeter']);
+            }
+        } else {
+            $user = UserModel::getById(['userId' => $aArgs['userId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+        }
+
+        $r = UserModel::resetPassword(['userId' => $aArgs['userId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'Password Update Error']);
+        }
+
+        return $response->withJson(['success' => _RESET_PASSWORD]);
     }
 
     public function updateCurrentUserPassword(RequestInterface $request, ResponseInterface $response)
@@ -106,9 +225,10 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
-    public function setCurrentUserBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response) {
-        if (empty($_SESSION['user']['UserId'])) {
-            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+    public function setBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response, $aArgs) {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
         $data = $request->getParams();
@@ -117,32 +237,38 @@ class UserController
             if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
                 return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
             }
-            $newUser = strrchr($value['newUser'], '(');
-            $newUser = str_replace(['(', ')'], '', $newUser);
-            if (!empty($newUser)) {
-                $check = UserModel::getById(['userId' => $newUser, 'select' => ['1']]);
-            }
-            if (empty($newUser) || empty($check)) {
+
+            $check = UserModel::getById(['userId' => $value['newUser'], 'select' => ['1']]);
+
+            if (empty($check)) {
                 return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
             }
         }
 
         if (!empty($data)) {
-            BasketsModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
+            BasketsModel::setBasketsRedirection(['userId' => $aArgs['userId'], 'data' => $data]);
         }
 
-        UserModel::activateAbsenceById(['userId' => $_SESSION['user']['UserId']]);
+        UserModel::activateAbsenceById(['userId' => $aArgs['userId']]);
         if($_SESSION['history']['userabs'] == "true") { //TODO No Session
             $history = new \history();
-            $currentUser = UserModel::getLabelledUserById(['id' => $_SESSION['user']['UserId']]);
-            $history->add($_SESSION['tablename']['users'], $_SESSION['user']['UserId'], 'ABS', 'userabs', _ABS_USER.' : '.$currentUser, $_SESSION['config']['databasetype']);
+            $absenceUser = UserModel::getLabelledUserById(['id' => $aArgs['userId']]);
+            $history->add($_SESSION['tablename']['users'], $_SESSION['user']['UserId'], 'ABS', 'userabs', _ABS_USER.' : '.$absenceUser, $_SESSION['config']['databasetype']);
         }
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson([
+            'success'   => _ABSENCE_ACTIVATED,
+            'user'      => UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['status']])
+        ]);
     }
 
-    public function createCurrentUserSignature(RequestInterface $request, ResponseInterface $response)
+    public function addSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['base64', 'name', 'label']])) {
@@ -150,7 +276,7 @@ class UserController
         }
 
         $file     = base64_decode($data['base64']);
-        $tmpName  = 'tmp_file_' .$_SESSION['user']['UserId']. '_' .rand(). '_' .$data['name'];
+        $tmpName  = "tmp_file_{$aArgs['userId']}_" .rand(). "_{$data['name']}";
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
@@ -177,9 +303,9 @@ class UserController
         }
 
         if (!$fileAccepted || $type[0] != 'image') {
-            return $response->withJson(['errors' => _WRONG_FILE_TYPE]);
+            return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
         } elseif ($size > 2000000){
-            return $response->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
+            return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 
         file_put_contents($_SESSION['config']['tmppath'] . $tmpName, $file);
@@ -196,11 +322,11 @@ class UserController
         );
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
-            return $response->withJson(['errors' => $storeInfos['error'] .' templates']);
+            return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' templates']);
         }
 
         $r = UserModel::createSignature([
-            'userId'            => $_SESSION['user']['UserId'],
+            'userId'            => $aArgs['userId'],
             'signatureLabel'    => $data['label'],
             'signaturePath'     => $storeInfos['destination_dir'],
             'signatureFileName' => $storeInfos['file_destination_name'],
@@ -212,12 +338,17 @@ class UserController
 
         return $response->withJson([
             'success' => _NEW_SIGNATURE,
-            'signatures' => UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']])
+            'signatures' => UserModel::getSignaturesById(['userId' => $aArgs['userId']])
         ]);
     }
 
-    public function updateCurrentUserSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function updateSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['label']])) {
@@ -226,7 +357,7 @@ class UserController
 
         $r = UserModel::updateSignature([
             'id'        => $aArgs['id'],
-            'userId'    => $_SESSION['user']['UserId'],
+            'userId'    => $aArgs['userId'],
             'label'     => $data['label']
         ]);
 
@@ -236,13 +367,18 @@ class UserController
 
         return $response->withJson([
             'success' => _UPDATED_SIGNATURE,
-            'signature' => UserModel::getSignatureWithSignatureIdById(['userId' => $_SESSION['user']['UserId'], 'signatureId' => $aArgs['id']])
+            'signature' => UserModel::getSignatureWithSignatureIdById(['userId' => $aArgs['userId'], 'signatureId' => $aArgs['id']])
         ]);
     }
 
-    public function deleteCurrentUserSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function deleteSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $r = UserModel::deleteSignature(['signatureId' => $aArgs['id'], 'userId' => $_SESSION['user']['UserId']]);
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $r = UserModel::deleteSignature(['signatureId' => $aArgs['id'], 'userId' => $aArgs['userId']]);
 
         if (!$r) {
             return $response->withStatus(500)->withJson(['errors' => 'Signature Creation Error']);
@@ -250,7 +386,7 @@ class UserController
 
         return $response->withJson([
             'success' => _DELETED_SIGNATURE,
-            'signatures' => UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']])
+            'signatures' => UserModel::getSignaturesById(['userId' => $aArgs['userId']])
         ]);
     }
 
@@ -324,39 +460,290 @@ class UserController
     {
         $users = UserModel::get([
             'select'    => ['user_id', 'firstname', 'lastname'],
-            'where'     => ['enabled = ?', 'user_id != ?'],
-            'data'      => ['Y', 'superadmin']
+            'where'     => ['enabled = ?', 'status != ?', 'user_id != ?'],
+            'data'      => ['Y', 'DEL', 'superadmin']
         ]);
 
-        $formattedUsers = [];
-        foreach ($users as $value) {
-            $formattedUsers[] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
-        }
-
-        return $response->withJson($formattedUsers);
-    }
-
-    public function getUsersForAdministration(RequestInterface $request, ResponseInterface $response)
-    {
-
-        if ($_SESSION['user']['UserId'] == 'superadmin') {
-            $users = UserModel::get([
-                'select'    => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                'where'     => ['user_id != ?'],
-                'data'      => ['superadmin']
-            ]);
-        } else {
-            $entities = EntitiesModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
-            $users = UserModel::getByEntities([
-                'select'    => ['users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                'entities'  => $entities
-            ]);
+        foreach ($users as $key => $value) {
+            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
         }
 
         return $response->withJson($users);
     }
 
-    private function checkNeededParameters($aArgs = [])
+    public function getUsersForAutocompletionWithExclusion(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $excludeUsers = ['superadmin',$aArgs['userId']];
+        $users = UserModel::get([
+            'select'    => ['user_id', 'firstname', 'lastname'],
+            'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
+            'data'      => ['Y', 'DEL', $excludeUsers]
+        ]);
+
+        foreach ($users as $key => $value) {
+            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
+        }
+
+        return $response->withJson($users);
+    }
+
+    public function getUsersForAdministration(RequestInterface $request, ResponseInterface $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $users = UserModel::get([
+                'select'    => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
+            ]);
+        } else {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities([
+                'select'    => ['DISTINCT users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'entities'  => $entities
+            ]);
+        }
+
+        $usersId = [];
+        foreach ($users as $value) {
+            $usersId[] = $value['user_id'];
+        }
+
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => 'item_id', 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']); 
+        
+        $usersListModels = [];
+        foreach ($listModels as $value) {
+            $usersListModels[] = $value['item_id'];
+        }
+        
+        foreach ($users as $key => $value) {
+
+            if (in_array($value['user_id'], $usersListModels)) {
+                $users[$key]['inDiffListDest'] = 'Y';
+            } else {
+                $users[$key]['inDiffListDest'] = 'N';
+            }
+        }
+
+        $return['lang'] = LangModel::getUsersForAdministrationLang();
+        $return['users'] = $users;        
+        return $response->withJson($return);
+    }
+
+    public function getUserForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user['signatures'] = UserModel::getSignaturesById(['userId' => $aArgs['userId']]);
+        $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $aArgs['userId']]);
+        $user['groups'] = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+        $user['entities'] = UserModel::getEntitiesById(['userId' => $aArgs['userId']]);
+        $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $aArgs['userId']]);
+        $user['lang'] = LangModel::getUserAdministrationLang();
+
+        return $response->withJson($user);
+    }
+
+    public function addGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['role']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::addGroup(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId'], 'role' => $data['role']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Group Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP]);
+    }
+
+    public function updateGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['role']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::updateGroup(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId'], 'role' => $data['role']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Group Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP]);
+    }
+
+    public function deleteGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        $r = UserModel::deleteGroup(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Group Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP, 'groups' => UserModel::getGroupsById(['userId' => $aArgs['userId']])]);
+    }
+
+    public function addEntity(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['role']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $r = UserModel::addEntity(['userId' => $aArgs['userId'], 'entityId' => $aArgs['groupId'], 'role' => $data['role']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Entity Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP]);
+    }
+
+    public function updateEntity(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $data = $request->getParams();
+        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['user_role']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request : Missing Argument']);
+        }
+
+        $r = UserModel::updateEntity(['userId' => $aArgs['userId'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Entity Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP]);
+    }
+
+    public function updatePrimaryEntity(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $r = UserModel::updatePrimaryEntity(['userId' => $aArgs['userId'], 'entityId' => $aArgs['entityId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Entity Update Error']);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP, 'entities' => UserModel::getEntitiesById(['userId' => $aArgs['userId']])]);
+    }
+
+    public function deleteEntity(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $primaryEntity = UserModel::getPrimaryEntityById(['userId' => $aArgs['userId']]);
+        $r = UserModel::deleteEntity(['userId' => $aArgs['userId'], 'entityId' => $aArgs['entityId']]);
+
+        if (!$r) {
+            return $response->withStatus(500)->withJson(['errors' => 'User Entity Update Error']);
+        }
+        if (!empty($primaryEntity['entity_id']) && $primaryEntity['entity_id'] == $aArgs['entityId']) {
+            UserModel::reassignPrimaryEntity(['userId' => $aArgs['userId']]);
+        }
+
+        return $response->withJson(['success' => _ADDED_GROUP, 'entities' => UserModel::getEntitiesById(['userId' => $aArgs['userId']])]);
+    }
+
+    private function hasUsersRights(array $aArgs = [])
+    {
+        $error = [
+            'status'    => 200,
+            'error'     => ''
+        ];
+        if (empty($aArgs['himself']) || $_SESSION['user']['UserId'] != $aArgs['userId']) {
+            if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+                $error['status'] = 403;
+                $error['error'] = 'Service forbidden';
+            }
+            if ($_SESSION['user']['UserId'] != 'superadmin') {
+                $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+                $users = UserModel::getByEntities([
+                    'select'    => ['users.user_id'],
+                    'entities'  => $entities
+                ]);
+                $allowed = false;
+                foreach ($users as $value) {
+                    if ($value['user_id'] == $aArgs['userId']) {
+                        $allowed = true;
+                    }
+                }
+                if (!$allowed) {
+                    $error['status'] = 403;
+                    $error['error'] = 'UserId out of perimeter';
+                }
+            } else {
+                $user = UserModel::getById(['userId' => $aArgs['userId']]);
+                if (empty($user)) {
+                    $error['status'] = 400;
+                    $error['error'] = 'User not found';
+                }
+            }
+        }
+
+        return $error;
+    }
+
+    private function checkNeededParameters(array $aArgs = [])
     {
         foreach ($aArgs['needed'] as $value) {
             if (empty($aArgs['data'][$value])) {

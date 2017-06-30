@@ -20,9 +20,9 @@
 
 require_once 'vendor/autoload.php';
 //require_once 'core/Controllers/ResController.php';
-require_once __DIR__.'/RequestSeda.php';
-require_once __DIR__.'/ArchiveTransfer.php';
-require_once __DIR__ . '/AbstractMessage.php';
+require_once __DIR__ . '/RequestSeda.php';
+require_once __DIR__ . '/class/ArchiveTransfer.php';
+require_once __DIR__ . '/class/AbstractMessage.php';
 
 $status = 0;
 $error = $content = '';

@@ -10,7 +10,7 @@
 /**
  * @brief Acknowledgement letter
  * @author dev@maarch.org
- * @ingroup export_seda
+ * @ingroup export seda
  */
 
 /**

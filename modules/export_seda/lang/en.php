@@ -1,13 +1,13 @@
 <?php
 
 if (!defined("_EXPORT_SEDA_COMMENT"))
-    define("_EXPORT_SEDA_COMMENT", "SEDA export");
+    define("_EXPORT_SEDA_COMMENT", "Export");
 
 if (!defined("_EXPORT_SEDA"))
-    define("_EXPORT_SEDA", "SEDA export");
+    define("_EXPORT_SEDA", "Export");
 
 if (!defined("_EXPORT_SEDA_VIEW"))
-    define("_EXPORT_SEDA_VIEW", "See SEDA export");
+    define("_EXPORT_SEDA_VIEW", "See message export");
 
 if (!defined("_INFORMATION_MESSAGE"))
     define("_INFORMATION_MESSAGE", "Information message");

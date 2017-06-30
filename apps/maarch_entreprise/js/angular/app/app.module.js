@@ -12,7 +12,11 @@ var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
+var header_component_1 = require("./header.component");
 var users_administration_component_1 = require("./users-administration.component");
+var user_administration_component_1 = require("./user-administration.component");
+var status_list_administration_component_1 = require("./status-list-administration.component");
+var status_administration_component_1 = require("./status-administration.component");
 var profile_component_1 = require("./profile.component");
 var parameter_component_1 = require("./parameter.component");
 var parameters_component_1 = require("./parameters.component");
@@ -37,6 +41,10 @@ AppModule = __decorate([
             router_1.RouterModule.forRoot([
                 { path: 'administration', component: administration_component_1.AdministrationComponent },
                 { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
+                { path: 'administration/users/:userId', component: user_administration_component_1.UserAdministrationComponent },
+                { path: 'administration/status/create', component: status_administration_component_1.StatusAdministrationComponent },
+                { path: 'administration/status/update/:id', component: status_administration_component_1.StatusAdministrationComponent },
+                { path: 'administration/status', component: status_list_administration_component_1.StatusListAdministrationComponent },
                 { path: 'profile', component: profile_component_1.ProfileComponent },
                 { path: 'administration/parameter/create', component: parameter_component_1.ParameterComponent },
                 { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
@@ -53,8 +61,24 @@ AppModule = __decorate([
             ], { useHash: true }),
             http_1.HttpModule
         ],
-        providers: [],
-        declarations: [app_component_1.AppComponent, actions_component_1.ActionsComponent, action_component_1.ActionComponent, administration_component_1.AdministrationComponent, reports_component_1.ReportsComponent, users_administration_component_1.UsersAdministrationComponent, priorities_component_1.PrioritiesComponent, priority_component_1.PriorityComponent, parameters_component_1.ParametersComponent, parameter_component_1.ParameterComponent, profile_component_1.ProfileComponent, signature_book_component_1.SignatureBookComponent, signature_book_component_1.SafeUrlPipe],
+        declarations: [
+            header_component_1.HeaderComponent,
+            app_component_1.AppComponent,
+            actions_component_1.ActionsComponent,
+            administration_component_1.AdministrationComponent,
+            reports_component_1.ReportsComponent,
+            users_administration_component_1.UsersAdministrationComponent,
+            user_administration_component_1.UserAdministrationComponent,
+            status_administration_component_1.StatusAdministrationComponent,
+            status_list_administration_component_1.StatusListAdministrationComponent,
+            priorities_component_1.PrioritiesComponent,
+            priority_component_1.PriorityComponent,
+            parameters_component_1.ParametersComponent,
+            parameter_component_1.ParameterComponent,
+            profile_component_1.ProfileComponent,
+            signature_book_component_1.SignatureBookComponent,
+            signature_book_component_1.SafeUrlPipe
+        ],
         bootstrap: [app_component_1.AppComponent]
     })
 ], AppModule);

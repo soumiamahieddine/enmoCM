@@ -104,7 +104,7 @@ var ProfileComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/user/profile')
+        this.http.get(this.coreUrl + 'rest/users/profile')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
@@ -114,9 +114,11 @@ var ProfileComponent = (function () {
             setTimeout(function () {
                 $j("#absenceUser").typeahead({
                     order: "asc",
+                    display: "formattedUser",
+                    templateValue: "{{user_id}}",
                     source: {
                         ajax: {
-                            type: "POST",
+                            type: "GET",
                             dataType: "json",
                             url: _this.coreUrl + "rest/users/autocompleter",
                         }
@@ -207,10 +209,10 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.activateAbsence = function () {
         var _this = this;
-        this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', this.userAbsenceModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
             .map(function (res) { return res.json(); })
             .subscribe(function () {
-            location.hash = "";
+            _this.userAbsenceModel = [];
             location.search = "?display=true&page=logout&abs_mode";
         }, function (err) {
             _this.resultInfo = JSON.parse(err._body).errors;
@@ -336,87 +338,78 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.submitSignature = function () {
         var _this = this;
-        this.http.post(this.coreUrl + 'rest/currentUser/signature', this.signatureModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/signature", this.signatureModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                _this.user.signatures = data.signatures;
-                _this.signatureModel = {
-                    base64: "",
-                    base64ForJs: "",
-                    name: "",
-                    type: "",
-                    size: 0,
-                    label: "",
-                };
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
+            _this.user.signatures = data.signatures;
+            _this.signatureModel = {
+                base64: "",
+                base64ForJs: "",
+                name: "",
+                type: "",
+                size: 0,
+                label: "",
+            };
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
         });
     };
     ProfileComponent.prototype.updateSignature = function () {
         var _this = this;
         var id = this.user.signatures[this.selectedSignature].id;
-        this.http.put(this.coreUrl + 'rest/currentUser/signature/' + id, { "label": this.selectedSignatureLabel })
+        this.http.put(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id, { "label": this.selectedSignatureLabel })
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
-                _this.selectedSignature = -1;
-                _this.selectedSignatureLabel = "";
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
+            _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
+            _this.selectedSignature = -1;
+            _this.selectedSignatureLabel = "";
+            _this.resultInfo = data.success;
+            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
+        }, function (err) {
+            _this.resultInfo = JSON.parse(err._body).errors;
+            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                $j("#resultInfo").slideUp(500);
+            });
         });
     };
     ProfileComponent.prototype.deleteSignature = function (id) {
         var _this = this;
         var r = confirm('Voulez-vous vraiment supprimer la signature ?');
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/currentUser/signature/' + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
-                else {
-                    _this.user.signatures = data.signatures;
-                    _this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
+                _this.user.signatures = data.signatures;
+                _this.resultInfo = data.success;
+                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
+            }, function (err) {
+                _this.resultInfo = JSON.parse(err._body).errors;
+                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
+                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
+                    $j("#resultInfo").slideUp(500);
+                });
             });
         }
     };
     ProfileComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.http.put(this.coreUrl + 'rest/user/profile', this.user)
+        this.http.put(this.coreUrl + 'rest/users/profile', this.user)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
