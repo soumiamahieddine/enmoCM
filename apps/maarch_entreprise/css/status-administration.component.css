@@ -1,0 +1,21 @@
+
+#statusIconList i{
+    color : #666;
+    font-size: 18px;
+}
+#statusIconList button{
+    width: 60px;
+    margin-bottom: 5px;
+}
+#statusIconList .btn-primary i{
+    color:white;
+}
+.mandatory{
+    font-size:7px;
+    color:red;
+    top: -1.5em;
+}
+
+label{
+    font-weight: normal;
+}
