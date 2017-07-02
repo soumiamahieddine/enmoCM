@@ -54,7 +54,7 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
         $response = $status->create($fullRequest, new \Slim\Http\Response());
 
         $compare = '[[{"id":"TEST","label_status":"TEST",'
-            . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
+            . '"is_system":"N","is_folder_status":"N","img_filename":null,'
             . '"maarch_module":"apps","can_be_searched":"Y",'
             . '"can_be_modified":"Y"}]]';
         
@@ -76,7 +76,7 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
         $response = $status->update($fullRequest, new \Slim\Http\Response());
 
         $compare = '[[{"id":"TEST","label_status":"TEST AFTER UP",'
-            . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
+            . '"is_system":"N","is_folder_status":"N","img_filename":null,'
             . '"maarch_module":"apps","can_be_searched":"Y",'
             . '"can_be_modified":"Y"}]]';
         

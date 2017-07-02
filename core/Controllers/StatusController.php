@@ -70,13 +70,13 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $errors = $this->control($request, 'create');
+        $request = $request->getParams();
+        $aArgs   = self::manageValue($request);
+        $errors  = $this->control($aArgs, 'create');
 
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
-
-        $aArgs = $request->getParams();
 
         $return = StatusModel::create($aArgs);
 
@@ -98,13 +98,14 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $errors = $this->control($request, 'update');
+        $request = $request->getParams();
+        $aArgs   = self::manageValue($request);
+        $errors  = $this->control($aArgs, 'update');
 
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $aArgs = $request->getParams();
 
         $return = StatusModel::update($aArgs);
 
@@ -143,27 +144,43 @@ class StatusController
         return $response->withJson([$obj]);
     }
 
+    protected function manageValue($request){
+        foreach ($request  as $key => $value) {
+            if(in_array($key, ['is_system', 'is_folder_status', 'can_be_searched', 'can_be_modified'])){
+                if(empty($value)){
+                    $request[$key] = 'N';
+                } else {
+                    $request[$key] = 'Y';
+                }
+            }
+        }
+
+        $request['is_system'] = 'N';
+
+        return $request;
+    }
+
     protected function control($request, $mode)
     {
         $errors = [];
 
         if ($mode == 'update') {
             $obj = StatusModel::getById([
-                'id' => $request->getParam('id')
+                'id' => $request['id']
             ]);
             if (empty($obj)) {
                 array_push(
                     $errors,
-                    _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
+                    _ID . ' ' . $request['id'] . ' ' . _NOT_EXISTS
                 );
             }
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('id'))) {
+        if (!Validator::notEmpty()->validate($request['id'])) {
             array_push($errors, _ID . ' ' . _IS_EMPTY);
         } elseif ($mode == 'create') {
             $obj = StatusModel::getById([
-                'id' => $request->getParam('id')
+                'id' => $request['id']
             ]);
             if (!empty($obj)) {
                 array_push(
@@ -173,53 +190,53 @@ class StatusController
             }
         }
 
-        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id')) ||
-            !Validator::length(1, 10)->validate($request->getParam('id'))) {
+        if (!Validator::regex('/^[\w.-]*$/')->validate($request['id']) ||
+            !Validator::length(1, 10)->validate($request['id'])) {
             array_push($errors, 'id not valid');
         }
 
-        if (!Validator::notEmpty()->validate($request->getParam('label_status')) ||
-            !Validator::length(1, 50)->validate($request->getParam('label_status'))) {
+        if (!Validator::notEmpty()->validate($request['label_status']) ||
+            !Validator::length(1, 50)->validate($request['label_status'])) {
             array_push($errors, 'label_status not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('is_system')) &&
-            !Validator::contains('Y')->validate($request->getParam('is_system')) &&
-            !Validator::contains('N')->validate($request->getParam('is_system'))
+        if ( Validator::notEmpty()->validate($request['is_system']) &&
+            !Validator::contains('Y')->validate($request['is_system']) &&
+            !Validator::contains('N')->validate($request['is_system'])
         ) {
             array_push($errors, 'is_system not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('Y')->validate($request->getParam('is_folder_status')) &&
-            !Validator::contains('N')->validate($request->getParam('is_folder_status'))
+        if ( Validator::notEmpty()->validate($request['is_folder_status']) &&
+            !Validator::contains('Y')->validate($request['is_folder_status']) &&
+            !Validator::contains('N')->validate($request['is_folder_status'])
         ) {
             array_push($errors, 'is_folder_status not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('img_filename')) &&
-            (!Validator::regex('/^[\w-.]+$/')->validate($request->getParam('img_filename')) ||
-            !Validator::length(1, 255)->validate($request->getParam('img_filename')))
+        if ( Validator::notEmpty()->validate($request['img_filename']) &&
+            (!Validator::regex('/^[\w-.]+$/')->validate($request['img_filename']) ||
+            !Validator::length(1, 255)->validate($request['img_filename']))
         ) {
             array_push($errors, 'img_filename not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('maarch_module')) &&
-            !Validator::length(null, 255)->validate($request->getParam('maarch_module'))
+        if ( Validator::notEmpty()->validate($request['maarch_module']) &&
+            !Validator::length(null, 255)->validate($request['maarch_module'])
         ) {
             array_push($errors, 'maarch_module not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('Y')->validate($request->getParam('can_be_searched')) &&
-            !Validator::contains('N')->validate($request->getParam('can_be_searched'))
+        if ( Validator::notEmpty()->validate($request['can_be_searched']) &&
+            !Validator::contains('Y')->validate($request['can_be_searched']) &&
+            !Validator::contains('N')->validate($request['can_be_searched'])
         ) {
             array_push($errors, 'can_be_searched not valid');
         }
 
-        if ( Validator::notEmpty()->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('Y')->validate($request->getParam('can_be_modified')) &&
-            !Validator::contains('N')->validate($request->getParam('can_be_modified'))
+        if ( Validator::notEmpty()->validate($request['can_be_modified']) &&
+            !Validator::contains('Y')->validate($request['can_be_modified']) &&
+            !Validator::contains('N')->validate($request['can_be_modified'])
         ) {
             array_push($errors, 'can_be_modified');
         }
