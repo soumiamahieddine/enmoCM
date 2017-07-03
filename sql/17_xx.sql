@@ -60,6 +60,7 @@ INSERT INTO status_images (image_name) VALUES ('fm-letter-incoming');
 INSERT INTO status_images (image_name) VALUES ('fm-letter-outgoing');
 INSERT INTO status_images (image_name) VALUES ('fm-letter-internal');
 INSERT INTO status_images (image_name) VALUES ('fm-file-fingerprint');
+INSERT INTO status_images (image_name) VALUES ('fm-classification-plan-l1');
 
 
 ALTER TABLE status DROP COLUMN IF EXISTS identifier;
