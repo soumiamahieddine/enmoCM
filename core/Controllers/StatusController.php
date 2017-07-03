@@ -241,7 +241,7 @@ class StatusController
             !Validator::contains('Y')->validate($request['can_be_modified']) &&
             !Validator::contains('N')->validate($request['can_be_modified'])
         ) {
-            array_push($errors, 'can_be_modified');
+            array_push($errors, 'can_be_modified not valid');
         }
 
         return $errors;
