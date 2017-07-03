@@ -29,3 +29,5 @@ WITH (OIDS=FALSE);
 
 ALTER TABLE status DROP COLUMN IF EXISTS identifier;
 ALTER TABLE status ADD COLUMN identifier serial;
+ALTER TABLE users DROP COLUMN IF EXISTS id;
+ALTER TABLE users ADD COLUMN id serial;
