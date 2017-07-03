@@ -24,6 +24,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
+            'order_by'  => 'identifier'
         ]);
 
         return $aReturn;
@@ -49,6 +50,21 @@ class StatusModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
+    public static function getByIdentifier(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['identifier']);
+        static::checkNumeric($aArgs, ['identifier']);
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['status'],
+            'where'     => ['identifier = ?'],
+            'data'      => [$aArgs['identifier']]
+        ]);
+
+        return $aReturn;
+    }
+
     public static function create(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['id', 'label_status']);
@@ -61,10 +77,12 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id', 'label_status']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['label_status', 'identifier']);
+        static::checkNumeric($aArgs, ['identifier']);
 
-        $where['id'] = $aArgs['id'];
+        $where['identifier'] = $aArgs['identifier'];
+        unset($aArgs['id']);
+        unset($aArgs['identifier']);
 
         $aReturn = static::updateTable(
             $aArgs,
@@ -77,15 +95,28 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        static::checkRequired($aArgs, ['identifier']);
+        static::checkNumeric($aArgs, ['identifier']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'status',
-                'where' => ['id = ?'],
-                'data'  => [$aArgs['id']]
+                'where' => ['identifier = ?'],
+                'data'  => [$aArgs['identifier']]
             ]);
 
         return $aReturn;
     }
+
+    public static function getStatusImages(array $aArgs = [])
+    {
+
+        $aReturn = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['status_images'],
+            'order_by'  => 'id'
+        ]);
+
+        return $aReturn;
+    }
+
 }

@@ -78,30 +78,9 @@
                 <i class="fa fa-picture-o" aria-hidden="true"></i> {{lang.img_related}}
             </div>
             <div class="col-sm-12 panel-body">
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-new"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-inprogress"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-info"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-wait"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-validated"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-rejected"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-end"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-newmail"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-attr"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-arev"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aval"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aimp"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-imp"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aenv"></i></button> 
-                <button [ngClass]="[status.img_filename == 'fm-letter-status-acla' ? 'btn-primary' : 'btn-default']" type="button" class="btn btn-group-lg"><i id="img_0" class="fm fm-letter-status-acla"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aarch"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-add"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-search"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-del"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-incoming"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-outgoing"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-internal"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-file-fingerprint"></i></button> 
+                <button *ngFor="let image of statusImages" type="button" [ngClass]="[status.img_filename==image.image_name ? 'btn-primary' : 'btn-default']" class="btn btn-group-lg" (click)="selectImage(image.image_name)">
+                    <i id="img_0" [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}}"></i>
+                </button> 
             </div>
         </div>
         <div class="col-sm-12 panel-body" style="text-align:center;">
@@ -114,12 +93,12 @@
 
 <div class="tooltip_templates" style="display: none">
     <span id="infoSearchableTooltip">
-        Si <b>NON coché</b>,<br/>
-        le statut <b>{{status.id}}</b> ne vous sera <b>PAS proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents.
+        Si <b>coché</b>,<br/>
+        le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents.
     </span>
     <span id="infoCanBeModifiedTooltip">
-        Si <b>NON coché</b>,<br/>
-        vous ne pourrez <b>PAS modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>.
+        Si <b>coché</b>,<br/>
+        vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>.
    </span>
    <span id="infoIsFolderStatusTooltip">
         Si <b>coché</b>,<br/>
