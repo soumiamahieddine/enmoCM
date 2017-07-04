@@ -12,7 +12,7 @@ var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
-var header_component_1 = require("./header.component");
+//import { HeaderComponent }                      from './header.component';
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
@@ -33,7 +33,8 @@ AppModule = __decorate([
             router_1.RouterModule.forRoot([
                 { path: 'administration', component: administration_component_1.AdministrationComponent },
                 { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
-                { path: 'administration/users/:userId', component: user_administration_component_1.UserAdministrationComponent },
+                { path: 'administration/users/new', component: user_administration_component_1.UserAdministrationComponent },
+                { path: 'administration/users/:id', component: user_administration_component_1.UserAdministrationComponent },
                 { path: 'administration/status/create', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/update/:id', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status', component: status_list_administration_component_1.StatusListAdministrationComponent },
@@ -44,7 +45,6 @@ AppModule = __decorate([
             http_1.HttpModule
         ],
         declarations: [
-            header_component_1.HeaderComponent,
             app_component_1.AppComponent,
             administration_component_1.AdministrationComponent,
             users_administration_component_1.UsersAdministrationComponent,

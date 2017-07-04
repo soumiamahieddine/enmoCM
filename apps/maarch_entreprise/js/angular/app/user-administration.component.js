@@ -14,10 +14,11 @@ var http_1 = require("@angular/http");
 var router_1 = require("@angular/router");
 require("rxjs/add/operator/map");
 var UserAdministrationComponent = (function () {
-    function UserAdministrationComponent(http, route, zone) {
+    function UserAdministrationComponent(http, route, router, zone) {
         var _this = this;
         this.http = http;
         this.route = route;
+        this.router = router;
         this.zone = zone;
         this.user = {
             lang: {}
@@ -33,7 +34,6 @@ var UserAdministrationComponent = (function () {
         this.userAbsenceModel = [];
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
-        this.resultInfo = "";
         this.loading = false;
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
@@ -50,29 +50,44 @@ var UserAdministrationComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.route.params.subscribe(function (params) {
-            _this.userId = params['userId'];
-            _this.http.get(_this.coreUrl + 'rest/administration/users/' + _this.userId)
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
-                _this.user = data;
-                _this.loading = false;
-                setTimeout(function () {
-                    $j("#absenceUser").typeahead({
-                        order: "asc",
-                        display: "formattedUser",
-                        templateValue: "{{user_id}}",
-                        source: {
-                            ajax: {
-                                type: "GET",
-                                dataType: "json",
-                                url: _this.coreUrl + "rest/users/autocompleter",
+            if (typeof params['id'] == "undefined") {
+                _this.userCreation = true;
+                _this.http.get(_this.coreUrl + "rest/administration/users/new")
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.user = data;
+                    _this.loading = false;
+                }, function () {
+                    location.href = "index.php";
+                });
+            }
+            else {
+                _this.userCreation = false;
+                _this.serialId = params['id'];
+                _this.http.get(_this.coreUrl + "rest/administration/users/" + _this.serialId)
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.user = data;
+                    _this.userId = data.user_id;
+                    _this.loading = false;
+                    setTimeout(function () {
+                        $j("#absenceUser").typeahead({
+                            order: "asc",
+                            display: "formattedUser",
+                            templateValue: "{{user_id}}",
+                            source: {
+                                ajax: {
+                                    type: "GET",
+                                    dataType: "json",
+                                    url: _this.coreUrl + "rest/users/autocompleter",
+                                }
                             }
-                        }
-                    });
-                }, 0);
-            }, function () {
-                location.href = "index.php";
-            });
+                        });
+                    }, 0);
+                }, function () {
+                    location.href = "index.php";
+                });
+            }
         });
     };
     UserAdministrationComponent.prototype.processAfterUpload = function (b64Content) {
@@ -90,11 +105,7 @@ var UserAdministrationComponent = (function () {
             this.signatureModel.type = "";
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
-            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification("Taille maximum de fichier dépassée (2 MB)");
         }
     };
     UserAdministrationComponent.prototype.clickOnUploader = function (id) {
@@ -120,23 +131,14 @@ var UserAdministrationComponent = (function () {
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     };
     UserAdministrationComponent.prototype.resetPassword = function () {
-        var _this = this;
         var r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.userId + "/password", {})
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
@@ -153,38 +155,21 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                _this.resultInfo = data.success;
                 $j("#groupRole")[0].value = "";
                 $j('#addGroupModal').modal('hide');
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
     UserAdministrationComponent.prototype.updateGroup = function (group) {
-        var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.deleteGroup = function (group) {
@@ -196,17 +181,9 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
@@ -223,38 +200,21 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
                 _this.user.allEntities = data.allEntities;
-                _this.resultInfo = data.success;
                 $j("#entityRole")[0].value = "";
                 $j('#addEntityModal').modal('hide');
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
     UserAdministrationComponent.prototype.updateEntity = function (entity) {
-        var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id, entity)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.updatePrimaryEntity = function (entity) {
@@ -263,17 +223,9 @@ var UserAdministrationComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user['entities'] = data.entities;
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.deleteEntity = function (entity) {
@@ -285,23 +237,15 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
                 _this.user.allEntities = data.allEntities;
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
     UserAdministrationComponent.prototype.submitSignature = function () {
         var _this = this;
-        this.http.post(this.coreUrl + "rest/users/" + this.userId + "/signature", this.signatureModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
@@ -313,60 +257,36 @@ var UserAdministrationComponent = (function () {
                 size: 0,
                 label: "",
             };
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.updateSignature = function () {
         var _this = this;
         var id = this.user.signatures[this.selectedSignature].id;
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/signature/" + id, { "label": this.selectedSignatureLabel })
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": this.selectedSignatureLabel })
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
             _this.selectedSignature = -1;
             _this.selectedSignatureLabel = "";
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.deleteSignature = function (id) {
         var _this = this;
         var r = confirm('Voulez-vous vraiment supprimer la signature ?');
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/signature/" + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
@@ -398,41 +318,32 @@ var UserAdministrationComponent = (function () {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
             $j('#manageAbs').modal('hide');
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     UserAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-        }, function (error) {
-            alert(error.statusText);
-        });
+        if (this.userCreation) {
+            this.http.post(this.coreUrl + "rest/users", this.user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                successNotification(data.success);
+                _this.router.navigate(["/administration/users/" + _this.user.userId]);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
+        else {
+            this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
     };
     return UserAdministrationComponent;
 }());
@@ -441,6 +352,6 @@ UserAdministrationComponent = __decorate([
         templateUrl: angularGlobals["user-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], UserAdministrationComponent);
 exports.UserAdministrationComponent = UserAdministrationComponent;

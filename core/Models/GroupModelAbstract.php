@@ -55,7 +55,7 @@ class GroupModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
-        $rawUserGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+        $rawUserGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
 
         $userGroups = [];
         foreach ($rawUserGroups as $value) {
