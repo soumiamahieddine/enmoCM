@@ -199,6 +199,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE status
 (
+  identifier serial,
   id character varying(10) NOT NULL,
   label_status character varying(50) NOT NULL,
   is_system character(1) NOT NULL DEFAULT 'Y'::bpchar,
@@ -208,6 +209,14 @@ CREATE TABLE status
   can_be_searched character(1) NOT NULL DEFAULT 'Y'::bpchar,
   can_be_modified character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT status_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE status_images
+(
+  id serial,
+  image_name character varying(128) NOT NULL,
+  CONSTRAINT status_images_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
