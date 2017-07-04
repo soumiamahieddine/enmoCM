@@ -119,20 +119,20 @@ var StatusAdministrationComponent = (function () {
             this.http.post(this.coreUrl + 'rest/status', this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                successNotification(_this.lang.newStatusAdded + ' : ' + _this.status.label_status);
+                successNotification(_this.lang.newStatusAdded + ' : ' + _this.status.id);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
         else if (this.mode == "update") {
             this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                successNotification(_this.lang.statusUpdated + ' : ' + _this.status.label_status);
+                successNotification(_this.lang.statusUpdated + ' : ' + _this.status.id);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
     };

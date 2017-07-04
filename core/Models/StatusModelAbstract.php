@@ -38,8 +38,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -53,8 +53,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function getByIdentifier(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -68,8 +68,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id', 'label_status']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label_status']);
+        ValidatorModel::stringType($aArgs, ['id', 'label_status']);
 
         $aReturn = static::insertInto($aArgs, 'status');
 
@@ -78,8 +78,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['label_status', 'identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['label_status', 'identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $where['identifier'] = $aArgs['identifier'];
         unset($aArgs['id']);
@@ -97,8 +97,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'status',

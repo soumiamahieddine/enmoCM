@@ -174,7 +174,9 @@ class StatusController
     {
         $errors = [];
 
-        if ($mode == 'create') {
+        if(!Validator::notEmpty()->validate($request['id'])){
+            array_push($errors, _ID . ' ' . _EMPTY);
+        } else if ($mode == 'create') {
             $obj = StatusModel::getById([
                 'id' => $request['id']
             ]);

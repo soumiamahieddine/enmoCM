@@ -119,20 +119,20 @@ export class StatusAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + 'rest/status', this.status)
             .map(res => res.json())
             .subscribe((data) => {
-                successNotification(this.lang.newStatusAdded + ' : ' + this.status.label_status);
+                successNotification(this.lang.newStatusAdded + ' : ' + this.status.id);
                 this.router.navigate(['administration/status']);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         } else if(this.mode == "update"){
 
             this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
             .map(res => res.json())             
             .subscribe((data) => {
-                successNotification(this.lang.statusUpdated + ' : ' + this.status.label_status);
+                successNotification(this.lang.statusUpdated + ' : ' + this.status.id);
                 this.router.navigate(['administration/status']);                    
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
     }
