@@ -3,10 +3,10 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
-declare function disablePrototypeJS(method: string, plugins: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var tinymce : any;
-declare var Prototype : any;
 declare var angularGlobals : any;
 
 
@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit {
     showPassword                : boolean   = false;
     selectedSignature           : number    = -1;
     selectedSignatureLabel      : string    = "";
-    resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
 
@@ -65,13 +64,6 @@ export class ProfileComponent implements OnInit {
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
-        }
-
-        if (Prototype.BrowserFeatures.ElementExtensions) {
-            //FIX PROTOTYPE CONFLICT
-            let pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover','tab'];
-            disablePrototypeJS('show', pluginsToDisable);
-            disablePrototypeJS('hide', pluginsToDisable);
         }
 
         //LOAD EDITOR TINYMCE for MAIL SIGN
@@ -122,10 +114,6 @@ export class ProfileComponent implements OnInit {
             .subscribe((data) => {
                 this.user = data;
 
-                this.user.baskets.forEach((value: any, index: number) => {
-                    this.user.baskets[index]['disabled'] = false;
-                });
-
                 setTimeout(() => {
                     $j("#absenceUser").typeahead({
                         order: "asc",
@@ -160,11 +148,7 @@ export class ProfileComponent implements OnInit {
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
 
-            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification("Taille maximum de fichier dépassée (2 MB)");
         }
     }
 
@@ -244,11 +228,7 @@ export class ProfileComponent implements OnInit {
                 this.userAbsenceModel  = [];
                 location.search = "?display=true&page=logout&abs_mode";
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -257,11 +237,7 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(data.errors);
                 } else {
                     this.showPassword = false;
                     this.passwordModel = {
@@ -269,13 +245,10 @@ export class ProfileComponent implements OnInit {
                         newPassword             : "",
                         reNewPassword           : "",
                     };
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    //auto close
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    successNotification(data.success);
                 }
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -286,11 +259,7 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(data.errors);
                 } else {
                     this.user.emailSignatures = data.emailSignatures;
                     this.mailSignatureModel     = {
@@ -299,11 +268,7 @@ export class ProfileComponent implements OnInit {
                         title                   : "",
                     };
                     tinymce.get('emailSignature').setContent("");
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    }); 
+                    successNotification(data.success);
                 }
             });
     }
@@ -316,19 +281,11 @@ export class ProfileComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 if (data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(data.errors);
                 } else {
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    }); 
+                    successNotification(data.success);
                 }
             });
     }
@@ -343,11 +300,7 @@ export class ProfileComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.errors) {
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
+                        errorNotification(data.errors);
                     } else {
                         this.user.emailSignatures = data.emailSignatures;
                         this.mailSignatureModel     = {
@@ -356,18 +309,14 @@ export class ProfileComponent implements OnInit {
                             title                   : "",
                         };
                         tinymce.get('emailSignature').setContent("");
-                        this.resultInfo = data.success;
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        }); 
+                        successNotification(data.success);
                     }
                 });
         }
     }
 
     submitSignature() {
-        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/signature", this.signatureModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/signatures", this.signatureModel)
             .map(res => res.json())
             .subscribe((data) => {
                 this.user.signatures = data.signatures;
@@ -379,40 +328,24 @@ export class ProfileComponent implements OnInit {
                     size                    : 0,
                     label                   : "",
                 };
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
     updateSignature() {
         var id = this.user.signatures[this.selectedSignature].id;
 
-        this.http.put(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id, {"label" : this.selectedSignatureLabel})
+        this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id, {"label" : this.selectedSignatureLabel})
             .map(res => res.json())
             .subscribe((data) => {
                 this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
                 this.selectedSignature = -1;
                 this.selectedSignatureLabel = "";
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -420,21 +353,13 @@ export class ProfileComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment supprimer la signature ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.signatures = data.signatures;
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }
@@ -443,23 +368,9 @@ export class ProfileComponent implements OnInit {
         this.http.put(this.coreUrl + 'rest/users/profile', this.user)
             .map(res => res.json())
             .subscribe((data) => {
-                if (data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                            
-                } else {
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    //auto close
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });   
-                }
-            }, (error) => {
-                alert(error.statusText);
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 }

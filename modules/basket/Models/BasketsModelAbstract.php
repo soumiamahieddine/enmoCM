@@ -102,27 +102,30 @@ class BasketsModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
-        $userGroups = UserModel::getGroupsById(['userId' => $aArgs['userId']]);
+        $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupIds = [];
         foreach ($userGroups as $value) {
             $groupIds[] = $value['group_id'];
         }
 
-        $aBaskets = static::select(
-            [
-                'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
-                'table'     => ['groupbasket, baskets'],
-                'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
-                'data'      => [$groupIds],
-                'order_by'  => 'group_id, basket_order, basket_name'
-            ]
-        );
+        $aBaskets = [];
+        if (!empty($groupIds)) {
+            $aBaskets = static::select(
+                [
+                    'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
+                    'table'     => ['groupbasket, baskets'],
+                    'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
+                    'data'      => [$groupIds],
+                    'order_by'  => 'group_id, basket_order, basket_name'
+                ]
+            );
 
-        foreach ($aBaskets as $key => $value) {
-            $aBaskets[$key]['is_virtual'] = 'N';
-            $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
+            foreach ($aBaskets as $key => $value) {
+                $aBaskets[$key]['is_virtual'] = 'N';
+                $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
+            }
+            $aBaskets = array_merge($aBaskets, self::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }
-        $aBaskets = array_merge($aBaskets, self::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
 
         return $aBaskets;
     }

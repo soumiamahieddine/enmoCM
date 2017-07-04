@@ -67,6 +67,7 @@ class VisaController
             'actionLabel' => $actionLabel
         ];
 
+        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
 
         $datas = [];
         $datas['actions']       = $actionsData;
@@ -75,7 +76,7 @@ class VisaController
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
         $datas['nbNotes']       = \NotesModel::countForCurrentUserByResId(['resId' => $resId]);
-        $datas['signatures']    = UserModel::getSignaturesById(['userId' => $_SESSION['user']['UserId']]);
+        $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = \VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['canSign']       = $coreTools->test_service('sign_document', 'visa', false);

@@ -102,7 +102,8 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/{userId}', \Core\Controllers\UserController::class . ':getUserForAdministration');
+$app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
+$app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
@@ -151,6 +152,7 @@ $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':ge
 $app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserController::class . ':getUsersForAutocompletionWithExclusion');
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
+$app->post('/users', \Core\Controllers\UserController::class . ':create');
 $app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');
 $app->delete('/users/{userId}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{userId}/groups', \Core\Controllers\UserController::class . ':addGroup');
@@ -161,9 +163,9 @@ $app->put('/users/{userId}/entities/{entityId}', \Core\Controllers\UserControlle
 $app->put('/users/{userId}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
 $app->put('/users/{userId}/password', \Core\Controllers\UserController::class . ':resetPassword');
-$app->post('/users/{userId}/signature', \Core\Controllers\UserController::class . ':addSignature');
-$app->put('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':updateSignature');
-$app->delete('/users/{userId}/signature/{id}', \Core\Controllers\UserController::class . ':deleteSignature');
+$app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
+$app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
+$app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{userId}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
 
 //CurrentUser

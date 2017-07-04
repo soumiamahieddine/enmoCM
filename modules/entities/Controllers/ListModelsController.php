@@ -37,7 +37,7 @@ class ListModelsController
         $data = $request->getParams();
 
         foreach ($data['redirectListModels'] as $listModel) {
-            $user = UserModel::getById(['userId' => $listModel['redirectUserId']]);
+            $user = UserModel::getByUserId(['userId' => $listModel['redirectUserId']]);
             $userId = $listModel['redirectUserId'];
             if (empty($user)) {
                 return $response->withStatus(404)->withJson(['errors' => "User « $userId » not found"]);
