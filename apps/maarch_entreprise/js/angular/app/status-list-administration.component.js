@@ -83,11 +83,11 @@ var StatusListAdministrationComponent = (function () {
     StatusListAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Statuts";
     };
-    StatusListAdministrationComponent.prototype.deleteStatus = function (statusId) {
+    StatusListAdministrationComponent.prototype.deleteStatus = function (statusId, statusIdentifier) {
         var _this = this;
         var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/status/' + statusId)
+            this.http.delete(this.coreUrl + 'rest/status/' + statusIdentifier)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {

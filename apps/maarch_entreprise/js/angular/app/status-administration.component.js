@@ -29,6 +29,7 @@ var StatusAdministrationComponent = (function () {
             img_filename: null
         };
         this.lang = "";
+        this.statusImages = "";
         this.loading = false;
         this.resultInfo = "";
     }
@@ -39,19 +40,20 @@ var StatusAdministrationComponent = (function () {
         this.prepareStatus();
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
-            if (_this.route.toString().includes('update')) {
-                _this.mode = 'update';
-                _this.statusId = params['id'];
-                _this.getStatusInfos(_this.statusId);
-            }
-            else if (_this.route.toString().includes('create')) {
-                _this.http.get(_this.coreUrl + 'rest/status/lang')
+            if (_this.route.toString().includes('status/new')) {
+                _this.http.get(_this.coreUrl + 'rest/status/new')
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
-                    _this.lang = data;
+                    _this.lang = data['lang'];
+                    _this.statusImages = data['statusImages'];
                     _this.mode = 'create';
                     _this.pageTitle = _this.lang.newStatus;
                 });
+            }
+            else {
+                _this.mode = 'update';
+                _this.statusIdentifier = params['identifier'];
+                _this.getStatusInfos(_this.statusIdentifier);
             }
             setTimeout(function () {
                 $j(".help").tooltipster({
@@ -68,9 +70,9 @@ var StatusAdministrationComponent = (function () {
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>Statuts</a> > Modification";
     };
-    StatusAdministrationComponent.prototype.getStatusInfos = function (statusId) {
+    StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/status/' + statusId)
+        this.http.get(this.coreUrl + 'rest/status/' + statusIdentifier)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
@@ -101,10 +103,14 @@ var StatusAdministrationComponent = (function () {
                     _this.status.is_folder_status = false;
                 }
                 _this.lang = data['lang'];
+                _this.statusImages = data['statusImages'];
                 _this.pageTitle = _this.lang.modify_status + ' : ' + _this.status.id;
-                console.log(_this.status);
             }
         });
+    };
+    StatusAdministrationComponent.prototype.selectImage = function (image_name) {
+        this.status.img_filename = image_name;
+        console.log(this.status.img_filename);
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
@@ -130,7 +136,7 @@ var StatusAdministrationComponent = (function () {
             });
         }
         else if (this.mode == "update") {
-            this.http.put(this.coreUrl + 'rest/status/' + this.statusId, this.status)
+            this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {

@@ -37,29 +37,36 @@ class StatusController
         return $response->withJson($datas);
     }
 
-    public function getLang(RequestInterface $request, ResponseInterface $response){
-        $obj = StatusModel::getStatusLang();
-        return $response->withJson($obj);
+    public function getNewInformations(RequestInterface $request, ResponseInterface $response)
+    {
+        $datas = [
+            'statusImages' => StatusModel::getStatusImages(),
+            'lang'         => StatusModel::getStatusLang()
+        ];
+        
+        return $response->withJson($datas);
+
     }
 
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getByIdentifier(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!empty($aArgs['id'])) {
-            $obj = StatusModel::getById([
-                'id' => $aArgs['id']
+        if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
+            $obj = StatusModel::getByIdentifier([
+                'identifier' => $aArgs['identifier']
             ]);
 
             if (empty($obj)) {
-                return $response->withStatus(404)->withJson(['errors' => 'Id not found']);
+                return $response->withStatus(404)->withJson(['errors' => 'identifier not found']);
             }
 
             return $response->withJson([
-                'status' => $obj,
-                'lang'   =>  StatusModel::getStatusLang()
+                'status'       => $obj,
+                'lang'         =>  StatusModel::getStatusLang(),
+                'statusImages' => StatusModel::getStatusImages(),
             ]);
 
         } else {
-            return $response->withStatus(400)->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+            return $response->withStatus(400)->withJson(['errors' => 'identifier not valid']);
         }
 
     }
@@ -92,13 +99,15 @@ class StatusController
         }
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response)
+    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $request = $request->getParams();
+        $request = array_merge($request, $aArgs);
+
         $aArgs   = self::manageValue($request);
         $errors  = $this->control($aArgs, 'update');
 
@@ -106,13 +115,11 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-
         $return = StatusModel::update($aArgs);
 
         if ($return) {
-            $id = $aArgs['id'];
-            $obj = StatusModel::getById([
-                'id' => $id
+            $obj = StatusModel::getByIdentifier([
+                'identifier' => $aArgs['identifier']
             ]);
 
         } else {
@@ -130,15 +137,14 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+        if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
             $obj = StatusModel::delete([
-                'id' => $id
+                'identifier' => $aArgs['identifier']
             ]);
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _NOT_DELETE]);
+                ->withJson(['errors' => 'identifier not valid']);
         }
 
         return $response->withJson([$obj]);
@@ -164,21 +170,7 @@ class StatusController
     {
         $errors = [];
 
-        if ($mode == 'update') {
-            $obj = StatusModel::getById([
-                'id' => $request['id']
-            ]);
-            if (empty($obj)) {
-                array_push(
-                    $errors,
-                    _ID . ' ' . $request['id'] . ' ' . _NOT_EXISTS
-                );
-            }
-        }
-
-        if (!Validator::notEmpty()->validate($request['id'])) {
-            array_push($errors, _ID . ' ' . _IS_EMPTY);
-        } elseif ($mode == 'create') {
+        if ($mode == 'create') {
             $obj = StatusModel::getById([
                 'id' => $request['id']
             ]);
@@ -188,10 +180,21 @@ class StatusController
                     _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
+        } else if ($mode == 'update') {
+            $obj = StatusModel::getByIdentifier([
+                'identifier' => $request['identifier']
+            ]);
+            if (empty($obj)) {
+                array_push(
+                    $errors,
+                    $request['identifier'] . ' ' . _NOT_EXISTS
+                );
+            }
         }
 
         if (!Validator::regex('/^[\w.-]*$/')->validate($request['id']) ||
-            !Validator::length(1, 10)->validate($request['id'])) {
+            !Validator::length(1, 10)->validate($request['id']) ||
+            !Validator::notEmpty()->validate($request['id'])) {
             array_push($errors, 'id not valid');
         }
 
@@ -238,7 +241,7 @@ class StatusController
             !Validator::contains('Y')->validate($request['can_be_modified']) &&
             !Validator::contains('N')->validate($request['can_be_modified'])
         ) {
-            array_push($errors, 'can_be_modified');
+            array_push($errors, 'can_be_modified not valid');
         }
 
         return $errors;

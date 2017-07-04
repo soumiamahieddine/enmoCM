@@ -107,11 +107,11 @@ $app->get('/administration/users/{id}', \Core\Controllers\UserController::class 
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
-$app->get('/status/lang', \Core\Controllers\StatusController::class . ':getLang');
-$app->get('/status/{id}', \Core\Controllers\StatusController::class . ':getById');
+$app->get('/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
+$app->get('/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/status/{id}', \Core\Controllers\StatusController::class . ':update');
-$app->delete('/status/{id}', \Core\Controllers\StatusController::class . ':delete');
+$app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
+$app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
 
 //docserver
 $app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList');
