@@ -85,11 +85,12 @@ class StatusModelAbstract extends \Apps_Table_Service
         unset($aArgs['id']);
         unset($aArgs['identifier']);
 
-        $aReturn = static::updateTable(
-            $aArgs,
-            'status',
-            $where
-        );
+        $aReturn = parent::update([
+            'table' => 'status',
+            'set'   => $aArgs,
+            'where' => ['identifier = ?'],
+            'data'  => [$where['identifier']]
+        ]);
 
         return $aReturn;
     }

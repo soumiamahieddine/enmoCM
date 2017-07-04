@@ -29,8 +29,7 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response = $status->create($fullRequest, new \Slim\Http\Response());
-
+        $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType("int", $responseBody[0][0]->identifier);
@@ -60,8 +59,10 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
             'is_folder_status' => ''
         ];
         $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
+
         $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
+
         $this->assertSame(_ID . ' TEST ' . _ALREADY_EXISTS, $responseBody->errors[0]);
 
         ########## CREATE FAIL 2 ##########
@@ -73,9 +74,11 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
             'is_folder_status' => ''
         ];
         $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
+
         $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('label_status not valid', $responseBody->errors[0]);
+
+        $this->assertSame(_DESCRIPTION . ' ' . _INVALID, $responseBody->errors[0]);
     }
 
     public function testGetListUpdateDelete()
@@ -137,7 +140,8 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
 
         $aArgs = [
             'id'           => 'TEST',
-            'label_status' => 'TEST AFTER UP'
+            'label_status' => 'TEST AFTER UP',
+            'img_filename' => 'fm-letter-end',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -158,13 +162,15 @@ class StatusControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $aCompare = json_decode(json_encode($compare), false);
+
         $this->assertEquals($aCompare, $responseBody[0][0], "\$canonicalize = true", 0.0, 10, true);
 
         ########## UPDATE FAIL ##########
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
             'id'           => 'PZOEIRUTY',
-            'label_status' => 'TEST AFTER UP'
+            'label_status' => 'TEST AFTER UP',
+            'img_filename' => 'fm-letter-end',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 

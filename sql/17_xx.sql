@@ -73,6 +73,6 @@ ALTER TABLE users ADD UNIQUE (id);
 ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_serial_id;
 ALTER TABLE user_signatures ADD COLUMN user_serial_id integer;
 ALTER TABLE user_signatures ADD FOREIGN KEY (user_serial_id) REFERENCES users(id);
-UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id)
+UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
 ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
 ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;

@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 @Component({
@@ -27,7 +29,6 @@ export class StatusAdministrationComponent implements OnInit {
     statusImages        : any               = "";
 
     loading             : boolean           = false;
-    resultInfo          : string            = "";
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
@@ -37,7 +38,6 @@ export class StatusAdministrationComponent implements OnInit {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
-        this.updateBreadcrumb(angularGlobals.applicationName);
 
         this.route.params.subscribe((params) => {
             if (this.route.toString().includes('status/new')){
@@ -48,6 +48,7 @@ export class StatusAdministrationComponent implements OnInit {
                     this.statusImages = data['statusImages'];
                     this.mode         = 'create';
                     this.pageTitle    = this.lang.newStatus;
+                    this.updateBreadcrumb(angularGlobals.applicationName);
                 });
             } else {
                 this.mode     = 'update';
@@ -69,89 +70,69 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>Statuts</a> > Modification";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
+                                        "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.admin+"</a> > "+
+                                        "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>"+this.lang.admin_status+"</a> > ";
+        if(this.mode == 'create'){
+            breadCrumb += this.lang.newItem;
+        } else {
+            breadCrumb += this.lang.modification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     }
 
     getStatusInfos(statusIdentifier : string){
         this.http.get(this.coreUrl + 'rest/status/'+statusIdentifier)
             .map(res => res.json())
             .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.status    = data['status'][0];
-                    if(this.status.can_be_searched == 'Y'){
-                        this.status.can_be_searched = true;
-                    }else{
-                        this.status.can_be_searched = false;
-                    }
-                    if(this.status.can_be_modified == 'Y'){
-                        this.status.can_be_modified = true;
-                    }else{
-                        this.status.can_be_modified = false;
-                    }
-                    if(this.status.is_folder_status == 'Y'){
-                        this.status.is_folder_status = true;
-                    }else{
-                        this.status.is_folder_status = false;
-                    }
-                    this.lang         = data['lang'];
-                    this.statusImages = data['statusImages'];
-                    this.pageTitle    = this.lang.modify_status + ' : ' + this.status.id;
+                this.status    = data['status'][0];
+                if(this.status.can_be_searched == 'Y'){
+                    this.status.can_be_searched = true;
+                }else{
+                    this.status.can_be_searched = false;
                 }
+                if(this.status.can_be_modified == 'Y'){
+                    this.status.can_be_modified = true;
+                }else{
+                    this.status.can_be_modified = false;
+                }
+                if(this.status.is_folder_status == 'Y'){
+                    this.status.is_folder_status = true;
+                }else{
+                    this.status.is_folder_status = false;
+                }
+                this.lang         = data['lang'];
+                this.statusImages = data['statusImages'];
+                this.pageTitle    = this.lang.modify_status + ' : ' + this.status.id;
+                this.updateBreadcrumb(angularGlobals.applicationName);
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });                
     }
 
     selectImage(image_name : string){
         this.status.img_filename = image_name;
-        console.log(this.status.img_filename);
     }
     
     submitStatus() {
-
         if(this.mode == 'create'){
             this.http.post(this.coreUrl + 'rest/status', this.status)
             .map(res => res.json())
             .subscribe((data) => {
-                if(data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.resultInfo = this.lang.paramCreatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/status']);
-                }
-                
+                successNotification(this.lang.newStatusAdded + ' : ' + this.status.label_status);
+                this.router.navigate(['administration/status']);
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
         } else if(this.mode == "update"){
 
             this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
             .map(res => res.json())             
             .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.resultInfo = this.lang.paramUpdatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/status']);                    
-                }
+                successNotification(this.lang.statusUpdated + ' : ' + this.status.label_status);
+                this.router.navigate(['administration/status']);                    
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     }

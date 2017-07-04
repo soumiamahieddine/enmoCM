@@ -132,6 +132,13 @@ class LangModelAbstract
             'no'               => _NO,
             'modify_status'    => _MODIFY_STATUS,
             'deleteConfirm'    => _REALLY_DELETE,
+            'admin_status'     => _ADMIN_STATUS,
+            'admin'            => _ADMIN,
+            'modification'     => _MODIFICATION,
+            'delStatus'        => _DEL_STATUS,
+            'newStatusAdded'   => _NEW_STATUS_ADDED,
+            'statusUpdated'    => _STATUS_UPDATED,
+            'newItem'          => _NEW_ITEM,
         ];
         return $aLang;
     }
