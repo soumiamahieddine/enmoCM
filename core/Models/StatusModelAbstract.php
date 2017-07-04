@@ -30,7 +30,8 @@ class StatusModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
-    public static function getStatusLang(){
+    public static function getStatusLang()
+    {
         $aLang = LangModel::getStatusLang();
         return $aLang;
     }
@@ -109,7 +110,6 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function getStatusImages(array $aArgs = [])
     {
-
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status_images'],
@@ -118,5 +118,4 @@ class StatusModelAbstract extends \Apps_Table_Service
 
         return $aReturn;
     }
-
 }
