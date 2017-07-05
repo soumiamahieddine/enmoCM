@@ -45,7 +45,6 @@ class DatabaseModel
                 $args['table'] .=  " LEFT JOIN {$tmpTable[$i]} ON {$value}";
                 $i++;
             }
-
         }
 
         $select = implode(', ', $args['select']);

@@ -146,7 +146,7 @@ class BasketsModelAbstract extends \Apps_Table_Service
         );
 
         foreach ($aBaskets as $key => $value) {
-            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['id' => $value['user_abs']]);
+            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['user_abs']]);
         }
 
         return $aBaskets;

@@ -258,15 +258,15 @@ class VisaController
             }
 
             if (!empty($value['dest_user'])) {
-                $attachments[$key]['destUser'] = UserModel::getLabelledUserById(['id' => $value['dest_user']]);
+                $attachments[$key]['destUser'] = UserModel::getLabelledUserById(['userId' => $value['dest_user']]);
             } elseif (!empty($value['dest_contact_id']) && !empty($value['dest_address_id'])) {
                 $attachments[$key]['destUser'] = \ContactsModel::getLabelledContactWithAddress(['contactId' => $value['dest_contact_id'], 'addressId' => $value['dest_address_id']]);
             }
             if (!empty($value['updated_by'])) {
-                $attachments[$key]['updated_by'] = UserModel::getLabelledUserById(['id' => $value['updated_by']]);
+                $attachments[$key]['updated_by'] = UserModel::getLabelledUserById(['userId' => $value['updated_by']]);
             }
             if (!empty($value['typist'])) {
-                $attachments[$key]['typist'] = UserModel::getLabelledUserById(['id' => $value['typist']]);
+                $attachments[$key]['typist'] = UserModel::getLabelledUserById(['userId' => $value['typist']]);
             }
 
             $attachments[$key]['canModify'] = false;

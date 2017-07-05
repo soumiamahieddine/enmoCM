@@ -16,6 +16,7 @@
 namespace Entities\Models;
 
 use Core\Models\UserModel;
+use Core\Models\ValidatorModel;
 
 require_once 'apps/maarch_entreprise/services/Table.php';
 
@@ -77,8 +78,9 @@ class EntityModelAbstract extends \Apps_Table_Service
 
     public static function getByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
