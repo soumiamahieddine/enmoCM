@@ -21,7 +21,6 @@ use Respect\Validation\Validator;
 use Core\Models\StatusModel;
 use Core\Models\StatusImagesModel;
 use Core\Models\ServiceModel;
-use Core\Controllers\HistoryController;
 
 class StatusController
 {

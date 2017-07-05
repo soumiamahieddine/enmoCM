@@ -14,6 +14,7 @@
 */
 
 namespace Core\Models;
+
 use Core\Controllers\HistoryController;
 
 require_once('apps/maarch_entreprise/tools/log4php/Logger.php');
@@ -30,7 +31,7 @@ class HistoryModelAbstract extends \Apps_Table_Service
         if (!isset($_SESSION['logging_method_memory'])) {
             $pathToXmlLogin = HistoryController::getXmlFilePath('apps/maarch_entreprise/xml/logging_method.xml');
              
-            if(!$pathToXmlLogin) {
+            if (!$pathToXmlLogin) {
                 $noXml = true;
                 $logging_methods[0]['ID']               = 'database';
                 $logging_methods[0]['ACTIVATED']        = true;
@@ -108,9 +109,11 @@ class HistoryModelAbstract extends \Apps_Table_Service
 
         $db = new \Database();
         $aArgs['event_date'] = $db->current_datetime();
-        $aReturn = static::insertInto($aArgs, 'history');
+        $aReturn = DatabaseModel::insert([
+            'table'         => 'history',
+            'columnsValues' => $aArgs
+        ]);
 
         return $aReturn;
     }
-
 }

@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\HistoryModel;
+use Notifications\Controllers\NotificationsEventsController;
 
 require_once('core/class/class_functions.php');
 
@@ -52,8 +53,7 @@ class HistoryController
         $result    = _OK,
         $level     = _LEVEL_DEBUG,
         $user      = ''
-    )
-    {
+    ) {
         $remote_ip = $_SERVER['REMOTE_ADDR'];
 
         $user = '';
@@ -103,14 +103,13 @@ class HistoryController
             ]);
         } else {
             //write on a log
-            echo $info; exit;
+            echo $info;
+            exit;
         }
 
         $core = new \core_tools();
         if ($core->is_module_loaded("notifications")) {
-            require_once("modules/notifications/class/events_controler.php");
-            $eventsCtrl = new \events_controler();
-            $eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+            NotificationsEventsController::fill_event_stack($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
@@ -136,7 +135,7 @@ class HistoryController
         }
 
         $configFileLog4PHP = self::getXmlFilePath('apps/maarch_entreprise/xml/log4php.xml');
-        if(!$configFileLog4PHP){
+        if (!$configFileLog4PHP) {
             $configFileLog4PHP = "apps/maarch_entreprise/xml/log4php.default.xml";
         }
 
@@ -224,5 +223,4 @@ class HistoryController
         }
         return $pathToXml;
     }
-
 }

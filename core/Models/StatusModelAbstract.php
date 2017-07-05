@@ -15,16 +15,14 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class StatusModelAbstract extends \Apps_Table_Service
+class StatusModelAbstract
 {
     public static function getList()
     {
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
-            'order_by'  => 'identifier'
+            'order_by'  => ['identifier']
         ]);
 
         return $aReturn;
@@ -41,7 +39,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
             'where'     => ['id = ?'],
@@ -56,7 +54,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         ValidatorModel::notEmpty($aArgs, ['identifier']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
             'where'     => ['identifier = ?'],
@@ -71,7 +69,10 @@ class StatusModelAbstract extends \Apps_Table_Service
         ValidatorModel::notEmpty($aArgs, ['id', 'label_status']);
         ValidatorModel::stringType($aArgs, ['id', 'label_status']);
 
-        $aReturn = static::insertInto($aArgs, 'status');
+        $aReturn = DatabaseModel::insert([
+            'table'         => 'status',
+            'columnsValues' => $aArgs
+            ]);
 
         return $aReturn;
     }
@@ -85,7 +86,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         unset($aArgs['id']);
         unset($aArgs['identifier']);
 
-        $aReturn = parent::update([
+        $aReturn = DatabaseModel::update([
             'table' => 'status',
             'set'   => $aArgs,
             'where' => ['identifier = ?'],
@@ -100,7 +101,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         ValidatorModel::notEmpty($aArgs, ['identifier']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
-        $aReturn = static::deleteFrom([
+        $aReturn = DatabaseModel::delete([
                 'table' => 'status',
                 'where' => ['identifier = ?'],
                 'data'  => [$aArgs['identifier']]
