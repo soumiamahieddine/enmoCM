@@ -210,7 +210,7 @@ class HistoryController
             $aArgs['charset'] = 'utf-8';
         }
         $charset = $aArgs['charset'];
-        
+
         $str = htmlentities($aArgs['string'], ENT_NOQUOTES, $charset);
 
         $str = preg_replace(
@@ -238,8 +238,8 @@ class HistoryController
 
         $filePath = $aArgs['filePath'];
 
-        if (file_exists($_SESSION['config']['corepath'].'custom/'.$filePath)) {
-            $pathToXml = $_SESSION['config']['corepath'].'custom/'.$filePath;
+        if (file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/'.$filePath)) {
+            $pathToXml = $_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/'.$filePath;
         } elseif (file_exists($_SESSION['config']['corepath'].$filePath)) {
             $pathToXml = $_SESSION['config']['corepath'].$filePath;
         } else {
