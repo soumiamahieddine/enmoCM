@@ -19,7 +19,8 @@ use Respect\Validation\Validator;
 
 class ValidatorModel
 {
-    public static function notEmpty(array $aArgs, $aKeys) {
+    public static function notEmpty(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
@@ -30,7 +31,8 @@ class ValidatorModel
         }
     }
 
-    public static function intVal(array $aArgs, $aKeys) {
+    public static function intVal(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
@@ -44,7 +46,8 @@ class ValidatorModel
         }
     }
 
-    public static function intType(array $aArgs, $aKeys) {
+    public static function intType(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
@@ -58,7 +61,8 @@ class ValidatorModel
         }
     }
 
-    public static function stringType(array $aArgs, $aKeys) {
+    public static function stringType(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
@@ -72,7 +76,8 @@ class ValidatorModel
         }
     }
 
-    public static function arrayType(array $aArgs, $aKeys) {
+    public static function arrayType(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
@@ -86,7 +91,8 @@ class ValidatorModel
         }
     }
 
-    public static function boolType(array $aArgs, $aKeys) {
+    public static function boolType(array $aArgs, $aKeys)
+    {
         if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
             throw new \Exception('First argument must be a non empty array');
         }
