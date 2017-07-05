@@ -498,6 +498,7 @@ if (!defined("_FIRST_WARNING")) define("_FIRST_WARNING","1ere Relance");
 if (!defined("_SECOND_WARNING")) define("_SECOND_WARNING","2e Relance");
 if (!defined("_CLOSED")) define("_CLOSED","Clos");
 if (!defined("_NEW")) define("_NEW","Nouveaux");
+if (!defined("_NEW_ITEM")) define("_NEW_ITEM","Nouveau");
 if (!defined("_LATE")) define("_LATE", "En retard");
 
 if (!defined("_STATUS_DELETED")) define("_STATUS_DELETED", "Suppression du statut");
@@ -2046,21 +2047,21 @@ if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
 //PARAMETERS
 if(!defined('_ID_IS_EMPTY_CONTROLLER'))
     define('_ID_IS_EMPTY_CONTROLLER',' L\'identifiant est vide');
-
 if(!defined('_PARAM_VALUE_IS_EMPTY'))
     define('_PARAM_VALUE_IS_EMPTY',' La valeur du paramètre est vide');
-
 if(!defined('_INVALID_PARAM_DATE'))
     define('_INVALID_PARAM_DATE',' Paramètre date invalide');
-
 if(!defined('_INVALID_INTEGER'))
     define('_INVALID_INTEGER','Entier non valide');
-
 if(!defined('_INVALID_STRING'))
     define('_INVALID_STRING','Chaine de caractère invalide');
-
 if(!defined('_INVALID_DESCRIPTION'))
     define('_INVALID_DESCRIPTION','Description invalide');
-
 if(!defined('_INVALID_ID'))
     define('_INVALID_ID','Identifiant invalide');
+if (!defined('_INVALID'))
+    define('_INVALID', 'n\'est pas valide');
+if (!defined('_NEW_STATUS_ADDED'))
+    define('_NEW_STATUS_ADDED', 'Nouveau statut créé');
+if (!defined('_STATUS_UPDATED'))
+    define('_STATUS_UPDATED', 'Statut mis à jour');

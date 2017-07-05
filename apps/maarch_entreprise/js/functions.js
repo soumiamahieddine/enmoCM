@@ -3,70 +3,6 @@ var chronoExpiration;
 
 page_result_final = '';
 
-var angularGlobals = {};
-function triggerAngular(prodmode, locationToGo) {
-    var views = [
-        'header',
-        'administration',
-        'users-administration',
-        'user-administration',
-        'status-administration',
-        'statuses-administration',
-        'actions-administration',
-        'action-administration',
-        'profile',
-        'signature-book',
-        'parameters',
-        'priorities',
-        'priority',
-        'parameter'
-    ];
-
-    $j.ajax({
-        url      : '../../rest/initialize',
-        type     : 'POST',
-        dataType : 'json',
-        data: {
-            views  : views
-        },
-        success: function(answer) {
-
-            angularGlobals = answer;
-            if (prodmode) {
-                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-
-                var alreadyLoaded = false;
-                $j('script').each(function(i, element) {
-                    if (element.src == (answer.coreUrl + "apps/maarch_entreprise/js/angular/main.bundle.min.js")) {
-                        alreadyLoaded = true;
-                    }
-                });
-                if (!alreadyLoaded) {
-                    var head = document.getElementsByTagName('head')[0];
-                    var script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = "js/angular/main.bundle.min.js";
-
-                    script.onreadystatechange = changeLocationToAngular(locationToGo);
-                    script.onload = changeLocationToAngular(locationToGo);
-
-                    // Fire the loading
-                    head.appendChild(script);
-                } else {
-                    location.href = locationToGo;
-                }
-            } else {
-                System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-                location.href = locationToGo;
-            }
-        }
-    });
-}
-
-function changeLocationToAngular(locationToGo) {
-    location.href = locationToGo;
-}
-
 function capitalizeFirstLetter(theString)
 {
     return theString && theString[0].toUpperCase() + theString.slice(1);
@@ -3253,18 +3189,6 @@ function loadToolbarBadge(targetTab,path_manage_script){
     })
 }
 
-var disablePrototypeJS = function (method, pluginsToDisable) {
-    var handler = function (event) {
-        event.target[method] = undefined;
-        setTimeout(function () {
-            delete event.target[method];
-        }, 0);
-    };
-    pluginsToDisable.each(function (plugin) {
-        $j(window).on(method + '.bs.' + plugin, handler);
-    });
-};
-
 function resetSelect(id) {
     $j('#'+id).val("");
     Event.fire($(id), "chosen:updated");
@@ -3791,26 +3715,3 @@ function change3(id){
         ouvre3(id);
     }
 }
-var isBootstrapEvent = false;
-if (window.jQuery) {
-    var all = jQuery('*');
-    jQuery.each(['hide.bs.dropdown', 
-        'hide.bs.collapse', 
-        'hide.bs.modal', 
-        'hide.bs.tooltip',
-        'hide.bs.popover'], function(index, eventName) {
-        all.on(eventName, function( event ) {
-            isBootstrapEvent = true;
-        });
-    });
-}
-var originalHide = Element.hide;
-Element.addMethods({
-    hide: function(element) {
-        if(isBootstrapEvent) {
-            isBootstrapEvent = false;
-            return element;
-        }
-        return originalHide(element);
-    }
-});

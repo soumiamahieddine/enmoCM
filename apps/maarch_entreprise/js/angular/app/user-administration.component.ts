@@ -1,9 +1,11 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -16,6 +18,8 @@ export class UserAdministrationComponent implements OnInit {
 
     coreUrl                     : string;
     userId                      : string;
+    serialId                    : number;
+    userCreation                : boolean;
 
     user                        : any       = {
         lang                    : {}
@@ -32,11 +36,10 @@ export class UserAdministrationComponent implements OnInit {
 
     selectedSignature           : number    = -1;
     selectedSignatureLabel      : string    = "";
-    resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private zone: NgZone) {
+    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -55,31 +58,45 @@ export class UserAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            this.userId = params['userId'];
+            if (typeof params['id'] == "undefined") {
+                this.userCreation = true;
+                this.http.get(this.coreUrl + "rest/administration/users/new")
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.user = data;
 
-            this.http.get(this.coreUrl + 'rest/administration/users/' + this.userId)
-                .map(res => res.json())
-                .subscribe((data) => {
-                    this.user = data;
+                        this.loading = false;
+                    }, () => {
+                        location.href = "index.php";
+                    });
+            } else {
+                this.userCreation = false;
+                this.serialId = params['id'];
+                this.http.get(this.coreUrl + "rest/administration/users/" + this.serialId)
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.user = data;
+                        this.userId = data.user_id;
 
-                    this.loading = false;
-                    setTimeout(() => {
-                        $j("#absenceUser").typeahead({
-                            order: "asc",
-                            display: "formattedUser",
-                            templateValue: "{{user_id}}",
-                            source: {
-                                ajax: {
-                                    type: "GET",
-                                    dataType: "json",
-                                    url: this.coreUrl + "rest/users/autocompleter",
+                        this.loading = false;
+                        setTimeout(() => {
+                            $j("#absenceUser").typeahead({
+                                order: "asc",
+                                display: "formattedUser",
+                                templateValue: "{{user_id}}",
+                                source: {
+                                    ajax: {
+                                        type: "GET",
+                                        dataType: "json",
+                                        url: this.coreUrl + "rest/users/autocompleter",
+                                    }
                                 }
-                            }
-                        });
-                    }, 0);
-                }, () => {
-                    location.href = "index.php";
-                });
+                            });
+                        }, 0);
+                    }, () => {
+                        location.href = "index.php";
+                    });
+            }
         });
     }
 
@@ -98,11 +115,7 @@ export class UserAdministrationComponent implements OnInit {
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
 
-            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification("Taille maximum de fichier dépassée (2 MB)");
         }
     }
 
@@ -142,17 +155,32 @@ export class UserAdministrationComponent implements OnInit {
             this.http.put(this.coreUrl + "rest/users/" + this.userId + "/password", {})
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+        }
+    }
+
+    addGroup() {
+        var index = $j("#groupsSelect option:selected").index();
+
+        if (index > 0) {
+            var group = {
+                "groupId"   : this.user.allGroups[index - 1].group_id,
+                "role"      : $j("#groupRole")[0].value
+            };
+
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/groups", group)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.user.groups = data.groups;
+                    this.user.allGroups = data.allGroups;
+                    $j("#groupRole")[0].value = "";
+                    $j('#addGroupModal').modal('hide');
+                    successNotification(data.success);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }
@@ -161,17 +189,9 @@ export class UserAdministrationComponent implements OnInit {
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
             .map(res => res.json())
             .subscribe((data) => {
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -182,18 +202,34 @@ export class UserAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.user['groups'] = data.groups;
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    this.user.groups = data.groups;
+                    this.user.allGroups = data.allGroups;
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+        }
+    }
+
+    addEntity() {
+        var index = $j("#entitiesSelect option:selected").index();
+
+        if (index > 0) {
+            var entity = {
+                "entityId"   : this.user.allEntities[index - 1].entity_id,
+                "role"      : $j("#entityRole")[0].value
+            };
+
+            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/entities", entity)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.user.entities = data.entities;
+                    this.user.allEntities = data.allEntities;
+                    $j("#entityRole")[0].value = "";
+                    $j('#addEntityModal').modal('hide');
+                    successNotification(data.success);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }
@@ -202,17 +238,9 @@ export class UserAdministrationComponent implements OnInit {
         this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id, entity)
             .map(res => res.json())
             .subscribe((data) => {
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -221,18 +249,9 @@ export class UserAdministrationComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 this.user['entities'] = data.entities;
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
-
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -243,24 +262,17 @@ export class UserAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    this.user['entities'] = data.entities;
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    this.user.entities = data.entities;
+                    this.user.allEntities = data.allEntities;
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }
 
     submitSignature() {
-        this.http.post(this.coreUrl + "rest/users/" + this.userId + "/signature", this.signatureModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .map(res => res.json())
             .subscribe((data) => {
                 this.user.signatures = data.signatures;
@@ -272,40 +284,24 @@ export class UserAdministrationComponent implements OnInit {
                     size                    : 0,
                     label                   : "",
                 };
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
     updateSignature() {
         var id = this.user.signatures[this.selectedSignature].id;
 
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/signature/" + id, {"label" : this.selectedSignatureLabel})
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, {"label" : this.selectedSignatureLabel})
             .map(res => res.json())
             .subscribe((data) => {
                 this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
                 this.selectedSignature = -1;
                 this.selectedSignatureLabel = "";
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
@@ -313,21 +309,13 @@ export class UserAdministrationComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment supprimer la signature ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/signature/" + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.signatures = data.signatures;
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }
@@ -335,7 +323,7 @@ export class UserAdministrationComponent implements OnInit {
     addBasketRedirection() {
         var index = $j("#selectBasketAbsenceUser option:selected").index();
 
-        if (index > 0) {
+        if (index > 0 && $j("#absenceUser")[0].value != "") {
             this.userAbsenceModel.push({
                 "basketId"      : this.user.baskets[index - 1].basket_id,
                 "basketName"    : this.user.baskets[index - 1].basket_name,
@@ -362,40 +350,30 @@ export class UserAdministrationComponent implements OnInit {
                 this.user.status = data.user.status;
                 this.userAbsenceModel  = [];
                 $j('#manageAbs').modal('hide');
-                this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, (err) => {
-                this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
 
     onSubmit() {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if (data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-
-                } else {
-                    this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
-            }, (error) => {
-                alert(error.statusText);
-            });
+        if (this.userCreation) {
+            this.http.post(this.coreUrl + "rest/users", this.user)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    successNotification(data.success);
+                    this.router.navigate(["/administration/users/" + this.user.userId]);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+        } else {
+            this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    successNotification(data.success);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+        }
     }
 }

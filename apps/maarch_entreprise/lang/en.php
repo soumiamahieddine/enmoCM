@@ -2007,5 +2007,11 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Update sucessful');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
-
 if (!defined("_ADDRESS_NB")) define("_ADDRESS_NB","Address number");
+if (!defined('_INVALID'))
+    define('_INVALID', 'n\'est pas valide');
+if (!defined('_NEW_STATUS_ADDED'))
+    define('_NEW_STATUS_ADDED', 'New status added');
+if (!defined('_STATUS_UPDATED'))
+    define('_STATUS_UPDATED', 'Status updated');
+if (!defined("_NEW_ITEM")) define("_NEW_ITEM", "New");

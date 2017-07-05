@@ -17,46 +17,6 @@ namespace Core\Models;
 
 class LangModelAbstract
 {
-    public static function getUserAdministrationLang()
-    {
-        $aLang = [
-            'userModification'      => _ADMIN_USER_MODIFICATION,
-            'back'                  => _BASK_BACK,
-            'reinitPassword'        => _REINITIALIZE_PASSWORD,
-            'manageBaskets'         => _MANAGE_BASKETS,
-            'manageAbsences'        => _MANAGE_ABSENCES,
-            'manageSignatures'      => _MANAGE_SIGNATURES,
-            'primaryEntity'         => _PRIMARY_ENTITY,
-            'secondaryEntity'       => _SECONDARY_ENTITY,
-            'firstname'             => _FIRSTNAME,
-            'lastname'              => _LASTNAME,
-            'userId'                => _ID,
-            'initials'              => _INITIALS,
-            'phoneNumber'           => _PHONE_NUMBER,
-            'email'                 => _EMAIL,
-            'fingerprint'           => _DIGITAL_FINGERPRINT,
-            'saveModification'      => _SAVE_MODIFICATION,
-            'emailSignatures'       => _EMAIL_SIGNATURES,
-            'sbSignatures'          => _SB_SIGNATURES,
-            'newSignature'          => _DEFINE_NEW_SIGNATURE,
-            'signatureLabel'        => _SIGNATURE_LABEL,
-            'updateSignature'       => _UPDATE_SIGNATURE,
-            'deleteSignature'       => _DELETE_SIGNATURE,
-            'clickOn'               => _CLICK_ON,
-            'toSignature'           => _TO_ADD_SIGNATURE,
-            'toUpdateSignature'     => _TO_UPDATE_SIGNATURE,
-            'cancel'                => _CANCEL,
-            'to'                    => _TO,
-            'activateAbs'           => _ACTIVATE_ABSENCE,
-            'user'                  => _USER,
-            'delete'                => _DELETE,
-            'basketToRedirect'      => _CHOOSE_BASKET_TO_REDIRECT,
-            'autoLogout'            => _AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS
-        ];
-
-        return $aLang;
-    }
-
     public static function getProfileLang()
     {
         $aLang = [
@@ -283,11 +243,18 @@ class LangModelAbstract
             'no'               => _NO,
             'modify_status'    => _MODIFY_STATUS,
             'deleteConfirm'    => _REALLY_DELETE,
+            'admin_status'     => _ADMIN_STATUS,
+            'admin'            => _ADMIN,
+            'modification'     => _MODIFICATION,
+            'delStatus'        => _DEL_STATUS,
+            'newStatusAdded'   => _NEW_STATUS_ADDED,
+            'statusUpdated'    => _STATUS_UPDATED,
+            'newItem'          => _NEW_ITEM,
         ];
         return $aLang;
     }
 
-    public static function getUsersForAdministrationLang()
+    public static function getUsersAdministrationLang()
     {
         $aLang = [
             'back'                  => _BASK_BACK,
@@ -316,7 +283,35 @@ class LangModelAbstract
             'suspendMsg'            => _REALLY_SUSPEND,
             'authorizeMsg'          => _REALLY_AUTHORIZE,
             'checkListDiffMsg'      => _PLEASE_CHECK_LISTDIFF,
-            'user'                  => _USER
+            'user'                  => _USER,
+            'userModification'      => _ADMIN_USER_MODIFICATION,
+            'reinitPassword'        => _REINITIALIZE_PASSWORD,
+            'manageBaskets'         => _MANAGE_BASKETS,
+            'manageAbsences'        => _MANAGE_ABSENCES,
+            'manageSignatures'      => _MANAGE_SIGNATURES,
+            'primaryEntity'         => _PRIMARY_ENTITY,
+            'secondaryEntity'       => _SECONDARY_ENTITY,
+            'userId'                => _ID,
+            'initials'              => _INITIALS,
+            'phoneNumber'           => _PHONE_NUMBER,
+            'email'                 => _EMAIL,
+            'fingerprint'           => _DIGITAL_FINGERPRINT,
+            'saveModification'      => _SAVE_MODIFICATION,
+            'emailSignatures'       => _EMAIL_SIGNATURES,
+            'sbSignatures'          => _SB_SIGNATURES,
+            'newSignature'          => _DEFINE_NEW_SIGNATURE,
+            'signatureLabel'        => _SIGNATURE_LABEL,
+            'updateSignature'       => _UPDATE_SIGNATURE,
+            'deleteSignature'       => _DELETE_SIGNATURE,
+            'clickOn'               => _CLICK_ON,
+            'toSignature'           => _TO_ADD_SIGNATURE,
+            'toUpdateSignature'     => _TO_UPDATE_SIGNATURE,
+            'validate'              => _VALIDATE,
+            'cancel'                => _CANCEL,
+            'to'                    => _TO,
+            'activateAbs'           => _ACTIVATE_ABSENCE,
+            'basketToRedirect'      => _CHOOSE_BASKET_TO_REDIRECT,
+            'autoLogout'            => _AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS
         ];
 
         return $aLang;

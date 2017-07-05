@@ -43,7 +43,6 @@ var ProfileComponent = (function () {
         this.showPassword = false;
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
-        this.resultInfo = "";
         this.loading = false;
         window['angularProfileComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
@@ -59,12 +58,6 @@ var ProfileComponent = (function () {
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
-        }
-        if (Prototype.BrowserFeatures.ElementExtensions) {
-            //FIX PROTOTYPE CONFLICT
-            var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
-            disablePrototypeJS('show', pluginsToDisable);
-            disablePrototypeJS('hide', pluginsToDisable);
         }
         //LOAD EDITOR TINYMCE for MAIL SIGN
         tinymce.baseURL = "../../node_modules/tinymce";
@@ -108,9 +101,6 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
-            _this.user.baskets.forEach(function (value, index) {
-                _this.user.baskets[index]['disabled'] = false;
-            });
             setTimeout(function () {
                 $j("#absenceUser").typeahead({
                     order: "asc",
@@ -143,11 +133,7 @@ var ProfileComponent = (function () {
             this.signatureModel.type = "";
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
-            this.resultInfo = "Taille maximum de fichier dépassée (2 MB)";
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification("Taille maximum de fichier dépassée (2 MB)");
         }
     };
     ProfileComponent.prototype.displayPassword = function () {
@@ -215,11 +201,7 @@ var ProfileComponent = (function () {
             _this.userAbsenceModel = [];
             location.search = "?display=true&page=logout&abs_mode";
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     ProfileComponent.prototype.updatePassword = function () {
@@ -228,11 +210,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(data.errors);
             }
             else {
                 _this.showPassword = false;
@@ -241,13 +219,10 @@ var ProfileComponent = (function () {
                     newPassword: "",
                     reNewPassword: "",
                 };
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                //auto close
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     ProfileComponent.prototype.submitEmailSignature = function () {
@@ -257,11 +232,7 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(data.errors);
             }
             else {
                 _this.user.emailSignatures = data.emailSignatures;
@@ -271,11 +242,7 @@ var ProfileComponent = (function () {
                     title: "",
                 };
                 tinymce.get('emailSignature').setContent("");
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }
         });
     };
@@ -287,20 +254,12 @@ var ProfileComponent = (function () {
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(data.errors);
             }
             else {
                 _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
                 _this.user.emailSignatures[_this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }
         });
     };
@@ -313,11 +272,7 @@ var ProfileComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    errorNotification(data.errors);
                 }
                 else {
                     _this.user.emailSignatures = data.emailSignatures;
@@ -327,18 +282,14 @@ var ProfileComponent = (function () {
                         title: "",
                     };
                     tinymce.get('emailSignature').setContent("");
-                    _this.resultInfo = data.success;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
+                    successNotification(data.success);
                 }
             });
         }
     };
     ProfileComponent.prototype.submitSignature = function () {
         var _this = this;
-        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/signature", this.signatureModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/signatures", this.signatureModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
@@ -350,85 +301,46 @@ var ProfileComponent = (function () {
                 size: 0,
                 label: "",
             };
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     ProfileComponent.prototype.updateSignature = function () {
         var _this = this;
         var id = this.user.signatures[this.selectedSignature].id;
-        this.http.put(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id, { "label": this.selectedSignatureLabel })
+        this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id, { "label": this.selectedSignatureLabel })
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
             _this.selectedSignature = -1;
             _this.selectedSignatureLabel = "";
-            _this.resultInfo = data.success;
-            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            successNotification(data.success);
         }, function (err) {
-            _this.resultInfo = JSON.parse(err._body).errors;
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                $j("#resultInfo").slideUp(500);
-            });
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     ProfileComponent.prototype.deleteSignature = function (id) {
         var _this = this;
         var r = confirm('Voulez-vous vraiment supprimer la signature ?');
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.user.user_id + "/signature/" + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                successNotification(data.success);
             }, function (err) {
-                _this.resultInfo = JSON.parse(err._body).errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };
     ProfileComponent.prototype.onSubmit = function () {
-        var _this = this;
         this.http.put(this.coreUrl + 'rest/users/profile', this.user)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                _this.resultInfo = data.success;
-                $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                //auto close
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-        }, function (error) {
-            alert(error.statusText);
+            successNotification(data.success);
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     return ProfileComponent;

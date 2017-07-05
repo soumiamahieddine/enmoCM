@@ -26,7 +26,7 @@ class EntityModelAbstract extends \Apps_Table_Service
         $aEntities = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
-            'where'     => ['enabled'],
+            'where'     => ['enabled = ?'],
             'data'      => ['Y']
         ]);
 
@@ -36,20 +36,27 @@ class EntityModelAbstract extends \Apps_Table_Service
     public static function getById(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['entityId']);
-        static::checkString($aArgs, ['entityId']);
+        if (is_array($aArgs['entityId'])) {
+            $where = ['entity_id in (?)'];
+        } else {
+            static::checkString($aArgs, ['entityId']);
+            $where = ['entity_id = ?'];
+        }
 
-        $aEntity = static::select([
+        $aEntities = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
-            'where'     => ['entity_id = ?'],
+            'where'     => $where,
             'data'      => [$aArgs['entityId']]
         ]);
 
-        if (empty($aEntity[0])) {
+        if (empty($aEntities[0])) {
             return [];
+        } elseif (is_array($aArgs['entityId'])) {
+            return $aEntities;
+        } else {
+            return $aEntities[0];
         }
-
-        return $aEntity[0];
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -117,4 +124,41 @@ class EntityModelAbstract extends \Apps_Table_Service
         
         return array_unique($entities);
     }
+
+    public static function getAvailableEntitiesForAdministratorByUserId(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'administratorUserId']);
+        static::checkString($aArgs, ['userId', 'administratorUserId']);
+
+
+        if ($aArgs['administratorUserId'] == 'superadmin') {
+            $rawEntitiesAllowedForAdministrator = self::get(['select' => ['entity_id']]);
+            $entitiesAllowedForAdministrator = [];
+            foreach ($rawEntitiesAllowedForAdministrator as $value) {
+                $entitiesAllowedForAdministrator[] = $value['entity_id'];
+            }
+        } else {
+            $entitiesAllowedForAdministrator = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['administratorUserId']]);
+        }
+
+        $rawUserEntities = self::getByUserId(['userId' => $aArgs['userId'], 'select' => ['entity_id']]);
+
+        $userEntities = [];
+        foreach ($rawUserEntities as $value) {
+            $userEntities[] = $value['entity_id'];
+        }
+
+        $allEntities = self::get(['select' => ['entity_id', 'entity_label']]);
+
+        foreach ($allEntities as $key => $value) {
+            if (in_array($value['entity_id'], $userEntities) || !in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {
+                $allEntities[$key]['disabled'] = true;
+            } else {
+                $allEntities[$key]['disabled'] = false;
+            }
+        }
+
+        return $allEntities;
+    }
+
 }

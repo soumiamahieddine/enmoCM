@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -29,23 +31,16 @@ export class StatusListAdministrationComponent implements OnInit {
         this.coreUrl = angularGlobals.coreUrl;
 
         this.prepareStatus();
-        this.updateBreadcrumb(angularGlobals.applicationName);
 
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/administration/status')
             .map(res => res.json())
-            .subscribe((data) => {
-                if(data.errors){
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {                        
-                    this.statusList = data.statusList;
-                    this.lang       = data.lang;
-                    this.nbStatus = Object.keys(this.statusList).length;                
-                    setTimeout(() => {
+            .subscribe((data) => {                      
+                this.statusList = data.statusList;
+                this.lang       = data.lang;
+                this.nbStatus = Object.keys(this.statusList).length;                
+                setTimeout(() => {
                     this.table = $j('#statusTable').DataTable({
                         "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
                         "lengthMenu": [ 10, 25, 50, 75, 100 ],
@@ -75,11 +70,10 @@ export class StatusListAdministrationComponent implements OnInit {
                     $j(".datatablesRight").css({"float":"right"});      
 
                 }, 0);
+                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.loading = false;
-                }
             }, (err) => {
-                console.log(err);
-                location.href = "index.php";
+                errorNotification(JSON.parse(err._body).errors);
             });
     }
     
@@ -88,37 +82,28 @@ export class StatusListAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Statuts";
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
+                                            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " + this.lang.admin_status;
     }
 
-    deleteStatus(statusId : string){
+    deleteStatus(statusId : string, statusIdentifier : string){
         var resp = confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
-            this.http.delete(this.coreUrl + 'rest/status/'+statusId)
+            this.http.delete(this.coreUrl + 'rest/status/'+statusIdentifier)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    if(data.errors){
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                    } else{
-                        var list = this.statusList;
-                        for(var i = 0; i<list.length;i++){
-                            if(list[i].id==statusId){
-                                list.splice(i, 1);
-                            }
+                    var list = this.statusList;
+                    for(var i = 0; i<list.length;i++){
+                        if(list[i].id==statusId){
+                            list.splice(i, 1);
                         }
-                        this.table.row($j("#"+statusId)).remove().draw();
-                        this.resultInfo = "Statut supprimé avec succès";
-                    
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                        this.nbStatus = Object.keys(this.statusList).length;
                     }
+                    this.table.row($j("#"+statusId)).remove().draw();
+
+                    successNotification(this.lang.delStatus + " : " + statusId);
+                    this.nbStatus = Object.keys(this.statusList).length;
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }

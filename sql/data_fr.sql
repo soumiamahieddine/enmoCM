@@ -1054,6 +1054,35 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ACK_SEDA ', 'Accusé de reception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REPLY_SEDA', 'Courrier archivé', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 ------------
+--STATUS IMAGES-
+------------
+TRUNCATE TABLE status_images;
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-new');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-inprogress');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-info');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-wait');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-validated');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-rejected');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-end');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-newmail');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-attr');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-arev');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-aval');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-aimp');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-imp');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-aenv');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-acla');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-status-aarch');
+INSERT INTO status_images (image_name) VALUES ('fm-letter');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-add');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-search');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-del');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-incoming');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-outgoing');
+INSERT INTO status_images (image_name) VALUES ('fm-letter-internal');
+INSERT INTO status_images (image_name) VALUES ('fm-file-fingerprint');
+INSERT INTO status_images (image_name) VALUES ('fm-classification-plan-l1');
+------------
 --PARAMETERS
 ------------
 TRUNCATE TABLE parameters;

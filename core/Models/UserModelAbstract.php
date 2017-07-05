@@ -38,6 +38,94 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
+        static::checkRequired($aArgs, ['id']);
+        static::checkNumeric($aArgs, ['id']);
+
+        $aUser = static::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users'],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        if (empty($aUser)) {
+            return [];
+        }
+
+        return $aUser[0];
+    }
+
+    public static function create(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['user']);
+        static::checkRequired($aArgs['user'], ['userId', 'firstname', 'lastname']);
+        static::checkString($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
+
+        parent::insertInto(
+            [
+                'user_id'           => $aArgs['user']['userId'],
+                'firstname'         => $aArgs['user']['firstname'],
+                'lastname'          => $aArgs['user']['lastname'],
+                'mail'              => $aArgs['user']['mail'],
+                'phone'             => $aArgs['user']['phone'],
+                'initials'          => $aArgs['user']['initials'],
+                'thumbprint'        => $aArgs['user']['thumbprint'],
+                'enabled'           => 'Y',
+                'status'            => 'OK',
+                'change_password'   => 'Y',
+                'loginmode'         => 'standard',
+                'password'          => SecurityModel::getPasswordHash('maarch')
+            ],
+            'users'
+        );
+
+        return true;
+    }
+
+    public static function update(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['user', 'userId']);
+        static::checkRequired($aArgs['user'], ['firstname', 'lastname']);
+        static::checkString($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'status', 'enabled']);
+
+        $isUpdated = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'firstname'     => $aArgs['user']['firstname'],
+                'lastname'      => $aArgs['user']['lastname'],
+                'mail'          => $aArgs['user']['mail'],
+                'phone'         => $aArgs['user']['phone'],
+                'initials'      => $aArgs['user']['initials'],
+                'status'        => $aArgs['user']['status'],
+                'enabled'       => $aArgs['user']['enabled'],
+                'thumbprint'    => $aArgs['user']['thumbprint']
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $isUpdated;
+    }
+
+    public static function delete(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId']);
+        static::checkString($aArgs, ['userId']);
+
+        $isUpdated = parent::update([
+            'table'     => 'users',
+            'set'       => [
+                'status'        => 'DEL',
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $isUpdated;
+    }
+
+    public static function getByUserId(array $aArgs = [])
+    {
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
 
@@ -84,48 +172,6 @@ class UserModelAbstract extends \Apps_Table_Service
         ]);
 
         return $aUser;
-    }
-
-    public static function update(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['user', 'userId']);
-        static::checkRequired($aArgs['user'], ['firstname', 'lastname']);
-        static::checkString($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'status', 'enabled']);
-
-        $isUpdated = parent::update([
-            'table'     => 'users',
-            'set'       => [
-                'firstname'     => $aArgs['user']['firstname'],
-                'lastname'      => $aArgs['user']['lastname'],
-                'mail'          => $aArgs['user']['mail'],
-                'phone'         => $aArgs['user']['phone'],
-                'initials'      => $aArgs['user']['initials'],
-                'status'        => $aArgs['user']['status'],
-                'enabled'       => $aArgs['user']['enabled'],
-                'thumbprint'    => $aArgs['user']['thumbprint']
-            ],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
-        ]);
-
-        return $isUpdated;
-    }
-
-    public static function delete(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
-
-        $isUpdated = parent::update([
-            'table'     => 'users',
-            'set'       => [
-                'status'        => 'DEL',
-            ],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
-        ]);
-
-        return $isUpdated;
     }
 
     public static function updatePassword(array $aArgs = [])
@@ -183,15 +229,16 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function createSignature(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
-        static::checkString($aArgs, ['userId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
+        static::checkRequired($aArgs, ['userSerialId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
+        static::checkString($aArgs, ['signatureLabel', 'signaturePath', 'signatureFileName']);
+        static::checkNumeric($aArgs, ['userSerialId']);
 
         parent::insertInto(
             [
-                'user_id'           => $aArgs['userId'],
-                'signature_label'   => $aArgs['signatureLabel'],
-                'signature_path'    => $aArgs['signaturePath'],
-                'signature_file_name' => $aArgs['signatureFileName']
+                'user_serial_id'        => $aArgs['userSerialId'],
+                'signature_label'       => $aArgs['signatureLabel'],
+                'signature_path'        => $aArgs['signaturePath'],
+                'signature_file_name'   => $aArgs['signatureFileName']
             ],
             'user_signatures'
         );
@@ -201,17 +248,17 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function updateSignature(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id', 'userId', 'label']);
-        static::checkString($aArgs, ['userId', 'label']);
-        static::checkNumeric($aArgs, ['id']);
+        static::checkRequired($aArgs, ['signatureId', 'userSerialId', 'label']);
+        static::checkString($aArgs, ['label']);
+        static::checkNumeric($aArgs, ['signatureId', 'userSerialId']);
 
         parent::update([
             'table'     => 'user_signatures',
             'set'       => [
                 'signature_label'   => $aArgs['label']
             ],
-            'where'     => ['user_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userId'], $aArgs['id']]
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']]
         ]);
 
         return true;
@@ -219,21 +266,13 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function deleteSignature(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['signatureId']);
-        static::checkNumeric($aArgs, ['signatureId']);
-
-        $where = ['id = ?'];
-        $data = [$aArgs['signatureId']];
-
-        if (!empty($aArgs['userId'])) {
-            $where[] = 'user_id = ?';
-            $data[] = $aArgs['userId'];
-        }
+        static::checkRequired($aArgs, ['signatureId', 'userSerialId']);
+        static::checkNumeric($aArgs, ['signatureId', 'userSerialId']);
 
         parent::deleteFrom([
             'table'     => 'user_signatures',
-            'where'     => $where,
-            'data'      => $data,
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
         ]);
 
         return true;
@@ -291,14 +330,14 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function getSignaturesById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        static::checkRequired($aArgs, ['id']);
+        static::checkNumeric($aArgs, ['id']);
 
         $aReturn = static::select([
-            'select'    => ['id', 'user_id', 'signature_label', 'signature_path', 'signature_file_name'],
+            'select'    => ['id', 'user_serial_id', 'signature_label', 'signature_path', 'signature_file_name'],
             'table'     => ['user_signatures'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']],
+            'where'     => ['user_serial_id = ?'],
+            'data'      => [$aArgs['id']],
             'order_by'  => 'id'
         ]);
 
@@ -311,7 +350,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
             $extension = explode('.', $pathToSignature);
             $extension = $extension[count($extension) - 1];
-            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] . '_' . rand() . '.' . strtolower($extension);
+            $fileNameOnTmp = 'tmp_file_' . $aArgs['id'] . '_' . rand() . '.' . strtolower($extension);
             $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
             if (file_exists($pathToSignature) && copy($pathToSignature, $filePathOnTmp)) {
                 $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; // TODO No Session
@@ -328,15 +367,14 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function getSignatureWithSignatureIdById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'signatureId']);
-        static::checkString($aArgs, ['userId']);
-        static::checkNumeric($aArgs, ['signatureId']);
+        static::checkRequired($aArgs, ['id', 'signatureId']);
+        static::checkNumeric($aArgs, ['id','signatureId']);
 
         $aReturn = static::select([
-            'select'    => ['id', 'user_id', 'signature_label'],
+            'select'    => ['id', 'user_serial_id', 'signature_label'],
             'table'     => ['user_signatures'],
-            'where'     => ['user_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userId'], $aArgs['signatureId']],
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['id'], $aArgs['signatureId']],
         ]);
 
         return $aReturn[0];
@@ -451,7 +489,7 @@ class UserModelAbstract extends \Apps_Table_Service
         return $aEntity[0];
     }
 
-    public static function getGroupsById(array $aArgs = [])
+    public static function getGroupsByUserId(array $aArgs = [])
     {
         static::checkRequired($aArgs, ['userId']);
         static::checkString($aArgs, ['userId']);
@@ -518,9 +556,25 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function hasGroup(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'groupId']);
+        static::checkString($aArgs, ['userId', 'groupId']);
+
+
+        $groups = self::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        foreach ($groups as $value) {
+            if ($value['group_id'] == $aArgs['groupId']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function addGroup(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'groupId']);
         static::checkString($aArgs, ['userId', 'groupId', 'role']);
 
 
@@ -539,7 +593,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function updateGroup(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'groupId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'groupId']);
         static::checkString($aArgs, ['userId', 'groupId', 'role']);
 
 
@@ -570,9 +624,25 @@ class UserModelAbstract extends \Apps_Table_Service
         return true;
     }
 
+    public static function hasEntity(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'entityId']);
+        static::checkString($aArgs, ['userId', 'entityId']);
+
+
+        $entities = self::getEntitiesById(['userId' => $aArgs['userId']]);
+        foreach ($entities as $value) {
+            if ($value['entity_id'] == $aArgs['entityId']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function addEntity(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
+        static::checkRequired($aArgs, ['userId', 'entityId', 'primaryEntity']);
         static::checkString($aArgs, ['userId', 'entityId', 'role', 'primaryEntity']);
 
 
@@ -591,7 +661,7 @@ class UserModelAbstract extends \Apps_Table_Service
 
     public static function updateEntity(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'entityId', 'role']);
+        static::checkRequired($aArgs, ['userId', 'entityId']);
         static::checkString($aArgs, ['userId', 'entityId', 'role']);
 
 

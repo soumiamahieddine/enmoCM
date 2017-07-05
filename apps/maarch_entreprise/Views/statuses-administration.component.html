@@ -1,6 +1,3 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
-</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -14,7 +11,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/status/create">
+                    <li style="cursor: pointer" routerLink="/administration/status/new">
                         <a title="{{lang.newStatus}}"><i class="fa fa-check-circle"></i><sup><i class="fa fa-plus"></i></sup></a>
                     </li>
                 </ul>
@@ -43,10 +40,10 @@
                     <td>{{status.label_status}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/status/update/{{status.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                            <button routerLink="/administration/status/{{status.identifier}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status.id)">
+                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status.id, status.identifier)">
                                 <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                             </button>
                         </div>

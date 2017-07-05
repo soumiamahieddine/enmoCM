@@ -1,6 +1,3 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
-</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -26,7 +23,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hashtag" title="{{lang.identifier}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input [(ngModel)]="status.id" required class="form-control" [disabled]="mode == 'update'" name="id" id="id" title="{{lang.identifier}}" type="text" required>
+                    <input [(ngModel)]="status.id" class="form-control" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.identifier}}" type="text" required>
                 </div>
             </div>
         </div>
@@ -34,7 +31,7 @@
             <div class="col-sm-12">
                 <div class="input-group">
                     <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{lang.description}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input class="form-control" name="label_status" id="label_status" [(ngModel)]="status.label_status" title="{{lang.description}}" type="text" required>
+                    <input class="form-control" name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.description}}" type="text" required>
                 </div>
             </div>
         </div>
@@ -46,7 +43,7 @@
                     </span>
                     <label class="form-control" for="can_be_searched">{{lang.can_be_searched}}</label>
                     <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_searched" [checked]="status.can_be_searched == 'Y'" name="can_be_searched" id="can_be_searched" type="checkbox">
+                        <input [(ngModel)]="status.can_be_searched" name="can_be_searched" id="can_be_searched" type="checkbox">
                     </span>
                 </div>
             </div>
@@ -57,7 +54,7 @@
                     </span>
                     <label class="form-control" for="can_be_modified">{{lang.can_be_modified}}</label>
                     <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_modified" [checked]="status.can_be_modified == 'Y'" type="checkbox" name="can_be_modified" id="can_be_modified">
+                        <input [(ngModel)]="status.can_be_modified" type="checkbox" name="can_be_modified" id="can_be_modified">
                     </span>
                 </div>
             </div>
@@ -78,30 +75,9 @@
                 <i class="fa fa-picture-o" aria-hidden="true"></i> {{lang.img_related}}
             </div>
             <div class="col-sm-12 panel-body">
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-new"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-inprogress"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-info"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-wait"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-validated"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-rejected"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-end"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-newmail"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-attr"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-arev"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aval"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aimp"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-imp"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aenv"></i></button> 
-                <button [ngClass]="[status.img_filename == 'fm-letter-status-acla' ? 'btn-primary' : 'btn-default']" type="button" class="btn btn-group-lg"><i id="img_0" class="fm fm-letter-status-acla"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-status-aarch"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-add"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-search"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-del"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-incoming"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-outgoing"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-letter-internal"></i></button> 
-                <button type="button" class="btn btn-default btn-group-lg"><i id="img_0" class="fm fm-file-fingerprint"></i></button> 
+                <button *ngFor="let image of statusImages" type="button" [ngClass]="[status.img_filename==image.image_name ? 'btn-primary' : 'btn-default']" class="btn btn-group-lg" (click)="selectImage(image.image_name)">
+                    <i id="img_0" [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}}"></i>
+                </button> 
             </div>
         </div>
         <div class="col-sm-12 panel-body" style="text-align:center;">
@@ -114,15 +90,15 @@
 
 <div class="tooltip_templates" style="display: none">
     <span id="infoSearchableTooltip">
-        Si <b>NON coché</b>,<br/>
-        le statut <b>{{status.id}}</b> ne vous sera <b>PAS proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents.
+        Si <b>coché</b>,<br/>
+        le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents.
     </span>
     <span id="infoCanBeModifiedTooltip">
-        si <b>NON coché</b>,<br/>
-        vous ne pourrez <b>PAS modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>.
+        Si <b>coché</b>,<br/>
+        vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>.
    </span>
    <span id="infoIsFolderStatusTooltip">
-        si <b>coché</b>,<br/>
-        Le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>.
+        Si <b>coché</b>,<br/>
+        le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>.
    </span>
 </div>

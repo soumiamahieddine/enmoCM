@@ -123,16 +123,16 @@ abstract class UserSignaturesAbstract extends Database
     }
 
     public function getForUser($user_id) {
-        $db = new Database();
-
-        $stmt = $db->query('SELECT * FROM ' .USER_SIGNATURES_TABLE. ' WHERE user_id = ? ',
-            [$user_id]
-        );
-        $userSignatures = [];
-        while($res = $stmt->fetchObject())
-            $userSignatures[] = ['id' => $res->id, 'signature_label' => $res->signature_label, 'signature_path' => $res->signature_path, 'signature_file_name' => $res->signature_file_name];
-
-        return $userSignatures;
+//        $db = new Database();
+//
+//        $stmt = $db->query('SELECT * FROM ' .USER_SIGNATURES_TABLE. ' WHERE user_id = ? ',
+//            [$user_id]
+//        );
+//        $userSignatures = [];
+//        while($res = $stmt->fetchObject())
+//            $userSignatures[] = ['id' => $res->id, 'signature_label' => $res->signature_label, 'signature_path' => $res->signature_path, 'signature_file_name' => $res->signature_file_name];
+//
+        return [];
     }
 
     public function deleteForCurrentUser($id) {

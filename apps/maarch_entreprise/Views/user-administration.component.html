@@ -1,12 +1,12 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
-</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0">
-        <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}} 
+    <h1 *ngIf="userCreation" style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> Création d'un utilisateur {{user.userId}}
+    </h1>
+    <h1 *ngIf="!userCreation" style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}}
         <sup>
             <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary" title="Actif" >Actif</span>
             <span *ngIf="user.status == 'ABS'" class="label label-warning" title="Absent" >Absent</span>
@@ -20,7 +20,7 @@
                     <i class="fa fa-arrow-circle-left" title="{{user.lang.back}}"></i>
                 </a>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div *ngIf="!userCreation" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right userAdministrationClickable">
                     <li>
                         <a (click)="resetPassword()"><i class="fa fa-key"></i> {{user.lang.reinitPassword}}</a>
@@ -46,7 +46,8 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" id="userId" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
+                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="Id" required>
+                            <input *ngIf="!userCreation" type="text" class="form-control" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
                         </div>
                     </div>
                 </div>
@@ -93,7 +94,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+        <div *ngIf="!userCreation" class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
             <h2>Groupes <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addGroupModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter un groupe"></i></h2>
             <div *ngFor="let group of user.groups" class="col-sm-12 form-group">
                 <div class="input-group">
@@ -112,7 +113,7 @@
                 L'utilisateur n'appartient à aucun groupe.
             </div>
         </div>
-        <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+        <div *ngIf="!userCreation" class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
             <h2>Entités <i class="fa fa-plus pull-right" data-toggle="modal" data-target="#addEntityModal" style="cursor:pointer;" aria-hidden="true" title="Ajouter une entité"></i></h2>
             <div *ngFor="let entity of user.entities" class="col-sm-12 form-group">
                 <div class="input-group">
@@ -144,25 +145,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addGroupModalLabel">Ajouter un groupe</h4>
             </div>
-            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <select class="form-control" placeholder="Choisissez un groupe">
-                                    <option>test</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
-                            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <select id="groupsSelect" class="form-control">
+                                <option>Choisissez un groupe</option>
+                                <option *ngFor="let group of user.allGroups" [disabled]="group.disabled">{{group.group_desc}}</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" >Valider</button>
-                </div>
-            </form>
+                        <div class="col-sm-6">
+                            <input id="groupRole" class="form-control" placeholder="Rôle" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="addGroup()" type="button" class="btn btn-default">{{user.lang.validate}}</button>
+            </div>
         </div>
     </div>
 </div>
@@ -175,25 +175,24 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addEntityModalLabel">Ajouter une entité</h4>
             </div>
-            <form (ngSubmit)="onSubmit()" #addGroupForm="ngForm">
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <select class="form-control" placeholder="Choisissez une entité">
-                                    <option>test</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="groupRole" name="groupRole" required="" title="Rôle" placeholder="Rôle" type="text">
-                            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <select id="entitiesSelect" class="form-control">
+                                <option>Choisissez une entité</option>
+                                <option *ngFor="let entity of user.allEntities" [disabled]="entity.disabled">{{entity.entity_label}}</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" >Valider</button>
-                </div>
-            </form>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="entityRole" placeholder="Rôle" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="addEntity()" type="button" class="btn btn-default" >{{user.lang.validate}}</button>
+            </div>
         </div>
     </div>
 </div>
