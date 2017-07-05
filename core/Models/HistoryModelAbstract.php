@@ -79,7 +79,7 @@ class HistoryModelAbstract extends \Apps_Table_Service
     public static function writeLog(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['logger', 'logLine', 'level']);
-        ValidatorModel::stringType($aArgs, ['logger', 'logLine', 'level']);
+        ValidatorModel::stringType($aArgs, ['logLine']);
 
         $logger  = $aArgs['logger'];
         $logLine = $aArgs['logLine'];

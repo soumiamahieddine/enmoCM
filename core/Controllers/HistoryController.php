@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\HistoryModel;
+use Core\Models\ValidatorModel;
 use Notifications\Controllers\NotificationsEventsController;
 
 require_once('core/class/class_functions.php');
@@ -138,7 +139,7 @@ class HistoryController
     */
     private function addToLog4php(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['traceInformations', 'logging_method', 'isTech']);
+        ValidatorModel::notEmpty($aArgs, ['traceInformations', 'logging_method']);
 
         $traceInformations = $aArgs['traceInformations'];
         $logging_method    = $aArgs['logging_method'];
