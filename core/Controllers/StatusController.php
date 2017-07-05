@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\StatusModel;
+use Core\Models\StatusImagesModel;
 use Core\Models\ServiceModel;
 
 class StatusController
@@ -44,7 +45,7 @@ class StatusController
         }
 
         $datas = [
-            'statusImages' => StatusModel::getStatusImages(),
+            'statusImages' => StatusImagesModel::getStatusImages(),
             'lang'         => StatusModel::getStatusLang()
         ];
         
@@ -68,8 +69,8 @@ class StatusController
 
             return $response->withJson([
                 'status'       => $obj,
-                'lang'         =>  StatusModel::getStatusLang(),
-                'statusImages' => StatusModel::getStatusImages(),
+                'lang'         => StatusModel::getStatusLang(),
+                'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
         } else {
             return $response->withStatus(400)->withJson(['errors' => 'identifier not valid']);

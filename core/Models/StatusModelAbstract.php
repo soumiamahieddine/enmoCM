@@ -109,14 +109,4 @@ class StatusModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
-    public static function getStatusImages(array $aArgs = [])
-    {
-        $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['status_images'],
-            'order_by'  => 'id'
-        ]);
-
-        return $aReturn;
-    }
 }
