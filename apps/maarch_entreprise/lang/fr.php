@@ -492,6 +492,7 @@ if (!defined("_FIRST_WARNING")) define("_FIRST_WARNING","1ere Relance");
 if (!defined("_SECOND_WARNING")) define("_SECOND_WARNING","2e Relance");
 if (!defined("_CLOSED")) define("_CLOSED","Clos");
 if (!defined("_NEW")) define("_NEW","Nouveaux");
+if (!defined("_NEW_ITEM")) define("_NEW_ITEM","Nouveau");
 if (!defined("_LATE")) define("_LATE", "En retard");
 
 if (!defined("_STATUS_DELETED")) define("_STATUS_DELETED", "Suppression du statut");
@@ -2015,3 +2016,9 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Mise à jour réussi');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucun tag de disponible pour une mise à jour');
+if (!defined('_INVALID'))
+    define('_INVALID', 'n\'est pas valide');
+if (!defined('_NEW_STATUS_ADDED'))
+    define('_NEW_STATUS_ADDED', 'Nouveau statut créé');
+if (!defined('_STATUS_UPDATED'))
+    define('_STATUS_UPDATED', 'Statut mis à jour');

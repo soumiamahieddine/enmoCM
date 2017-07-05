@@ -30,15 +30,16 @@ class StatusModelAbstract extends \Apps_Table_Service
         return $aReturn;
     }
 
-    public static function getStatusLang(){
+    public static function getStatusLang()
+    {
         $aLang = LangModel::getStatusLang();
         return $aLang;
     }
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -52,8 +53,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function getByIdentifier(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -67,8 +68,8 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id', 'label_status']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label_status']);
+        ValidatorModel::stringType($aArgs, ['id', 'label_status']);
 
         $aReturn = static::insertInto($aArgs, 'status');
 
@@ -77,44 +78,33 @@ class StatusModelAbstract extends \Apps_Table_Service
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['label_status', 'identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['label_status', 'identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $where['identifier'] = $aArgs['identifier'];
         unset($aArgs['id']);
         unset($aArgs['identifier']);
 
-        $aReturn = static::updateTable(
-            $aArgs,
-            'status',
-            $where
-        );
+        $aReturn = parent::update([
+            'table' => 'status',
+            'set'   => $aArgs,
+            'where' => ['identifier = ?'],
+            'data'  => [$where['identifier']]
+        ]);
 
         return $aReturn;
     }
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['identifier']);
-        static::checkNumeric($aArgs, ['identifier']);
+        ValidatorModel::notEmpty($aArgs, ['identifier']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
 
         $aReturn = static::deleteFrom([
                 'table' => 'status',
                 'where' => ['identifier = ?'],
                 'data'  => [$aArgs['identifier']]
             ]);
-
-        return $aReturn;
-    }
-
-    public static function getStatusImages(array $aArgs = [])
-    {
-
-        $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['status_images'],
-            'order_by'  => 'id'
-        ]);
 
         return $aReturn;
     }

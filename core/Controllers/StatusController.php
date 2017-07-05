@@ -19,6 +19,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\StatusModel;
+use Core\Models\StatusImagesModel;
 use Core\Models\ServiceModel;
 
 class StatusController
@@ -39,17 +40,24 @@ class StatusController
 
     public function getNewInformations(RequestInterface $request, ResponseInterface $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $datas = [
-            'statusImages' => StatusModel::getStatusImages(),
+            'statusImages' => StatusImagesModel::getStatusImages(),
             'lang'         => StatusModel::getStatusLang()
         ];
         
         return $response->withJson($datas);
-
     }
 
     public function getByIdentifier(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
             $obj = StatusModel::getByIdentifier([
                 'identifier' => $aArgs['identifier']
@@ -61,14 +69,12 @@ class StatusController
 
             return $response->withJson([
                 'status'       => $obj,
-                'lang'         =>  StatusModel::getStatusLang(),
-                'statusImages' => StatusModel::getStatusImages(),
+                'lang'         => StatusModel::getStatusLang(),
+                'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
-
         } else {
             return $response->withStatus(400)->withJson(['errors' => 'identifier not valid']);
         }
-
     }
 
     public function create(RequestInterface $request, ResponseInterface $response)
@@ -93,7 +99,6 @@ class StatusController
                 'id' => $id
             ]);
             return $response->withJson([$obj]);
-
         } else {
             return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
         }
@@ -121,7 +126,6 @@ class StatusController
             $obj = StatusModel::getByIdentifier([
                 'identifier' => $aArgs['identifier']
             ]);
-
         } else {
             return $response
                 ->withStatus(500)
@@ -150,10 +154,11 @@ class StatusController
         return $response->withJson([$obj]);
     }
 
-    protected function manageValue($request){
+    protected function manageValue($request)
+    {
         foreach ($request  as $key => $value) {
-            if(in_array($key, ['is_system', 'is_folder_status', 'can_be_searched', 'can_be_modified'])){
-                if(empty($value)){
+            if (in_array($key, ['is_system', 'is_folder_status', 'can_be_searched', 'can_be_modified'])) {
+                if (empty($value)) {
                     $request[$key] = 'N';
                 } else {
                     $request[$key] = 'Y';
@@ -170,7 +175,9 @@ class StatusController
     {
         $errors = [];
 
-        if ($mode == 'create') {
+        if(!Validator::notEmpty()->validate($request['id'])){
+            array_push($errors, _ID . ' ' . _EMPTY);
+        } else if ($mode == 'create') {
             $obj = StatusModel::getById([
                 'id' => $request['id']
             ]);
@@ -180,7 +187,7 @@ class StatusController
                     _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
                 );
             }
-        } else if ($mode == 'update') {
+        } elseif ($mode == 'update') {
             $obj = StatusModel::getByIdentifier([
                 'identifier' => $request['identifier']
             ]);
@@ -195,56 +202,54 @@ class StatusController
         if (!Validator::regex('/^[\w.-]*$/')->validate($request['id']) ||
             !Validator::length(1, 10)->validate($request['id']) ||
             !Validator::notEmpty()->validate($request['id'])) {
-            array_push($errors, 'id not valid');
+            array_push($errors, _ID . ' ' . _INVALID);
         }
 
         if (!Validator::notEmpty()->validate($request['label_status']) ||
             !Validator::length(1, 50)->validate($request['label_status'])) {
-            array_push($errors, 'label_status not valid');
+            array_push($errors, _DESCRIPTION . ' ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['is_system']) &&
+        if (Validator::notEmpty()->validate($request['is_system']) &&
             !Validator::contains('Y')->validate($request['is_system']) &&
             !Validator::contains('N')->validate($request['is_system'])
         ) {
-            array_push($errors, 'is_system not valid');
+            array_push($errors, 'is_system ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['is_folder_status']) &&
+        if (Validator::notEmpty()->validate($request['is_folder_status']) &&
             !Validator::contains('Y')->validate($request['is_folder_status']) &&
             !Validator::contains('N')->validate($request['is_folder_status'])
         ) {
-            array_push($errors, 'is_folder_status not valid');
+            array_push($errors, _IS_FOLDER_STATUS . ' ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['img_filename']) &&
-            (!Validator::regex('/^[\w-.]+$/')->validate($request['img_filename']) ||
-            !Validator::length(1, 255)->validate($request['img_filename']))
+        if (!Validator::notEmpty()->validate($request['img_filename']) ||
+            !Validator::length(1, 255)->validate($request['img_filename'])
         ) {
-            array_push($errors, 'img_filename not valid');
+            array_push($errors, _IMG_RELATED . ' ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['maarch_module']) &&
+        if (Validator::notEmpty()->validate($request['maarch_module']) &&
             !Validator::length(null, 255)->validate($request['maarch_module'])
         ) {
-            array_push($errors, 'maarch_module not valid');
+            array_push($errors, 'maarch_module ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['can_be_searched']) &&
+        if (Validator::notEmpty()->validate($request['can_be_searched']) &&
             !Validator::contains('Y')->validate($request['can_be_searched']) &&
             !Validator::contains('N')->validate($request['can_be_searched'])
         ) {
-            array_push($errors, 'can_be_searched not valid');
+            array_push($errors, _CAN_BE_SEARCHED . ' ' . _INVALID);
         }
 
-        if ( Validator::notEmpty()->validate($request['can_be_modified']) &&
+        if (Validator::notEmpty()->validate($request['can_be_modified']) &&
             !Validator::contains('Y')->validate($request['can_be_modified']) &&
             !Validator::contains('N')->validate($request['can_be_modified'])
         ) {
-            array_push($errors, 'can_be_modified not valid');
+            array_push($errors, _CAN_BE_MODIFIED . ' ' . _INVALID);
         }
 
         return $errors;
-
     }
 }
