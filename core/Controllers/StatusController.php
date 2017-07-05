@@ -21,6 +21,7 @@ use Respect\Validation\Validator;
 use Core\Models\StatusModel;
 use Core\Models\StatusImagesModel;
 use Core\Models\ServiceModel;
+use Core\Controllers\HistoryController;
 
 class StatusController
 {
@@ -30,12 +31,10 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $datas = [
+        return $response->withJson([
             'statusList' => StatusModel::getList(),
             'lang'       => StatusModel::getStatusLang()
-        ];
-        
-        return $response->withJson($datas);
+        ]);
     }
 
     public function getNewInformations(RequestInterface $request, ResponseInterface $response)
@@ -44,12 +43,10 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $datas = [
+        return $response->withJson([
             'statusImages' => StatusImagesModel::getStatusImages(),
             'lang'         => StatusModel::getStatusLang()
-        ];
-        
-        return $response->withJson($datas);
+        ]);
     }
 
     public function getByIdentifier(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -59,9 +56,7 @@ class StatusController
         }
 
         if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $aArgs['identifier']
-            ]);
+            $obj = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
 
             if (empty($obj)) {
                 return $response->withStatus(404)->withJson(['errors' => 'identifier not found']);
@@ -73,7 +68,7 @@ class StatusController
                 'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
         } else {
-            return $response->withStatus(400)->withJson(['errors' => 'identifier not valid']);
+            return $response->withStatus(500)->withJson(['errors' => 'identifier not valid']);
         }
     }
 
@@ -91,14 +86,10 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $return = StatusModel::create($aArgs);
-
-        if ($return) {
-            $id = $aArgs['id'];
-            $obj = StatusModel::getById([
-                'id' => $id
+        if (StatusModel::create($aArgs)) {
+            return $response->withJson([
+                StatusModel::getById(['id' => $aArgs['id']])
             ]);
-            return $response->withJson([$obj]);
         } else {
             return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
         }
@@ -120,19 +111,27 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $return = StatusModel::update($aArgs);
+        if (StatusModel::update($aArgs)) {
+            $return = [
+                StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])
+            ];
 
-        if ($return) {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $aArgs['identifier']
-            ]);
+            HistoryController::add(
+                'status', 
+                $return[0][0]['id'], 
+                'UP', 
+                'statusup',
+                _MODIFY_STATUS . ' : ' . $return[0][0]['id'], 
+                $_SESSION['config']['databasetype']
+            );
+
+            return $response->withJson($return);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
-        return $response->withJson([$obj]);
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -141,17 +140,28 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
-            $obj = StatusModel::delete([
-                'identifier' => $aArgs['identifier']
-            ]);
+        $statusDeleted = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
+
+        if (Validator::notEmpty()->validate($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier']) && !empty($statusDeleted)) {
+            $return = [
+                StatusModel::delete(['identifier' => $aArgs['identifier']])
+            ];
+
+            HistoryController::add(
+                'status', 
+                $statusDeleted[0]['id'], 
+                'DEL', 
+                'statusdel',
+                _STATUS_DELETED . ' : ' . $statusDeleted[0]['id'], 
+                $_SESSION['config']['databasetype']
+            );
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => 'identifier not valid']);
         }
 
-        return $response->withJson([$obj]);
+        return $response->withJson($return);
     }
 
     protected function manageValue($request)
