@@ -56,7 +56,7 @@ export class ActionAdministrationComponent implements OnInit {
                     .subscribe((data) => {
                         this.action = data.action;
                         this.lang = data.lang;
-                        this.lang.pageTitle = this.lang.modify_action+' : '+this.action.action_id
+                        this.lang.pageTitle = this.lang.add+' '+this.lang.action;
                         this.categoriesList = data.categoriesList;
                         this.statusList = data.statusList;
 
@@ -75,8 +75,8 @@ export class ActionAdministrationComponent implements OnInit {
                     .map(res => res.json())
                     .subscribe((data) => {
                         this.lang= data.lang;
-                        this.lang.pageTitle = this.lang.add+' '+this.lang.action
                         this.action = data.action;
+                        this.lang.pageTitle = this.lang.modify_action+' : '+this.action.id;
                         this.categoriesList = data.categoriesList;
                         this.statusList = data.statusList;
 

@@ -49,7 +49,7 @@ var ActionAdministrationComponent = (function () {
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.lang = data.lang;
-                    _this.lang.pageTitle = _this.lang.modify_action + ' : ' + _this.action.action_id;
+                    _this.lang.pageTitle = _this.lang.add + ' ' + _this.lang.action;
                     _this.categoriesList = data.categoriesList;
                     _this.statusList = data.statusList;
                     _this.actionPagesList = data.action_pagesList;
@@ -66,8 +66,8 @@ var ActionAdministrationComponent = (function () {
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data.lang;
-                    _this.lang.pageTitle = _this.lang.add + ' ' + _this.lang.action;
                     _this.action = data.action;
+                    _this.lang.pageTitle = _this.lang.modify_action + ' : ' + _this.action.id;
                     _this.categoriesList = data.categoriesList;
                     _this.statusList = data.statusList;
                     _this.actionPagesList = data.action_pagesList;
