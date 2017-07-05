@@ -187,7 +187,7 @@ class HistoryController
         $formatter = new \functions();
 
         $logLine = $formatter->wash_html($logLine, '');
-        $logLine = self::wd_remove_accents($logLine);
+        $logLine = self::wd_remove_accents(['string' => $logLine]);
 
         HistoryModel::writeLog([
             'logger'  => $logger,
@@ -204,9 +204,14 @@ class HistoryController
     *
     * @return  string $str
     */
-    public static function wd_remove_accents($str, $charset ='utf-8')
+    public static function wd_remove_accents(array $aArgs = [])
     {
-        $str = htmlentities($str, ENT_NOQUOTES, "utf-8");
+        if(empty($aArgs['charset'])){
+            $aArgs['charset'] = 'utf-8';
+        }
+        $charset = $aArgs['charset'];
+        
+        $str = htmlentities($aArgs['string'], ENT_NOQUOTES, $charset);
 
         $str = preg_replace(
             '#\&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring)\;#',
