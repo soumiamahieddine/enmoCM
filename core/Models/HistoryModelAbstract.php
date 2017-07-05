@@ -29,7 +29,7 @@ class HistoryModelAbstract extends \Apps_Table_Service
     public static function build_logging_method()
     {
         if (!isset($_SESSION['logging_method_memory'])) {
-            $pathToXmlLogin = HistoryController::getXmlFilePath('apps/maarch_entreprise/xml/logging_method.xml');
+            $pathToXmlLogin = HistoryController::getXmlFilePath(['filePath' => 'apps/maarch_entreprise/xml/logging_method.xml']);
              
             if (!$pathToXmlLogin) {
                 $noXml = true;
@@ -76,10 +76,15 @@ class HistoryModelAbstract extends \Apps_Table_Service
     * @param  $logLine (string) => Line we want to trace
     * @param  $level (enum) => Log level
     */
-    public static function writeLog($logger, $logLine, $level)
+    public static function writeLog(array $aArgs = [])
     {
-        switch ($level) {
+        ValidatorModel::notEmpty($aArgs, ['logger', 'logLine', 'level']);
+        ValidatorModel::stringType($aArgs, ['logger', 'logLine', 'level']);
 
+        $logger  = $aArgs['logger'];
+        $logLine = $aArgs['logLine'];
+
+        switch ($aArgs['level']) {
             case _LEVEL_DEBUG:
                 $logger->debug($logLine);
                 break;

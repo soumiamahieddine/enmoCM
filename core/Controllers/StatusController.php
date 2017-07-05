@@ -115,15 +115,14 @@ class StatusController
                 StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])
             ];
 
-            HistoryController::add(
-                'status', 
-                $return[0][0]['id'], 
-                'UP', 
-                'statusup',
-                _MODIFY_STATUS . ' : ' . $return[0][0]['id'], 
-                $_SESSION['config']['databasetype']
-            );
-
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $return[0][0]['id'], 
+                'event_type' => 'UP', 
+                'event_id'   => 'statusup',
+                'info'       => _MODIFY_STATUS . ' : ' . $return[0][0]['id']
+            ]);
+            
             return $response->withJson($return);
         } else {
             return $response
@@ -146,14 +145,13 @@ class StatusController
                 StatusModel::delete(['identifier' => $aArgs['identifier']])
             ];
 
-            HistoryController::add(
-                'status', 
-                $statusDeleted[0]['id'], 
-                'DEL', 
-                'statusdel',
-                _STATUS_DELETED . ' : ' . $statusDeleted[0]['id'], 
-                $_SESSION['config']['databasetype']
-            );
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $statusDeleted[0]['id'], 
+                'event_type' => 'DEL', 
+                'event_id'   => 'statusdel',
+                'info'       => _STATUS_DELETED . ' : ' . $statusDeleted[0]['id']
+            ]);
         } else {
             return $response
                 ->withStatus(500)

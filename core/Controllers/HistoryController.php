@@ -34,32 +34,44 @@ class HistoryController
     * @param $event_type
     * @param $event_id
     * @param $info
-    * @param $databasetype
     * @param $id_module = 'admin'
     * @param $isTech = false
     * @param $result = _OK
     * @param $level = _LEVEL_DEBUG
-    * @param $user = ''
     */
-    public static function add(
-        $table_name,
-        $record_id,
-        $event_type,
-        $event_id,
-        $info,
-        $databasetype,
-        $id_module = 'admin',
-        $isTech    = false,
-        $result    = _OK,
-        $level     = _LEVEL_DEBUG,
-        $user      = ''
-    ) {
+    public static function add(array $aArgs = []) 
+    {
+        ValidatorModel::notEmpty($aArgs, ['table_name', 'info', 'event_id', 'event_type', 'record_id']);
+
+        if(empty($aArgs['id_module'])){
+            $aArgs['id_module'] = 'admin';
+        }
+        if(empty($aArgs['isTech'])){
+            $aArgs['isTech'] = false;
+        }
+        if(empty($aArgs['result'])){
+            $aArgs['result'] = _OK;
+        }
+        if(empty($aArgs['level'])){
+            $aArgs['level'] = _LEVEL_DEBUG;
+        }
+
         $remote_ip = $_SERVER['REMOTE_ADDR'];
 
         $user = '';
         if (isset($_SESSION['user']['UserId'])) {
             $user = $_SESSION['user']['UserId'];
         }
+
+        $table_name   = $aArgs['table_name'];
+        $info         = $aArgs['info'];
+        $record_id    = $aArgs['record_id'];
+        $event_type   = $aArgs['event_type'];
+        $event_id     = $aArgs['event_id'];
+        $id_module    = $aArgs['id_module'];
+        $result       = $aArgs['result'];
+        $level        = $aArgs['level'];
+        $databasetype = $_SESSION['config']['databasetype'];
 
         $traceInformations = array(
             'WHERE'         => $table_name,
@@ -85,7 +97,11 @@ class HistoryController
                     if ($logging_method['LOGGER_NAME_FUNC'] == "") {
                         $logging_method['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
                     }
-                    self::addToLog4php($traceInformations, $logging_method, $isTech);
+                    self::addToLog4php([
+                        'traceInformations' => $traceInformations,
+                        'logging_method'    => $logging_method,
+                        'isTech'            => $isTech,
+                    ]);
                 }
             }
         }
@@ -120,21 +136,15 @@ class HistoryController
     * @param  $logging_method (string) => Array of XML attributes
     * @param  $isTech (boolean) => Says if the log is technical (true) or functional (false)
     */
-    private function addToLog4php($traceInformations, $logging_method, $isTech)
+    private function addToLog4php(array $aArgs = [])
     {
-        if (!isset($_SESSION['user']['loginmode'])) {
-            $_SESSION['user']['loginmode'] = '';
-        }
+        ValidatorModel::notEmpty($aArgs, ['traceInformations', 'logging_method', 'isTech']);
 
-        if (!isset($_SESSION['user']['department'])) {
-            $_SESSION['user']['department'] = '';
-        }
+        $traceInformations = $aArgs['traceInformations'];
+        $logging_method    = $aArgs['logging_method'];
+        $isTech            = $aArgs['isTech'];
 
-        if (!isset($_SESSION['user']['primarygroup'])) {
-            $_SESSION['user']['primarygroup'] = '';
-        }
-
-        $configFileLog4PHP = self::getXmlFilePath('apps/maarch_entreprise/xml/log4php.xml');
+        $configFileLog4PHP = self::getXmlFilePath(['filePath' => 'apps/maarch_entreprise/xml/log4php.xml']);
         if (!$configFileLog4PHP) {
             $configFileLog4PHP = "apps/maarch_entreprise/xml/log4php.default.xml";
         }
@@ -178,7 +188,11 @@ class HistoryController
         $logLine = $formatter->wash_html($logLine, '');
         $logLine = self::wd_remove_accents($logLine);
 
-        HistoryModel::writeLog($logger, $logLine, $traceInformations['LEVEL']);
+        HistoryModel::writeLog([
+            'logger'  => $logger,
+            'logLine' => $logLine,
+            'level'   => $traceInformations['LEVEL']
+        ]);
     }
 
     /**
@@ -212,8 +226,12 @@ class HistoryController
         return $str;
     }
 
-    public static function getXmlFilePath($filePath)
+    public static function getXmlFilePath(array $aArgs = [])
     {
+        ValidatorModel::notEmpty($aArgs, ['filePath']);
+
+        $filePath = $aArgs['filePath'];
+
         if (file_exists($_SESSION['config']['corepath'].'custom/'.$filePath)) {
             $pathToXml = $_SESSION['config']['corepath'].'custom/'.$filePath;
         } elseif (file_exists($_SESSION['config']['corepath'].$filePath)) {
