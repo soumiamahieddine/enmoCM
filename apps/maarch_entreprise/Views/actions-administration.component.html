@@ -15,7 +15,7 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/actions/create">
+                    <li style="cursor: pointer" routerLink="/administration/actions/new">
                         <a data-toggle="modal" data-target="#manageSign" title="{{lang.new_action}}"><i class="fa fa-exchange"></i><sup><i class="fa fa-plus"></i></sup></a>
                     </li>
                 </ul>
@@ -23,25 +23,25 @@
         </div>
     </nav>
     <div class="col-md-12">
-        <table id ="actionsTable" class="display">
+        <table id ="actionsTable" class="display" style="display:none;">
             <thead>
             <tr>
-                <th style="width:50px;"><span>{{lang.id}}</span></th>
-                <th><span>{{lang.desc}}</span></th>
-                <th><span>{{lang.is_folder_action}}</span></th>
-                <th><span>{{lang.is_system}}</span></th>
-                <th><span>&nbsp;</span></th>
+                <th style="width:5%;"><span>{{lang.id}}</span></th>
+                <th style="width:45%;"><span>{{lang.desc}}</span></th>
+                <th style="width:15%;"><span>{{lang.action_history}}</span></th>
+                <th style="width:15%;"><span>{{lang.is_folder_action}}</span></th>
+                <th style="width:30%;"><span>&nbsp;</span></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let action of actions" id="{{action.id}}">
-                <td> {{action.id}} </td>
-                <td> {{action.label_action}} </td>
-                <td *ngIf="action.history == 'N'"> {{lang.no}} </td>
-                <td *ngIf="action.history == 'Y'"> {{lang.yes}}  </td>
-                <td *ngIf="action.is_system == 'Y'"> {{lang.yes}}  </td>
-                <td *ngIf="action.is_system == 'N'"> {{lang.no}}  </td>
-                <td style="text-align:right;">
+                <td style="width:5%;"> {{action.id}} </td>
+                <td style="width:45%;"> {{action.label_action}} </td>
+                <td style="width:15%;" *ngIf="action.history == 'N'"> {{lang.no}} </td>
+                <td style="width:15%;" *ngIf="action.history == 'Y'"> {{lang.yes}}  </td>
+                <td style="width:15%;" *ngIf="action.is_folder_action == 'Y'"> {{lang.yes}}  </td>
+                <td style="width:15%;" *ngIf="action.is_folder_action == 'N'"> {{lang.no}}  </td>
+                <td style="width:30%;" style="text-align:right;">
                     <div class="btn-group" role="group" aria-label="...">
                         <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.modify}}">
                             <a><i style="cursor:pointer" class="fa fa-edit"></i></a>

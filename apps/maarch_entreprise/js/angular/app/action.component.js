@@ -38,7 +38,13 @@ var ActionComponent = (function () {
         this.keywords = [];
         this.leftCategories = [];
         this.rightCategories = [];
+        this.loading = false;
     }
+    ActionComponent.prototype.updateBreadcrumb = function (applicationName) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Actions</a> > Modification";
+        }
+    };
     ActionComponent.prototype.prepareActions = function () {
         var _this = this;
         $j('#inner_content').remove();
@@ -233,8 +239,8 @@ var ActionComponent = (function () {
 }());
 ActionComponent = __decorate([
     core_1.Component({
-        templateUrl: 'Views/action.component.html',
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'js/angular/app/Css/actions.component.css']
+        templateUrl: angularGlobals["action-administrationView"],
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/action-administration.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], ActionComponent);

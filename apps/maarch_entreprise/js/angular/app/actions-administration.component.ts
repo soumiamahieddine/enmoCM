@@ -47,7 +47,7 @@ export class ActionsAdministrationComponent implements OnInit {
                 this.lang= data['lang'];
                 setTimeout(() => {
                     this.table = $j('#actionsTable').DataTable({
-                        "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
+                        "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
                         "lengthMenu": [ 10, 25, 50, 75, 100 ],
                         "oLanguage": {
                             "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
@@ -66,7 +66,11 @@ export class ActionsAdministrationComponent implements OnInit {
                         "order": [[ 1, "asc" ]],
                         "columnDefs": [
                             { "orderable": false, "targets": 4 }
-                        ]
+                        ],
+                        "fnInitComplete": function () {
+                            $j('#actionsTable').show();
+                        },
+                        stateSave: true
                     });
                     $j('.dataTables_filter input').attr("placeholder", this.lang.search);
                     $j('dataTables_filter input').addClass('form-control');

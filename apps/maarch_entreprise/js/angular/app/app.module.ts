@@ -4,7 +4,6 @@ import { RouterModule }     from '@angular/router';
 import { HttpModule }       from '@angular/http';
 import { FormsModule }      from '@angular/forms';
 
-
 import { AppComponent }                         from './app.component';
 import { HeaderComponent }                      from './header.component';
 import { UsersAdministrationComponent }         from './users-administration.component';
@@ -12,6 +11,7 @@ import { UserAdministrationComponent }          from './user-administration.comp
 import { StatusListAdministrationComponent }    from './status-list-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
 import { ActionsAdministrationComponent }       from './actions-administration.component';
+import { ActionAdministrationComponent }        from './action-administration.component';
 import { ProfileComponent }                     from './profile.component';
 import { ParameterComponent }                   from './parameter.component';
 import { ParametersComponent }                  from './parameters.component';
@@ -21,9 +21,6 @@ import { PriorityComponent }                    from './priority.component';
 import { AdministrationComponent }              from './administration.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { ReportsComponent } from './reports.component';
-
-
-import { ActionComponent } from './action.component';
 
 @NgModule({
   imports:      [
@@ -47,8 +44,8 @@ import { ActionComponent } from './action.component';
           { path: 'administration/priority/create', component : PriorityComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: 'administration/actions', component: ActionsAdministrationComponent },
-          { path: 'administration/actions/create', component: ActionComponent },
-          { path: 'administration/actions/:id', component: ActionComponent },
+          { path: 'administration/actions/new', component: ActionAdministrationComponent },
+          { path: 'administration/actions/:id', component: ActionAdministrationComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
       HttpModule
@@ -56,7 +53,7 @@ import { ActionComponent } from './action.component';
   declarations: [
       HeaderComponent,
       AppComponent,
-      ActionComponent,
+      ActionAdministrationComponent,
       ActionsAdministrationComponent,
       AdministrationComponent,
       ReportsComponent,

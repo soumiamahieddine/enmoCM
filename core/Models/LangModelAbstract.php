@@ -197,6 +197,7 @@ class LangModelAbstract
             'id'                                => _ID,
             'desc'                              => _DESC,
             'is_folder_action'                  => _IS_FOLDER_ACTION,
+            'is_folder_action_desc'             => _IS_FOLDER_ACTION_DESC,
             'is_system'                         => _IS_SYSTEM,
             'new_action'                        => _NEW_ACTION,
             'recordsPerPage'                    =>  _RECORDS_PER_PAGE,
@@ -216,6 +217,7 @@ class LangModelAbstract
             'no'                                => _NO,
             'action_page'                       =>  _ACTION_PAGE,
             'action_history'                    =>  _ACTION_HISTORY,
+            'action_history_desc'               =>  _ACTION_HISTORY_DESC,
             'choose_category_association'       =>  _CHOOSE_CATEGORY_ASSOCIATION,
             'choose_category_association_help'  =>  _CHOOSE_CATEGORY_ASSOCIATION_HELP,
             'add'                               =>  _ADD,
@@ -235,8 +237,12 @@ class LangModelAbstract
             'record'                            => _RECORD,
             'search'                            => _SEARCH,
             'actions'                           => _ACTIONS,
+            'action'                           => _ACTION,
             'admin'                             => _ADMIN,
-            'deleteMsg'                         => _REALLY_DELETE
+            'deleteMsg'                         => _REALLY_DELETE,
+            'modify_action'                     => _MODIFY_ACTION,
+            'selectAll'                         => _SELECT_ALL,
+            'unselectAll'                       => _UNSELECT_ALL,
             
 
         ];

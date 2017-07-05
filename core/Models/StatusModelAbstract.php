@@ -24,6 +24,7 @@ class StatusModelAbstract extends \Apps_Table_Service
         $aReturn = static::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
+            'order_by'  => 'label_status'
         ]);
 
         return $aReturn;

@@ -34,7 +34,9 @@ if (!defined("_DELETED")) define("_DELETED", "supprimé");
 if (!defined("_PLEASE_CHOOSE_AN_ATTACHMENT")) define("_PLEASE_CHOOSE_AN_ATTACHMENT", "Ajoutez une pièce jointe svp.");
 if (!defined("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT")) define("_ADD_ATTACHMENT_TO_SEND_TO_CONTACT", "Veuillez ajouter une pièce jointe avant d'envoyer ce courrier au contact");
 if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT", "Envoyer au contact avec une pièce jointe obligatoire");
+if (!defined("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC")) define("_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC", "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
 if (!defined("_SEND_ATTACHMENTS_TO_CONTACT")) define("_SEND_ATTACHMENTS_TO_CONTACT", "Envoyer au contact");
+if (!defined("_SEND_ATTACHMENTS_TO_CONTACT_DESC")) define("_SEND_ATTACHMENTS_TO_CONTACT_DESC", "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");
 if (!defined("_PROCESSING_MODE")) define("_PROCESSING_MODE", "Mode de traitement");
 if (!defined("_VIEW_LAST_COURRIERS")) define("_VIEW_LAST_COURRIERS", "Mes derniers courriers/doc");
 if (!defined("_ADMIN_USERS"))    define("_ADMIN_USERS", "Utilisateurs");
@@ -107,6 +109,7 @@ if (!defined("_DELETION"))    define("_DELETION", "Suppression");
 if (!defined("_SUSPENSION"))    define("_SUSPENSION", "Suspension");
 if (!defined("_VALIDATION"))    define("_VALIDATION", "Validation");
 if (!defined("_REDIRECTION"))    define("_REDIRECTION", "Redirection");
+if (!defined("_REDIRECTION_DESC"))    define("_REDIRECTION_DESC", "Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.");
 if (!defined("_DUPLICATION"))    define("_DUPLICATION", "Duplication");
 if (!defined("_PROPOSITION"))    define("_PROPOSITION", "Proposition");
 if (!defined("_ERR"))    define("_ERR", "Erreur");
@@ -287,6 +290,7 @@ if (!defined("_MANAGE_DOCTYPES_DESC")) define("_MANAGE_DOCTYPES_DESC", "Administ
 if (!defined("_VIEW_HISTORY2")) define("_VIEW_HISTORY2", "Visualisation de l'historique");
 if (!defined("_VIEW_HISTORY_BATCH2")) define("_VIEW_HISTORY_BATCH2", "Visualisation de l'historique des batchs");
 if (!defined("_INDEX_FILE")) define("_INDEX_FILE", "Indexer un fichier");
+if (!defined("_INDEX_FILE_DESC")) define("_INDEX_FILE_DESC", "Ouvre la page d'indexation afin d'enregistrer un document.");
 if (!defined("_WORDING")) define("_WORDING", "Libellé");
 if (!defined("_COLLECTION")) define("_COLLECTION", "Collection");
 if (!defined("_VIEW_TREE_DOCTYPES")) define("_VIEW_TREE_DOCTYPES", "Arborescence du plan de classement");
@@ -516,15 +520,18 @@ if (!defined("_ACTION_LIST")) define("_ACTION_LIST", "Liste des actions");
 if (!defined("_ADD_ACTION")) define("_ADD_ACTION", "Ajouter nouvelle action");
 if (!defined("_ALL_ACTIONS")) define("_ALL_ACTIONS", "Toutes les actions");
 if (!defined("_ACTION_HISTORY")) define("_ACTION_HISTORY", "Tracer l'action");
+if (!defined("_ACTION_HISTORY_DESC")) define("_ACTION_HISTORY_DESC", "Permet tracer cette action dans l'historique du document. Il est fortement recommandé de cocher cette option.");
 
 if (!defined("_ACTION_DELETED")) define("_ACTION_DELETED", "Suppression de l'action");
 if (!defined("_DEL_ACTION")) define("_DEL_ACTION", "Action supprimée");
 if (!defined("_MODIFY_ACTION")) define("_MODIFY_ACTION", "Modification de l'action");
-if (!defined("_ACTION_ADDED")) define("_ACTION_ADDED","Ajout d'une nouvelle action");
-if (!defined("_ACTION_MODIFIED")) define("_ACTION_MODIFIED","Modification d'une action");
+if (!defined("_ACTION_ADDED")) define("_ACTION_ADDED", "Ajout d'une nouvelle action");
+if (!defined("_ACTION_MODIFIED")) define("_ACTION_MODIFIED", "Modification d'une action");
 if (!defined("_NEW_ACTION")) define("_NEW_ACTION", "Nouvelle action");
 if (!defined("_THE_ACTION")) define("_THE_ACTION", "L'action ");
 if (!defined("_ADMIN_ACTIONS")) define("_ADMIN_ACTIONS", "Actions");
+if (!defined("_KEYWORD_REDIRECT_DESC")) define("_KEYWORD_REDIRECT_DESC", "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les services et / ou les utilisateurs disponibles pour la redirection.");
+if (!defined("_KEYWORD_INDEXING_DESC")) define("_KEYWORD_INDEXING_DESC", "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les services traitant disponibles et le/les statut(s) potentiels pour un enregistrement / modification de document.");
 
 
 /************** Historique**************/
@@ -711,7 +718,8 @@ if (!defined("_NUM_GED")) define("_NUM_GED", "N° GED");
 if (!defined("_AJAX_PARAM_ERROR")) define("_AJAX_PARAM_ERROR", "Erreur passage paramètres Ajax");
 if (!defined("_ACTION_CONFIRM")) define("_ACTION_CONFIRM", "Voulez-vous effectuer l'action suivante : ");
 if (!defined("_ADD_ATTACHMENT_OR_NOTE")) define("_ADD_ATTACHMENT_OR_NOTE", "Ajoutez une pièce jointe ou une note pour ce(s) courrier(s)");
-if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT")) define("_CLOSE_MAIL_WITH_ATTACHMENT", "Clôture avec pièce jointe");
+if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT")) define("_CLOSE_MAIL_WITH_ATTACHMENT", "Clôturer un courrier avec pièce jointe");
+if (!defined("_CLOSE_MAIL_WITH_ATTACHMENT_DESC")) define("_CLOSE_MAIL_WITH_ATTACHMENT_DESC", "Permet de mettre à jour la date de clôture d'un document ('closing_date' de la table mlb_coll_ext) avec présence OBLIGATOIRE de pièce(s) jointe(s) / note(s).");
 if (!defined("_ACTION_NOT_IN_DB")) define("_ACTION_NOT_IN_DB", "Action non enregistrée en base");
 if (!defined("_ERROR_PARAM_ACTION")) define("_ERROR_PARAM_ACTION", "Erreur paramètrage de l'action");
 if (!defined("_SQL_ERROR")) define("_SQL_ERROR", "Erreur SQL");
@@ -725,6 +733,7 @@ if (!defined("_CHOOSE_ONE_OBJECT")) define("_CHOOSE_ONE_OBJECT", "Choisissez au 
 if (!defined("_CLICK_LINE_TO_CHECK_INVOICE")) define("_CLICK_LINE_TO_CHECK_INVOICE", "Cliquer sur une ligne pour vérifier une facture");
 if (!defined("_FOUND_INVOICES")) define("_FOUND_INVOICES", " facture(s) trouvée(s)");
 if (!defined("_SIMPLE_CONFIRM")) define("_SIMPLE_CONFIRM", "Confirmation simple");
+if (!defined("_SIMPLE_CONFIRM_DESC")) define("_SIMPLE_CONFIRM_DESC", "Ouvre simplement une modal de confirmation de l'action à effetuer.");
 if (!defined("_CHECK_INVOICE")) define("_CHECK_INVOICE", "Vérifier facture");
 
 if (!defined("_REDIRECT_TO")) define("_REDIRECT_TO", "Rediriger vers");
@@ -867,6 +876,7 @@ if (!defined("_ADMISSION_DATE")) define("_ADMISSION_DATE", "Date d'arrivée");
 if (!defined("_FOUND_DOC")) define("_FOUND_DOC", "document(s) trouvé(s)");
 if (!defined("_FOUND_LOGS")) define("_FOUND_LOGS", "fichier(s) de logs trouvé(s)");
 if (!defined("_PROCESS")) define("_PROCESS", "Traitement ");
+if (!defined("_PROCESS_DESC")) define("_PROCESS_DESC", "Ouvre la page de traitement d'un document (les métas-données ne peuvent être modfiées depuis cette page).");
 if (!defined("_DOC_NUM")) define("_DOC_NUM", "document n° ");
 if (!defined("_LETTER_NUM")) define("_LETTER_NUM", "courrier n° ");
 if (!defined("_GENERAL_INFO")) define("_GENERAL_INFO", "Informations générales");
@@ -1126,6 +1136,7 @@ if (!defined("_TO")) define("_TO", "vers");
 if (!defined("_FILE_PROPERTIES")) define("_FILE_PROPERTIES", "Propriétés du fichier");
 if (!defined("_FILE_DATA")) define("_FILE_DATA", "Informations sur le document");
 if (!defined("_VIEW_DOC")) define("_VIEW_DOC", "Voir le document");
+if (!defined("_VIEW_DOC_DESC")) define("_VIEW_DOC_DESC", "Ouvre une modal avec le document en visualisation. Incrémente également la donnée 'viewed' de la table listinstance (utile si utilisée dans les clauses de bannettes) ");
 if (!defined("_TYPIST")) define("_TYPIST", "Opérateur");
 if (!defined("_LOT")) define("_LOT", "Lot");
 if (!defined("_ARBOX")) define("_ARBOX", "Boite");
@@ -1244,6 +1255,7 @@ if (!defined("_HELP_FULLTEXT_SEARCH_EXEMPLE2")) define("_HELP_FULLTEXT_SEARCH_EX
 if (!defined("_HELP_FULLTEXT_SEARCH_EXEMPLE3")) define("_HELP_FULLTEXT_SEARCH_EXEMPLE3", "vite~ trouve vote, vite");
 if (!defined("_TIPS_FULLTEXT_TEXT")) define("_TIPS_FULLTEXT_TEXT", "La recherche peut se faire sur des nombres");
 if (!defined("_CLOSE_MAIL")) define("_CLOSE_MAIL", "Clôturer un courrier");
+if (!defined("_CLOSE_MAIL_DESC")) define("_CLOSE_MAIL_DESC", "Permet de mettre à jour la date de clôture d'un document ('closing_date' de la table mlb_coll_ext). ESSENTIEL afin de terminer votre workflow de document.");
 
 /******************** Keywords Helper ************/
 if (!defined("_HELP_KEYWORD0")) define("_HELP_KEYWORD0", "id de l'utilisateur connecté");
@@ -1308,6 +1320,7 @@ if (!defined("_DOCSERVER_COPY_ERROR")) define("_DOCSERVER_COPY_ERROR", " Erreur 
 if (!defined("_MAKE_NEW_SEARCH")) define("_MAKE_NEW_SEARCH", "Effectuer une nouvelle recherche");
 if (!defined("_NO_PAGE")) define("_NO_PAGE", "Aucune page");
 if (!defined("_VALIDATE_QUALIF")) define("_VALIDATE_QUALIF", "Validation/Qualification");
+if (!defined("_VALIDATE_QUALIF_DESC")) define("_VALIDATE_QUALIF_DESC", "Ouvre la page de modification d'un document déjà enregistré (les métas-données peuvent être modifiées depuis cette page).");
 if (!defined("_DB_CONNEXION_ERROR")) define("_DB_CONNEXION_ERROR", "Erreur de connexion à la base de données");
 if (!defined("_DATABASE_SERVER")) define("_DATABASE_SERVER", "Serveur de base de données");
 if (!defined("_DB_PORT")) define("_DB_PORT", "Port");
@@ -1537,6 +1550,7 @@ if (!defined("_EXPORT_LIST"))    define("_EXPORT_LIST", "Exporter");
 /******************** Action put in copy ************/
 if (!defined("_ADD_LINKS"))    define("_ADD_LINKS", "Ajouter des liaisons");
 if (!defined("_PUT_IN_COPY"))    define("_PUT_IN_COPY", "Ajouter en copie");
+if (!defined("_PUT_IN_COPY_DESC"))    define("_PUT_IN_COPY_DESC", "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
 if (!defined("_POWERED_BY"))    define("_POWERED_BY", "Powered by Maarch&trade;.");
 if (!defined("_LINK_TO_DOC"))    define("_LINK_TO_DOC", "Lier à un document");
 if (!defined("_LINK_REFERENCE"))    define("_LINK_REFERENCE", "Pour lier vous devez choisir un document existant");
@@ -1574,7 +1588,9 @@ if (!defined("_QUALIFY_FIRST"))    define("_QUALIFY_FIRST", "La fiche détaillé
 
 /******************** persistent mode ************/
 if (!defined("_SET_PERSISTENT_MODE_ON"))    define("_SET_PERSISTENT_MODE_ON", "Activer la persistance");
+if (!defined("_SET_PERSISTENT_MODE_ON_DESC"))    define("_SET_PERSISTENT_MODE_ON_DESC", "Permet de conserver un document dans une bannette quelque soit son état. Insère la donnée dans la table 'basket_persistent_mode'.");
 if (!defined("_SET_PERSISTENT_MODE_OFF"))    define("_SET_PERSISTENT_MODE_OFF", "Désactiver la persistance");
+if (!defined("_SET_PERSISTENT_MODE_OFF_DESC"))    define("_SET_PERSISTENT_MODE_OFF_DESC", "Réinitialise le comportement de visualisation du document dans la bannette. Supprime la donnée dans la table 'basket_persistent_mode'.");
 
 /************************ Lists ************************/
 if (!defined("_ADMIN_LISTS"))                       define("_ADMIN_LISTS", "Gestions des listes");
@@ -1751,6 +1767,7 @@ if (!defined("_ONLY_ALPHANUM")) define("_ONLY_ALPHANUM", "Seuls les caractères 
 if (!defined("_ONLY_ALPHABETIC")) define("_ONLY_ALPHABETIC", "Seuls les caractères alphabétiques sont acceptés");
 
 if (!defined("_CLOSE_MAIL_AND_INDEX")) define("_CLOSE_MAIL_AND_INDEX", "Clôturer un courrier et lancer l'indexation");
+if (!defined("_CLOSE_MAIL_AND_INDEX_DESC")) define("_CLOSE_MAIL_AND_INDEX_DESC", "Permet de mettre à jour la date de clôture d'un document ('closing_date' de la table mlb_coll_ext) ET ouvre la page d'indexation afin d'enregistrer un nouveau document.");
 if (!defined("_DOC_NOT_CLOSED")) define("_DOC_NOT_CLOSED", "Ce courrier n'est pas clôturé");
 
 if (!defined("_SECURITY_MESSAGE")) define("_SECURITY_MESSAGE", "Message de sécurité");
@@ -1792,22 +1809,26 @@ if (!defined("_FORMAT_PHONE")) define("_FORMAT_PHONE", "Format : 06 01 02 03 04"
 if (!defined("_SIGNATURE")) define("_SIGNATURE", "Signature");
 
 // Actions parapheur
-if (!defined("_SEND_MAIL"))    define("_SEND_MAIL", "Envoi du dossier par courriel");
-if (!defined("_IMPRIM_DOSSIER"))    define("_IMPRIM_DOSSIER", "Impression du dossier");
-if (!defined("_PROCEED_WORKFLOW"))    define("_PROCEED_WORKFLOW", "Poursuivre le circuit de visa");
-if (!defined("_INTERRUPT_WORKFLOW"))
-    define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
-if (!defined("_REJECTION_WORKFLOW_REDACTOR"))
-    define("_REJECTION_WORKFLOW_REDACTOR", "Refus de visa - retour rédacteur");
-if (!defined("_REJECTION_WORKFLOW_PREVIOUS"))
-    define("_REJECTION_WORKFLOW_PREVIOUS", "Refus de visa - retour au précédent viseur");
-if (!defined("_VISA_MAIL"))    define("_VISA_MAIL", "Viser le courrier");
-if (!defined("_SEND_SIGNED_DOCS"))    define("_SEND_SIGNED_DOCS", "Transmettre réponses signées");
-if (!defined("_PREPARE_VISA"))    define("_PREPARE_VISA", "Préparer le circuit de visa");
-if (!defined("_REDIRECTION_VISA_SIGN"))    define("_REDIRECTION_VISA_SIGN", "Redirection pour signature");
-if (!defined('_SEND_TO_VISA'))    define( '_SEND_TO_VISA', 'Envoi pour visa');
+if (!defined("_SEND_MAIL")) define("_SEND_MAIL", "Envoi du dossier par courriel");
+if (!defined("_IMPRIM_DOSSIER")) define("_IMPRIM_DOSSIER", "Impression du dossier");
+if (!defined("_PROCEED_WORKFLOW")) define("_PROCEED_WORKFLOW", "Poursuivre le circuit de visa");
+if (!defined("_PROCEED_WORKFLOW_DESC")) define("_PROCEED_WORKFLOW_DESC", "Met à jour la date du visa de l'actuel viseur / signataire présent dans le circuit de visa du document ('process_date' de la table listinstance).");
+if (!defined("_INTERRUPT_WORKFLOW")) define("_INTERRUPT_WORKFLOW", "Interrompre le circuit de visa");
+if (!defined("_INTERRUPT_WORKFLOW_DESC")) define("_INTERRUPT_WORKFLOW_DESC", "Met à jour la date du visa de l'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document ('process_date' de la table listinstance). Insère également un message d'interruption sur le viseur actuel ('process_comment' de la table listinstance).");
+if (!defined("_REJECTION_WORKFLOW_REDACTOR")) define("_REJECTION_WORKFLOW_REDACTOR", "Refus de visa - retour rédacteur");
+if (!defined("_REJECTION_WORKFLOW_REDACTOR_DESC")) define("_REJECTION_WORKFLOW_REDACTOR_DESC", "Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document ('process_date' de la table listinstance).");
+if (!defined("_REJECTION_WORKFLOW_PREVIOUS")) define("_REJECTION_WORKFLOW_PREVIOUS", "Refus de visa - retour au précédent viseur");
+if (!defined("_REJECTION_WORKFLOW_PREVIOUS_DESC")) define("_REJECTION_WORKFLOW_PREVIOUS_DESC", "Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document ('process_date' de la table listinstance).");
+if (!defined("_VISA_MAIL")) define("_VISA_MAIL", "Viser le courrier");
+if (!defined("_VISA_MAIL_DESC")) define("_VISA_MAIL_DESC", "Ouvre la page du parapheur afin de pouvoir viser / signer le document.");
+if (!defined("_SEND_SIGNED_DOCS")) define("_SEND_SIGNED_DOCS", "Transmettre réponses signées");
+if (!defined("_SEND_SIGNED_DOCS_DESC")) define("_SEND_SIGNED_DOCS_DESC", "Vérifie si les projets de réponse ont été signés.");
+if (!defined("_PREPARE_VISA")) define("_PREPARE_VISA", "Préparer le circuit de visa");
+if (!defined("_REDIRECTION_VISA_SIGN")) define("_REDIRECTION_VISA_SIGN", "Redirection pour signature");
+if (!defined('_SEND_TO_VISA')) define('_SEND_TO_VISA', 'Envoi pour visa');
+if (!defined('_SEND_TO_VISA_DESC')) define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au document.');
 
-if (!defined("_MAIL_WILL_DISAPPEAR"))    define("_MAIL_WILL_DISAPPEAR", "Ce courrier sort de votre périmètre. Vous ne pourrez plus y accéder ensuite.");
+if (!defined("_MAIL_WILL_DISAPPEAR")) define("_MAIL_WILL_DISAPPEAR", "Ce courrier sort de votre périmètre. Vous ne pourrez plus y accéder ensuite.");
 
 //maarchIVS translate
 
@@ -1824,6 +1845,8 @@ if (!defined("_CONTROL_PARAM_TECHNIC")) define("_CONTROL_PARAM_TECHNIC", "Contr�
 if (!defined("_COMPONENT")) define("_COMPONENT", "Composant");
 
 if (!defined("_MARK_AS_READ")) define("_MARK_AS_READ", "Marquer comme lu");
+if (!defined("_MARK_AS_READ_DESC"))    define("_MARK_AS_READ_DESC", "Marque le document comme 'lu' dans la bannette. Insère la donnée dans la table 'res_mark_as_read' (utile si utilisée dans les clauses de bannettes).");
+
 
 if (!defined("_USE_PREVIOUS_ADDRESS")) define("_USE_PREVIOUS_ADDRESS", "Réutiliser une adresse");
 

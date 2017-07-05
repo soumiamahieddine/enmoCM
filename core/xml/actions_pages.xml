@@ -16,6 +16,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>redirect</ID>
         <LABEL>_REDIRECTION</LABEL>
         <NAME>redirect</NAME>
+        <DESC>_REDIRECTION_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>entities</MODULE>
         <KEYWORD>redirect</KEYWORD>
@@ -40,6 +41,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>put_in_copy</ID>
         <LABEL>_PUT_IN_COPY</LABEL>
         <NAME>put_in_copy</NAME>
+        <DESC>_PUT_IN_COPY_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>entities</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -51,6 +53,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>confirm_status</ID>
         <LABEL>_SIMPLE_CONFIRM</LABEL>
         <NAME>confirm_status</NAME>
+        <DESC>_SIMPLE_CONFIRM_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -62,6 +65,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>process</ID>
         <LABEL>_PROCESS</LABEL>
         <NAME>process</NAME>
+        <DESC>_PROCESS_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -73,6 +77,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>index_mlb</ID>
         <LABEL>_INDEX_FILE</LABEL>
         <NAME>index_mlb</NAME>
+        <DESC>_INDEX_FILE_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <KEYWORD>indexing</KEYWORD>
@@ -85,6 +90,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>validate_mail</ID>
         <LABEL>_VALIDATE_QUALIF</LABEL>
         <NAME>validate_mail</NAME>
+        <DESC>_VALIDATE_QUALIF_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -96,6 +102,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>view</ID>
         <LABEL>_VIEW_DOC</LABEL>
         <NAME>view</NAME>
+        <DESC>_VIEW_DOC_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -107,6 +114,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>close_mail</ID>
         <LABEL>_CLOSE_MAIL</LABEL>
         <NAME>close_mail</NAME>
+        <DESC>_CLOSE_MAIL_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -118,6 +126,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>set_persistent_mode_on</ID>
         <LABEL>_SET_PERSISTENT_MODE_ON</LABEL>
         <NAME>set_persistent_mode_on</NAME>
+        <DESC>_SET_PERSISTENT_MODE_ON_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -129,6 +138,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>set_persistent_mode_off</ID>
         <LABEL>_SET_PERSISTENT_MODE_OFF</LABEL>
         <NAME>set_persistent_mode_off</NAME>
+        <DESC>_SET_PERSISTENT_MODE_OFF_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -140,6 +150,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>mark_as_read</ID>
         <LABEL>_MARK_AS_READ</LABEL>
         <NAME>mark_as_read</NAME>
+        <DESC>_MARK_AS_READ_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -173,6 +184,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>close_mail_and_index</ID>
         <LABEL>_CLOSE_MAIL_AND_INDEX</LABEL>
         <NAME>close_mail_and_index</NAME>
+        <DESC>_CLOSE_MAIL_AND_INDEX_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -184,6 +196,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>close_mail_with_attachment</ID>
         <LABEL>_CLOSE_MAIL_WITH_ATTACHMENT</LABEL>
         <NAME>close_mail_with_attachment</NAME>
+        <DESC>_CLOSE_MAIL_WITH_ATTACHMENT_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -195,6 +208,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_attachments_to_contact</ID>
         <LABEL>_SEND_ATTACHMENTS_TO_CONTACT</LABEL>
         <NAME>send_attachments_to_contact</NAME>
+        <DESC>_SEND_ATTACHMENTS_TO_CONTACT_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -206,6 +220,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_to_contact_with_mandatory_attachment</ID>
         <LABEL>_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT</LABEL>
         <NAME>send_to_contact_with_mandatory_attachment</NAME>
+        <DESC>_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -213,11 +228,11 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-	<!-- ACTIONS AJOUTEES PAR DIS -->
 	<ACTIONPAGE>
         <ID>visa_mail</ID>
         <LABEL>_VISA_MAIL</LABEL>
         <NAME>visa_mail</NAME>
+        <DESC>_VISA_MAIL_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -229,6 +244,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>visa_workflow</ID>
         <LABEL>_PROCEED_WORKFLOW</LABEL>
         <NAME>visa_workflow</NAME>
+        <DESC>_PROCEED_WORKFLOW_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -240,6 +256,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>interrupt_visa</ID>
         <LABEL>_INTERRUPT_WORKFLOW</LABEL>
         <NAME>interrupt_visa</NAME>
+        <DESC>_INTERRUPT_WORKFLOW_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -251,6 +268,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>rejection_visa_redactor</ID>
         <LABEL>_REJECTION_WORKFLOW_REDACTOR</LABEL>
         <NAME>rejection_visa_redactor</NAME>
+        <DESC>_REJECTION_WORKFLOW_REDACTOR_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -262,6 +280,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>rejection_visa_previous</ID>
         <LABEL>_REJECTION_WORKFLOW_PREVIOUS</LABEL>
         <NAME>rejection_visa_previous</NAME>
+        <DESC>_REJECTION_WORKFLOW_PREVIOUS_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -273,6 +292,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_to_visa</ID>
         <LABEL>_SEND_TO_VISA</LABEL>
         <NAME>send_to_visa</NAME>
+        <DESC>_SEND_TO_VISA_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -284,63 +304,9 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_signed_docs</ID>
         <LABEL>_SEND_SIGNED_DOCS</LABEL>
         <NAME>send_signed_docs</NAME>
+        <DESC>_SEND_SIGNED_DOCS_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>export_seda</ID>
-        <LABEL>_EXPORT_SEDA</LABEL>
-        <NAME>export_seda</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>export_seda</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>check_acknowledgement</ID>
-        <LABEL>_CHECK_ACKNOWLEDGMENT</LABEL>
-        <NAME>check_acknowledgement</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>export_seda</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>check_reply</ID>
-        <LABEL>_CHECK_REPLY</LABEL>
-        <NAME>check_reply</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>export_seda</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>purge_letter</ID>
-        <LABEL>_PURGE_LETTER</LABEL>
-        <NAME>purge_letter</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>export_seda</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>reset_letter</ID>
-        <LABEL>_RESET_LETTER</LABEL>
-        <NAME>reset_letter</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>export_seda</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
