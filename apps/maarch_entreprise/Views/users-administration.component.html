@@ -1,6 +1,3 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
-</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -15,8 +12,8 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration">
-                        <a data-toggle="modal" data-target="#manageSign" title="{{lang.addUser}}"><i class="fa fa-user-plus"></i></a>
+                    <li style="cursor: pointer" routerLink="/administration/users/new">
+                        <a title="{{lang.addUser}}"><i class="fa fa-user-plus"></i></a>
                     </li>
                 </ul>
             </div>
@@ -47,10 +44,9 @@
                     <td>{{user.mail}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/users/{{user.user_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                            <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-
                             <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
                                 <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
                             </button>

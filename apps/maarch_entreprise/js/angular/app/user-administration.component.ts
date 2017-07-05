@@ -47,7 +47,7 @@ export class UserAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Utilisateurs</a> > Modification";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Utilisateurs</a>";
         }
     }
 
@@ -152,7 +152,7 @@ export class UserAdministrationComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
 
         if (r) {
-            this.http.put(this.coreUrl + "rest/users/" + this.userId + "/password", {})
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .map(res => res.json())
                 .subscribe((data) => {
                     successNotification(data.success);
@@ -171,7 +171,7 @@ export class UserAdministrationComponent implements OnInit {
                 "role"      : $j("#groupRole")[0].value
             };
 
-            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/groups", group)
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.groups = data.groups;
@@ -186,7 +186,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     updateGroup(group: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .map(res => res.json())
             .subscribe((data) => {
                 successNotification(data.success);
@@ -199,7 +199,7 @@ export class UserAdministrationComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment retirer l\'utilisateur de ce groupe ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.groups = data.groups;
@@ -220,7 +220,7 @@ export class UserAdministrationComponent implements OnInit {
                 "role"      : $j("#entityRole")[0].value
             };
 
-            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/entities", entity)
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.entities = data.entities;
@@ -235,7 +235,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     updateEntity(entity: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id, entity)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .map(res => res.json())
             .subscribe((data) => {
                 successNotification(data.success);
@@ -245,7 +245,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     updatePrimaryEntity(entity: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id + "/primaryEntity", {})
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .map(res => res.json())
             .subscribe((data) => {
                 this.user['entities'] = data.entities;
@@ -259,7 +259,7 @@ export class UserAdministrationComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.user.entities = data.entities;
@@ -344,7 +344,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     activateAbsence() {
-        this.http.post(this.coreUrl + "rest/users/" + this.userId + "/baskets/absence", this.userAbsenceModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/baskets/absence", this.userAbsenceModel)
             .map(res => res.json())
             .subscribe((data) => {
                 this.user.status = data.user.status;
@@ -362,12 +362,12 @@ export class UserAdministrationComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     successNotification(data.success);
-                    this.router.navigate(["/administration/users/" + this.user.userId]);
+                    this.router.navigate(["/administration/users/" + data.user.id]);
                 }, (err) => {
                     errorNotification(JSON.parse(err._body).errors);
                 });
         } else {
-            this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .map(res => res.json())
                 .subscribe((data) => {
                     successNotification(data.success);

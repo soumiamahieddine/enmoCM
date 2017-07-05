@@ -153,20 +153,20 @@ $app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserControl
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
-$app->put('/users/{userId}', \Core\Controllers\UserController::class . ':update');
-$app->delete('/users/{userId}', \Core\Controllers\UserController::class . ':delete');
-$app->post('/users/{userId}/groups', \Core\Controllers\UserController::class . ':addGroup');
-$app->put('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
-$app->delete('/users/{userId}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
-$app->post('/users/{userId}/entities', \Core\Controllers\UserController::class . ':addEntity');
-$app->put('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
-$app->put('/users/{userId}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
-$app->delete('/users/{userId}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
-$app->put('/users/{userId}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
+$app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
+$app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
+$app->put('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
+$app->delete('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
+$app->post('/users/{id}/entities', \Core\Controllers\UserController::class . ':addEntity');
+$app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
+$app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
+$app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
+$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{userId}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
+$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
 
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
