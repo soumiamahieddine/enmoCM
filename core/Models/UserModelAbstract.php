@@ -556,6 +556,31 @@ class UserModelAbstract
         return true;
     }
 
+    public static function deactivateAbsenceById(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+
+        DatabaseModel::delete([
+            'table'     => 'user_abs',
+            'where'     => ['user_abs = ?'],
+            'data'      => [$user['user_id']]
+        ]);
+
+        DatabaseModel::update([
+            'table'     => 'users',
+            'set'       => [
+                'status'    => 'OK'
+            ],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
     public static function hasGroup(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);

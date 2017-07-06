@@ -1951,8 +1951,12 @@ if (!defined('_RESET_PASSWORD'))
     define('_RESET_PASSWORD', 'Mot de passe réinitialisé');
 if (!defined('_ACTIVATE_ABSENCE'))
     define('_ACTIVATE_ABSENCE', 'Activer l\'absence');
+if (!defined('_DEACTIVATE_ABSENCE'))
+    define('_DEACTIVATE_ABSENCE', 'Désactiver l\'absence');
 if (!defined('_ABSENCE_ACTIVATED'))
     define('_ABSENCE_ACTIVATED', 'L\'utilisateur est maintenant considéré comme absent');
+if (!defined('_ABSENCE_DEACTIVATED'))
+    define('_ABSENCE_DEACTIVATED', 'L\'utilisateur est maintenant considéré comme actif');
 /***** User Administration *****/
 
 /**** admin update control ****/

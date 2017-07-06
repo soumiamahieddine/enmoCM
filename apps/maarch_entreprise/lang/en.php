@@ -1939,8 +1939,12 @@ if (!defined('_RESET_PASSWORD'))
     define('_RESET_PASSWORD', 'Password reset');
 if (!defined('_ACTIVATE_ABSENCE'))
     define('_ACTIVATE_ABSENCE', 'Activate absence');
+if (!defined('_DEACTIVATE_ABSENCE'))
+    define('_DEACTIVATE_ABSENCE', 'Deactivate absence');
 if (!defined('_ABSENCE_ACTIVATED'))
     define('_ABSENCE_ACTIVATED', 'The user is now off');
+if (!defined('_ABSENCE_DEACTIVATED'))
+    define('_ABSENCE_DEACTIVATED', 'The user is now active');
 /***** User Administration *****/
 
 /**** admin update control ****/

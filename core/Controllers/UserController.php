@@ -53,13 +53,18 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['userId']);
+        $check = Validator::stringType()->notEmpty()->validate($data['userId']) && preg_match("/^[\w.@-]*$/", $data['userId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['1']]);
+        if (!empty($existingUser)) {
+            return $response->withStatus(400)->withJson(['errors' => _THE_ID. ' ' ._ALREADY_EXISTS]);
         }
 
         UserModel::create(['user' => $data]);
@@ -206,22 +211,57 @@ class UserController
             }
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
         if (!empty($data)) {
             BasketsModel::setBasketsRedirection(['userId' => $user['user_id'], 'data' => $data]);
         }
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
         if($_SESSION['history']['userabs'] == "true") { //TODO No Session
-            $history = new \history();
-            $absenceUser = UserModel::getLabelledUserById(['id' => $aArgs['id']]);
-            $history->add($_SESSION['tablename']['users'], $_SESSION['user']['UserId'], 'ABS', 'userabs', _ABS_USER.' : '.$absenceUser, $_SESSION['config']['databasetype']);
+            HistoryController::add([
+                'table_name'    => 'users',
+                'record_id'     => $user['user_id'],
+                'event_type'    => 'ABS',
+                'event_id'      => 'userabs',
+                'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
+            ]);
         }
 
         return $response->withJson([
             'success'   => _ABSENCE_ACTIVATED,
             'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
         ]);
+    }
+
+    public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs) {
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $data = $request->getParams();
+
+        if (!empty($data['status']) && $data['status'] == 'OK') {
+            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
+
+            UserModel::deactivateAbsenceById(['id' => $aArgs['id']]);
+            if($_SESSION['history']['userabs'] == "true") { //TODO No Session
+                HistoryController::add([
+                    'table_name'    => 'users',
+                    'record_id'     => $user['user_id'],
+                    'event_type'    => 'RET',
+                    'event_id'      => 'userabs',
+                    'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+                ]);
+            }
+
+            return $response->withJson([
+                'success'   => _ABSENCE_DEACTIVATED,
+                'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
+            ]);
+        }
+
+        return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
     }
 
     public function addSignature(RequestInterface $request, ResponseInterface $response, $aArgs)

@@ -28,6 +28,9 @@
                     <!--<li>-->
                         <!--<a><i class="fa fa-inbox"></i> {{user.lang.manageBaskets}}</a>-->
                     <!--</li>-->
+                    <li *ngIf="user.status == 'ABS'">
+                        <a (click)="deactivateAbsence()"><i class="fa fa-user"></i> {{user.lang.deactivateAbs}}</a>
+                    </li>
                     <li *ngIf="user.status == 'OK'">
                         <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times"></i> {{user.lang.manageAbsences}}</a>
                     </li>
@@ -46,7 +49,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="Identifiant" required>
+                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="Identifiant" pattern="^[\w.@-]*$" required>
                             <input *ngIf="!userCreation" type="text" class="form-control" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
                         </div>
                     </div>

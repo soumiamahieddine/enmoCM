@@ -163,6 +163,7 @@ $app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::c
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
 $app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');

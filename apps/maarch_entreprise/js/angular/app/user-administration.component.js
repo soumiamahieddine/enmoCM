@@ -323,6 +323,17 @@ var UserAdministrationComponent = (function () {
             errorNotification(JSON.parse(err._body).errors);
         });
     };
+    UserAdministrationComponent.prototype.deactivateAbsence = function () {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.user.status = data.user.status;
+            successNotification(data.success);
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
+        });
+    };
     UserAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
         if (this.userCreation) {

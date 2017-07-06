@@ -356,6 +356,17 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
+    deactivateAbsence() {
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", {"status" : "OK"})
+            .map(res => res.json())
+            .subscribe((data) => {
+                this.user.status = data.user.status;
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+    }
+
     onSubmit() {
         if (this.userCreation) {
             this.http.post(this.coreUrl + "rest/users", this.user)
