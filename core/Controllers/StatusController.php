@@ -86,9 +86,19 @@ class StatusController
         }
 
         if (StatusModel::create($aArgs)) {
-            return $response->withJson([
+            $return = [
                 StatusModel::getById(['id' => $aArgs['id']])
+            ];
+
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $return[0][0]['id'], 
+                'event_type' => 'ADD', 
+                'event_id'   => 'statusup',
+                'info'       => _STATUS_ADDED . ' : ' . $return[0][0]['id']
             ]);
+
+            return $response->withJson($return);
         } else {
             return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
         }
@@ -185,9 +195,8 @@ class StatusController
         if(!Validator::notEmpty()->validate($request['id'])){
             array_push($errors, _ID . ' ' . _EMPTY);
         } else if ($mode == 'create') {
-            $obj = StatusModel::getById([
-                'id' => $request['id']
-            ]);
+            $obj = StatusModel::getById(['id' => $request['id']]);
+
             if (!empty($obj)) {
                 array_push(
                     $errors,
@@ -195,9 +204,8 @@ class StatusController
                 );
             }
         } elseif ($mode == 'update') {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $request['identifier']
-            ]);
+            $obj = StatusModel::getByIdentifier(['identifier' => $request['identifier']]);
+            
             if (empty($obj)) {
                 array_push(
                     $errors,
