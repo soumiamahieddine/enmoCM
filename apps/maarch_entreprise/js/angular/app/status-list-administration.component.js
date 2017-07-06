@@ -54,7 +54,8 @@ var StatusListAdministrationComponent = (function () {
                     "order": [[2, "asc"]],
                     "columnDefs": [
                         { "orderable": false, "targets": [0, 3] }
-                    ]
+                    ],
+                    "stateSave": true
                 });
                 $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
                 $j('dataTables_filter input').addClass('form-control');

@@ -107,8 +107,8 @@ $app->get('/administration/users/{id}', \Core\Controllers\UserController::class 
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
-$app->get('/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
-$app->get('/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+$app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
+$app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
