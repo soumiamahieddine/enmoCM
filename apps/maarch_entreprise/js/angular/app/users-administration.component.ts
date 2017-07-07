@@ -22,7 +22,7 @@ export class UsersAdministrationComponent implements OnInit {
     userDestRedirectModels      : any[]     = [];
 
     lang                        : any       = {};
-    table                       : any
+    table                       : any;
 
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
@@ -225,7 +225,6 @@ export class UsersAdministrationComponent implements OnInit {
     }
 
     deleteUserModal(user: any) {
-
         let r = confirm(this.lang.deleteMsg + " ?");
 
         if (r) {

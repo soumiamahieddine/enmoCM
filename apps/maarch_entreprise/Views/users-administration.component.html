@@ -37,9 +37,9 @@
                     <td>{{user.lastname}}</td>
                     <td>{{user.firstname}}</td>
                     <td>
-                        <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.enabled}}</span>
-                        <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.absent}}</span>
-                        <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.disabled}}</span>
+                        <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.active}}</span>
+                        <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.inactive}}</span>
+                        <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.abs}}</span>
                     </td>
                     <td>{{user.mail}}</td>
                     <td style="text-align:right;">

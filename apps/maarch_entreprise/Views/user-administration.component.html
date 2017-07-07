@@ -8,9 +8,9 @@
     <h1 *ngIf="!userCreation" style="margin-top: 0">
         <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}}
         <sup>
-            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary" title="Actif" >Actif</span>
-            <span *ngIf="user.status == 'ABS'" class="label label-warning" title="Absent" >Absent</span>
-            <span *ngIf="user.enabled == 'N'" class="label label-danger" title="Inactif" >Inactif</span>
+            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{user.lang.active}}</span>
+            <span *ngIf="user.enabled == 'N'" class="label label-danger">{{user.lang.inactive}}</span>
+            <span *ngIf="user.status == 'ABS'" class="label label-warning">{{user.lang.abs}}</span>
         </sup>
     </h1>
     <nav class="navbar navbar-default" id="toolBox">
@@ -49,7 +49,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="Identifiant" pattern="^[\w.@-]*$" required>
+                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="{{user.lang.userId}}" pattern="^[\w.@-]*$" required>
                             <input *ngIf="!userCreation" type="text" class="form-control" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
                         </div>
                     </div>

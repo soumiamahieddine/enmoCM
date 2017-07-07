@@ -27,7 +27,6 @@ use Core\Models\UserModel;
 use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
-include_once 'core/class/class_history.php';
 
 
 class UserController
@@ -176,7 +175,7 @@ class UserController
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['currentPassword', 'newPassword', 'reNewPassword']])) {
-            return $response->withJson(['errors' => _EMPTY_PSW_FORM]);
+            return $response->withStatus(400)->withJson(['errors' => _EMPTY_PSW_FORM]);
         }
 
         if ($data['newPassword'] != $data['reNewPassword']) {

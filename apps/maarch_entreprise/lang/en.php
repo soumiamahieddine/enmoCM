@@ -1945,6 +1945,12 @@ if (!defined('_ABSENCE_ACTIVATED'))
     define('_ABSENCE_ACTIVATED', 'The user is now off');
 if (!defined('_ABSENCE_DEACTIVATED'))
     define('_ABSENCE_DEACTIVATED', 'The user is now active');
+if (!defined('_ABS'))
+    define('_ABS', 'Absent');
+if (!defined('_ACTIVE'))
+    define('_ACTIVE', 'Active');
+if (!defined('_INACTIVE'))
+    define('_INACTIVE', 'Inactive');
 /***** User Administration *****/
 
 /**** admin update control ****/

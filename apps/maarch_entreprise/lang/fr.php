@@ -1957,6 +1957,12 @@ if (!defined('_ABSENCE_ACTIVATED'))
     define('_ABSENCE_ACTIVATED', 'L\'utilisateur est maintenant considéré comme absent');
 if (!defined('_ABSENCE_DEACTIVATED'))
     define('_ABSENCE_DEACTIVATED', 'L\'utilisateur est maintenant considéré comme actif');
+if (!defined('_ABS'))
+    define('_ABS', 'Absent');
+if (!defined('_ACTIVE'))
+    define('_ACTIVE', 'Actif');
+if (!defined('_INACTIVE'))
+    define('_INACTIVE', 'Inactif');
 /***** User Administration *****/
 
 /**** admin update control ****/

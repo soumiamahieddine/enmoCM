@@ -85,7 +85,7 @@ class UserModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'user']);
         ValidatorModel::notEmpty($aArgs['user'], ['firstname', 'lastname']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'status', 'enabled']);
+        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled']);
 
         DatabaseModel::update([
             'table'     => 'users',
@@ -95,7 +95,6 @@ class UserModelAbstract
                 'mail'          => $aArgs['user']['mail'],
                 'phone'         => $aArgs['user']['phone'],
                 'initials'      => $aArgs['user']['initials'],
-                'status'        => $aArgs['user']['status'],
                 'enabled'       => $aArgs['user']['enabled'],
                 'thumbprint'    => $aArgs['user']['thumbprint']
             ],
