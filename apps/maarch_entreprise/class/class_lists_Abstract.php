@@ -123,7 +123,6 @@
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 . 'class_security.php';
-require_once 'modules/basket/services/Baskets.php';
 
 abstract class lists_Abstract extends Database
 {
