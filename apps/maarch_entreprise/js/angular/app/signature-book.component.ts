@@ -8,6 +8,8 @@ declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
 declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 
@@ -146,6 +148,12 @@ export class SignatureBookComponent implements OnInit {
                             });
                         }
                     }, 0);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                    setTimeout(() => {
+                        this.backToBasket();
+                    }, 2000);
+
                 });
         });
     }

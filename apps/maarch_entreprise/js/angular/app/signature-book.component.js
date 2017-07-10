@@ -136,6 +136,11 @@ var SignatureBookComponent = (function () {
                         });
                     }
                 }, 0);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+                setTimeout(function () {
+                    _this.backToBasket();
+                }, 2000);
             });
         });
     };
