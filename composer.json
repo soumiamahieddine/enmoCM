@@ -6,6 +6,7 @@
             "Attachments\\": "modules/attachments/",
             "Baskets\\": "modules/basket/",
             "Entities\\": "modules/entities/",
+            "Notes\\": "modules/notes/",
             "Notifications\\": "modules/notifications/",
     		"Visa\\": "modules/visa/"
     	}

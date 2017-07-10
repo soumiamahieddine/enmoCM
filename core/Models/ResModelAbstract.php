@@ -15,43 +15,42 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class ResModelAbstract extends \Apps_Table_Service
+class ResModelAbstract
 {
     /**
      * Retrieve info of resId
-     * @param  $resId integer
-     * @param  $table string
-     * @param  $select string
+     * @param  $aArgs array
+     *
      * @return array $res
      */
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['resId']);
-        static::checkNumeric($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['table']);
 
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'res_letterbox';
+        if (empty($aArgs['table'])) {
+            $aArgs['table'] = 'res_letterbox';
         }
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
+            'table'     => [$aArgs['table']],
             'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']],
-            'order_by'  => [$aArgs['orderBy']]
+            'data'      => [$aArgs['resId']]
         ]);
 
-        return $aReturn;
+        if (empty($aReturn[0])) {
+            return [];
+        }
+
+        return $aReturn[0];
     }
 
     /**
      * Retrieve info of last resId
-     * @param  $table string
-     * @param  $select string
+     * @param  $aArgs array
+
      * @return array $res
      */
     public static function getLastId(array $aArgs = [])
@@ -62,7 +61,7 @@ class ResModelAbstract extends \Apps_Table_Service
             $table = 'res_letterbox';
         }
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'data'      => [$aArgs['resId']],
@@ -75,18 +74,15 @@ class ResModelAbstract extends \Apps_Table_Service
 
     /**
      * Retrieve info of resId by path
-     * @param  $docserverId string
-     * @param  $path string
-     * @param  $filename string
-     * @param  $table string
-     * @param  $select string
+     * @param  $aArgs array
+     *
      * @return array $res
      */
     public static function getByPath(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserverId']);
-        static::checkRequired($aArgs, ['path']);
-        static::checkRequired($aArgs, ['filename']);
+        ValidatorModel::notEmpty($aArgs, ['docserverId', 'path', 'filename']);
+        ValidatorModel::stringType($aArgs, ['docserverId', 'path', 'filename', 'table']);
+
 
         if (!empty($aArgs['table'])) {
             $table = $aArgs['table'];
@@ -94,7 +90,7 @@ class ResModelAbstract extends \Apps_Table_Service
             $table = 'res_letterbox';
         }
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => ['docserver_id = ? and path = ? and filename = ?'],
@@ -107,80 +103,87 @@ class ResModelAbstract extends \Apps_Table_Service
 
     /**
      * insert into a resTable
-     * @param  $resId integer
-     * @param  $table string
-     * @param  $data array
-     * @return boolean $status
+     * @param  $aArgs array
+     *
+     * @return boolean
      */
     public static function create(array $aArgs = [])
     {
+        ValidatorModel::notEmpty($aArgs, ['data']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+        ValidatorModel::stringType($aArgs, ['table']);
+
         if (empty($aArgs['table'])) {
             $aArgs['table'] = 'res_letterbox';
         }
 
-        $aReturn = static::insertInto($aArgs['data'], $aArgs['table']);
+        DatabaseModel::insert([
+            'table'         => $aArgs['table'],
+            'columnsValues' => $aArgs['data']
 
-        return $aReturn;
+        ]);
+
+        return true;
     }
 
     /**
      * deletes into a resTable
-     * @param  $resId integer
-     * @param  $table string
-     * @return boolean $status
+     * @param  $aArgs array
+     *
+     * @return boolean
      */
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkNumeric($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['table']);
 
         if (empty($aArgs['table'])) {
             $aArgs['table'] = 'res_letterbox';
         }
 
-        $aReturn = static::deleteFrom([
-                'table' => $aArgs['table'],
-                'where' => ['res_id = ?'],
-                'data'  => [$aArgs['id']]
-            ]);
+        DatabaseModel::delete([
+            'table' => $aArgs['table'],
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     /**
      * update a resTable
-     * @param  $resId integer
-     * @param  $table string
-     * @param  $data array
-     * @return boolean $status
+     * @param  $aArgs array
+     *
+     * @return boolean
      */
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['res_id']);
-        static::checkNumeric($aArgs, ['res_id']);
-
-        $where['res_id'] = $aArgs['res_id'];
+        ValidatorModel::notEmpty($aArgs, ['res_id']);
+        ValidatorModel::intVal($aArgs, ['res_id']);
+        ValidatorModel::stringType($aArgs, ['table']);
+        ValidatorModel::arrayType($aArgs, ['data']);
 
         if (empty($aArgs['table'])) {
             $aArgs['table'] = 'res_letterbox';
         }
 
-        $aReturn = static::updateTable(
-            $aArgs['data'],
-            $aArgs['table'],
-            $where
-        );
+        DatabaseModel::update([
+            'table' => $aArgs['table'],
+            'set'   => $aArgs['data'],
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['res_id']]
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function isLockForCurrentUser(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['resId']);
-        static::checkNumeric($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
-
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => ['locker_user_id', 'locker_time'],
             'table'     => ['res_letterbox'],
             'where'     => ['res_id = ?'],

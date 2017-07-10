@@ -7,9 +7,15 @@
  *
  */
 
-namespace Visa\Models;
+/**
+ * @brief Note Model
+ * @author dev@maarch.org
+ * @ingroup notes
+ */
 
-class VisaModel extends VisaModelAbstract
+namespace Notes\Models;
+
+class NoteModel extends NoteModelAbstract
 {
     // Do your stuff in this class
 }

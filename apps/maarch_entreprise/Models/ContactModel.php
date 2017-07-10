@@ -9,16 +9,14 @@
 */
 
 /**
-* @brief Contacts Model
+* @brief Contact Model
 * @author dev@maarch.org
 * @ingroup apps
 */
 
-//namespace Apps\Models\Contacts;
+namespace Apps\Models;
 
-require_once 'apps/maarch_entreprise/Models/ContactsModelAbstract.php';
-
-class ContactsModel extends ContactsModelAbstract
+class ContactModel extends ContactModelAbstract
 {
     // Do your stuff in this class
 }

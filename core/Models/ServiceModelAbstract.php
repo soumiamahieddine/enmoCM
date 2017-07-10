@@ -15,13 +15,11 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class ServiceModelAbstract extends \Apps_Table_Service
+class ServiceModelAbstract
 {
     public static function getApplicationAdministrationServicesByXML()
     {
-        $xmlfile = static::getLoadedXml(['location' => 'apps']);
+        $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);
         $applicationServices = [];
 
         if ($xmlfile) {
@@ -45,10 +43,10 @@ class ServiceModelAbstract extends \Apps_Table_Service
 
     public static function getApplicationAdministrationServicesByUserServices(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userServices']);
-        static::checkArray($aArgs, ['userServices']);
+        ValidatorModel::notEmpty($aArgs, ['userServices']);
+        ValidatorModel::arrayType($aArgs, ['userServices']);
 
-        $xmlfile = static::getLoadedXml(['location' => 'apps']);
+        $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);
         $applicationServices = [];
 
         if ($xmlfile) {
@@ -83,7 +81,7 @@ class ServiceModelAbstract extends \Apps_Table_Service
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MODULES as $mod) {
             $module = (string)$mod->moduleid;
-            $xmlModuleFile = static::getLoadedXml(['location' => $module]);
+            $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
@@ -107,8 +105,8 @@ class ServiceModelAbstract extends \Apps_Table_Service
 
     public static function getModulesAdministrationServicesByUserServices(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userServices']);
-        static::checkArray($aArgs, ['userServices']);
+        ValidatorModel::notEmpty($aArgs, ['userServices']);
+        ValidatorModel::arrayType($aArgs, ['userServices']);
 
         if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
             $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
@@ -121,7 +119,7 @@ class ServiceModelAbstract extends \Apps_Table_Service
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MODULES as $mod) {
             $module = (string)$mod->moduleid;
-            $xmlModuleFile = static::getLoadedXml(['location' => $module]);
+            $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
@@ -145,8 +143,8 @@ class ServiceModelAbstract extends \Apps_Table_Service
 
     public static function getAdministrationServicesByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $rawServicesStoredInDB = UserModel::getServicesById(['userId' => $aArgs['userId']]);
         $servicesStoredInDB = [];
@@ -155,16 +153,16 @@ class ServiceModelAbstract extends \Apps_Table_Service
         }
 
         $administration = [];
-        $administration['application'] = static::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
-        $administration['modules'] = static::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+        $administration['application'] = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+        $administration['modules'] = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
 
         return $administration;
     }
 
     public static function hasService(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id', 'userId', 'location', 'type']);
-        static::checkString($aArgs, ['id', 'userId', 'location', 'type']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'location', 'type']);
+        ValidatorModel::stringType($aArgs, ['id', 'userId', 'location', 'type']);
 
         if ($aArgs['userId'] == 'superadmin') {
             return true;
@@ -175,8 +173,7 @@ class ServiceModelAbstract extends \Apps_Table_Service
             $servicesStoredInDB[] = $value['service_id'];
         }
 
-
-        $xmlfile = static::getLoadedXml(['location' => $aArgs['location']]);
+        $xmlfile = ServiceModel::getLoadedXml(['location' => $aArgs['location']]);
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
@@ -192,8 +189,8 @@ class ServiceModelAbstract extends \Apps_Table_Service
 
     protected static function getLoadedXml(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['location']);
-        static::checkString($aArgs, ['location']);
+        ValidatorModel::notEmpty($aArgs, ['location']);
+        ValidatorModel::stringType($aArgs, ['location']);
 
         if ($aArgs['location'] == 'apps') {
             if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/services.xml")) { //Todo No Session

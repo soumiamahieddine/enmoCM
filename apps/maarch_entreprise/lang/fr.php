@@ -1843,6 +1843,11 @@ if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée d'
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 
+/***** Global ******/
+if (!defined('_UNREACHABLE_DOCSERVER'))
+    define('_UNREACHABLE_DOCSERVER', 'Chemin docserver inatteignable');
+/***** Global ******/
+
 /***** Profile *****/
 if (!defined('_MANAGE_MY_SIGNATURES'))
     define('_MANAGE_MY_SIGNATURES', 'Gérer mes signatures');

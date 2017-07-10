@@ -18,9 +18,8 @@ namespace Core\Models;
 use Core\Controllers\HistoryController;
 
 require_once('apps/maarch_entreprise/tools/log4php/Logger.php');
-require_once 'apps/maarch_entreprise/services/Table.php';
 
-class HistoryModelAbstract extends \Apps_Table_Service
+class HistoryModelAbstract
 {
 
     /**

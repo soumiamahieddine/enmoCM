@@ -15,13 +15,11 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class GroupModelAbstract extends \Apps_Table_Service
+class GroupModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        $aGroups = static::select([
+        $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
             'where'     => ['enabled = ?'],
@@ -33,10 +31,10 @@ class GroupModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['groupId']);
-        static::checkString($aArgs, ['groupId']);
+        ValidatorModel::notEmpty($aArgs, ['groupId']);
+        ValidatorModel::stringType($aArgs, ['groupId']);
 
-        $aGroups = static::select([
+        $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
             'where'     => ['group_id = ?'],
@@ -52,8 +50,8 @@ class GroupModelAbstract extends \Apps_Table_Service
 
     public static function getAvailableGroupsByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $rawUserGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
 
@@ -62,7 +60,7 @@ class GroupModelAbstract extends \Apps_Table_Service
             $userGroups[] = $value['group_id'];
         }
 
-        $allGroups = self::get(['select' => ['group_id', 'group_desc']]);
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
 
         foreach ($allGroups as $key => $value) {
             if (in_array($value['group_id'], $userGroups)) {

@@ -345,8 +345,11 @@ class UserModelAbstract
             $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
         }
 
+        if (!file_exists($docserver['path_template'])) {
+            return [];
+        }
         foreach($aReturn as $key => $value) {
-            $pathToSignature = $docserver[0]['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+            $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
 
             $extension = explode('.', $pathToSignature);
             $extension = $extension[count($extension) - 1];

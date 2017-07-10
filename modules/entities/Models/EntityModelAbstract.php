@@ -15,16 +15,15 @@
 
 namespace Entities\Models;
 
+use Core\Models\DatabaseModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class EntityModelAbstract extends \Apps_Table_Service
+class EntityModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        $aEntities = static::select([
+        $aEntities = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
             'where'     => ['enabled = ?'],
@@ -36,15 +35,16 @@ class EntityModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['entityId']);
+        ValidatorModel::notEmpty($aArgs, ['entityId']);
+
         if (is_array($aArgs['entityId'])) {
             $where = ['entity_id in (?)'];
         } else {
-            static::checkString($aArgs, ['entityId']);
+            ValidatorModel::stringType($aArgs, ['entityId']);
             $where = ['entity_id = ?'];
         }
 
-        $aEntities = static::select([
+        $aEntities = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
             'where'     => $where,
@@ -60,29 +60,12 @@ class EntityModelAbstract extends \Apps_Table_Service
         }
     }
 
-    public static function getByEmail(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['email']);
-        static::checkString($aArgs, ['email']);
-
-        $aReturn = static::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['entities'],
-            'where'     => ['email = ?', 'enabled = ?'],
-            'data'      => [$aArgs['email'], 'Y'],
-            'limit'     => 1,
-        ]);
-
-        return $aReturn;
-    }
-
     public static function getByUserId(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
@@ -94,10 +77,10 @@ class EntityModelAbstract extends \Apps_Table_Service
 
     private static function getEntityChilds(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['entityId']);
-        static::checkString($aArgs, ['entityId']);
+        ValidatorModel::notEmpty($aArgs, ['entityId']);
+        ValidatorModel::stringType($aArgs, ['entityId']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => ['entity_id'],
             'table'     => ['entities'],
             'where'     => ['parent_entity_id = ?'],
@@ -106,7 +89,7 @@ class EntityModelAbstract extends \Apps_Table_Service
 
         $entities = [$aArgs['entityId']];
         foreach ($aReturn as $value) {
-            $entities = array_merge($entities, static::getEntityChilds(['entityId' => $value['entity_id']]));
+            $entities = array_merge($entities, EntityModel::getEntityChilds(['entityId' => $value['entity_id']]));
         }
 
         return $entities;
@@ -114,14 +97,14 @@ class EntityModelAbstract extends \Apps_Table_Service
 
     public static function getAllEntitiesByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $aReturn = UserModel::getEntitiesById(['userId' => $aArgs['userId']]);
 
         $entities = [];
         foreach ($aReturn as $value) {
-            $entities = array_merge($entities, static::getEntityChilds(['entityId' => $value['entity_id']]));
+            $entities = array_merge($entities, EntityModel::getEntityChilds(['entityId' => $value['entity_id']]));
         }
         
         return array_unique($entities);
@@ -129,12 +112,11 @@ class EntityModelAbstract extends \Apps_Table_Service
 
     public static function getAvailableEntitiesForAdministratorByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'administratorUserId']);
-        static::checkString($aArgs, ['userId', 'administratorUserId']);
-
+        ValidatorModel::notEmpty($aArgs, ['userId', 'administratorUserId']);
+        ValidatorModel::stringType($aArgs, ['userId', 'administratorUserId']);
 
         if ($aArgs['administratorUserId'] == 'superadmin') {
-            $rawEntitiesAllowedForAdministrator = self::get(['select' => ['entity_id']]);
+            $rawEntitiesAllowedForAdministrator = EntityModel::get(['select' => ['entity_id']]);
             $entitiesAllowedForAdministrator = [];
             foreach ($rawEntitiesAllowedForAdministrator as $value) {
                 $entitiesAllowedForAdministrator[] = $value['entity_id'];
@@ -143,14 +125,14 @@ class EntityModelAbstract extends \Apps_Table_Service
             $entitiesAllowedForAdministrator = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['administratorUserId']]);
         }
 
-        $rawUserEntities = self::getByUserId(['userId' => $aArgs['userId'], 'select' => ['entity_id']]);
+        $rawUserEntities = EntityModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['entity_id']]);
 
         $userEntities = [];
         foreach ($rawUserEntities as $value) {
             $userEntities[] = $value['entity_id'];
         }
 
-        $allEntities = self::get(['select' => ['entity_id', 'entity_label']]);
+        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label']]);
 
         foreach ($allEntities as $key => $value) {
             if (in_array($value['entity_id'], $userEntities) || !in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {

@@ -36,7 +36,6 @@ export class SignatureBookComponent implements OnInit {
         consigne                : "",
         documents               : [],
         attachments             : [],
-        //histories               : [],
         resList                 : [],
         resListIndex            : 0,
         lang                    : {}
@@ -423,19 +422,15 @@ export class SignatureBookComponent implements OnInit {
             isVersion = "false";
         }
 
-        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
+        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
             .map(res => res.json())
-            .subscribe((data) => {
-                if (data.status == "OK") {
-                    this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
-                    if (this.signatureBook.resList.length > 0) {
-                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
-                    }
-                } else {
-                    alert(data.error);
+            .subscribe(() => {
+                this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
+                this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                if (this.signatureBook.resList.length > 0) {
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 }
             });
 
