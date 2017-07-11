@@ -208,7 +208,8 @@ if ($mode == 'list') {
         </div>
         </form >
         <style type="text/css">#thesaurus_name_associate_chosen .chosen-drop{display:none;}.search-choice{padding: 5px !important;}</style>
-        <script type="text/javascript">new Chosen($('thesaurus_name_associate'),{width: "95%", disable_search_threshold: 10});
+        <script type="text/javascript">
+        $j("#tag_userform").chosen({width: "95%", disable_search_threshold: 10});
         </script>
         <script type="text/javascript">document.getElementById("thesaurus_parent_id").onchange();</script>
     <?php

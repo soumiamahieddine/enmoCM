@@ -21,7 +21,9 @@
 /**
  * Ce fichier a mettre en paralléle dans le custom, permet de mettre des definitions spécifique au custom (exemple langue ou remplacement de define de ce fichier de base)
  **/
-require_once 'apps/maarch_entreprise/define_custom.php';
+ if(file_exists('apps/maarch_entreprise/define_custom.php')) {
+	require_once 'apps/maarch_entreprise/define_custom.php';
+ }
 
 // Variable pour activer les vues V2
 if (!defined('V2_ENABLED')) {

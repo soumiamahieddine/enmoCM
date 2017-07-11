@@ -63,7 +63,7 @@ $frm_str .='<style>#tag_userform_chosen{width:100% !important;}</style>';
 
 $frm_str .= '<input type="hidden" id="new_tag_label" name="new_tag_label"/>';
 $frm_str .= '<script type="text/javascript">load_tags('.$route_tag_ui_script.', \''.$res_id.'\', \''.$coll_id.'\');';
-$frm_str .= 'new Chosen($(\'tag_userform\'),{width: "226px", disable_search_threshold: 10,search_contains: true});';
+$frm_str .= ' $j("#tag_userform").chosen({width: "226px", disable_search_threshold: 10,search_contains: true});';
 if ($core_tools->test_service('create_tag', 'tags', false) == 1) {
     $frm_str .= '$j( "#tag_userform_chosen input" ).focusout(function() {$j("#new_tag_label").val($j("#tag_userform_chosen input").val());if($j( "#tag_userform_chosen .no-results" ).length){if(confirm("'._ADD_TAG_CONFIRM.'")){add_this_tags('.$route_tag_add_tags_from_res.', '.$route_tag_ui_script.');}}});';
 }

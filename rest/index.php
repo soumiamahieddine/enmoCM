@@ -118,8 +118,15 @@ $app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList
 $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
 
 //docserverType
-$app->get('/docserverType', \Core\Controllers\DocserverTypeController::class . ':getList');
-$app->get('/docserverType/{id}', \Core\Controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
+$app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+
+//admin_reports
+$app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
+$app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
+$app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
+
+
 
 //attachments
 $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class . ':getList');
@@ -174,5 +181,28 @@ $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':u
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+
+//parameters
+$app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
+$app->get('/administration/parameters/new', \Core\Controllers\ParametersController::class . ':getNewParameterForAdministration');
+$app->get('/administration/parameters/{id}', \Core\Controllers\ParametersController::class . ':getParameterForAdministration');
+$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
+$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
+$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+
+//priorities
+$app->get('/priorities', \Core\Controllers\PrioritiesController::class . ':getList');
+$app->get('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':getById');
+$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
+$app->put('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':update');
+$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':delete');
+
+//actions
+$app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
+$app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
+$app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::class . ':getByIdForAdministration');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
 
 $app->run();

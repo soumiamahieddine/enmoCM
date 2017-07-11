@@ -28,6 +28,7 @@
 * @version $Revision$
 * @ingroup basket
 */
+use Baskets\Models\BasketsModel;
 
 $_SESSION['count_view_baskets']++;
 $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
@@ -49,8 +50,12 @@ $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappur
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
         $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
+
+
+        
+
         if ($_SESSION['save_list']['template'] <> "") {
-            $urlParameters .= '&template='.$_SESSION['save_list']['template'];
+            $urlParameters .= '&template='.BasketsModel::getTemplateById(['basketId'=>$_SESSION['current_basket']['id']]);
         }
         $_SESSION['save_list']['fromDetail'] = "false";
         $_SESSION['save_list']['fromValidateMail'] = "false";

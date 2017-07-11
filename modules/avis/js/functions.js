@@ -91,6 +91,8 @@ function updateAvisWorkflow(resId) {
             $i++;
         });
     }
+
+    //EXEMPLE BIEN FAIT
     $j.ajax({
         url: 'index.php?display=true&module=avis&page=updateAvisWF',
         type: 'POST',

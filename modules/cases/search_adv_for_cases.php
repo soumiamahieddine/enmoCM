@@ -1,21 +1,10 @@
 <?php
-/*
-*    Copyright 2008,2009 Maarch
+
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 *
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -81,8 +70,8 @@ while ($res = $stmt->fetchObject()) {
     array_push(
         $queries,
         array(
-        	'ID' => $res->query_id,
-        	'LABEL' => $res->query_name,
+            'ID'    => $res->query_id,
+            'LABEL' => $res->query_name,
         )
     );
 }
@@ -97,10 +86,10 @@ while ($res = $stmt->fetchObject()) {
     array_push(
         $usersList,
         array(
-        	'ID' => functions::show_string($res->user_id),
-        	'NOM' => functions::show_string($res->lastname),
-        	'PRENOM' => functions::show_string($res->firstname),
-        	'STATUT' => $res->status,
+            'ID'     => functions::show_string($res->user_id),
+            'NOM'    => functions::show_string($res->lastname),
+            'PRENOM' => functions::show_string($res->firstname),
+            'STATUT' => $res->status,
         )
     );
 }
@@ -178,8 +167,8 @@ for ($i = 0; $i < count($indexes); $i ++) {
 
 //Coming date
 $arrTmp2 = array(
-	'label' => _DATE_START,
-	'type' => 'date_range',
+    'label' => _DATE_START,
+    'type'  => 'date_range',
 	'param' => array(
 		'field_label' => _DATE_START,
 		'id1' => 'admission_date_from',
@@ -190,8 +179,8 @@ $param['admission_date'] = $arrTmp2;
 
 //Loaded date
 $arrTmp2 = array(
-	'label' => _REG_DATE,
-	'type' => 'date_range',
+    'label' => _REG_DATE,
+    'type'  => 'date_range',
 	'param' => array(
 		'field_label' => _REG_DATE,
 		'id1' => 'creation_date_from',
@@ -202,8 +191,8 @@ $param['creation_date'] = $arrTmp2;
 
 //Closing date
 $arrTmp2 = array(
-	'label' => _PROCESS_DATE,
-	'type' => 'date_range',
+    'label' => _PROCESS_DATE,
+    'type'  => 'date_range',
 	'param' => array(
 		'field_label' => _PROCESS_DATE,
 		'id1' => 'closing_date_from',
@@ -214,8 +203,8 @@ $param['closing_date'] = $arrTmp2;
 
 //Document date
 $arrTmp2 = array(
-	'label' => _DOC_DATE,
-	'type' => 'date_range',
+    'label' => _DOC_DATE,
+    'type'  => 'date_range',
 	'param' => array(
 		'field_label' => _DOC_DATE,
 		'id1' => 'doc_date_from',
@@ -226,8 +215,8 @@ $param['doc_date'] = $arrTmp2;
 
 //Process limit date
 $arrTmp2 = array(
-	'label' => _LIMIT_DATE_PROCESS,
-	'type' => 'date_range',
+    'label' => _LIMIT_DATE_PROCESS,
+    'type'  => 'date_range',
 	'param' => array(
 		'field_label' => _LIMIT_DATE_PROCESS,
 		'id1' => 'process_limit_date_from',
@@ -267,8 +256,8 @@ foreach (array_keys($_SESSION['mail_priorities']) as $priority)    {
     );
 }
 $arrTmp2 = array(
-	'label' => _PRIORITY,
-	'type' => 'select_simple',
+    'label' => _PRIORITY,
+    'type'  => 'select_simple',
 	'param' => array(
 		'field_label' => _MAIL_PRIORITY,
 		'default_label' => addslashes(_CHOOSE_PRIORITY),
@@ -280,8 +269,8 @@ $param['priority'] = $arrTmp2;
 if ($_SESSION['features']['search_notes'] == 'true') {
     //annotations
     $arrTmp2 = array(
-    	'label' => _NOTES,
-    	'type' => 'textarea',
+        'label' => _NOTES,
+        'type'  => 'textarea',
     	'param' => array(
     		'field_label' => _NOTES,
     		'other' => $size
@@ -319,8 +308,8 @@ if ($core->is_module_loaded('entities')) {
     }
 
     $arrTmp2 = array(
-    	'label' => _DESTINATION_SEARCH,
-    	'type' => 'select_multiple',
+        'label' => _DESTINATION_SEARCH,
+        'type'  => 'select_multiple',
     	'param' => array(
     		'field_label' => _DESTINATION_SEARCH,
     		'label_title' => _CHOOSE_ENTITES_SEARCH_TITLE,
@@ -333,8 +322,8 @@ if ($core->is_module_loaded('entities')) {
 
 //process notes
 $arrTmp2 = array(
-	'label' => _PROCESS_NOTES,
-	'type' => 'textarea',
+    'label' => _PROCESS_NOTES,
+    'type'  => 'textarea',
 	'param' => array(
 		'field_label' => _PROCESS_NOTES,
 		'other' => $size,
@@ -345,8 +334,8 @@ $param['process_notes'] = $arrTmp2;
 
 // chrono
 $arrTmp2 = array(
-	'label' => _CHRONO_NUMBER,
-	'type' => 'input_text',
+    'label' => _CHRONO_NUMBER,
+    'type'  => 'input_text',
 	'param' => array(
 		'field_label' => _CHRONO_NUMBER,
 		'other' => $size
@@ -369,22 +358,22 @@ for ($i = 0; $i < count($status); $i ++) {
 array_push(
     $arrTmp,
     array(
-    	'VALUE'=> 'REL1',
-    	'LABEL' =>_FIRST_WARNING
+        'VALUE' => 'REL1',
+        'LABEL' =>_FIRST_WARNING
     )
 );
 array_push(
     $arrTmp,
     array(
-    	'VALUE'=> 'REL2',
-    	'LABEL' =>_SECOND_WARNING
+        'VALUE' => 'REL2',
+        'LABEL' =>_SECOND_WARNING
     )
 );
 array_push(
     $arrTmp,
     array(
-    	'VALUE'=> 'LATE',
-    	'LABEL' =>_LATE
+        'VALUE' => 'LATE',
+        'LABEL' =>_LATE
     )
 );
 
@@ -423,8 +412,8 @@ while ($res = $stmt->fetchObject()) {
     );
 }
 $arrTmp2 = array(
-	'label' => _DOCTYPES,
-	'type' => 'select_multiple',
+    'label' => _DOCTYPES,
+    'type'  => 'select_multiple',
 	'param' => array(
 		'field_label' => _DOCTYPE,
 		'label_title' => _CHOOSE_DOCTYPES_SEARCH_TITLE,
@@ -453,8 +442,8 @@ foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) 
     );
 }
 $arrTmp2 = array(
-	'label' => _CATEGORY,
-	'type' => 'select_simple',
+    'label' => _CATEGORY,
+    'type'  => 'select_simple',
 	'param' => array(
 		'field_label' => _CATEGORY,
 		'default_label' => '',
@@ -466,44 +455,44 @@ $param['category'] = $arrTmp2;
 //Answers types
 $arrTmp = array(
     array(
-    	'ID' => 'simple_mail',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_SIMPLE_MAIL
+        'ID'    => 'simple_mail',
+        'VALUE' => 'true',
+        'LABEL' =>_SIMPLE_MAIL
     ),
     array(
-    	'ID' => 'AR',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_REGISTERED_MAIL
+        'ID'    => 'AR',
+        'VALUE' => 'true',
+        'LABEL' =>_REGISTERED_MAIL
     ),
     array(
-    	'ID' => 'fax',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_FAX
+        'ID'    => 'fax',
+        'VALUE' => 'true',
+        'LABEL' =>_FAX
     ),
     array(
-    	'ID' => 'courriel',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_MAIL
+        'ID'    => 'courriel',
+        'VALUE' => 'true',
+        'LABEL' =>_MAIL
     ),
     array(
-    	'ID' => 'direct',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_DIRECT_CONTACT
+        'ID'    => 'direct',
+        'VALUE' => 'true',
+        'LABEL' =>_DIRECT_CONTACT
     ),
     array(
-    	'ID' => 'autre',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_OTHER
+        'ID'    => 'autre',
+        'VALUE' => 'true',
+        'LABEL' =>_OTHER
     ),
     array(
-    	'ID' => 'norep',
-    	'VALUE'=> 'true',
-    	'LABEL' =>_NO_ANSWER
+        'ID'    => 'norep',
+        'VALUE' => 'true',
+        'LABEL' =>_NO_ANSWER
     )
 );
 $arrTmp2 = array(
-	'label' => _ANSWER_TYPE,
-	'type' => 'checkbox',
+    'label' => _ANSWER_TYPE,
+    'type'  => 'checkbox',
 	'param' => array(
 		'field_label' => _ANSWER_TYPE,
 		'checkbox_data' => $arrTmp
@@ -546,15 +535,26 @@ function del_query_confirm()
 </script>
 <div id="case_div" style="display:none;">
     <div id="inner_content">
-        <dl id="tabricator2">
+        <div class="frame-trig">
         <?php
         if($_GET['searched_item'] <> 'case')
         {
             if($core->test_service('add_cases', 'cases', false) == 1)
             {
                 ?>
-                <dt><?php echo _CREATE_NEW_CASE;?></dt>
-                <dd>
+                <div id="create-new-case" class="tab-trig tab-trig-open" onclick="tabClickCases('create-new-case')"><?php echo _CREATE_NEW_CASE;?></div>
+                 <?php
+                if($_GET['searched_item']=="res_id" || $_GET['searched_item']=="res_id_in_process")
+                    $title_search = _SEARCH_A_CASE;
+
+                elseif($_GET['searched_item']=="case")
+                    $title_search = _SEARCH_A_RES;
+
+                else
+                    $title_search = _ERROR
+                ?>
+                <div id="title-search" class="tab-trig" onclick="tabClickCases('title-search')" ><?php functions::xecho($title_search );?></div>
+                <div id="frame-create-new-case" class="frame-targ">
                     <h4><p align="center"><i class="fa fa-plus fa-2x"></i> <?php echo _CREATE_NEW_CASE;?><p></h4>
                     <p class="error"><?php if (isset($_SESSION['cases_error'])){ echo $_SESSION['cases_error'];}$_SESSION['cases_error'] = "";?></p>
                     <div class="blank_space">&nbsp;</div>
@@ -593,26 +593,14 @@ function del_query_confirm()
                             </table>
                         </div>
                     </form>
-                </dd>
+                </div>
                 <?php
             }
         }
         ?>
 <!-- ##########################-->
 
-        <?php
-        if($_GET['searched_item']=="res_id" || $_GET['searched_item']=="res_id_in_process")
-            $title_search = _SEARCH_A_CASE;
-
-        elseif($_GET['searched_item']=="case")
-            $title_search = _SEARCH_A_RES;
-
-        else
-            $title_search = _ERROR
-        ?>
-
-            <dt><?php functions::xecho($title_search );?></dt>
-            <dd>
+            <div id="frame-title-search" class="frame-targ frame-targ-none">
                 <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php functions::xecho($title_search );?></h4></p>
                 <!-- <hr/> -->
                 <br/>
@@ -795,17 +783,15 @@ function del_query_confirm()
         load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>', '<?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
-    </dd>
+    </div>
 </dl>
 </div>
 <!-- <div align="center"><input type="button" class="button" name="close" id="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> -->
 </div>
 
 <script type="text/javascript">
- var item  = $('case_div');
-  var tabricator1 = new Tabricator('tabricator2', 'DT');
-  if(item)
-    {
-     item.style.display='block';
+    var item  = $('case_div');
+    if(item) {
+        item.style.display='block';
     }
 </script>

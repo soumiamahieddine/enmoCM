@@ -330,6 +330,8 @@ if (!defined("_IS_FOLDER_STATUS"))
     define("_IS_FOLDER_STATUS", "Statut de dossier");
 if (!defined("_IS_FOLDER_ACTION"))                  
     define("_IS_FOLDER_ACTION", "Action de dossier");
+if (!defined("_IS_FOLDER_ACTION_DESC"))                  
+    define("_IS_FOLDER_ACTION_DESC", "Permet d'utiliser cette action dans une bannette de dossier");
 if (!defined("_CONFIRM_FOLDER_STATUS"))             
     define("_CONFIRM_FOLDER_STATUS", "Confirmation simple (dossiers)");
 if (!defined("_REDIRECT_FOLDER"))                   

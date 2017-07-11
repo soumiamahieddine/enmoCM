@@ -12,8 +12,11 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <!--<li>-->
+                        <!--<a data-toggle="modal" data-target="#manageAbs" (click)="getAbsenceInfos()"><i class="fa fa-user-times" title=""></i> {{user.lang.manageAbsences}} </a>-->
+                    <!--</li>-->
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times" title=""></i> {{user.lang.manageAbsences}} </a>
+                        <a (click)="absenceModal()" ><i class="fa fa-user-times"></i> {{user.lang.manageAbsences}} </a>
                     </li>
                     <li style="cursor: pointer">
                         <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{user.lang.manageSignatures}} </a>
@@ -171,7 +174,7 @@
                         <i class="fa fa-tasks" title="{{uam.basketId}}"></i> {{uam.basketName}}
                         <span class="pull-right">
                             <span class="label label-primary">{{uam.newUser}}</span>
-                            <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{user.lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
+                        <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{user.lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
                         </span>
                     </li>
                 </ul>
@@ -179,6 +182,9 @@
             <div class="modal-footer">
                 <button type="button" (click)="activateAbsence()" class="btn btn-default">{{user.lang.activateAbs}}</button>
             </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default">Activer mon absence</button>
         </div>
     </div>
 </div>

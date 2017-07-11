@@ -33,9 +33,7 @@ class ResController
 {
     public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!empty($aArgs)) {
-            $aArgs = $aArgs;
-        } else {
+        if(empty($aArgs)){
             $aArgs = $request->getQueryParams();
             $aArgs['data'] = json_decode($aArgs['data']);
             $aArgs['data'] = $this->object2array($aArgs['data']);
@@ -238,9 +236,7 @@ class ResController
 
     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!empty($aArgs)) {
-            $aArgs = $aArgs;
-        } else {
+        if(empty($aArgs)){
             $aArgs = $request->getQueryParams();
             $aArgs['data'] = json_decode($aArgs['data']);
             $aArgs['data'] = $this->object2array($aArgs['data']);
@@ -596,7 +592,6 @@ class ResController
             }
 
             if (strtoupper($data[$i]['type']) == 'STRING') {
-                $data[$i]['value'] = $data[$i]['value'];
                 $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
                 $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }

@@ -7,8 +7,15 @@ function triggerAngular(prodmode, locationToGo) {
         'user-administration',
         'status-administration',
         'statuses-administration',
+        'actions-administration',
+        'action-administration',
         'profile',
-        'signature-book'
+        'signature-book',
+        'parameter-administration',
+        'parameters-administration',
+        'priorities',
+        'priority',
+        'parameter'
     ];
 
     $j.ajax({

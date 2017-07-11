@@ -218,7 +218,7 @@ abstract class admin_reports_Abstract extends Database
             <?php
             if (count($users) > 0) {
                 ?>
-                <div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
+                <div  onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
                 &nbsp;<i class="fa fa-users fa-2x"></i> <i><?php
                 echo _SEE_GROUP_MEMBERS;
                 ?></i> <i class="fa fa-angle-right"></i>

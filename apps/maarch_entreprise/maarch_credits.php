@@ -68,12 +68,12 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <li><a target="blank" href="http://www.fpdf.org/">Fpdf</a></li>
             <li><a target="blank" href="http://www.setasign.de/products/pdf-php-solutions/fpdi/">fpdi</a></li>
             <li><a target="blank" href="https://jquery.com/">Jquery</a></li>
+            <li><a target="blank" href="https://github.com/running-coder/jquery-typeahead">Jquery Typeahead</a></li>
             <li><a target="blank" href="http://logging.apache.org/log4php/">log4php</a></li>
             <li><a target="blank" href="http://chir.ag/tech/download/pdfb">Pdfb</a></li>
             <li><a target="blank" href="http://www.foolabs.com/xpdf/">Pdftotext</a></li>
             <li><a target="blank" href="http://www.prototypejs.org/">Prototype</a></li>
             <li><a target="blank" href="http://script.aculo.us/">Script.aculo.us</a></li>
-            <li>Tabricator</li>
             <li><a target="blank" href="http://tafel.developpez.com">Tafel Tree</a></li>
             <li><a target="blank" href="http://www.tinybutstrong.com/">Tiny But Strong</a></li>
             <li><a target="blank" href="http://www.tinymce.com/">TinyMCE</a></li>

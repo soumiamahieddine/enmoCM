@@ -200,12 +200,45 @@ if (!defined('_DISPLAY_ATTACHMENTS'))
     define('_DISPLAY_ATTACHMENTS', 'Afficher la liste des pièces jointes');
 /***** Signature Book *****/
 
+//Parameters
+if(!defined('_PARAMETER_IDENTIFIER'))
+    define('_PARAMETER_IDENTIFIER','Identifiant');
+
+if(!defined('_DESCRIPTION'))
+    define('_DESCRIPTION','Description');
+
+if(!defined('_VALUE'))
+    define('_VALUE','Valeur');
+
+if(!defined('_TYPE'))
+    define('_TYPE','Type');
+
+if(!defined('_STRING'))
+    define('_STRING','Chaîne de caractères');
+
+if(!defined('_INTEGER'))
+    define('_INTEGER','Nombre entier');
+
+if(!defined('_VALIDATE'))
+    define('_VALIDATE','Valider');
+
+if(!defined('_CANCEL'))
+    define('_CANCEL','Annuler');
+
+if(!defined('_MODIFY_PARAMETER'))
+    define('_MODIFY_PARAMETER','Modifier paramètre');
+
+if(!defined('_DELETE_PARAMETER'))
+    define('_DELETE_PARAMETER','Supprimer paramètre');
 
 if(!defined('_PAGE'))
     define('_PAGE','Page');
 
 if(!defined('_OUT_OF'))
     define('_OUT_OF','sur');
+
+if(!defined('_SEARCH'))
+    define('_SEARCH','Chercher');
 
 if(!defined('_RECORDS_PER_PAGE'))
     define('_RECORDS_PER_PAGE','résultats par page');
@@ -224,3 +257,33 @@ if(!defined('_FILTERED_FROM'))
 
 if(!defined('_RECORDS'))
     define('_RECORDS','résultats');
+
+if(!defined('_FIRST'))
+    define('_FIRST','premier');
+
+if(!defined('_LAST'))
+    define('_LAST','dernier');
+
+if(!defined('_NEXT'))
+    define('_NEXT','suivant');
+
+if(!defined('_PREVIOUS'))
+    define('_PREVIOUS','précédent');
+
+if(!defined('_PARAMETER'))
+    define('_PARAMETER','paramètre');
+
+if(!defined('_ID_IS_EMPTY_CONTROLLER'))
+    define('_ID_IS_EMPTY_CONTROLLER','L\'identifiant est vide');
+
+if(!defined('_PARAM_CREATED_SUCCESS'))
+    define('_PARAM_CREATED_SUCCESS','Paramètre créé avec succès');
+
+if(!defined('_PARAM_UPDATED_SUCCESS'))
+    define('_PARAM_UPDATED_SUCCESS','Mise à jour effectuée');
+
+if(!defined('_DELETE_CONFIRM'))
+    define('_DELETE_CONFIRM','Voulez-vous vraiment supprimer le paramètre');
+
+if(!defined('_CONTROL_TECHNICAL_PARAMS'))
+    define('_CONTROL_TECHNICAL_PARAMS','Contrôler les paramètres techniques');

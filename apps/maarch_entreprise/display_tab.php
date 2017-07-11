@@ -1,5 +1,4 @@
 <?php
-
 if(isset($_REQUEST["titleTab"])){
     $titleTab = $_REQUEST["titleTab"];
     $res_id   = $_REQUEST["resId"];
@@ -26,5 +25,5 @@ $frm_str .= '<div id="load_tab" title="loading..." style="text-align:center;"><i
 $frm_str .= '<iframe src="' . $script . '" '
             . 'name="iframe_tab" id="iframe_tab" width="100%" height="590px" align="center" '
             . 'scrolling="auto" frameborder="0" onload="document.getElementById(\'load_tab\').style.display=\'none\';"></iframe>';
-
+//var_dump($frm_str);
 echo $frm_str;

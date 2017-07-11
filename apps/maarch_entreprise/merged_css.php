@@ -44,6 +44,10 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrap-chosen.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
+
+readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
 
 //Views
 readfile('apps/maarch_entreprise/css/administration.component.css');
@@ -60,4 +64,3 @@ readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 readfile('apps/maarch_entreprise/css/engine.css');
 
 ob_end_flush();
-

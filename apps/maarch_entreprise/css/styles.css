@@ -4,13 +4,239 @@
 html {
     height: 100%;
 }
-.border_on
-{
+
+.detailsDisplayDiv {
+    background: #fff;
+    border-top: 1px solid #666;
+    clear: both;
+    margin: 0 0 0 -5px;
+    overflow: auto;
+    padding: 5px;
+    height: 92%;
+    width: auto;
+    /*padding: 0px;
+color: #666;
+background-color: #CEE9F1;
+border-top: solid 2px #FDD16C;
+border-bottom: solid 2px #FDD16C;
+padding: 10px;*/
+}
+
+.func {
+
+  background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.detailsTab {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+    display: block;
+}
+
+.whole-panel{ 
+    background: #009DC5;
+    border: 1px solid #000;
+    display: inline-block;
+    height: 650px;
+    min-width: 995px;
+    margin: 0 auto 1em;
+    padding: 5px 0 0 5px;
+    display: block;
+}
+.technical-infos{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+   /* display: block;*/
+}
+
+.diffusion-list{
+    
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+ 
+.print-folder {
+
+
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+
+.visa-circuit{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.opinion-circuit {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.attached-files {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.answers-done{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.history{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.notes {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.matter{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.email{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.versions{
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.links {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.border_on {
     border-style:solid;
     border-color:#003399;
     border-width:thin;
     margin-top: 10px;
 }
+
 body {
     color: #666;
     /*background: white url(static.php?filename=bg_body.gif) top center repeat-y;*/
@@ -232,12 +458,12 @@ a.prev {
     padding-left: 10px;
 }
 
-a.next {
+/*a.next {
     background-image: url(static.php?filename=puce_next.gif);
     background-position: center right;
     padding-left: 0;
     padding-right: 10px;
-}
+}*/
 
 a.change, a.suspend, a.delete, a.authorize, a.up, a.down, a.view {
     padding: 5px 0 5px 20px;
@@ -2799,60 +3025,6 @@ hr{
     text-align: center;
 }
 
-/**** TABRICATOR ****/
-.tabricator
-{
-    background:                #009DC5;
-    border:                    1px solid #000;
-    display:                   inline-block;
-    /*height:                    auto!important;*/
-    height: 650px;
-    min-width : 995px;
-    margin:                    0 auto 1em;
-    /*max-width:                 40em;*/
-    padding:                   5px 0 0 5px;
-}
-
-.tabricator {
-    display:                   block;
-}
-.tabricator .trig {
-    background:                #deedf3;
-    border:                    1px solid #666;
-    border-bottom:             0;
-    cursor:                    pointer;
-    display:                   inline;
-    float:                     right;
-    margin:                    2px 0 0 -1px;
-    padding:                   2px 5px;
-    position:                  relative;
-    font-size: 14px;
-}
-.tabricator .trig:hover {
-    background:                #f5f5f5;
-}
-.tabricator .open,
-.tabricator .open:hover {
-    background:                #fff;
-    margin-top:                0;
-    margin-bottom:             -3px;
-    padding-bottom:            5px;
-    position:                  relative;
-    z-index:                   1;
-}
-.tabricator .targ {
-    background:                #fff;
-    border-top:                1px solid #666;
-    clear:                     both;
-    margin:                    0 0 0 -5px;
-    overflow:                  auto;
-    padding:                   5px;
-    height:  92%;
-    /*width: 99.5%;*/
-    width:                      auto;
-}
-
-
 /***** PROTOHUDS *****/
 .protohud {
     font-size:                 12px;
@@ -3594,6 +3766,64 @@ a.actionList {
 
 input.button {
 width:auto;
+}
+
+.TabSelected{
+    background: #fff !important;
+    margin-top: 0 !important;
+    margin-bottom: -3px !important;
+    padding-bottom: 5px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.detailsDisplayDiv {
+    background: #fff;
+    border-top: 1px solid #666;
+    clear: both;
+    margin: 0 0 0 -5px;
+    overflow: auto;
+    padding: 5px;
+    height: 92%;
+    width: auto;
+}
+
+.DetailsTabFunc  {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+.detailsTab {
+    background: #deedf3;
+    border: 1px solid #666;
+    border-bottom: 0;
+    cursor: pointer;
+    display: inline;
+    float: right;
+    margin: 2px 0 0 -1px;
+    padding: 2px 5px;
+    position: relative;
+    font-size: 14px;
+    display: block;
+}
+
+.whole-panel{ 
+    background: #009DC5;
+    border: 1px solid #000;
+    display: inline-block;
+    height: 650px;
+    min-width: 995px;
+    margin: 0 auto 1em;
+    padding: 5px 0 0 5px;
+    display: block;
 }
 
 #frmsearch2 .autocomplete, #frmcontact .autocomplete{

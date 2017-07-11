@@ -17,9 +17,9 @@ function change_entity(
     var origin_arg = origin_keyword || '';
     var load_listmodel = load_listmodel || 'true';
 		
-    if($('destination_mandatory'))
+    if($j('#destination_mandatory'))
     {
-        var isMandatory = $('destination_mandatory').style.display;
+        var isMandatory = $j('#destination_mandatory').css('display');
     }
     else
     {
@@ -27,62 +27,95 @@ function change_entity(
     }
     if(entity_id != null)
     {
-        new Ajax.Request(path_manage_script,
-        {
-            method:'post',
-            parameters: { 
-				objectType : 'entity_id',
-				objectId : entity_id,
-				collId : 'letterbox_coll',
-                load_from_model : load_listmodel,
-                origin : origin_arg,
-                mandatory : isMandatory,
-                category : category
-            },
-                onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                //alert(answer.responseText);
+
+        $j.ajax({
+        url: path_manage_script,
+        type: 'POST',
+        data: {
+            objectType : 'entity_id',
+            objectId : entity_id,
+            collId : 'letterbox_coll',
+            load_from_model : load_listmodel,
+            origin : origin_arg,
+            mandatory : isMandatory,
+            category : category
+        },
+        success: function(answer){
+                eval("response = "+answer);
+
                 if(response.status == 0 )
                 {
-                    var diff_list_tr = $('diff_list_tr');
-                    var diff_list_div = $(div_id);
+                    var diff_list_tr = $j('#diff_list_tr');
+                    var diff_list_div = $j("#"+div_id);
                     if(diff_list_div != null)
                     {
-                        diff_list_div.innerHTML = response.div_content;
+                        diff_list_div.html(response.div_content);
+
                     }
                     if(diff_list_tr)
                     {
-                        diff_list_tr.style.display = tr_display_val;
+                        diff_list_tr.css('display',tr_display_val);
                     }
                     else
                     {
-                        diff_list_div.style.display = 'block';
+                        diff_list_div.css('display','block');
                     }
                 }
                 else
                 {
-                    var diff_list_tr = $('diff_list_tr');
-                    var diff_list_div = $(div_id);
+                    var diff_list_tr = $j('#diff_list_tr');
+                    var diff_list_div = $j("#"+div_id);
                     if(diff_list_div != null)
                     {
-                        diff_list_div.innerHTML = '';
+                        diff_list_div.html('');
                     }
                     if(diff_list_tr)
                     {
-                        diff_list_tr.style.display = tr_display_val;
+                        diff_list_tr.css('display',tr_display_val);
                     }
                     else
                     {
-                        diff_list_div.style.display = 'none';
+                        diff_list_div.css('display','none');
                     }
                     try{
-                        $('frm_error').innerHTML = response.error_txt;
+                        $j('#frm_error').html(response.error_txt);
                         }
                     catch(e){}
                 }
             }
-        });
+
+    });
     }
+}
+
+// Load list of listmodels to fill select list (index, validate)
+// >>> type of list (entity_id, type_id, custom list type)
+// >>> type of element to fill (select or list)
+// >>> id of element to fill
+function select_listmodels(
+	objectType, 
+	returnElementType, 
+	returnElementId
+) {
+        console.log('appel select_listmodels');
+
+	new Ajax.Request(
+		'index.php?display=true&module=entities&page=select_listmodels',
+        {
+            method:'post',
+            parameters: { 
+				objectType : objectType,
+				returnElementType : returnElementType
+            },
+            onSuccess: function(answer)
+				{
+					var returnElement = $(returnElementId);
+					if(returnElement != null && returnElement.nodeName.toUpperCase() == returnElementType.toUpperCase()) {
+						returnElement.innerHTML += answer.responseText;
+					}
+				}
+        }
+	);
 }
 
 // Load listmodel to session[origin]
@@ -105,33 +138,35 @@ function load_listmodel(
 	var objectType = selectedOption.getAttribute('data-object_type');
 	var objectId = selectedOption.value;
 	
-	var diff_list_div = $(div_id);
-	new Ajax.Request(
-		"index.php?display=true&module=entities&page=load_listmodel",
-        {
-            method:'post',
-            parameters: { 
-				objectType : objectType,
-				objectId : objectId,
-                origin : origin,
-                category : category
-			},
-            onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                //alert(answer.responseText);
+	var diff_list_div = $j("#"+div_id);
+       
+	
+    $j.ajax({
+        url: 'index.php?display=true&module=entities&page=load_listmodel',
+        type: 'POST',
+        data: {
+            objectType : objectType,
+            objectId : objectId,
+            origin : origin,
+            category : category
+        },
+        success: function(answer){
+                eval("response = "+answer);
+
                 if(response.status == 0 ) {
-					diff_list_div.innerHTML = response.div_content;
+                    diff_list_div.html(response.div_content);
                 }
                 else {
-					diff_list_div.innerHTML = '';
+                    diff_list_div.html('');
                     try{
-                        $('frm_error').innerHTML = response.error_txt;
+                        $j('#frm_error').html(response.error_txt);
                     } catch(e){}
                 }
             }
-        }
-	);
+
+    });
 }
+
 
 function change_diff_list(
 	origin,
@@ -141,6 +176,8 @@ function change_diff_list(
     category,
     specific_role
 ) {
+        console.log('test change_diff_list');
+
     if(category === undefined){
         category = '';
     }
@@ -192,7 +229,6 @@ function change_diff_list(
                 }
                 else
                 {
-                    //alert(response.error_txt);
                     try{
                         $('frm_error').innerHTML = response.error_txt;
                         }
@@ -216,6 +252,8 @@ function isIdToken(value)
 }
 
 function validate_difflist_type() {
+        console.log('test validate_difflist_type');
+
   var main_error = $('main_error'); 
   main_error.innerHTML = '';
   
@@ -264,6 +302,7 @@ function validate_difflist_type() {
   );
   
 }
+
 
 function saveListDiff(mode, table, collId, resId, userId, concatList, onlyCC) {
     new Ajax.Request(

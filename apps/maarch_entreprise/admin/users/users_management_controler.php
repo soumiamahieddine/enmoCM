@@ -486,7 +486,9 @@ function display_del_check($user_id)
             </p>
         </form>
             </div>
-            <script type="text/javascript">new Chosen($('user_id'),{width: "auto", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});</script>
+            <script type="text/javascript">$j("#user_id").chosen({width: "auto", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});
+           </script>
+
         <?php
         exit();  
 }
@@ -788,7 +790,8 @@ function display_up_check($user_id)
     $frm .= '</div>';
     //script
     $frm .= '<script>';
-        $frm .= 'new Chosen($(\'user_id\'),{width: "220px", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});';
+    $frm .= '$j("#user_id").chosen({width: "220px", disable_search_threshold: 10, search_contains: true,allow_single_deselect: true});';
+
     $frm .= '</script>';
     /*****************/
     echo $frm;

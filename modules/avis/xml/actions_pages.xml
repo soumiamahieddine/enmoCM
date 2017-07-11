@@ -16,6 +16,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_docs_to_recommendation</ID>
         <LABEL>_SEND_DOCS_TO_RECOMMENDATION</LABEL>
         <NAME>send_docs_to_recommendation</NAME>
+        <DESC>_SEND_DOCS_TO_RECOMMENDATION_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -27,6 +28,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>validate_recommendation</ID>
         <LABEL>_VALIDATE_RECOMMENDATION</LABEL>
         <NAME>validate_recommendation</NAME>
+        <DESC>_VALIDATE_RECOMMENDATION_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -38,6 +40,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>send_to_avis</ID>
         <LABEL>_SEND_TO_AVIS_WF</LABEL>
         <NAME>send_to_avis</NAME>
+        <DESC>_SEND_TO_AVIS_WF_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -49,6 +52,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>avis_workflow</ID>
         <LABEL>_PROCEED_WORKFLOW_AVIS</LABEL>
         <NAME>avis_workflow</NAME>
+        <DESC>_PROCEED_WORKFLOW_AVIS_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -60,6 +64,7 @@ An action page is described in a ACTIONPAGE tag :
         <ID>avis_workflow_simple</ID>
         <LABEL>_PROCEED_WORKFLOW_AVIS_SIMPLE</LABEL>
         <NAME>avis_simple</NAME>
+        <DESC>_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC</DESC>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

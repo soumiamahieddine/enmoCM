@@ -4,11 +4,12 @@
 		<id>admin_reports</id>
 		<name>_ADMIN_REPORTS</name>
 		<comment>_ADMIN_REPORTS_DESC</comment>
-		<servicepage>index.php?page=admin_reports&amp;module=reports</servicepage>
+		<servicepage>/administration/reports</servicepage>
 		<servicetype>admin</servicetype>
 		<system_service>false</system_service>
 		<style>fa fa-area-chart</style>
 		<enabled>true</enabled>
+		<angular>true</angular>
 		<WHEREAMIUSED>
 			<page>admin.php</page>
 			<nature>listelement</nature>

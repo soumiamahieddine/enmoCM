@@ -47,11 +47,11 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/controls.js');
 
 		//TODO clean
-		readfile('apps/maarch_entreprise/js/chosen.proto.min.js');
 		readfile('apps/maarch_entreprise/js/scrollbox.js');
-		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
-		readfile('apps/maarch_entreprise/js/tabricator.js');
 
+		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
+
+		echo "\n";
 		//Dependencies
 		readfile('node_modules/jquery/dist/jquery.min.js');
 		readfile('node_modules/core-js/client/shim.js');
@@ -61,8 +61,11 @@ class MergedJsAbstract {
 		readfile('node_modules/tinymce/tinymce.min.js');
 		readfile('node_modules/datatables/media/js/jquery.dataTables.min.js');
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
-		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
+		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
+		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
+
+		echo "\n";
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
@@ -78,7 +81,12 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
 
-        echo "\n";
+		echo "\n";
+
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');		
+        
+		echo "\n";
+
 	}
 
 	public function merge_module() {
