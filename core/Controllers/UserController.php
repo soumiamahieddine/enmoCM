@@ -501,7 +501,7 @@ class UserController
             $usersId[] = $value['user_id'];
         }
 
-        $listModels = ListModelsModel::getDiffListByUsersId(['select' => 'item_id', 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']); 
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
         
         $usersListModels = [];
         foreach ($listModels as $value) {
