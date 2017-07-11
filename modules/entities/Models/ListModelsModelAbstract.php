@@ -11,35 +11,33 @@
 
 namespace Entities\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
-class ListModelsModelAbstract extends \Apps_Table_Service
+class ListModelsModelAbstract
 {
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['set', 'where', 'data']);
-        static::checkArray($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        $aReturn = parent::update([
+        DatabaseModel::update([
             'table'     => 'listmodels',
             'set'       => $aArgs['set'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data']
         ]);
-        return $aReturn;
+
+        return true;
     }
 
     public static function getDiffListByUsersId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['users_id']);
-        static::checkRequired($aArgs, ['object_type']);
-        static::checkRequired($aArgs, ['item_mode']);
+        ValidatorModel::notEmpty($aArgs, ['users_id', 'object_type', 'item_mode']);
+        ValidatorModel::arrayType($aArgs, ['users_id']);
+        ValidatorModel::stringType($aArgs, ['object_type', 'item_mode']);
 
-        static::checkArray($aArgs, ['users_id']);
-        static::checkString($aArgs, ['object_type']);
-        static::checkString($aArgs, ['item_mode']);
-
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['listmodels'],
             'where'     => ['item_id in (?)', 'object_type = ?', 'item_mode = ?'],
@@ -51,15 +49,11 @@ class ListModelsModelAbstract extends \Apps_Table_Service
 
     public static function getDiffListByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['itemId']);
-        static::checkRequired($aArgs, ['objectType']);
-        static::checkRequired($aArgs, ['itemMode']);
+        ValidatorModel::notEmpty($aArgs, ['itemId', 'objectType', 'itemMode']);
+        ValidatorModel::arrayType($aArgs, ['users_id']);
+        ValidatorModel::stringType($aArgs, ['itemId', 'objectType', 'itemMode']);
 
-        static::checkString($aArgs, ['itemId']);
-        static::checkString($aArgs, ['objectType']);
-        static::checkString($aArgs, ['itemMode']);
-
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['listmodels'],
             'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?'],

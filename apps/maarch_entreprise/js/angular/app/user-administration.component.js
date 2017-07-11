@@ -41,7 +41,7 @@ var UserAdministrationComponent = (function () {
     }
     UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Utilisateurs</a> > Modification";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Utilisateurs</a>";
         }
     };
     UserAdministrationComponent.prototype.ngOnInit = function () {
@@ -133,7 +133,7 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.resetPassword = function () {
         var r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
         if (r) {
-            this.http.put(this.coreUrl + "rest/users/" + this.userId + "/password", {})
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
@@ -150,7 +150,7 @@ var UserAdministrationComponent = (function () {
                 "groupId": this.user.allGroups[index - 1].group_id,
                 "role": $j("#groupRole")[0].value
             };
-            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/groups", group)
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
@@ -164,7 +164,7 @@ var UserAdministrationComponent = (function () {
         }
     };
     UserAdministrationComponent.prototype.updateGroup = function (group) {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id, group)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             successNotification(data.success);
@@ -176,7 +176,7 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de ce groupe ?');
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/groups/" + group.group_id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
@@ -195,7 +195,7 @@ var UserAdministrationComponent = (function () {
                 "entityId": this.user.allEntities[index - 1].entity_id,
                 "role": $j("#entityRole")[0].value
             };
-            this.http.post(this.coreUrl + "rest/users/" + this.userId + "/entities", entity)
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
@@ -209,7 +209,7 @@ var UserAdministrationComponent = (function () {
         }
     };
     UserAdministrationComponent.prototype.updateEntity = function (entity) {
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id, entity)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             successNotification(data.success);
@@ -219,7 +219,7 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.updatePrimaryEntity = function (entity) {
         var _this = this;
-        this.http.put(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id + "/primaryEntity", {})
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user['entities'] = data.entities;
@@ -232,7 +232,7 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.userId + "/entities/" + entity.entity_id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
@@ -312,12 +312,23 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.activateAbsence = function () {
         var _this = this;
-        this.http.post(this.coreUrl + "rest/users/" + this.userId + "/baskets/absence", this.userAbsenceModel)
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/baskets/absence", this.userAbsenceModel)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
             $j('#manageAbs').modal('hide');
+            successNotification(data.success);
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
+        });
+    };
+    UserAdministrationComponent.prototype.deactivateAbsence = function () {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.user.status = data.user.status;
             successNotification(data.success);
         }, function (err) {
             errorNotification(JSON.parse(err._body).errors);
@@ -330,13 +341,13 @@ var UserAdministrationComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
-                _this.router.navigate(["/administration/users/" + _this.user.userId]);
+                _this.router.navigate(["/administration/users/" + data.user.id]);
             }, function (err) {
                 errorNotification(JSON.parse(err._body).errors);
             });
         }
         else {
-            this.http.put(this.coreUrl + "rest/users/" + this.userId, this.user)
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);

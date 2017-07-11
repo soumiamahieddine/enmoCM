@@ -1834,6 +1834,11 @@ if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration 
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
 
+/***** Global ******/
+if (!defined('_UNREACHABLE_DOCSERVER'))
+    define('_UNREACHABLE_DOCSERVER', 'Unreachable docserver path');
+/***** Global ******/
+
 /***** Profile *****/
 if (!defined('_MANAGE_MY_SIGNATURES'))
     define('_MANAGE_MY_SIGNATURES', 'Manage my signatures');
@@ -1942,8 +1947,18 @@ if (!defined('_RESET_PASSWORD'))
     define('_RESET_PASSWORD', 'Password reset');
 if (!defined('_ACTIVATE_ABSENCE'))
     define('_ACTIVATE_ABSENCE', 'Activate absence');
+if (!defined('_DEACTIVATE_ABSENCE'))
+    define('_DEACTIVATE_ABSENCE', 'Deactivate absence');
 if (!defined('_ABSENCE_ACTIVATED'))
     define('_ABSENCE_ACTIVATED', 'The user is now off');
+if (!defined('_ABSENCE_DEACTIVATED'))
+    define('_ABSENCE_DEACTIVATED', 'The user is now active');
+if (!defined('_ABS'))
+    define('_ABS', 'Absent');
+if (!defined('_ACTIVE'))
+    define('_ACTIVE', 'Active');
+if (!defined('_INACTIVE'))
+    define('_INACTIVE', 'Inactive');
 /***** User Administration *****/
 
 /**** admin update control ****/

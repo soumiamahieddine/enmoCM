@@ -15,28 +15,26 @@
 
 namespace Baskets\Models;
 
+use Core\Models\DatabaseModel;
 use Core\Models\UserModel;
+use Core\Models\ValidatorModel;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract extends \Apps_Table_Service
+class BasketsModelAbstract
 {
 
     public static function getResListById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['basketId']);
-        static::checkString($aArgs, ['basketId']);
+        ValidatorModel::notEmpty($aArgs, ['basketId']);
+        ValidatorModel::stringType($aArgs, ['basketId']);
 
-
-        $aBasket = static::select(
-            [
+        $aBasket = DatabaseModel::select([
             'select'    => ['basket_clause', 'basket_res_order'],
             'table'     => ['baskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
-            ]
-        );
+        ]);
 
         if (empty($aBasket[0]) || empty($aBasket[0]['basket_clause'])) {
             return [];
@@ -45,50 +43,42 @@ class BasketsModelAbstract extends \Apps_Table_Service
         $sec = new \SecurityControler();
         $where = $sec->process_security_where_clause($aBasket[0]['basket_clause'], $_SESSION['user']['UserId'], false);
 
-        $aResList = static::select(
-            [
+        $aResList = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => [$where],
-            'order_by'  => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : $aBasket[0]['basket_res_order'],
-            ]
-        );
+            'order_by'  => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : [$aBasket[0]['basket_res_order']],
+        ]);
 
         return $aResList;
     }
 
     public static function getActionByActionId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['actionId']);
-        static::checkNumeric($aArgs, ['actionId']);
+        ValidatorModel::notEmpty($aArgs, ['actionId']);
+        ValidatorModel::intVal($aArgs, ['actionId']);
 
-
-        $aAction = static::select(
-            [
+        $aAction = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['actions'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['actionId']]
-            ]
-        );
+        ]);
 
         return $aAction[0];
     }
 
     public static function getActionIdById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['basketId']);
-        static::checkString($aArgs, ['basketId']);
+        ValidatorModel::notEmpty($aArgs, ['basketId']);
+        ValidatorModel::stringType($aArgs, ['basketId']);
 
-
-        $aAction = static::select(
-            [
+        $aAction = DatabaseModel::select([
             'select'    => ['id_action'],
             'table'     => ['actions_groupbaskets'],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['basketId']]
-            ]
-        );
+        ]);
 
         if (empty($aAction[0])) {
             return '';
@@ -99,8 +89,8 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
     public static function getBasketsByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupIds = [];
@@ -110,21 +100,19 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
         $aBaskets = [];
         if (!empty($groupIds)) {
-            $aBaskets = static::select(
-                [
+            $aBaskets = DatabaseModel::select([
                     'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
                     'table'     => ['groupbasket, baskets'],
                     'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
                     'data'      => [$groupIds],
-                    'order_by'  => 'group_id, basket_order, basket_name'
-                ]
-            );
+                    'order_by'  => ['group_id, basket_order, basket_name']
+            ]);
 
             foreach ($aBaskets as $key => $value) {
                 $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
             }
-            $aBaskets = array_merge($aBaskets, self::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            $aBaskets = array_merge($aBaskets, BasketsModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }
 
         return $aBaskets;
@@ -132,21 +120,19 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
     public static function getAbsBasketsByUserId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
-        $aBaskets = static::select(
-            [
+        $aBaskets = DatabaseModel::select([
                 'select'    => ['ba.basket_id', 'ba.basket_name', 'ua.user_abs', 'ua.basket_owner', 'ua.is_virtual'],
                 'table'     => ['baskets ba, user_abs ua'],
                 'where'     => ['ua.new_user = ?', 'ua.basket_id = ba.basket_id'],
                 'data'      => [$aArgs['userId']],
-                'order_by'  => 'ba.basket_order, ba.basket_name'
-            ]
-        );
+                'order_by'  => ['ba.basket_order, ba.basket_name']
+        ]);
 
         foreach ($aBaskets as $key => $value) {
-            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['id' => $value['user_abs']]);
+            $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['user_abs']]);
         }
 
         return $aBaskets;
@@ -154,22 +140,21 @@ class BasketsModelAbstract extends \Apps_Table_Service
 
     public static function setBasketsRedirection(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['userId', 'data']);
-        static::checkString($aArgs, ['userId']);
-        static::checkArray($aArgs, ['data']);
-
+        ValidatorModel::notEmpty($aArgs, ['userId', 'data']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::arrayType($aArgs, ['data']);
 
         foreach ($aArgs['data'] as $value) {
-            parent::insertInto(
-                [
+            DatabaseModel::insert([
+                'table'         => 'user_abs',
+                'columnsValues' => [
                     'user_abs'      => $aArgs['userId'],
                     'new_user'      => $value['newUser'],
                     'basket_id'     => $value['basketId'],
                     'basket_owner'  => $value['basketOwner'],
                     'is_virtual'    => $value['virtual']
-                ],
-                'user_abs'
-            );
+                ]
+            ]);
         }
 
         return true;

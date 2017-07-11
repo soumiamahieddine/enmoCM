@@ -3,6 +3,8 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -20,7 +22,7 @@ export class UsersAdministrationComponent implements OnInit {
     userDestRedirectModels      : any[]     = [];
 
     lang                        : any       = {};
-    table                       : any
+    table                       : any;
 
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
@@ -79,8 +81,7 @@ export class UsersAdministrationComponent implements OnInit {
                 }, 0);
 
                 this.loading = false;
-            }, (err) => {
-                console.log(err);
+            }, () => {
                 location.href = "index.php";
             });
     }
@@ -90,58 +91,46 @@ export class UsersAdministrationComponent implements OnInit {
             user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listModels/itemId/'+user.user_id+'/itemMode/dest/objectType/entity_id')
-            .map(res => res.json())
-            .subscribe((data) => {
-                this.userDestRedirectModels = data.listModels;
-                setTimeout(() => {
-                    $j(".redirectDest").typeahead({
-                        order: "asc",
-                        display: "formattedUser",
-                        templateValue: "{{user_id}}",
-                        source: {
-                            ajax: {
-                                type: "GET",
-                                dataType: "json",
-                                url: this.coreUrl + "rest/users/autocompleter/exclude/"+user.user_id,
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.userDestRedirectModels = data.listModels;
+                    setTimeout(() => {
+                        $j(".redirectDest").typeahead({
+                            order: "asc",
+                            display: "formattedUser",
+                            templateValue: "{{user_id}}",
+                            source: {
+                                ajax: {
+                                    type: "GET",
+                                    dataType: "json",
+                                    url: this.coreUrl + "rest/users/autocompleter/exclude/"+user.user_id,
+                                }
                             }
-                        }
-                    });
-                }, 0);
-                
-            }, (err) => {
-                console.log(err);
-                location.href = "index.php";
-            });
-
-        }else{
-            let r = confirm(this.lang.suspendMsg+' ?');
+                        });
+                    }, 0);
+                }, (err) => {
+                    console.log(err);
+                    location.href = "index.php";
+                });
+        } else {
+            let r = confirm(this.lang.suspendMsg + " ?");
 
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
                     .map(res => res.json())
                     .subscribe((data) => {
-                        if (data.errors) {
-                            user.enabled = 'Y';
-                            this.resultInfo = data.errors;
-                            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                $j("#resultInfo").slideUp(500);
-                            });
-                        } else {
-                            this.resultInfo = data.success;
-                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                $j("#resultInfo").slideUp(500);
-                            });
-                        }
+                        successNotification(data.success);
+                    }, (err) => {
+                        user.enabled = 'Y';
+                        errorNotification(JSON.parse(err._body).errors);
                     });
             }
         }
     }
 
     suspendUserModal(user: any) {
-        let r = confirm(this.lang.suspendMsg+' ?');
+        let r = confirm(this.lang.suspendMsg + " ?");
 
         if (r) {
             user.enabled = 'N';
@@ -152,85 +141,44 @@ export class UsersAdministrationComponent implements OnInit {
                 .subscribe((data) => {
                     if (data.errors) {
                         user.enabled = 'Y';
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
+                        errorNotification(data.errors);
                     } else {
                         //then suspend user
                         this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
                             .map(res => res.json())
                             .subscribe((data) => {
-                                if (data.errors) {
-                                    user.enabled = 'Y';
-                                    this.resultInfo = data.errors;
-                                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                        $j("#resultInfo").slideUp(500);
-                                    });
-                                } else {
-                                    user.inDiffListDest = 'N';
-                                    $j('#changeDiffListDest').modal('hide');
-                                    this.resultInfo = data.success;
-                                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                        $j("#resultInfo").slideUp(500);
-                                    });
-                                }
+                                user.inDiffListDest = 'N';
+                                $j('#changeDiffListDest').modal('hide');
+                                successNotification(data.success);
                             }, (err) => {
-                                    this.resultInfo = JSON.parse(err._body).errors;
-                                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                    $j("#resultInfo").slideUp(500);
-                                });
+                                user.enabled = 'Y';
+                                errorNotification(JSON.parse(err._body).errors);
                             });
                     }
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
+                    errorNotification(JSON.parse(err._body).errors);
                 });
-            });
         }
     
     }
 
     activateUser(user: any) {
-        let r = confirm(this.lang.authorizeMsg+' ?');
+        let r = confirm(this.lang.authorizeMsg + " ?");
 
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    if (data.errors) {
-                        user.enabled = 'N';
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                    } else {
-                        this.resultInfo = data.success;
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                    }
+                    successNotification(data.success);
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
+                    user.enabled = 'N';
+                    errorNotification(JSON.parse(err._body).errors);
                 });
-            });
         }
     }
 
     deleteUser(user: any) {
-
         if(user.inDiffListDest == 'Y') {
             user.mode = 'del';
             this.userDestRedirect = user;
@@ -253,46 +201,31 @@ export class UsersAdministrationComponent implements OnInit {
                 }); 
                 
             }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
+                errorNotification(JSON.parse(err._body).errors);
             });
-
-        }else{
-            let r = confirm(this.lang.deleteMsg+' ?');
+        } else {
+            let r = confirm(this.lang.deleteMsg + " ?");
 
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
                     .map(res => res.json())
                     .subscribe((data) => {
-                        if (data.errors) {
-                            this.resultInfo = data.errors;
-                            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                $j("#resultInfo").slideUp(500);
-                            });
-                        } else {
-                            for (var i = 0;i<this.users.length;i++) {
-                                if(this.users[i].user_id == user.user_id){
-                                    this.users.splice(i,1);
-                                }
+                        for (var i = 0;i<this.users.length;i++) {
+                            if(this.users[i].user_id == user.user_id){
+                                this.users.splice(i,1);
                             }
-                            this.table.row($j("#"+user.user_id)).remove().draw();
-                            this.resultInfo = data.success;
-                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                $j("#resultInfo").slideUp(500);
-                            });
                         }
+                        this.table.row($j("#"+user.user_id)).remove().draw();
+                        successNotification(data.success);
+                    }, (err) => {
+                        errorNotification(JSON.parse(err._body).errors);
                     });
             }
         }
     }
-    deleteUserModal(user: any) {
 
-        let r = confirm(this.lang.deleteMsg+' ?');
+    deleteUserModal(user: any) {
+        let r = confirm(this.lang.deleteMsg + " ?");
 
         if (r) {
             user.redirectListModels = this.userDestRedirectModels;
@@ -301,48 +234,29 @@ export class UsersAdministrationComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.errors) {
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
+                        errorNotification(data.errors);
                     } else {
                         //then delete user
                         this.http.delete(this.coreUrl + 'rest/users/' + user.user_id)
                             .map(res => res.json())
                             .subscribe((data) => {
-                                if (data.errors) {
-                                    this.resultInfo = data.errors;
-                                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                        $j("#resultInfo").slideUp(500);
-                                    });
-                                } else {
-                                    user.inDiffListDest = 'N';
-                                    $j('#changeDiffListDest').modal('hide');
-                                    for (var i = 0;i<this.users.length;i++) {
-                                        if(this.users[i].user_id == user.user_id){
-                                            this.users.splice(i,1);
-                                        }
+                                user.inDiffListDest = 'N';
+                                $j('#changeDiffListDest').modal('hide');
+                                for (var i = 0;i<this.users.length;i++) {
+                                    if(this.users[i].user_id == user.user_id){
+                                        this.users.splice(i,1);
                                     }
-                                    this.table.row($j("#"+user.user_id)).remove().draw();
-
-                                    this.resultInfo = data.success;
-                                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                        $j("#resultInfo").slideUp(500);
-                                    });
                                 }
+                                this.table.row($j("#"+user.user_id)).remove().draw();
+                                successNotification(data.success);
+                            }, (err) => {
+                                errorNotification(JSON.parse(err._body).errors);
                             });
                     }
                 }, (err) => {
-                    this.resultInfo = JSON.parse(err._body).errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
+                    errorNotification(JSON.parse(err._body).errors);
                 });
-            });
         }
-    
     }
+
 }

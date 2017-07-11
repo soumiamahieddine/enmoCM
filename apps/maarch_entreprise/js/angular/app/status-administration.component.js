@@ -38,8 +38,8 @@ var StatusAdministrationComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
         this.route.params.subscribe(function (params) {
-            if (_this.route.toString().includes('status/new')) {
-                _this.http.get(_this.coreUrl + 'rest/status/new')
+            if (typeof params['identifier'] == "undefined") {
+                _this.http.get(_this.coreUrl + 'rest/administration/status/new')
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data['lang'];
@@ -80,7 +80,7 @@ var StatusAdministrationComponent = (function () {
     };
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/status/' + statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/administration/status/' + statusIdentifier)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.status = data['status'][0];

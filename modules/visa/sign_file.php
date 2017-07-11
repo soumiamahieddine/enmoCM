@@ -38,7 +38,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 		}
 
 		$docserver = \Core\Models\DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
-		$pathToWantedSignature = $docserver[0]['path_template'] . str_replace('#', '/', $signature->signature_path) . $signature->signature_file_name;
+		$pathToWantedSignature = $docserver['path_template'] . str_replace('#', '/', $signature->signature_path) . $signature->signature_file_name;
 	} else {
 		$pathToWantedSignature = $_SESSION['user']['pathToSignature'][0];
 	}

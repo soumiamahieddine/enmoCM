@@ -40,8 +40,8 @@ export class StatusAdministrationComponent implements OnInit {
         this.prepareStatus();
 
         this.route.params.subscribe((params) => {
-            if (this.route.toString().includes('status/new')){
-                this.http.get(this.coreUrl + 'rest/status/new')
+            if (typeof params['identifier'] == "undefined"){
+                this.http.get(this.coreUrl + 'rest/administration/status/new')
                 .map(res => res.json())
                 .subscribe((data) => {
                     this.lang         = data['lang'];
@@ -82,7 +82,7 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     getStatusInfos(statusIdentifier : string){
-        this.http.get(this.coreUrl + 'rest/status/'+statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/administration/status/'+statusIdentifier)
             .map(res => res.json())
             .subscribe((data) => {
                 this.status    = data['status'][0];

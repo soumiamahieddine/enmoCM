@@ -1,6 +1,5 @@
 <?php
 
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,16 +8,14 @@
 */
 
 /**
-* @brief Contacts Model
+* @brief Notifications Model
 * @author dev@maarch.org
-* @ingroup apps
+* @ingroup core
 */
 
-//namespace Apps\Models\Contacts;
+namespace Notifications\Models;
 
-require_once 'apps/maarch_entreprise/Models/ContactsModelAbstract.php';
-
-class ContactsModel extends ContactsModelAbstract
+class NotificationsModel extends NotificationsModelAbstract
 {
     // Do your stuff in this class
 }

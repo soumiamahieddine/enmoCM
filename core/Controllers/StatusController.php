@@ -30,12 +30,10 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $datas = [
+        return $response->withJson([
             'statusList' => StatusModel::getList(),
             'lang'       => StatusModel::getStatusLang()
-        ];
-        
-        return $response->withJson($datas);
+        ]);
     }
 
     public function getNewInformations(RequestInterface $request, ResponseInterface $response)
@@ -44,12 +42,10 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $datas = [
+        return $response->withJson([
             'statusImages' => StatusImagesModel::getStatusImages(),
             'lang'         => StatusModel::getStatusLang()
-        ];
-        
-        return $response->withJson($datas);
+        ]);
     }
 
     public function getByIdentifier(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -59,9 +55,7 @@ class StatusController
         }
 
         if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $aArgs['identifier']
-            ]);
+            $obj = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
 
             if (empty($obj)) {
                 return $response->withStatus(404)->withJson(['errors' => 'identifier not found']);
@@ -73,7 +67,7 @@ class StatusController
                 'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
         } else {
-            return $response->withStatus(400)->withJson(['errors' => 'identifier not valid']);
+            return $response->withStatus(500)->withJson(['errors' => 'identifier not valid']);
         }
     }
 
@@ -91,14 +85,20 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $return = StatusModel::create($aArgs);
+        if (StatusModel::create($aArgs)) {
+            $return = [
+                StatusModel::getById(['id' => $aArgs['id']])
+            ];
 
-        if ($return) {
-            $id = $aArgs['id'];
-            $obj = StatusModel::getById([
-                'id' => $id
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $return[0][0]['id'], 
+                'event_type' => 'ADD', 
+                'event_id'   => 'statusup',
+                'info'       => _STATUS_ADDED . ' : ' . $return[0][0]['id']
             ]);
-            return $response->withJson([$obj]);
+
+            return $response->withJson($return);
         } else {
             return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
         }
@@ -120,19 +120,26 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $return = StatusModel::update($aArgs);
+        if (StatusModel::update($aArgs)) {
+            $return = [
+                StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])
+            ];
 
-        if ($return) {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $aArgs['identifier']
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $return[0][0]['id'], 
+                'event_type' => 'UP', 
+                'event_id'   => 'statusup',
+                'info'       => _MODIFY_STATUS . ' : ' . $return[0][0]['id']
             ]);
+            
+            return $response->withJson($return);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
-        return $response->withJson([$obj]);
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -141,9 +148,19 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!empty($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier'])) {
-            $obj = StatusModel::delete([
-                'identifier' => $aArgs['identifier']
+        $statusDeleted = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
+
+        if (Validator::notEmpty()->validate($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier']) && !empty($statusDeleted)) {
+            $return = [
+                StatusModel::delete(['identifier' => $aArgs['identifier']])
+            ];
+
+            HistoryController::add([
+                'table_name' => 'status', 
+                'record_id'  => $statusDeleted[0]['id'], 
+                'event_type' => 'DEL', 
+                'event_id'   => 'statusdel',
+                'info'       => _STATUS_DELETED . ' : ' . $statusDeleted[0]['id']
             ]);
         } else {
             return $response
@@ -151,7 +168,7 @@ class StatusController
                 ->withJson(['errors' => 'identifier not valid']);
         }
 
-        return $response->withJson([$obj]);
+        return $response->withJson($return);
     }
 
     protected function manageValue($request)
@@ -178,9 +195,8 @@ class StatusController
         if(!Validator::notEmpty()->validate($request['id'])){
             array_push($errors, _ID . ' ' . _EMPTY);
         } else if ($mode == 'create') {
-            $obj = StatusModel::getById([
-                'id' => $request['id']
-            ]);
+            $obj = StatusModel::getById(['id' => $request['id']]);
+
             if (!empty($obj)) {
                 array_push(
                     $errors,
@@ -188,9 +204,8 @@ class StatusController
                 );
             }
         } elseif ($mode == 'update') {
-            $obj = StatusModel::getByIdentifier([
-                'identifier' => $request['identifier']
-            ]);
+            $obj = StatusModel::getByIdentifier(['identifier' => $request['identifier']]);
+            
             if (empty($obj)) {
                 array_push(
                     $errors,

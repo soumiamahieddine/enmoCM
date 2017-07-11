@@ -8,9 +8,9 @@
     <h1 *ngIf="!userCreation" style="margin-top: 0">
         <i class="fa fa-user fa-2x"></i> {{user.lang.userModification}}: {{userId}}
         <sup>
-            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary" title="Actif" >Actif</span>
-            <span *ngIf="user.status == 'ABS'" class="label label-warning" title="Absent" >Absent</span>
-            <span *ngIf="user.enabled == 'N'" class="label label-danger" title="Inactif" >Inactif</span>
+            <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{user.lang.active}}</span>
+            <span *ngIf="user.enabled == 'N'" class="label label-danger">{{user.lang.inactive}}</span>
+            <span *ngIf="user.status == 'ABS'" class="label label-warning">{{user.lang.abs}}</span>
         </sup>
     </h1>
     <nav class="navbar navbar-default" id="toolBox">
@@ -28,6 +28,9 @@
                     <!--<li>-->
                         <!--<a><i class="fa fa-inbox"></i> {{user.lang.manageBaskets}}</a>-->
                     <!--</li>-->
+                    <li *ngIf="user.status == 'ABS'">
+                        <a (click)="deactivateAbsence()"><i class="fa fa-user"></i> {{user.lang.deactivateAbs}}</a>
+                    </li>
                     <li *ngIf="user.status == 'OK'">
                         <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times"></i> {{user.lang.manageAbsences}}</a>
                     </li>
@@ -39,14 +42,14 @@
         </div>
     </nav>
     <div class="row row-eq-height">
-        <div class="col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+        <div class="col-md-4" [ngClass]="{'col-md-offset-4': userCreation}" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
             <h2>Informations</h2>
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="Id" required>
+                            <input *ngIf="userCreation" type="text" class="form-control" name="user_id" [(ngModel)]="user.userId" placeholder="{{user.lang.userId}}" pattern="^[\w.@-]*$" required>
                             <input *ngIf="!userCreation" type="text" class="form-control" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
                         </div>
                     </div>

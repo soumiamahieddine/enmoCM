@@ -36,11 +36,12 @@
    <id>admin_users</id>
    <name>_ADMIN_USERS</name>
    <comment>_ADMIN_USERS_DESC</comment>
-   <servicepage>index.php?page=users_management_controler&amp;admin=users&amp;mode=list</servicepage>
+   <servicepage>/administration/users</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>fa fa-user</style>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <SERVICE>
    <id>admin_groups</id>
@@ -96,10 +97,11 @@
    <id>admin_status</id>
    <name>_ADMIN_STATUS</name>
    <comment>_ADMIN_STATUS_DESC</comment>
-   <servicepage>index.php?page=status_management_controler&amp;mode=list&amp;admin=status</servicepage>
+   <servicepage>/administration/status</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-check-circle</style>
    <system_service>false</system_service>
+   <angular>true</angular>
    <enabled>true</enabled>
  </SERVICE>
   <SERVICE>

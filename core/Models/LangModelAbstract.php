@@ -268,9 +268,6 @@ class LangModelAbstract
             'identifier'            => _ID,
             'status'                => _STATUS,
             'mail'                  => _MAIL,
-            'enabled'               => _VISIBLE,
-            'disabled'              => _NOT_VISIBLE,
-            'absent'                => _MISSING,
             'edit'                  => _MODIFY,
             'suspend'               => _SUSPEND,
             'authorize'             => _AUTHORIZE,
@@ -314,8 +311,12 @@ class LangModelAbstract
             'cancel'                => _CANCEL,
             'to'                    => _TO,
             'activateAbs'           => _ACTIVATE_ABSENCE,
+            'deactivateAbs'         => _DEACTIVATE_ABSENCE,
             'basketToRedirect'      => _CHOOSE_BASKET_TO_REDIRECT,
-            'autoLogout'            => _AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS
+            'autoLogout'            => _AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS,
+            'abs'                   => _ABS,
+            'active'                => _ACTIVE,
+            'inactive'              => _INACTIVE,
         ];
 
         return $aLang;

@@ -7,24 +7,25 @@
  *
  */
 
-require_once 'apps/maarch_entreprise/services/Table.php';
+namespace Visa\Models;
 
-class VisaModelAbstract extends Apps_Table_Service
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
+
+class VisaModelAbstract
 {
 
     public static function hasVisaWorkflowByResId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['resId']);
-        static::checkNumeric($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
-
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => ['COUNT(*)'],
             'table'     => ['listinstance'],
             'where'     => ['res_id = ?', 'item_mode in (?)'],
             'data'      => [$aArgs['resId'], ['visa', 'sign']]
         ]);
-
 
         return ((int)$aReturn[0]['count'] > 0);
     }

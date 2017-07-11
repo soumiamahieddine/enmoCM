@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Apps\Models\ContactModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -240,8 +241,6 @@ class ResExtController
         }
         require_once 'apps/maarch_entreprise/class/class_chrono.php';
         $chronoX = new \chrono();
-        require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
-        $contacts = new \ContactsModel();
         for ($i=0; $i<count($data); $i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' ||
                 strtoupper($data[$i]['type']) == 'FLOAT'
@@ -279,7 +278,7 @@ class ResExtController
             ) {
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
-                $contactDetails =$contacts->getByEmail([
+                $contactDetails = ContactModel::getByEmail([
                     'email' => $mail[count($mail) -1],
                     'select' => ['contact_id']
                 ]);
@@ -296,7 +295,7 @@ class ResExtController
             ) {
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
-                $contactDetails =$contacts->getByEmail([
+                $contactDetails = ContactModel::getByEmail([
                     'email' => $mail[count($mail) -1],
                     'select' => ['ca_id']
                 ]);

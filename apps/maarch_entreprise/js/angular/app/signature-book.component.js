@@ -40,7 +40,6 @@ var SignatureBookComponent = (function () {
             consigne: "",
             documents: [],
             attachments: [],
-            //histories               : [],
             resList: [],
             resListIndex: 0,
             lang: {}
@@ -137,6 +136,11 @@ var SignatureBookComponent = (function () {
                         });
                     }
                 }, 0);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+                setTimeout(function () {
+                    _this.backToBasket();
+                }, 2000);
             });
         });
     };
@@ -415,20 +419,15 @@ var SignatureBookComponent = (function () {
             collId = "res_attachments";
             isVersion = "false";
         }
-        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
+        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
             .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.status == "OK") {
-                _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
-                _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
-                if (_this.signatureBook.resList.length > 0) {
-                    _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
-                }
-            }
-            else {
-                alert(data.error);
+            .subscribe(function () {
+            _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
+            _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
+            _this.signatureBook.attachments[_this.rightSelectedThumbnail].status = 'A_TRA';
+            _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
+            if (_this.signatureBook.resList.length > 0) {
+                _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
             }
         });
     };

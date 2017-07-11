@@ -8,21 +8,24 @@
 */
 
 /**
-* @brief Status Images Model
+* @brief Notifications Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Notifications\Models;
 
-class StatusImagesModelAbstract
+use Core\Models\DatabaseModel;
+
+class NotificationsModelAbstract
 {
-    public static function getStatusImages(array $aArgs = [])
+    public static function getEnableNotifications()
     {
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['status_images'],
-            'order_by'  => ['id']
+            'table'     => ['notifications'],
+            'where'     => ['is_enabled = ?'],
+            'data'      => ['Y']
         ]);
 
         return $aReturn;
