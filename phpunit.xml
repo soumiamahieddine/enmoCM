@@ -10,11 +10,22 @@
           <directory suffix="Test.php">core/Test</directory>
           <directory suffix=".php">core/Controllers</directory>
           <directory suffix=".php">core/Models</directory>
+          <directory suffix=".php">apps/maarch_entreprise/Models</directory>
+          <directory suffix=".php">modules/notifications/Controllers</directory>
+          <directory suffix=".php">modules/notifications/Models</directory>          
+          <directory suffix=".php">modules/visa/Controllers</directory>
+          <directory suffix=".php">modules/visa/Models</directory>          
+          <directory suffix=".php">modules/attachments/Controllers</directory>
+          <directory suffix=".php">modules/attachments/Models</directory>          
+          <directory suffix=".php">modules/entities/Controllers</directory>
+          <directory suffix=".php">modules/entities/Models</directory>
+          <directory suffix=".php">modules/basket/Models</directory>
+          <directory suffix=".php">modules/notes/Models</directory>
       </whitelist>
     </filter>
     <logging>
         <log type="coverage-clover" target="core/Test/build/tests-clover.xml"/>
+        <log type="junit"           target="core/Test/build/tests-phpunit.xml" logIncompleteSkipped="false"/>
         <log type="coverage-html"   target="core/Test/build" lowUpperBound="35" highLowerBound="70"/>
     </logging>
 </phpunit>
-

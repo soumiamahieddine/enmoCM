@@ -7,7 +7,7 @@
  *
  */
 
-require_once 'modules/visa/Models/VisaModelAbstract.php';
+namespace Visa\Models;
 
 class VisaModel extends VisaModelAbstract
 {

@@ -8,6 +8,8 @@ declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
 declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 
@@ -36,7 +38,6 @@ export class SignatureBookComponent implements OnInit {
         consigne                : "",
         documents               : [],
         attachments             : [],
-        //histories               : [],
         resList                 : [],
         resListIndex            : 0,
         lang                    : {}
@@ -94,6 +95,7 @@ export class SignatureBookComponent implements OnInit {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
 
+            this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
             this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
@@ -146,6 +148,12 @@ export class SignatureBookComponent implements OnInit {
                             });
                         }
                     }, 0);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                    setTimeout(() => {
+                        this.backToBasket();
+                    }, 2000);
+
                 });
         });
     }
@@ -176,13 +184,15 @@ export class SignatureBookComponent implements OnInit {
             }
         }
 
-        unlockDocument(this.resId);
-        if (idToGo >= 0) {
-            $j("#send").removeAttr("disabled");
-            $j("#send").css("opacity", "1");
-            this.zone.run(() => this.changeLocation(idToGo, "action"));
-        } else {
-            this.zone.run(() => this.backToBasket());
+        if (c > 0) { // This (if)line is added because of manage action behaviour (processAfterAction is called twice)
+            unlockDocument(this.resId);
+            if (idToGo >= 0) {
+                $j("#send").removeAttr("disabled");
+                $j("#send").css("opacity", "1");
+                this.zone.run(() => this.changeLocation(idToGo, "action"));
+            } else {
+                this.zone.run(() => this.backToBasket());
+            }
         }
     }
 
@@ -420,19 +430,15 @@ export class SignatureBookComponent implements OnInit {
             isVersion = "false";
         }
 
-        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {}, {})
+        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
             .map(res => res.json())
-            .subscribe((data) => {
-                if (data.status == "OK") {
-                    this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
-                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
-                    if (this.signatureBook.resList.length > 0) {
-                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
-                    }
-                } else {
-                    alert(data.error);
+            .subscribe(() => {
+                this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
+                this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                if (this.signatureBook.resList.length > 0) {
+                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 }
             });
 

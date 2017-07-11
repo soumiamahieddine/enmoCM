@@ -63,16 +63,12 @@ class Zip
 
         exec($command, $output, $return);
 
-        // var_dump($command);
-        // var_dump($output);
-        // var_dump($return);
-
         if ($return === 0) {
             return true;
         } else {
             $message = $this->handleError($return);
 
-            throw new \dependency\fileSystem\Exception($message, $return, null, $output);
+            return $message;
         }
     }
     

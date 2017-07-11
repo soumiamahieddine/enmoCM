@@ -344,17 +344,6 @@
       <parameter name="page" value="history_batch"/>
     </requestDefinition>
 
-    <!-- Admin status -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="status"/>
-      <parameter name="page" value="status_list_by_name"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_status" >
-      <parameter name="admin" value="status"/>
-      <parameter name="page" value="status_management_controler"/>
-    </requestDefinition>
-
     <!-- Admin parameters -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_parameters" >
       <parameter name="admin" value="parameter"/>

@@ -1,6 +1,3 @@
-nav{
-    margin-top:10px !important;
-}
 h2{
     background-color: #009DC5 !important;
     color: white !important;
@@ -17,27 +14,6 @@ h2{
 
 .ng-invalid:not(form)  {
     border-left: 5px solid #a94442;
-}
-
-.modal-content{
-    background-color: #009DC5 !important;
-}
-.modal-header h4{
-    color: white !important;
-
-}
-
-.modal-body{
-    background-color: white;
-    padding:10px;
-}
-.modal-body .list-group li{
-    /*border-color: #009DC5 !important;*/
-    font-weight: bold;
-}
-
-.modal-footer{
-    background:white;
 }
 /* layout.css Style */
 .upload-drop-zone {
@@ -58,21 +34,6 @@ h2{
 .upload-drop-zone.drop {
     color: #222;
     border-color: #222;
-}
-/* Alert info*/
-#resultInfo{
-    top :10px;
-    text-align: center;
-    position: absolute;
-    width: 30%;
-    right: 10px;
-    z-index: 1051;
-    height: 40px;
-    -moz-box-shadow: 0px 0px 5px 0px #656565;
-    -webkit-box-shadow: 0px 0px 5px 0px #656565;
-    -o-box-shadow: 0px 0px 5px 0px #656565;
-    box-shadow: 0px 0px 5px 0px #656565;
-    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
 }
  #signList {
     overflow-x:scroll;

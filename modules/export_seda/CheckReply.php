@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/RequestSeda.php';
-require_once __DIR__ . '/AbstractMessage.php';
+require_once __DIR__ . '/class/AbstractMessage.php';
 
 Class CheckReply {
     protected $token;
@@ -97,6 +97,8 @@ Class CheckReply {
             $_SESSION['error'] = _ERROR_WRONG_REPLY . $resId;
             return false;
         }
+
+        return $resId;
     }
 
     public function getReply($reference) {

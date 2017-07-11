@@ -8,7 +8,7 @@
         <sae>MaarchRM</sae>
         <token></token>
         <urlSAEService>http://srv-maarchrm-ap</urlSAEService>
-        <urlSAE>http://maarchrm/tranfer/sent</urlSAE>
+        <urlSAE>http://maarchrm/transfer/sent</urlSAE>
         <deleteData>true</deleteData>
     </CONFIG>
     <TABLENAME/>

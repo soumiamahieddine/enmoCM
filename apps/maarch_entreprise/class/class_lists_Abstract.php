@@ -123,7 +123,6 @@
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 . 'class_security.php';
-require_once 'modules/basket/services/Baskets.php';
 
 abstract class lists_Abstract extends Database
 {
@@ -212,7 +211,7 @@ abstract class lists_Abstract extends Database
                         "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
                         . " as total, e.entity_label , e.short_label FROM " 
                         . $view. " r left join " . ENT_ENTITIES
-                        . " e on e.entity_id = r.destination " .$where . " and entity_id <> ''"
+                        . " e on e.entity_id = r.destination " .$where . " and (e.entity_id <> '' or e.entity_id IS NOT NULL)"
                         . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
                     );
                     while ($res = $stmt->fetchObject()) {
@@ -1465,8 +1464,8 @@ abstract class lists_Abstract extends Database
                     $keyValue = $resultTheLine[$i]['value'];
                 }
             }
-            $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
-            if ($aService['actionPage'] == 'visa_mail') {
+            $sAction = \Apps\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+            if ($sAction == 'visa_mail') {
                 if (PROD_MODE) {
                     $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', true)"';
                 } else {
@@ -3332,8 +3331,8 @@ abstract class lists_Abstract extends Database
                         !empty($this->params['defaultAction']) && 
                         $lineIsDisabled === false
                     ) {
-                        $aService = Basket_Baskets_Service::getServiceFromActionId(['id' => $this->params['defaultAction']]);
-                        if ($aService['actionPage'] == 'visa_mail') {
+                        $sAction = \Apps\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+                        if ($sAction == 'visa_mail') {
                             if (PROD_MODE) {
                                 $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
                                     .'onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', true);" width="'.$resultTheLine[$column]['size'].'%" '

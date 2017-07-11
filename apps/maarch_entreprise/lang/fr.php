@@ -204,7 +204,8 @@ if (!defined("_REALLY_DELETE")) define("_REALLY_DELETE", "Voulez-vous vraiment s
 if (!defined("_REALLY_CONTINUE")) define("_REALLY_CONTINUE", "Voulez-vous vraiment continuer ");
 if (!defined("_DEFINITIVE_ACTION")) define("_DEFINITIVE_ACTION", "Cette action est définitive");
 if (!defined("_AND")) define("_AND", " et ");
-if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
+//if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
+if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", "L'utilisateur est présent en tant que destinataire d'un ou plusieurs modèle(s) de liste de diffusion, veuillez le remplacer par un autre utilisateur.");
 if (!defined("_THE_USER_JS")) define("_THE_USER_JS", "L\'utilisateur ");
 
 
@@ -491,6 +492,7 @@ if (!defined("_FIRST_WARNING")) define("_FIRST_WARNING","1ere Relance");
 if (!defined("_SECOND_WARNING")) define("_SECOND_WARNING","2e Relance");
 if (!defined("_CLOSED")) define("_CLOSED","Clos");
 if (!defined("_NEW")) define("_NEW","Nouveaux");
+if (!defined("_NEW_ITEM")) define("_NEW_ITEM","Nouveau");
 if (!defined("_LATE")) define("_LATE", "En retard");
 
 if (!defined("_STATUS_DELETED")) define("_STATUS_DELETED", "Suppression du statut");
@@ -1841,9 +1843,14 @@ if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Durée d'
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Tout désélectionner");
 
+/***** Global ******/
+if (!defined('_UNREACHABLE_DOCSERVER'))
+    define('_UNREACHABLE_DOCSERVER', 'Chemin docserver inatteignable');
+/***** Global ******/
+
 /***** Profile *****/
-if (!defined('_MANAGE_SIGNATURES'))
-    define('_MANAGE_SIGNATURES', 'Gérer mes signatures');
+if (!defined('_MANAGE_MY_SIGNATURES'))
+    define('_MANAGE_MY_SIGNATURES', 'Gérer mes signatures');
 if (!defined('_MY_GROUPS'))
     define('_MY_GROUPS', 'Mes Groupes');
 if (!defined('_PRIMARY_GROUP'))
@@ -1916,8 +1923,10 @@ if (!defined('_DELETED_EMAIL_SIGNATURE'))
 
 if (!defined('_UNDEFINED_USER'))
     define('_UNDEFINED_USER', 'Utilisateur non répertorié');
-if (!defined('_ACTIVATE_ABSENCE'))
-    define('_ACTIVATE_ABSENCE', 'Activer mon absence');
+if (!defined('_CHOOSE_BASKET_TO_REDIRECT'))
+    define('_CHOOSE_BASKET_TO_REDIRECT', 'Choisissez une bannette');
+if (!defined('_ACTIVATE_MY_ABSENCE'))
+    define('_ACTIVATE_MY_ABSENCE', 'Activer mon absence');
 if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
@@ -1927,6 +1936,38 @@ if (!defined('_ADMIN_USER_MODIFICATION'))
     define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
 if (!defined('_ADDED_GROUP'))
     define('_ADDED_GROUP', 'Groupe ajouté');
+if (!defined('_UPDATED_GROUP'))
+    define('_UPDATED_GROUP', 'Groupe modifié');
+if (!defined('_DELETED_GROUP'))
+    define('_DELETED_GROUP', 'Groupe supprimé');
+if (!defined('_ADDED_ENTITY'))
+    define('_ADDED_ENTITY', 'Entité ajoutée');
+if (!defined('_UPDATED_ENTITY'))
+    define('_UPDATED_ENTITY', 'Entité modifiée');
+if (!defined('_DELETED_ENTITY'))
+    define('_DELETED_ENTITY', 'Entité supprimé');
+if (!defined('_MANAGE_SIGNATURES'))
+    define('_MANAGE_SIGNATURES', 'Gérer les signatures');
+if (!defined('_MANAGE_ABSENCES'))
+    define('_MANAGE_ABSENCES', 'Gérer les absences');
+if (!defined('_REINITIALIZE_PASSWORD'))
+    define('_REINITIALIZE_PASSWORD', 'Réinitialiser le mot de passe');
+if (!defined('_RESET_PASSWORD'))
+    define('_RESET_PASSWORD', 'Mot de passe réinitialisé');
+if (!defined('_ACTIVATE_ABSENCE'))
+    define('_ACTIVATE_ABSENCE', 'Activer l\'absence');
+if (!defined('_DEACTIVATE_ABSENCE'))
+    define('_DEACTIVATE_ABSENCE', 'Désactiver l\'absence');
+if (!defined('_ABSENCE_ACTIVATED'))
+    define('_ABSENCE_ACTIVATED', 'L\'utilisateur est maintenant considéré comme absent');
+if (!defined('_ABSENCE_DEACTIVATED'))
+    define('_ABSENCE_DEACTIVATED', 'L\'utilisateur est maintenant considéré comme actif');
+if (!defined('_ABS'))
+    define('_ABS', 'Absent');
+if (!defined('_ACTIVE'))
+    define('_ACTIVE', 'Actif');
+if (!defined('_INACTIVE'))
+    define('_INACTIVE', 'Inactif');
 /***** User Administration *****/
 
 /**** admin update control ****/
@@ -1990,3 +2031,9 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Mise à jour réussi');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucun tag de disponible pour une mise à jour');
+if (!defined('_INVALID'))
+    define('_INVALID', 'n\'est pas valide');
+if (!defined('_NEW_STATUS_ADDED'))
+    define('_NEW_STATUS_ADDED', 'Nouveau statut créé');
+if (!defined('_STATUS_UPDATED'))
+    define('_STATUS_UPDATED', 'Statut mis à jour');

@@ -18,137 +18,121 @@ var StatusAdministrationComponent = (function () {
         this.http = http;
         this.route = route;
         this.router = router;
+        this.pageTitle = "";
         this.mode = null;
-        this.parametersList = null;
-        this.parameter = {
+        this.status = {
             id: null,
-            param_value_string: null,
-            param_value_int: null,
-            param_value_date: null,
-            description: null
+            label_status: null,
+            can_be_searched: null,
+            can_be_modified: null,
+            is_folder_status: null,
+            img_filename: null
         };
         this.lang = "";
-        this.resultInfo = "";
+        this.statusImages = "";
+        this.loading = false;
     }
     StatusAdministrationComponent.prototype.ngOnInit = function () {
-        // this.coreUrl = angularGlobals.coreUrl;
-        // this.prepareParameter();
-        // this.http.get(this.coreUrl + 'rest/parameters/lang')
-        // .map(res => res.json())
-        // .subscribe((data) => {
-        //     this.lang = data;
-        // });
-        // this.route.params.subscribe((params) => {
-        //     if(this.route.toString().includes('update')){
-        //         this.mode='update';
-        //         this.paramId = params['id'];
-        //         this.getParameterInfos(this.paramId);                
-        //     } else if (this.route.toString().includes('create')){
-        //         this.mode = 'create';
-        //         this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-        //         $j('#pageTitle').html(this.pageTitle);
-        //         this.type = 'string';
-        //     }
-        // });
-    };
-    StatusAdministrationComponent.prototype.prepareParameter = function () {
-        $j('#inner_content').remove();
-    };
-    StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
-    };
-    StatusAdministrationComponent.prototype.getParameterInfos = function (paramId) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/parameters/' + paramId)
-            .map(function (res) { return res.json(); })
-            .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
+        this.loading = true;
+        this.coreUrl = angularGlobals.coreUrl;
+        this.prepareStatus();
+        this.route.params.subscribe(function (params) {
+            if (typeof params['identifier'] == "undefined") {
+                _this.http.get(_this.coreUrl + 'rest/administration/status/new')
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.lang = data['lang'];
+                    _this.statusImages = data['statusImages'];
+                    _this.mode = 'create';
+                    _this.pageTitle = _this.lang.newStatus;
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                 });
             }
             else {
-                var infoParam = data;
-                _this.parameter.id = infoParam[0].id;
-                if (infoParam[0].param_value_string != null) {
-                    _this.parameter.param_value_string = infoParam[0].param_value_string;
-                    _this.type = "string";
-                }
-                else if (infoParam[0].param_value_int != null) {
-                    _this.parameter.param_value_int = infoParam[0].param_value_int;
-                    _this.type = "int";
-                }
-                else if (infoParam[0].param_value_date != null) {
-                    _this.parameter.param_value_date = infoParam[0].param_value_date;
-                    _this.type = "date";
-                }
-                _this.parameter.description = infoParam[0].description;
-                _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
-                $j('#pageTitle').html(_this.pageTitle);
+                _this.mode = 'update';
+                _this.statusIdentifier = params['identifier'];
+                _this.getStatusInfos(_this.statusIdentifier);
             }
+            setTimeout(function () {
+                $j(".help").tooltipster({
+                    theme: 'tooltipster-maarch',
+                    interactive: true
+                });
+            }, 0);
+        });
+        this.loading = false;
+    };
+    StatusAdministrationComponent.prototype.prepareStatus = function () {
+        $j('#inner_content').remove();
+    };
+    StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
+            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " +
+            "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>" + this.lang.admin_status + "</a> > ";
+        if (this.mode == 'create') {
+            breadCrumb += this.lang.newItem;
+        }
+        else {
+            breadCrumb += this.lang.modification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
+    };
+    StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
+        var _this = this;
+        this.http.get(this.coreUrl + 'rest/administration/status/' + statusIdentifier)
+            .map(function (res) { return res.json(); })
+            .subscribe(function (data) {
+            _this.status = data['status'][0];
+            if (_this.status.can_be_searched == 'Y') {
+                _this.status.can_be_searched = true;
+            }
+            else {
+                _this.status.can_be_searched = false;
+            }
+            if (_this.status.can_be_modified == 'Y') {
+                _this.status.can_be_modified = true;
+            }
+            else {
+                _this.status.can_be_modified = false;
+            }
+            if (_this.status.is_folder_status == 'Y') {
+                _this.status.is_folder_status = true;
+            }
+            else {
+                _this.status.is_folder_status = false;
+            }
+            _this.lang = data['lang'];
+            _this.statusImages = data['statusImages'];
+            _this.pageTitle = _this.lang.modify_status + ' : ' + _this.status.id;
+            _this.updateBreadcrumb(angularGlobals.applicationName);
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
-    StatusAdministrationComponent.prototype.submitParameter = function () {
+    StatusAdministrationComponent.prototype.selectImage = function (image_name) {
+        this.status.img_filename = image_name;
+    };
+    StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
-        if (this.type == 'date') {
-            //Résolution bug calendrier
-            this.parameter.param_value_date = $j("#param_value_date").val();
-            this.parameter.param_value_int = null;
-            this.parameter.param_value_string = null;
-        }
-        else if (this.type == 'int') {
-            this.parameter.param_value_date = null;
-            this.parameter.param_value_string = null;
-        }
-        else if (this.type == 'string') {
-            this.parameter.param_value_date = null;
-            this.parameter.param_value_int = null;
-        }
         if (this.mode == 'create') {
-            this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
+            this.http.post(this.coreUrl + 'rest/status', this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    _this.parameter.param_value_date = null;
-                    _this.parameter.param_value_int = null;
-                    _this.parameter.param_value_string = null;
-                }
-                else {
-                    _this.resultInfo = _this.lang.paramCreatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    _this.router.navigate(['administration/parameters']);
-                }
+                successNotification(_this.lang.newStatusAdded + ' : ' + _this.status.id);
+                _this.router.navigate(['administration/status']);
+            }, function (err) {
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
         else if (this.mode == "update") {
-            this.http.put(this.coreUrl + 'rest/parameters/' + this.paramId, this.parameter)
+            this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
-                else {
-                    _this.resultInfo = _this.lang.paramUpdatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    _this.router.navigate(['administration/parameters']);
-                }
+                successNotification(_this.lang.statusUpdated + ' : ' + _this.status.id);
+                _this.router.navigate(['administration/status']);
+            }, function (err) {
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
     };
@@ -157,7 +141,7 @@ var StatusAdministrationComponent = (function () {
 StatusAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals['status-administrationView'],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], StatusAdministrationComponent);

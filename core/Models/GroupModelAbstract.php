@@ -15,16 +15,14 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class GroupModelAbstract extends \Apps_Table_Service
+class GroupModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        $aGroups = static::select([
+        $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['enabled'],
+            'where'     => ['enabled = ?'],
             'data'      => ['Y']
         ]);
 
@@ -33,13 +31,13 @@ class GroupModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['groupId']);
-        static::checkString($aArgs, ['groupId']);
+        ValidatorModel::notEmpty($aArgs, ['groupId']);
+        ValidatorModel::stringType($aArgs, ['groupId']);
 
-        $aGroups = static::select([
+        $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
-            'where'     => ['group_id'],
+            'where'     => ['group_id = ?'],
             'data'      => [$aArgs['groupId']]
         ]);
 
@@ -49,4 +47,30 @@ class GroupModelAbstract extends \Apps_Table_Service
 
         return $aGroups[0];
     }
+
+    public static function getAvailableGroupsByUserId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        $rawUserGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+
+        $userGroups = [];
+        foreach ($rawUserGroups as $value) {
+            $userGroups[] = $value['group_id'];
+        }
+
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+
+        foreach ($allGroups as $key => $value) {
+            if (in_array($value['group_id'], $userGroups)) {
+                $allGroups[$key]['disabled'] = true;
+            } else {
+                $allGroups[$key]['disabled'] = false;
+            }
+        }
+
+        return $allGroups;
+    }
+
 }

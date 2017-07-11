@@ -15,13 +15,11 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class DocserverModelAbstract extends \Apps_Table_Service
+class DocserverModelAbstract
 {
     public static function getList()
     {
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
         ]);
@@ -31,10 +29,10 @@ class DocserverModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_id']);
-        static::checkString($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_id']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_id = ?'],
@@ -46,65 +44,67 @@ class DocserverModelAbstract extends \Apps_Table_Service
 
     public static function getByTypeId(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_type_id']);
-        static::checkString($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_type_id = ?'],
             'data'      => [$aArgs['docserver_type_id']]
         ]);
 
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_id']);
-        static::checkString($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_id']);
 
-        $aReturn = static::insertInto($aArgs, 'docservers');
+        DatabaseModel::insert([
+            'table'         => 'docservers',
+            'columnsValues' => $aArgs
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_id']);
-        static::checkString($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_id']);
 
-        $where['docserver_id'] = $aArgs['docserver_id'];
+        DatabaseModel::update([
+            'table'     => 'docservers',
+            'set'       => $aArgs,
+            'where'     => ['docserver_id = ?'],
+            'data'      => [$aArgs['docserver_id']]
+        ]);
 
-        $aReturn = static::updateTable(
-            $aArgs,
-            'docservers',
-            $where
-        );
-
-        return $aReturn;
+        return true;
     }
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_id']);
-        static::checkString($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_id']);
 
-        $aReturn = static::deleteFrom([
-                'table' => 'docservers',
-                'where' => ['docserver_id = ?'],
-                'data'  => [$aArgs['id']]
-            ]);
+        DatabaseModel::delete([
+            'table'     => 'docservers',
+            'where'     => ['docserver_id = ?'],
+            'data'      => [$aArgs['docserver_id']]
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function getDocserverToInsert(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['collId']);
-        static::checkString($aArgs, ['collId']);
+        ValidatorModel::notEmpty($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => ['*'],
             'table'     => ['docservers'],
             'where'     => ["is_readonly = 'N' and enabled = 'Y' and coll_id = ?"],

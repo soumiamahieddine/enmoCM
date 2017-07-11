@@ -22,12 +22,12 @@ use Core\Models\DocserverModel;
 use Core\Models\DocserverTypeModel;
 use Core\Models\UserModel;
 use Core\Models\ResModel;
+use Notes\Models\NoteModel;
 use Entities\Models\EntitiesModel;
 use Core\Controllers\DocserverController;
 use Core\Controllers\DocserverToolsController;
 
 require_once 'core/class/class_db_pdo.php';
-require_once 'modules/notes/Models/NotesModel.php';
 
 class ResController
 {
@@ -85,7 +85,7 @@ class ResController
 
     public function getNotesCountForCurrentUserById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        return $response->withJson(\NotesModel::countForCurrentUserByResId(['resId' => $aArgs['resId']]));
+        return $response->withJson(NoteModel::countForCurrentUserByResId(['resId' => $aArgs['resId']]));
     }
 
     /**
@@ -251,8 +251,7 @@ class ResController
         if ($return) {
             $id = $aArgs['res_id'];
             $obj = ResModel::getById([
-                'resId' => $id,
-                'orderBy' => 'res_id'
+                'resId' => $id
             ]);
         } else {
             return $response
@@ -289,8 +288,7 @@ class ResController
         if ($return) {
             $id = $aArgs['res_id'];
             $obj = ResModel::getById([
-                'resId' => $id,
-                'orderBy' => 'res_id'
+                'resId' => $id
             ]);
         } else {
             return $response

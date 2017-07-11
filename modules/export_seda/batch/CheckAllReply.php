@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../RequestSeda.php';
-require_once __DIR__ . '/../AbstractMessage.php';
+require_once __DIR__ . '/../class/AbstractMessage.php';
 require_once __DIR__ . '/../CheckReply.php';
 
 $checkAllReply = new CheckAllReply();

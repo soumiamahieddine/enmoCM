@@ -5,6 +5,11 @@
         <comment>_EXPORT_SEDA_COMMENT</comment>
         <file_prefix>seda</file_prefix>
         <loaded>true</loaded>
+        <sae>MaarchRM</sae>
+        <token></token>
+        <urlSAEService>http://srv-maarchrm-ap</urlSAEService>
+        <urlSAE>http://maarchrm/transfer/sent</urlSAE>
+        <deleteData>true</deleteData>
     </CONFIG>
     <TABLENAME/>
     <HISTORY>

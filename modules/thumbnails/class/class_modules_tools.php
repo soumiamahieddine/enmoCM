@@ -1,7 +1,5 @@
 <?php
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
 class thumbnails
 {
 	/*function __construct()
@@ -248,7 +246,7 @@ class thumbnails
 			return false;
 		}
 
-		$oRowSet = Apps_Table_Service::select([
+		$oRowSet = \Core\Models\DatabaseModel::select([
 			'select'    => ['path_template'],
 			'table'     => ['docservers'],
 			'where'     => ['docserver_type_id = ?'],
@@ -261,7 +259,7 @@ class thumbnails
 
 		$docserverPath = $oRowSet[0]['path_template'];
 
-		$oRowSet = Apps_Table_Service::select([
+		$oRowSet = \Core\Models\DatabaseModel::select([
 			'select'    => ['tnl_path', 'tnl_filename'],
 			'table'     => [$resTable],
 			'where'     => ['res_id = ?'],

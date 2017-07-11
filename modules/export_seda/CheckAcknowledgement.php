@@ -51,5 +51,7 @@ class CheckAcknowledgement
             $_SESSION['error'] = _ERROR_WRONG_ACKNOWLEDGEMENT . $resId;
             return false;
         }
+
+        return $resId;
     }
 }

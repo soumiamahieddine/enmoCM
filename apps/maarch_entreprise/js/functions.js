@@ -3,63 +3,6 @@ var chronoExpiration;
 
 page_result_final = '';
 
-var angularGlobals = {};
-function triggerAngular(prodmode, locationToGo) {
-    var views = [
-        'administration',
-        'users-administration',
-        'user-administration',
-        'status-administration',
-        'status-list-administration',
-        'profile',
-        'signature-book'
-    ];
-
-    $j.ajax({
-        url      : '../../rest/initialize',
-        type     : 'POST',
-        dataType : 'json',
-        data: {
-            views  : views
-        },
-        success: function(answer) {
-
-            angularGlobals = answer;
-            if (prodmode) {
-                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-
-                var alreadyLoaded = false;
-                $j('script').each(function(i, element) {
-                    if (element.src == (answer.coreUrl + "apps/maarch_entreprise/js/angular/main.bundle.min.js")) {
-                        alreadyLoaded = true;
-                    }
-                });
-                if (!alreadyLoaded) {
-                    var head = document.getElementsByTagName('head')[0];
-                    var script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = "js/angular/main.bundle.min.js";
-
-                    script.onreadystatechange = changeLocationToAngular(locationToGo);
-                    script.onload = changeLocationToAngular(locationToGo);
-
-                    // Fire the loading
-                    head.appendChild(script);
-                } else {
-                    location.href = locationToGo;
-                }
-            } else {
-                System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-                location.href = locationToGo;
-            }
-        }
-    });
-}
-
-function changeLocationToAngular(locationToGo) {
-    location.href = locationToGo;
-}
-
 function capitalizeFirstLetter(theString)
 {
     return theString && theString[0].toUpperCase() + theString.slice(1);
@@ -2808,16 +2751,13 @@ function loadDiffList(id)
     new Effect.toggle('diffList_' + id, 'appear', {delay: 0.2});
     var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
     new Ajax.Request(path_manage_script,
-            {
-                method: 'post',
-                parameters: {res_id: id},
-                onSuccess: function (answer) {
-                    eval("response = " + answer.responseText);
-                    $('divDiffList_' + id).innerHTML = '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Liste de diffusion:</legend>' + response.toShow + '</fieldset>';
-                }
-            });
-    var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
-    new Ajax.Request(path_manage_script,
+    {
+        method: 'post',
+        parameters: {res_id: id},
+        onSuccess: function (answer) {
+            eval("response = " + answer.responseText);
+            $('divDiffList_' + id).innerHTML = '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Liste de diffusion:</legend>' + response.toShow + '</fieldset>';
+            new Ajax.Request(path_manage_script,
             {
                 method: 'post',
                 parameters: {res_id: id, typeList: 'VISA_CIRCUIT', showStatus: true},
@@ -2828,28 +2768,29 @@ function loadDiffList(id)
                         $j('#divDiffList_' + id).css({"width": "97%", "display": "table"});
                         $j('#divDiffList_' + id).children().css({"width": "48%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
                     }
-                    var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
                     new Ajax.Request(path_manage_script,
-                            {
-                                method: 'post',
-                                parameters: {res_id: id, typeList: 'AVIS_CIRCUIT', showStatus: true},
-                                onSuccess: function (answer) {
-                                    eval("response = " + answer.responseText);
-                                    if (!response.toShow.match(/<div style="font-style:italic;text-align:center;color:#ea0000;margin:10px;">/)) {
-                                        $('divDiffList_' + id).innerHTML += '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Circuit d\'avis:</legend>' + response.toShow + '</fieldset>';
-                                        $j('#divDiffList_' + id).css({"width": "97%", "display": "table", "white-space": "nowrap"});
-                                        $j('#divDiffList_' + id+" fieldset").css({"white-space": "normal"});
-                                        if($j('#visa_fieldset').length){
-                                            $j('#divDiffList_' + id).children().css({"width": "32%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
-                                        }else{
-                                            $j('#divDiffList_' + id).children().css({"width": "48%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
-                                        }
-                                    }
-
+                    {
+                        method: 'post',
+                        parameters: {res_id: id, typeList: 'AVIS_CIRCUIT', showStatus: true},
+                        onSuccess: function (answer) {
+                            eval("response = " + answer.responseText);
+                            if (!response.toShow.match(/<div style="font-style:italic;text-align:center;color:#ea0000;margin:10px;">/)) {
+                                $('divDiffList_' + id).innerHTML += '<fieldset style="border: 1px dashed rgb(0, 157, 197);width:100%;"><legend>Circuit d\'avis:</legend>' + response.toShow + '</fieldset>';
+                                $j('#divDiffList_' + id).css({"width": "97%", "display": "table", "white-space": "nowrap"});
+                                $j('#divDiffList_' + id+" fieldset").css({"white-space": "normal"});
+                                if($j('#visa_fieldset').length){
+                                    $j('#divDiffList_' + id).children().css({"width": "32%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
+                                }else{
+                                    $j('#divDiffList_' + id).children().css({"width": "48%", "display": "table-cell", "vertical-align": "top", "padding": "5px", "margin": "5px"});
                                 }
-                            });
+                            }
+
+                        }
+                    });
                 }
             });
+        }
+    });
 
 }
 
@@ -3176,18 +3117,6 @@ function loadToolbarBadge(targetTab,path_manage_script){
         }
     });
 }
-
-var disablePrototypeJS = function (method, pluginsToDisable) {
-    var handler = function (event) {
-        event.target[method] = undefined;
-        setTimeout(function () {
-            delete event.target[method];
-        }, 0);
-    };
-    pluginsToDisable.each(function (plugin) {
-        $j(window).on(method + '.bs.' + plugin, handler);
-    });
-};
 
 function resetSelect(id) {
     $j('#'+id).val("");

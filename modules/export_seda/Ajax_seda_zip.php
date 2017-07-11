@@ -46,8 +46,8 @@ class Extract
 
 	public function exportZip($reference)
 	{
-		$messageDirectory = __DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$reference;
-		$zipfile = __DIR__.DIRECTORY_SEPARATOR.'seda2'.DIRECTORY_SEPARATOR.$reference. ".zip";
+		$messageDirectory = __DIR__.DIRECTORY_SEPARATOR.'message'.DIRECTORY_SEPARATOR.$reference;
+		$zipfile = __DIR__.DIRECTORY_SEPARATOR.'message'.DIRECTORY_SEPARATOR.$reference. ".zip";
 
 		if (!is_file($zipfile)) {
             if (is_dir($messageDirectory)) {

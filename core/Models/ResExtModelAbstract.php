@@ -15,21 +15,18 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class ResExtModelAbstract extends \Apps_Table_Service
+class ResExtModelAbstract
 {
     /**
      * Retrieve info of resId
-     * @param  $resId integer
-     * @param  $table string
-     * @param  $select string
-     * @return array $res
+     * @param  $aArgs array
+     *
+     * @return array
      */
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
-        static::checkRequired($aArgs, ['resId']);
-        static::checkNumeric($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
         if (!empty($aArgs['table'])) {
             $table = $aArgs['table'];
@@ -37,7 +34,7 @@ class ResExtModelAbstract extends \Apps_Table_Service
             $table = 'mlb_coll_ext';
         }
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => ['res_id = ?'],
@@ -49,9 +46,9 @@ class ResExtModelAbstract extends \Apps_Table_Service
 
     /**
      * Retrieve info of last resId
-     * @param  $table string
-     * @param  $select string
-     * @return array $res
+     * @param  $aArgs array
+     *
+     * @return array
      */
     public static function getLastId(array $aArgs = [])
     {
@@ -61,10 +58,9 @@ class ResExtModelAbstract extends \Apps_Table_Service
             $table = 'mlb_coll_ext';
         }
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
-            'data'      => [$aArgs['resId']],
             'order_by'  => ['res_id desc'],
             'limit'     => 1,
         ]);
@@ -74,23 +70,22 @@ class ResExtModelAbstract extends \Apps_Table_Service
 
     /**
      * Retrieve process_limit_date for resource in extension table if mlb
-     * @param  $resId integer
-     * @param  $defaultDelay integer
-     * @param  $calendarType sring => calendar or workingDay
+     * @param  $aArgs array
+     *
      * @return integer $processLimitDate
      */
-    public function retrieveProcessLimitDate($aArgs)
+    public function retrieveProcessLimitDate(array $aArgs)
     {
-        static::checkRequired($aArgs, ['resId']);
-        static::checkNumeric($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
         if (!empty($aArgs['table'])) {
             $table = $aArgs['table'];
         } else {
             $table = 'res_view_letterbox';
         }
-        $processLimitDate = '';
         $aArgs['select'] = ['creation_date, admission_date, type_id'];
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => ['res_id = ?'],
@@ -104,7 +99,7 @@ class ResExtModelAbstract extends \Apps_Table_Service
             $admissionDate = $aReturn[0]['admission_date'];
             $creationDate = $aReturn[0]['creation_date'];
             $aArgs['select'] = ['process_delay'];
-            $aReturnT = static::select([
+            $aReturnT = DatabaseModel::select([
                 'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
                 'table'     => ['mlb_doctype_ext'],
                 'where'     => ['type_id = ?'],
@@ -156,9 +151,9 @@ class ResExtModelAbstract extends \Apps_Table_Service
 
     /**
      * insert into a resTable
-     * @param  $resId integer
-     * @param  $table string
-     * @return boolean $status
+     * @param  $aArgs array
+     *
+     * @return boolean
      */
     public static function create(array $aArgs = [])
     {
@@ -166,32 +161,35 @@ class ResExtModelAbstract extends \Apps_Table_Service
             $aArgs['table'] = 'mlb_coll_ext';
         }
 
-        $aReturn = static::insertInto($aArgs['data'], $aArgs['table']);
+        DatabaseModel::insert([
+            'table'         => $aArgs['table'],
+            'columnsValues' => $aArgs['data']
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     /**
      * deletes into a resTable
-     * @param  $resId integer
-     * @param  $table string
-     * @return boolean $status
+     * @param  $aArgs array
+     *
+     * @return boolean
      */
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkNumeric($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         if (empty($aArgs['table'])) {
             $aArgs['table'] = 'mlb_coll_ext';
         }
 
-        $aReturn = static::deleteFrom([
+        DatabaseModel::delete([
                 'table' => $aArgs['table'],
                 'where' => ['res_id = ?'],
                 'data'  => [$aArgs['id']]
-            ]);
+        ]);
 
-        return $aReturn;
+        return true;
     }
 }

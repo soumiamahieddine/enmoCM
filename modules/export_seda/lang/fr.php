@@ -1,7 +1,7 @@
 <?php
 
-if (!defined("_EXPORT_SEDA_COMMENT"))
-    define("_EXPORT_SEDA_COMMENT", "Export SEDA");
+if (!defined("_EXPORTSEDA_COMMENT"))
+    define("_EXPORT_SEDA_COMMENT", "Export");
 
 if (!defined("_EXPORT_SEDA"))
     define("_EXPORT_SEDA","Transferer vos courriers");
@@ -16,7 +16,7 @@ if (!defined("_RESET_LETTER"))
 
 
 if (!defined("_EXPORT_SEDA_VIEW"))
-    define("_EXPORT_SEDA_VIEW", "Voir le bordereau SEDA");
+    define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
 
 if (!defined("_INFORMATION_MESSAGE"))
     define("_INFORMATION_MESSAGE", "Information bordereau");

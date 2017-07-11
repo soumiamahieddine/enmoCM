@@ -1,7 +1,6 @@
 <?php
 
 require_once 'vendor/autoload.php';
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once __DIR__.'/RequestSeda.php';
 
 Class Purge{
@@ -46,7 +45,7 @@ Class Purge{
             $this->db->deleteMessage($message->message_id);
         }
 
-        return true;
+        return $resId;
     }
 
     private function purgeResource($resId)
@@ -73,9 +72,8 @@ Class Purge{
 
     private function purgeContact($contactId)
     {
-        $contacts = new \ContactsModel();
-        $contactDetails = $contacts->purgeContact([
-            'id'=>$contactId
+        $contactDetails = \Apps\Models\ContactModel::purgeContact([
+            'id' => $contactId
         ]);
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-namespace MaarchTest;
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,132 +7,199 @@ namespace MaarchTest;
 *
 */
 
+namespace MaarchTest;
+
 require_once __DIR__.'/define.php';
 
 class StatusControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetList()
-    {
-        $action = new \Core\Controllers\StatusController();
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-                //'REQUEST_URI' => '/status',
-                //'QUERY_STRING'=>'foo=bar',
-            ]
-        );
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->getList($request, $response, []);
-
-        $this->assertNotNull((string)$response->getBody());
-    }
-
-    public function testGetById()
-    {
-        $action = new \Core\Controllers\StatusController();
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'GET',
-            ]
-        );
-
-        $aArgs = [
-            'id'=> 'NEW'
-        ];
-
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->getById($request, $response, $aArgs);
-        $compare = '[[{"id":"NEW","label_status":"Nouveau",'
-            . '"is_system":"Y","is_folder_status":"N","img_filename":'
-            . '"fm-letter-status-new","maarch_module":"apps",'
-            . '"can_be_searched":"Y","can_be_modified":"Y"}]]';
-
-        $this->assertSame((string)$response->getBody(), $compare);
-    }
-
     public function testCreate()
     {
-        $action = new \Core\Controllers\StatusController();
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $query  = 'id=TEST&';
-        $query .= 'label_status=TEST';
-
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'POST',
-                'QUERY_STRING'=> $query,
-            ]
-        );
-        
         $aArgs = [
-            'id'=> 'NEW'
+            'id'               => 'TEST',
+            'label_status'     => 'TEST',
+            'img_filename'     => 'fm-letter-end',
+            'is_folder_status' => '',
+            'can_be_searched'  => 'true',
+            'can_be_modified'  => '',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $status->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType("int", $responseBody[0][0]->identifier);
+
+        unset($responseBody[0][0]->identifier);
+
+        $compare = [
+            'id'               => 'TEST',
+            'label_status'     => 'TEST',
+            'is_system'        => 'N',
+            'is_folder_status' => 'N',
+            'img_filename'     => 'fm-letter-end',
+            'maarch_module'    => 'apps',
+            'can_be_searched'  => 'Y',
+            'can_be_modified'  => 'N',
         ];
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->create($request, $response, $aArgs);
+        $aCompare = json_decode(json_encode($compare), false);
+        $this->assertEquals($aCompare, $responseBody[0][0], "\$canonicalize = true", 0.0, 10, true);
 
-        $compare = '[[{"id":"TEST","label_status":"TEST",'
-            . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
-            . '"maarch_module":"apps","can_be_searched":"Y",'
-            . '"can_be_modified":"Y"}]]';
-        
-        $this->assertSame((string)$response->getBody(), $compare);
+        ########## CREATE FAIL ##########
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'id'               => 'TEST',
+            'label_status'     => 'TEST',
+            'img_filename'     => 'fm-letter-end',
+            'is_folder_status' => ''
+        ];
+        $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $status->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(_ID . ' TEST ' . _ALREADY_EXISTS, $responseBody->errors[0]);
+
+        ########## CREATE FAIL 2 ##########
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'id'               => 'papa',
+            'label_status'     => '',
+            'img_filename'     => 'fm-letter-end',
+            'is_folder_status' => ''
+        ];
+        $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $status->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(_DESCRIPTION . ' ' . _INVALID, $responseBody->errors[0]);
     }
 
-    public function testUpdate()
+    public function testGetListUpdateDelete()
     {
-        $action = new \Core\Controllers\StatusController();
+        ########## GET LIST ##########
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
 
-        $query  = 'id=TEST&';
-        $query .= 'label_status=TEST AFTER UP';
+        $response  = $status->getList($request, new \Slim\Http\Response());
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'PUT',
-                'QUERY_STRING'=> $query,
-            ]
-        );
-        
-        $aArgs = [
-            'id'=> 'NEW'
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertNotNull($responseBody->statusList);
+
+        foreach ($responseBody->statusList as $value) {
+            $this->assertInternalType("int", $value->identifier);
+        }
+
+        $this->assertNotNull($responseBody->lang);
+
+        $elem = $responseBody->statusList;
+        end($elem);
+        $key = key($elem);
+        $lastIdentifier = $elem[$key]->identifier;
+
+        ########## GETBYIDENTIFIER ##########
+        $response     = $status->getByIdentifier($request, new \Slim\Http\Response(), ['identifier' => $lastIdentifier]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->status);
+        $this->assertNotNull($responseBody->statusImages);
+        $this->assertNotNull($responseBody->lang);
+
+        $compare = [
+            'identifier'       => $lastIdentifier,
+            'id'               => 'TEST',
+            'label_status'     => 'TEST',
+            'is_system'        => 'N',
+            'is_folder_status' => 'N',
+            'img_filename'     => 'fm-letter-end',
+            'maarch_module'    => 'apps',
+            'can_be_searched'  => 'Y',
+            'can_be_modified'  => 'N',
         ];
 
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->update($request, $response, $aArgs);
+        $aCompare = json_decode(json_encode($compare), false);
+        $this->assertEquals($aCompare, $responseBody->status[0], "\$canonicalize = true", 0.0, 10, true);
 
-        $compare = '[[{"id":"TEST","label_status":"TEST AFTER UP",'
-            . '"is_system":"Y","is_folder_status":"N","img_filename":null,'
-            . '"maarch_module":"apps","can_be_searched":"Y",'
-            . '"can_be_modified":"Y"}]]';
-        
-        $this->assertSame((string)$response->getBody(), $compare);
-    }
+        ########## GETBYIDENTIFIER FAIL ##########
+        $response     = $status->getByIdentifier($request, new \Slim\Http\Response(), ['identifier' => -1]);
+        $responseBody = json_decode((string)$response->getBody());
 
-    public function testDelete()
-    {
-        $action = new \Core\Controllers\StatusController();
+        $this->assertSame('identifier not found', $responseBody->errors);
 
-        $environment = \Slim\Http\Environment::mock(
-            [
-                'REQUEST_METHOD' => 'DELETE',
-            ]
-        );
+
+        ########## UPDATE ##########
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'id'=> 'TEST'
+            'id'           => 'TEST',
+            'label_status' => 'TEST AFTER UP',
+            'img_filename' => 'fm-letter-end',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $status->update($fullRequest, new \Slim\Http\Response(), ['identifier' => $lastIdentifier]);
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $compare = [
+            'identifier'       => $lastIdentifier,
+            'id'               => 'TEST',
+            'label_status'     => 'TEST AFTER UP',
+            'is_system'        => 'N',
+            'is_folder_status' => 'N',
+            'img_filename'     => 'fm-letter-end',
+            'maarch_module'    => 'apps',
+            'can_be_searched'  => 'Y',
+            'can_be_modified'  => 'N',
         ];
 
+        $aCompare = json_decode(json_encode($compare), false);
+
+        $this->assertEquals($aCompare, $responseBody[0][0], "\$canonicalize = true", 0.0, 10, true);
+
+        ########## UPDATE FAIL ##########
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-        $response = new \Slim\Http\Response();
-        $response = $action->delete($request, $response, $aArgs);
-        
+        $aArgs = [
+            'id'           => 'PZOEIRUTY',
+            'label_status' => 'TEST AFTER UP',
+            'img_filename' => 'fm-letter-end',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $status->update($fullRequest, new \Slim\Http\Response(), ['identifier' => -1]);
+
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame('-1 ' . _NOT_EXISTS, $responseBody->errors[0]);
+
+
+        ########## DELETE ##########
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $status->delete($request, new \Slim\Http\Response(), ['identifier'=> $lastIdentifier]);
+
         $this->assertSame((string)$response->getBody(), '[true]');
+    }
+
+    public function testGetNewInformations()
+    {
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $status      = new \Core\Controllers\StatusController();
+
+        $response = $status->getNewInformations($request, new \Slim\Http\Response());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->statusImages);
+        $this->assertNotNull($responseBody->lang);
     }
 }

@@ -4,156 +4,135 @@ import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 @Component({
     templateUrl : angularGlobals['status-administrationView'],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
 })
 export class StatusAdministrationComponent implements OnInit {
-    coreUrl         : string;
-    pageTitle       : string ;
-    mode            : string = null;
-    paramId         : string;
-    type            : string;
-    parametersList : any = null;
-    parameter   : any   = {
-        id                  : null,
-        param_value_string  : null,
-        param_value_int     : null,
-        param_value_date    : null,
-        description         : null
-    };
-    paramDateTemp   :string;
-    lang        : any = "";
+    coreUrl             : string;
+    pageTitle           : string            = "" ;
+    mode                : string            = null;
+    statusIdentifier    : string;
+    status              : any               = {
+                                                id              : null,
+                                                label_status     : null,
+                                                can_be_searched : null,
+                                                can_be_modified : null,
+                                                is_folder_status : null,
+                                                img_filename     : null
+                                            };
+    lang                : any               = "";
+    statusImages        : any               = "";
 
-    resultInfo : string = "";
+    loading             : boolean           = false;
 
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit(): void {
-        // this.coreUrl = angularGlobals.coreUrl;
-        // this.prepareParameter();
-        // this.http.get(this.coreUrl + 'rest/parameters/lang')
-        // .map(res => res.json())
-        // .subscribe((data) => {
-        //     this.lang = data;
-        // });
+        this.loading = true;
+        this.coreUrl = angularGlobals.coreUrl;
+        this.prepareStatus();
 
-        // this.route.params.subscribe((params) => {
-        //     if(this.route.toString().includes('update')){
-        //         this.mode='update';
-        //         this.paramId = params['id'];
-        //         this.getParameterInfos(this.paramId);                
-        //     } else if (this.route.toString().includes('create')){
-        //         this.mode = 'create';
-        //         this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-        //         $j('#pageTitle').html(this.pageTitle);
-        //         this.type = 'string';
-        //     }
-        // });
-               
+        this.route.params.subscribe((params) => {
+            if (typeof params['identifier'] == "undefined"){
+                this.http.get(this.coreUrl + 'rest/administration/status/new')
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.lang         = data['lang'];
+                    this.statusImages = data['statusImages'];
+                    this.mode         = 'create';
+                    this.pageTitle    = this.lang.newStatus;
+                    this.updateBreadcrumb(angularGlobals.applicationName);
+                });
+            } else {
+                this.mode     = 'update';
+                this.statusIdentifier = params['identifier'];
+                this.getStatusInfos(this.statusIdentifier);
+            }
+            setTimeout(() => {
+                $j(".help").tooltipster({
+                    theme: 'tooltipster-maarch',
+                    interactive: true
+                });
+            }, 0);
+        });
+        this.loading = false;
     }
 
-    prepareParameter() {
+    prepareStatus() {
         $j('#inner_content').remove();
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
+                                        "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.admin+"</a> > "+
+                                        "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>"+this.lang.admin_status+"</a> > ";
+        if(this.mode == 'create'){
+            breadCrumb += this.lang.newItem;
+        } else {
+            breadCrumb += this.lang.modification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     }
 
-    getParameterInfos(paramId : string){
-        this.http.get(this.coreUrl + 'rest/parameters/'+paramId)
+    getStatusInfos(statusIdentifier : string){
+        this.http.get(this.coreUrl + 'rest/administration/status/'+statusIdentifier)
             .map(res => res.json())
             .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else{
-                    var infoParam=data; 
-                    this.parameter.id = infoParam[0].id;
-                    if(infoParam[0].param_value_string != null){
-                        this.parameter.param_value_string = infoParam[0].param_value_string
-                        this.type = "string";
-                    } else if(infoParam[0].param_value_int != null){
-                        this.parameter.param_value_int = infoParam[0].param_value_int;
-                        this.type = "int";
-                    } else if(infoParam[0].param_value_date != null) {
-                        this.parameter.param_value_date = infoParam[0].param_value_date;
-                        this.type = "date";
-                    }
-                    this.parameter.description = infoParam[0].description;
-                    this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : "+this.parameter.id;
-                    $j('#pageTitle').html(this.pageTitle);
+                this.status    = data['status'][0];
+                if(this.status.can_be_searched == 'Y'){
+                    this.status.can_be_searched = true;
+                }else{
+                    this.status.can_be_searched = false;
                 }
+                if(this.status.can_be_modified == 'Y'){
+                    this.status.can_be_modified = true;
+                }else{
+                    this.status.can_be_modified = false;
+                }
+                if(this.status.is_folder_status == 'Y'){
+                    this.status.is_folder_status = true;
+                }else{
+                    this.status.is_folder_status = false;
+                }
+                this.lang         = data['lang'];
+                this.statusImages = data['statusImages'];
+                this.pageTitle    = this.lang.modify_status + ' : ' + this.status.id;
+                this.updateBreadcrumb(angularGlobals.applicationName);
+            }, (err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });                
     }
+
+    selectImage(image_name : string){
+        this.status.img_filename = image_name;
+    }
     
-    submitParameter() {
-
-        if(this.type=='date'){
-            //Résolution bug calendrier
-            this.parameter.param_value_date = $j("#param_value_date").val();
-            this.parameter.param_value_int=null;
-            this.parameter.param_value_string=null;
-        }
-        else if(this.type == 'int'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_string=null;
-        }
-        else if (this.type == 'string'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_int=null;
-        }
-
+    submitStatus() {
         if(this.mode == 'create'){
-            this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
+            this.http.post(this.coreUrl + 'rest/status', this.status)
             .map(res => res.json())
             .subscribe((data) => {
-                if(data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.parameter.param_value_date=null;
-                    this.parameter.param_value_int=null;
-                    this.parameter.param_value_string=null;
-                } else {
-                    this.resultInfo = this.lang.paramCreatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);
-                }
-                
+                successNotification(this.lang.newStatusAdded + ' : ' + this.status.id);
+                this.router.navigate(['administration/status']);
+            }, (err) => {
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         } else if(this.mode == "update"){
 
-            this.http.put(this.coreUrl+'rest/parameters/'+this.paramId,this.parameter)
+            this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
             .map(res => res.json())             
             .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.resultInfo = this.lang.paramUpdatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);                    
-                }
+                successNotification(this.lang.statusUpdated + ' : ' + this.status.id);
+                this.router.navigate(['administration/status']);                    
+            }, (err) => {
+                errorNotification((JSON.parse(err._body).errors).join("<br>"));
             });
         }
     }

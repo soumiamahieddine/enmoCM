@@ -15,13 +15,11 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class DocserverTypeModelAbstract extends \Apps_Table_Service
+class DocserverTypeModelAbstract
 {
     public static function getList()
     {
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docserver_types'],
         ]);
@@ -31,10 +29,11 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_type_id']);
-        static::checkString($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
 
-        $aReturn = static::select([
+
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docserver_types'],
             'where'     => ['docserver_type_id = ?'],
@@ -46,41 +45,43 @@ class DocserverTypeModelAbstract extends \Apps_Table_Service
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_type_id']);
-        static::checkString($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
 
-        $aReturn = static::insertInto($aArgs, 'docserver_types');
+        DatabaseModel::insert([
+            'table'         => 'docserver_types',
+            'columnsValues' => $aArgs
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_type_id']);
-        static::checkString($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
 
-        $where['docserver_type_id'] = $aArgs['docserver_type_id'];
+        DatabaseModel::update([
+            'table'     => 'docserver_types',
+            'set'       => $aArgs,
+            'where'     => ['docserver_type_id = ?'],
+            'data'      => [$aArgs['docserver_type_id']]
+        ]);
 
-        $aReturn = static::updateTable(
-            $aArgs,
-            'docserver_types',
-            $where
-        );
-
-        return $aReturn;
+        return true;
     }
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['docserver_type_id']);
-        static::checkString($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
+        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
 
-        $aReturn = static::deleteFrom([
+        DatabaseModel::delete([
                 'table' => 'docserver_types',
                 'where' => ['docserver_type_id = ?'],
                 'data'  => [$aArgs['docserver_type_id']]
-            ]);
+        ]);
 
-        return $aReturn;
+        return true;
     }
 }

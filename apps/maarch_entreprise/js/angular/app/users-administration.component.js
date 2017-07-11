@@ -16,6 +16,8 @@ var UsersAdministrationComponent = (function () {
     function UsersAdministrationComponent(http) {
         this.http = http;
         this.users = [];
+        this.userDestRedirect = {};
+        this.userDestRedirectModels = [];
         this.lang = {};
         this.resultInfo = "";
         this.loading = false;
@@ -36,10 +38,11 @@ var UsersAdministrationComponent = (function () {
             _this.users = data.users;
             _this.lang = data.lang;
             setTimeout(function () {
-                $j('#usersTable').DataTable({
-                    "dom": '<"datatablesLeft"p><"datatablesRight"f>rt<"datatablesCenter"i><"clear">',
+                _this.table = $j('#usersTable').DataTable({
+                    "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
+                    "lengthMenu": [10, 25, 50, 75, 100],
                     "oLanguage": {
-                        "sLengthMenu": "Display _MENU_ records per page",
+                        "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
                         "sZeroRecords": _this.lang.noResult,
                         "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
                         "sSearch": "",
@@ -51,7 +54,11 @@ var UsersAdministrationComponent = (function () {
                         },
                         "sInfoEmpty": _this.lang.noRecord,
                         "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                    }
+                    },
+                    "order": [[1, "asc"]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": [3, 5] }
+                    ]
                 });
                 $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
                 $j('dataTables_filter input').addClass('form-control');
@@ -60,9 +67,177 @@ var UsersAdministrationComponent = (function () {
                 $j(".datatablesRight").css({ "float": "right" });
             }, 0);
             _this.loading = false;
-        }, function (err) {
+        }, function () {
             location.href = "index.php";
         });
+    };
+    UsersAdministrationComponent.prototype.suspendUser = function (user) {
+        var _this = this;
+        if (user.inDiffListDest == 'Y') {
+            user.mode = 'up';
+            this.userDestRedirect = user;
+            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.userDestRedirectModels = data.listModels;
+                setTimeout(function () {
+                    $j(".redirectDest").typeahead({
+                        order: "asc",
+                        display: "formattedUser",
+                        templateValue: "{{user_id}}",
+                        source: {
+                            ajax: {
+                                type: "GET",
+                                dataType: "json",
+                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
+                            }
+                        }
+                    });
+                }, 0);
+            }, function (err) {
+                console.log(err);
+                location.href = "index.php";
+            });
+        }
+        else {
+            var r = confirm(this.lang.suspendMsg + " ?");
+            if (r) {
+                user.enabled = 'N';
+                this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    successNotification(data.success);
+                }, function (err) {
+                    user.enabled = 'Y';
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+            }
+        }
+    };
+    UsersAdministrationComponent.prototype.suspendUserModal = function (user) {
+        var _this = this;
+        var r = confirm(this.lang.suspendMsg + " ?");
+        if (r) {
+            user.enabled = 'N';
+            user.redirectListModels = this.userDestRedirectModels;
+            //first, update listModels
+            this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    user.enabled = 'Y';
+                    errorNotification(data.errors);
+                }
+                else {
+                    //then suspend user
+                    _this.http.put(_this.coreUrl + 'rest/users/' + user.user_id, user)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        user.inDiffListDest = 'N';
+                        $j('#changeDiffListDest').modal('hide');
+                        successNotification(data.success);
+                    }, function (err) {
+                        user.enabled = 'Y';
+                        errorNotification(JSON.parse(err._body).errors);
+                    });
+                }
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
+    };
+    UsersAdministrationComponent.prototype.activateUser = function (user) {
+        var r = confirm(this.lang.authorizeMsg + " ?");
+        if (r) {
+            user.enabled = 'Y';
+            this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                successNotification(data.success);
+            }, function (err) {
+                user.enabled = 'N';
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
+    };
+    UsersAdministrationComponent.prototype.deleteUser = function (user) {
+        var _this = this;
+        if (user.inDiffListDest == 'Y') {
+            user.mode = 'del';
+            this.userDestRedirect = user;
+            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.userDestRedirectModels = data.listModels;
+                setTimeout(function () {
+                    $j(".redirectDest").typeahead({
+                        order: "asc",
+                        source: {
+                            ajax: {
+                                type: "GET",
+                                dataType: "json",
+                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
+                            }
+                        }
+                    });
+                });
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
+        else {
+            var r = confirm(this.lang.deleteMsg + " ?");
+            if (r) {
+                this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    for (var i = 0; i < _this.users.length; i++) {
+                        if (_this.users[i].user_id == user.user_id) {
+                            _this.users.splice(i, 1);
+                        }
+                    }
+                    _this.table.row($j("#" + user.user_id)).remove().draw();
+                    successNotification(data.success);
+                }, function (err) {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
+            }
+        }
+    };
+    UsersAdministrationComponent.prototype.deleteUserModal = function (user) {
+        var _this = this;
+        var r = confirm(this.lang.deleteMsg + " ?");
+        if (r) {
+            user.redirectListModels = this.userDestRedirectModels;
+            //first, update listModels
+            this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                if (data.errors) {
+                    errorNotification(data.errors);
+                }
+                else {
+                    //then delete user
+                    _this.http.delete(_this.coreUrl + 'rest/users/' + user.user_id)
+                        .map(function (res) { return res.json(); })
+                        .subscribe(function (data) {
+                        user.inDiffListDest = 'N';
+                        $j('#changeDiffListDest').modal('hide');
+                        for (var i = 0; i < _this.users.length; i++) {
+                            if (_this.users[i].user_id == user.user_id) {
+                                _this.users.splice(i, 1);
+                            }
+                        }
+                        _this.table.row($j("#" + user.user_id)).remove().draw();
+                        successNotification(data.success);
+                    }, function (err) {
+                        errorNotification(JSON.parse(err._body).errors);
+                    });
+                }
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
+            });
+        }
     };
     return UsersAdministrationComponent;
 }());
