@@ -491,7 +491,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         //script
         $frm_str .= '<script>';
-             $frmStr .= '$j("#folder").chosen({width: "100%", disable_search_threshold: 10, search_contains: true});displayFatherFolder(\'folder\'});';
+             $frm_str .= '$j("#folder").chosen({width: "100%", disable_search_threshold: 10, search_contains: true});displayFatherFolder(\'folder\');';
 
         $frm_str .= '</script>';
     }

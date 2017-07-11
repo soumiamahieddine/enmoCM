@@ -11,10 +11,7 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
 require_once 'core/class/class_functions.php';
-
-
 
 class ParametersModelAbstract extends \Apps_Table_Service
 {

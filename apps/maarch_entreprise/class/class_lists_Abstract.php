@@ -354,8 +354,7 @@ abstract class lists_Abstract extends Database
                     }
                 }
                 $filters .='</select>&nbsp;';
-                //$filters .= '<script>new c($(\'category_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
-                $filters .= '<script> $j("#category_id").chosen({width:"150px",allow_single_deselect: true});</script>';
+                $filters .= '<script> $j("#category_id_list").chosen({width:"150px",allow_single_deselect: true});</script>';
             break;
 
             case 'priority':
