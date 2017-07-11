@@ -8,7 +8,7 @@ declare function $j(selector: any) : any;
 declare var angularGlobals : any;
 @Component({
     templateUrl : angularGlobals.priorityView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameter.component.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
 
 export class PriorityComponent implements OnInit {

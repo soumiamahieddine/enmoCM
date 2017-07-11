@@ -124,45 +124,16 @@ export class ActionAdministrationComponent implements OnInit {
 
     }
 
-    selectAll(event){
+    selectAll(event:any){
         var target = event.target.getAttribute("data-target");
         $j('#' + target + ' option').prop('selected', true);
         $j('#' + target).trigger('chosen:updated');
        
     }
 
-    unselectAll(event){
+    unselectAll(event:any){
         var target = event.target.getAttribute("data-target");
         $j('#' + target + ' option').prop('selected', false);
         $j('#' + target).trigger('chosen:updated');
     }
-
-    /*createAction() {
-        delete this.action.id;
-        delete this.action.coll_categories;
-        this.http.post(this.coreUrl + 'rest/actions', this.action)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if (data.errors) {
-
-                } else {
-                    this.router.navigate(['/administration/actions']);
-                    this.resultInfo = this.lang.action_added;
-                    setTimeout(() => {
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").text(this.lang.action_added);
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                    }, 0);
-                }
-            }, (errors) => {
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").text(JSON.parse(errors._body).errors);
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                    $j("#resultInfo").slideUp(500);
-                });
-            });
-    }*/
-
 }

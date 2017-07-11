@@ -10,7 +10,7 @@ var prioritiesDataTable : any;
 
 @Component({
     templateUrl : angularGlobals.prioritiesView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameter.component.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
 
 export class PrioritiesComponent implements OnInit {

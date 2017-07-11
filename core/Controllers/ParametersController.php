@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-    namespace Core\Controllers;
+namespace Core\Controllers;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -26,7 +26,7 @@ require_once 'modules/notes/Models/NotesModel.php';
 
 class ParametersController
 {
-    public function getList(RequestInterface $request, ResponseInterface $response)
+    public function getParametersForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         $obj = [
                 'parametersList'    =>  ParametersModel::getList(),
@@ -35,9 +35,30 @@ class ParametersController
         return $response->withJson($obj);
     }
 
-    public function getLang(RequestInterface $request, ResponseInterface $response)
+    public function getParameterForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $obj = ParametersModel::getParametersLang();
+        $obj['parameter'] = ParametersModel::getById(['id' => $aArgs['id']]);
+        
+        if (empty($obj)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+        }
+
+        if ($obj['parameter']['param_value_date']) {
+            $obj['type'] = 'date';
+        } else if ($obj['parameter']['param_value_int']) {
+            $obj['type'] = 'int';
+        } else {
+            $obj['type'] = 'string';
+        }
+
+        $obj['lang'] = ParametersModel::getParametersLang();
+
+        return $response->withJson($obj);
+    }
+
+    public function getNewParameterForAdministration(RequestInterface $request, ResponseInterface $response)
+    {
+        $obj['lang'] = ParametersModel::getParametersLang();
         return $response->withJson($obj);
     }
 

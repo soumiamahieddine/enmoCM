@@ -21,8 +21,8 @@ var status_administration_component_1 = require("./status-administration.compone
 var actions_administration_component_1 = require("./actions-administration.component");
 var action_administration_component_1 = require("./action-administration.component");
 var profile_component_1 = require("./profile.component");
-var parameter_component_1 = require("./parameter.component");
-var parameters_component_1 = require("./parameters.component");
+var parameter_administration_component_1 = require("./parameter-administration.component");
+var parameters_administration_component_1 = require("./parameters-administration.component");
 var priorities_component_1 = require("./priorities.component");
 var priority_component_1 = require("./priority.component");
 var signature_book_component_1 = require("./signature-book.component");
@@ -47,9 +47,9 @@ AppModule = __decorate([
                 { path: 'administration/status/new', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/:identifier', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'profile', component: profile_component_1.ProfileComponent },
-                { path: 'administration/parameter/create', component: parameter_component_1.ParameterComponent },
-                { path: 'administration/parameter/update/:id', component: parameter_component_1.ParameterComponent },
-                { path: 'administration/parameters', component: parameters_component_1.ParametersComponent },
+                { path: 'administration/parameters/new', component: parameter_administration_component_1.ParameterAdministrationComponent },
+                { path: 'administration/parameters/:id', component: parameter_administration_component_1.ParameterAdministrationComponent },
+                { path: 'administration/parameters', component: parameters_administration_component_1.ParametersAdministrationComponent },
                 { path: 'administration/reports', component: reports_component_1.ReportsComponent },
                 { path: 'administration/priorities', component: priorities_component_1.PrioritiesComponent },
                 { path: 'administration/priority/update/:id', component: priority_component_1.PriorityComponent },
@@ -74,8 +74,8 @@ AppModule = __decorate([
             status_list_administration_component_1.StatusListAdministrationComponent,
             priorities_component_1.PrioritiesComponent,
             priority_component_1.PriorityComponent,
-            parameters_component_1.ParametersComponent,
-            parameter_component_1.ParameterComponent,
+            parameters_administration_component_1.ParametersAdministrationComponent,
+            parameter_administration_component_1.ParameterAdministrationComponent,
             profile_component_1.ProfileComponent,
             signature_book_component_1.SignatureBookComponent,
             signature_book_component_1.SafeUrlPipe

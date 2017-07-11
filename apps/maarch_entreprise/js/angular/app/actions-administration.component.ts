@@ -24,7 +24,6 @@ export class ActionsAdministrationComponent implements OnInit {
     loading                 : boolean       = false;
 
     constructor(public http: Http) {
-        this.coreUrl = angularGlobals.coreUrl;
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -34,6 +33,8 @@ export class ActionsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.coreUrl = angularGlobals.coreUrl;
+        
         this.loading = true;
 
         this.updateBreadcrumb(angularGlobals.applicationName);
@@ -90,7 +91,7 @@ export class ActionsAdministrationComponent implements OnInit {
         let r = confirm(this.lang.deleteMsg+' ?');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + id, this.actions)
+            this.http.delete(this.coreUrl + 'rest/actions/' + id)
                 .map(res => res.json())
                 .subscribe((data) => {
                     if (data.errors) {

@@ -7,51 +7,65 @@ declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 @Component({
-    templateUrl : angularGlobals.parameterView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameter.component.css']
+    templateUrl : angularGlobals['parameter-administrationView'],
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
-export class ParameterComponent implements OnInit {
-    coreUrl         : string;
-    pageTitle       : string ;
-    mode            : string = null;
-    paramId         : string;
-    type            : string;
-    parametersList : any = null;
-    parameter   : any   = {
-        id                  : null,
-        param_value_string  : null,
-        param_value_int     : null,
-        param_value_date    : null,
-        description         : null
-    };
-    paramDateTemp   :string;
-    lang        : any = "";
+export class ParameterAdministrationComponent implements OnInit {
+    coreUrl                 : string;
+    pageTitle               : string;
+    creationMode            : boolean       = true;
+    type                    : string;
+    parameter               : any           = {};
+    paramDateTemp           : string;
+    lang                    : any           = "";
 
-    resultInfo : string = "";
-
+    resultInfo              : string        = "";
+    loading                 : boolean       = false;
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareParameter();
-        this.http.get(this.coreUrl + 'rest/parameters/lang')
-        .map(res => res.json())
-        .subscribe((data) => {
-            this.lang = data;
-        });
+        this.updateBreadcrumb(angularGlobals.applicationName);
 
         this.route.params.subscribe((params) => {
-            if(this.route.toString().includes('update')){
-                this.mode='update';
-                this.paramId = params['id'];
-                this.getParameterInfos(this.paramId);                
-            } else if (this.route.toString().includes('create')){
-                this.mode = 'create';
-                this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-                $j('#pageTitle').html(this.pageTitle);
-                this.type = 'string';
+            if (typeof params['id'] == "undefined"){
+                this.creationMode = true;
+
+                this.http.get(this.coreUrl + 'rest/administration/parameters/new')
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.lang = data.lang;
+                        this.type = 'string';
+                        this.pageTitle = this.lang.newParameter;
+
+                        this.loading = false;
+                        setTimeout(() => {
+                            //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true}); 
+                        }, 0);
+                }, () => {
+                    location.href = "index.php";
+                });
+            } else {
+                this.creationMode = false;
+                this.http.get(this.coreUrl + 'rest/administration/parameters/'+params['id'])
+                    .map(res => res.json())
+                    .subscribe((data) => {
+                        this.parameter = data.parameter;
+                        this.lang = data.lang
+                        this.type = data.type;
+
+                        this.loading = false;
+                        setTimeout(() => {
+                            //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true});   
+                        }, 0);
+
+                    }, () => {
+                        location.href = "index.php";
+                    }); 
             }
         });
                
@@ -62,44 +76,15 @@ export class ParameterComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string){
-        $j('#ariane').html("<a href='index.php?reinit=true'>" + applicationName + "</a> ><a href='index.php?page=admin&reinit=true'> Administration</a> > Paramètres");
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>Paramètres</a> > Modification";
+        }
     }
 
-    getParameterInfos(paramId : string){
-        this.http.get(this.coreUrl + 'rest/parameters/'+paramId)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else{
-                    var infoParam=data; 
-                    this.parameter.id = infoParam[0].id;
-                    if(infoParam[0].param_value_string != null){
-                        this.parameter.param_value_string = infoParam[0].param_value_string
-                        this.type = "string";
-                    } else if(infoParam[0].param_value_int != null){
-                        this.parameter.param_value_int = infoParam[0].param_value_int;
-                        this.type = "int";
-                    } else if(infoParam[0].param_value_date != null) {
-                        this.parameter.param_value_date = infoParam[0].param_value_date;
-                        this.type = "date";
-                    }
-                    this.parameter.description = infoParam[0].description;
-                    this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : "+this.parameter.id;
-                    $j('#pageTitle').html(this.pageTitle);
-                }
-            });                
-    }
     
-    submitParameter() {
-
+    onSubmit() {
         if(this.type=='date'){
-            //Résolution bug calendrier
-            this.parameter.param_value_date = $j("#param_value_date").val();
+            this.parameter.param_value_date = $j("#paramValue").val();
             this.parameter.param_value_int=null;
             this.parameter.param_value_string=null;
         }
@@ -112,7 +97,7 @@ export class ParameterComponent implements OnInit {
             this.parameter.param_value_int=null;
         }
 
-        if(this.mode == 'create'){
+        /*if(this.mode == 'create'){
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
             .map(res => res.json())
             .subscribe((data) => {
@@ -155,7 +140,6 @@ export class ParameterComponent implements OnInit {
                     this.router.navigate(['administration/parameters']);                    
                 }
             });
-        }
+        }*/
     }
-
 }

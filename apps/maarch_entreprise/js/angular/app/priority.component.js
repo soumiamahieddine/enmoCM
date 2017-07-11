@@ -118,7 +118,7 @@ var PriorityComponent = (function () {
 PriorityComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals.priorityView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameter.component.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], PriorityComponent);

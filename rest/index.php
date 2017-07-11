@@ -121,16 +121,6 @@ $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':ge
 $app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
 $app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
 
-
-/**
-*
-*
-*
-*
-*
-*
-*
-**/
 //admin_reports
 $app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
 $app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
@@ -192,20 +182,18 @@ $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 
 //parameters
-$app->get('/parameters/lang',\Core\Controllers\ParametersController::class . ':getLang');
-$app->get('/parameters', \Core\Controllers\ParametersController::class . ':getList');
-$app->get('/parameters/{id}', \Core\Controllers\ParametersController::class . ':getById');
+$app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
+$app->get('/administration/parameters/new', \Core\Controllers\ParametersController::class . ':getNewParameterForAdministration');
+$app->get('/administration/parameters/{id}', \Core\Controllers\ParametersController::class . ':getParameterForAdministration');
 $app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
 $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
-
-
 
 //priorities
 $app->get('/priorities', \Core\Controllers\PrioritiesController::class . ':getList');
 $app->get('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':getById');
 $app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
-$app->put('/priorities/{id}',\Core\Controllers\PrioritiesController::class . ':update');
+$app->put('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':update');
 $app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':delete');
 
 //actions

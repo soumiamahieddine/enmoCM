@@ -29,9 +29,11 @@ var ParameterComponent = (function () {
         };
         this.lang = "";
         this.resultInfo = "";
+        this.loading = false;
     }
     ParameterComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareParameter();
         this.http.get(this.coreUrl + 'rest/parameters/lang')
@@ -40,16 +42,20 @@ var ParameterComponent = (function () {
             _this.lang = data;
         });
         this.route.params.subscribe(function (params) {
-            if (_this.route.toString().includes('update')) {
+            if (_this.route.toString().includes('parameters/new')) {
+                _this.http.get(_this.coreUrl + 'rest/parameters/new')
+                    .map(function (res) { return res.json(); })
+                    .subscribe(function (data) {
+                    _this.lang = data['lang'];
+                    _this.mode = 'create';
+                    _this.pageTitle = _this.lang.newParameter;
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
+                });
+            }
+            else {
                 _this.mode = 'update';
                 _this.paramId = params['id'];
                 _this.getParameterInfos(_this.paramId);
-            }
-            else if (_this.route.toString().includes('create')) {
-                _this.mode = 'create';
-                _this.pageTitle = '<i class=\"fa fa-wrench fa-2x\"></i> Paramètre';
-                $j('#pageTitle').html(_this.pageTitle);
-                _this.type = 'string';
             }
         });
     };
@@ -64,32 +70,24 @@ var ParameterComponent = (function () {
         this.http.get(this.coreUrl + 'rest/parameters/' + paramId)
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            if (data.errors) {
-                _this.resultInfo = data.errors;
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
+            var infoParam = data;
+            console.log(infoParam);
+            _this.parameter.id = infoParam[0].id;
+            if (infoParam[0].param_value_string != null) {
+                _this.parameter.param_value_string = infoParam[0].param_value_string;
+                _this.type = "string";
             }
-            else {
-                var infoParam = data;
-                _this.parameter.id = infoParam[0].id;
-                if (infoParam[0].param_value_string != null) {
-                    _this.parameter.param_value_string = infoParam[0].param_value_string;
-                    _this.type = "string";
-                }
-                else if (infoParam[0].param_value_int != null) {
-                    _this.parameter.param_value_int = infoParam[0].param_value_int;
-                    _this.type = "int";
-                }
-                else if (infoParam[0].param_value_date != null) {
-                    _this.parameter.param_value_date = infoParam[0].param_value_date;
-                    _this.type = "date";
-                }
-                _this.parameter.description = infoParam[0].description;
-                _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
-                $j('#pageTitle').html(_this.pageTitle);
+            else if (infoParam[0].param_value_int != null) {
+                _this.parameter.param_value_int = infoParam[0].param_value_int;
+                _this.type = "int";
             }
+            else if (infoParam[0].param_value_date != null) {
+                _this.parameter.param_value_date = infoParam[0].param_value_date;
+                _this.type = "date";
+            }
+            _this.parameter.description = infoParam[0].description;
+            _this.pageTitle = "<i class=\"fa fa-wrench fa-2x\"></i> Paramètre : " + _this.parameter.id;
+            $j('#pageTitle').html(_this.pageTitle);
         });
     };
     ParameterComponent.prototype.submitParameter = function () {
@@ -158,8 +156,8 @@ var ParameterComponent = (function () {
 }());
 ParameterComponent = __decorate([
     core_1.Component({
-        templateUrl: angularGlobals.parameterView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameter.component.css']
+        templateUrl: angularGlobals['parameter-administrationView'],
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
 ], ParameterComponent);

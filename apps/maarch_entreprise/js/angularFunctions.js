@@ -11,7 +11,8 @@ function triggerAngular(prodmode, locationToGo) {
         'action-administration',
         'profile',
         'signature-book',
-        'parameters',
+        'parameter-administration',
+        'parameters-administration',
         'priorities',
         'priority',
         'parameter'

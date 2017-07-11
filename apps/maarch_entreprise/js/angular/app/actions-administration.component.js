@@ -20,7 +20,6 @@ var ActionsAdministrationComponent = (function () {
         this.lang = {};
         this.resultInfo = "";
         this.loading = false;
-        this.coreUrl = angularGlobals.coreUrl;
     }
     ActionsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -29,6 +28,7 @@ var ActionsAdministrationComponent = (function () {
     };
     ActionsAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
@@ -81,7 +81,7 @@ var ActionsAdministrationComponent = (function () {
         var _this = this;
         var r = confirm(this.lang.deleteMsg + ' ?');
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + id, this.actions)
+            this.http.delete(this.coreUrl + 'rest/actions/' + id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {

@@ -14,8 +14,8 @@ import { StatusAdministrationComponent }        from './status-administration.co
 import { ActionsAdministrationComponent }       from './actions-administration.component';
 import { ActionAdministrationComponent }        from './action-administration.component';
 import { ProfileComponent }                     from './profile.component';
-import { ParameterComponent }                   from './parameter.component';
-import { ParametersComponent }                  from './parameters.component';
+import { ParameterAdministrationComponent }     from './parameter-administration.component';
+import { ParametersAdministrationComponent }    from './parameters-administration.component';
 import { PrioritiesComponent }                  from './priorities.component';
 import { PriorityComponent }                    from './priority.component';
 
@@ -36,9 +36,9 @@ import { ReportsComponent } from './reports.component';
           { path: 'administration/status/new', component: StatusAdministrationComponent },
           { path: 'administration/status/:identifier', component: StatusAdministrationComponent },
           { path: 'profile', component: ProfileComponent },
-          { path: 'administration/parameter/create', component: ParameterComponent },
-          { path: 'administration/parameter/update/:id', component: ParameterComponent },
-          { path: 'administration/parameters', component: ParametersComponent },
+          { path: 'administration/parameters/new', component: ParameterAdministrationComponent },
+          { path: 'administration/parameters/:id', component: ParameterAdministrationComponent },
+          { path: 'administration/parameters', component: ParametersAdministrationComponent },
           { path: 'administration/reports', component : ReportsComponent},
           { path: 'administration/priorities', component : PrioritiesComponent },
           { path: 'administration/priority/update/:id', component : PriorityComponent },
@@ -63,8 +63,8 @@ import { ReportsComponent } from './reports.component';
       StatusListAdministrationComponent,
       PrioritiesComponent,
       PriorityComponent,
-      ParametersComponent,
-      ParameterComponent,
+      ParametersAdministrationComponent,
+      ParameterAdministrationComponent,
       ProfileComponent,
       SignatureBookComponent,
       SafeUrlPipe
