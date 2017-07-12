@@ -89,26 +89,15 @@ var ParametersAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
-                else {
-                    for (var i = 0; i < _this.parametersList.length; i++) {
-                        if (_this.parametersList[i].id == paramId) {
-                            _this.parametersList.splice(i, 1);
-                        }
+                for (var i = 0; i < _this.parametersList.length; i++) {
+                    if (_this.parametersList[i].id == paramId) {
+                        _this.parametersList.splice(i, 1);
                     }
-                    _this.table.row($j("#" + paramId)).remove().draw();
-                    _this.resultInfo = "Paramètre supprimé avec succès";
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
                 }
+                _this.table.row($j("#" + paramId)).remove().draw();
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };

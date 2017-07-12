@@ -4,8 +4,11 @@ import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
+
 @Component({
     templateUrl : angularGlobals['parameter-administrationView'],
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
@@ -43,9 +46,7 @@ export class ParameterAdministrationComponent implements OnInit {
                         this.pageTitle = this.lang.newParameter;
 
                         this.loading = false;
-                        setTimeout(() => {
-                            //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true}); 
-                        }, 0);
+
                 }, () => {
                     location.href = "index.php";
                 });
@@ -59,9 +60,6 @@ export class ParameterAdministrationComponent implements OnInit {
                         this.type = data.type;
 
                         this.loading = false;
-                        setTimeout(() => {
-                            //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true});   
-                        }, 0);
 
                     }, () => {
                         location.href = "index.php";
@@ -81,7 +79,6 @@ export class ParameterAdministrationComponent implements OnInit {
         }
     }
 
-    
     onSubmit() {
         if(this.type=='date'){
             this.parameter.param_value_date = $j("#paramValue").val();
@@ -97,49 +94,26 @@ export class ParameterAdministrationComponent implements OnInit {
             this.parameter.param_value_int=null;
         }
 
-        /*if(this.mode == 'create'){
+        if(this.creationMode == true){
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
             .map(res => res.json())
-            .subscribe((data) => {
-                if(data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.parameter.param_value_date=null;
-                    this.parameter.param_value_int=null;
-                    this.parameter.param_value_string=null;
-                } else {
-                    this.resultInfo = this.lang.paramCreatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);
-                }
+            .subscribe((data) => {                
+                this.router.navigate(['administration/parameters']);
+                successNotification(data.success);
                 
+            },(err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
-        } else if(this.mode == "update"){
+        } else if(this.creationMode == false){
 
-            this.http.put(this.coreUrl+'rest/parameters/'+this.paramId,this.parameter)
+            this.http.put(this.coreUrl+'rest/parameters/'+this.parameter.id,this.parameter)
             .map(res => res.json())             
             .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.resultInfo = this.lang.paramUpdatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);                    
-                }
+                this.router.navigate(['administration/parameters']);
+                successNotification(data.success);                         
+            },(err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
-        }*/
+        }
     }
 }

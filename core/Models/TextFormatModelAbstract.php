@@ -31,4 +31,24 @@ class TextFormatModelAbstract
 
         return utf8_encode($string);
     }
+
+    public function format_date($date)
+    {
+        $last_date = '';
+        if($date <> "")
+        {
+            if(strpos($date," "))
+            {
+                $date_ex = explode(" ",$date);
+                $the_date = explode("-",$date_ex[0]);
+                $last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
+            }
+            else
+            {
+                $the_date = explode("-",$date);
+                $last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
+            }
+        }
+        return $last_date;
+    }
 }

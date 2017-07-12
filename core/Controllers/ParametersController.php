@@ -1,15 +1,11 @@
 <?php
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
-*
-*/
 
-/**
-* @brief Parameters Controller
-* @author dev@maarch.org
+* @brief   ParametersController
+* @author  dev <dev@maarch.org>
 * @ingroup core
 */
 
@@ -73,6 +69,7 @@ class ParametersController
 
         if (!empty($errors)) {
             return $response
+                ->withStatus(500)
                 ->withJson(['errors' => $errors]);
         }
         
@@ -81,16 +78,18 @@ class ParametersController
         $return = ParametersModel::create($datas);
 
         if ($return) {
-            $obj = ParametersModel::getById([
-                'id' => $datas['id']
-            ]);
+            $obj = ParametersModel::getById(['id' => $datas['id']]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_CREATE]);
         }
 
-        return $response->withJson($obj);
+        return $response->withJson(
+            [
+            'success'   =>  _PARAMETER. ' <b>' . $obj['id'] .'</b> ' ._ADDED,
+            ]
+        );
     }
 
     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -99,6 +98,7 @@ class ParametersController
 
         if (!empty($errors)) {
             return $response
+                ->withStatus(500)
                 ->withJson(['errors' => $errors]);
         }
 
@@ -106,22 +106,28 @@ class ParametersController
         $return = ParametersModel::update($aArgs);
 
         if ($return) {
-            $obj = ParametersModel::getById([
-                'id' => $aArgs['id']
-            ]);
+            $obj = ParametersModel::getById(['id' => $aArgs['id']]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
-        return $response->withJson($obj);
+        return $response->withJson(
+            [
+            'success'   =>  _PARAMETER. ' <b>' . $aArgs['id'] .'</b> ' ._UPDATED,
+            ]
+        );
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $obj = ParametersModel::delete(['id' => $aArgs['id']]);
-        return $response->withJson($obj);
+        return $response->withJson(
+            [
+            'success'   =>  _PARAMETER. ' <b>' . $aArgs['id'] .'</b> ' ._DELETED,
+            ]
+        );
     }
 
     protected function control($request, $mode)
@@ -129,10 +135,12 @@ class ParametersController
         $errors = [];
 
         if ($mode == 'update') {
-            $obj = ParametersModel::getById([
+            $obj = ParametersModel::getById(
+                [
                 'id' => $request->getParam('id'),
                 'param_value_int' => $request->getParam('param_value_int')
-            ]);
+                ]
+            );
             if (empty($obj)) {
                 array_push($errors, _ID . ' '. _NOT_EXISTS);
             }
@@ -152,9 +160,7 @@ class ParametersController
             if (!Validator::regex('/^[0-9]*$/')->validate($request->getParam('param_value_int')) && $request->getParam('param_value_int')!=null) {
                 array_push($errors, _INVALID_INTEGER);
             }
-            $obj = ParametersModel::getById([
-                'id' => $request->getParam('id')
-            ]);
+            $obj = ParametersModel::getById(['id' => $request->getParam('id')]);
             if (!empty($obj)) {
                 array_push($errors, _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS);
             }
@@ -164,9 +170,9 @@ class ParametersController
                 array_push($errors, _INVALID_PARAM_DATE);
             }
         }
-        if (!Validator::notEmpty()->validate($request->getParam('param_value_int'))&&
-        !Validator::notEmpty()->validate($request->getParam('param_value_string'))&&
-        !Validator::notEmpty()->validate($request->getParam('param_value_date'))
+        if (!Validator::notEmpty()->validate($request->getParam('param_value_int'))
+            && !Validator::notEmpty()->validate($request->getParam('param_value_string'))
+            && !Validator::notEmpty()->validate($request->getParam('param_value_date'))
         ) {
             array_push($errors, _PARAM_VALUE_IS_EMPTY);
         }

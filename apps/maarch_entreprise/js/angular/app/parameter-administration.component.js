@@ -40,9 +40,6 @@ var ParameterAdministrationComponent = (function () {
                     _this.type = 'string';
                     _this.pageTitle = _this.lang.newParameter;
                     _this.loading = false;
-                    setTimeout(function () {
-                        //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true}); 
-                    }, 0);
                 }, function () {
                     location.href = "index.php";
                 });
@@ -56,9 +53,6 @@ var ParameterAdministrationComponent = (function () {
                     _this.lang = data.lang;
                     _this.type = data.type;
                     _this.loading = false;
-                    setTimeout(function () {
-                        //$j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true});   
-                    }, 0);
                 }, function () {
                     location.href = "index.php";
                 });
@@ -74,6 +68,7 @@ var ParameterAdministrationComponent = (function () {
         }
     };
     ParameterAdministrationComponent.prototype.onSubmit = function () {
+        var _this = this;
         if (this.type == 'date') {
             this.parameter.param_value_date = $j("#paramValue").val();
             this.parameter.param_value_int = null;
@@ -87,50 +82,26 @@ var ParameterAdministrationComponent = (function () {
             this.parameter.param_value_date = null;
             this.parameter.param_value_int = null;
         }
-        /*if(this.mode == 'create'){
+        if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if(data.errors) {
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.parameter.param_value_date=null;
-                    this.parameter.param_value_int=null;
-                    this.parameter.param_value_string=null;
-                } else {
-                    this.resultInfo = this.lang.paramCreatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);
-                }
-                
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.router.navigate(['administration/parameters']);
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
-        } else if(this.mode == "update"){
-
-            this.http.put(this.coreUrl+'rest/parameters/'+this.paramId,this.parameter)
-            .map(res => res.json())
-            .subscribe((data) => {
-                if(data.errors){
-                    this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {
-                    this.resultInfo = this.lang.paramUpdatedSuccess;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                    this.router.navigate(['administration/parameters']);
-                }
+        }
+        else if (this.creationMode == false) {
+            this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.router.navigate(['administration/parameters']);
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
-        }*/
+        }
     };
     return ParameterAdministrationComponent;
 }());

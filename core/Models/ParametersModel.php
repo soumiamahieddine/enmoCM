@@ -1,12 +1,19 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-    namespace Core\Models;
+* @brief   ParametersModel
+* @author  dev <dev@maarch.org>
+* @ingroup core
+*/
 
-    use Core\Models\ParametersModelAbstract;
+namespace Core\Models;
 
-    class ParametersModel extends ParametersModelAbstract
-    {
+use Core\Models\ParametersModelAbstract;
 
-    }
+class ParametersModel extends ParametersModelAbstract
+{
 
-?>
+}

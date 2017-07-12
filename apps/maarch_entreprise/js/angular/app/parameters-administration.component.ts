@@ -3,6 +3,8 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -97,31 +99,20 @@ export class ParametersAdministrationComponent implements OnInit {
 
     deleteParameter(paramId : string){
         var resp =confirm(this.lang.deleteConfirm+' '+paramId+'?');
-        if(resp){
-                this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
-                    .map(res => res.json())
-                    .subscribe((data) => {
-                        if(data.errors){
-                            this.resultInfo = data.errors;
-                                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                    $j("#resultInfo").slideUp(500);
-                                });
-                        } else{
-                            for(var i = 0; i<this.parametersList.length;i++){
-                                if(this.parametersList[i].id==paramId){
-                                    this.parametersList.splice(i,1);
-                                }
-                            }
-                            this.table.row($j("#"+paramId)).remove().draw();
-                            this.resultInfo = "Paramètre supprimé avec succès";
-                        
-                            $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                                    $j("#resultInfo").slideUp(500);
-                                });
+        if (resp) {
+            this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    for(var i = 0; i<this.parametersList.length;i++){
+                        if(this.parametersList[i].id==paramId){
+                            this.parametersList.splice(i,1);
                         }
-                    });
+                    }
+                    this.table.row($j("#"+paramId)).remove().draw();
+                    successNotification(data.success);               
+                },(err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
         }
     }
  

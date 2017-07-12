@@ -11,15 +11,13 @@
 
 namespace Core\Models;
 
-require_once 'core/class/class_functions.php';
-
-class ParametersModelAbstract extends \Apps_Table_Service
+class ParametersModelAbstract
 {
     public static function getList()
     {
         $func = new \functions();
 
-        $aReturn = static::select(
+        $aReturn = DatabaseModel::select(
             ['select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['parameters']]
         );
@@ -42,45 +40,51 @@ class ParametersModelAbstract extends \Apps_Table_Service
 
     public static function getById(array $aArgs = [])
     {
-        $func = new \functions();
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select(
+            [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     =>['parameters'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
-        ]);
-        if ($aReturn[0]['param_value_date']!=null) {
-            $aReturn[0]['param_value_date']=$func->format_date($aReturn[0]['param_value_date']);
+            ]
+        );
+        if ($aReturn[0]['param_value_date'] != null) {
+            $aReturn[0]['param_value_date'] = TextFormatModel::format_date($aReturn[0]['param_value_date']);
         }
         
         return $aReturn[0];
-
     }
 
     public static function create(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = static::insertInto($aArgs, 'parameters');
+        $aReturn = DatabaseModel::insert(
+            [
+            'table'         => 'parameters',
+            'columnsValues' => $aArgs
+            ]
+        );
 
         return $aReturn;
     }
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-        $where['id'] = $aArgs['id'];
-
-        $aReturn = static::updateTable(
-            $aArgs,
-            'parameters',
-            $where
+        $aReturn = DatabaseModel::update(
+            [
+            'table'     => 'parameters',
+            'set'       => $aArgs,
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+            ]
         );
 
         return $aReturn;
@@ -88,14 +92,16 @@ class ParametersModelAbstract extends \Apps_Table_Service
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = static::deleteFrom([
-                'table' => 'parameters',
-                'where' => ['id = ?'],
-                'data'  => [$aArgs['id']]
-            ]);
+        $aReturn = DatabaseModel::delete(
+            [
+            'table' => 'parameters',
+            'where' => ['id = ?'],
+            'data'  => [$aArgs['id']]
+            ]
+        );
 
         return $aReturn;
     }
