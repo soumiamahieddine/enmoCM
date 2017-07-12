@@ -1,43 +1,72 @@
 <nav id="headerV2" class="navbar navbar-default">
-    <div class="container-fluid" style="height: 100%;margin-top:0px;">
-        <ol class="breadcrumb">
-            <li id="ariane"></li>
-        </ol>
-        <div class="navbar-header" id="headerPos">
-
-            <ul class="nav navbar-nav">
-
-                <li class="dropdown" id="menuList">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-dropbox" aria-hidden="true"></i> Menu <span class="caret"></span></a>
-                    <ul id="menuListContent" class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-cogs" aria-hidden="true"></i> Administration</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-folder-open-o" aria-hidden="true"></i><sup><i class="fa fa-eye" aria-hidden="true"></i></sup> Consulter un dossier</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i><sup><i class="fa fa-plus" aria-hidden="true"></i></sup> Enregistrer un document</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-area-chart" aria-hidden="true"></i>  Statistiques</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-address-book-o" aria-hidden="true"></i>  Mes contacts</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i><sup><i class="fa fa-search" aria-hidden="true"></i></sup> Rechercher un document</a></li>
-                        <li><a href="#"><i class="fa fa-address-book-o" aria-hidden="true"></i><sup><i class="fa fa-search" aria-hidden="true"></i></sup> Rechercher un contact</a></li>
-                        <li><a href="#"><i class="fa fa-folder-open-o" aria-hidden="true"></i><sup><i class="fa fa-search" aria-hidden="true"></i></sup> Rechercher un dossier</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i>  Mon profile</a></li>
-                        <li><a href="#"><i class="fa fa-power-off" aria-hidden="true"></i>  Déconnexion</a></li>
-                        <li id="menuListContentInfoUser"><span>superadmin</span><a href="#">A propos de Maarch</a></li>
-                    </ul>
-                </li>
-                <p class="navbar-text"></p>
-            </ul>
-
-        </div>
-        <div class="collapse navbar-collapse" id="headerLogo">
-            <div class="navbar-header navbar-right" id="headerLogoPos">
-                <a class="navbar-brand" href="#"></a>
-            </div>
-        </div>
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a id="headerLogo" class="navbar-brand" href="index.php"></a>
     </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <div class="input-group">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span> Courriers</button>
+                <ul class="dropdown-menu">
+                <li><a href="#">Courriers</a></li>
+                <li><a href="#">Contacts</a></li>
+                <li><a href="#">Pièces jointes</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Globale</a></li>
+                </ul>
+            </div><!-- /btn-group -->
+            <input style="width:400px;" type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+            </span>
+            </div><!-- /input-group -->
+        </div>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gears fa-2x"></i> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Gestion utlisateurs</a></li>
+            <li><a href="#">Gestion groupes</a></li>
+            <li><a href="#">Gestion statuts</a></li>
+            <li><a href="#">...</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Panneau d'administration</a></li>
+          </ul>
+        </li>
+        <li class="dropdown" id="headerNotification">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bell fa-2x"></i><sup class="notification"><span color="red" class="badge">5</span></sup> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="alert-info"><a><b>3</b> nouveau(x) courrier(s) dans <i class="link">courrier à traiter</i></a></li>
+            <li class="alert-info"><a><b class="link">2017/A/123</b> nouvelle note ajoutée</a></li>
+            <li class="alert-warning"><a><b class="link">2017/A/123</b> arrive bientôt à échéance ! <i class="badge">1 jour(s)</i></a></li>
+            <li class="alert-warning"><a><b class="link">2017/A/21</b> arrive bientôt à échéance ! <i class="badge">2 jour(s)</i></a></li>
+            <li class="alert-danger"><a><b class="link">2017/A/21</b> est arrivé à échéance ! <i class="badge">- 4 jour(s)</i></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Voir la liste des notifications</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x"></i> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Mon profile</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Déconnexion</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
 </nav>
 <router-outlet></router-outlet>
