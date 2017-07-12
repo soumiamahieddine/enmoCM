@@ -35,6 +35,7 @@ var ActionsAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/actions')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
+            console.log('toto');
             _this.actions = data['actions'];
             _this.titles = data['titles'];
             _this.lang = data['lang'];
@@ -84,27 +85,17 @@ var ActionsAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + 'rest/actions/' + id)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
-                if (data.errors) {
-                    _this.resultInfo = data.errors;
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
-                }
-                else {
-                    var list = _this.actions;
-                    for (var i = 0; i < list.length; i++) {
-                        if (list[i].id == id) {
-                            list.splice(i, 1);
-                        }
+                var list = _this.actions;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].id == id) {
+                        list.splice(i, 1);
                     }
-                    _this.table.row($j("#" + id)).remove().draw();
-                    _this.resultInfo = _this.lang.delete_action;
-                    $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                        $j("#resultInfo").slideUp(500);
-                    });
                 }
+                _this.table.row($j("#" + id)).remove().draw();
+                _this.resultInfo = _this.lang.delete_action;
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };

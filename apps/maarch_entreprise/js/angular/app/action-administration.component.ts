@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -103,22 +105,20 @@ export class ActionAdministrationComponent implements OnInit {
             .map(res => res.json())
             .subscribe((data) => {
                 this.router.navigate(['/administration/actions']);
-                //TO_DO_NOTIF
+                successNotification(data.success);
 
-            },(errors) => {
-                console.log(errors);
-                //TO_DO_NOTIF_ERRORS
+            },(err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }else if (this.mode == 'update') {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
             .map(res => res.json())
             .subscribe((data) => {
                 this.router.navigate(['/administration/actions']);
-                //TO_DO_NOTIF
+                successNotification(data.success);
 
-            },(errors) => {
-                console.log(errors);
-                //TO_DO_NOTIF_ERRORS
+            },(err) => {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
 

@@ -1,96 +1,108 @@
 <?php
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
-*
-*/
 
-/**
-* @brief Status Model
-* @author dev@maarch.org
+* @brief   ActionsModelAbstract
+* @author  dev <dev@maarch.org>
 * @ingroup core
 */
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class ActionsModelAbstract extends \Apps_Table_Service
+class ActionsModelAbstract
 {
     public static function getList()
     {
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select(
+            [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['actions'],
-        ]);
+            ]
+        );
 
         return $aReturn;
     }
 
     public static function getById(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = static::select([
+        $aReturn = DatabaseModel::select(
+            [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['actions'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
-        ]);
+            ]
+        );
 
         if (empty($aReturn[0])) {
             return [];
         }
 
-        $aReturn=$aReturn[0];
-        $aReturn['actionCategories']=static::select([
-            'select'    => 'category_id',
+        $aReturn = $aReturn[0];
+        $aReturn['actionCategories']=DatabaseModel::select(
+            [
+            'select'    => ['category_id'],
             'table'     => ['actions_categories'],
             'where'     => ['action_id = ?'],
             'data'      => [$aArgs['id']]
-        ]);
+            ]
+        );
        
         return $aReturn;
     }
 
     public static function create(array $aArgs = [])
     {
-        $actioncategories=$aArgs['actionCategories'];
+        $actioncategories = $aArgs['actionCategories'];
         unset($aArgs['actionCategories']);
-        $aReturn = static::insertInto($aArgs, 'actions');
-        $tab['action_id']=max(ActionsModel::getList())['id'];
+        $aReturn = DatabaseModel::insert(
+            [
+            'table'         => 'actions',
+            'columnsValues' => $aArgs
+            ]
+        );
+
+        $tab['action_id'] = max(ActionsModel::getList())['id'];
 
         for ($i=0;$i<count($actioncategories);$i++) {
 
             $tab['category_id'] = $actioncategories[$i];
-            $aInsert = static::insertInto($tab, 'actions_categories');
+            $aInsert = DatabaseModel::insert(
+                [
+                'table'         => 'actions_categories',
+                'columnsValues' => $tab
+                ]
+            );    
         }
-
         return $aReturn;
     }
 
     public static function update(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
         
-        $aReturn = parent::update(
+        $aReturn = DatabaseModel::update(
             ['table'     => 'actions',
             'set'       => [
-                'keyword' => $aArgs['keyword'],          
-                'label_action' => $aArgs['label_action'],
-                'id_status' => $aArgs['id_status'],
-                'action_page' => $aArgs['action_page'],
-                'history' => $aArgs['history'],
-                'is_folder_action' => $aArgs['is_folder_action'],
-                'history' => $aArgs['history']
+                'keyword'           => $aArgs['keyword'],          
+                'label_action'      => $aArgs['label_action'],
+                'id_status'         => $aArgs['id_status'],
+                'action_page'       => $aArgs['action_page'],
+                'history'           => $aArgs['history'],
+                'is_folder_action'  => $aArgs['is_folder_action'],
+                'history'           => $aArgs['history']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]]
         );
 
-        $aDelete = static::deleteFrom(
+        $aDelete = DatabaseModel::delete(
             ['table' => 'actions_categories',
             'where' => ['action_id = ?'],
             'data'  => [$aArgs['id']]
@@ -102,31 +114,41 @@ class ActionsModelAbstract extends \Apps_Table_Service
         for ($i=0;$i<count($aArgs['actionCategories']);$i++) {
 
             $tab['category_id']=$aArgs['actionCategories'][$i];
-            $aInsert = static::insertInto($tab, 'actions_categories');
+            $aInsert = DatabaseModel::insert(
+                [
+                'table'         => 'actions_categories',
+                'columnsValues' => $tab
+                ]
+            );    
         }
 
- 
         return $aReturn;
     }
 
     public static function delete(array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = static::deleteFrom([
+        $aReturn = DatabaseModel::delete(
+            [
                 'table' => 'actions',
                 'where' => ['id = ?'],
                 'data'  => [$aArgs['id']]
-            ]);
-        $aDelete = static::deleteFrom([
+            ]
+        );
+        $aDelete = DatabaseModel::delete(
+            [
                 'table' => 'actions_categories',
                 'where' => ['action_id = ?'],
                 'data'  => [$aArgs['id']]
-            ]);
+            ]
+        );
         return $aReturn;
     }
 
-    public static function getLettersBoxCategories(){
+    public static function getLettersBoxCategories()
+    {
         if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/config.xml')) {
             $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/config.xml';
         } else {
@@ -138,9 +160,9 @@ class ActionsModelAbstract extends \Apps_Table_Service
         $categories= $xmlfile->COLLECTION->categories;
         if (count($categories) > 0) {
             foreach ($categories->category as $category) {
-               $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
+                $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
 
-                if($category->id == (string)$categories->default_category){
+                if ($category->id == (string)$categories->default_category) {
                     $categoriesTmp['default_category']=true;
 
                 } else {

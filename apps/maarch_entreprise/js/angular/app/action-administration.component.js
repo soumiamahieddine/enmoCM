@@ -92,10 +92,9 @@ var ActionAdministrationComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                //TO_DO_NOTIF
-            }, function (errors) {
-                console.log(errors);
-                //TO_DO_NOTIF_ERRORS
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
         else if (this.mode == 'update') {
@@ -103,10 +102,9 @@ var ActionAdministrationComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                //TO_DO_NOTIF
-            }, function (errors) {
-                console.log(errors);
-                //TO_DO_NOTIF_ERRORS
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(JSON.parse(err._body).errors);
             });
         }
     };

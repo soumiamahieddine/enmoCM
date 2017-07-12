@@ -3,6 +3,8 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -43,6 +45,7 @@ export class ActionsAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/administration/actions')
             .map(res => res.json())
             .subscribe((data) => {
+                console.log('toto');
                 this.actions = data['actions'];
                 this.titles = data['titles'];
                 this.lang= data['lang'];
@@ -94,28 +97,18 @@ export class ActionsAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/actions/' + id)
                 .map(res => res.json())
                 .subscribe((data) => {
-                    if (data.errors) {
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
-                    }
-                    else
-                    {
-                        var list = this.actions;
-                        for(var i = 0; i<list.length;i++){
-                            if(list[i].id==id){
-                                list.splice(i,1);
-                            }
+                    var list = this.actions;
+                    for(var i = 0; i<list.length;i++){
+                        if(list[i].id==id){
+                            list.splice(i,1);
                         }
-                        this.table.row($j("#"+id)).remove().draw();
-                        this.resultInfo = this.lang.delete_action;
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        });
                     }
+                    this.table.row($j("#"+id)).remove().draw();
+                    this.resultInfo = this.lang.delete_action;
+                    successNotification(data.success);
+                    
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
                 });
         }
     }

@@ -1,15 +1,11 @@
 <?php
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
-*
-*/
 
-/**
-* @brief Status Controller
-* @author dev@maarch.org
+* @brief   ActionsController
+* @author  dev <dev@maarch.org>
 * @ingroup core
 */
 
@@ -24,7 +20,8 @@ use Core\Models\LangModel;
 
 class ActionsController
 {
-    public function getForAdministration(RequestInterface $request, ResponseInterface $response){
+    public function getForAdministration(RequestInterface $request, ResponseInterface $response)
+    {
         
         $obj['lang'] = LangModel::getActionsForAdministrationLang();
         $obj ['actions']= ActionsModel::getList();
@@ -132,11 +129,12 @@ class ActionsController
                 ->withJson(['errors' => _NOT_CREATE]);
         }
 
-        $datas = [
-            $obj,
-        ];
-
-        return  $response->withJson($datas);
+        return $response->withJson(
+            [
+            'success'   =>  _ACTION. ' <b>' . $obj['id'] .'</b> ' ._ADDED,
+            'action'      => $obj
+            ]
+        );
     }
 
     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -160,20 +158,19 @@ class ActionsController
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = ActionsModel::getById([
-                'id' => $id
-            ]);
+            $obj = ActionsModel::getById(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
-        $datas = [
-            $obj,
-        ];
-
-        return $response->withJson($datas);
+        return $response->withJson(
+            [
+            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._UPDATED,
+            'action'      => $obj
+            ]
+        );
     }
 
 
@@ -181,20 +178,20 @@ class ActionsController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = ActionsModel::delete([
-                'id' => $id
-            ]);
+            $obj = ActionsModel::delete(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
         }
         
-        $datas = [
-            $obj,
-        ];
 
-        return $response->withJson($datas);
+        return $response->withJson(
+            [
+            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
+            'action'      => $obj
+            ]
+        );
     }
 
     protected function control($aArgs, $mode)
