@@ -1,3 +1,7 @@
+[![build status](https://labs.maarch.org/maarch/MaarchCourrier/badges/master/build.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/master)
+[![coverage report](https://labs.maarch.org/maarch/MaarchCourrier/badges/master/coverage.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/master)
+
+
 # Maarch Courrier
 Gestionnaire Électronique de Correspondances – Libre et Open Source –
 
