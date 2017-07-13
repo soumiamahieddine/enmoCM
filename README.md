@@ -1,5 +1,6 @@
-[![build status](https://labs.maarch.org/maarch/MaarchCourrier/badges/master/build.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/master)
-[![coverage report](https://labs.maarch.org/maarch/MaarchCourrier/badges/master/coverage.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/master)
+[![build status](https://labs.maarch.org/maarch/MaarchCourrier/badges/gitlab-ci-test/build.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/gitlab-ci-test)
+[![coverage report](https://labs.maarch.org/maarch/MaarchCourrier/badges/gitlab-ci-test/coverage.svg)](https://labs.maarch.org/maarch/MaarchCourrier/commits/gitlab-ci-test)
+
 
 
 # Maarch Courrier
