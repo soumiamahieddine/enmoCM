@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit colors="true" bootstrap="core/Test/define.php">
     <testsuites>
         <testsuite name="Maarch Core Test Suite">
-            <directory>core/Test</directory>
+            <!--directory>core/Test</directory-->
+            <file>core/Test/StatusControllerTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
