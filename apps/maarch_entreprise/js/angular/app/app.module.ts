@@ -5,7 +5,6 @@ import { HttpModule }       from '@angular/http';
 import { FormsModule }      from '@angular/forms';
 
 import { AppComponent }                         from './app.component';
-//import { HeaderComponent }                      from './header.component';
 import { AdministrationComponent }              from './administration.component';
 import { UsersAdministrationComponent }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
@@ -13,11 +12,11 @@ import { StatusListAdministrationComponent }    from './status-list-administrati
 import { StatusAdministrationComponent }        from './status-administration.component';
 import { ActionsAdministrationComponent }       from './actions-administration.component';
 import { ActionAdministrationComponent }        from './action-administration.component';
-import { ProfileComponent }                     from './profile.component';
 import { ParameterAdministrationComponent }     from './parameter-administration.component';
 import { ParametersAdministrationComponent }    from './parameters-administration.component';
-import { PrioritiesComponent }                  from './priorities.component';
-import { PriorityComponent }                    from './priority.component';
+import { PrioritiesAdministrationComponent }    from './priorities-administration.component';
+import { PriorityAdministrationComponent }      from './priority-administration.component';
+import { ProfileComponent }                     from './profile.component';
 
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { ReportsComponent } from './reports.component';
@@ -36,13 +35,13 @@ import { ReportsComponent } from './reports.component';
           { path: 'administration/status/new', component: StatusAdministrationComponent },
           { path: 'administration/status/:identifier', component: StatusAdministrationComponent },
           { path: 'profile', component: ProfileComponent },
+          { path: 'administration/parameters', component: ParametersAdministrationComponent },
           { path: 'administration/parameters/new', component: ParameterAdministrationComponent },
           { path: 'administration/parameters/:id', component: ParameterAdministrationComponent },
-          { path: 'administration/parameters', component: ParametersAdministrationComponent },
           { path: 'administration/reports', component : ReportsComponent},
-          { path: 'administration/priorities', component : PrioritiesComponent },
-          { path: 'administration/priority/update/:id', component : PriorityComponent },
-          { path: 'administration/priority/create', component : PriorityComponent },
+          { path: 'administration/priorities', component : PrioritiesAdministrationComponent },
+          { path: 'administration/priorities/new', component : PriorityAdministrationComponent },
+          { path: 'administration/priorities/:id', component : PriorityAdministrationComponent },
           { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
           { path: 'administration/actions', component: ActionsAdministrationComponent },
           { path: 'administration/actions/new', component: ActionAdministrationComponent },
@@ -61,8 +60,8 @@ import { ReportsComponent } from './reports.component';
       UserAdministrationComponent,
       StatusAdministrationComponent,
       StatusListAdministrationComponent,
-      PrioritiesComponent,
-      PriorityComponent,
+      PrioritiesAdministrationComponent,
+      PriorityAdministrationComponent,
       ParametersAdministrationComponent,
       ParameterAdministrationComponent,
       ProfileComponent,

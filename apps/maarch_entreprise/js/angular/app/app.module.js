@@ -12,7 +12,6 @@ var router_1 = require("@angular/router");
 var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
 var app_component_1 = require("./app.component");
-//import { HeaderComponent }                      from './header.component';
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
@@ -20,11 +19,11 @@ var status_list_administration_component_1 = require("./status-list-administrati
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
 var action_administration_component_1 = require("./action-administration.component");
-var profile_component_1 = require("./profile.component");
 var parameter_administration_component_1 = require("./parameter-administration.component");
 var parameters_administration_component_1 = require("./parameters-administration.component");
-var priorities_component_1 = require("./priorities.component");
-var priority_component_1 = require("./priority.component");
+var priorities_administration_component_1 = require("./priorities-administration.component");
+var priority_administration_component_1 = require("./priority-administration.component");
+var profile_component_1 = require("./profile.component");
 var signature_book_component_1 = require("./signature-book.component");
 var reports_component_1 = require("./reports.component");
 var AppModule = (function () {
@@ -47,13 +46,13 @@ AppModule = __decorate([
                 { path: 'administration/status/new', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/:identifier', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'profile', component: profile_component_1.ProfileComponent },
+                { path: 'administration/parameters', component: parameters_administration_component_1.ParametersAdministrationComponent },
                 { path: 'administration/parameters/new', component: parameter_administration_component_1.ParameterAdministrationComponent },
                 { path: 'administration/parameters/:id', component: parameter_administration_component_1.ParameterAdministrationComponent },
-                { path: 'administration/parameters', component: parameters_administration_component_1.ParametersAdministrationComponent },
                 { path: 'administration/reports', component: reports_component_1.ReportsComponent },
-                { path: 'administration/priorities', component: priorities_component_1.PrioritiesComponent },
-                { path: 'administration/priority/update/:id', component: priority_component_1.PriorityComponent },
-                { path: 'administration/priority/create', component: priority_component_1.PriorityComponent },
+                { path: 'administration/priorities', component: priorities_administration_component_1.PrioritiesAdministrationComponent },
+                { path: 'administration/priorities/new', component: priority_administration_component_1.PriorityAdministrationComponent },
+                { path: 'administration/priorities/:id', component: priority_administration_component_1.PriorityAdministrationComponent },
                 { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: 'administration/actions', component: actions_administration_component_1.ActionsAdministrationComponent },
                 { path: 'administration/actions/new', component: action_administration_component_1.ActionAdministrationComponent },
@@ -72,8 +71,8 @@ AppModule = __decorate([
             user_administration_component_1.UserAdministrationComponent,
             status_administration_component_1.StatusAdministrationComponent,
             status_list_administration_component_1.StatusListAdministrationComponent,
-            priorities_component_1.PrioritiesComponent,
-            priority_component_1.PriorityComponent,
+            priorities_administration_component_1.PrioritiesAdministrationComponent,
+            priority_administration_component_1.PriorityAdministrationComponent,
             parameters_administration_component_1.ParametersAdministrationComponent,
             parameter_administration_component_1.ParameterAdministrationComponent,
             profile_component_1.ProfileComponent,

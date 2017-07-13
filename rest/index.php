@@ -85,16 +85,12 @@ if ($_SESSION['error']) {
     exit();
 }
 
-//$lifetime = 3600;
-//setcookie(session_name(),session_id(),time()+$lifetime);
-
-//exit;
-
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
     ]
 ]);
+
 
 //Initialize
 $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
@@ -104,11 +100,15 @@ $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdmi
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
-
-//status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+$app->get('/administration/priorities', \Core\Controllers\PriorityController::class . ':getPrioritiesForAdministration');
+$app->get('/administration/priorities/new', \Core\Controllers\PriorityController::class . ':getNewPriorityForAdministration');
+$app->get('/administration/priorities/{id}', \Core\Controllers\PriorityController::class . ':getPriorityForAdministration');
+
+
+//status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
@@ -190,12 +190,10 @@ $app->post('/parameters', \Core\Controllers\ParametersController::class . ':crea
 $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
 
-//priorities
-$app->get('/priorities', \Core\Controllers\PrioritiesController::class . ':getList');
-$app->get('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':getById');
-$app->post('/priorities', \Core\Controllers\PrioritiesController::class . ':create');
-$app->put('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':update');
-$app->delete('/priorities/{id}', \Core\Controllers\PrioritiesController::class . ':delete');
+//Priorities
+$app->post('/priorities', \Core\Controllers\PriorityController::class . ':create');
+$app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
+$app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
