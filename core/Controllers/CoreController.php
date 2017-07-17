@@ -28,7 +28,10 @@ class CoreController
     {
         $data = $request->getParams();
 
+        $availableLanguages = ['en', 'fr'];
+
         $aInit = [];
+        $aInit['lang'] = 'en';
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = $_SESSION['config']['applicationname']; //Todo No Session
 
@@ -37,6 +40,22 @@ class CoreController
                 $aInit[$view . 'View'] = 'Views/' . $view . '.component.html';
                 if(file_exists("{$_SESSION['config']['corepath']}custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html")) {
                     $aInit[$view . 'View'] = "../../custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html";
+                }
+            }
+        }
+
+        if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
+            $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
+        } else {
+            $path = 'apps/maarch_entreprise/xml/config.xml';
+        }
+
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                $lang = (string)$loadedXml->CONFIG->lang;
+                if (in_array($lang, $availableLanguages)) {
+                    $aInit['lang'] = $lang;
                 }
             }
         }

@@ -12,13 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
+var translate_component_1 = require("./translate.component");
 var ProfileComponent = (function () {
     function ProfileComponent(http, zone) {
         var _this = this;
         this.http = http;
         this.zone = zone;
+        this.lang = translate_component_1.LANG;
         this.user = {
-            lang: {},
             baskets: []
         };
         this.passwordModel = {
