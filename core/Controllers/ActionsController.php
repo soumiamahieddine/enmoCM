@@ -23,7 +23,6 @@ class ActionsController
     public function getForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         
-        $obj['lang'] = LangModel::getActionsForAdministrationLang();
         $obj ['actions']= ActionsModel::getList();
        
         return $response->withJson($obj);
