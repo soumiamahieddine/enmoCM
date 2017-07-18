@@ -1922,7 +1922,7 @@ if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'You are going to be automaticaly disconnected after your redirections');
 /***** Profile *****/
 
-/***** User Administration *****/
+/***** Administration *****/
 if (!defined('_ADMIN_USER_MODIFICATION'))
     define('_ADMIN_USER_MODIFICATION', 'Modification of user');
 if (!defined('_ADDED_GROUP'))
@@ -1959,7 +1959,13 @@ if (!defined('_ACTIVE'))
     define('_ACTIVE', 'Active');
 if (!defined('_INACTIVE'))
     define('_INACTIVE', 'Inactive');
-/***** User Administration *****/
+if (!defined('_ADDED_PRIORITY'))
+    define('_ADDED_PRIORITY', 'Priority created');
+if (!defined('_UPDATED_PRIORITY'))
+    define('_UPDATED_PRIORITY', 'Priority updated');
+if (!defined('_DELETED_PRIORITY'))
+    define('_DELETED_PRIORITY', 'Priority deleted');
+/***** Administration *****/
 
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))

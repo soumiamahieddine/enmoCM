@@ -37,5 +37,10 @@ exports.LANG_FR = {
     'user': "utilisateur",
     'delete': "Supprimer",
     'basketToRedirect': "Choisissez une banette",
-    'autoLogoutAbsence': "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes"
+    'autoLogoutAbsence': "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes",
+    'color': "Couleur",
+    'label': "Label",
+    'workingDays': "Jours travaillés",
+    'processDelay': "Délai de traitement",
+    'save': "Enregistrer"
 };

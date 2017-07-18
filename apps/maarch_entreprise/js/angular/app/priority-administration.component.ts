@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Http } from '@angular/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
+import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -19,13 +20,13 @@ export class PriorityAdministrationComponent implements OnInit {
     coreUrl         : string;
     id              : string;
     creationMode    : boolean;
+    lang            : any       = LANG;
+    loading         : boolean   = false;
 
     priority        : any       = {
         working_days    : false
     };
-    lang            : any       = {};
 
-    loading         : boolean   = false;
 
     constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
     }
@@ -45,23 +46,14 @@ export class PriorityAdministrationComponent implements OnInit {
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
-                this.http.get(this.coreUrl + "rest/administration/priorities/new")
-                    .map(res => res.json())
-                    .subscribe((data) => {
-                        this.lang = data.lang;
-
-                        this.loading = false;
-                    }, () => {
-                        location.href = "index.php";
-                    });
+                this.loading = false;
             } else {
                 this.creationMode = false;
                 this.id = params['id'];
-                this.http.get(this.coreUrl + "rest/administration/priorities/" + this.id)
+                this.http.get(this.coreUrl + "rest/priorities/" + this.id)
                     .map(res => res.json())
                     .subscribe((data) => {
                         this.priority = data.priority;
-                        this.lang = data.lang;
 
                         this.loading = false;
                     }, () => {
@@ -77,6 +69,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     successNotification(data.success);
+                    this.router.navigate(["/administration/priorities"]);
                 }, (err) => {
                     errorNotification(JSON.parse(err._body).errors);
                 });
@@ -85,12 +78,11 @@ export class PriorityAdministrationComponent implements OnInit {
                 .map(res => res.json())
                 .subscribe((data) => {
                     successNotification(data.success);
+                    this.router.navigate(["/administration/priorities"]);
                 }, (err) => {
                     errorNotification(JSON.parse(err._body).errors);
                 });
         }
-
     }
-
 
 }
