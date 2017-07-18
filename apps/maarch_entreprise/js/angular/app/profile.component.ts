@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -17,9 +18,9 @@ declare var angularGlobals : any;
 export class ProfileComponent implements OnInit {
 
     coreUrl                     : string;
+    lang                        : any       = LANG;
 
     user                        : any       = {
-        lang                    : {},
         baskets                 : []
     };
     passwordModel               : any       = {

@@ -1,8 +1,11 @@
 import { Component, OnInit} from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
@@ -13,12 +16,12 @@ declare var angularGlobals : any;
 export class PrioritiesAdministrationComponent implements OnInit {
 
     coreUrl         : string;
+    lang            : any       = LANG;
+    loading         : boolean   = false;
 
     priorities      : any[]     = [];
-    lang            : any       = {};
 
     datatable       : any;
-    loading         : boolean   = false;
 
 
     constructor(public http: Http) {
@@ -35,11 +38,10 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/administration/priorities')
+        this.http.get(this.coreUrl + 'rest/priorities')
             .map(res => res.json())
             .subscribe((data) => {
                 this.priorities = data.priorities;
-                this.lang = data.lang;
                 //setTimeout(() => {
                 //    this.datatable = $j('#prioritiesTable').DataTable({
                 //        "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
@@ -76,29 +78,18 @@ export class PrioritiesAdministrationComponent implements OnInit {
             })
     }
 
-    //deletePriority(priorityId: string){
-    //    var resp = confirm('Confirmer?');
-    //    if(resp){
-    //        var intId = parseInt(priorityId);
-    //        this.http.delete(this.coreUrl + 'rest/priorities/'+intId)
-    //        .map(res => res.json())
-    //        .subscribe((data) => {
-    //            if(data.errors){
-    //                this.resultInfo = data.errors;
-    //                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-    //                            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-    //                                $j("#resultInfo").slideUp(500);
-    //                });
-    //            } else {
-    //                var list = this.prioritiesList;
-    //                for(var i=0;i<list.length;i++){
-    //                    if(list[i].id==priorityId){
-    //                        list.splice(i,1)
-    //                    }
-    //                }
-    //                prioritiesDataTable.row($j('#'+priorityId)).remove().draw();
-    //            }
-    //        })
-    //    }
-    //}
+    deletePriority(id: string) {
+        let r = confirm("Voulez-vous vraiment supprimer cette priorité ?");
+
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/priorities/" + id)
+                .map(res => res.json())
+                .subscribe((data) => {
+                    this.priorities = data.priorities;
+                    successNotification(data.success);
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                })
+        }
+    }
 }

@@ -32,17 +32,17 @@
             </thead>
             <tbody>
             <tr *ngFor="let priority of priorities" id="{{priority.id}}">
-                <td>{{priority.label_priority}}</td>
-                <td><input type="color" value="{{priority.color_priority}}" style="background:none;border:none;width:45px;" disabled></td>
+                <td>{{priority.label}}</td>
+                <td><input type="color" value="{{priority.color}}" style="background:none;border:none;width:45px;" disabled></td>
                 <td>{{priority.delays}}</td>
-                <td *ngIf="priority.working_days =='Y'">Jours ouvrés</td>
-                <td *ngIf="priority.working_days =='N'">Jours calendaires</td>
+                <td *ngIf="priority.working_days">Jours ouvrés</td>
+                <td *ngIf="!priority.working_days">Jours calendaires</td>
                 <td style="text-align:right;">
                     <div class="btn-group" role="group" aria-label="...">
                         <button routerLink="/administration/priorities/{{priority.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                             <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                         </button>
-                        <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deletePriority(priority)">
+                        <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deletePriority(priority.id)">
                             <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                         </button>
                     </div>

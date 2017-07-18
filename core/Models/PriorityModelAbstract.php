@@ -29,7 +29,7 @@ abstract class PriorityModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         $aPriority = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -51,6 +51,7 @@ abstract class PriorityModelAbstract
         ValidatorModel::stringType($aArgs, ['label', 'color', 'working_days']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
+        //working_days => true (monday to friday) => false (monday to sunday)
         $id = DatabaseModel::uniqueId();
         DatabaseModel::insert([
             'table'         => 'priorities',
@@ -59,7 +60,7 @@ abstract class PriorityModelAbstract
                 'label'         => $aArgs['label'],
                 'color'         => $aArgs['color'],
                 'working_days'  => $aArgs['working_days'],
-                'delays'        => $aArgs['delays'],
+                'delays'        => $aArgs['delays']
             ]
         ]);
 
@@ -68,12 +69,18 @@ abstract class PriorityModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'delays', 'working_days']);
+        ValidatorModel::stringType($aArgs, ['id', 'label', 'color', 'working_days']);
+        ValidatorModel::intVal($aArgs, ['delays']);
 
+        //working_days => true (monday to friday) => false (monday to sunday)
         DatabaseModel::update([
             'table'     => 'priorities',
             'set'       => [
+                'label'         => $aArgs['label'],
+                'color'         => $aArgs['color'],
+                'working_days'  => $aArgs['working_days'],
+                'delays'        => $aArgs['delays']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
@@ -85,10 +92,9 @@ abstract class PriorityModelAbstract
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-
-        DatabaseModel::deleteFrom([
+        DatabaseModel::delete([
             'table' => 'priorities',
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]
