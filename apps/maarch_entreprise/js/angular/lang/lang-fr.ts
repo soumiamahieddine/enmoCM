@@ -88,5 +88,11 @@ export const LANG_FR = {
     toUpdateSignature: "pour modifier la signature téléchargée",
     updateSignature: "Modifier la signature",
     user: "utilisateur",
-    userId: "Identifiant"
+    userId: "Identifiant",
+
+    //Priorities admin
+    color: "Couleur",
+    label: "Label",
+    processDelay: "Délai de traitement",
+    workingDays: "Jours travaillés"
 };

@@ -35,5 +35,10 @@ export const LANG_EN = {
     'user'                  : "user",
     'delete'                : "Delete",
     'basketToRedirect'      : "Choose a basket",
-    'autoLogoutAbsence'     : "You are going to be automaticaly disconnected after your redirections"
+    'autoLogoutAbsence'     : "You are going to be automaticaly disconnected after your redirections",
+    'color'                 : "Color",
+    'label'                 : "Label",
+    'workingDays'           : "Working days",
+    'processDelay'          : "Process delay",
+    'save'                  : "Save",
 };
