@@ -1958,7 +1958,7 @@ if (!defined('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS'))
     define('_AUTO_LOGOUT_AFTER_BASKETS_REDIRECTIONS', 'Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes');
 /***** Profile *****/
 
-/***** User Administration *****/
+/***** Administration *****/
 if (!defined('_ADMIN_USER_MODIFICATION'))
     define('_ADMIN_USER_MODIFICATION', 'Modification de l\'utilisateur');
 if (!defined('_ADDED_GROUP'))
@@ -1995,7 +1995,13 @@ if (!defined('_ACTIVE'))
     define('_ACTIVE', 'Actif');
 if (!defined('_INACTIVE'))
     define('_INACTIVE', 'Inactif');
-/***** User Administration *****/
+if (!defined('_ADDED_PRIORITY'))
+    define('_ADDED_PRIORITY', 'Priorité ajoutée');
+if (!defined('_UPDATED_PRIORITY'))
+    define('_UPDATED_PRIORITY', 'Priorité modifiée');
+if (!defined('_DELETED_PRIORITY'))
+    define('_DELETED_PRIORITY', 'Priorité supprimée');
+/***** Administration *****/
 
 /**** admin update control ****/
 if (!defined('_ADMIN_UPDATE_CONTROL'))

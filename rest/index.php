@@ -103,10 +103,6 @@ $app->get('/administration/users/{id}', \Core\Controllers\UserController::class 
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
-$app->get('/administration/priorities', \Core\Controllers\PriorityController::class . ':getPrioritiesForAdministration');
-$app->get('/administration/priorities/new', \Core\Controllers\PriorityController::class . ':getNewPriorityForAdministration');
-$app->get('/administration/priorities/{id}', \Core\Controllers\PriorityController::class . ':getPriorityForAdministration');
-
 
 //status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
@@ -191,7 +187,9 @@ $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
 
 //Priorities
+$app->get('/priorities', \Core\Controllers\PriorityController::class . ':get');
 $app->post('/priorities', \Core\Controllers\PriorityController::class . ':create');
+$app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':getById');
 $app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
 $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 

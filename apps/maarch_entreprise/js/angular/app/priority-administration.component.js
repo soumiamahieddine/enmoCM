@@ -13,16 +13,17 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var router_1 = require("@angular/router");
 require("rxjs/add/operator/map");
+var translate_component_1 = require("./translate.component");
 var PriorityAdministrationComponent = (function () {
     function PriorityAdministrationComponent(http, route, router) {
         this.http = http;
         this.route = route;
         this.router = router;
+        this.lang = translate_component_1.LANG;
+        this.loading = false;
         this.priority = {
             working_days: false
         };
-        this.lang = {};
-        this.loading = false;
     }
     PriorityAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -37,23 +38,15 @@ var PriorityAdministrationComponent = (function () {
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
-                _this.http.get(_this.coreUrl + "rest/administration/priorities/new")
-                    .map(function (res) { return res.json(); })
-                    .subscribe(function (data) {
-                    _this.lang = data.lang;
-                    _this.loading = false;
-                }, function () {
-                    location.href = "index.php";
-                });
+                _this.loading = false;
             }
             else {
                 _this.creationMode = false;
                 _this.id = params['id'];
-                _this.http.get(_this.coreUrl + "rest/administration/priorities/" + _this.id)
+                _this.http.get(_this.coreUrl + "rest/priorities/" + _this.id)
                     .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.priority = data.priority;
-                    _this.lang = data.lang;
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -62,11 +55,13 @@ var PriorityAdministrationComponent = (function () {
         });
     };
     PriorityAdministrationComponent.prototype.onSubmit = function () {
+        var _this = this;
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
+                _this.router.navigate(["/administration/priorities"]);
             }, function (err) {
                 errorNotification(JSON.parse(err._body).errors);
             });
@@ -76,6 +71,7 @@ var PriorityAdministrationComponent = (function () {
                 .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
+                _this.router.navigate(["/administration/priorities"]);
             }, function (err) {
                 errorNotification(JSON.parse(err._body).errors);
             });
