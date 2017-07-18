@@ -32,9 +32,9 @@ class StatusControllerTest extends TestCase
         $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType("int", $responseBody[0][0]->identifier);
+        $this->assertInternalType("int", $responseBody->status->identifier);
 
-        unset($responseBody[0][0]->identifier);
+        unset($responseBody->status->identifier);
 
         $compare = [
             'id'               => 'TEST',
@@ -48,7 +48,7 @@ class StatusControllerTest extends TestCase
         ];
 
         $aCompare = json_decode(json_encode($compare), false);
-        $this->assertEquals($aCompare, $responseBody[0][0], "\$canonicalize = true", 0.0, 10, true);
+        $this->assertEquals($aCompare, $responseBody->status, "\$canonicalize = true", 0.0, 10, true);
 
         ########## CREATE FAIL ##########
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -163,7 +163,7 @@ class StatusControllerTest extends TestCase
 
         $aCompare = json_decode(json_encode($compare), false);
 
-        $this->assertEquals($aCompare, $responseBody[0][0], "\$canonicalize = true", 0.0, 10, true);
+        $this->assertEquals($aCompare, $responseBody->status, "\$canonicalize = true", 0.0, 10, true);
 
         ########## UPDATE FAIL ##########
         $request = \Slim\Http\Request::createFromEnvironment($environment);
