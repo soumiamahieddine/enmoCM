@@ -49,34 +49,47 @@ abstract class attachments_Abstract
         )
         ) {
             $configPath = $_SESSION['config']['corepath'] . 'custom'
-                        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                        . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
-                        . "attachments" . DIRECTORY_SEPARATOR . "xml"
-                        . DIRECTORY_SEPARATOR . "config.xml";
+                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
+                . "attachments" . DIRECTORY_SEPARATOR . "xml"
+                . DIRECTORY_SEPARATOR . "config.xml";
         } else {
             $configPath = "modules" . DIRECTORY_SEPARATOR . "attachments"
-                        . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
-                        . "config.xml";
+                . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+                . "config.xml";
         }
         $xmlconfig = simplexml_load_file($configPath);
         foreach ($xmlconfig->TABLENAME as $tableName) {
-            $_SESSION['tablename']['attach_res_attachments'] = (string) $tableName->attach_res_attachments;
+            $_SESSION['tablename']['attach_res_attachments'] = (string)$tableName->attach_res_attachments;
         }
-		$conf = $xmlconfig->CONFIG;
-		$_SESSION['modules_loaded']['attachments']['convertPdf'] = (string) $conf->convertPdf;
-		$_SESSION['modules_loaded']['attachments']['vbs_convert_path'] = (string) $conf->vbs_convert_path;
-		$_SESSION['modules_loaded']['attachments']['useExeConvert'] = (string) $conf->useExeConvert;
+        $conf = $xmlconfig->CONFIG;
+        $_SESSION['modules_loaded']['attachments']['convertPdf'] = (string)$conf->convertPdf;
+        $_SESSION['modules_loaded']['attachments']['vbs_convert_path'] = (string)$conf->vbs_convert_path;
+        $_SESSION['modules_loaded']['attachments']['useExeConvert'] = (string)$conf->useExeConvert;
         $watermark = $conf->watermark;
-        $_SESSION['modules_loaded']['attachments']['watermark']['enabled'] = (string) $watermark->enabled;
-        $_SESSION['modules_loaded']['attachments']['watermark']['text'] = (string) $watermark->text;
-        $_SESSION['modules_loaded']['attachments']['watermark']['position'] = (string) $watermark->position;
-        $_SESSION['modules_loaded']['attachments']['watermark']['font'] = (string) $watermark->font;
-        $_SESSION['modules_loaded']['attachments']['watermark']['text_color'] = (string) $watermark->text_color;
-		 
+        $_SESSION['modules_loaded']['attachments']['watermark']['enabled'] = (string)$watermark->enabled;
+        $_SESSION['modules_loaded']['attachments']['watermark']['text'] = (string)$watermark->text;
+        $_SESSION['modules_loaded']['attachments']['watermark']['position'] = (string)$watermark->position;
+        $_SESSION['modules_loaded']['attachments']['watermark']['font'] = (string)$watermark->font;
+        $_SESSION['modules_loaded']['attachments']['watermark']['text_color'] = (string)$watermark->text_color;
+
         $hist = $xmlconfig->HISTORY;
-        $_SESSION['history']['attachadd'] = (string) $hist->attachadd;
-        $_SESSION['history']['attachup'] = (string) $hist->attachup;
-        $_SESSION['history']['attachdel'] = (string) $hist->attachdel;
-        $_SESSION['history']['attachview'] = (string) $hist->attachview;
+        $_SESSION['history']['attachadd'] = (string)$hist->attachadd;
+        $_SESSION['history']['attachup'] = (string)$hist->attachup;
+        $_SESSION['history']['attachdel'] = (string)$hist->attachdel;
+        $_SESSION['history']['attachview'] = (string)$hist->attachview;
+
+        // RECONCILIATION
+        $reconciliation = $xmlconfig->RECONCILIATION->CONFIG;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['multiple_res_id'] = (string)$reconciliation->multiple_res_id;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['attach_to_empty'] = (string)$reconciliation->attach_to_empty;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['delete_response_project'] = (string)$reconciliation->delete_response_project;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'] = (string)$reconciliation->close_incoming;
+
+        $reconciliationTab = $xmlconfig->RECONCILIATION->TABLENAME;
+        $_SESSION['tablename']['reconciliation']['attachment'] = (string)$reconciliationTab->attachment;
+        $_SESSION['tablename']['reconciliation']['letterbox'] = (string)$reconciliationTab->letterbox;
+        $_SESSION['tablename']['reconciliation']['contacts_v2'] = (string)$reconciliationTab->contacts_v2;
+        $_SESSION['tablename']['reconciliation']['contact_addresses'] = (string)$reconciliationTab->contact_addresses;
     }
 }
