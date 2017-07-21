@@ -12,12 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
+var translate_component_1 = require("./translate.component");
 var ActionsAdministrationComponent = (function () {
     function ActionsAdministrationComponent(http) {
         this.http = http;
+        this.lang = translate_component_1.LANG;
         this.actions = [];
         this.titles = [];
-        this.lang = {};
         this.resultInfo = "";
         this.loading = false;
     }
@@ -35,10 +36,8 @@ var ActionsAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/actions')
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            console.log('toto');
             _this.actions = data['actions'];
             _this.titles = data['titles'];
-            _this.lang = data['lang'];
             setTimeout(function () {
                 _this.table = $j('#actionsTable').DataTable({
                     "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
@@ -92,7 +91,6 @@ var ActionsAdministrationComponent = (function () {
                     }
                 }
                 _this.table.row($j("#" + id)).remove().draw();
-                _this.resultInfo = _this.lang.delete_action;
                 successNotification(data.success);
             }, function (err) {
                 errorNotification(JSON.parse(err._body).errors);

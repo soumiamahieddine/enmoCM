@@ -1,6 +1,3 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
-</div>
 <div *ngIf="loading">
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
@@ -29,7 +26,7 @@
                 <th style="width:5%;"><span>{{lang.id}}</span></th>
                 <th style="width:45%;"><span>{{lang.desc}}</span></th>
                 <th style="width:15%;"><span>{{lang.action_history}}</span></th>
-                <th style="width:15%;"><span>{{lang.is_folder_action}}</span></th>
+                <th style="width:15%;"><span>{{lang.isFolderAction}}</span></th>
                 <th style="width:30%;"><span>&nbsp;</span></th>
             </tr>
             </thead>
@@ -43,7 +40,7 @@
                 <td style="width:15%;" *ngIf="action.is_folder_action == 'N'"> {{lang.no}}  </td>
                 <td style="width:30%;" style="text-align:right;">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.modify}}">
+                        <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
                             <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                         </button>
                         <button [disabled]="action.is_system == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteAction(action.id)">

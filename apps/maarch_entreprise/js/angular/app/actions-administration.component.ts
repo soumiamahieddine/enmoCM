@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -16,10 +17,10 @@ declare var angularGlobals : any;
 
 export class ActionsAdministrationComponent implements OnInit {
     coreUrl                 : string;
+    lang                    : any           = LANG;
 
     actions                 : any[]         = [];
     titles                  : any[]         = [];
-    lang                    : any           = {};
     table                   : any;
 
     resultInfo              : string        = "";
@@ -45,10 +46,8 @@ export class ActionsAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/administration/actions')
             .map(res => res.json())
             .subscribe((data) => {
-                console.log('toto');
                 this.actions = data['actions'];
                 this.titles = data['titles'];
-                this.lang= data['lang'];
                 setTimeout(() => {
                     this.table = $j('#actionsTable').DataTable({
                         "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
@@ -104,7 +103,6 @@ export class ActionsAdministrationComponent implements OnInit {
                         }
                     }
                     this.table.row($j("#"+id)).remove().draw();
-                    this.resultInfo = this.lang.delete_action;
                     successNotification(data.success);
                     
                 }, (err) => {
