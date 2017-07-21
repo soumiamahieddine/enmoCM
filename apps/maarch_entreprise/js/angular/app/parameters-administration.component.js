@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var ParametersAdministrationComponent = (function () {
     function ParametersAdministrationComponent(http) {
         this.http = http;
@@ -31,7 +30,6 @@ var ParametersAdministrationComponent = (function () {
         this.prepareParameter();
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.http.get(this.coreUrl + 'rest/administration/parameters')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
                 $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
@@ -87,7 +85,6 @@ var ParametersAdministrationComponent = (function () {
         var resp = confirm(this.lang.deleteConfirm + ' ' + paramId + '?');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 for (var i = 0; i < _this.parametersList.length; i++) {
                     if (_this.parametersList[i].id == paramId) {
@@ -108,6 +105,6 @@ ParametersAdministrationComponent = __decorate([
         templateUrl: angularGlobals["parameters-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameters-administration.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], ParametersAdministrationComponent);
 exports.ParametersAdministrationComponent = ParametersAdministrationComponent;

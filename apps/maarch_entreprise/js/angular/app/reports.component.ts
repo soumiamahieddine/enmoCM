@@ -1,6 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 declare function $j (selector: any) : any;
 declare var angularGlobals : any;
@@ -22,7 +21,7 @@ export class ReportsComponent implements OnInit
     arrayArgsPut    : any = [];
     lang            : any = [];
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     prepareState() {
@@ -34,7 +33,6 @@ export class ReportsComponent implements OnInit
         this.coreUrl = angularGlobals.coreUrl;
 
         this.http.get(this.coreUrl + 'rest/report/groups')
-            .map(res => res.json())
             .subscribe((data) => {
                 this.groups = data['group'];
                 this.lang = data['lang']; 
@@ -43,7 +41,6 @@ export class ReportsComponent implements OnInit
 
     loadGroup() { 
         this.http.get(this.coreUrl + 'rest/report/groups/'+ this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id) // SELECTED ANDGULAR  .selected()
-            .map(res => res.json())
             .subscribe((data) => {
                 this.checkboxes = data;
                 console.log(this.checkboxes[0].id);     
@@ -62,7 +59,6 @@ export class ReportsComponent implements OnInit
         }
         console.log(this.arrayArgsPut);    
         this.http.put(this.coreUrl + 'rest/report/groups/'+this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id, this.arrayArgsPut) // SELECTED ANDGULAR  .selected()
-            .map(res => res.json())
             .subscribe((data) => {
                 this.arrayArgsPut = [];
             });

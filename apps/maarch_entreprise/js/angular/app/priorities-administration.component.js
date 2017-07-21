@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var translate_component_1 = require("./translate.component");
 var PrioritiesAdministrationComponent = (function () {
     function PrioritiesAdministrationComponent(http) {
@@ -31,7 +30,6 @@ var PrioritiesAdministrationComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/priorities')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.priorities = data.priorities;
             //setTimeout(() => {
@@ -73,7 +71,6 @@ var PrioritiesAdministrationComponent = (function () {
         var r = confirm("Voulez-vous vraiment supprimer cette priorité ?");
         if (r) {
             this.http.delete(this.coreUrl + "rest/priorities/" + id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.priorities = data.priorities;
                 successNotification(data.success);
@@ -89,6 +86,6 @@ PrioritiesAdministrationComponent = __decorate([
         templateUrl: angularGlobals["priorities-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], PrioritiesAdministrationComponent);
 exports.PrioritiesAdministrationComponent = PrioritiesAdministrationComponent;

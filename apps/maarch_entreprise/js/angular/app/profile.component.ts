@@ -1,6 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
@@ -49,7 +48,7 @@ export class ProfileComponent implements OnInit {
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private zone: NgZone) {
+    constructor(public http: HttpClient, private zone: NgZone) {
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -111,8 +110,7 @@ export class ProfileComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/users/profile')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user = data;
 
                 setTimeout(() => {
@@ -224,7 +222,6 @@ export class ProfileComponent implements OnInit {
 
     activateAbsence() {
         this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
-            .map(res => res.json())
             .subscribe(() => {
                 this.userAbsenceModel  = [];
                 location.search = "?display=true&page=logout&abs_mode";
@@ -235,8 +232,7 @@ export class ProfileComponent implements OnInit {
 
     updatePassword() {
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 if (data.errors) {
                     errorNotification(data.errors);
                 } else {
@@ -257,8 +253,7 @@ export class ProfileComponent implements OnInit {
         this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
 
         this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 if (data.errors) {
                     errorNotification(data.errors);
                 } else {
@@ -279,8 +274,7 @@ export class ProfileComponent implements OnInit {
         var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
 
         this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 if (data.errors) {
                     errorNotification(data.errors);
                 } else {
@@ -298,8 +292,7 @@ export class ProfileComponent implements OnInit {
             var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
 
             this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.errors) {
                         errorNotification(data.errors);
                     } else {
@@ -318,8 +311,7 @@ export class ProfileComponent implements OnInit {
 
     submitSignature() {
         this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/signatures", this.signatureModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user.signatures = data.signatures;
                 this.signatureModel  = {
                     base64                  : "",
@@ -339,8 +331,7 @@ export class ProfileComponent implements OnInit {
         var id = this.user.signatures[this.selectedSignature].id;
 
         this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id, {"label" : this.selectedSignatureLabel})
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
                 this.selectedSignature = -1;
                 this.selectedSignatureLabel = "";
@@ -355,8 +346,7 @@ export class ProfileComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.signatures = data.signatures;
                     successNotification(data.success);
                 }, (err) => {
@@ -367,8 +357,7 @@ export class ProfileComponent implements OnInit {
 
     onSubmit() {
         this.http.put(this.coreUrl + 'rest/users/profile', this.user)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
                 errorNotification(JSON.parse(err._body).errors);

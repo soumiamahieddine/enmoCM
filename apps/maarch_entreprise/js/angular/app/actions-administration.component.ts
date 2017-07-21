@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
@@ -26,7 +25,7 @@ export class ActionsAdministrationComponent implements OnInit {
     resultInfo              : string        = "";
     loading                 : boolean       = false;
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -44,7 +43,6 @@ export class ActionsAdministrationComponent implements OnInit {
         $j('#inner_content').remove();
 
         this.http.get(this.coreUrl + 'rest/administration/actions')
-            .map(res => res.json())
             .subscribe((data) => {
                 this.actions = data['actions'];
                 this.titles = data['titles'];
@@ -94,8 +92,7 @@ export class ActionsAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     var list = this.actions;
                     for(var i = 0; i<list.length;i++){
                         if(list[i].id==id){

@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var StatusAdministrationComponent = (function () {
     function StatusAdministrationComponent(http, route, router) {
@@ -40,7 +39,6 @@ var StatusAdministrationComponent = (function () {
         this.route.params.subscribe(function (params) {
             if (typeof params['identifier'] == "undefined") {
                 _this.http.get(_this.coreUrl + 'rest/administration/status/new')
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data['lang'];
                     _this.statusImages = data['statusImages'];
@@ -81,7 +79,6 @@ var StatusAdministrationComponent = (function () {
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
         var _this = this;
         this.http.get(this.coreUrl + 'rest/administration/status/' + statusIdentifier)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.status = data['status'][0];
             if (_this.status.can_be_searched == 'Y') {
@@ -117,8 +114,7 @@ var StatusAdministrationComponent = (function () {
         var _this = this;
         if (this.mode == 'create') {
             this.http.post(this.coreUrl + 'rest/status', this.status)
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
+                .subscribe(function () {
                 successNotification(_this.lang.newStatusAdded + ' : ' + _this.status.id);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
@@ -127,8 +123,7 @@ var StatusAdministrationComponent = (function () {
         }
         else if (this.mode == "update") {
             this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
+                .subscribe(function () {
                 successNotification(_this.lang.statusUpdated + ' : ' + _this.status.id);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
@@ -143,6 +138,6 @@ StatusAdministrationComponent = __decorate([
         templateUrl: angularGlobals['status-administrationView'],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
 ], StatusAdministrationComponent);
 exports.StatusAdministrationComponent = StatusAdministrationComponent;

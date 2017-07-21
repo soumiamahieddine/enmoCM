@@ -10,9 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
-require("rxjs/add/operator/map");
 var AdministrationComponent = (function () {
     function AdministrationComponent(http, router) {
         this.http = http;
@@ -45,7 +44,6 @@ var AdministrationComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/administration')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.applicationServices = data.application;
             _this.modulesServices = data.modules;
@@ -67,6 +65,6 @@ AdministrationComponent = __decorate([
         templateUrl: angularGlobals.administrationView,
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.Router])
 ], AdministrationComponent);
 exports.AdministrationComponent = AdministrationComponent;

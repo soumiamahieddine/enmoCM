@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
@@ -17,14 +16,14 @@ export class StatusListAdministrationComponent implements OnInit {
     coreUrl                     : string;
     nbStatus                    : number;
     lang                        : any           = "";
-    table                       : any
+    table                       : any;
     statusList                  : any;
 
     resultInfo                  : string        = "";
     loading                     : boolean       = false;
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient) {
     }
 
     ngOnInit(): void {
@@ -35,8 +34,7 @@ export class StatusListAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/administration/status')
-            .map(res => res.json())
-            .subscribe((data) => {                      
+            .subscribe((data : any) => {
                 this.statusList = data.statusList;
                 this.lang       = data.lang;
                 this.nbStatus = Object.keys(this.statusList).length;                
@@ -91,8 +89,7 @@ export class StatusListAdministrationComponent implements OnInit {
         var resp = confirm(this.lang.deleteConfirm+' '+statusId+'?');
         if(resp){
             this.http.delete(this.coreUrl + 'rest/status/'+statusIdentifier)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe(() => {
                     var list = this.statusList;
                     for(var i = 0; i<list.length;i++){
                         if(list[i].id==statusId){

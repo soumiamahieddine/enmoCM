@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var ActionAdministrationComponent = (function () {
     function ActionAdministrationComponent(http, route, router) {
@@ -45,7 +44,6 @@ var ActionAdministrationComponent = (function () {
             if (typeof params['id'] == "undefined") {
                 _this.mode = 'create';
                 _this.http.get(_this.coreUrl + 'rest/initAction')
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.lang = data.lang;
@@ -63,7 +61,6 @@ var ActionAdministrationComponent = (function () {
             else {
                 _this.mode = 'update';
                 _this.http.get(_this.coreUrl + 'rest/administration/actions/' + params['id'])
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data.lang;
                     _this.action = data.action;
@@ -89,7 +86,6 @@ var ActionAdministrationComponent = (function () {
         this.action.action_page = $j("#action_page").chosen().val();
         if (this.mode == 'create') {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
                 successNotification(data.success);
@@ -99,7 +95,6 @@ var ActionAdministrationComponent = (function () {
         }
         else if (this.mode == 'update') {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
                 successNotification(data.success);
@@ -125,6 +120,6 @@ ActionAdministrationComponent = __decorate([
         templateUrl: angularGlobals["action-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/action-administration.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
 ], ActionAdministrationComponent);
 exports.ActionAdministrationComponent = ActionAdministrationComponent;

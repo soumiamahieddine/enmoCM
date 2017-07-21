@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var ReportsComponent = (function () {
     function ReportsComponent(http) {
         this.http = http;
@@ -27,7 +26,6 @@ var ReportsComponent = (function () {
         this.prepareState();
         this.coreUrl = angularGlobals.coreUrl;
         this.http.get(this.coreUrl + 'rest/report/groups')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.groups = data['group'];
             _this.lang = data['lang'];
@@ -36,7 +34,6 @@ var ReportsComponent = (function () {
     ReportsComponent.prototype.loadGroup = function () {
         var _this = this;
         this.http.get(this.coreUrl + 'rest/report/groups/' + this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id) // SELECTED ANDGULAR  .selected()
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.checkboxes = data;
             console.log(_this.checkboxes[0].id);
@@ -54,7 +51,6 @@ var ReportsComponent = (function () {
         }
         console.log(this.arrayArgsPut);
         this.http.put(this.coreUrl + 'rest/report/groups/' + this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id, this.arrayArgsPut) // SELECTED ANDGULAR  .selected()
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.arrayArgsPut = [];
         });
@@ -66,6 +62,6 @@ ReportsComponent = __decorate([
         templateUrl: 'Views/reports.component.html',
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', '../maarch_entreprise/css/reports.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], ReportsComponent);
 exports.ReportsComponent = ReportsComponent;

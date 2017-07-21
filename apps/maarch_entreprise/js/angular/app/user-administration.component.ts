@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -39,7 +38,7 @@ export class UserAdministrationComponent implements OnInit {
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -61,8 +60,7 @@ export class UserAdministrationComponent implements OnInit {
             if (typeof params['id'] == "undefined") {
                 this.userCreation = true;
                 this.http.get(this.coreUrl + "rest/administration/users/new")
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.user = data;
 
                         this.loading = false;
@@ -73,8 +71,7 @@ export class UserAdministrationComponent implements OnInit {
                 this.userCreation = false;
                 this.serialId = params['id'];
                 this.http.get(this.coreUrl + "rest/administration/users/" + this.serialId)
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.user = data;
                         this.userId = data.user_id;
 
@@ -153,8 +150,7 @@ export class UserAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {
                     errorNotification(JSON.parse(err._body).errors);
@@ -172,8 +168,7 @@ export class UserAdministrationComponent implements OnInit {
             };
 
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.groups = data.groups;
                     this.user.allGroups = data.allGroups;
                     $j("#groupRole")[0].value = "";
@@ -187,8 +182,7 @@ export class UserAdministrationComponent implements OnInit {
 
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
                 errorNotification(JSON.parse(err._body).errors);
@@ -200,8 +194,7 @@ export class UserAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.groups = data.groups;
                     this.user.allGroups = data.allGroups;
                     successNotification(data.success);
@@ -221,8 +214,7 @@ export class UserAdministrationComponent implements OnInit {
             };
 
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.entities = data.entities;
                     this.user.allEntities = data.allEntities;
                     $j("#entityRole")[0].value = "";
@@ -236,8 +228,7 @@ export class UserAdministrationComponent implements OnInit {
 
     updateEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
                 errorNotification(JSON.parse(err._body).errors);
@@ -246,8 +237,7 @@ export class UserAdministrationComponent implements OnInit {
 
     updatePrimaryEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user['entities'] = data.entities;
                 successNotification(data.success);
             }, (err) => {
@@ -260,8 +250,7 @@ export class UserAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.entities = data.entities;
                     this.user.allEntities = data.allEntities;
                     successNotification(data.success);
@@ -273,8 +262,7 @@ export class UserAdministrationComponent implements OnInit {
 
     submitSignature() {
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user.signatures = data.signatures;
                 this.signatureModel  = {
                     base64                  : "",
@@ -294,8 +282,7 @@ export class UserAdministrationComponent implements OnInit {
         var id = this.user.signatures[this.selectedSignature].id;
 
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, {"label" : this.selectedSignatureLabel})
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
                 this.selectedSignature = -1;
                 this.selectedSignatureLabel = "";
@@ -310,8 +297,7 @@ export class UserAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.user.signatures = data.signatures;
                     successNotification(data.success);
                 }, (err) => {
@@ -345,8 +331,7 @@ export class UserAdministrationComponent implements OnInit {
 
     activateAbsence() {
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/baskets/absence", this.userAbsenceModel)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel  = [];
                 $j('#manageAbs').modal('hide');
@@ -358,8 +343,7 @@ export class UserAdministrationComponent implements OnInit {
 
     deactivateAbsence() {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", {"status" : "OK"})
-            .map(res => res.json())
-            .subscribe((data) => {
+                .subscribe((data : any) => {
                 this.user.status = data.user.status;
                 successNotification(data.success);
             }, (err) => {
@@ -370,8 +354,7 @@ export class UserAdministrationComponent implements OnInit {
     onSubmit() {
         if (this.userCreation) {
             this.http.post(this.coreUrl + "rest/users", this.user)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                     this.router.navigate(["/administration/users/" + data.user.id]);
                 }, (err) => {
@@ -379,8 +362,7 @@ export class UserAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {
                     errorNotification(JSON.parse(err._body).errors);

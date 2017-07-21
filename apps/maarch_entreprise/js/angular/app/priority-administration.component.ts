@@ -1,7 +1,6 @@
 import { Component, OnInit} from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/map';
 import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
@@ -28,7 +27,7 @@ export class PriorityAdministrationComponent implements OnInit {
     };
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -51,8 +50,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 this.creationMode = false;
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.priority = data.priority;
 
                         this.loading = false;
@@ -66,8 +64,7 @@ export class PriorityAdministrationComponent implements OnInit {
     onSubmit(){
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                     this.router.navigate(["/administration/priorities"]);
                 }, (err) => {
@@ -75,8 +72,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.put(this.coreUrl + "rest/priorities/" + this.id, this.priority)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                     this.router.navigate(["/administration/priorities"]);
                 }, (err) => {

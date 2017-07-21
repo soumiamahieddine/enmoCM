@@ -1,6 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 
 declare function $j(selector: any) : any;
@@ -24,7 +23,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     datatable       : any;
 
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -39,8 +38,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/priorities')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.priorities = data.priorities;
                 //setTimeout(() => {
                 //    this.datatable = $j('#prioritiesTable').DataTable({
@@ -83,8 +81,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/priorities/" + id)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.priorities = data.priorities;
                     successNotification(data.success);
                 }, (err) => {

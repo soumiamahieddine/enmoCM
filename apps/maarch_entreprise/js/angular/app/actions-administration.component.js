@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var translate_component_1 = require("./translate.component");
 var ActionsAdministrationComponent = (function () {
     function ActionsAdministrationComponent(http) {
@@ -34,7 +33,6 @@ var ActionsAdministrationComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
         this.http.get(this.coreUrl + 'rest/administration/actions')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.actions = data['actions'];
             _this.titles = data['titles'];
@@ -82,7 +80,6 @@ var ActionsAdministrationComponent = (function () {
         var r = confirm(this.lang.deleteMsg + ' ?');
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 var list = _this.actions;
                 for (var i = 0; i < list.length; i++) {
@@ -104,6 +101,6 @@ ActionsAdministrationComponent = __decorate([
         templateUrl: angularGlobals["actions-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], ActionsAdministrationComponent);
 exports.ActionsAdministrationComponent = ActionsAdministrationComponent;

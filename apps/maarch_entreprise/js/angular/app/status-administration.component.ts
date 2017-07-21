@@ -1,6 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
@@ -31,7 +30,7 @@ export class StatusAdministrationComponent implements OnInit {
     loading             : boolean           = false;
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit(): void {
@@ -42,7 +41,6 @@ export class StatusAdministrationComponent implements OnInit {
         this.route.params.subscribe((params) => {
             if (typeof params['identifier'] == "undefined"){
                 this.http.get(this.coreUrl + 'rest/administration/status/new')
-                .map(res => res.json())
                 .subscribe((data) => {
                     this.lang         = data['lang'];
                     this.statusImages = data['statusImages'];
@@ -83,7 +81,6 @@ export class StatusAdministrationComponent implements OnInit {
 
     getStatusInfos(statusIdentifier : string){
         this.http.get(this.coreUrl + 'rest/administration/status/'+statusIdentifier)
-            .map(res => res.json())
             .subscribe((data) => {
                 this.status    = data['status'][0];
                 if(this.status.can_be_searched == 'Y'){
@@ -117,8 +114,7 @@ export class StatusAdministrationComponent implements OnInit {
     submitStatus() {
         if(this.mode == 'create'){
             this.http.post(this.coreUrl + 'rest/status', this.status)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe(() => {
                 successNotification(this.lang.newStatusAdded + ' : ' + this.status.id);
                 this.router.navigate(['administration/status']);
             }, (err) => {
@@ -127,8 +123,7 @@ export class StatusAdministrationComponent implements OnInit {
         } else if(this.mode == "update"){
 
             this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
-            .map(res => res.json())             
-            .subscribe((data) => {
+            .subscribe(() => {
                 successNotification(this.lang.statusUpdated + ' : ' + this.status.id);
                 this.router.navigate(['administration/status']);                    
             }, (err) => {

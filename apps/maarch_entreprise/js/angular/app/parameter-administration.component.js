@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var ParameterAdministrationComponent = (function () {
     function ParameterAdministrationComponent(http, route, router) {
@@ -34,7 +33,6 @@ var ParameterAdministrationComponent = (function () {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
                 _this.http.get(_this.coreUrl + 'rest/administration/parameters/new')
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.lang = data.lang;
                     _this.type = 'string';
@@ -47,7 +45,6 @@ var ParameterAdministrationComponent = (function () {
             else {
                 _this.creationMode = false;
                 _this.http.get(_this.coreUrl + 'rest/administration/parameters/' + params['id'])
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.parameter = data.parameter;
                     _this.lang = data.lang;
@@ -84,7 +81,6 @@ var ParameterAdministrationComponent = (function () {
         }
         if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
                 successNotification(data.success);
@@ -94,7 +90,6 @@ var ParameterAdministrationComponent = (function () {
         }
         else if (this.creationMode == false) {
             this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
                 successNotification(data.success);
@@ -110,6 +105,6 @@ ParameterAdministrationComponent = __decorate([
         templateUrl: angularGlobals['parameter-administrationView'],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
 ], ParameterAdministrationComponent);
 exports.ParameterAdministrationComponent = ParameterAdministrationComponent;

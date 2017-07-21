@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var UsersAdministrationComponent = (function () {
     function UsersAdministrationComponent(http) {
         this.http = http;
@@ -33,9 +32,8 @@ var UsersAdministrationComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/administration/users')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
-            _this.users = data.users;
+            _this.users = data['users'];
             _this.lang = data.lang;
             setTimeout(function () {
                 _this.table = $j('#usersTable').DataTable({
@@ -77,7 +75,6 @@ var UsersAdministrationComponent = (function () {
             user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.userDestRedirectModels = data.listModels;
                 setTimeout(function () {
@@ -104,7 +101,6 @@ var UsersAdministrationComponent = (function () {
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     successNotification(data.success);
                 }, function (err) {
@@ -122,7 +118,6 @@ var UsersAdministrationComponent = (function () {
             user.redirectListModels = this.userDestRedirectModels;
             //first, update listModels
             this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
                     user.enabled = 'Y';
@@ -131,7 +126,6 @@ var UsersAdministrationComponent = (function () {
                 else {
                     //then suspend user
                     _this.http.put(_this.coreUrl + 'rest/users/' + user.user_id, user)
-                        .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
                         user.inDiffListDest = 'N';
                         $j('#changeDiffListDest').modal('hide');
@@ -151,7 +145,6 @@ var UsersAdministrationComponent = (function () {
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
             }, function (err) {
@@ -166,7 +159,6 @@ var UsersAdministrationComponent = (function () {
             user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.userDestRedirectModels = data.listModels;
                 setTimeout(function () {
@@ -189,7 +181,6 @@ var UsersAdministrationComponent = (function () {
             var r = confirm(this.lang.deleteMsg + " ?");
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     for (var i = 0; i < _this.users.length; i++) {
                         if (_this.users[i].user_id == user.user_id) {
@@ -211,7 +202,6 @@ var UsersAdministrationComponent = (function () {
             user.redirectListModels = this.userDestRedirectModels;
             //first, update listModels
             this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
                     errorNotification(data.errors);
@@ -219,7 +209,6 @@ var UsersAdministrationComponent = (function () {
                 else {
                     //then delete user
                     _this.http.delete(_this.coreUrl + 'rest/users/' + user.user_id)
-                        .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
                         user.inDiffListDest = 'N';
                         $j('#changeDiffListDest').modal('hide');
@@ -246,6 +235,6 @@ UsersAdministrationComponent = __decorate([
         templateUrl: angularGlobals["users-administrationView"],
         styleUrls: ['css/users-administration.component.css', '../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], UsersAdministrationComponent);
 exports.UsersAdministrationComponent = UsersAdministrationComponent;

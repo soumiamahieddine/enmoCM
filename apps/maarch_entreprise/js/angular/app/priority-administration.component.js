@@ -10,9 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
-require("rxjs/add/operator/map");
 var translate_component_1 = require("./translate.component");
 var PriorityAdministrationComponent = (function () {
     function PriorityAdministrationComponent(http, route, router) {
@@ -44,7 +43,6 @@ var PriorityAdministrationComponent = (function () {
                 _this.creationMode = false;
                 _this.id = params['id'];
                 _this.http.get(_this.coreUrl + "rest/priorities/" + _this.id)
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.priority = data.priority;
                     _this.loading = false;
@@ -58,7 +56,6 @@ var PriorityAdministrationComponent = (function () {
         var _this = this;
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
                 _this.router.navigate(["/administration/priorities"]);
@@ -68,7 +65,6 @@ var PriorityAdministrationComponent = (function () {
         }
         else {
             this.http.put(this.coreUrl + "rest/priorities/" + this.id, this.priority)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
                 _this.router.navigate(["/administration/priorities"]);
@@ -84,6 +80,6 @@ PriorityAdministrationComponent = __decorate([
         templateUrl: angularGlobals["priority-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
 ], PriorityAdministrationComponent);
 exports.PriorityAdministrationComponent = PriorityAdministrationComponent;

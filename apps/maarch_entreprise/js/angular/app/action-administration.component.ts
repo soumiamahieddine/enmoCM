@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
@@ -28,7 +27,7 @@ export class ActionAdministrationComponent implements OnInit {
     resultInfo                  : string;
     loading                     : boolean   = false;
 
-    constructor(public http: Http,private route: ActivatedRoute, private router: Router){
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router){
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -54,8 +53,7 @@ export class ActionAdministrationComponent implements OnInit {
                 this.mode = 'create';
                 
                 this.http.get(this.coreUrl + 'rest/initAction')
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.action = data.action;
                         this.lang = data.lang;
                         this.lang.pageTitle = this.lang.add+' '+this.lang.action;
@@ -74,8 +72,7 @@ export class ActionAdministrationComponent implements OnInit {
                 this.mode = 'update';
 
                 this.http.get(this.coreUrl + 'rest/administration/actions/' + params['id'])
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.lang= data.lang;
                         this.action = data.action;
                         this.lang.pageTitle = this.lang.modify_action+' : '+this.action.id;
@@ -102,8 +99,7 @@ export class ActionAdministrationComponent implements OnInit {
 
         if (this.mode == 'create') {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
                 successNotification(data.success);
 
@@ -112,8 +108,7 @@ export class ActionAdministrationComponent implements OnInit {
             });
         }else if (this.mode == 'update') {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
                 successNotification(data.success);
 

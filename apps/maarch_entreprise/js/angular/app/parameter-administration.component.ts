@@ -1,6 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function $j(selector: any) : any;
@@ -25,7 +24,7 @@ export class ParameterAdministrationComponent implements OnInit {
     resultInfo              : string        = "";
     loading                 : boolean       = false;
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit(): void {
@@ -39,24 +38,22 @@ export class ParameterAdministrationComponent implements OnInit {
                 this.creationMode = true;
 
                 this.http.get(this.coreUrl + 'rest/administration/parameters/new')
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.lang = data.lang;
                         this.type = 'string';
                         this.pageTitle = this.lang.newParameter;
 
                         this.loading = false;
 
-                }, () => {
-                    location.href = "index.php";
-                });
+                    }, () => {
+                        location.href = "index.php";
+                    });
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/administration/parameters/'+params['id'])
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.parameter = data.parameter;
-                        this.lang = data.lang
+                        this.lang = data.lang;
                         this.type = data.type;
 
                         this.loading = false;
@@ -96,8 +93,7 @@ export class ParameterAdministrationComponent implements OnInit {
 
         if(this.creationMode == true){
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
-            .map(res => res.json())
-            .subscribe((data) => {                
+            .subscribe((data : any) => {
                 this.router.navigate(['administration/parameters']);
                 successNotification(data.success);
                 
@@ -107,8 +103,7 @@ export class ParameterAdministrationComponent implements OnInit {
         } else if(this.creationMode == false){
 
             this.http.put(this.coreUrl+'rest/parameters/'+this.parameter.id,this.parameter)
-            .map(res => res.json())             
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.router.navigate(['administration/parameters']);
                 successNotification(data.success);                         
             },(err) => {

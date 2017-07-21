@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -28,7 +27,7 @@ export class UsersAdministrationComponent implements OnInit {
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -44,9 +43,8 @@ export class UsersAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/administration/users')
-            .map(res => res.json())
-            .subscribe((data) => {
-                this.users = data.users;
+            .subscribe((data : any) => {
+                this.users = data['users'];
                 this.lang = data.lang;
 
                 setTimeout(() => {
@@ -91,8 +89,7 @@ export class UsersAdministrationComponent implements OnInit {
             user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listModels/itemId/'+user.user_id+'/itemMode/dest/objectType/entity_id')
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.userDestRedirectModels = data.listModels;
                     setTimeout(() => {
                         $j(".redirectDest").typeahead({
@@ -118,8 +115,7 @@ export class UsersAdministrationComponent implements OnInit {
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         successNotification(data.success);
                     }, (err) => {
                         user.enabled = 'Y';
@@ -137,16 +133,14 @@ export class UsersAdministrationComponent implements OnInit {
             user.redirectListModels = this.userDestRedirectModels;
             //first, update listModels
             this.http.put(this.coreUrl + 'rest/listModels/itemId/'+user.user_id+'/itemMode/dest/objectType/entity_id', user)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.errors) {
                         user.enabled = 'Y';
                         errorNotification(data.errors);
                     } else {
                         //then suspend user
                         this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
-                            .map(res => res.json())
-                            .subscribe((data) => {
+                            .subscribe((data : any) => {
                                 user.inDiffListDest = 'N';
                                 $j('#changeDiffListDest').modal('hide');
                                 successNotification(data.success);
@@ -168,8 +162,7 @@ export class UsersAdministrationComponent implements OnInit {
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {
                     user.enabled = 'N';
@@ -183,33 +176,31 @@ export class UsersAdministrationComponent implements OnInit {
             user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listModels/itemId/'+user.user_id+'/itemMode/dest/objectType/entity_id')
-            .map(res => res.json())
-            .subscribe((data) => {
-                this.userDestRedirectModels = data.listModels;
+                .subscribe((data : any) => {
+                    this.userDestRedirectModels = data.listModels;
 
-                setTimeout(() => {
-                    $j(".redirectDest").typeahead({
-                        order: "asc",
-                        source: {
-                            ajax: {
-                                type: "GET",
-                                dataType: "json",
-                                url: this.coreUrl + "rest/users/autocompleter/exclude/"+user.user_id,
+                    setTimeout(() => {
+                        $j(".redirectDest").typeahead({
+                            order: "asc",
+                            source: {
+                                ajax: {
+                                    type: "GET",
+                                    dataType: "json",
+                                    url: this.coreUrl + "rest/users/autocompleter/exclude/"+user.user_id,
+                                }
                             }
-                        }
+                        });
                     });
-                }); 
-                
-            }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
-            });
+
+                }, (err) => {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
         } else {
             let r = confirm(this.lang.deleteMsg + " ?");
 
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         for (var i = 0;i<this.users.length;i++) {
                             if(this.users[i].user_id == user.user_id){
                                 this.users.splice(i,1);
@@ -231,15 +222,13 @@ export class UsersAdministrationComponent implements OnInit {
             user.redirectListModels = this.userDestRedirectModels;
             //first, update listModels
             this.http.put(this.coreUrl + 'rest/listModels/itemId/'+user.user_id+'/itemMode/dest/objectType/entity_id', user)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.errors) {
                         errorNotification(data.errors);
                     } else {
                         //then delete user
                         this.http.delete(this.coreUrl + 'rest/users/' + user.user_id)
-                            .map(res => res.json())
-                            .subscribe((data) => {
+                            .subscribe((data : any) => {
                                 user.inDiffListDest = 'N';
                                 $j('#changeDiffListDest').modal('hide');
                                 for (var i = 0;i<this.users.length;i++) {

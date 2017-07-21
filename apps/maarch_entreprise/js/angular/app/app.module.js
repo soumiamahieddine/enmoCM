@@ -9,8 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
-var http_1 = require("@angular/http");
 var forms_1 = require("@angular/forms");
+var http_1 = require("@angular/common/http");
 var app_component_1 = require("./app.component");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
@@ -59,7 +59,7 @@ AppModule = __decorate([
                 { path: 'administration/actions/:id', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
-            http_1.HttpModule
+            http_1.HttpClientModule
         ],
         declarations: [
             app_component_1.AppComponent,

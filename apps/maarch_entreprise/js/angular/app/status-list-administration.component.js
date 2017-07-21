@@ -10,14 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
-var router_1 = require("@angular/router");
+var http_1 = require("@angular/common/http");
 var StatusListAdministrationComponent = (function () {
-    function StatusListAdministrationComponent(http, route, router) {
+    function StatusListAdministrationComponent(http) {
         this.http = http;
-        this.route = route;
-        this.router = router;
         this.lang = "";
         this.resultInfo = "";
         this.loading = false;
@@ -28,7 +24,6 @@ var StatusListAdministrationComponent = (function () {
         this.prepareStatus();
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/administration/status')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.statusList = data.statusList;
             _this.lang = data.lang;
@@ -81,8 +76,7 @@ var StatusListAdministrationComponent = (function () {
         var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/status/' + statusIdentifier)
-                .map(function (res) { return res.json(); })
-                .subscribe(function (data) {
+                .subscribe(function () {
                 var list = _this.statusList;
                 for (var i = 0; i < list.length; i++) {
                     if (list[i].id == statusId) {
@@ -104,6 +98,6 @@ StatusListAdministrationComponent = __decorate([
         templateUrl: angularGlobals['statuses-administrationView'],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], StatusListAdministrationComponent);
 exports.StatusListAdministrationComponent = StatusListAdministrationComponent;

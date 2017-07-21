@@ -10,9 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
+var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
-require("rxjs/add/operator/map");
 var UserAdministrationComponent = (function () {
     function UserAdministrationComponent(http, route, router, zone) {
         var _this = this;
@@ -53,7 +52,6 @@ var UserAdministrationComponent = (function () {
             if (typeof params['id'] == "undefined") {
                 _this.userCreation = true;
                 _this.http.get(_this.coreUrl + "rest/administration/users/new")
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.user = data;
                     _this.loading = false;
@@ -65,7 +63,6 @@ var UserAdministrationComponent = (function () {
                 _this.userCreation = false;
                 _this.serialId = params['id'];
                 _this.http.get(_this.coreUrl + "rest/administration/users/" + _this.serialId)
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.user = data;
                     _this.userId = data.user_id;
@@ -134,7 +131,6 @@ var UserAdministrationComponent = (function () {
         var r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
             }, function (err) {
@@ -151,7 +147,6 @@ var UserAdministrationComponent = (function () {
                 "role": $j("#groupRole")[0].value
             };
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
@@ -165,7 +160,6 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.updateGroup = function (group) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             successNotification(data.success);
         }, function (err) {
@@ -177,7 +171,6 @@ var UserAdministrationComponent = (function () {
         var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de ce groupe ?');
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
@@ -196,7 +189,6 @@ var UserAdministrationComponent = (function () {
                 "role": $j("#entityRole")[0].value
             };
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
                 _this.user.allEntities = data.allEntities;
@@ -210,7 +202,6 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.updateEntity = function (entity) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             successNotification(data.success);
         }, function (err) {
@@ -220,7 +211,6 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.updatePrimaryEntity = function (entity) {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user['entities'] = data.entities;
             successNotification(data.success);
@@ -233,7 +223,6 @@ var UserAdministrationComponent = (function () {
         var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.entities = data.entities;
                 _this.user.allEntities = data.allEntities;
@@ -246,7 +235,6 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.submitSignature = function () {
         var _this = this;
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
             _this.signatureModel = {
@@ -266,7 +254,6 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         var id = this.user.signatures[this.selectedSignature].id;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": this.selectedSignatureLabel })
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
             _this.selectedSignature = -1;
@@ -281,7 +268,6 @@ var UserAdministrationComponent = (function () {
         var r = confirm('Voulez-vous vraiment supprimer la signature ?');
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
                 successNotification(data.success);
@@ -313,7 +299,6 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.activateAbsence = function () {
         var _this = this;
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/baskets/absence", this.userAbsenceModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
@@ -326,7 +311,6 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.deactivateAbsence = function () {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             successNotification(data.success);
@@ -338,7 +322,6 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         if (this.userCreation) {
             this.http.post(this.coreUrl + "rest/users", this.user)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
                 _this.router.navigate(["/administration/users/" + data.user.id]);
@@ -348,7 +331,6 @@ var UserAdministrationComponent = (function () {
         }
         else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 successNotification(data.success);
             }, function (err) {
@@ -363,6 +345,6 @@ UserAdministrationComponent = __decorate([
         templateUrl: angularGlobals["user-administrationView"],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], UserAdministrationComponent);
 exports.UserAdministrationComponent = UserAdministrationComponent;

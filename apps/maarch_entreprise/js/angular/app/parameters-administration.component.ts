@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -26,7 +25,7 @@ export class ParametersAdministrationComponent implements OnInit {
     loading         : boolean       = false;
 
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     prepareParameter() {
@@ -44,8 +43,7 @@ export class ParametersAdministrationComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
 
         this.http.get(this.coreUrl + 'rest/administration/parameters')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 if(data.errors){
                     $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
                     $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
@@ -101,8 +99,7 @@ export class ParametersAdministrationComponent implements OnInit {
         var resp =confirm(this.lang.deleteConfirm+' '+paramId+'?');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     for(var i = 0; i<this.parametersList.length;i++){
                         if(this.parametersList[i].id==paramId){
                             this.parametersList.splice(i,1);

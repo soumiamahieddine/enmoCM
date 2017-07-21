@@ -1,8 +1,8 @@
 import { NgModule }         from '@angular/core';
 import { BrowserModule }    from '@angular/platform-browser';
 import { RouterModule }     from '@angular/router';
-import { HttpModule }       from '@angular/http';
 import { FormsModule }      from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent }                         from './app.component';
 import { AdministrationComponent }              from './administration.component';
@@ -48,7 +48,7 @@ import { ReportsComponent } from './reports.component';
           { path: 'administration/actions/:id', component: ActionAdministrationComponent },
           { path: '**',   redirectTo: '', pathMatch: 'full' },
       ], { useHash: true }),
-      HttpModule
+      HttpClientModule
   ],
   declarations: [
       AppComponent,

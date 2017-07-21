@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
 
@@ -22,7 +21,7 @@ export class AdministrationComponent implements OnInit {
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private router: Router) {
+    constructor(public http: HttpClient, private router: Router) {
     }
 
     prepareAdministration() {
@@ -52,8 +51,7 @@ export class AdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/administration')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.applicationServices = data.application;
                 this.modulesServices = data.modules;
 
