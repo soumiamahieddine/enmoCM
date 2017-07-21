@@ -157,10 +157,6 @@ class DatabaseModel
         $db = new \Database();
         $db->query($query, $data);
 
-        if (!empty($args['getLastId'])) {
-            return $db->lastInsertId($args['getLastId']);
-        }
-
         return true;
     }
 

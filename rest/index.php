@@ -85,6 +85,15 @@ if ($_SESSION['error']) {
     exit();
 }
 
+$cookie = (array)\Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie)) {
+    if (!\Core\Models\SecurityModel::checkAuthentication($cookie)) {
+        echo 'Authentication Failed';
+        exit();
+    }
+}
+
+
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
