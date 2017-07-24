@@ -43,9 +43,10 @@ class SecurityModelAbstract
         ValidatorModel::notEmpty($args, ['userId', 'password']);
         ValidatorModel::stringType($args, ['userId', 'password']);
 
+        $customId = CoreConfigModel::getCustomId();
 
-        if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
-            $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
         } else {
             $path = 'apps/maarch_entreprise/xml/config.xml';
         }
@@ -58,13 +59,11 @@ class SecurityModelAbstract
             }
         }
 
-        $t = str_replace('core/Models', '', dirname(__file__));
-        $y = basename($t);
-
+        $cookiePath = str_replace('apps/maarch_entreprise/index.php', '', $_SERVER['SCRIPT_NAME']);
 
         $cookieData = json_encode(['userId' => $args['userId'], 'password' => $args['password']]);
         $cookieDataEncrypted = openssl_encrypt ($cookieData, 'aes-256-ctr', '12345678910');
-        setcookie('maarchCourrierAuth', base64_encode($cookieDataEncrypted), time() + 60 * $cookieTime, '/', '', false, true);
+        setcookie('maarchCourrierAuth', base64_encode($cookieDataEncrypted), time() + 60 * $cookieTime, $cookiePath, '', false, true);
 
         return true;
     }
