@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LANG } from './translate.component';
+import { LANG } from '../translate.component';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;

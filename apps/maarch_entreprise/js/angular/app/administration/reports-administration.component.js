@@ -11,17 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
-var ReportsComponent = (function () {
-    function ReportsComponent(http) {
+var ReportsAdministrationComponent = (function () {
+    function ReportsAdministrationComponent(http) {
         this.http = http;
         this.test42 = "Ptit test OKLM";
         this.arrayArgsPut = [];
         this.lang = [];
     }
-    ReportsComponent.prototype.prepareState = function () {
+    ReportsAdministrationComponent.prototype.prepareState = function () {
         $j('#inner_content').remove();
     };
-    ReportsComponent.prototype.ngOnInit = function () {
+    ReportsAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.prepareState();
         this.coreUrl = angularGlobals.coreUrl;
@@ -31,7 +31,7 @@ var ReportsComponent = (function () {
             _this.lang = data['lang'];
         });
     };
-    ReportsComponent.prototype.loadGroup = function () {
+    ReportsAdministrationComponent.prototype.loadGroup = function () {
         var _this = this;
         this.http.get(this.coreUrl + 'rest/report/groups/' + this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id) // SELECTED ANDGULAR  .selected()
             .subscribe(function (data) {
@@ -40,11 +40,11 @@ var ReportsComponent = (function () {
         });
         $j("#formCategoryId").removeClass("hide");
     };
-    ReportsComponent.prototype.clickOnCategory = function (id) {
+    ReportsAdministrationComponent.prototype.clickOnCategory = function (id) {
         $j(".category").addClass("hide");
         $j("#" + id).removeClass("hide");
     };
-    ReportsComponent.prototype.updateDB = function () {
+    ReportsAdministrationComponent.prototype.updateDB = function () {
         var _this = this;
         for (var i = 0; i < $j(":checkbox").length; i++) {
             this.arrayArgsPut.push({ id: this.checkboxes[i].id, checked: $j(":checkbox")[i].checked });
@@ -55,13 +55,13 @@ var ReportsComponent = (function () {
             _this.arrayArgsPut = [];
         });
     };
-    return ReportsComponent;
+    return ReportsAdministrationComponent;
 }());
-ReportsComponent = __decorate([
+ReportsAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: 'Views/reports.component.html',
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', '../maarch_entreprise/css/reports.css']
     }),
     __metadata("design:paramtypes", [http_1.HttpClient])
-], ReportsComponent);
-exports.ReportsComponent = ReportsComponent;
+], ReportsAdministrationComponent);
+exports.ReportsAdministrationComponent = ReportsAdministrationComponent;

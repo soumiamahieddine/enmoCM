@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
-var translate_component_1 = require("./translate.component");
+var translate_component_1 = require("../translate.component");
 var PrioritiesAdministrationComponent = (function () {
     function PrioritiesAdministrationComponent(http) {
         this.http = http;

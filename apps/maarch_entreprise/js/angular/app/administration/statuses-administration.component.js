@@ -11,14 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
-var StatusListAdministrationComponent = (function () {
-    function StatusListAdministrationComponent(http) {
+var StatusesAdministrationComponent = (function () {
+    function StatusesAdministrationComponent(http) {
         this.http = http;
         this.lang = "";
         this.resultInfo = "";
         this.loading = false;
     }
-    StatusListAdministrationComponent.prototype.ngOnInit = function () {
+    StatusesAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
@@ -64,14 +64,14 @@ var StatusListAdministrationComponent = (function () {
             errorNotification(JSON.parse(err._body).errors);
         });
     };
-    StatusListAdministrationComponent.prototype.prepareStatus = function () {
+    StatusesAdministrationComponent.prototype.prepareStatus = function () {
         $j('#inner_content').remove();
     };
-    StatusListAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+    StatusesAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
             "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " + this.lang.admin_status;
     };
-    StatusListAdministrationComponent.prototype.deleteStatus = function (statusId, statusIdentifier) {
+    StatusesAdministrationComponent.prototype.deleteStatus = function (statusId, statusIdentifier) {
         var _this = this;
         var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
         if (resp) {
@@ -91,13 +91,13 @@ var StatusListAdministrationComponent = (function () {
             });
         }
     };
-    return StatusListAdministrationComponent;
+    return StatusesAdministrationComponent;
 }());
-StatusListAdministrationComponent = __decorate([
+StatusesAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals['statuses-administrationView'],
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.HttpClient])
-], StatusListAdministrationComponent);
-exports.StatusListAdministrationComponent = StatusListAdministrationComponent;
+], StatusesAdministrationComponent);
+exports.StatusesAdministrationComponent = StatusesAdministrationComponent;

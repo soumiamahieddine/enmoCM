@@ -8,7 +8,7 @@ declare var angularGlobals : any;
     templateUrl : 'Views/reports.component.html',   
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', '../maarch_entreprise/css/reports.css']
 })
-export class ReportsComponent implements OnInit 
+export class ReportsAdministrationComponent implements OnInit
 {
 
     test42          : string = "Ptit test OKLM";

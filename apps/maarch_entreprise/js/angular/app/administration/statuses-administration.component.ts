@@ -12,7 +12,7 @@ declare var angularGlobals : any;
     templateUrl : angularGlobals['statuses-administrationView'],
     styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
-export class StatusListAdministrationComponent implements OnInit {
+export class StatusesAdministrationComponent implements OnInit {
     coreUrl                     : string;
     nbStatus                    : number;
     lang                        : any           = "";

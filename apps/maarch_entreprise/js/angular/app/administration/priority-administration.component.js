@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
-var translate_component_1 = require("./translate.component");
+var translate_component_1 = require("../translate.component");
 var PriorityAdministrationComponent = (function () {
     function PriorityAdministrationComponent(http, route, router) {
         this.http = http;
