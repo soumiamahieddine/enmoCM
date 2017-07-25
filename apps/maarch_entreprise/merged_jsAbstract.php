@@ -51,11 +51,10 @@ class MergedJsAbstract {
 
 		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
 
-		echo "\n";
 		//Dependencies
 		readfile('node_modules/jquery/dist/jquery.min.js');
-		readfile('node_modules/core-js/client/shim.js');
-		readfile('node_modules/zone.js/dist/zone.min.js');
+		readfile('node_modules/core-js/client/shim.js'); //Angular
+		readfile('node_modules/zone.js/dist/zone.min.js'); //Angular
 		readfile('node_modules/bootstrap/dist/js/bootstrap.min.js');
 		readfile('node_modules/chart.js/Chart.min.js');
 		readfile('node_modules/tinymce/tinymce.min.js');
@@ -63,9 +62,8 @@ class MergedJsAbstract {
 		readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js');
 		readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js');
 		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
+		readfile('node_modules/hammerjs/hammer.min.js'); //Angular Material
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
-
-		echo "\n";
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
@@ -81,9 +79,7 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
 
-		echo "\n";
-
-		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');		
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
         
 		echo "\n";
 
