@@ -43,8 +43,6 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
 }
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/chosen.min.css';
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrap-chosen.css';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
 
 //Views
@@ -55,11 +53,13 @@ readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
 readfile('node_modules/datatables/media/css/jquery.dataTables.min.css');
 readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
 readfile('node_modules/@angular/material/prebuilt-themes/indigo-pink.css');
+readfile('apps/maarch_entreprise/css/chosen.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
 readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 
 //Custom CSS for V2
 readfile('apps/maarch_entreprise/css/engine.css');
+readfile('apps/maarch_entreprise/css/bootstrap-chosen.css');
 
 ob_end_flush();

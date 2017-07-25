@@ -46,11 +46,6 @@ class MergedJsAbstract {
 		readfile('apps/maarch_entreprise/js/effects.js');
 		readfile('apps/maarch_entreprise/js/controls.js');
 
-		//TODO clean
-		readfile('apps/maarch_entreprise/js/scrollbox.js');
-
-		readfile('apps/maarch_entreprise/js/event.simulate.js'); // Works with chosen proto
-
 		//Dependencies
 		readfile('node_modules/jquery/dist/jquery.min.js');
 		readfile('node_modules/core-js/client/shim.js'); //Angular
@@ -64,6 +59,7 @@ class MergedJsAbstract {
 		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
 		readfile('node_modules/hammerjs/hammer.min.js'); //Angular Material
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');
@@ -79,10 +75,8 @@ class MergedJsAbstract {
 //		include('apps/maarch_entreprise/js/render.js');
 //		include('apps/maarch_entreprise/js/jio.js');
 
-		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
-        
-		echo "\n";
 
+		echo "\n";
 	}
 
 	public function merge_module() {
