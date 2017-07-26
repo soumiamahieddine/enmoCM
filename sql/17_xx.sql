@@ -70,3 +70,6 @@ ALTER TABLE user_signatures ADD FOREIGN KEY (user_serial_id) REFERENCES users(id
 UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
 ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
 ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;
+
+ALTER TABLE sendmail DROP COLUMN IF EXISTS res_version_att_id_list;
+ALTER TABLE sendmail ADD COLUMN res_version_att_id_list character varying(255);
