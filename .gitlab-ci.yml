@@ -41,4 +41,4 @@ job_php-7.0:
     #- cd App/MaarchRM
     - phpunit --coverage-text --colors=never -c phpunit.xml
   only:
-    - gitlab-ci-test
+    - master
