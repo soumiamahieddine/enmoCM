@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 declare function $j(selector: any) : any;
 
@@ -20,13 +19,13 @@ export class HeaderComponent implements OnInit {
     coreUrl                     : string;
 
     lang                        : any       = {};
-    table                       : any
+    table                       : any;
 
     resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http) {
+    constructor(public http: HttpClient) {
     }
 
     prepareHeader() {

@@ -85,16 +85,21 @@ if ($_SESSION['error']) {
     exit();
 }
 
-//$lifetime = 3600;
-//setcookie(session_name(),session_id(),time()+$lifetime);
+$cookie = (array)\Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie)) {
+    if (!\Core\Models\SecurityModel::checkAuthentication($cookie)) {
+        echo 'Authentication Failed';
+        exit();
+    }
+}
 
-//exit;
 
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
     ]
 ]);
+
 
 //Initialize
 $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
@@ -104,11 +109,11 @@ $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdmi
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
-
-//status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+
+//status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
@@ -118,8 +123,15 @@ $app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList
 $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
 
 //docserverType
-$app->get('/docserverType', \Core\Controllers\DocserverTypeController::class . ':getList');
-$app->get('/docserverType/{id}', \Core\Controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
+$app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+
+//admin_reports
+$app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
+$app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
+$app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
+
+
 
 //attachments
 $app->get('/attachments', \Attachments\Controllers\AttachmentsController::class . ':getList');
@@ -149,7 +161,6 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserController::class . ':getUsersForAutocompletionWithExclusion');
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
@@ -174,5 +185,28 @@ $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':u
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+
+//parameters
+$app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
+$app->get('/administration/parameters/new', \Core\Controllers\ParametersController::class . ':getNewParameterForAdministration');
+$app->get('/administration/parameters/{id}', \Core\Controllers\ParametersController::class . ':getParameterForAdministration');
+$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
+$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
+$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+
+//Priorities
+$app->get('/priorities', \Core\Controllers\PriorityController::class . ':get');
+$app->post('/priorities', \Core\Controllers\PriorityController::class . ':create');
+$app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':getById');
+$app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
+$app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
+
+//actions
+$app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
+$app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
+$app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::class . ':getByIdForAdministration');
+$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
 
 $app->run();

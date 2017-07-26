@@ -10,15 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
+var translate_component_1 = require("./translate.component");
 var ProfileComponent = (function () {
     function ProfileComponent(http, zone) {
         var _this = this;
         this.http = http;
         this.zone = zone;
+        this.lang = translate_component_1.LANG;
         this.user = {
-            lang: {},
             baskets: []
         };
         this.passwordModel = {
@@ -98,7 +98,6 @@ var ProfileComponent = (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/users/profile')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user = data;
             setTimeout(function () {
@@ -196,7 +195,6 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.activateAbsence = function () {
         var _this = this;
         this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function () {
             _this.userAbsenceModel = [];
             location.search = "?display=true&page=logout&abs_mode";
@@ -207,7 +205,6 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
                 errorNotification(data.errors);
@@ -229,7 +226,6 @@ var ProfileComponent = (function () {
         var _this = this;
         this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
         this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
                 errorNotification(data.errors);
@@ -251,7 +247,6 @@ var ProfileComponent = (function () {
         this.mailSignatureModel.htmlBody = tinymce.get('emailSignature').getContent();
         var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
         this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (data.errors) {
                 errorNotification(data.errors);
@@ -269,7 +264,6 @@ var ProfileComponent = (function () {
         if (r) {
             var id = this.user.emailSignatures[this.mailSignatureModel.selected - 1].id;
             this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.errors) {
                     errorNotification(data.errors);
@@ -290,7 +284,6 @@ var ProfileComponent = (function () {
     ProfileComponent.prototype.submitSignature = function () {
         var _this = this;
         this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/signatures", this.signatureModel)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
             _this.signatureModel = {
@@ -310,7 +303,6 @@ var ProfileComponent = (function () {
         var _this = this;
         var id = this.user.signatures[this.selectedSignature].id;
         this.http.put(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id, { "label": this.selectedSignatureLabel })
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
             _this.selectedSignature = -1;
@@ -325,7 +317,6 @@ var ProfileComponent = (function () {
         var r = confirm('Voulez-vous vraiment supprimer la signature ?');
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
                 successNotification(data.success);
@@ -336,7 +327,6 @@ var ProfileComponent = (function () {
     };
     ProfileComponent.prototype.onSubmit = function () {
         this.http.put(this.coreUrl + 'rest/users/profile', this.user)
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             successNotification(data.success);
         }, function (err) {
@@ -350,6 +340,6 @@ ProfileComponent = __decorate([
         templateUrl: angularGlobals.profileView,
         styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
     }),
-    __metadata("design:paramtypes", [http_1.Http, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone])
 ], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;

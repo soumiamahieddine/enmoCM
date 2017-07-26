@@ -39,7 +39,6 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['lang'] = LangModel::getProfileLang();
 
         return $response->withJson($user);
     }
@@ -447,26 +446,12 @@ class UserController
 
     public function getUsersForAutocompletion(RequestInterface $request, ResponseInterface $response)
     {
-        $users = UserModel::get([
-            'select'    => ['user_id', 'firstname', 'lastname'],
-            'where'     => ['enabled = ?', 'status != ?', 'user_id != ?'],
-            'data'      => ['Y', 'DEL', 'superadmin']
-        ]);
+        $excludedUsers = ['superadmin'];
 
-        foreach ($users as $key => $value) {
-            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
-        }
-
-        return $response->withJson($users);
-    }
-
-    public function getUsersForAutocompletionWithExclusion(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $excludeUsers = ['superadmin',$aArgs['userId']];
         $users = UserModel::get([
             'select'    => ['user_id', 'firstname', 'lastname'],
             'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-            'data'      => ['Y', 'DEL', $excludeUsers]
+            'data'      => ['Y', 'DEL', $excludedUsers]
         ]);
 
         foreach ($users as $key => $value) {

@@ -1,0 +1,97 @@
+<div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" routerLink="/administration/actions" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 style="margin-top: 0"><i class="fa fa-exchange fa-2x"></i> {{lang.pageTitle}}</h1>
+    <div class="container-fluid" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+        <div class="col-md-6 col-md-offset-3">
+            <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert"><b>{{lang.action}} {{lang.is_system}} !</b> {{lang.do_not_modify_unless_expert}}</div>
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{lang.desc}}"></i><sup class="mandatory" title="champ requis">*</sup></span>
+                            <input [(ngModel)]="action.label_action" required class="form-control" name="action_name" id="action_name" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-check-circle" title="{{lang.associated_status}}"></i></span>
+                            <select  [(ngModel)]="action.id_status" class="forms-select form-control" name="status" id="status">
+                                <option *ngFor="let statut of statusList" [value]="statut.id">{{statut.label_status}}</option>
+                            </select>                    
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-retweet" title="{{lang.action_page}}"></i></span>
+                            <select  [(ngModel)]="action.action_page" class="forms-select form-control" name="action_page" id="action_page">
+                                <option title="{{action.desc}}" *ngFor="let action of actionPagesList.actionsPageList" value="{{action.name}}">{{action.label}}</option>
+                            </select>                  
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-code" title="{{lang.keyword}}"></i></span>
+                            <select  [(ngModel)]="action.keyword" class="forms-select form-control" name="keyword" id="keyword">
+                                <option title="{{keyword.desc}}" *ngFor="let keyword of keywordsList" value="{{keyword.value}}">{{keyword.label}}</option>
+                            </select>               
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <label class="form-control" for="history" title="{{lang.action_history_desc}}">{{lang.action_history}}</label>
+                            <span class="input-group-addon">
+                                <input [(ngModel)]="action.history" name="history" id="history" type="checkbox">
+                            </span>                 
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <label class="form-control" for="is_folder_action" title="{{lang.is_folder_action_desc}}">{{lang.is_folder_action}}</label>
+                            <span class="input-group-addon">
+                                <input [(ngModel)]="action.is_folder_action" name="is_folder_action" id="is_folder_action" type="checkbox">
+                            </span>                 
+                        </div>
+                    </div>
+                </div>
+                <div id="categoryAssociationList" class="form-group panel panel-default">
+                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">
+                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="categorieslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="categorieslist" (click)="unselectAll($event)"></i> {{lang.choose_category_association }}
+                    </div>
+                    <div class="col-sm-12 panel-body">
+                        <select class="forms-select form-control" name="categorieslist[]" id="categorieslist" size="7" multiple="multiple" required>
+                            <option *ngFor="let category of categoriesList" [selected]="category.selected" value="{{category.id}}">{{category.label}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12 panel-body" style="text-align:center;">
+                    <button class="btn btn-default" type="submit" [disabled]="!actionsFormUp.form.valid" >{{lang.validate}}</button>
+                    <button class="btn btn-default" routerLink='/administration/actions'>{{lang.cancel}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

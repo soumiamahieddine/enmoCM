@@ -1,0 +1,64 @@
+<div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <h1 *ngIf="creationMode" style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> Création d'une priorité {{priority.label}}
+    </h1>
+    <h1 *ngIf="!creationMode" style="margin-top: 0">
+        <i class="fa fa-user fa-2x"></i> Modif: {{priority.label}}
+    </h1>
+    <nav class="navbar navbar-default" id="toolBox">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a routerLink="/administration/priorities" class="navbar-brand" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="Retour"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="row row-eq-height">
+        <div class="col-md-offset-4 col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>Informations</h2>
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+                            <input type="color" class="form-control" name="color" [(ngModel)]="priority.color" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+                            <input type="checkbox" class="form-control" name="working_days" title="{{lang.workingDays}}" [(ngModel)]="priority.working_days">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
+                            <input type="number" class="form-control" name="delays" title="{{lang.processDelay}}" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-default" [disabled]="!priorityForm.form.valid">{{lang.save}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -2898,58 +2898,6 @@ hr{
     padding:0 8px 0 8px;
 }
 
-/**** TABRICATOR ****/
-.tabricator
-{
-    background:                #93D1E4;
-    border:                    1px solid #000;
-    display:                   inline-block;
-    /*height:                    auto!important;*/
-    height: 650px;
-    width : 995px;
-    margin:                    0 auto 1em;
-    /*max-width:                 40em;*/
-    padding:                   5px 0 0 5px;
-}
-
-.tabricator {
-    display:                   block;
-}
-.tabricator .trig {
-    background:                #deedf3;
-    border:                    1px solid #666;
-    border-bottom:             0;
-    cursor:                    pointer;
-    display:                   inline;
-    float:                     right;
-    margin:                    2px 0 0 -1px;
-    padding:                   2px 5px;
-    position:                  relative;
-    font-size: 14px;
-}
-.tabricator .trig:hover {
-    background:                #f5f5f5;
-}
-.tabricator .open,
-.tabricator .open:hover {
-    background:                #fff;
-    margin-top:                0;
-    margin-bottom:             -3px;
-    padding-bottom:            5px;
-    position:                  relative;
-    z-index:                   1;
-}
-.tabricator .targ {
-    background:                #fff;
-    border-top:                1px solid #666;
-    clear:                     both;
-    margin:                    0 0 0 -5px;
-    overflow:                  auto;
-    padding:                   5px;
-    height:  92%;
-    width: 99.5%;
-}
-
 
 /***** PROTOHUDS *****/
 .protohud {

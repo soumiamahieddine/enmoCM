@@ -207,9 +207,9 @@ function updateProcessDate(path_manage_script)
 
 function displayFatherFolder(select)
 {
-    if ($(select) && $('parentFolderSpan') && $('parentFolderTr')) {
-        var tmpParSpan = $('parentFolderSpan');
-        var tmpParTr = $('parentFolderTr');
+    if ($(select) && $j('#parentFolderSpan') && $j('#parentFolderTr')) {
+        var tmpParSpan = $j('#parentFolderSpan');
+        var tmpParTr = $j('#parentFolderTr');
         var selectFolders = $(select);
     } else {
         return ;
@@ -217,12 +217,13 @@ function displayFatherFolder(select)
 
     for (var i = 0; i < selectFolders.options.length; i++) {
         if (selectFolders.options[i].getAttribute('value') == selectFolders.options[selectFolders.selectedIndex].getAttribute('parent')) {
-            tmpParTr.style.display = "";
-            tmpParSpan.innerHTML = "Dossier Parent : " + selectFolders.options[i].label;
+            tmpParTr.css("display"," ");
+
+            tmpParSpan.html( "Dossier Parent : " + selectFolders.options[i].label);
             return;
         }
     }
-    tmpParTr.style.display = "none";
+    tmpParTr.css("display","none");
 }
 
 function checkRealDate(arg) {

@@ -11,8 +11,14 @@ if (!defined("_AVIS_WORKFLOW_COMMENT"))
 if (!defined("_SEND_DOCS_TO_RECOMMENDATION"))
     define("_SEND_DOCS_TO_RECOMMENDATION", "Envoyer une demande d'avis (parallèle)");
 
+if (!defined("_SEND_DOCS_TO_RECOMMENDATION_DESC"))
+    define("_SEND_DOCS_TO_RECOMMENDATION_DESC", "Ouvre une modal permettant d'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.");
+
 if (!defined("_VALIDATE_RECOMMENDATION"))
     define("_VALIDATE_RECOMMENDATION", "Valider la demande d'avis (parallèle)");
+
+if (!defined("_VALIDATE_RECOMMENDATION_DESC"))
+    define("_VALIDATE_RECOMMENDATION_DESC", "Permet d'ajouter dans la note de demande avis la personne qui a contrôlé la demande.");
 
 if (!defined("_AVIS_USER"))
     define("_AVIS_USER", "Pour avis");
@@ -54,7 +60,10 @@ if (!defined("_LAST_AVIS"))
     define("_LAST_AVIS", "Conseiller décideur");
 
 if (!defined("_SEND_TO_AVIS_WF"))
-    define("_SEND_TO_AVIS_WF", "Demander un avis (séquentiel)");
+    define("_SEND_TO_AVIS_WF", "Envoyer une demande d'avis (séquentiel)");
+
+if (!defined("_SEND_TO_AVIS_WF_DESC"))
+    define("_SEND_TO_AVIS_WF_DESC", "Ouvre une modal permettant de configurer un circuit d'avis pour le document.");
 
 if (!defined("_WAITING_FOR_AVIS"))
     define("_WAITING_FOR_AVIS", "En attente d'avis");
@@ -62,8 +71,14 @@ if (!defined("_WAITING_FOR_AVIS"))
 if (!defined("_PROCEED_WORKFLOW_AVIS"))
     define("_PROCEED_WORKFLOW_AVIS", "Émettre un avis (séquentiel)");
 
+if (!defined("_PROCEED_WORKFLOW_AVIS_DESC"))
+    define("_PROCEED_WORKFLOW_AVIS_DESC", "Met à jour la date d'émission d'avis du conseiller actuel du circuit d'avis ('process_date' de la table listinstance).");
+
 if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE"))
     define("_PROCEED_WORKFLOW_AVIS_SIMPLE", "Émettre un avis (parallèle)");
+
+if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC"))
+    define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du document ('process_date' de la table listinstance).");
 
 if (!defined("_EMPTY_AVIS_WORKFLOW"))
     define("_EMPTY_AVIS_WORKFLOW", "Aucun circuit d'avis paramétré");

@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/map");
+var http_1 = require("@angular/common/http");
 var HeaderComponent = (function () {
     function HeaderComponent(http) {
         this.http = http;
@@ -38,6 +37,6 @@ HeaderComponent = __decorate([
             '../../node_modules/bootstrap/dist/css/bootstrap.min.css' //load bootstrap css
         ]
     }),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.HttpClient])
 ], HeaderComponent);
 exports.HeaderComponent = HeaderComponent;

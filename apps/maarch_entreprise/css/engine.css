@@ -66,6 +66,10 @@ table.dataTable thead .sorting_asc_disabled {
 table.dataTable thead .sorting_desc_disabled {
     background-image: url("../../node_modules/datatables/media/images/sort_desc_disabled.png")!important;
 }
+.datatablesCenter .dataTables_paginate{
+    float:none !important;
+    text-align: center !important;
+}
 .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
     background:#FDD16C !important;
     border:none !important;
@@ -129,6 +133,9 @@ a.next{
 .dataTables_length{
     float:none !important;
 }
+.dataTables_length select{
+    width:auto !important;
+}
 
 .tooltipster-sidetip.tooltipster-maarch .tooltipster-box {
 	background: white;
@@ -157,4 +164,17 @@ a.next{
     position: relative;
     top: -6px;
     right: -6px;
+}
+
+.selectAll, .unselectAll{
+    cursor: pointer;
+    float:left;
+}
+
+.selectAll:active, .unselectAll:active{
+    color: #009DC5 !important;
+}
+
+.mandatory{
+    color:red;
 }

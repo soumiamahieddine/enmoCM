@@ -35,7 +35,7 @@ $core_tools2->test_service('create_folder', 'folder');
 $core_tools2->load_html();
 $core_tools2->load_header('', true, true);
 if(isset($_SESSION['error'])) { ?>
-    <div class="error" id="main_error_popup" onclick="this.hide();">
+    <div class="error" id="main_error_popup" onclick="$(this).hide();">
         <?php
         echo functions::xssafe($_SESSION['error']);
         ?>

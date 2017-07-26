@@ -26,6 +26,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Visa\Models\VisaModel;
 
+//TODO Require once
 require_once 'modules/basket/class/class_modules_tools.php';
 require_once 'core/class/class_core_tools.php';
 require_once 'core/class/class_security.php';

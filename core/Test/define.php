@@ -57,6 +57,10 @@ Core_CoreConfig_Service::loadModulesConfig($_SESSION['modules']);
 Core_CoreConfig_Service::loadAppServices();
 Core_CoreConfig_Service::loadModulesServices($_SESSION['modules']);
 
+$folderRootName = str_replace("\\","/", dirname(__file__));
+$folderRootName = str_replace('/core/Test', '', $folderRootName);
+$folderRootName = substr($folderRootName, strrpos($folderRootName, "/")+1);
+$_SESSION['config']['coreurl'] = 'http://localhost/' . $folderRootName . '/';
 
 //login management
 require_once('apps/maarch_entreprise/class/class_login.php');
@@ -71,6 +75,7 @@ if ($_SESSION['error']) {
     echo $_SESSION['error'];
     exit();
 }
+
 
 class httpRequestCustom
 {

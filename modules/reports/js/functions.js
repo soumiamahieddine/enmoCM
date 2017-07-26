@@ -15,7 +15,7 @@ function fill_report_result(url_report)
 				fct_args += tmp2[0]+'#'+tmp2[1]+'$$';
 			}
 		}
-		$j.ajax(
+		/*
 		{
 			url : url_report,
 		    type : 'POST',
@@ -28,14 +28,36 @@ function fill_report_result(url_report)
 				div_to_fill.html(response.content);
 				eval(response.exec_js);
 			}
-		});
+		});*/
+
+		$j.ajax(
+			{
+				url: url_report,
+				type: 'POST',
+				data: {
+					arguments : fct_args,
+				},
+				success: function(answer){
+					//console.log(answer);
+					eval("response = "+answer);
+					$j('#result_report').html(response.content);
+					eval(response.exec_js);
+				},
+
+				error : function(answer)
+				{
+					alert(error);
+				}
+
+			}
+		)
 	}
 }
 
 function record_data(url)
 {
-	var path_manage_script = url;
-    new Ajax.Request(path_manage_script,
+	//var path_manage_script = url;
+    /*new Ajax.Request(path_manage_script,
 	{
 		method:'post',
 		onSuccess: function(response){
@@ -46,5 +68,21 @@ function record_data(url)
 				console.log(result.response);
 			}
 		}
-	});
+	});*/
+	$j.ajax({
+		url: url,
+		type: 'POST',
+		data: {
+			data : donnees
+		},
+		success: function(answer){
+			eval("result = "+answer);
+			if(result.status ==1){
+				window.location.assign("index.php?page=export&display=true&origin=graph");
+			}
+			else{
+				console.log(result.response);
+			}
+		}
+	})
 }

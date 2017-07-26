@@ -2,21 +2,21 @@
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{user.lang.myProfile}}</h1>
+    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{lang.myProfile}}</h1>
     <nav class="navbar navbar-default" id="toolBox">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="index.php" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{user.lang.back}}"></i>
+                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times" title=""></i> {{user.lang.manageAbsences}} </a>
+                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times" title=""></i> {{lang.manageMyAbsences}} </a>
                     </li>
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{user.lang.manageSignatures}} </a>
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{lang.manageMySignatures}} </a>
                     </li>
                 </ul>
             </div>
@@ -24,7 +24,7 @@
     </nav>
     <div class="row row-eq-height">
         <div class="col-md-3" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myGroups}}</h2>
+            <h2>{{lang.myGroups}}</h2>
             <ul class="list-group" >
                 <li class="list-group-item" *ngFor="let group of user.groups">
                     <i class="fa fa-users"></i> {{group.group_desc}}
@@ -32,26 +32,26 @@
             </ul>
         </div>
         <div class="col-md-4 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myInformations}}</h2>
+            <h2>{{lang.myInformations}}</h2>
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
                 <div class="form-group">
                     <div class="col-sm-5" style="font-weight:bold;">
-                        <input type="text" class="form-control" id="lastname" name="lastname" title="{{user.lang.lastname}}" placeholder="{{user.lang.lastname}}" [(ngModel)]="user.lastname" required>
+                        <input type="text" class="form-control" id="lastname" name="lastname" title="{{lang.lastname}}" placeholder="{{lang.lastname}}" [(ngModel)]="user.lastname" required>
                     </div>
                     <div class="col-sm-5" style="font-weight:bold;">
-                        <input type="text" class="form-control" id="firstname" name="firstname" title="{{user.lang.firstname}}" placeholder="{{user.lang.firstname}}" [(ngModel)]="user.firstname" required>
+                        <input type="text" class="form-control" id="firstname" name="firstname" title="{{lang.firstname}}" placeholder="{{lang.firstname}}" [(ngModel)]="user.firstname" required>
                     </div>
                     <div class="col-sm-2" style="font-style:italic;">
-                        <input type="text" class="form-control" id="initials" name="initials" title="{{user.lang.initials}}" placeholder="{{user.lang.initials}}" [(ngModel)]="user.initials">
+                        <input type="text" class="form-control" id="initials" name="initials" title="{{lang.initials}}" placeholder="{{lang.initials}}" [(ngModel)]="user.initials">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
                          <div class="input-group">
                              <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                             <input type="text" class="form-control" id="userId" title="{{user.lang.userId}}" value="{{user.user_id}}" disabled>
+                             <input type="text" class="form-control" id="userId" title="{{lang.userId}}" value="{{user.user_id}}" disabled>
                              <span class="input-group-btn">
-                                <button (click)="displayPassword()" class="btn btn-success" type="button" title="{{user.lang.changePsw}}"><i class="fa fa-key" aria-hidden="true"></i></button>
+                                <button (click)="displayPassword()" class="btn btn-success" type="button" title="{{lang.changePsw}}"><i class="fa fa-key" aria-hidden="true"></i></button>
                             </span>
                          </div>
                     </div>
@@ -62,7 +62,7 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
                                 <input type="password" class="form-control" style="display: none">
-                                <input type="password" [(ngModel)]="passwordModel.currentPassword" class="form-control" name="currentPassword" placeholder="{{user.lang.currentPsw}}">
+                                <input type="password" [(ngModel)]="passwordModel.currentPassword" class="form-control" name="currentPassword" placeholder="{{lang.currentPsw}}">
                             </div>
                         </div>
                     </div>
@@ -70,19 +70,19 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                                <input type="password" [(ngModel)]="passwordModel.newPassword" class="form-control" name="newPassword" placeholder="{{user.lang.newPsw}}">
+                                <input type="password" [(ngModel)]="passwordModel.newPassword" class="form-control" name="newPassword" placeholder="{{lang.newPsw}}">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
-                                <input type="password" [(ngModel)]="passwordModel.reNewPassword" class="form-control" name="reNewPassword" placeholder="{{user.lang.renewPsw}}">
+                                <input type="password" [(ngModel)]="passwordModel.reNewPassword" class="form-control" name="reNewPassword" placeholder="{{lang.renewPsw}}">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div style="text-align:center;">
-                            <button type="button" (click)="updatePassword()" [disabled]="!passwordModel.currentPassword || !passwordModel.newPassword || !passwordModel.reNewPassword || (passwordModel.newPassword != passwordModel.reNewPassword)" class="btn btn-default">{{user.lang.changePsw}}</button>
+                            <button type="button" (click)="updatePassword()" [disabled]="!passwordModel.currentPassword || !passwordModel.newPassword || !passwordModel.reNewPassword || (passwordModel.newPassword != passwordModel.reNewPassword)" class="btn btn-default">{{lang.changePsw}}</button>
                         </div>
                     </div>
                     <hr style="background-color: grey; height: 1px">
@@ -91,7 +91,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input type="tel" class="form-control" id="phone" name="phone" title="{{user.lang.phoneNumber}}" placeholder="{{user.lang.phoneNumber}}" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d?\d?\s?)[1-9]([\.\-\s]?\d\d){4}([\.\-\s]?\d?\d?)$">
+                            <input type="tel" class="form-control" id="phone" name="phone" title="{{lang.phoneNumber}}" placeholder="{{lang.phoneNumber}}" [(ngModel)]="user.phone" pattern="^(?:0|\+\d\d?\d?\s?)[1-9]([\.\-\s]?\d\d){4}([\.\-\s]?\d?\d?)$">
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
-                            <input type="email" class="form-control" id="mail" name="mail" title="{{user.lang.email}}"  placeholder="{{user.lang.email}}" [(ngModel)]="user.mail" pattern="[^@\s]+@[^@\s]+">
+                            <input type="email" class="form-control" id="mail" name="mail" title="{{lang.email}}"  placeholder="{{lang.email}}" [(ngModel)]="user.mail" pattern="[^@\s]+@[^@\s]+">
                         </div>
 
                     </div>
@@ -108,24 +108,24 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-paw" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="{{user.lang.fingerprint}}" placeholder="{{user.lang.fingerprint}}" [(ngModel)]="user.thumbprint">
+                            <input type="text" class="form-control" id="fingerprint" name="fingerprint" title="{{lang.fingerprint}}" placeholder="{{lang.fingerprint}}" [(ngModel)]="user.thumbprint">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div style="text-align:center;">
-                        <button type="submit" class="btn btn-default" [disabled]="!profileForm.form.valid">{{user.lang.saveModification}}</button>
+                        <button type="submit" class="btn btn-default" [disabled]="!profileForm.form.valid">{{lang.saveModifications}}</button>
                     </div>
                 </div>
             </form>
         </div>
         <div class="col-md-3 col-md-offset-1" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>{{user.lang.myEntities}}</h2>
+            <h2>{{lang.myEntities}}</h2>
             <ul class="list-group" >
                 <li class="list-group-item" *ngFor="let entity of user.entities">
                     <i class="fa fa-sitemap"></i> {{entity.entity_label}}
-                    <span *ngIf="entity.primary_entity == 'Y'" class="label label-primary">{{user.lang.primaryEntity}}</span>
-                    <span *ngIf="entity.primary_entity != 'Y'" class="label label-default">{{user.lang.secondaryEntity}}</span>
+                    <span *ngIf="entity.primary_entity == 'Y'" class="label label-primary">{{lang.primaryEntity}}</span>
+                    <span *ngIf="entity.primary_entity != 'Y'" class="label label-default">{{lang.secondaryEntity}}</span>
                 </li>
             </ul>
         </div>
@@ -137,32 +137,32 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{user.lang.manageAbsences}}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{lang.manageMyAbsences}}</h4>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger" role="alert">{{user.lang.autoLogout}}</div>
+                <div class="alert alert-danger" role="alert">{{lang.autoLogoutAbsence}}</div>
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
                         <form class="navbar-form navbar-left">
                             <div class="form-group">
                                 <select id="selectBasketAbsenceUser" class="form-control">
-                                    <option>{{user.lang.basketToRedirect}}</option>
+                                    <option>{{lang.basketToRedirect}}</option>
                                     <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
                                         {{basket.basket_name}}
                                         <span *ngIf="basket.group_id">({{basket.group_id}})</span>
                                         <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
                                     </option>
                                 </select>
-                                <span>&nbsp;{{user.lang.to}}&nbsp;</span>
+                                <span>&nbsp;{{lang.to}}&nbsp;</span>
                             </div>
                             <div class="form-group typeahead__container">
                                 <div class="typeahead__field">
-                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{user.lang.user}}" autocomplete="off">
+                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{lang.user}}" autocomplete="off">
                                 </div>
                             </div>
                         </form>
                         <ul class="nav navbar-nav navbar-right" (click)="addBasketRedirection()" style="cursor: pointer">
-                            <li><a title="{{user.lang.saveModification}}"><i class="fa fa-plus"></i></a></li>
+                            <li><a title="{{lang.saveModifications}}"><i class="fa fa-plus"></i></a></li>
                         </ul>
                     </div>
                 </nav>
@@ -171,13 +171,13 @@
                         <i class="fa fa-tasks" title="{{uam.basketId}}"></i> {{uam.basketName}}
                         <span class="pull-right">
                             <span class="label label-primary">{{uam.newUser}}</span>
-                            <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{user.lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
+                        <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
                         </span>
                     </li>
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" (click)="activateAbsence()" class="btn btn-default">{{user.lang.activateAbs}}</button>
+                <button type="button" (click)="activateAbsence()" class="btn btn-default">{{lang.activateMyAbs}}</button>
             </div>
         </div>
     </div>
@@ -188,12 +188,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{user.lang.manageSignatures}}</h4>
+                <h4 class="modal-title">{{lang.manageMySignatures}}</h4>
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">{{user.lang.emailSignatures}}</a></li>
-                    <li role="presentation"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">{{user.lang.sbSignatures}}</a></li>
+                    <li role="presentation" class="active"><a href="#mailSign" aria-controls="mailSign" role="tab" data-toggle="tab">{{lang.emailSignatures}}</a></li>
+                    <li role="presentation"><a href="#signatureBookSign" aria-controls="signatureBookSign" role="tab" data-toggle="tab">{{lang.sbSignatures}}</a></li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="mailSign">
@@ -201,21 +201,21 @@
                             <div class="row" style="margin-top:5px;">
                                 <div class="col-md-5">
                                     <select id="emailSignaturesSelect" class="form-control" (change)="changeEmailSignature()">
-                                        <option>{{user.lang.newSignature}}</option>
+                                        <option>{{lang.newSignature}}</option>
                                         <option *ngFor="let emailSignature of user.emailSignatures">{{emailSignature.title}}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-5">
-                                    <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="{{user.lang.signatureLabel}}" class="form-control" required>
+                                    <input type="text" [(ngModel)]="mailSignatureModel.title" name="title" placeholder="{{lang.signatureLabel}}" class="form-control" required>
                                 </div>
                                 <div class="col-md-1 col-md-offset-1" *ngIf="mailSignatureModel.selected == 0">
                                     <button type="submit" class="form-control btn btn-sm btn-success" [disabled]="!emailSignatureForm.form.valid"><i class="fa fa-plus"></i></button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                    <button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="{{user.lang.updateSignature}}"><i class="fa fa-pencil"></i></button>
+                                    <button type="button" class="form-control btn btn-sm btn-primary" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid" title="{{lang.updateSignature}}"><i class="fa fa-pencil"></i></button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
-                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="{{user.lang.deleteSignature}}"><i class="fa fa-trash"></i></button>
+                                    <button type="button" class="form-control btn btn-sm btn-danger"  (click)="deleteEmailSignature()" title="{{lang.deleteSignature}}"><i class="fa fa-trash"></i></button>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:5px;">
@@ -231,7 +231,7 @@
                         <div class="row" style="margin-top:5px;">
                             <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
                                 <div class="col-md-11">
-                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="{{user.lang.signatureLabel}}" class="form-control" required>
+                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="{{lang.signatureLabel}}" class="form-control" required>
                                     <div class="form-inline hide">
                                         <div class="form-group">
                                             <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)" accept="image/*">
@@ -245,9 +245,9 @@
                                 </div>
                                 <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
                                     <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
-                                        {{user.lang.clickOn}} <i class="fa fa-upload fa-2x"></i>
-                                        <span *ngIf="!signatureModel.size">{{user.lang.toSignature}}</span>
-                                        <span *ngIf="signatureModel.size">{{user.lang.toUpdateSignature}}</span>
+                                        {{lang.clickOn}} <i class="fa fa-upload fa-2x"></i>
+                                        <span *ngIf="!signatureModel.size">{{lang.toSignature}}</span>
+                                        <span *ngIf="signatureModel.size">{{lang.toUpdateSignature}}</span>
                                         (< 2MB)
                                     </div>
                                 </div>
@@ -263,19 +263,19 @@
                                     <div class="caption" style="margin-bottom:0px;">
                                         <div *ngIf="selectedSignature != i">
                                             <p title="{{signature.signature_label}}" style="text-overflow: ellipsis;">{{signature.signature_label}}</p>
-                                            <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="{{user.lang.updateSignature}}">
+                                            <a (click)="displaySignatureEditionForm(i)" class="btn btn-primary" role="button" title="{{lang.updateSignature}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="{{user.lang.deleteSignature}}">
+                                            <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="{{lang.deleteSignature}}">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </div>
                                         <div *ngIf="selectedSignature == i">
-                                            <input type="text" [(ngModel)]="selectedSignatureLabel" name="selectedSignatureLabel" placeholder="{{user.lang.signatureLabel}}" class="form-control" style="margin-bottom: 10px; font-size: 12px;height:28px">
-                                            <button (click)="updateSignature()" type="button" class="btn btn-success" [disabled]="!selectedSignatureLabel" title="{{user.lang.updateSignature}}">
+                                            <input type="text" [(ngModel)]="selectedSignatureLabel" name="selectedSignatureLabel" placeholder="{{lang.signatureLabel}}" class="form-control" style="margin-bottom: 10px; font-size: 12px;height:28px">
+                                            <button (click)="updateSignature()" type="button" class="btn btn-success" [disabled]="!selectedSignatureLabel" title="{{lang.updateSignature}}">
                                                 <i class="fa fa-check"></i>
                                             </button>
-                                            <button (click)="selectedSignature = -1" type="button" class="btn btn-warning" title="{{user.lang.cancel}}">
+                                            <button (click)="selectedSignature = -1" type="button" class="btn btn-warning" title="{{lang.cancel}}">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>

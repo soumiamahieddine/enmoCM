@@ -8,16 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
-var router_1 = require("@angular/router");
-var http_1 = require("@angular/http");
+var animations_1 = require("@angular/platform-browser/animations");
 var forms_1 = require("@angular/forms");
+var http_1 = require("@angular/common/http");
 var app_component_1 = require("./app.component");
-//import { HeaderComponent }                      from './header.component';
-var administration_component_1 = require("./administration.component");
-var users_administration_component_1 = require("./users-administration.component");
-var user_administration_component_1 = require("./user-administration.component");
-var status_list_administration_component_1 = require("./status-list-administration.component");
-var status_administration_component_1 = require("./status-administration.component");
+var app_routing_module_1 = require("./app-routing.module");
+var administration_module_1 = require("./administration/administration.module");
 var profile_component_1 = require("./profile.component");
 var signature_book_component_1 = require("./signature-book.component");
 var AppModule = (function () {
@@ -29,28 +25,14 @@ AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
+            animations_1.BrowserAnimationsModule,
             forms_1.FormsModule,
-            router_1.RouterModule.forRoot([
-                { path: 'administration', component: administration_component_1.AdministrationComponent },
-                { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
-                { path: 'administration/users/new', component: user_administration_component_1.UserAdministrationComponent },
-                { path: 'administration/users/:id', component: user_administration_component_1.UserAdministrationComponent },
-                { path: 'administration/status', component: status_list_administration_component_1.StatusListAdministrationComponent },
-                { path: 'administration/status/new', component: status_administration_component_1.StatusAdministrationComponent },
-                { path: 'administration/status/:identifier', component: status_administration_component_1.StatusAdministrationComponent },
-                { path: 'profile', component: profile_component_1.ProfileComponent },
-                { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
-                { path: '**', redirectTo: '', pathMatch: 'full' },
-            ], { useHash: true }),
-            http_1.HttpModule
+            http_1.HttpClientModule,
+            administration_module_1.AdministrationModule,
+            app_routing_module_1.AppRoutingModule
         ],
         declarations: [
             app_component_1.AppComponent,
-            administration_component_1.AdministrationComponent,
-            users_administration_component_1.UsersAdministrationComponent,
-            user_administration_component_1.UserAdministrationComponent,
-            status_administration_component_1.StatusAdministrationComponent,
-            status_list_administration_component_1.StatusListAdministrationComponent,
             profile_component_1.ProfileComponent,
             signature_book_component_1.SignatureBookComponent,
             signature_book_component_1.SafeUrlPipe

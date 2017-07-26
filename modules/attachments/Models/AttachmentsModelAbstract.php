@@ -9,6 +9,7 @@
 
 namespace Attachments\Models;
 
+use Core\Models\CoreConfigModel;
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 
@@ -16,8 +17,10 @@ class AttachmentsModelAbstract
 {
     public static function getAttachmentsTypesByXML()
     {
-        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-            $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/entreprise.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/entreprise.xml";
         } else {
             $path = 'apps/maarch_entreprise/xml/entreprise.xml';
         }

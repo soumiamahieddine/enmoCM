@@ -10,20 +10,34 @@ function capitalizeFirstLetter(theString)
 
 function whatIsTheDivStatus(theDiv, divStatus)
 {
-    if ($(theDiv).style.display == 'none') {
+    /*if ($(theDiv).style.display == 'none') {
         $(divStatus).innerHTML = '<i class="fa fa-minus-square-o"></i>';
     } else {
         $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
+    }
+    $j.ajax
+    */    
+    if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
     }
 }
 
 
 function resetInlineDisplay(theDiv)
 {
+    /*setTimeout(function() {
+        if ($(theDiv).style.display == '')
+            $(theDiv).style.display = 'inline';
+    }, 250);*/
+    
     setTimeout(function() {
         if ($(theDiv).style.display == '')
             $(theDiv).style.display = 'inline';
     }, 250);
+
+
 }
 
 function changeSignatureForProfil(selected, mailSignaturesJS)
@@ -70,7 +84,14 @@ function deleteSignature(mailSignaturesJS)
     }
 }
 
+/*if ($j('#'+theDiv).css('display') == 'none') {
+        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+    } else {
+        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
+    }*/
+
 function addNewRowPriority(buttonRow) {
+    console.log("PRIORITE")
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
 
@@ -83,6 +104,20 @@ function addNewRowPriority(buttonRow) {
                             "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
                             "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
     }
+    /*
+    console.log("PRIORITE")
+    var index = buttonRow.rowIndex;
+    var indexDiff = index - $("priorityAddField").rowIndex;
+
+    if ($j('#priorityAddField').css('display') == "none") {
+        $j('#priorityAddField').css('display') = "";
+        $j("#minusButton").css('display') = "";
+    } else {
+        var newRow = $("prioritiesTable").insertRow(index);
+        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'> <input style='background:none;border:none;width:45px;' name='color_new" + indexDiff + "' id='color_new" + indexDiff + "' type='color' value=''></td>" +
+                            "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
+                            "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
+    }*/
 
 }
 
@@ -181,24 +216,24 @@ var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minC
         });
 };
 
-/**
-* List used for autocompletion and set id in hidden input
-*
-*/
-var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li){
-                $(new_value).value = li.id;
-            }
-        });
-};
+    /**
+    * List used for autocompletion
+    *
+    */
+    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    $j('#'+new_value).value = li.id; 
+                }
+            });
+    };
 
 var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
 {
@@ -219,43 +254,43 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
         });
 };
 
-var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li){
-                var str = li.id;
-                var res = str.split(",");
-                $(new_value).value = res[0];
-                $(actual_value).value = res[1];
-                $('country').value = 'FRANCE';
-            }
-        });
-};
 
-var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
-{
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript,
-        {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            callback: function (element, entry){
-                return entry + "&"+previous_name+"=" + $(previous_field).value;
-            },
-            afterUpdateElement: function (text, li){
-                $(new_value).value = li.id;
-            }
-        });
-};
+    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    var str = li.id;
+                    var res = str.split(",");
+                    $j("#"+new_value).value = res[0];
+                    $j("#"+actual_value).value = res[1];
+                    $j('#country').value = 'FRANCE';
+                }
+            });
+    };
 
+    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                callback: function (element, entry){
+                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).value; 
+                },
+                afterUpdateElement: function (text, li){
+                    $j("#"+new_value).value = li.id;
+                }
+            });
+    };
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -377,7 +412,7 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
 
     }
     function showCalender(ele) {
-        if($('basis')) { removeCalender() }
+        if($j('#basis')[0]) { removeCalender() }
         else {
             target=$(ele.id.replace(/for_/,''));
             var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
@@ -484,10 +519,10 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
 
     function ShowHideMenu(menu,onouoff) {
         if (typeof($) == 'function') {
-            monmenu = $(menu);
-            mondivmenu = $("menu");
-            monadmin = $("admin");
-            monhelp = $("aide");
+            monmenu = $j("#"+menu)[0];
+            mondivmenu = $j("#menu")[0];
+            monadmin = $j("#admin")[0];
+            monhelp = $j("#aide")[0];
         }
         else if(document.all) {
             monmenu = document.all[menu];
@@ -525,6 +560,7 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
             }
         }
     }
+
 
 
 /****************************************/
@@ -1005,8 +1041,9 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
+
     if ($j('#divList')) {
-        $j('#divList').css("display", "block");
+        $j('#divList').css('display','block');
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1023,7 +1060,7 @@ function destroyModal(id_mod){
     }
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
-    $j("input[type='button']").prop("disabled", false).css("opacity", "1")
+    $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
 /**
@@ -1156,7 +1193,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
-
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -1186,6 +1222,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
+
                 $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
@@ -1712,8 +1749,10 @@ function print_r(x, max, sep, l) {
  * @param id String Basket id to unlock
  * @param coll String Collection identifier of the basket
  **/
-function unlock(path_script, id, coll)
+function unlock(path_script, id, coll) // A FAIRE
 {
+
+    Console.log("TEST UNLOCK");
     if(path_script && res_id && coll_id)
     {
         new Ajax.Request(path_script,
@@ -1761,65 +1800,77 @@ function setContactType(mode, creation){
  **/
 function show_admin_contacts( is_corporate, display)
 {
+    
     var display_value = display || 'inline';
-    var title = $("title_p");
-    var lastname = $("lastname_p");
-    var firstname = $("firstname_p");
-    var function_p = $("function_p");
-    var lastname_mandatory = $("lastname_mandatory");
-    var society_mandatory = $("society_mandatory");
+    var title = $j("#title_p");
+    var lastname = $j("#lastname_p");
+    var firstname = $j("#firstname_p");
+    var function_p = $j("#function_p");
+    var lastname_mandatory = $j("#lastname_mandatory");
+    var society_mandatory = $j("#society_mandatory");
     if(is_corporate == true)
     {
         if(title)
         {
-            title.style.display = "none";
+           // title.style.display = "none";
+            title.css('display', 'none');
         }
         if(lastname)
         {
-            lastname.style.display = "none";
+            lastname.css('display', 'none');
         }
         if(firstname)
         {
-            firstname.style.display = "none";
+            firstname.css('display', 'none');
         }
         if(function_p)
         {
-            function_p.style.display = "none";
+            function_p.css('display', 'none');
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.display = 'none';
+            lastname_mandatory.css('display', 'none');
         }
         if(society_mandatory)
         {
-            society_mandatory.style.display = 'inline';
+            society_mandatory.css('display', 'none');
         }
     }
     else
     {
         if(title)
         {
-            title.style.display = display_value;
+          //  title.style.display = display_value;
+            title.css('display', display_value);
         }
         if(lastname)
         {
-            lastname.style.display = display_value;
+           // lastname.style.display = display_value;
+            lastname.css('display', display_value);
         }
         if(firstname)
         {
-            firstname.style.display = display_value;
+            //firstname.style.display = display_value;
+            firstname.css('display', display_value);
+
         }
         if(function_p)
         {
-            function_p.style.display = display_value;
+            //function_p.style.display = display_value;
+            function_p.css('display', display_value);
+
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.display = 'inline';
+           // lastname_mandatory.style.display = 'inline';
+            lastname_mandatory.css('display', 'inline');
+
         }
         if(society_mandatory)
         {
-            society_mandatory.style.display = 'none';
+            //society_mandatory.style.display = 'none';
+            society_mandatory.css('display', 'none');
+
         }
     }
 }
@@ -1889,10 +1940,11 @@ function clear_form(form_id)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_userlogs(url)
+function valid_userlogs(url) 
 {
     var user_div = $('user_id');
     var user_id_val = '';
+    console.log("TEST USERLOGS")
     if(user_div)
     {
         user_id_val = user_div.value;
@@ -1907,7 +1959,7 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-            //  alert(answer.responseText);
+                //alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -1923,7 +1975,7 @@ function valid_userlogs(url)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_report_by_period(url)
+function valid_report_by_period(url) 
 {
     var type_period = '';
     var type_report = 'graph';
@@ -2844,20 +2896,19 @@ function showPreviousAttachments(path_manage_script, id){
 }
 
 function affiche_reference(){
-    
     var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
 
-    if (nature.getAttribute('with_reference') == 'true') {      
-        $('reference_number_tr').setStyle({display: 'table-row'});
+    if (nature.getAttribute('with_reference') == 'true') {
+        $j('#reference_number_tr').css('display','table-row');
     } else {
-        $('reference_number_tr').setStyle({display: 'none'});
-        $('reference_number').value='';
+        $j('#reference_number_tr').css('display','none');
+        $j('#reference_number').val('');
     }
 }
 
 function erase_contact_external_id(id, erase_id){
-    if($(id).value == ''){
-        $(erase_id).value = '';
+    if($j('#'+id).val() == ''){
+        $j('#'+erase_id).val('');
     }
 }
 
@@ -3056,7 +3107,7 @@ function linkDuplicate(id_form) {
     }
 }
 
-function loadTab(resId,collId,titleTab,pathScriptTab,module){
+function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
     if(document.getElementById('show_tab').getAttribute('module') == module){
         document.getElementById('show_tab').style.display='none';
         if(document.getElementById(module+'_tab') != undefined ){
@@ -3068,17 +3119,17 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
     }
     
     var path_manage_script = 'index.php?display=true&page=display_tab';
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: {
+    $j.ajax({
+        url: path_manage_script,
+        type: 'POST',
+        data: {
             resId : resId,
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
+
             },
-        onSuccess: function(answer){
-            //console.log(answer.responseText);
+        success: function(answer){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
@@ -3086,42 +3137,105 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             if(document.getElementById(module+'_tab') != undefined ){
                 document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
             }
-            document.getElementById('show_tab').innerHTML = answer.responseText;
+            document.getElementById('show_tab').innerHTML = answer;
         }
     });
+ 
+
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){
     document.getElementById(id_iframe).src = pathScriptTab;
 }
 
+function tabClicked (TabId,toHide){
+    var doc = $j("#home-panel");
+    if (toHide) {
+        doc.css("display","none");  
+         $j("#uniqueDetailsDiv").css("display","");
+    } else {
+        $j("#uniqueDetailsDiv").css("display","none");
+        doc.css("display","");
+    } 
+                
+    $j(".DetailsTabFunc").removeClass("TabSelected");
+    $j("#"+TabId).addClass("TabSelected");
+
+}
+
 //LOAD BADGES TOOLBAR
 function loadToolbarBadge(targetTab,path_manage_script){
-    new Ajax.Request(path_manage_script,
-    {
-        asynchronous : false,
-        method:'post',
-        parameters: {
+    
+   $j.ajax({
+        url: path_manage_script,
+        type : 'POST',
+        //dataType: 'JSON',
+        data: {
             targetTab : targetTab
         },
-        onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            if (response.status == 0) {
+        success: function(answer){
+            eval("response = "+answer);
+            if(response.status==0){            
                 if(response.nav != ''){
-                    document.getElementById(response.nav).style.paddingRight = "0px";
+                    $j('#'+response.nav).css('paddingRight','0px');
                 }
-                eval(response.exec_js);
-            } else if (response.status == 1){
-                alert('Erreur!');
+            eval(response.exec_js);
             }
+        },
+        error: function(error)
+        {
+            alert(error);
         }
-    });
+    })
 }
 
 function resetSelect(id) {
     $j('#'+id).val("");
     Event.fire($(id), "chosen:updated");
 }
+
+function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){
+    var minus;
+    if($j('#'+branch_id+' i').first().prop('class')==closed) {
+        minus = false;
+    } else {
+        minus = true;
+    }
+
+    $j.ajax({
+        url  : path_manage_script, 
+        type : 'POST',
+        data : {
+            branch_id : branch_id
+        },
+        success: function(result){
+            if(minus) {
+                BootstrapTree.removeSons($j('#'+branch_id+' > ul'));
+                $j('#'+branch_id+' i').first().prop('class',closed);
+            } else {
+                if(result!=''){
+                    BootstrapTree.addNode($j('#'+branch_id), $j(result), opened, closed);
+                    BootstrapTree.init($j('#'+treeDiv), opened, closed);
+                    $j('#'+branch_id+' > ul').first().find('li').hide();
+                    $j('#'+branch_id+' > ul').first().find('li').show('fast');
+                    $j('#'+branch_id+' i').first().prop('class',opened);
+                } else{
+                    $j('#'+branch_id+' i').first().prop('class','emptyNode');
+                }
+            }
+        }
+    });
+}
+
+// Exemple appel service
+// function testService(){
+//     $j.ajax({
+//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
+//         success: function(result){
+//             console.log(result);
+//         }
+//     });
+// }
 
 function titleWithTooltipster(id){
     $j(document).ready(function() {

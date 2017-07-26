@@ -10,10 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
+var http_1 = require("@angular/common/http");
 var platform_browser_1 = require("@angular/platform-browser");
 var router_1 = require("@angular/router");
-require("rxjs/add/operator/map");
 var SafeUrlPipe = (function () {
     function SafeUrlPipe(sanitizer) {
         this.sanitizer = sanitizer;
@@ -91,7 +90,6 @@ var SignatureBookComponent = (function () {
             lockDocument(_this.resId);
             setInterval(function () { lockDocument(_this.resId); }, 50000);
             _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.error) {
                     location.hash = "";
@@ -231,7 +229,6 @@ var SignatureBookComponent = (function () {
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
-                        .map(function (res) { return res.json(); })
                         .subscribe(function (data) {
                         _this.signatureBook.resList = data.resList;
                         _this.signatureBook.resList.forEach(function (value, index) {
@@ -273,14 +270,12 @@ var SignatureBookComponent = (function () {
         var _this = this;
         if (mode == "rightContent") {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 _this.signatureBook.documents = data;
             });
         }
         else {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 var i = 0;
                 if (mode == "add") {
@@ -352,7 +347,6 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.refreshNotes = function () {
         var _this = this;
         this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.signatureBook.nbNotes = data;
         });
@@ -379,7 +373,6 @@ var SignatureBookComponent = (function () {
                 }
             }
             this.http.get(path, signature)
-                .map(function (res) { return res.json(); })
                 .subscribe(function (data) {
                 if (data.status == 0) {
                     _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + data.new_id + "&isVersion=false";
@@ -420,7 +413,6 @@ var SignatureBookComponent = (function () {
             isVersion = "false";
         }
         this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
-            .map(function (res) { return res.json(); })
             .subscribe(function () {
             _this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + _this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
             _this.signatureBook.attachments[_this.rightSelectedThumbnail].viewerLink = _this.rightViewerLink;
@@ -444,7 +436,6 @@ var SignatureBookComponent = (function () {
     SignatureBookComponent.prototype.changeLocation = function (resId, origin) {
         var _this = this;
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
-            .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             if (!data.lock) {
                 var path = "/" + _this.basketId + "/signatureBook/" + resId;
@@ -452,10 +443,10 @@ var SignatureBookComponent = (function () {
             }
             else {
                 if (origin == "view") {
-                    alert("Courrier verouillé par " + data.lockBy);
+                    alert("Courrier verrouillé par " + data.lockBy);
                 }
                 else if (origin == "action") {
-                    alert("Courrier suivant verouillé par " + data.lockBy);
+                    alert("Courrier suivant verrouillé par " + data.lockBy);
                     _this.backToBasket();
                 }
             }
@@ -467,7 +458,6 @@ var SignatureBookComponent = (function () {
             unlockDocument(this.resId);
             if (this.signatureBook.resList.length == 0) {
                 this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
-                    .map(function (res) { return res.json(); })
                     .subscribe(function (data) {
                     _this.signatureBook.resList = data.resList;
                     valid_action_form('empty', 'index.php?display=true&page=manage_action&module=core', _this.signatureBook.currentAction.id, _this.resId, 'res_letterbox', 'null', 'letterbox_coll', 'page', false, [$j("#signatureBookActions option:selected")[0].value]);
@@ -487,6 +477,6 @@ SignatureBookComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["signature-bookView"],
     }),
-    __metadata("design:paramtypes", [http_1.Http, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
 ], SignatureBookComponent);
 exports.SignatureBookComponent = SignatureBookComponent;

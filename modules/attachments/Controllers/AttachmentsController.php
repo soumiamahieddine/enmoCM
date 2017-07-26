@@ -21,8 +21,6 @@ use Respect\Validation\Validator;
 use Attachments\Models\AttachmentsModel;
 use Core\Controllers\ResController;
 
-require_once 'modules/attachments/Models/AttachmentsModel.php';
-
 class AttachmentsController
 {
     
@@ -168,7 +166,6 @@ class AttachmentsController
             }
 
             if (strtoupper($data[$i]['type']) == 'STRING') {
-               $data[$i]['value'] = $data[$i]['value'];
                $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
                $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }

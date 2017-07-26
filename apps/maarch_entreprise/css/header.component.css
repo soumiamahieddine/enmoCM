@@ -1,5 +1,4 @@
 #headerV2{
-    height:74px;
     border-radius:0px;
     margin-left: -10px;
     margin-top: 0px;
@@ -8,6 +7,11 @@
     background: #009DC5;
     color:white;
 }
+
+#headerV2 .navbar-right .dropdown-toggle{
+    color:white !important;
+}
+
 #headerV2 .breadcrumb{
     padding:0px;
     margin-bottom:0px;
@@ -67,20 +71,35 @@
     margin-right:-30px;
     margin-top:-34px;
 }
-#headerLogo div a{
-    float: right;
-    right: 0px;
-    position: absolute;
+#headerLogo{
     margin: 0px;
     padding-right: 0px;
     padding-top: 0px;
-    height: 76px;
-    width: 236px;
+    height: 56px;
+    width: 176px;
     background: url(static.php?filename=default_nav_logo_maarch.gif) #f2f2f2;
     background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
 }
+
+#headerNotification .link{
+    text-decoration: underline;
+    cursor: pointer; 
+}
+#headerNotification .dropdown-menu .badge{
+    font-size: 70%;
+}
+#headerNotification .alert-info a{
+    color: #31708f !important;
+}
+#headerNotification .alert-warning a{
+    color: #8a6d3b !important;
+}
+#headerNotification .alert-danger a{
+    color: #a94442 !important;
+}
+
 #menuListContentInfoUser{
     background-color: #1B91BA;
     height: 15px;
@@ -110,4 +129,12 @@
 }
 #menuListContentInfoUser a:hover,#menuListContentInfoUser a:focus{
     background-color: initial;
+}
+
+.notification .badge {
+    background-color: #a94442;
+    font-size: 9px;
+    position: relative;
+    left: -10px;
+    top: 5px;
 }

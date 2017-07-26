@@ -53,46 +53,48 @@ $core->manage_location_bar(
 );
 /***********************************************************/
 
-//$core->show_array($_REQUEST);
 $_SESSION['origin'] = "search_folder_tree";
 ?>
-<script type="text/javascript" >
-    BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
-</script>
+
 <h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE;?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <h2>
 		<form method="post" name="form_search_folder" id="form_search_folder" action="#">
-        <table width="100%" border="0">
-            <tr>
-                <td align="right"><label for="folder"><?php
-            echo _FOLDER;
-            ?> :</label></td>
-                            <td class="indexing_field">
-                                <input type="text" name="folder" id="folder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
-                                <div id="show_folder" class="autocomplete" style="color:#666;"></div>
-                            </td>
-                            <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER;?> :</label></td>
-                            <td>
-                                <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
-                                <div id="show_subfolder" class="autocomplete"></div>
-                            </td>-->
-                            <td>
-                                <input id="tree_send" type="button" value="<?php
-            echo _SEARCH;
-            ?>" onclick="javascript:submitForm();" class="button">
-                </td>
-				<td width="50%"><div style="font-size: 8px;margin-top: -11px;">
-        <br>
-        <a href="javascript://" onClick="window.top.location.href='<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>index.php?page=search_folder_tree&module=folder&erase=true';">
-                <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH;?>"></i>
-        </a>
-    </div></td>
-            </tr>
-        </table>
+            <table width="100%" border="0">
+                <tr>
+                    <td align="right">
+                        <label for="folder"><?php echo _FOLDER;?> :</label>
+                    </td>
+                    <td class="indexing_field">
+                        <div class="typeahead__container">
+                            <div class="typeahead__field">
+                                <span class="typeahead__query">
+                                    <input type="text" class="folderTest" name="folder[query]" id="folder" size="45" autocomplete="off" type="search" onKeyPress="if(event.keyCode == 13) submitForm();" />
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER;?> :</label></td>
+                    <td>
+                        <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
+                        <div id="show_subfolder" class="autocomplete"></div>
+                    </td>-->
+                    <td>
+                        <input id="tree_send" type="button" value="<?php echo _SEARCH; ?>" onclick="javascript:submitForm();" class="button">
+                    </td>
+                	<td width="50%">
+                        <div style="font-size: 8px;margin-top: -11px;">
+                            <br>
+                            <a href="javascript://" onClick="window.top.location.href='<?php
+                                    echo $_SESSION['config']['businessappurl'];
+                                    ?>index.php?page=search_folder_tree&module=folder&erase=true';">
+                                    <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH;?>"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 		</form>
         </h2>
         <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
@@ -111,12 +113,42 @@ $_SESSION['origin'] = "search_folder_tree";
     </div>
     <!-- Display the layout of search_folder_tree -->
 </div>
+<form id="form-country_v1" name="form-country_v1">
+    <div class="typeahead__container">
+        <div class="typeahead__field">
+ 
+            <span class="typeahead__query">
+                <input class="js-typeahead-country_v1" name="country_v1[query]" placeholder="Search" autocomplete="off" type="search">
+            </span>
+            <span class="typeahead__button">
+                <button type="submit">
+                    <i class="typeahead__search-icon"></i>
+                </button>
+            </span>
+ 
+        </div>
+    </div>
+</form>
 <script type="text/javascript">
 
-    initList('folder', 'show_folder', '<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 
-        'Input', '2');
+    $j.typeahead({
+        input: '.folderTest',
+        order: "desc",
+        dynamic: true,
+        debug: false,
+        source: {
+            ajax: function(query){
+            return{
+                    type : 'POST',
+                    url  : 'index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',
+                    data : {
+                        Input: "{{query}}"
+                    }
+                }
+            }
+        }
+    });
+
     function submitForm()
     {
         var folder = $('folder').value;
@@ -125,7 +157,7 @@ $_SESSION['origin'] = "search_folder_tree";
             $('myTree').innerHTML="";
         }
         // Get tree parameters from an ajax script (get_tree_info.php)
-        new Ajax.Request(BASE_URL+'index.php?display=true&module=folder&page=get_tree_info&display=true',{
+        new Ajax.Request('index.php?display=true&module=folder&page=get_tree_info&display=true',{
             method: 'post',
             parameters: {
                 tree_id: 'myTree',
@@ -133,7 +165,6 @@ $_SESSION['origin'] = "search_folder_tree";
             },
             onSuccess: function(response){
                 eval('params='+response.responseText+';');
-                //console.log(params);
             },
             onLoading: function(answer) {
                 //show loading
@@ -142,7 +173,6 @@ $_SESSION['origin'] = "search_folder_tree";
             onComplete: function(response){
                 $('loading').style.display='none';
                 $('myTree').innerHTML=response.responseText;
-                 // alert(response.responseText);
 
              /*   if(more_params['onComplete_callback'])
                 {
@@ -155,7 +185,7 @@ $_SESSION['origin'] = "search_folder_tree";
     {
 
             if($(''+folders_system_id).hasClassName('mt_fopened')){
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -181,7 +211,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 });
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -206,7 +236,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
+            }
 
         }
 
@@ -219,10 +249,10 @@ $_SESSION['origin'] = "search_folder_tree";
                 $('autofolders').style.listStyleImage= 'url(static.php?filename=folder.gif)';
                 $('autofolders').removeClassName('link_open');
                 $('autofolders').removeClassName('mt_fopened');
-                $('autofolders').src = BASE_URL+'static.php?filename=folder.gif';
+                $('autofolders').src = 'static.php?filename=folder.gif';
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -248,8 +278,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_autofolder_folders(id, folder_level,id_folder,path_folder,desc_tree)
@@ -264,7 +293,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 $(''+id_folder).removeClassName('mt_fopened');
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -303,8 +332,7 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_autofolder_folder_docs(id, folder_level,id_folder,path_folder)
@@ -319,7 +347,7 @@ $_SESSION['origin'] = "search_folder_tree";
 
             }else{
 
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folder_level: folder_level,
@@ -346,14 +374,13 @@ $_SESSION['origin'] = "search_folder_tree";
                         $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
                        }
                 });
-        }
-
+            }
         }
 
         function get_folder_docs(folders_system_id)
         {
             if($(''+folders_system_id).hasClassName('mt_fopened')){
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -378,7 +405,7 @@ $_SESSION['origin'] = "search_folder_tree";
                 });
 
             }else{
-                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                new Ajax.Request('index.php?page=ajax_get_folder&module=folder&display=true',
                 {  
                     method:'post',
                     parameters: {folders_system_id: folders_system_id,
@@ -413,9 +440,3 @@ $_SESSION['origin'] = "search_folder_tree";
         }
 
 </script>
-<script type="text/javascript" src="<?php
-echo $_SESSION['config']['businessappurl'] . 'tools/'
-?>MaarchJS/dist/maarch.js"></script>
-<script type="text/javascript" src="<?php
-echo $_SESSION['config']['businessappurl'] . 'js/'
-?>search_customer.js"></script>

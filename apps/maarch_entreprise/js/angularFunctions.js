@@ -7,8 +7,15 @@ function triggerAngular(prodmode, locationToGo) {
         'user-administration',
         'status-administration',
         'statuses-administration',
+        'actions-administration',
+        'action-administration',
         'profile',
-        'signature-book'
+        'signature-book',
+        'parameter-administration',
+        'parameters-administration',
+        'priorities-administration',
+        'priority-administration',
+        'parameter'
     ];
 
     $j.ajax({
@@ -111,7 +118,7 @@ function islockForSignatureBook(resId, basketId, prodmode) {
             var response = JSON.parse(result);
 
             if (response.lock) {
-                alert("Courrier verouillé par " + response.lockBy);
+                alert("Courrier verrouillé par " + response.lockBy);
             } else {
                 if (prodmode) {
                     triggerAngular(true, "#/" + basketId + "/signatureBook/" + resId);

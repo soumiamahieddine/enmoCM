@@ -322,8 +322,6 @@ $time = $core_tools->get_session_time_expire();
 
         ?>  </div>
             <script type="text/javascript">
-                sb = new ScrollBox(document.getElementById('allowed_basket_actions'), {auto_hide: true});
-                sb2 = new ScrollBox(document.getElementById('config_actions'), {auto_hide: true});
                manage_actions('<?php if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'])){ echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];}?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
             </script>
             <p>&nbsp;</p>
@@ -333,8 +331,7 @@ $time = $core_tools->get_session_time_expire();
             </p>
     </form>
 </div>
-</div>
-<script type="text/javascript">$j('select').each(function(i, element) { new Chosen(element,{width: "226px", disable_search_threshold: 10,search_contains: true}); });</script>
-
+</div> 
+<script type="text/javascript">$j('select').chosen({width: "226px", disable_search_threshold: 10,search_contains: true});</script>
 </body>
 </html>

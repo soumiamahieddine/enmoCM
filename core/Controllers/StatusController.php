@@ -86,16 +86,14 @@ class StatusController
         }
 
         if (StatusModel::create($aArgs)) {
-            $return = [
-                StatusModel::getById(['id' => $aArgs['id']])
-            ];
+            $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
 
             HistoryController::add([
                 'table_name' => 'status', 
-                'record_id'  => $return[0][0]['id'], 
+                'record_id'  => $return['status']['id'], 
                 'event_type' => 'ADD', 
                 'event_id'   => 'statusup',
-                'info'       => _STATUS_ADDED . ' : ' . $return[0][0]['id']
+                'info'       => _STATUS_ADDED . ' : ' . $return['status']['id']
             ]);
 
             return $response->withJson($return);
@@ -121,16 +119,14 @@ class StatusController
         }
 
         if (StatusModel::update($aArgs)) {
-            $return = [
-                StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])
-            ];
+            $return['status'] = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])[0];
 
             HistoryController::add([
                 'table_name' => 'status', 
-                'record_id'  => $return[0][0]['id'], 
+                'record_id'  => $return['status']['id'], 
                 'event_type' => 'UP', 
                 'event_id'   => 'statusup',
-                'info'       => _MODIFY_STATUS . ' : ' . $return[0][0]['id']
+                'info'       => _MODIFY_STATUS . ' : ' . $return['status']['id']
             ]);
             
             return $response->withJson($return);

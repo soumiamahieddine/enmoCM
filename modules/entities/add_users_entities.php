@@ -8,7 +8,7 @@
 * @version 1
 * @since 03/2009
 * @license GPL
-* @author  Cédric Ndoumba  <dev@maarch.org>
+* @author  Cï¿½dric Ndoumba  <dev@maarch.org>
 */
 try{
     require_once("modules/entities/class/EntityControler.php");
@@ -31,7 +31,7 @@ for($i = 0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
 
 
 $entities = array();
-//$entities = $entity_ctrl->getAllEntities(); // To do : recup l'arborescence des entités
+//$entities = $entity_ctrl->getAllEntities(); // To do : recup l'arborescence des entitï¿½s
 $entities = $entity_ctrl->getAllEntities();
 //var_dump($entities);
 $EntitiesIdExclusion = array();
@@ -102,7 +102,7 @@ function in_session_array($entity_id)
 		
     ?>
     </select>
-    <script type="text/javascript">new Chosen($('entity_id'),{width: "95%", disable_search_threshold: 10, search_contains: true});</script>
+    <script type="text/javascript">$j("#entity_id").chosen({width: "95%", disable_search_threshold: 10, search_contains: true});</script>
 </p>
 <br/>
 <p>

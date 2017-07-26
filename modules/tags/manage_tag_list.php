@@ -145,7 +145,7 @@ if ($mode == 'list') {
                 }
                 $content .= '</select>';
                 $content .= '<p style="text-align: right;margin-right: 20px;"><a style="cursor: pointer;" onclick="resetSelect(\'entitieslist\')">'._UNSELECT_ALL.'</a></p>';
-                $content .= '<script>new Chosen($(\'entitieslist\'),{width: "95%", disable_search_threshold: 10, search_contains: true,display_disabled_options: false});</script>';
+                $content .= '<script> $j("#entitieslist").chosen({width: "95%", disable_search_threshold: 10, search_contains: true,display_disabled_options: false});</script>';
                 echo $content;
             ?>
             </p>

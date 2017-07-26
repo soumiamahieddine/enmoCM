@@ -535,7 +535,7 @@ abstract class visa_Abstract extends Database
                 }
                 $str .= '</select>';
                 $str .= '<script>';
-                $str .= 'new Chosen($(\'visaUserList\'),{width: "250px", disable_search_threshold: 10});';
+				$str .=' $j("#visaUserList").chosen({width: "250px", disable_search_threshold: 10});';
                 $str .= '</script>';
 
                 require_once("modules/entities/class/class_manage_listdiff.php");
@@ -551,7 +551,7 @@ abstract class visa_Abstract extends Database
                 $str .= '</select>';
 
                 $str .= '<script>';
-                $str .= 'new Chosen($(\'modelList\'),{width: "250px;", disable_search_threshold: 10});';
+				$str .=' $j("#modelList").chosen({width: "250px", disable_search_threshold: 10});';
                 $str .= '</script>';
                 $str .= '<br/><br/>';
             }
