@@ -817,13 +817,14 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 $frmStr .= 'selected="selected"';
             }
             $frmStr .= '>' . functions::xssafe($statuses[$i]['LABEL']) . '</option>';
+        }
         
-        $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-        $frmStr .= '</tr>';
+    $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frmStr .= '</tr>';
 
-        $frmStr .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-    }
+    $frmStr .= '<script>$j("#status").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
+
     $frmStr .= '</table>';
     
     $frmStr .= '</div>';
