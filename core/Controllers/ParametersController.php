@@ -17,9 +17,6 @@ use Respect\Validation\Validator;
 use Core\Models\LangModel;
 use Core\Models\ParametersModel;
 
-require_once 'core/class/class_db_pdo.php';
-require_once 'modules/notes/Models/NoteModel.php';
-
 class ParametersController
 {
     public function getParametersForAdministration(RequestInterface $request, ResponseInterface $response)

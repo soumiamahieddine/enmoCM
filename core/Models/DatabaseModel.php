@@ -15,8 +15,6 @@
 
 namespace Core\Models;
 
-require_once 'core/class/class_db_pdo.php';
-
 class DatabaseModel
 {
 
@@ -72,7 +70,6 @@ class DatabaseModel
         $select = implode(', ', $args['select']);
 
         if (empty($args['where'])) {
-            $args['where'] = [];
             $where = '';
         } else {
             ValidatorModel::arrayType($args, ['where']);
@@ -106,14 +103,15 @@ class DatabaseModel
         ValidatorModel::arrayType($args, ['data']);
 
 
-        $db = new \Database();
+        $db = new DatabasePDO();
 
         if (!empty($limit)) {
-            $where = implode(' AND ', $args['where']);
-            $query = $db->limit_select(0, $limit, $select, $args['table'], $where, $groupBy, '', $orderBy);
-        } else {
-            $query = "SELECT {$select} FROM {$args['table']} {$where} {$groupBy} {$orderBy}";
+            $limitData = $db->setLimit(['where' => $where, 'limit' => $limit]);
+            $where = $limitData['where'];
+            $limit = $limitData['limit'];
         }
+
+        $query = "SELECT {$select} FROM {$args['table']}{$where}{$groupBy}{$orderBy}{$limit}";
 
         $stmt = $db->query($query, $args['data']);
 
@@ -154,12 +152,8 @@ class DatabaseModel
 
         $query = "INSERT INTO {$args['table']} ({$columns}) VALUES ({$values})";
 
-        $db = new \Database();
+        $db = new DatabasePDO();
         $db->query($query, $data);
-
-        if (!empty($args['getLastId'])) {
-            return $db->lastInsertId($args['getLastId']);
-        }
 
         return true;
     }
@@ -193,7 +187,7 @@ class DatabaseModel
 
         $query = "UPDATE {$args['table']} SET {$set} WHERE {$where}";
 
-        $db = new \Database();
+        $db = new DatabasePDO();
         $db->query($query, $args['data']);
 
         return true;
@@ -219,7 +213,7 @@ class DatabaseModel
         $where = implode(' AND ', $args['where']);
         $query = "DELETE FROM {$args['table']} WHERE {$where}";
 
-        $db = new \Database();
+        $db = new DatabasePDO();
         $db->query($query, $args['data']);
 
         return true;

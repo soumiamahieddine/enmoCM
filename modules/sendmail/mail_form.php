@@ -103,7 +103,7 @@ $core_tools->load_header('', true, false);
 $core_tools->load_js(); 
 //ADD
 if ($mode == 'add') {
-    $content .= '<div class="block">';
+    $content .= '<div>';
     $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
     $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
@@ -249,13 +249,13 @@ if ($mode == 'add') {
         $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</div>';
         for($i=0; $i < count($joined_files); $i++) {
             //Get data
-            $id = $joined_files[$i]['id']; 
+            $id          = $joined_files[$i]['id']; 
             $description = $joined_files[$i]['label'];
-            $format = $joined_files[$i]['format'];
-            $format = $joined_files[$i]['format'];
-            $mime_type = $is->get_mime_type($joined_files[$i]['format']);
-            $att_type = $joined_files[$i]['format'];
-            $filesize = $joined_files[$i]['filesize']/1024;
+            $format      = $joined_files[$i]['format'];
+            $format      = $joined_files[$i]['format'];
+            $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
+            $att_type    = $joined_files[$i]['format'];
+            $filesize    = $joined_files[$i]['filesize']/1024;
             ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
 			//Show data
 			$version = '';
@@ -296,45 +296,44 @@ if ($mode == 'add') {
             $content .='<br/>';
             $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._ATTACHMENTS.'</div>';
             $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
-            //var_dump($attachment_files);
+
             for($i=0; $i < count($attachment_files); $i++) {
                 $it = $i+1;
-                //nouvelle ligne toutes les 3 infos
-                //if($it%4 == 0 || $it == 1){
-                    $content .= "<tr style=\"vertical-align:top;\">";
-                //}
+                $content .= "<tr style=\"vertical-align:top;\">";
 
                 //Get data
-                $id = $attachment_files[$i]['id']; 
+                $id           = $attachment_files[$i]['id']; 
+                $isVersion    = $attachment_files[$i]['is_version']; 
                 $id_converted = $attachment_files[$i]['converted_pdf']; 
-                $description = $attachment_files[$i]['label'];
+                $description  = $attachment_files[$i]['label'];
                 if (strlen($description) > 73) {
                     $description = substr($description, 0, 70);
                     $description .= "...";
                 }
-                $format = $attachment_files[$i]['format'];
-                $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
-                $att_type = $attachment_files[$i]['format'];
-                $filesize = $attachment_files[$i]['filesize']/1024;
+                $format          = $attachment_files[$i]['format'];
+                $mime_type       = $is->get_mime_type($attachment_files[$i]['format']);
+                $att_type        = $attachment_files[$i]['format'];
+                $filesize        = $attachment_files[$i]['filesize']/1024;
                 $attachment_type = $_SESSION['attachment_types'][$attachment_files[$i]['attachment_type']];
-                $chrono = $attachment_files[$i]['identifier'];
-                $dest_society = $attachment_files[$i]['society'];
-                $dest_firstname = $attachment_files[$i]['firstname'];
-                $dest_lastname = $attachment_files[$i]['lastname'];
+                $chrono          = $attachment_files[$i]['identifier'];
+                $dest_society    = $attachment_files[$i]['society'];
+                $dest_firstname  = $attachment_files[$i]['firstname'];
+                $dest_lastname   = $attachment_files[$i]['lastname'];
                 ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
                 
+                if($isVersion){
+                    $inputName = "join_version_attachment[]";
+                } else {
+                    $inputName = "join_attachment[]";
+                }
+
                 $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
                     . "\" title=\"".$description
-                    . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
+                    . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_attachment_".$i."\" name=\"".$inputName."\""
                     . " class=\"check\" value=\""
                     . $id."\"";
                 
-                    /*if ($_SESSION['attachment_types_attach_in_mail'][$attachment_type]) {
-                        $content .= " checked=\"checked\" ";
-                    }*/
-                    /*
-                    avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
-                    */
+                    // avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
                     if ($attachment_type == _SIGNED_RESPONSE) {
                         $content .= " checked=\"checked\" ";
                     }
@@ -342,14 +341,14 @@ if ($mode == 'add') {
 
                 if(!$id_converted){
                     $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
-                    $content .= ' onclick="clickAttachments('.$id.')" ';
+                    $content .= ' onclick="clickAttachmentsInput('.$i.')" ';
                 }else{
                     $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                 }
 
                 $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
                 if($id_converted){
-                    $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_file_".$id_converted."\" name=\"join_attachment[]\""
+                    $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
                     . $id_converted."\" />version pdf)";
                 }
@@ -359,13 +358,10 @@ if ($mode == 'add') {
                 $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
                 $content .= "</td>";   
 
-                //if($it%3 == 0 && $it != 1){
-                    $content .= "</tr>";
-                //}
+                $content .= "</tr>";
 
 				$filename = $sendmail_tools->createFilename($description, $format);
 
-                // $all_joined_files .= $description.': '.$filename.PHP_EOL;
             }
             $content .= "</table>";
         }
@@ -383,10 +379,7 @@ if ($mode == 'add') {
             $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
             for($i=0; $i < count($user_notes); $i++) {
                 $it = $i+1;
-                //nouvelle ligne toutes les 3 infos
-                //if($it%4 == 0 || $it == 1){
-                    $content .= "<tr style=\"vertical-align:top;\">";
-                //}
+                $content .= "<tr style=\"vertical-align:top;\">";
 
                 //Get data
                 $id = $user_notes[$i]['id']; 
@@ -404,12 +397,9 @@ if ($mode == 'add') {
                 $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
                     ."<strong>". $noteShort."</strong></td>"; 
 
-                //if($it%3 == 0 && $it != 1){
-                    $content .= "</tr>";
-                //}
+                $content .= "</tr>";
             }
             
-            // $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
             $content .= "</table>";
         }
     }
@@ -494,7 +484,7 @@ if ($mode == 'add') {
 
         //Check if mail exists
         if (count($emailArray) > 0 ) {
-            $content .= '<div class="block">';
+            $content .= '<div>';
             $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
             $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
             $content .= '<input type="hidden" value="'.$id.'" name="id" id="id">';
@@ -609,13 +599,13 @@ if ($mode == 'add') {
                 $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</div>';
                 for($i=0; $i < count($joined_files); $i++) {
                     //Get data
-                    $id = $joined_files[$i]['id']; 
+                    $id          = $joined_files[$i]['id']; 
                     $description = $joined_files[$i]['label'];
-                    $format = $joined_files[$i]['format'];
-                    $format = $joined_files[$i]['format'];
-                    $mime_type = $is->get_mime_type($joined_files[$i]['format']);
-                    $att_type = $joined_files[$i]['format'];
-                    $filesize = $joined_files[$i]['filesize']/1024;
+                    $format      = $joined_files[$i]['format'];
+                    $format      = $joined_files[$i]['format'];
+                    $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
+                    $att_type    = $joined_files[$i]['format'];
+                    $filesize    = $joined_files[$i]['filesize']/1024;
 					($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
 
                     //Show data
@@ -665,44 +655,47 @@ if ($mode == 'add') {
                     $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
                     for($i=0; $i < count($attachment_files); $i++) {
                         $it = $i+1;
-                        //nouvelle ligne toutes les 3 infos
-                        //if($it%4 == 0 || $it == 1){
-                            $content .= "<tr style=\"vertical-align:top;\">";
-                        //}
+                        $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id = $attachment_files[$i]['id']; 
+                        $id           = $attachment_files[$i]['id']; 
+                        $isVersion    = $attachment_files[$i]['is_version']; 
                         $id_converted = $attachment_files[$i]['converted_pdf']; 
-                        $description = $attachment_files[$i]['label'];
+                        $description  = $attachment_files[$i]['label'];
                         if (strlen($description) > 73) {
                             $description = substr($description, 0, 70);
                             $description .= "...";
                         }
-                        $format = $attachment_files[$i]['format'];
-                        $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
-                        $att_type = $attachment_files[$i]['format'];
-                        $filesize = $attachment_files[$i]['filesize']/1024;
+                        $format          = $attachment_files[$i]['format'];
+                        $mime_type       = $is->get_mime_type($attachment_files[$i]['format']);
+                        $att_type        = $attachment_files[$i]['format'];
+                        $filesize        = $attachment_files[$i]['filesize']/1024;
                         $attachment_type = $_SESSION['attachment_types'][$attachment_files[$i]['attachment_type']];
-                        $chrono = $attachment_files[$i]['identifier'];
-                        $dest_society = $attachment_files[$i]['society'];
-                        $dest_firstname = $attachment_files[$i]['firstname'];
-                        $dest_lastname = $attachment_files[$i]['lastname'];
+                        $chrono          = $attachment_files[$i]['identifier'];
+                        $dest_society    = $attachment_files[$i]['society'];
+                        $dest_firstname  = $attachment_files[$i]['firstname'];
+                        $dest_lastname   = $attachment_files[$i]['lastname'];
                         ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
-                        
+
+                        if($isVersion){
+                            $inputName = "join_version_attachment[]";
+                        } else {
+                            $inputName = "join_attachment[]";
+                        }
+
                         $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
                             . "\" title=\"".$description
-                            . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\"";
-                            (in_array($id, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
+                            . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_attachment_".$id."\" name=\"".$inputName."\"";
+
+                        if(($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))){
+                            $checked = ' checked="checked"';
+                        }
+
                         $content .= " ".$checked    
                             . " class=\"check\" value=\""
                             . $id."\"";
                         
-                            /*if ($_SESSION['attachment_types_attach_in_mail'][$attachment_type]) {
-                                $content .= " checked=\"checked\" ";
-                            }*/
-                            /*
-                            avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
-                            */
+                            //avec la condition ci-dessous, toutes les réponses signées sont cochées lorsqu'on veut envoyer le courrier par mail
                             if ($attachment_type == _SIGNED_RESPONSE && $mode == 'transfer') {
                                 $content .= " checked=\"checked\" ";
                             }
@@ -710,14 +703,14 @@ if ($mode == 'add') {
 
                         if(!$id_converted){
                             $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
-                            $content .= ' onclick="clickAttachments('.$id.')" ';
+                            $content .= ' onclick="clickAttachmentsInput('.$id.')" ';
                         }else{
                             $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                         }
 
                         $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
                         if($id_converted){
-                            $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_file_".$id_converted."\" name=\"join_attachment[]\""
+                            $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                             . " class=\"check\"";
 
                             (in_array($id_converted, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
@@ -731,9 +724,8 @@ if ($mode == 'add') {
                         $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
                         $content .= "</td>";   
 
-                        //if($it%3 == 0 && $it != 1){
-                            $content .= "</tr>";
-                        //}
+                        $content .= "</tr>";
+
                         //Filename
 						$filename = $sendmail_tools->createFilename($description, $format);
                         $all_joined_files .= $description.': '.$filename.PHP_EOL;
@@ -755,10 +747,7 @@ if ($mode == 'add') {
                     $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
                     for($i=0; $i < count($user_notes); $i++) {
                         $it = $i+1;
-                        //nouvelle ligne toutes les 3 infos
-                        //if($it%4 == 0 || $it == 1){
-                            $content .= "<tr style=\"vertical-align:top;\">";
-                        //}
+                        $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
                         $id = $user_notes[$i]['id']; 
@@ -780,12 +769,9 @@ if ($mode == 'add') {
                         $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
                             ."<strong>". $noteShort."</strong></td>"; 
 
-                        //if($it%3 == 0 && $it != 1){
-                            $content .= "</tr>";
-                        //}
+                        $content .= "</tr>";
                     }
                     
-                    // $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
                     $content .= "</table>";
                     //Filename
                     $filename = "notes_".$identifier."_".date(dmY).".html";
@@ -905,7 +891,7 @@ if ($mode == 'add') {
         if (count($emailArray) > 0 ) {
 			$usermailArray = $users_tools->get_user($emailArray['userId']);
 		
-            $content .= '<div class="block">';
+            $content .= '<div>';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
 
@@ -982,13 +968,13 @@ if ($mode == 'add') {
                 $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</div>';
                 for($i=0; $i < count($joined_files); $i++) {
                     //Get data
-                    $id = $joined_files[$i]['id']; 
+                    $id          = $joined_files[$i]['id']; 
                     $description = $joined_files[$i]['label'];
-                    $format = $joined_files[$i]['format'];
-                    $format = $joined_files[$i]['format'];
-                    $mime_type = $is->get_mime_type($joined_files[$i]['format']);
-                    $att_type = $joined_files[$i]['format'];
-                    $filesize = $joined_files[$i]['filesize']/1024;
+                    $format      = $joined_files[$i]['format'];
+                    $format      = $joined_files[$i]['format'];
+                    $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
+                    $att_type    = $joined_files[$i]['format'];
+                    $filesize    = $joined_files[$i]['filesize']/1024;
                     ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
 
                     //Show data
@@ -1038,34 +1024,42 @@ if ($mode == 'add') {
                     $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
                     for($i=0; $i < count($attachment_files); $i++) {
                         $it = $i+1;
-                        //nouvelle ligne toutes les 3 infos
-                        //if($it%4 == 0 || $it == 1){
-                            $content .= "<tr style=\"vertical-align:top;\">";
-                        //}
+                        $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id = $attachment_files[$i]['id']; 
+                        $id           = $attachment_files[$i]['id']; 
+                        $isVersion    = $attachment_files[$i]['is_version']; 
                         $id_converted = $attachment_files[$i]['converted_pdf']; 
-                        $description = $attachment_files[$i]['label'];
+                        $description  = $attachment_files[$i]['label'];
                         if (strlen($description) > 73) {
                             $description = substr($description, 0, 70);
                             $description .= "...";
                         }
-                        $format = $attachment_files[$i]['format'];
-                        $mime_type = $is->get_mime_type($attachment_files[$i]['format']);
-                        $att_type = $attachment_files[$i]['format'];
-                        $filesize = $attachment_files[$i]['filesize']/1024;
+                        $format          = $attachment_files[$i]['format'];
+                        $mime_type       = $is->get_mime_type($attachment_files[$i]['format']);
+                        $att_type        = $attachment_files[$i]['format'];
+                        $filesize        = $attachment_files[$i]['filesize']/1024;
                         $attachment_type = $_SESSION['attachment_types'][$attachment_files[$i]['attachment_type']];
-                        $chrono = $attachment_files[$i]['identifier'];
-                        $dest_society = $attachment_files[$i]['society'];
-                        $dest_firstname = $attachment_files[$i]['firstname'];
-                        $dest_lastname = $attachment_files[$i]['lastname'];
+                        $chrono          = $attachment_files[$i]['identifier'];
+                        $dest_society    = $attachment_files[$i]['society'];
+                        $dest_firstname  = $attachment_files[$i]['firstname'];
+                        $dest_lastname   = $attachment_files[$i]['lastname'];
                         ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
-                        
+
+                        if($isVersion){
+                            $inputName = "join_version_attachment[]";
+                        } else {
+                            $inputName = "join_attachment[]";
+                        }
+
                         $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
                             . "\" title=\"".$description
-                            . "\"><input style=\"margin-left: 3px\" disabled=\"disabled\" type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\"";
-                            (in_array($id, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
+                            . "\"><input style=\"margin-left: 3px\" disabled=\"disabled\" type=\"checkbox\" id=\"join_attachment_".$id."\" name=\"".$inputName."\"";
+
+                        if(($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))){
+                            $checked = ' checked="checked"';
+                        }
+
                         $content .= " ".$checked    
                             . " class=\"check\" value=\""
                             . $id."\"";
@@ -1074,14 +1068,14 @@ if ($mode == 'add') {
 
                         if(!$id_converted){
                             $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
-                            $content .= ' onclick="clickAttachments('.$id.')" ';
+                            $content .= ' onclick="clickAttachmentsInput('.$id.')" ';
                         }else{
                             $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                         }
 
                         $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
                         if($id_converted){
-                            $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" disabled=\"disabled\" type=\"checkbox\" id=\"join_file_".$id_converted."\" name=\"join_attachment[]\""
+                            $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" disabled=\"disabled\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                             . " class=\"check\"";
 
                             (in_array($id_converted, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
@@ -1095,9 +1089,7 @@ if ($mode == 'add') {
                         $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
                         $content .= "</td>";   
 
-                        //if($it%3 == 0 && $it != 1){
-                            $content .= "</tr>";
-                        //}
+                        $content .= "</tr>";
                         //Filename
                         $filename = $sendmail_tools->createFilename($description, $format);
                         $all_joined_files .= $description.': '.$filename.PHP_EOL;
@@ -1119,10 +1111,7 @@ if ($mode == 'add') {
                     $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
                     for($i=0; $i < count($user_notes); $i++) {
                         $it = $i+1;
-                        //nouvelle ligne toutes les 3 infos
-                        //if($it%4 == 0 || $it == 1){
-                            $content .= "<tr style=\"vertical-align:top;\">";
-                        //}
+                        $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
                         $id = $user_notes[$i]['id']; 
@@ -1144,12 +1133,9 @@ if ($mode == 'add') {
                         $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
                             ."<strong>". $noteShort."</strong></td>"; 
 
-                        //if($it%3 == 0 && $it != 1){
-                            $content .= "</tr>";
-                        //}
+                        $content .= "</tr>";
                     }
                     
-                    // $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
                     $content .= "</table>";
                     //Filename
                     $filename = "notes_".$identifier."_".date(dmY).".html";

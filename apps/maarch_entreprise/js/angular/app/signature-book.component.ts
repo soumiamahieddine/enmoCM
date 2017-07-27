@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform, Component, OnInit, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/map';
 
 declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
@@ -68,7 +67,7 @@ export class SignatureBookComponent implements OnInit {
     attachmentsViewerLink       : string    = "";
 
 
-    constructor(public http: Http, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction(),
@@ -99,8 +98,7 @@ export class SignatureBookComponent implements OnInit {
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
             this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.error) {
                         location.hash = "";
                         location.search = "";
@@ -242,8 +240,7 @@ export class SignatureBookComponent implements OnInit {
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0 || this.signatureBook.resList[0].allSigned == null) {
                     this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList/details')
-                        .map(res => res.json())
-                        .subscribe((data) => {
+                        .subscribe((data : any) => {
                             this.signatureBook.resList = data.resList;
                             this.signatureBook.resList.forEach((value: any, index: number) => {
                                 if (value.res_id == this.resId) {
@@ -283,15 +280,13 @@ export class SignatureBookComponent implements OnInit {
     refreshAttachments(mode: string) {
         if (mode == "rightContent") {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     this.signatureBook.documents = data;
                 });
 
         } else {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     var i = 0;
                     if (mode == "add") {
                         var found = false;
@@ -363,8 +358,7 @@ export class SignatureBookComponent implements OnInit {
 
     refreshNotes() {
         this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 this.signatureBook.nbNotes = data;
             });
     }
@@ -389,8 +383,7 @@ export class SignatureBookComponent implements OnInit {
             }
 
             this.http.get(path, signature)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.status == 0) {
                         this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + data.new_id + "&isVersion=false";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
@@ -431,7 +424,6 @@ export class SignatureBookComponent implements OnInit {
         }
 
         this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
-            .map(res => res.json())
             .subscribe(() => {
                 this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
@@ -458,8 +450,7 @@ export class SignatureBookComponent implements OnInit {
 
     changeLocation(resId: number, origin: string) {
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
-            .map(res => res.json())
-            .subscribe((data) => {
+            .subscribe((data : any) => {
                 if (!data.lock) {
                     let path = "/" + this.basketId + "/signatureBook/" + resId;
                     this.router.navigate([path]);
@@ -480,8 +471,7 @@ export class SignatureBookComponent implements OnInit {
 
             if (this.signatureBook.resList.length == 0) {
                 this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
-                    .map(res => res.json())
-                    .subscribe((data) => {
+                    .subscribe((data : any) => {
                         this.signatureBook.resList = data.resList;
 
                         valid_action_form(

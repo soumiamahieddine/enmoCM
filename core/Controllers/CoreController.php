@@ -15,47 +15,30 @@
 
 namespace Core\Controllers;
 
+use Core\Models\CoreConfigModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\ServiceModel;
 
-include_once 'core/class/class_portal.php';
-
 class CoreController
 {
     public function initialize(RequestInterface $request, ResponseInterface $response)
     {
+        $customId = CoreConfigModel::getCustomId();
+
         $data = $request->getParams();
 
-        $availableLanguages = ['en', 'fr'];
-
         $aInit = [];
-        $aInit['lang'] = 'en';
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
-        $aInit['applicationName'] = $_SESSION['config']['applicationname']; //Todo No Session
+        $aInit['applicationName'] = CoreConfigModel::getApplicationName();
+        $aInit['lang'] = CoreConfigModel::getLanguage();
 
         if (!empty($data['views'])) {
             foreach ($data['views'] as $view) {
                 $aInit[$view . 'View'] = 'Views/' . $view . '.component.html';
-                if(file_exists("{$_SESSION['config']['corepath']}custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html")) {
-                    $aInit[$view . 'View'] = "../../custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/Views/{$view}.component.html";
-                }
-            }
-        }
-
-        if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
-            $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                $lang = (string)$loadedXml->CONFIG->lang;
-                if (in_array($lang, $availableLanguages)) {
-                    $aInit['lang'] = $lang;
+                if(file_exists("custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html")) {
+                    $aInit[$view . 'View'] = "../../custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html";
                 }
             }
         }

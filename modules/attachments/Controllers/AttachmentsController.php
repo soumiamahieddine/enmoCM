@@ -21,8 +21,6 @@ use Respect\Validation\Validator;
 use Attachments\Models\AttachmentsModel;
 use Core\Controllers\ResController;
 
-require_once 'modules/attachments/Models/AttachmentsModel.php';
-
 class AttachmentsController
 {
     

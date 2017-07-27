@@ -267,6 +267,7 @@ if (! empty($_SESSION['error'])) {
             //$core->show_array($res);
             $_SESSION['user'] = $res['user'];
             if ($res['error'] == '') {
+                \Core\Models\SecurityModel::setCookieAuth(['userId' => $login, 'password' => $pass]);
                // $businessAppTools->load_app_var_session($_SESSION['user']);
                 //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
                 $core->load_menu($_SESSION['modules']);

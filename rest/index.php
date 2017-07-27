@@ -85,6 +85,15 @@ if ($_SESSION['error']) {
     exit();
 }
 
+$cookie = (array)\Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie)) {
+    if (!\Core\Models\SecurityModel::checkAuthentication($cookie)) {
+        echo 'Authentication Failed';
+        exit();
+    }
+}
+
+
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
@@ -152,7 +161,6 @@ $app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->get('/users/autocompleter/exclude/{userId}', \Core\Controllers\UserController::class . ':getUsersForAutocompletionWithExclusion');
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
