@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Core\Models\SecurityModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -179,7 +180,7 @@ class UserController
 
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_SECOND_PSW]);
-        } elseif (!UserModel::checkPassword(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
+        } elseif (!SecurityModel::checkAuthentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
             return $response->withJson(['errors' => _WRONG_PSW]);
         }
 

@@ -30,8 +30,7 @@ if ($restMode) {
     require_once 'core/class/class_security.php';
     $sec = new security();
     $_SESSION['error'] = '';
-    $pass = $sec->getPasswordHash($userLogin['password']);
-    $res = $sec->login($userLogin['user'], $pass);
+    $res = $sec->login($userLogin['user'], $userLogin['password']);
     //var_dump($res);
     $_SESSION['user'] = $res['user'];
     if (!empty($res['error'])) {

@@ -207,25 +207,6 @@ class UserModelAbstract
         return true;
     }
 
-    public static function checkPassword(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'password']);
-        ValidatorModel::stringType($aArgs, ['userId', 'password']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['password'],
-            'table'     => ['users'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
-        ]);
-
-        if ($aReturn[0]['password'] === SecurityModel::getPasswordHash($aArgs['password'])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public static function createSignature(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userSerialId', 'signatureLabel', 'signaturePath', 'signatureFileName']);

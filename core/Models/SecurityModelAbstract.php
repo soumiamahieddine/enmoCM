@@ -20,7 +20,7 @@ class SecurityModelAbstract
 
     public static function getPasswordHash($password)
     {
-        return hash('sha512', $password);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     public static function checkAuthentication(array $args)
@@ -31,11 +31,15 @@ class SecurityModelAbstract
         $aReturn = DatabaseModel::select([
             'select'    => ['password'],
             'table'     => ['users'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$args['userId']]
+            'where'     => ['user_id = ?', 'status != ?'],
+            'data'      => [$args['userId'], 'DEL']
         ]);
 
-        return $aReturn[0]['password'] === $args['password'];
+        if (empty($aReturn[0])) {
+            return false;
+        }
+
+        return password_verify($args['password'], $aReturn[0]['password']);
     }
 
     public static function setCookieAuth(array $args)

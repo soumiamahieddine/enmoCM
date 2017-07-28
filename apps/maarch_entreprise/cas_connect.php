@@ -109,8 +109,7 @@ $trace = new history();
 if ($restMode) {
     $security = new security();
     $_SESSION['error'] = '';
-    $pass = $security->getPasswordHash($loginArray['password']);
-    $res  = $security->login($userId, $pass);
+    $res  = $security->login($userId, $loginArray['password']);
 
     $_SESSION['user'] = $res['user'];
     if (!empty($res['error'])) {
