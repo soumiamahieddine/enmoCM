@@ -2142,15 +2142,12 @@ class Install extends functions
         }
     }
 
-    public function setSuperadminPass(
-        $newPass
-    )
+    public function setSuperadminPass($newPass)
     {
         $db = new Database();
-        $sec = new security();
-        
+
         $query = "UPDATE users SET password=? WHERE user_id='superadmin'";
-        $db->query($query, array($sec->getPasswordHash($newPass)));
+        $db->query($query, [\Core\Models\SecurityModel::getPasswordHash($newPass)]);
     }
 
     function copy_dir($dir2copy, $dir_paste, $excludeExt=false)

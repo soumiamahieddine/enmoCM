@@ -385,8 +385,7 @@ if(!empty($control['error']) && $control['error'] <> 1) {
     if ($restMode) {
         $security = new security();
         $_SESSION['error'] = '';
-        $pass = $security->getPasswordHash($loginArray['password']);
-        $res = $security->login($loginArray['UserId'] , $pass);
+        $res = $security->login($loginArray['UserId'] , $loginArray['password']);
         //$core->show_array($res);
         $_SESSION['user'] = $res['user'];
         if (!empty($res['error'])) {

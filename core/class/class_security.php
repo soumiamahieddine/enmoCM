@@ -99,7 +99,6 @@ class security extends Database
         $s_login = str_replace('>', '', $s_login);
         $s_login = str_replace('<', '', $s_login);
 
-        $database = new Database();
         // #TODO : Not usefull anymore, loginmode field is always in users table
         //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
         if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
@@ -110,12 +109,11 @@ class security extends Database
                 $comp =" and STATUS <> 'DEL'";
             } else {
                 if ($ra_code <> false) {
-                    $comp = " and password = :password and "
+                    $comp = " and "
                         . "ra_code = :ra_code and ra_expiration_date >= :ra_expiration_date "
                         . "and status <> :status "
                         . "and (loginmode = :loginmode1 or loginmode = :loginmode2)";
                     $params = array(
-                        'password'           => $pass, 
                         'ra_code'            => $this->getPasswordHash($ra_code),
                         'ra_expiration_date' => date('Y-m-d 00:00:00'),
                         'status'             => 'DEL',
@@ -123,16 +121,20 @@ class security extends Database
                         'loginmode2'         => 'sso',
                     );
                 } else {
-                    $comp = " and password = :password and STATUS <> 'DEL' "
+                    $comp = " and STATUS <> 'DEL' "
                           . "and (loginmode in ('standard', 'sso', 'cas'))";
-                    $params = array('password' => $pass);
+                    $params = [];
                 }
             }
         } else {
-            $comp = " and password = :password and STATUS <> 'DEL'";
-            $params = array('password' => $pass);
+            $comp = " and STATUS <> 'DEL'";
+            $params = [];
         }
-        $user = $uc->getWithComp($s_login, $comp, $params);
+
+        $check = \Core\Models\SecurityModel::checkAuthentication(['userId' => $s_login, 'password' => $pass]);
+        if ($check) {
+            $user = $uc->getWithComp($s_login, $comp, $params);
+        }
 
         if (isset($user)) {
             if ($user->__get('enabled') == 'Y') {
@@ -524,7 +526,7 @@ class security extends Database
      */
     public function getPasswordHash($textToHash)
     {
-        return hash('sha512', $textToHash);
+        return password_hash($textToHash, PASSWORD_DEFAULT);
     }
 
     /**
