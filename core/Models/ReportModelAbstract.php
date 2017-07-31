@@ -38,8 +38,10 @@ class ReportModelAbstract extends \Apps_Table_Service
         static::checkRequired($aArgs, ['id']);
         static::checkString($aArgs, ['id']);
 
-        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-            $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/entreprise.xml';
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists('custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml')) {
+            $path = 'custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml';
         } else {
             $path = 'modules/reports/xml/reports.xml';
         }

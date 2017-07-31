@@ -105,7 +105,7 @@ function unlockDocument(resId) {
     });
 }
 
-function islockForSignatureBook(resId, basketId, prodmode) {
+function islockForSignatureBook(resId, basketId, groupId, prodmode) {
     $j.ajax({
         url: 'index.php?display=true&dir=actions&page=docLocker',
         type : 'POST',
@@ -121,9 +121,9 @@ function islockForSignatureBook(resId, basketId, prodmode) {
                 alert("Courrier verrouillé par " + response.lockBy);
             } else {
                 if (prodmode) {
-                    triggerAngular(true, "#/" + basketId + "/signatureBook/" + resId);
+                    triggerAngular(true, "#/groups/" + groupId + "/baskets/" + basketId + "/signatureBook/" + resId);
                 } else {
-                    triggerAngular(false, "#/" + basketId + "/signatureBook/" + resId);
+                    triggerAngular(false, "#/groups/" + groupId + "/baskets/" + basketId + "/signatureBook/" + resId);
                 }
             }
         }

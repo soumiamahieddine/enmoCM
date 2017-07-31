@@ -25,7 +25,11 @@ class CoreConfigModel
         }
 
         $explodeUrl = explode('/', $_SERVER['SCRIPT_NAME']);
-        $path = $explodeUrl[count($explodeUrl) - 3];
+        if (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise') === false) {
+            $path = $explodeUrl[count($explodeUrl) - 3];
+        } else {
+            $path = $explodeUrl[count($explodeUrl) - 4];
+        }
 
         $xmlfile = simplexml_load_file('custom/custom.xml');
         foreach ($xmlfile->custom as $value) {
@@ -83,5 +87,13 @@ class CoreConfigModel
         }
 
         return 'en';
+    }
+
+    public static function getTmpPath()
+    {
+        $tmpPath = str_replace('core/Models', '', dirname(__FILE__));
+        $tmpPath .= 'apps/maarch_entreprise/tmp/';
+
+        return $tmpPath;
     }
 }

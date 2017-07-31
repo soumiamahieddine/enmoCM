@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Core\Models\CoreConfigModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -562,7 +563,7 @@ class DocserverController
         }
 
         if ($tmpDir == '') {
-            $tmp = $_SESSION['config']['tmppath'];
+            $tmp = CoreConfigModel::getTmpPath();
         } else {
             $tmp = $tmpDir;
         }

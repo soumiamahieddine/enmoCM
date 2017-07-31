@@ -48,12 +48,12 @@ class CoreController
 
     public static function getAdministration(RequestInterface $request, ResponseInterface $response)
     {
-        if ($_SESSION['user']['UserId'] == 'superadmin') {
+        if ($_SESSION['user']['UserId'] == 'superadmin') { //TODO session
             $administration = [];
             $administration['application'] = ServiceModel::getApplicationAdministrationServicesByXML();
             $administration['modules'] = ServiceModel::getModulesAdministrationServicesByXML();
         } else {
-            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $_SESSION['user']['UserId']]); //TODO session
         }
 
         return $response->withJson($administration);

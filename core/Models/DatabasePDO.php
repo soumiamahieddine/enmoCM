@@ -18,7 +18,7 @@ namespace Core\Models;
 class DatabasePDO
 {
     private static $pdo             = null;
-    private static $driver          = null;
+    private static $type            = null;
     private static $preparedQueries = [];
 
 
@@ -49,12 +49,12 @@ class DatabasePDO
                 $name = (string)$loadedXml->CONFIG->databasename;
                 $user = (string)$loadedXml->CONFIG->databaseuser;
                 $password = (string)$loadedXml->CONFIG->databasepassword;
-                self::$driver = (string)$loadedXml->CONFIG->databasetype;
-                if (self::$driver == 'POSTGRESQL') {
+                self::$type = (string)$loadedXml->CONFIG->databasetype;
+                if (self::$type == 'POSTGRESQL') {
                     $formattedDriver = 'pgsql';
-                } elseif (self::$driver == 'MYSQL') {
+                } elseif (self::$type == 'MYSQL') {
                     $formattedDriver = 'mysql';
-                } elseif (self::$driver == 'ORACLE') {
+                } elseif (self::$type == 'ORACLE') {
                     $formattedDriver = 'oci';
                 }
             }
@@ -70,7 +70,7 @@ class DatabasePDO
         );
         ValidatorModel::intVal(['port' => $port], ['port']);
 
-        if (self::$driver == 'ORACLE') {
+        if (self::$type == 'ORACLE') {
             $dsn = "oci:dbname=(DESCRIPTION = (ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = {$server})(PORT = {$port})))(CONNECT_DATA =(SERVICE_NAME = {$name})))";
         } else {
             $dsn = "{$formattedDriver}:host={$server};port={$port};dbname={$name}";
@@ -88,14 +88,14 @@ class DatabasePDO
             throw new \Exception($PDOException->getMessage());
         }
 
-        if (self::$driver == 'ORACLE') {
+        if (self::$type == 'ORACLE') {
             $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
     }
 
     public function query($queryString, array $data = [])
     {
-        if (self::$driver == 'ORACLE') {
+        if (self::$type == 'ORACLE') {
             $queryString = str_ireplace('CURRENT_TIMESTAMP', 'SYSDATE', $queryString);
         }
 
@@ -144,7 +144,7 @@ class DatabasePDO
         ValidatorModel::intVal($args, ['limit']);
         ValidatorModel::stringType($args, ['where']);
 
-        if (self::$driver == 'ORACLE') {
+        if (self::$type == 'ORACLE') {
             if (empty($args['where'])) {
                 $where = ' WHERE ROWNUM <= ' . $args['limit'];
             } else {
@@ -157,5 +157,10 @@ class DatabasePDO
         }
 
         return ['where' => $where, 'limit' => $limit];
+    }
+
+    public function getType()
+    {
+        return self::$type;
     }
 }

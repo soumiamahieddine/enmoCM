@@ -31,6 +31,7 @@ export class SignatureBookComponent implements OnInit {
     coreUrl                     : string;
     resId                       : number;
     basketId                    : string;
+    groupId                     : string;
 
     signatureBook: any = {
         currentAction           : {},
@@ -93,11 +94,12 @@ export class SignatureBookComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.resId      = +params['resId'];
             this.basketId   = params['basketId'];
+            this.groupId    = params['groupId'];
 
             this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             lockDocument(this.resId);
             setInterval(() => {lockDocument(this.resId)}, 50000);
-            this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/' + this.resId)
+            this.http.get(this.coreUrl + "rest/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + this.resId)
                 .subscribe((data : any) => {
                     if (data.error) {
                         location.hash = "";
@@ -452,7 +454,7 @@ export class SignatureBookComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
             .subscribe((data : any) => {
                 if (!data.lock) {
-                    let path = "/" + this.basketId + "/signatureBook/" + resId;
+                    let path = "/groups/" + this.groupId + "/baskets/" + this.basketId + '/signatureBook/' + resId;
                     this.router.navigate([path]);
                 } else {
                     if (origin == "view") {

@@ -134,12 +134,6 @@ $app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':g
 $app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
 
 
-
-//attachments
-$app->get('/attachments', \Attachments\Controllers\AttachmentsController::class . ':getList');
-$app->get('/attachments/{id}', \Attachments\Controllers\AttachmentsController::class . ':getById');
-$app->post('/attachments', \Attachments\Controllers\AttachmentsController::class . ':create');
-
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
 $app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':updateListModelsDiffListDestByUserId');
@@ -147,7 +141,7 @@ $app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectTyp
 //Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
-$app->get('/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
+$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
