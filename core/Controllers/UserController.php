@@ -180,7 +180,7 @@ class UserController
 
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_SECOND_PSW]);
-        } elseif (!SecurityModel::checkAuthentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
+        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
             return $response->withJson(['errors' => _WRONG_PSW]);
         }
 

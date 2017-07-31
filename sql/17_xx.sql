@@ -79,6 +79,6 @@ END$$;
 ALTER TABLE sendmail DROP COLUMN IF EXISTS res_version_att_id_list;
 ALTER TABLE sendmail ADD COLUMN res_version_att_id_list character varying(255);
 
-//SALT
+/*SALT*/
 UPDATE users set password = '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', change_password = 'Y' WHERE user_id != 'superadmin';
 UPDATE users set password = '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.' where user_id = 'superadmin';

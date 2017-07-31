@@ -131,7 +131,7 @@ class security extends Database
             $params = [];
         }
 
-        $check = \Core\Models\SecurityModel::checkAuthentication(['userId' => $s_login, 'password' => $pass]);
+        $check = \Core\Models\SecurityModel::authentication(['userId' => $s_login, 'password' => $pass]);
         if ($check) {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }
@@ -182,21 +182,6 @@ class security extends Database
                     'Status'          => $user->__get('status'),
                     'cookie_date'     => $user->__get('cookie_date'),
                 );
-
-                $key = md5(
-                    time() . '%' . $array['FirstName'] . '%' . $array['UserId']
-                    . '%' . $array['UserId'] . '%' . date('dmYHmi') . '%'
-                );
-                $user->__set('cookie_key', $key);
-                if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                    $user->__set('cookie_date', 'SYSDATE');
-                } else {
-                    $user->__set(
-                        'cookie_date', date('Y-m-d') . ' ' . date('H:m:i')
-                    );
-                }
-                // #TODO : usefull ?
-                $uc->save($user, 'up');
 
                 $array['primarygroup'] = $ugc ->getPrimaryGroup(
                     $array['UserId']
@@ -400,103 +385,8 @@ class security extends Database
     */
     public function reopen($s_UserId,$s_key)
     {
-        $comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
-        $uc = new users_controler();
-        $user = users_controler::get($s_login, $comp);
-        if(isset($user))
-        {
-            if($user->__get('enabled')  == "Y")
-            {
-                $serv_controler = new ServiceControler();
-                $_SESSION['user']['change_pass'] = $user->__get('change_password');
-                $_SESSION['user']['UserId']      = $user->__get('user_id');
-                $_SESSION['user']['FirstName']   = $user->__get('firstname');
-                $_SESSION['user']['LastName']    = $user->__get('lastname');
-                $_SESSION['user']['Phone']       = $user->__get('phone');
-                $_SESSION['user']['Mail']        = $user->__get('mail');
-                $_SESSION['user']['department']  = $user->__get('department');
-                $_SESSION['user']['thumbprint']  = $user->__get('thumbprint');
-
-                if (isset($_SESSION['modules_loaded']['visa'])) {
-                    require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
-                    $us = new UserSignatures();
-
-                    $db = new Database();
-                    $query = "select path_template from " 
-                        . _DOCSERVERS_TABLE_NAME 
-                        . " where docserver_id = 'TEMPLATES'";
-                    $stmt = $db->query($query);
-                    $resDs = $stmt->fetchObject();
-                    $pathToDs = $resDs->path_template;
-
-                    $tab_sign = $us->getForUser($_SESSION['user']['UserId']);
-                    $_SESSION['user']['pathToSignature'] = array();
-                    foreach ($tab_sign as $sign) {
-                        $path = $pathToDs . str_replace(
-                            "#", 
-                            DIRECTORY_SEPARATOR, 
-                            $sign['signature_path']
-                        )
-                        . $sign['signature_file_name'];
-                        array_push($_SESSION['user']['pathToSignature'], $path);
-                    }
-                }
-
-                $_SESSION['error'] =  "";
-
-                $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
-
-                $user->__set('cookie_key', $key);
-                if ($_SESSION['config']['databasetype'] == "ORACLE")
-                    $user->__set('cookie_date', 'SYSDATE');
-                else
-                    $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
-
-                $uc->save($user, 'up');
-
-                $_SESSION['user']['primarygroup'] =  $ugc->getPrimaryGroup($_SESSION['user']['UserId']);
-                $sec_controler = new SecurityControler();
-                $tmp = $sec_controler->load_security($_SESSION['user']['UserId']);
-                $_SESSION['user']['collections'] = $tmp['collections'];
-                $_SESSION['user']['security'] = $tmp['security'];
-                $serv_controler->loadEnabledServices();
-
-                $business_app_tools = new business_app_tools();
-                $core_tools = new core_tools();
-                $business_app_tools->load_app_var_session($array);
-                $core_tools->load_var_session($_SESSION['modules'], $array);
-
-                $_SESSION['user']['services'] = $serv_controler->loadUserServices($_SESSION['user']['UserId']);
-                $core_tools->load_menu($_SESSION['modules']);
-/*
-                if($_SESSION['history']['userlogin'] == "true")
-                {
-                    //add new instance in history table for the user's connexion
-                    $hist = new history();
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                    $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
-
-                    $hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
-                }
-*/
-                if($_SESSION['user']['change_pass'] == 'Y' && !isset($_SESSION['web_cas_url'])) {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
-                    exit();
-
-                } else {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php");
-                    exit();
-                }
-            } else {
-                $_SESSION['error'] = _SUSPENDED_ACCOUNT;
-                header("location: ".$_SESSION['config']['businessappurl']."index.php");
-                exit();
-            }
-        } else {
-            $_SESSION['error'] = _ERROR;
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
-            exit();
-        }
+        header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
+        exit();
     }
 
     /******************* COLLECTION MANAGEMENT FUNCTIONS *******************/
