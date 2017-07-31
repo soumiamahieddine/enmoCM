@@ -109,6 +109,7 @@ abstract class diffusion_list_Abstract extends functions
                     . "and l.item_type = 'user_id' " 
                     . "and l.object_type = ? "
                     . "and l.object_id = ? "
+                    . "and u.enabled = 'Y' "
                 . "ORDER BY l.sequence",array($item_mode,$objectType,$objectId));
             while ($user = $stmt->fetchObject()) {
                 if(!isset($listmodel[$role_id]))
