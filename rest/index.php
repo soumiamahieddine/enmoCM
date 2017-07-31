@@ -85,11 +85,13 @@ if ($_SESSION['error']) {
     exit();
 }
 
-$cookie = (array)\Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
+$cookie = \Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
 if (!empty($cookie)) {
-    if (!\Core\Models\SecurityModel::checkAuthentication($cookie)) {
-        echo 'Authentication Failed';
-        exit();
+    if (\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
+        \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+//    } else {
+//        echo 'Authentication Failed';
+//        exit();
     }
 }
 

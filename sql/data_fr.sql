@@ -997,7 +997,7 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 --SUPERADMIN USER
 ------------
 DELETE FROM users WHERE user_id='superadmin';
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('superadmin', '964a5502faec7a27f63ab5f7bddbe1bd8a685616a90ffcba633b5ad404569bd8fed4693cc00474a4881f636f3831a3e5a36bda049c568a89cfe54b1285b0c13e', 'Super', 'ADMIN', '0147245159', 'info@maarch.org', 'Maarch', '11', NULL, NULL, 'e657b3542b0362910db9195cb0fd0fb5', '2012-02-28 10:02:08', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('superadmin', '964a5502faec7a27f63ab5f7bddbe1bd8a685616a90ffcba633b5ad404569bd8fed4693cc00474a4881f636f3831a3e5a36bda049c568a89cfe54b1285b0c13e', 'Super', 'ADMIN', '0147245159', 'info@maarch.org', 'Maarch', '11', NULL, NULL, 'Y', 'N', NULL, 'OK', 'standard', NULL);
 ------------
 -- CONTACTS
 ------------

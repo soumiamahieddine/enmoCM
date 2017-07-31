@@ -95,6 +95,10 @@ class DatabasePDO
 
     public function query($queryString, array $data = [])
     {
+        if (self::$driver == 'ORACLE') {
+            $queryString = str_ireplace('CURRENT_TIMESTAMP', 'SYSDATE', $queryString);
+        }
+
         if (!empty($data)) {
             $tmpData = [];
             foreach ($data as $key => $value) {
