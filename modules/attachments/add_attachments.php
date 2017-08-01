@@ -37,7 +37,7 @@ $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = 
 // Retrieve the informations of the newly scanned document (the one to attach as an attachment)
 $queryChildInfos = ReconciliationModel::selectReconciliation([
         'table'     => [$letterboxTable],
-        'where'     => ['res_id = ?'],
+        'where'     => ['res_id = (?)'],
         'data'      => [$childResId]
 ]);
 
@@ -171,7 +171,7 @@ for($i = 0; $i <= count($aArgs['data']); $i++){
         $docserverPath = ReconciliationModel::selectReconciliation([
             'select'    => ['path_template'],
             'table'     => ['docservers'],
-            'where'     => ['docserver_id = ?'],
+            'where'     => ['docserver_id = (?)'],
             'data'      => [$aArgs['data'][$i]['value']]
         ]);
 

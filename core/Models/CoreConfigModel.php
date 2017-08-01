@@ -26,7 +26,6 @@ class CoreConfigModel
 
         $explodeUrl = explode('/', $_SERVER['SCRIPT_NAME']);
         $path = $explodeUrl[count($explodeUrl) - 3];
-
         $xmlfile = simplexml_load_file('custom/custom.xml');
         foreach ($xmlfile->custom as $value) {
             if (!empty($value->path) && $value->path == $path) {

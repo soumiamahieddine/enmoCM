@@ -56,7 +56,7 @@ for ($i = 0; $i < count($_GET['field']); $i++){
 // Get the informations of the current document in case there is more than one response project
 $defaultInfos = ReconciliationModel::selectReconciliation([
         'select'    =>  ['subject'],
-        'where'     =>  ['res_id = ?'],
+        'where'     =>  ['res_id = (?)'],
         'table'     =>  $letterboxTable,
         'data'      =>  [$_SESSION['doc_id']]
 ]);
@@ -67,7 +67,7 @@ if(count($_GET['field']) == 1){
     // Check if there is a response project and retrieve the infos about it
     $queryProjectResponse = ReconciliationModel::selectReconciliation([
         'select'    =>  ['identifier, title, dest_contact_id, dest_address_id'],
-        'where'     =>  ["res_id_master = ? AND attachment_type = 'response_project' AND status <> 'DEL'"],
+        'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project' AND status <> 'DEL'"],
         'table'     =>  $attachmentTable,
         'data'      =>  [$_GET['field']]
     ]);
@@ -75,7 +75,7 @@ if(count($_GET['field']) == 1){
     // Get the informations from res_view_letterbox, in order to get the contact infos if there is no project response
     $queryResViewLetterbox = ReconciliationModel::selectReconciliation([
         'select'    =>  ['contact_id, address_id'],
-        'where'     =>  ["res_id = ?"],
+        'where'     =>  ["res_id = (?)"],
         'table'     =>  'res_view_letterbox',
         'data'      =>  [$_GET['field']]
     ]);
@@ -150,7 +150,7 @@ if(count($_GET['field']) == 1){
     for($i = 0; $i< count($_GET['field']); $i++){
         $queryAllProjectReponse = ReconciliationModel::selectReconciliation([
             'select'    =>  ['title,identifier, dest_contact_id, dest_address_id'],
-            'where'     =>  ["res_id_master = ? AND attachment_type = 'response_project'"],
+            'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project'"],
             'table'     =>  $attachmentTable,
             'data'      =>  [$_GET['field'][$i]]
         ]);

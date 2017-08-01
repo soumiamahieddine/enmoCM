@@ -24,7 +24,7 @@ $close_incoming = $_SESSION['modules_loaded']['attachments']['reconciliation']['
 // Modification of the incoming document, as deleted
 $delMail = ReconciliationModel::updateReconciliation([
     'set'       => ['status' => 'DEL'],
-    'where'     => ['res_id = ?'],
+    'where'     => ['res_id = (?)'],
     'data'      => [$res_id],
     'table'     => $letterboxTable
 ]);
@@ -35,7 +35,7 @@ $tabFormValues = $_SESSION['modules_loaded']['attachments']['reconciliation']['t
 if($delete_response_project == 'true'){
     $delProject = ReconciliationModel::updateReconciliation([
         'set'       => ['status' => 'DEL'],
-        'where'     => ["res_id_master = ? AND identifier = ? AND status NOT IN ('DEL','TMP') AND attachment_type = 'response_project'"],
+        'where'     => ["res_id_master = (?) AND identifier = (?) AND status NOT IN ('DEL','TMP') AND attachment_type = 'response_project'"],
         'data'      => [$res_id_master[0], $tabFormValues['chrono_number']],
         'table'     => $attachmentTable
     ]);
@@ -46,7 +46,7 @@ if($close_incoming == 'true' && $tabFormValues['close_incoming_mail'] == 'true')
 	for($i = 0; $i < count($res_id_master); $i++){
 	    $queryClose = ReconciliationModel::updateReconciliation([
             'set'       => ['status' => 'END'],
-            'where'     => ['res_id = ?'],
+            'where'     => ['res_id = (?)'],
             'data'      => [$res_id_master[$i]],
             'table'     => $letterboxTable
         ]);

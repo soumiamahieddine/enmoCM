@@ -62,7 +62,7 @@ class ReconciliationController{
             'resId'  => $resId,
             'resIdMaster'  => $resIdMaster,
         ];
-        $returnPrepare = $this->prepareStorage($aArgs);
+        $returnPrepare = $this -> prepareStorage($aArgs);
 
         $aArgs = [
             'data'          => $returnPrepare['data'],

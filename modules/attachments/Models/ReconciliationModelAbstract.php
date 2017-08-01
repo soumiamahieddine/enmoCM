@@ -8,19 +8,17 @@
 
 
 namespace Attachments\Models;
+use Core\Models\ValidatorModel;
+use Core\Models\DatabaseModel;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-
-class ReconciliationModelAbstract extends \Apps_Table_Service{
-    public static function selectReconciliation(array $aArgs = [])
+class ReconciliationModelAbstract{
+    public static function selectReconciliation (array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['where', 'data']);
-        static::checkArray($aArgs, ['where', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['where', 'data', 'table']);
 
         $select = [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => $aArgs['table'],
+            'table'     => gettype($aArgs['table']) == 'string' ? array($aArgs['table']) : $aArgs['table'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
         ];
@@ -29,24 +27,21 @@ class ReconciliationModelAbstract extends \Apps_Table_Service{
             $select['order_by'] = $aArgs['orderBy'];
         }
 
-        $aReturn = static::select($select);
+        $aReturn = DatabaseModel::select($select);
 
         return $aReturn;
     }
 
     public static function updateReconciliation (array $aArgs = [])
     {
-        static::checkRequired($aArgs, ['where', 'data', 'set']);
-        static::checkArray($aArgs, ['set','where', 'data']);
+        ValidatorModel::notEmpty($aArgs, ['where', 'data', 'set']);
 
-        $update = [
+        $aReturn = DatabaseModel::update([
             'set'       => $aArgs['set'],
-            'table'     => $aArgs['table'],
+            'table'     => gettype($aArgs['table']) == 'array' ? (string) $aArgs['table'] : $aArgs['table'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
-        ];
-
-        $aReturn = static::update($update);
+        ]);
 
         return $aReturn;
     }
