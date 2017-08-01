@@ -38,4 +38,21 @@ class ActionModelAbstract
         return $action[0]['action_page'];
     }
 
+    public static function getDefaultActionByGroupBasketId(array $aArgs) {
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'basketId']);
+        ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);
+
+        $action = DatabaseModel::select([
+            'select'    => ['id_action'],
+            'table'     => ['actions_groupbaskets'],
+            'where'     => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
+            'data'      => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
+        ]);
+
+        if (empty($action[0])) {
+            return '';
+        }
+
+        return $action[0]['id_action'];
+    }
 }

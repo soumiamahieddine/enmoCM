@@ -15,6 +15,8 @@
 
 namespace Core\Controllers;
 
+use Core\Models\CoreConfigModel;
+use Core\Models\DatabasePDO;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -30,19 +32,13 @@ class HistoryController
     /**
     * Inserts a record in the history table
     *
-    * @param $table_name
-    * @param $record_id
-    * @param $event_type
-    * @param $event_id
-    * @param $info
-    * @param $id_module = 'admin'
-    * @param $isTech = false
-    * @param $result = _OK
-    * @param $level = _LEVEL_DEBUG
+    * @param $aArgs array
     */
-    public static function add(array $aArgs = []) 
+    public static function add(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['table_name', 'info', 'event_id', 'event_type', 'record_id']);
+
+        $db = new DatabasePDO();
 
         if(empty($aArgs['id_module'])){
             $aArgs['id_module'] = 'admin';
@@ -72,7 +68,7 @@ class HistoryController
         $id_module    = $aArgs['id_module'];
         $result       = $aArgs['result'];
         $level        = $aArgs['level'];
-        $databasetype = $_SESSION['config']['databasetype'];
+        $databasetype = $db->getType();
 
         $traceInformations = array(
             'WHERE'         => $table_name,
@@ -87,9 +83,9 @@ class HistoryController
             'LEVEL'         => $level
         );
 
-        HistoryModel::build_logging_method();
+        $loggingMethods = HistoryModel::build_logging_method();
 
-        foreach ($_SESSION['logging_method_memory'] as $logging_method) {
+        foreach ($loggingMethods as $logging_method) {
             if ($logging_method['ACTIVATED'] == true) {
                 if ($logging_method['ID'] == 'log4php') {
                     if ($logging_method['LOGGER_NAME_TECH'] == "") {
@@ -237,14 +233,16 @@ class HistoryController
         ValidatorModel::notEmpty($aArgs, ['filePath']);
 
         $filePath = $aArgs['filePath'];
+        $customId = CoreConfigModel::getCustomId();
 
-        if (file_exists($_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/'.$filePath)) {
-            $pathToXml = $_SESSION['config']['corepath'].'custom/'.$_SESSION['custom_override_id'].'/'.$filePath;
-        } elseif (file_exists($_SESSION['config']['corepath'].$filePath)) {
-            $pathToXml = $_SESSION['config']['corepath'].$filePath;
+        if (file_exists("custom/{$customId}/{$filePath}")) {
+            $pathToXml = "custom/{$customId}/{$filePath}";
+        } elseif (file_exists($filePath)) {
+            $pathToXml = $filePath;
         } else {
             $pathToXml = false;
         }
+
         return $pathToXml;
     }
 }

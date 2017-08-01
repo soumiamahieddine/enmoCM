@@ -254,6 +254,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users
 (
+  id serial,
   user_id character varying(128) NOT NULL,
   "password" character varying(255) DEFAULT NULL::character varying,
   firstname character varying(255) DEFAULT NULL::character varying,
@@ -273,12 +274,11 @@ CREATE TABLE users
   loginmode character varying(50) DEFAULT NULL::character varying,
   docserver_location_id character varying(32) DEFAULT NULL::character varying,
   thumbprint text DEFAULT NULL::character varying,
-  signature_path character varying(255) DEFAULT NULL::character varying,
-  signature_file_name character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
   ra_code character varying(255) DEFAULT NULL::character varying,
   ra_expiration_date timestamp without time zone,
-  CONSTRAINT users_pkey PRIMARY KEY (user_id)
+  CONSTRAINT users_pkey PRIMARY KEY (user_id),
+  CONSTRAINT users_id_key UNIQUE (id)
 )
 WITH (OIDS=FALSE);
 
@@ -2369,6 +2369,7 @@ CREATE TABLE sendmail
   is_res_master_attached character varying(1) NOT NULL DEFAULT 'Y',
   res_version_id_list character varying(255) DEFAULT NULL,
   res_attachment_id_list character varying(255) DEFAULT NULL,
+  res_version_att_id_list character varying(255) DEFAULT NULL,
   note_id_list character varying(255) DEFAULT NULL,
   is_html character varying(1) NOT NULL DEFAULT 'Y',
   email_status character varying(1) NOT NULL DEFAULT 'D',

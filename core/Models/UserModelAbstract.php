@@ -207,25 +207,6 @@ class UserModelAbstract
         return true;
     }
 
-    public static function checkPassword(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'password']);
-        ValidatorModel::stringType($aArgs, ['userId', 'password']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['password'],
-            'table'     => ['users'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
-        ]);
-
-        if ($aReturn[0]['password'] === SecurityModel::getPasswordHash($aArgs['password'])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public static function createSignature(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userSerialId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
@@ -348,15 +329,17 @@ class UserModelAbstract
         if (!file_exists($docserver['path_template'])) {
             return [];
         }
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $urlTmpPath = str_replace('rest/', '', \Url::coreurl()) . 'apps/maarch_entreprise/tmp/';
         foreach($aReturn as $key => $value) {
             $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
 
             $extension = explode('.', $pathToSignature);
             $extension = $extension[count($extension) - 1];
             $fileNameOnTmp = 'tmp_file_' . $aArgs['id'] . '_' . rand() . '.' . strtolower($extension);
-            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp; // TODO No Session
+            $filePathOnTmp = $tmpPath . $fileNameOnTmp;
             if (file_exists($pathToSignature) && copy($pathToSignature, $filePathOnTmp)) {
-                $aReturn[$key]['pathToSignatureOnTmp'] = $_SESSION['config']['businessappurl'] . '/tmp/' . $fileNameOnTmp; // TODO No Session
+                $aReturn[$key]['pathToSignatureOnTmp'] = $urlTmpPath . $fileNameOnTmp;
             } else {
                 $aReturn[$key]['pathToSignatureOnTmp'] = '';
             }

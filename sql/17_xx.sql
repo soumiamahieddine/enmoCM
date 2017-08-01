@@ -64,9 +64,21 @@ ALTER TABLE users DROP COLUMN IF EXISTS id;
 ALTER TABLE users ADD COLUMN id serial;
 ALTER TABLE users ADD UNIQUE (id);
 
-ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_serial_id;
-ALTER TABLE user_signatures ADD COLUMN user_serial_id integer;
-ALTER TABLE user_signatures ADD FOREIGN KEY (user_serial_id) REFERENCES users(id);
-UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
-ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
-ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'user_signatures') AND attname = 'user_id') THEN
+    ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_serial_id;
+    ALTER TABLE user_signatures ADD COLUMN user_serial_id integer;
+    ALTER TABLE user_signatures ADD FOREIGN KEY (user_serial_id) REFERENCES users(id);
+    UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
+    ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
+    ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;
+  END IF;
+END$$;
+
+
+ALTER TABLE sendmail DROP COLUMN IF EXISTS res_version_att_id_list;
+ALTER TABLE sendmail ADD COLUMN res_version_att_id_list character varying(255);
+
+/*SALT*/
+UPDATE users set password = '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', change_password = 'Y' WHERE user_id != 'superadmin';
+UPDATE users set password = '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.' where user_id = 'superadmin';

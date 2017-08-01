@@ -15,6 +15,8 @@
 
 namespace Core\Controllers;
 
+use Core\Models\CoreConfigModel;
+use Core\Models\SecurityModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -179,7 +181,7 @@ class UserController
 
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_SECOND_PSW]);
-        } elseif (!UserModel::checkPassword(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
+        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
             return $response->withJson(['errors' => _WRONG_PSW]);
         }
 
@@ -215,15 +217,13 @@ class UserController
         }
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
-        if($_SESSION['history']['userabs'] == "true") { //TODO No Session
-            HistoryController::add([
-                'table_name'    => 'users',
-                'record_id'     => $user['user_id'],
-                'event_type'    => 'ABS',
-                'event_id'      => 'userabs',
-                'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
-            ]);
-        }
+        HistoryController::add([
+            'table_name'    => 'users',
+            'record_id'     => $user['user_id'],
+            'event_type'    => 'ABS',
+            'event_id'      => 'userabs',
+            'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
+        ]);
 
         return $response->withJson([
             'success'   => _ABSENCE_ACTIVATED,
@@ -243,15 +243,13 @@ class UserController
             $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
 
             UserModel::deactivateAbsenceById(['id' => $aArgs['id']]);
-            if($_SESSION['history']['userabs'] == "true") { //TODO No Session
-                HistoryController::add([
-                    'table_name'    => 'users',
-                    'record_id'     => $user['user_id'],
-                    'event_type'    => 'RET',
-                    'event_id'      => 'userabs',
-                    'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
-                ]);
-            }
+            HistoryController::add([
+                'table_name'    => 'users',
+                'record_id'     => $user['user_id'],
+                'event_type'    => 'RET',
+                'event_id'      => 'userabs',
+                'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+            ]);
 
             return $response->withJson([
                 'success'   => _ABSENCE_DEACTIVATED,
@@ -284,8 +282,10 @@ class UserController
         $type     = explode('/', $mimeType);
         $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        if (file_exists('custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml')) {
-            $path = 'custom/' .$_SESSION['custom_override_id']. '/apps/maarch_entreprise/xml/extensions.xml';
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml";
         } else {
             $path = 'apps/maarch_entreprise/xml/extensions.xml';
         }
@@ -308,13 +308,13 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 
-        file_put_contents($_SESSION['config']['tmppath'] . $tmpName, $file);
+        file_put_contents(CoreConfigModel::getTmpPath() . $tmpName, $file);
 
         $docservers_controler = new \docservers_controler();
         $storeInfos = $docservers_controler->storeResourceOnDocserver(
             'templates',
             [
-                'tmpDir'      => $_SESSION['config']['tmppath'],
+                'tmpDir'      => CoreConfigModel::getTmpPath(),
                 'size'        => $data['size'],
                 'format'      => $ext,
                 'tmpFileName' => $tmpName

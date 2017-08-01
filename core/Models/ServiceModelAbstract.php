@@ -70,8 +70,10 @@ class ServiceModelAbstract
 
     public static function getModulesAdministrationServicesByXML()
     {
-        if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
-            $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
         } else {
             $path = 'apps/maarch_entreprise/xml/config.xml';
         }
@@ -108,8 +110,10 @@ class ServiceModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userServices']);
         ValidatorModel::arrayType($aArgs, ['userServices']);
 
-        if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml")) { //Todo No Session
-            $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/config.xml";
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
         } else {
             $path = 'apps/maarch_entreprise/xml/config.xml';
         }
@@ -192,15 +196,17 @@ class ServiceModelAbstract
         ValidatorModel::notEmpty($aArgs, ['location']);
         ValidatorModel::stringType($aArgs, ['location']);
 
+        $customId = CoreConfigModel::getCustomId();
+
         if ($aArgs['location'] == 'apps') {
-            if (file_exists("custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/services.xml")) { //Todo No Session
-                $path = "custom/{$_SESSION['custom_override_id']}/apps/maarch_entreprise/xml/services.xml";
+            if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/services.xml")) {
+                $path = "custom/{$customId}/apps/maarch_entreprise/xml/services.xml";
             } else {
                 $path = 'apps/maarch_entreprise/xml/services.xml';
             }
         } else {
-            if (file_exists("custom/{$_SESSION['custom_override_id']}/modules/{$aArgs['location']}/xml/services.xml")) { //Todo No Session
-                $path = "custom/{$_SESSION['custom_override_id']}/modules/{$aArgs['location']}/xml/services.xml";
+            if (file_exists("custom/{$customId}/modules/{$aArgs['location']}/xml/services.xml")) {
+                $path = "custom/{$customId}/modules/{$aArgs['location']}/xml/services.xml";
             } else {
                 $path = "modules/{$aArgs['location']}/xml/services.xml";
             }

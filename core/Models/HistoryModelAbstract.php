@@ -27,45 +27,40 @@ class HistoryModelAbstract
     */
     public static function build_logging_method()
     {
-        if (!isset($_SESSION['logging_method_memory'])) {
-            $pathToXmlLogin = HistoryController::getXmlFilePath(['filePath' => 'apps/maarch_entreprise/xml/logging_method.xml']);
-             
-            if (!$pathToXmlLogin) {
-                $noXml = true;
-                $logging_methods[0]['ID']               = 'database';
-                $logging_methods[0]['ACTIVATED']        = true;
-                $logging_methods[1]['ID']               = 'log4php';
-                $logging_methods[1]['ACTIVATED']        = true;
-                $logging_methods[1]['LOGGER_NAME_TECH'] = 'loggerTechnique';
-                $logging_methods[1]['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
-                $logging_methods[1]['LOG_FORMAT']       = '[%RESULT%][%CODE_METIER%][%WHERE%][%ID%][%HOW%][%USER%][%WHAT%][%ID_MODULE%][%REMOTE_IP%]';
-                $logging_methods[1]['CODE_METIER']      = 'MAARCH';
-            }
+        $logging_methods = [];
 
-            if (!isset($noXml)) {
-                $logging_methods = array();
+        $pathToXmlLogin = HistoryController::getXmlFilePath(['filePath' => 'apps/maarch_entreprise/xml/logging_method.xml']);
 
-                $xmlConfig = simplexml_load_file($pathToXmlLogin);
-                if (!$xmlConfig) {
-                    exit();
-                }
-
-                foreach ($xmlConfig->METHOD as $METHOD) {
-                    array_push(
-                        $logging_methods,
-                        array(
-                            'ID'               => (string)$METHOD->ID,
-                            'ACTIVATED'        => (boolean)$METHOD->ENABLED,
-                            'LOGGER_NAME_TECH' => (string)$METHOD->LOGGER_NAME_TECH,
-                            'LOGGER_NAME_FUNC' => (string)$METHOD->LOGGER_NAME_FUNC,
-                            'LOG_FORMAT'       => (string)$METHOD->APPLI_LOG_FORMAT,
-                            'CODE_METIER'      => (string)$METHOD->CODE_METIER
-                        )
-                    );
-                }
-            }
-            $_SESSION['logging_method_memory'] = $logging_methods;
+        if (!$pathToXmlLogin) {
+            $noXml = true;
+            $logging_methods[0]['ID']               = 'database';
+            $logging_methods[0]['ACTIVATED']        = true;
+            $logging_methods[1]['ID']               = 'log4php';
+            $logging_methods[1]['ACTIVATED']        = true;
+            $logging_methods[1]['LOGGER_NAME_TECH'] = 'loggerTechnique';
+            $logging_methods[1]['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
+            $logging_methods[1]['LOG_FORMAT']       = '[%RESULT%][%CODE_METIER%][%WHERE%][%ID%][%HOW%][%USER%][%WHAT%][%ID_MODULE%][%REMOTE_IP%]';
+            $logging_methods[1]['CODE_METIER']      = 'MAARCH';
         }
+
+        if (!isset($noXml)) {
+            $xmlConfig = simplexml_load_file($pathToXmlLogin);
+
+            if ($xmlConfig) {
+                foreach ($xmlConfig->METHOD as $METHOD) {
+                    $logging_methods[] = [
+                        'ID'               => (string)$METHOD->ID,
+                        'ACTIVATED'        => (boolean)$METHOD->ENABLED,
+                        'LOGGER_NAME_TECH' => (string)$METHOD->LOGGER_NAME_TECH,
+                        'LOGGER_NAME_FUNC' => (string)$METHOD->LOGGER_NAME_FUNC,
+                        'LOG_FORMAT'       => (string)$METHOD->APPLI_LOG_FORMAT,
+                        'CODE_METIER'      => (string)$METHOD->CODE_METIER
+                    ];
+                }
+            }
+        }
+
+        return $logging_methods;
     }
 
     /**

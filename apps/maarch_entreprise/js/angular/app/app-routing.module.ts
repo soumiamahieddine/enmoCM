@@ -9,7 +9,7 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
     imports: [
         RouterModule.forRoot([
             { path: 'profile', component: ProfileComponent },
-            { path: ':basketId/signatureBook/:resId', component: SignatureBookComponent },
+            { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: SignatureBookComponent },
             { path: '**',   redirectTo: '', pathMatch: 'full' },
         ], { useHash: true }),
     ],

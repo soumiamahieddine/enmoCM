@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Core\Models\CoreConfigModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -160,7 +161,7 @@ class ResController
             $fileContent = base64_decode($encodedFile);
             $random = rand();
             $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
-            $Fnm = $_SESSION['config']['tmppath'] . $fileName;
+            $Fnm = CoreConfigModel::getTmpPath() . $fileName;
             $inF = fopen($Fnm, "w");
             fwrite($inF, $fileContent);
             fclose($inF);
@@ -171,7 +172,7 @@ class ResController
                 'collId' => $collId,
                 'fileInfos' =>
                     [
-                        'tmpDir'        => $_SESSION['config']['tmppath'],
+                        'tmpDir'        => CoreConfigModel::getTmpPath(),
                         'size'          => filesize($Fnm),
                         'format'        => $fileFormat,
                         'tmpFileName'   => $fileName,

@@ -195,7 +195,7 @@ class ResModelAbstract
 
         if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
             $lock = false;
-        } elseif ($aReturn[0]['locker_user_id'] == $_SESSION['user']['UserId']) {
+        } elseif ($aReturn[0]['locker_user_id'] == $_SESSION['user']['UserId']) { //TODO SESSION
             $lock = false;
         } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
             $lock = false;

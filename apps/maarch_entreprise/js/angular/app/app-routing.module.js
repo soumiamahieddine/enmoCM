@@ -20,7 +20,7 @@ AppRoutingModule = __decorate([
         imports: [
             router_1.RouterModule.forRoot([
                 { path: 'profile', component: profile_component_1.ProfileComponent },
-                { path: ':basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
+                { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
                 { path: '**', redirectTo: '', pathMatch: 'full' },
             ], { useHash: true }),
         ],
