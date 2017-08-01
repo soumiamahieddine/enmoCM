@@ -356,7 +356,60 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="general_infos_div"  style="display:inline">';
     $frm_str .= '<div class="ref-unit">';
     $frm_str .= '<table width="100%" align="center" border="0"  id="indexing_fields" style="display:block;">';
-    /*** Category ***/
+
+    //NCH01
+    $frm_str .= '<tr id="attachment_tr" style="display:none'
+        . ';">';
+    $frm_str .= '<td>' . _LINK_TO_DOC . '</td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input type="radio" '
+        . 'name="attachment" id="attach" value="true" checked="checked"'
+        . 'onclick="show_attach(\'true\');"'
+        . ' /> '
+        . _YES . ' <input type="radio" name="attachment" id="no_attach"'
+        . ' value="false" '
+        . 'onclick="show_attach(\'false\');"'
+        . ' /> '
+        . _NO . '</td>';
+    $frm_str .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
+        . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span></td>';
+    $frm_str .= '</tr>';
+
+    $frm_str .= '<tr id="attach_show" style="display:none;">';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td style="text-align: right;">';
+    $frm_str .= '<a ';
+    $frm_str .= 'href="javascript://" ';
+    $frm_str .= 'onclick="window.open(';
+    $frm_str .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=fill_input&modulename=attachments&init_search&nodetails\', ';
+    $frm_str .= '\'search_doc_for_attachment\', ';
+    $frm_str .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
+    $frm_str .= ');"';
+    $frm_str .= ' title="' . _SEARCH . '"';
+    $frm_str .= '>';
+    $frm_str .= '<span style="font-weight: bold;">';
+    $frm_str .= '<i class="fa fa-link"></i>';
+    $frm_str .= '</span>';
+    $frm_str .= '</a>';
+    $frm_str .= '</td>';
+    $frm_str .= '<td style="text-align: right;">';
+    $frm_str .= '<input ';
+    $frm_str .= 'type="text" ';
+    $frm_str .= 'name="res_id" ';
+    $frm_str .= 'id="res_id" ';
+    $frm_str .= 'class="readonly" ';
+    $frm_str .= 'readonly="readonly" ';
+    $frm_str .= 'value=""';
+    $frm_str .= '/>';
+    $frm_str .= '</td>';
+    $frm_str .= '<td>';
+    $frm_str .= '<span class="red_asterisk" id="attachment_link_mandatory" '
+        . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span>';
+    $frm_str .= '</td>';
+    $frm_str .= '</tr>';
+    // END NCH01
+
+        /*** Category ***/
     $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
     $frm_str .='<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
     $frm_str .='<td>&nbsp;</td>';
@@ -438,6 +491,34 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     $frm_str .= '<script>$j("#type_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
+    /*** Object NCH01 ***/
+    $frm_str .= '<tr id="title_tr" style="display:none">';
+    $frm_str .='<td><label for="title" class="form_title" >'._OBJECT.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field"><input type="text" name="title" value="" id="title" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+    $frm_str .='<td><span class="red_asterisk" id="title_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
+    /*** Chrono number ***/
+    $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
+    $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="'
+        . functions::xssafe($chrono_number) . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+    $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
+    // NCH01 list of chrono number
+    $frm_str .= '<tr style="display:none" id="chrono_check"><td></td></tr>';
+    $frm_str .= '<tr id="list_chrono_number_tr" style="display:none">';
+    $frm_str .='<td><label for="list_chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field" id="list_chrono_number"></td>';
+    $frm_str .='<input type="hidden" name="hiddenChronoNumber" id="hiddenChronoNumber" value="">';
+    $frm_str .= '</tr>';
+    $frm_str .= '<tr style="display:none" id="chrono_number_generate"><td colspan="3" style="text-align:center">';
+    $frm_str .= '<a href="#" onclick="affiche_chrono_reconciliation()">' . _GENERATE_CHRONO_NUMBER . '</a>';    // NCH
+    $frm_str .= '</td></tr>';
     
     /*** Priority ***/
     $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
@@ -713,7 +794,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div></td>';
     $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" '
                     . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
-    $frm_str .= '</tr>';	
+    $frm_str .= '</tr>';
+
+    if($_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'] == 'true'){  // NCH01 - Close incoming
+        $frm_str .= '<tr style="display:none" id="close_incoming">';
+        $frm_str .= '<td><label for="close_incoming_mail" class="form_title" >'._CLOSE_INCOMING.'</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '<td class="indexing_field"><input type="radio" id="close_incoming_mail" name="close_incoming_mail" value="true">  ' . _YES . '  ';
+        $frm_str .= '<input type="radio" id="close_incoming_mail" name="close_incoming_mail" checked="checked" value="false">  ' . _NO . '  </td>';
+        $frm_str .= '</tr>';
+    }
 
     /*** Nature ***/
      $frm_str .= '<tr id="nature_id_tr" style="display:'.$display_value.';">';
@@ -921,15 +1011,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '<table width="100%" align="center" border="0" '
         . 'id="indexing_fields" style="display:table;">';
-
-    /*** Chrono number ***/
-    $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
-        $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
-        $frm_str .='<td>&nbsp;</td>';
-        $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="' 
-            . functions::xssafe($chrono_number) . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
-        $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-    $frm_str .= '</tr>';
 
     /*** Folder  ***/
     if ($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
@@ -1897,6 +1978,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $db->query("UPDATE " . $table_ext ." SET alt_identifier = ? where res_id = ?", array($myChrono, $res_id));
             }
         }
+    }elseif ($cat_id == "attachment"){                                          //
+        require('modules/attachments/add_attachments.php');                     //      NCH01
+        require('modules/attachments/remove_letterbox.php');                    //
     }
 
     //$_SESSION['indexing'] = array();
