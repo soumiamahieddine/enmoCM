@@ -33,12 +33,11 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 } else {
 	require_once 'apps/'. $_SESSION['config']['app_id'] .'/class/class_users.php';
 
-	$db = new Database();
+	$db       = new Database();
 	$arrayPDO = array();
-	$user = new class_users();
+	$user     = new class_users();
 
 	$whereSec = $user->get_global_security();
-
 
 	//IF EXTERNAL CONTACT
 	if (is_numeric($_POST['contact_id'])) {
@@ -52,16 +51,13 @@ if(empty($_POST['contact_id']) || $_POST['category'] == 'outgoing'){
 		$wherePDO = "status <> 'DEL' AND (exp_user_id = ? OR dest_user_id = ?) AND (creation_date >= " . $db->current_datetime() . " - INTERVAL '".$_SESSION['check_days_before']."' DAY)";
 		$arrayPDO = array($_POST['contact_id'], $_POST['contact_id']);
 	}
-	//echo $wherePDO;
 
 	//MERGE GLOBAL SECURITY WITH QUERY DOC
 	$wherePDO = $wherePDO . ' AND ('.$whereSec.')';
-	
-	//$query = "SELECT res_id FROM res_view_letterbox WHERE ".$wherePDO;
 
 	//EXCLUDE OWN RES_ID
 	if($_POST['res_id'] != "none"){
-		$query .= " AND res_id NOT IN (?)";
+		$wherePDO .= " AND res_id NOT IN (?)";
 		$allResId = explode(",", $_POST['res_id']);
 		$arrayPDO = array_merge($arrayPDO, array($allResId));
 		$_SESSION['excludeId'] = $_POST['res_id'];

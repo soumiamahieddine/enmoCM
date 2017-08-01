@@ -20,10 +20,10 @@ class SecurityModelAbstract
 
     public static function getPasswordHash($password)
     {
-        return hash('sha512', $password);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public static function checkAuthentication(array $args)
+    public static function authentication(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId', 'password']);
         ValidatorModel::stringType($args, ['userId', 'password']);
@@ -31,17 +31,40 @@ class SecurityModelAbstract
         $aReturn = DatabaseModel::select([
             'select'    => ['password'],
             'table'     => ['users'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$args['userId']]
+            'where'     => ['user_id = ?', 'status != ?'],
+            'data'      => [$args['userId'], 'DEL']
         ]);
 
-        return $aReturn[0]['password'] === $args['password'];
+        if (empty($aReturn[0])) {
+            return false;
+        }
+
+        return password_verify($args['password'], $aReturn[0]['password']);
+    }
+
+    public static function cookieAuthentication(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId', 'cookieKey']);
+        ValidatorModel::stringType($args, ['userId', 'cookieKey']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => ['password'],
+            'table'     => ['users'],
+            'where'     => ['user_id = ?', 'cookie_key = ?', 'cookie_date > CURRENT_TIMESTAMP'],
+            'data'      => [$args['userId'], $args['cookieKey']]
+        ]);
+
+        if (empty($aReturn[0])) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function setCookieAuth(array $args)
     {
-        ValidatorModel::notEmpty($args, ['userId', 'password']);
-        ValidatorModel::stringType($args, ['userId', 'password']);
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::stringType($args, ['userId']);
 
         $customId = CoreConfigModel::getCustomId();
 
@@ -59,11 +82,27 @@ class SecurityModelAbstract
             }
         }
 
-        $cookiePath = str_replace('apps/maarch_entreprise/index.php', '', $_SERVER['SCRIPT_NAME']);
+        $previousCookie = SecurityModel::getCookieAuth();
+        if (empty($previousCookie)) {
+            $cookieKey = SecurityModel::getPasswordHash($args['userId']);
+        } else {
+            $cookieKey = $previousCookie['cookieKey'];
+        }
+        $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
+        $cookieTime = time() + 60 * $cookieTime;
 
-        $cookieData = json_encode(['userId' => $args['userId'], 'password' => $args['password']]);
-        $cookieDataEncrypted = openssl_encrypt ($cookieData, 'aes-256-ctr', '12345678910');
-        setcookie('maarchCourrierAuth', base64_encode($cookieDataEncrypted), time() + 60 * $cookieTime, $cookiePath, '', false, true);
+        DatabaseModel::update([
+            'table' => 'users',
+            'set'   => [
+                'cookie_key'    => $cookieKey,
+                'cookie_date'   => date('Y-m-d H:i:s', $cookieTime),
+            ],
+            'where' => ['user_id = ?'],
+            'data'  => [$args['userId']]
+        ]);
+
+        $cookieData = json_encode(['userId' => $args['userId'], 'cookieKey' => $cookieKey]);
+        setcookie('maarchCourrierAuth', base64_encode($cookieData), $cookieTime, $cookiePath, '', false, true);
 
         return true;
     }
@@ -74,9 +113,10 @@ class SecurityModelAbstract
         if (empty($rawCookie)) {
             return [];
         }
-        $cookieDecrypted = openssl_decrypt(base64_decode($rawCookie), 'aes-256-ctr', '12345678910');
-        $cookie = json_decode($cookieDecrypted);
 
-        return $cookie;
+        $cookieDecoded = base64_decode($rawCookie);
+        $cookie = json_decode($cookieDecoded);
+
+        return (array)$cookie;
     }
 }

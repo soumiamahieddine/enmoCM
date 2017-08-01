@@ -181,15 +181,7 @@ class webService {
             $userID = str_replace('>', '', $userID);
             $userID = str_replace('<', '', $userID);
 
-            $sec = new security();
-            $stmt = $connexion->query(
-                "select * from " . $_SESSION['tablename']['users']
-                . " where user_id = ? and password = ? and STATUS <> 'DEL'",
-                array($userID, $sec->getPasswordHash($password))
-            );
-            if ($stmt->rowCount() > 0) {
-                $authenticated = true;
-            }
+            $authenticated = \Core\Models\SecurityModel::authentication(['userId' => $userID, 'password' => $password]);
         }
         return $authenticated;
     }

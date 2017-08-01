@@ -131,8 +131,7 @@ if (count($_SESSION['config']) <= 0) {
             $stmt = $db->query($query,array($this->$login));
             if ($stmt->fetchObject()) {
                 $_SESSION['error'] = '';
-                $pass = $sec->getPasswordHash($password);
-                $res = $sec->login($login, $pass, 'ldap');
+                $res = $sec->login($login, $password, 'ldap');
                 $_SESSION['user'] = $res['user'];
                 if (empty($_SESSION['error'])) {
                     $_SESSION['error'] = $res['error'];
@@ -167,9 +166,8 @@ if (count($_SESSION['config']) <= 0) {
             exit;
         } else {
             $_SESSION['error'] = '';
-            $pass = $sec->getPasswordHash($password);
-            if ($ra_code != '') $res = $sec->login($login, $pass, false, $ra_code);
-            else $res = $sec->login($login, $pass);
+            if ($ra_code != '') $res = $sec->login($login, $password, false, $ra_code);
+            else $res = $sec->login($login, $password);
 
             if (!$sec->test_allowed_ip() && $ra_code == ''){
                 $_SESSION['error'] = _TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP;

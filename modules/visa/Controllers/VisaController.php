@@ -13,6 +13,7 @@
 */
 namespace Visa\Controllers;
 
+use Apps\Models\ActionModel;
 use Apps\Models\ContactModel;
 use Attachments\Models\AttachmentsModel;
 use Core\Models\ResModel;
@@ -38,7 +39,6 @@ class VisaController
     {
         $resId = $aArgs['resId'];
         $_SESSION['doc_id'] = $resId; //TODO Set session for some actions
-        $basketId = $aArgs['basketId'];
         $collId = 'letterbox_coll';
 
         $security = new \security();
@@ -67,7 +67,7 @@ class VisaController
         $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
         $actionLabel .= " : {$documents[0]['title']}";
         $currentAction = [
-            'id' => $_SESSION['current_basket']['default_action'], //TODO No Session
+            'id' => ActionModel::getDefaultActionByGroupBasketId(['groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]),
             'actionLabel' => $actionLabel
         ];
 

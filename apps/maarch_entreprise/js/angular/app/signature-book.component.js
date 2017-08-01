@@ -86,10 +86,11 @@ var SignatureBookComponent = (function () {
         this.route.params.subscribe(function (params) {
             _this.resId = +params['resId'];
             _this.basketId = params['basketId'];
+            _this.groupId = params['groupId'];
             _this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             lockDocument(_this.resId);
             setInterval(function () { lockDocument(_this.resId); }, 50000);
-            _this.http.get(_this.coreUrl + 'rest/' + _this.basketId + '/signatureBook/' + _this.resId)
+            _this.http.get(_this.coreUrl + "rest/groups/" + _this.groupId + "/baskets/" + _this.basketId + '/signatureBook/' + _this.resId)
                 .subscribe(function (data) {
                 if (data.error) {
                     location.hash = "";
@@ -438,7 +439,7 @@ var SignatureBookComponent = (function () {
         this.http.get(this.coreUrl + 'rest/res/' + resId + '/lock')
             .subscribe(function (data) {
             if (!data.lock) {
-                var path = "/" + _this.basketId + "/signatureBook/" + resId;
+                var path = "/groups/" + _this.groupId + "/baskets/" + _this.basketId + '/signatureBook/' + resId;
                 _this.router.navigate([path]);
             }
             else {
