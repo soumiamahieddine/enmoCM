@@ -261,20 +261,17 @@ CREATE TABLE users
   lastname character varying(255) DEFAULT NULL::character varying,
   phone character varying(32) DEFAULT NULL::character varying,
   mail character varying(255) DEFAULT NULL::character varying,
-  department character varying(50) DEFAULT NULL::character varying,
+  initials character varying(32) DEFAULT NULL::character varying,
   custom_t1 character varying(50) DEFAULT '0'::character varying,
   custom_t2 character varying(50) DEFAULT NULL::character varying,
   custom_t3 character varying(50) DEFAULT NULL::character varying,
-  cookie_key character varying(255) DEFAULT NULL::character varying,
-  cookie_date timestamp without time zone,
+  status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  delay_number integer DEFAULT NULL,
-  status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   loginmode character varying(50) DEFAULT NULL::character varying,
-  docserver_location_id character varying(32) DEFAULT NULL::character varying,
+  cookie_key character varying(255) DEFAULT NULL::character varying,
+  cookie_date timestamp without time zone,
   thumbprint text DEFAULT NULL::character varying,
-  initials character varying(32) DEFAULT NULL::character varying,
   ra_code character varying(255) DEFAULT NULL::character varying,
   ra_expiration_date timestamp without time zone,
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
@@ -2073,22 +2070,26 @@ CREATE TABLE allowed_ip
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE user_signatures_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
 CREATE TABLE user_signatures
 (
-  id bigint NOT NULL DEFAULT nextval('user_signatures_seq'::regclass),
-  user_id character varying(128) NOT NULL,
+  id serial,
+  user_serial_id integer NOT NULL,
   signature_label character varying(255) DEFAULT NULL::character varying,
   signature_path character varying(255) DEFAULT NULL::character varying,
   signature_file_name character varying(255) DEFAULT NULL::character varying,
   fingerprint character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT user_signatures_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE priorities
+(
+  id character varying(16) NOT NULL,
+  label character varying(128) NOT NULL,
+  color character varying(128) NOT NULL,
+  working_days boolean NOT NULL,
+  delays integer NOT NULL,
+  CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 

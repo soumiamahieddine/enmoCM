@@ -60,15 +60,23 @@ INSERT INTO status_images (image_name) VALUES ('fm-classification-plan-l1');
 ALTER TABLE status DROP COLUMN IF EXISTS identifier;
 ALTER TABLE status ADD COLUMN identifier serial;
 
-ALTER TABLE users DROP COLUMN IF EXISTS id;
-ALTER TABLE users ADD COLUMN id serial;
-ALTER TABLE users ADD UNIQUE (id);
+ALTER TABLE users DROP COLUMN IF EXISTS signature_path;
+ALTER TABLE users DROP COLUMN IF EXISTS signature_file_name;
+ALTER TABLE users DROP COLUMN IF EXISTS docserver_location_id;
+ALTER TABLE users DROP COLUMN IF EXISTS delay_number;
+ALTER TABLE users DROP COLUMN IF EXISTS department;
+
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'users') AND attname = 'id') = 0 THEN
+    ALTER TABLE users ADD COLUMN id serial;
+    ALTER TABLE users ADD UNIQUE (id);
+  END IF;
+END$$;
 
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'user_signatures') AND attname = 'user_id') THEN
     ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_serial_id;
     ALTER TABLE user_signatures ADD COLUMN user_serial_id integer;
-    ALTER TABLE user_signatures ADD FOREIGN KEY (user_serial_id) REFERENCES users(id);
     UPDATE user_signatures set user_serial_id = (select id FROM users where users.user_id = user_signatures.user_id);
     ALTER TABLE user_signatures ALTER COLUMN user_serial_id set not null;
     ALTER TABLE user_signatures DROP COLUMN IF EXISTS user_id;
