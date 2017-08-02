@@ -61,11 +61,11 @@ class DatabasePDO
         }
 
         ValidatorModel::notEmpty(
-            ['driver' => $formattedDriver, 'server' => $server, 'port' => $port, 'name' => $name, 'user' => $user, 'password' => $password],
+            ['driver' => $formattedDriver, 'server' => $server, 'port' => $port, 'name' => $name, 'user' => $user],
             ['driver', 'server', 'port', 'name', 'user', 'password']
         );
         ValidatorModel::stringType(
-            ['driver' => $formattedDriver, 'server' => $server, 'name' => $name, 'user' => $user, 'password' => $password],
+            ['driver' => $formattedDriver, 'server' => $server, 'name' => $name, 'user' => $user],
             ['driver', 'server', 'name', 'user', 'password']
         );
         ValidatorModel::intVal(['port' => $port], ['port']);
