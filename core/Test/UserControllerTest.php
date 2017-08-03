@@ -8,14 +8,16 @@
 */
 
 namespace MaarchTest;
+use PHPUnit\Framework\TestCase;
 
 use Core\Models\DatabaseModel;
 
-require_once __DIR__.'/define.php';
-
-class UserControllerTest extends \PHPUnit_Framework_TestCase
+class UserControllerTest extends TestCase
 {
-    public function testCRUD()
+    private static $id = null;
+
+
+    public function testCreate()
     {
         $userController = new \Core\Controllers\UserController();
 
@@ -33,16 +35,17 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         $response     = $userController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $id = $responseBody->user->id;
-        $this->assertInternalType('int', $id);
+        self::$id = $responseBody->user->id;
+
+        $this->assertInternalType('int', self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => $id]);
+        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame($id, $responseBody->id);
+        $this->assertSame(self::$id, $responseBody->id);
         $this->assertSame('TEST-CKENT', $responseBody->user_id);
         $this->assertSame('TEST-CLARK', $responseBody->firstname);
         $this->assertSame('TEST-KENT', $responseBody->lastname);
@@ -52,6 +55,11 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(null, $responseBody->mail);
         $this->assertSame(null, $responseBody->initials);
         $this->assertSame(null, $responseBody->thumbprint);
+    }
+
+    public function testUpdate()
+    {
+        $userController = new \Core\Controllers\UserController();
 
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -67,7 +75,7 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => $id]);
+        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(_USER_UPDATED, $responseBody->success);
@@ -75,10 +83,10 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => $id]);
+        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame($id, $responseBody->id);
+        $this->assertSame(self::$id, $responseBody->id);
         $this->assertSame('TEST-CKENT', $responseBody->user_id);
         $this->assertSame('TEST-CLARK2', $responseBody->firstname);
         $this->assertSame('TEST-KENT2', $responseBody->lastname);
@@ -88,22 +96,27 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('ck@dailyP.com', $responseBody->mail);
         $this->assertSame('CK', $responseBody->initials);
         $this->assertSame(null, $responseBody->thumbprint);
+    }
+
+    public function testDelete()
+    {
+        $userController = new \Core\Controllers\UserController();
 
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->delete($request, new \Slim\Http\Response(), ['id' => $id]);
-        $responseBody = json_decode((string)$response->getBody());
+        $response       = $userController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame(_DELETED_USER, $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => $id]);
-        $responseBody = json_decode((string)$response->getBody());
+        $response       = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame($id, $responseBody->id);
+        $this->assertSame(self::$id, $responseBody->id);
         $this->assertSame('TEST-CKENT', $responseBody->user_id);
         $this->assertSame('TEST-CLARK2', $responseBody->firstname);
         $this->assertSame('TEST-KENT2', $responseBody->lastname);
@@ -118,7 +131,8 @@ class UserControllerTest extends \PHPUnit_Framework_TestCase
         DatabaseModel::delete([
             'table' => 'users',
             'where' => ['id = ?'],
-            'data'  => [$id]
+            'data'  => [self::$id]
         ]);
     }
+
 }
