@@ -760,6 +760,8 @@ if (!defined("_DEPARTMENT_EXP")) define("_DEPARTMENT_EXP", "Sender department");
 if (!defined("_INCOMING")) define("_INCOMING", "Arrival mail");
 if (!defined("_OUTGOING")) define("_OUTGOING", "Departure mail");
 if (!defined("_INTERNAL")) define("_INTERNAL", "Internal Mail");
+if (!defined("_ATTACHMENT")) define("_ATTACHMENT", "Attachment");
+
 if (!defined("_MARKET_DOCUMENT")) define("_MARKET_DOCUMENT", "Document of sub-folder");
 if (!defined("_EMPTY")) define("_EMPTY", "Empty");
 
