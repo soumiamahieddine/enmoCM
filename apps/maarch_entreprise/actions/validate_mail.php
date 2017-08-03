@@ -241,7 +241,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id);
         }
     }
-	
+    
     //Load Multicontacts
     //CONTACTS
     $_SESSION['adresses']['to'] = array();
@@ -250,9 +250,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $query = "SELECT c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
     $query .= "FROM view_contacts c, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id";          
     $stmt = $db->query($query, array($res_id));  
-	
+    
     while($res = $stmt->fetchObject()){
 
         if ($res->is_corporate_person == 'Y') {
@@ -284,11 +284,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         array_push($_SESSION['adresses']['addressid'], $res->ca_id);
         array_push($_SESSION['adresses']['contactid'], $res->contact_id);
     }
-	
+    
     //USERS
     $query = "SELECT u.firstname, u.lastname, u.user_id ";
     $query .= "FROM users u, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";           
     $stmt = $db->query($query, array($res_id));
 
     while($res = $stmt->fetchObject()){
@@ -363,7 +363,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<td>' . _LINK_TO_DOC . '</td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><input type="radio" '
-        . 'name="attachment" id="attach" value="true" checked="checked"'
+        . 'name="attachment" id="attach_reconciliation" value="true" checked="checked"'
         . 'onclick="show_attach(\'true\');"'
         . ' /> '
         . _YES . ' <input type="radio" name="attachment" id="no_attach"'
@@ -630,11 +630,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= ' checked="checked" '; 
     }
     $frm_str .= ' /><label for="type_contact_internal">'._INTERNAL2.'</label></td></tr>';
-					
+                    
     $frm_str .= '<tr id="contact_choose_2_tr" style="display:'.$display_value.';">';
     $frm_str .='<td>&nbsp;</td>';
     $frm_str .='<td>&nbsp;</td>';
-    $frm_str .='<td class="indexing_field">';					
+    $frm_str .='<td class="indexing_field">';                   
     $frm_str .= '<input type="radio" name="type_contact" class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"';
@@ -642,9 +642,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= ' checked="checked" ';
     }
     $frm_str .= '/><label for="type_contact_external">'._EXTERNAL.'</label></td></tr>';
-					
+                    
     $frm_str .= '<tr id="contact_choose_3_tr" style="display:' . $displayValue
-								. ';">';
+                                . ';">';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><input type="radio" name="type_contact" '
@@ -658,10 +658,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($data['type_contact'] == 'multi_external') {
         $frm_str .= ' checked="checked" ';
     }
-    $frm_str .= '/><label for="type_multi_contact_external">' . _MULTI_CONTACT	.'</label>'		
+    $frm_str .= '/><label for="type_multi_contact_external">' . _MULTI_CONTACT  .'</label>'     
         . '</td>';
     $frm_str .= '</tr>';
-					 
+                     
     $frm_str .= '<tr id="contact_id_tr" style="display:'.$display_value.';">';
     $frm_str .='<td class="indexing_label" style="vertical-align:bottom;"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>'
         . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
@@ -723,15 +723,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '/>';
     $frm_str .= '<input type="hidden" id="contactcheck" value="success"/>';
-					 
+                     
     /****multicontact***/
-					
+                    
     //Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
         ."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
-					
+                    
     //$_SESSION['adresses'] = '';
-					
+                    
     $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td><label for="contact" class="form_title" >'
         . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
@@ -1332,7 +1332,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $frm_str .= '</div>';
     $frm_str .= '</form>';
-	
+    
     return addslashes($frm_str);
 }
 
@@ -1354,7 +1354,7 @@ function check_form($form_id,$values)
     else
     {
         $attach = get_value_fields($values, 'attach');
-        
+
         if ($attach) {
             $idDoc = get_value_fields($values, 'res_id');
             if (! $idDoc || empty($idDoc)) {
@@ -1364,7 +1364,7 @@ function check_form($form_id,$values)
                 return false;
             }
         }
-        
+
         $cat_id = get_value_fields($values, 'category_id');
 
         if($cat_id == false)
@@ -1453,10 +1453,10 @@ function process_category_check($cat_id, $values)
     $admission_date = get_value_fields($values, 'admission_date');
     if ($admission_date < $doc_date)
     {
-		$_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
-		return false;
-	}*/
-	
+        $_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
+        return false;
+    }*/
+    
     // Process limit Date
     $_SESSION['store_process_limit_date'] = "";
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
@@ -1513,7 +1513,7 @@ function process_category_check($cat_id, $values)
             return false;
         }
         
-		
+        
 
         $contact_field = get_value_fields($values, 'contact');
 
@@ -1764,8 +1764,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             {
                 $query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date['date'],'true','','true')."'";
             } else {
-				$query_ext .= ", process_limit_date = null";
-			}
+                $query_ext .= ", process_limit_date = null";
+            }
             $_SESSION['store_process_limit_date'] = "";
         }
     }
@@ -1782,10 +1782,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if (!$contact_type) {
             $contact_type = get_value_fields($values_form, 'type_multi_contact_external');
         }
-	$nb_multi_contact = count($_SESSION['adresses']['to']);
+    $nb_multi_contact = count($_SESSION['adresses']['to']);
 
         $db->query("DELETE FROM contacts_res where res_id = ?", array($res_id));
-		
+        
         $db->query("UPDATE ". $table_ext 
             . " SET exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = ?",  
         array($res_id));
