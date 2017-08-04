@@ -241,7 +241,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id);
         }
     }
-	
+    
     //Load Multicontacts
     //CONTACTS
     $_SESSION['adresses']['to'] = array();
@@ -250,9 +250,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $query = "SELECT c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
     $query .= "FROM view_contacts c, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (c.contact_id as varchar(128)) = cres.contact_id AND c.ca_id = cres.address_id";          
     $stmt = $db->query($query, array($res_id));  
-	
+    
     while($res = $stmt->fetchObject()){
 
         if ($res->is_corporate_person == 'Y') {
@@ -284,11 +284,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         array_push($_SESSION['adresses']['addressid'], $res->ca_id);
         array_push($_SESSION['adresses']['contactid'], $res->contact_id);
     }
-	
+    
     //USERS
     $query = "SELECT u.firstname, u.lastname, u.user_id ";
     $query .= "FROM users u, contacts_res cres ";
-    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";			
+    $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ? AND cast (u.user_id as varchar(128)) = cres.contact_id";           
     $stmt = $db->query($query, array($res_id));
 
     while($res = $stmt->fetchObject()){
@@ -356,7 +356,60 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="general_infos_div"  style="display:inline">';
     $frm_str .= '<div class="ref-unit">';
     $frm_str .= '<table width="100%" align="center" border="0"  id="indexing_fields" style="display:block;">';
-    /*** Category ***/
+
+    //NCH01
+    $frm_str .= '<tr id="attachment_tr" style="display:none'
+        . ';">';
+    $frm_str .= '<td>' . _LINK_TO_DOC . '</td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input type="radio" '
+        . 'name="attachment" id="attach_reconciliation" value="true" checked="checked"'
+        . 'onclick="show_attach(\'true\');"'
+        . ' /> '
+        . _YES . ' <input type="radio" name="attachment" id="no_attach"'
+        . ' value="false" '
+        . 'onclick="show_attach(\'false\');"'
+        . ' /> '
+        . _NO . '</td>';
+    $frm_str .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
+        . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span></td>';
+    $frm_str .= '</tr>';
+
+    $frm_str .= '<tr id="attach_show" style="display:none;">';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td style="text-align: right;">';
+    $frm_str .= '<a ';
+    $frm_str .= 'href="javascript://" ';
+    $frm_str .= 'onclick="window.open(';
+    $frm_str .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=fill_input&modulename=attachments&init_search&nodetails\', ';
+    $frm_str .= '\'search_doc_for_attachment\', ';
+    $frm_str .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
+    $frm_str .= ');"';
+    $frm_str .= ' title="' . _SEARCH . '"';
+    $frm_str .= '>';
+    $frm_str .= '<span style="font-weight: bold;">';
+    $frm_str .= '<i class="fa fa-link"></i>';
+    $frm_str .= '</span>';
+    $frm_str .= '</a>';
+    $frm_str .= '</td>';
+    $frm_str .= '<td style="text-align: right;">';
+    $frm_str .= '<input ';
+    $frm_str .= 'type="text" ';
+    $frm_str .= 'name="res_id" ';
+    $frm_str .= 'id="res_id" ';
+    $frm_str .= 'class="readonly" ';
+    $frm_str .= 'readonly="readonly" ';
+    $frm_str .= 'value=""';
+    $frm_str .= '/>';
+    $frm_str .= '</td>';
+    $frm_str .= '<td>';
+    $frm_str .= '<span class="red_asterisk" id="attachment_link_mandatory" '
+        . 'style="display:inline;vertical-align:middle;"><i class="fa fa-star"></i></span>';
+    $frm_str .= '</td>';
+    $frm_str .= '</tr>';
+    // END NCH01
+
+        /*** Category ***/
     $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
     $frm_str .='<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
     $frm_str .='<td>&nbsp;</td>';
@@ -438,6 +491,34 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     $frm_str .= '<script>$j("#type_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
+    /*** Object NCH01 ***/
+    $frm_str .= '<tr id="title_tr" style="display:none">';
+    $frm_str .='<td><label for="title" class="form_title" >'._OBJECT.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field"><input type="text" name="title" value="" id="title" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+    $frm_str .='<td><span class="red_asterisk" id="title_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
+    /*** Chrono number ***/
+    $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
+    $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="'
+        . functions::xssafe($chrono_number) . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+    $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
+    // NCH01 list of chrono number
+    $frm_str .= '<tr style="display:none" id="chrono_check"><td></td></tr>';
+    $frm_str .= '<tr id="list_chrono_number_tr" style="display:none">';
+    $frm_str .='<td><label for="list_chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
+    $frm_str .='<td>&nbsp;</td>';
+    $frm_str .='<td class="indexing_field" id="list_chrono_number"></td>';
+    $frm_str .='<input type="hidden" name="hiddenChronoNumber" id="hiddenChronoNumber" value="">';
+    $frm_str .= '</tr>';
+    $frm_str .= '<tr style="display:none" id="chrono_number_generate"><td colspan="3" style="text-align:center">';
+    $frm_str .= '<a href="#" onclick="affiche_chrono_reconciliation()">' . _GENERATE_CHRONO_NUMBER . '</a>';    // NCH
+    $frm_str .= '</td></tr>';
     
     /*** Priority ***/
     $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
@@ -549,11 +630,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= ' checked="checked" '; 
     }
     $frm_str .= ' /><label for="type_contact_internal">'._INTERNAL2.'</label></td></tr>';
-					
+                    
     $frm_str .= '<tr id="contact_choose_2_tr" style="display:'.$display_value.';">';
     $frm_str .='<td>&nbsp;</td>';
     $frm_str .='<td>&nbsp;</td>';
-    $frm_str .='<td class="indexing_field">';					
+    $frm_str .='<td class="indexing_field">';                   
     $frm_str .= '<input type="radio" name="type_contact" class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"';
@@ -561,9 +642,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= ' checked="checked" ';
     }
     $frm_str .= '/><label for="type_contact_external">'._EXTERNAL.'</label></td></tr>';
-					
+                    
     $frm_str .= '<tr id="contact_choose_3_tr" style="display:' . $displayValue
-								. ';">';
+                                . ';">';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><input type="radio" name="type_contact" '
@@ -577,10 +658,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($data['type_contact'] == 'multi_external') {
         $frm_str .= ' checked="checked" ';
     }
-    $frm_str .= '/><label for="type_multi_contact_external">' . _MULTI_CONTACT	.'</label>'		
+    $frm_str .= '/><label for="type_multi_contact_external">' . _MULTI_CONTACT  .'</label>'     
         . '</td>';
     $frm_str .= '</tr>';
-					 
+                     
     $frm_str .= '<tr id="contact_id_tr" style="display:'.$display_value.';">';
     $frm_str .='<td class="indexing_label" style="vertical-align:bottom;"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>'
         . '<span id="author_contact">' . _AUTHOR_DOC . '</span>';
@@ -642,15 +723,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '/>';
     $frm_str .= '<input type="hidden" id="contactcheck" value="success"/>';
-					 
+                     
     /****multicontact***/
-					
+                    
     //Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
         ."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
-					
+                    
     //$_SESSION['adresses'] = '';
-					
+                    
     $frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td><label for="contact" class="form_title" >'
         . '<span id="exp_multi_contact">' . _SHIPPER . '</span>'
@@ -713,7 +794,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div></td>';
     $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" '
                     . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
-    $frm_str .= '</tr>';	
+    $frm_str .= '</tr>';
+
+    if($_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'] == 'true'){  // NCH01 - Close incoming
+        $frm_str .= '<tr style="display:none" id="close_incoming">';
+        $frm_str .= '<td><label for="close_incoming_mail" class="form_title" >'._CLOSE_INCOMING.'</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '<td class="indexing_field"><input type="radio" id="close_incoming_mail" name="close_incoming_mail" value="true">  ' . _YES . '  ';
+        $frm_str .= '<input type="radio" id="close_incoming_mail" name="close_incoming_mail" checked="checked" value="false">  ' . _NO . '  </td>';
+        $frm_str .= '</tr>';
+    }
 
     /*** Nature ***/
      $frm_str .= '<tr id="nature_id_tr" style="display:'.$display_value.';">';
@@ -921,15 +1011,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $frm_str .= '<table width="100%" align="center" border="0" '
         . 'id="indexing_fields" style="display:table;">';
-
-    /*** Chrono number ***/
-    $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
-        $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
-        $frm_str .='<td>&nbsp;</td>';
-        $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="' 
-            . functions::xssafe($chrono_number) . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
-        $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-    $frm_str .= '</tr>';
 
     /*** Folder  ***/
     if ($core_tools->is_module_loaded('folder') && ($core->test_service('associate_folder', 'folder',false) == 1)) {
@@ -1251,7 +1332,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $frm_str .= '</div>';
     $frm_str .= '</form>';
-	
+    
     return addslashes($frm_str);
 }
 
@@ -1273,7 +1354,7 @@ function check_form($form_id,$values)
     else
     {
         $attach = get_value_fields($values, 'attach');
-        
+
         if ($attach) {
             $idDoc = get_value_fields($values, 'res_id');
             if (! $idDoc || empty($idDoc)) {
@@ -1283,7 +1364,7 @@ function check_form($form_id,$values)
                 return false;
             }
         }
-        
+
         $cat_id = get_value_fields($values, 'category_id');
 
         if($cat_id == false)
@@ -1372,10 +1453,10 @@ function process_category_check($cat_id, $values)
     $admission_date = get_value_fields($values, 'admission_date');
     if ($admission_date < $doc_date)
     {
-		$_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
-		return false;
-	}*/
-	
+        $_SESSION['action_error'] = "La date du courrier doit être antérieure à la date d'arrivée du courrier ";
+        return false;
+    }*/
+    
     // Process limit Date
     $_SESSION['store_process_limit_date'] = "";
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
@@ -1432,7 +1513,7 @@ function process_category_check($cat_id, $values)
             return false;
         }
         
-		
+        
 
         $contact_field = get_value_fields($values, 'contact');
 
@@ -1683,8 +1764,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             {
                 $query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date['date'],'true','','true')."'";
             } else {
-				$query_ext .= ", process_limit_date = null";
-			}
+                $query_ext .= ", process_limit_date = null";
+            }
             $_SESSION['store_process_limit_date'] = "";
         }
     }
@@ -1701,10 +1782,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if (!$contact_type) {
             $contact_type = get_value_fields($values_form, 'type_multi_contact_external');
         }
-	$nb_multi_contact = count($_SESSION['adresses']['to']);
+    $nb_multi_contact = count($_SESSION['adresses']['to']);
 
         $db->query("DELETE FROM contacts_res where res_id = ?", array($res_id));
-		
+        
         $db->query("UPDATE ". $table_ext 
             . " SET exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = ?",  
         array($res_id));
@@ -1897,6 +1978,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $db->query("UPDATE " . $table_ext ." SET alt_identifier = ? where res_id = ?", array($myChrono, $res_id));
             }
         }
+    }elseif ($cat_id == "attachment"){                                          //
+        require('modules/attachments/add_attachments.php');                     //      NCH01
+        require('modules/attachments/remove_letterbox.php');                    //
     }
 
     //$_SESSION['indexing'] = array();

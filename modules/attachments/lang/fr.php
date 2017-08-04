@@ -143,3 +143,54 @@ if (!defined("_RETRIEVE_BACK_UP"))
 
 if (!defined("_DEST_USER_PJ"))
     define( "_DEST_USER_PJ", "Destinataire");
+
+
+// RECONCILIATION
+
+if(!defined('_RECONCILIATION'))
+    define('_RECONCILIATION', 'Rattacher à un courrier');
+if(!defined('_RECONCILIATION_COMMENT'))
+    define('_RECONCILIATION_COMMENT', 'Module Réconciliation');
+if(!defined('_RECONCILIATION_LABEL'))
+    define('_RECONCILIATION_LABEL', 'Réconciliation');
+if(!defined('_RECONCILIATION_MAIL'))
+    define('_RECONCILIATION_MAIL', 'Rapprochement du courrier');
+
+/************** Message d'erreur **************/
+
+if (!defined('_MULTIPLE_RESPONSE_PROJECT_CHRONO'))
+    define('_MULTIPLE_RESPONSE_PROJECT_CHRONO', 'Il existe plusieurs projets de réponses pour le courrier selectionné. Merci de saisir le numéro de chrono du projet de réponse');
+if (!defined('_MULTIPLE_RESPONSE_PROJECT_DEST'))
+    define('_MULTIPLE_RESPONSE_PROJECT_DEST', 'Il existe plusieurs projets de réponses pour le courrier selectionné. Merci de saisir un destinataire ');
+if(!defined('_NO_RESPONSE_PROJECT'))
+    define('_NO_RESPONSE_PROJECT','Le courrier selectionné ne contient aucun projet de réponse. Veuillez entrer les informations manuellement');
+if(!defined('_MULTIPLE_RES_ID_CHRONO'))
+    define('_MULTIPLE_RES_ID_CHRONO','Plusieurs courrier ont été selectionné, merci de saisir le numéro de chrono du projet de réponse');
+if(!defined('_MULTIPLE_RES_ID_DEST'))
+    define('_MULTIPLE_RES_ID_DEST','Plusieurs courrier ont été selectionné, merci de saisir un destinataire');
+if(!defined('_CHOOSE_ATTACH'))
+    define('_CHOOSE_ATTACH','Merci de choisir un courrier auquel rattacher la pièce jointe');
+if(!defined('_NO_DEST_INFOS'))
+    define('_NO_DEST_INFOS','Merci de saisir un destinataire manuellement');
+
+/************** POPUP **************/
+
+if(!defined('_MULTIPLE_RES_ID_ERROR'))
+    define('_MULTIPLE_RES_ID_ERROR','La selection de plusieurs courriers auquels rattacher la pièce jointe n\'est pas autorisée. Merci de ne selectionner qu\'un courrier');
+if(!defined('_ATTACH_TO_EMPTY_ERROR'))
+    define('_ATTACH_TO_EMPTY_ERROR', 'La selection d\'un courrier sans projet de réponse n\'est pas autorisé. Merci de selectionner un courrier contenant un projet de réponse');
+if(!defined('_ERROR_EMPTY_RES_ID'))
+    define('_ERROR_EMPTY_RES_ID', 'Aucun courrier n\'a été selectionné, merci de selectionner au moins un courrier');
+if(!defined('_SAME_RES_ID_ERROR'))
+    define('_SAME_RES_ID_ERROR', 'Un des courriers selectionné est le même que le document courant, veuillez le deselectionner');
+
+/************** INTERFACE ***********/
+
+if(!defined('_GENERATE_CHRONO_NUMBER'))
+    define('_GENERATE_CHRONO_NUMBER','Génerer un numéro de chrono');
+if(!defined('_CLOSE_INCOMING'))
+    define('_CLOSE_INCOMING','Cloturer le(s) document cible');
+if(!defined('_PLEASE_GENERATE_CHRONO_NUMBER'))
+    define ('_PLEASE_GENERATE_CHRONO_NUMBER','Merci de générer un numéro de chrono');
+if(!defined('_CHOOSE_CHRONO_NUMBER'))
+    define('_CHOOSE_CHRONO_NUMBER','Merci de choisir un numéro de chrono');

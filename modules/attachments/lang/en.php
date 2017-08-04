@@ -143,3 +143,53 @@ if (!defined("_RETRIEVE_BACK_UP"))
 
 if (!defined("_DEST_USER_PJ"))
     define( "_DEST_USER_PJ", "Recipient");
+
+// Reconciliation
+
+if(!defined('_RECONCILIATION'))
+    define('_RECONCILIATION', 'Attach to a document');
+if(!defined('_RECONCILIATION_COMMENT'))
+    define('_RECONCILIATION_COMMENT', 'Reconciliation module');
+if(!defined('_RECONCILIATION_LABEL'))
+    define('_RECONCILIATION_LABEL', 'Reconciliation');
+if(!defined('_RECONCILIATIION_MAIL'))
+    define('_RECONCILIATIION_MAIL', 'Reconciliation of the document');
+
+/************** Error message **************/
+
+if (!defined('_MULTIPLE_RESPONSE_PROJECT_CHRONO'))
+    define('_MULTIPLE_RESPONSE_PROJECT_CHRONO', 'There is more than one response project for the selected document. Please enter the chrono number of the selected response project');
+if (!defined('_MULTIPLE_RESPONSE_PROJECT_DEST'))
+    define('_MULTIPLE_RESPONSE_PROJECT_DEST', 'There is more than one response project for the selected document. Please enter a recipient');
+if(!defined('_NO_RESPONSE_PROJECT'))
+    define('_NO_RESPONSE_PROJECT','The selected document doesn\'t have any project response. Please enter the informations manually');
+if(!defined('_MULTIPLE_RES_ID_CHRONO'))
+    define('_MULTIPLE_RES_ID_CHRONO','Multiple documents are selected, please enter the chrono number of the selected response project');
+if(!defined('_MULTIPLE_RES_ID_DEST'))
+    define('_MULTIPLE_RES_ID_DEST','Multiple document are selected, please enter a recipient');
+if(!defined('_CHOOSE_ATTACH'))
+    define('_CHOOSE_ATTACH','Please choose a document to attach the attachment');
+if(!defined('_NO_DEST_INFOS'))
+    define('_NO_DEST_INFOS','Please enter a recipient manually');
+
+/************** POPUP **************/
+
+if(!defined('_ERROR_EMPTY_RES_ID'))
+    define('_ERROR_EMPTY_RES_ID', 'No mail was selected. Please select at least one mail');
+if(!defined('_MULTIPLE_RES_ID_ERROR'))
+    define('_MULTIPLE_RES_ID_ERROR','The selection of multiple mail to rattach the attachments isn\'t permitted. Please select just one mail');
+if(!defined('_ATTACH_TO_EMPTY_ERROR'))
+    define('_ATTACH_TO_EMPTY_ERROR', ' The  selection of a mail without project response isn\'t permitter. Please select a mail with one or more project response');
+if(!defined('_SAME_RES_ID_ERROR'))
+    define('_SAME_RES_ID_ERROR', 'One of the selected document is the same as the current. Please un-check it');
+
+/************** INTERFACE ***********/
+
+if(!defined('_GENERATE_CHRONO_NUMBER'))
+    define('_GENERATE_CHRONO_NUMBER','Generate a chrono number');
+if(!defined('_CLOSE_INCOMING'))
+    define('_CLOSE_INCOMING','Close the incoming document');
+if(!defined('_PLEASE_GENERATE_CHRONO_NUMBER'))
+    define ('_PLEASE_GENERATE_CHRONO_NUMBER','Please, generate a new chrono number');
+if(!defined('_CHOOSE_CHRONO_NUMBER'))
+    define('_CHOOSE_CHRONO_NUMBER','Please choose a chrono number');

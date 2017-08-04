@@ -770,6 +770,65 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
+    else if(cat_id == 'attachment'){    // NCH01
+        var category = [
+            {id:'doctype_mail', type:'label', state:'display'},
+            {id:'doctype_res', type:'label', state:'hide'},
+            {id:'priority_tr', type:'tr', state:'hide'},
+            {id:'doc_date_label', type:'label', state:'hide'},
+            {id:'doc_date_tr', type:'label', state:'hide'},
+            {id:'mail_date_label', type:'label', state:'hide'},
+            {id:'author_tr', type:'tr', state:'hide'},
+            {id:'admission_date_tr', type:'tr', state:'hide'},
+            {id:'contact_check', type:'tr', state:'hide'},
+            {id:'nature_id_tr', type:'tr', state:'hide'},
+            {id:'department_tr', type:'tr', state:'hide'},
+            {id:'label_dep_dest', type:'label', state:'hide'},
+            {id:'label_dep_exp', type:'label', state:'hide'},
+            {id:'process_limit_date_use_tr', type:'tr', state:'hide'},
+            {id:'process_limit_date_tr', type:'tr', state:'hide'},
+            {id:'box_id_tr', type:'tr', state:'hide'},
+            {id:'confidentiality_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_2_tr', type:'tr', state:'hide'},
+            {id:'contact_choose_3_tr', type:'tr', state:'hide'},
+            {id:'dest_contact_choose_label', type:'label', state:'hide'},
+            {id:'exp_contact_choose_label', type:'label', state:'hide'},
+            {id:'contact_id_tr', type:'tr', state:'hide'},
+            {id:'dest_contact', type:'label', state:'display'},
+            {id:'exp_contact', type:'label', state:'hide'},
+            {id:'author_contact', type:'label', state:'hide'},
+            {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+            {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+            {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+            {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
+            {id:'folder_tr', type:'tr', state:'hide'},
+            {id:'category_id_mandatory', type:'label', state:'hide'},
+            {id:'type_id_mandatory', type:'label', state:'hide'},
+            {id:'type_id_tr', type:'tr', state:'hide'},
+            {id:'diff_list_tr', type:'tr', state:'hide'},
+            {id:'priority_mandatory', type:'label', state:'hide'},
+            {id:'doc_date_mandatory', type:'label', state:'hide'},
+            {id:'author_mandatory', type:'label', state:'hide'},
+            {id:'admission_date_mandatory', type:'label', state:'hide'},
+            {id:'type_contact_mandatory', type:'label', state:'hide'},
+            {id:'contact_mandatory', type:'label', state:'hide'},
+            {id:'nature_id_mandatory', type:'label', state:'hide'},
+            {id:'subject_mandatory', type:'label', state:'hide'},
+            //{id:'subject_tr', type:'label', state:'hide'},
+            {id:'destination_mandatory', type:'label', state:'hide'},
+            {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+            {id:'process_limit_date_mandatory', type:'label', state:'hide'},
+            {id:'chrono_number', type:'label', state:'hide'},
+            {id:'chrono_number_tr', type:'tr', state:'hide'},
+            {id:'chrono_number_mandatory', type:'label', state:'hide'},
+            {id:'folder_mandatory', type:'label', state:'hide'},
+            {id:'res_id_link', type:'label', state:'hide'},
+            {id:'status', type:'tr', state:'hide'},
+            {id:'add_multi_contact_tr', type:'tr', state:'hide'},
+            {id:'show_multi_contact_tr', type:'tr', state:'hide'}
+        ];
+    }
     if(params_cat)
     {
         process_category(category, display_value_tr, params_cat);
@@ -807,6 +866,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         $('destination').value = destination;
                     }
 
+                    if(cat_id == 'ged_doc'){
+                        document.getElementById("diff_list_tr").style.display = 'none';
+                    }else{
+                        document.getElementById("diff_list_tr").style.display = 'table-row';
+                    }
+
                     if(cat_id != 'outgoing'){
                         $('choose_file_div').show();
                     }else{
@@ -817,12 +882,6 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                         document.getElementById("diff_list_tr").style.display='table-row';
                         document.getElementById("destination").onchange();
                         Event.fire($("destination"), "chosen:updated");
-                    }
-
-                    if(cat_id == 'ged_doc'){
-                        document.getElementById("diff_list_tr").style.display = 'none';
-                    }else{
-                        document.getElementById("diff_list_tr").style.display = 'table-row';
                     }
 
                     var path_scripts = '';
@@ -860,6 +919,18 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                 }
             }
         });
+    }
+     // NCH01		
+    if(cat_id == 'attachment'){		
+        document.getElementById("attachment_tr").style.display='table-row';		
+        document.getElementById("attach_show").style.display='table-row';
+        document.getElementById("subject_tr").style.display = 'none';
+        document.getElementById("diff_list_tr").style.display = 'none';
+    }else{		
+        document.getElementById("attachment_tr").style.display='none';		
+        document.getElementById("attach_show").style.display='none';
+        document.getElementById("diff_list_tr").style.display = 'table-row';
+        document.getElementById("subject_tr").style.display = 'table-row';
     }
 }
 
@@ -1179,7 +1250,9 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(to, {display : 'none'});
 				Element.setStyle(show_multi_contact, {display : 'none'});
 				Element.setStyle(add_multi_contact, {display : 'none'});
-				Element.setStyle(contact_id_tr, {display : 'table-row'});
+				// NCH01
+                var cat_id = $(category_id).options[$(category_id).selectedIndex].value;
+                if(cat_id != 'attachment') Element.setStyle(contact_id_tr, {display : 'table-row'});
 			}
         }
     }

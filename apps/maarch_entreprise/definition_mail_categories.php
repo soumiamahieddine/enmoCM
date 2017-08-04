@@ -503,6 +503,44 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array (
     'modify' => false
 );
 
+///////////////////////////// RECONCILIATION ////////////////////////////////////////////////
+
+
+$_ENV['categories']['attachment'] = array ();
+$_ENV['categories']['attachment']['img_cat'] = '<i class="fa fa-paperclip fa-2x"></i>';
+$_ENV['categories']['attachment']['other_cases'] = array ();
+$_ENV['categories']['attachment']['other_cases']['chrono_number'] = array (
+	'type_form' => 'integer',
+	'type_field' => 'integer',
+	'mandatory' => true,
+	'label' => _CHRONO_NUMBER,
+	'table' => 'none',
+	'img' => 'compass',
+	'modify' => false,
+	'form_show' => 'textfield'
+);
+$_ENV['categories']['attachment']['type_id'] = array (
+	'type_form' => 'integer',
+	'type_field' => 'integer',
+	'mandatory' => true,
+	'label' => _DOCTYPE_MAIL,
+	'table' => 'res',
+	'img' => 'file',
+	'modify' => true,
+	'form_show' => 'select'
+);
+$_ENV['categories']['attachment']['destination'] = array (
+	'type_form' => 'string',
+	'type_field' => 'string',
+	'mandatory' => true,
+	'label' => _DEPARTMENT_EXP,
+	'table' => 'res',
+	'img' => 'sitemap',
+	'modify' => false,
+	'form_show' => 'textarea'
+);
+
+
 ///////////////////////////// GED DOC ////////////////////////////////////////////////
 $_ENV['categories']['ged_doc'] = array ();
 $_ENV['categories']['ged_doc']['img_cat'] = '<i class="fa fa-arrow-right fa-2x"></i>';

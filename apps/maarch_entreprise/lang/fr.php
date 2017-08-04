@@ -19,8 +19,6 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 if (!defined("_MEP_VERSION")) define("_MEP_VERSION", "Maarch v17.06");
 
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
@@ -772,6 +770,7 @@ if (!defined("_DEPARTMENT_EXP")) define("_DEPARTMENT_EXP", "Service expéditeur"
 if (!defined("_INCOMING")) define("_INCOMING", "Courrier Arrivée");
 if (!defined("_OUTGOING")) define("_OUTGOING", "Courrier Départ");
 if (!defined("_INTERNAL")) define("_INTERNAL", "Courrier Interne");
+if (!defined("_ATTACHMENT")) define("_ATTACHMENT", "Pièce jointe");
 
 if (!defined("_GED_DOC")) define("_GED_DOC", "Document GED");
 if (!defined("_MARKET_DOCUMENT")) define("_MARKET_DOCUMENT", "Document de Sous-dossier");

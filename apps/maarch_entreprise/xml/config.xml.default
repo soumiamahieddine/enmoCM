@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <databaseserver>127.0.0.1</databaseserver>
+        <databaseserver>localhost</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarchcourrier</databasename>
+        <databasename>maarch</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
         <databasesearchlimit>500</databasesearchlimit>
@@ -14,9 +14,9 @@
         <adminmail>dev@maarch.org</adminmail>
         <adminname>maarch</adminname>
         <debug>false</debug>
-        <applicationname>MAARCH 17.06</applicationname>
+        <applicationname>MAARCH 17.06 RECONCILIATION DEV</applicationname>
         <defaultPage>welcome</defaultPage>
-        <exportdirectory></exportdirectory>
+        <exportdirectory/>
         <CookieTime>20</CookieTime> <!-- minutes -->
         <ldap>false</ldap> <!-- if true, ldap authentification, see ldap xml config file -->
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
@@ -58,7 +58,7 @@
         <extensions>
             <table>mlb_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\docservers\indexes\letterbox_coll\</path_to_lucene_index>
+        <path_to_lucene_index>/var/docservers/indexes/letterbox_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -75,6 +75,10 @@
             <category>
                 <id>ged_doc</id>
                 <label>_GED_DOC</label>
+            </category>
+            <category>
+                <id>attachment</id>
+                <label>_ATTACHMENT</label>
             </category>
             <default_category>incoming</default_category>
         </categories>
@@ -94,7 +98,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\docservers\indexes\attachments_coll\</path_to_lucene_index>
+        <path_to_lucene_index>/var/docservers/indexes/attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -118,7 +122,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\docservers\indexes\version_attachments_coll\</path_to_lucene_index>
+        <path_to_lucene_index>/var/docservers/indexes/version_attachments_coll/</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>

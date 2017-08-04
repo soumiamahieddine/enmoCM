@@ -359,6 +359,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $hideSelectFile = 'hideSelectFile();';
     }
     /*** Category ***/
+
     $frmStr .= '<tr id="category_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:200px;"><label for="category_id" '
             . 'class="form_title" >' . _CATEGORY . '</label></td>';
@@ -375,7 +376,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . '&resId=' . $resId . '&collId=' . $collId . '\',\'none\',\''.$collId.'\',this.options[this.selectedIndex].value);'.$hideSelectFile.'">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
-        if ($catId <> 'default_category') {
+        if ($catId <> 'default_category' && $catId <> 'attachment') {
             $frmStr .= '<option value="' . functions::xssafe($catId) . '"';
             if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId || (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] == $catId)
             ) {
