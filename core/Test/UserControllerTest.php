@@ -42,7 +42,7 @@ class UserControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
@@ -83,7 +83,7 @@ class UserControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
@@ -113,7 +113,7 @@ class UserControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $userController->getUserForAdministration($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response       = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);

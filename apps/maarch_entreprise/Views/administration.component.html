@@ -2,10 +2,10 @@
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-cogs fa-2x"></i> Administration</h1>
+    <h1 style="margin-top: 0"><i class="fa fa-cogs fa-2x"></i> {{lang.administration}}</h1>
     <div class="row row-eq-height">
         <div *ngIf="applicationServices[0]" class="col-md-12 servicesDiv">
-            <h2 class="administrationTitle">Application</h2>
+            <h2 class="administrationTitle">{{lang.application}}</h2>
             <div class="content">
                 <div *ngFor="let appService of applicationServices" class="admin_item" title="{{appService.comment}}" (click)="goToSpecifiedAdministration(appService)">
                     <div>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div *ngIf="modulesServices[0]" class="col-md-12 servicesDiv">
-            <h2 class="administrationTitle">Modules</h2>
+            <h2 class="administrationTitle">{{lang.modules}}</h2>
             <div class="content">
                 <div *ngFor="let modService of modulesServices" class="admin_item" title="{{modService.comment}}" (click)="goToSpecifiedAdministration(modService)">
                     <div>

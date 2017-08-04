@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LANG } from '../translate.component';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -16,13 +17,12 @@ declare const angularGlobals : any;
 export class UserAdministrationComponent implements OnInit {
 
     coreUrl                     : string;
+    lang                        : any       = LANG;
     userId                      : string;
     serialId                    : number;
     userCreation                : boolean;
 
-    user                        : any       = {
-        lang                    : {}
-    };
+    user                        : any       = {};
     signatureModel              : any       = {
         base64                  : "",
         base64ForJs             : "",
@@ -59,18 +59,11 @@ export class UserAdministrationComponent implements OnInit {
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
                 this.userCreation = true;
-                this.http.get(this.coreUrl + "rest/administration/users/new")
-                    .subscribe((data : any) => {
-                        this.user = data;
-
-                        this.loading = false;
-                    }, () => {
-                        location.href = "index.php";
-                    });
+                this.loading = false;
             } else {
                 this.userCreation = false;
                 this.serialId = params['id'];
-                this.http.get(this.coreUrl + "rest/administration/users/" + this.serialId)
+                this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")
                     .subscribe((data : any) => {
                         this.user = data;
                         this.userId = data.user_id;
@@ -153,7 +146,7 @@ export class UserAdministrationComponent implements OnInit {
                 .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -175,7 +168,7 @@ export class UserAdministrationComponent implements OnInit {
                     $j('#addGroupModal').modal('hide');
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -185,7 +178,7 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -199,7 +192,7 @@ export class UserAdministrationComponent implements OnInit {
                     this.user.allGroups = data.allGroups;
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -221,7 +214,7 @@ export class UserAdministrationComponent implements OnInit {
                     $j('#addEntityModal').modal('hide');
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -231,7 +224,7 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -241,7 +234,7 @@ export class UserAdministrationComponent implements OnInit {
                 this.user['entities'] = data.entities;
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -255,7 +248,7 @@ export class UserAdministrationComponent implements OnInit {
                     this.user.allEntities = data.allEntities;
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -274,7 +267,7 @@ export class UserAdministrationComponent implements OnInit {
                 };
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -288,7 +281,7 @@ export class UserAdministrationComponent implements OnInit {
                 this.selectedSignatureLabel = "";
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -301,7 +294,7 @@ export class UserAdministrationComponent implements OnInit {
                     this.user.signatures = data.signatures;
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -337,7 +330,7 @@ export class UserAdministrationComponent implements OnInit {
                 $j('#manageAbs').modal('hide');
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -347,7 +340,7 @@ export class UserAdministrationComponent implements OnInit {
                 this.user.status = data.user.status;
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
             });
     }
 
@@ -358,14 +351,14 @@ export class UserAdministrationComponent implements OnInit {
                     successNotification(data.success);
                     this.router.navigate(["/administration/users/" + data.user.id]);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }

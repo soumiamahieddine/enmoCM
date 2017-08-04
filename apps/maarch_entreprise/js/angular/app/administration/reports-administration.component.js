@@ -19,7 +19,6 @@ var ReportsAdministrationComponent = (function () {
         this.groups = [];
         this.reports = [];
         this.selectedGroup = "";
-        this.arrayArgsPut = [];
     }
     ReportsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {

@@ -109,8 +109,6 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
-$app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
@@ -157,6 +155,7 @@ $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':ge
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
+$app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
 $app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');

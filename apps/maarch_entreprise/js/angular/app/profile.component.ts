@@ -226,26 +226,22 @@ export class ProfileComponent implements OnInit {
                 this.userAbsenceModel  = [];
                 location.search = "?display=true&page=logout&abs_mode";
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
     updatePassword() {
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .subscribe((data : any) => {
-                if (data.errors) {
-                    errorNotification(data.errors);
-                } else {
-                    this.showPassword = false;
-                    this.passwordModel = {
-                        currentPassword         : "",
-                        newPassword             : "",
-                        reNewPassword           : "",
-                    };
-                    successNotification(data.success);
-                }
+                this.showPassword = false;
+                this.passwordModel = {
+                    currentPassword         : "",
+                    newPassword             : "",
+                    reNewPassword           : "",
+                };
+                successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -323,7 +319,7 @@ export class ProfileComponent implements OnInit {
                 };
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -337,7 +333,7 @@ export class ProfileComponent implements OnInit {
                 this.selectedSignatureLabel = "";
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 
@@ -350,7 +346,7 @@ export class ProfileComponent implements OnInit {
                     this.user.signatures = data.signatures;
                     successNotification(data.success);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    errorNotification(err.error.errors);
                 });
         }
     }
@@ -360,7 +356,7 @@ export class ProfileComponent implements OnInit {
             .subscribe((data : any) => {
                 successNotification(data.success);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
     }
 }

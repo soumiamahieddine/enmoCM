@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { LANG } from '../translate.component';
 
 declare function $j(selector: any) : any;
 
-declare var angularGlobals : any;
+declare const angularGlobals : any;
 
 
 @Component({
@@ -14,6 +15,7 @@ declare var angularGlobals : any;
 export class AdministrationComponent implements OnInit {
 
     coreUrl                     : string;
+    lang                        : any       = LANG;
 
     applicationServices         : any[]     = [];
     modulesServices             : any[]     = [];

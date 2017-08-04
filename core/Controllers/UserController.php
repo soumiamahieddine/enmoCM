@@ -142,7 +142,7 @@ class UserController
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
     {
-        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id', 'enabled']]);
 
         $data = $request->getParams();
 
@@ -153,6 +153,7 @@ class UserController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+        $data['enabled'] = $user['enabled'];
 
         UserModel::update(['id' => $user['id'], 'user' => $data]);
 
@@ -180,9 +181,9 @@ class UserController
         }
 
         if ($data['newPassword'] != $data['reNewPassword']) {
-            return $response->withStatus(400)->withJson(['errors' => _WRONG_SECOND_PSW]);
-        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
-            return $response->withJson(['errors' => _WRONG_PSW]);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'], 'password' => $data['currentPassword']])) {
+            return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
         }
 
         $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
@@ -507,7 +508,7 @@ class UserController
         return $response->withJson($return);
     }
 
-    public function getUserForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -522,19 +523,6 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $user['user_id']]);
-        $user['lang'] = LangModel::getUsersAdministrationLang();
-
-        return $response->withJson($user);
-    }
-
-    public function getNewUserForAdministration(RequestInterface $request, ResponseInterface $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $user = [];
-        $user['lang'] = LangModel::getUsersAdministrationLang();
 
         return $response->withJson($user);
     }

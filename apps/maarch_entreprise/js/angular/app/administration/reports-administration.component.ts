@@ -22,10 +22,6 @@ export class ReportsAdministrationComponent implements OnInit {
 
     selectedGroup   : string    = "";
 
-    label           : string;
-    indexGroups     : any;
-    tabId           : any;
-    arrayArgsPut    : any = [];
 
     constructor(public http: HttpClient) {
     }
