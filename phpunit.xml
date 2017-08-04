@@ -5,8 +5,8 @@
             <!--directory>core/Test</directory-->
             <!--file>core/Test/ActionControllerTest.php</file-->
             <file>core/Test/PriorityControllerTest.php</file>
-            <file>core/Test/ResControllerTest.php</file>
-            <file>core/Test/ResExtControllerTest.php</file>
+            <!--file>core/Test/ResControllerTest.php</file>
+            <file>core/Test/ResExtControllerTest.php</file-->
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
         </testsuite>
