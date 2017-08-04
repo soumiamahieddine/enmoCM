@@ -1,14 +1,14 @@
 {
     "autoload": {
     	"psr-4": {
-    		"Core\\": "core/",
-    		"Apps\\": "apps/maarch_entreprise/",
+            "Core\\": "core/",
+    	    "Apps\\": "apps/maarch_entreprise/",
             "Attachments\\": "modules/attachments/",
             "Baskets\\": "modules/basket/",
             "Entities\\": "modules/entities/",
             "Notes\\": "modules/notes/",
             "Notifications\\": "modules/notifications/",
-    		"Visa\\": "modules/visa/"
+    	    "Visa\\": "modules/visa/"
     	}
     },
     "require": {
