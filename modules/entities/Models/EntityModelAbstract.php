@@ -21,6 +21,22 @@ use Core\Models\ValidatorModel;
 
 class EntityModelAbstract
 {
+    public static function getByEmail(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['email']);
+        ValidatorModel::stringType($aArgs, ['email']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['email = ? and enabled = ?'],
+            'data'      => [$aArgs['email'], 'Y'],
+            'limit'     => 1,
+        ]);
+
+        return $aReturn;
+    }
+    
     public static function get(array $aArgs = [])
     {
         $aEntities = DatabaseModel::select([
