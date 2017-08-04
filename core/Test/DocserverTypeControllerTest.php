@@ -1,7 +1,5 @@
 <?php
 
-namespace MaarchTest;
-
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,9 +7,10 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+namespace MaarchTest;
+use PHPUnit\Framework\TestCase;
 
-class DocserverTypeControllerTest extends \PHPUnit_Framework_TestCase
+class DocserverTypeControllerTest extends TestCase
 {
     public function testGetList()
     {

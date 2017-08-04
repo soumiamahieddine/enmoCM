@@ -9,9 +9,9 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+use PHPUnit\Framework\TestCase;
 
-class ReportsTest extends \PHPUnit_Framework_TestCase
+class ReportsTest extends TestCase
 {
     public function testGetList()
     {

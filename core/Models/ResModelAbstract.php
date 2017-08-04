@@ -64,7 +64,6 @@ class ResModelAbstract
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
-            'data'      => [$aArgs['resId']],
             'order_by'  => ['res_id desc'],
             'limit'     => 1,
         ]);

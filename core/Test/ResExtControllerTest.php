@@ -9,9 +9,9 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+use PHPUnit\Framework\TestCase;
 
-class ResExtControllerTest extends \PHPUnit_Framework_TestCase
+class ResExtControllerTest extends TestCase
 {
     public function testCreate()
     {
@@ -125,7 +125,7 @@ class ResExtControllerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $resId = \Core\Models\ResExtModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResExtModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'id'=> $resId[0]['res_id']
@@ -325,7 +325,7 @@ class ResExtControllerTest extends \PHPUnit_Framework_TestCase
     {
         $action = new \Core\Controllers\ResExtController();
 
-        $resId = \Core\Models\ResExtModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResExtModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'id'=> $resId[0]['res_id']
