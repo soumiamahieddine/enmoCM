@@ -115,6 +115,9 @@ $app->get('/administration/status', \Core\Controllers\StatusController::class . 
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
 
+//groups
+$app->get('/groups', \Core\Controllers\GroupController::class . ':get');
+
 //status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
@@ -127,12 +130,6 @@ $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':ge
 //docserverType
 $app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
 $app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
-
-//admin_reports
-$app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
-$app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
-$app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
-
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
@@ -204,5 +201,10 @@ $app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::c
 $app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
 $app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
 $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
+//Reports
+$app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
+$app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+
 
 $app->run();

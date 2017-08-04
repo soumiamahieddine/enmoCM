@@ -232,15 +232,12 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE usergroups
 (
+  id serial NOT NULL,
   group_id character varying(32) NOT NULL,
   group_desc character varying(255) DEFAULT NULL::character varying,
-  administrator character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_right1 character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_right2 character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_right3 character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_right4 character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  CONSTRAINT usergroups_pkey PRIMARY KEY (group_id)
+  CONSTRAINT usergroups_pkey PRIMARY KEY (group_id),
+  CONSTRAINT usergroups_id_key UNIQUE (id)
 )
 WITH (OIDS=FALSE);
 
@@ -254,7 +251,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users
 (
-  id serial,
+  id serial NOT NULL,
   user_id character varying(128) NOT NULL,
   "password" character varying(255) DEFAULT NULL::character varying,
   firstname character varying(255) DEFAULT NULL::character varying,

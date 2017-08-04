@@ -1,66 +1,66 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LANG } from '../translate.component';
 
 declare function $j (selector: any) : any;
-declare var angularGlobals : any;
+declare function successNotification(message: string) : void;
+declare function errorNotification(message: string) : void;
+
+declare const angularGlobals : any;
+
 
 @Component({
-    templateUrl : 'Views/reports.component.html',   
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', '../maarch_entreprise/css/reports.css']
+    templateUrl : angularGlobals["reports-administrationView"],
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
 })
-export class ReportsAdministrationComponent implements OnInit
-{
+export class ReportsAdministrationComponent implements OnInit {
 
-    test42          : string = "Ptit test OKLM";
-    label           : string;
     coreUrl         : string;
-    groups          : any;
-    checkboxes      : any;
+    lang            : any       = LANG;
+    groups          : any[]     = [];
+    reports         : any[]     = [];
+
+    selectedGroup   : string    = "";
+
+    label           : string;
     indexGroups     : any;
     tabId           : any;
     arrayArgsPut    : any = [];
-    lang            : any = [];
 
     constructor(public http: HttpClient) {
     }
 
-    prepareState() {
-        $j('#inner_content').remove();
-     }
+    updateBreadcrumb(applicationName: string) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Etats et edition";
+        }
+    }
 
-     ngOnInit(): void {
-        this.prepareState();
+    ngOnInit(): void {
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
-        this.http.get(this.coreUrl + 'rest/report/groups')
-            .subscribe((data) => {
-                this.groups = data['group'];
-                this.lang = data['lang']; 
+        this.http.get(this.coreUrl + 'rest/groups')
+            .subscribe((data: any) => {
+                this.groups = data['groups'];
             });
     }
 
-    loadGroup() { 
-        this.http.get(this.coreUrl + 'rest/report/groups/'+ this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id) // SELECTED ANDGULAR  .selected()
-            .subscribe((data) => {
-                this.checkboxes = data;
-                console.log(this.checkboxes[0].id);     
+    loadReports() {
+        this.http.get(this.coreUrl + 'rest/reports/groups/'+ this.selectedGroup)
+            .subscribe((data: any) => {
+                this.reports = data['reports'];
+            }, (err) => {
+                errorNotification(err.error.errors);
             });
-        $j("#formCategoryId").removeClass("hide");
     }
 
-    clickOnCategory(id:any) {
-        $j(".category").addClass("hide");
-        $j("#"+id).removeClass("hide");
-    }
-
-    updateDB() {
-        for(var i = 0; i<$j(":checkbox").length;i++) {
-            this.arrayArgsPut.push ({id : this.checkboxes[i].id, checked : $j(":checkbox")[i].checked});
-        }
-        console.log(this.arrayArgsPut);    
-        this.http.put(this.coreUrl + 'rest/report/groups/'+this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id, this.arrayArgsPut) // SELECTED ANDGULAR  .selected()
-            .subscribe((data) => {
-                this.arrayArgsPut = [];
+    onSubmit() {
+        this.http.put(this.coreUrl + 'rest/reports/groups/'+ this.selectedGroup, this.reports)
+            .subscribe((data: any) => {
+                successNotification(data['success']);
+            }, (err) => {
+                errorNotification(err.error.errors);
             });
-    }   
+    }
 }

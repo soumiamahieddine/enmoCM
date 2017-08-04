@@ -10,6 +10,7 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
+var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
@@ -34,6 +35,7 @@ AdministrationModule = __decorate([
             common_1.CommonModule,
             forms_1.FormsModule,
             http_1.HttpClientModule,
+            app_material_module_1.AppMaterialModule,
             administration_routing_module_1.AdministrationRoutingModule
         ],
         declarations: [

@@ -6,7 +6,7 @@ declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
 declare function errorNotification(message: string) : void;
 
-declare var angularGlobals : any;
+declare const angularGlobals : any;
 
 
 @Component({

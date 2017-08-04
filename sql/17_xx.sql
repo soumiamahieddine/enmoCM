@@ -83,6 +83,19 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+ALTER TABLE usergroups DROP COLUMN IF EXISTS administrator;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS custom_right1;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS custom_right2;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS custom_right3;
+ALTER TABLE usergroups DROP COLUMN IF EXISTS custom_right4;
+
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'id') = 0 THEN
+    ALTER TABLE usergroups ADD COLUMN id serial NOT NULL;
+    ALTER TABLE usergroups ADD UNIQUE (id);
+  END IF;
+END$$;
+
 
 ALTER TABLE sendmail DROP COLUMN IF EXISTS res_version_att_id_list;
 ALTER TABLE sendmail ADD COLUMN res_version_att_id_list character varying(255);

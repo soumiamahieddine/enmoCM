@@ -1,0 +1,49 @@
+<div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <h1 style="margin-top: 0"><i class="fa fa-area-chart fa-2x"></i> {{lang.reports}}</h1>
+    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div>
+        <md-select placeholder="{{lang.chooseGroup}}" [(ngModel)]="selectedGroup" (change)="loadReports()" name="group">
+            <md-option *ngFor="let group of groups" [value]="group.group_id">
+                {{group.group_desc}}
+            </md-option>
+        </md-select>
+        <div *ngIf="reports.size() > 0">
+            <form class="form-horizontal" (ngSubmit)="onSubmit()">
+                {{lang.folders}}
+                <div class="form-group">
+                    <div *ngFor="let report of reports;let i = index">
+                        <md-checkbox *ngIf="report.module == 'folder'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</md-checkbox>
+                    </div>
+                </div>
+                {{lang.entities}}
+                <div class="form-group">
+                    <div *ngFor="let report of reports;let i = index">
+                        <md-checkbox *ngIf="report.module == 'entities'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</md-checkbox>
+                    </div>
+                </div>
+                {{lang.maarchApplication}}
+                <div class="form-group">
+                    <div *ngFor="let report of reports;let i = index">
+                        <md-checkbox *ngIf="report.module == 'application'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</md-checkbox>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-success">{{lang.save}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

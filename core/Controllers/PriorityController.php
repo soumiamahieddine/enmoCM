@@ -13,19 +13,11 @@ class PriorityController
 
     public function get(RequestInterface $request, ResponseInterface $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         return $response->withJson(['priorities' => PriorityModel::get()]);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $priotity = PriorityModel::getById(['id' => $aArgs['id']]);
 
         if(empty($priotity)){

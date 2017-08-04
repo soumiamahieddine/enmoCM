@@ -2086,3 +2086,8 @@ if (!defined('_NEW_STATUS_ADDED'))
     define('_NEW_STATUS_ADDED', 'Nouveau statut créé');
 if (!defined('_STATUS_UPDATED'))
     define('_STATUS_UPDATED', 'Statut mis à jour');
+
+/** Generic messages **/
+if(!defined('_SAVED_CHANGE'))
+    define('_SAVED_CHANGE', 'Modification enregistrée');
+/** Generic messages **/

@@ -2036,3 +2036,8 @@ if (!defined('_NEW_STATUS_ADDED'))
 if (!defined('_STATUS_UPDATED'))
     define('_STATUS_UPDATED', 'Status updated');
 if (!defined("_NEW_ITEM")) define("_NEW_ITEM", "New");
+
+/** Generic messages **/
+if(!defined('_SAVED_CHANGE'))
+    define('_SAVED_CHANGE', 'Saved change');
+/** Generic messages **/

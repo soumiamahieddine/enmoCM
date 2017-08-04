@@ -15,48 +15,27 @@
 
 namespace Core\Models;
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class ReportModelAbstract extends \Apps_Table_Service
+class ReportModelAbstract
 {
-
-
-    public static function getGroups() 
+    public static function getByGroupId(array $aArgs)
     {
-        $aReturn = static::select([
-            'select'    => ['*'],
-            'table'     => ['usergroups'],
-        ]);
-
-        return $aReturn;
-    }
-
-
-
-    public static function  getReportsTypesByXML(array $aArgs = [])
-    {
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['groupId']);
+        ValidatorModel::stringType($aArgs, ['groupId']);
 
         $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists('custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-            $path = 'custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml';
+        if (file_exists("custom/{$customId}/modules/reports/xml/reports.xml")) {
+            $path = "custom/{$customId}/modules/reports/xml/reports.xml";
         } else {
             $path = 'modules/reports/xml/reports.xml';
         }
 
+        $reports = [];
         $xmlfile = simplexml_load_file($path);
-        $reportsTypes = [];
-        $reportsTypes = $xmlfile->REPORT;
-        $tab = [];
-        $tab_id = [];
-        
 
-        if (count($reportsTypes) > 0) {
-            foreach ($reportsTypes as $value) {
-                if ($value->ENABLED == "true") {
-                    $tab[] = [
+        if ($xmlfile) {
+            foreach ($xmlfile->REPORT as $value) {
+                if ((string)$value->ENABLED == "true") {
+                    $reports[] = [
                         'id' => (string)$value->ID,
                         'label' => constant((string)$value->LABEL),
                         'desc' => constant((string)$value->DESCRIPTION),
@@ -67,93 +46,57 @@ class ReportModelAbstract extends \Apps_Table_Service
                         'module_label' => (string)$value->MODULE_LABEL,
                         'checked' => false
                     ];
-                    $tab_id[] = $value->ID;
                 }
             }
             
-            $aReturn = static::select([
-                'select'    =>  ['*'],
+            $aReturn = DatabaseModel::select([
+                'select'    => ['*'],
                 'table'     => ['usergroups_reports'],
-                'where'     => ['report_id in (?)', 'group_id = ?'], 
-                'data'      => [$tab_id, $aArgs['id']]
+                'where'     => ['group_id = ?'],
+                'data'      => [$aArgs['groupId']]
             ]);
                 
-            $tab_id_query = []; 
-            foreach($aReturn as $rep ) {
-                $tab_id_query[] = $rep['report_id'];
+            $selectedReports = [];
+            foreach ($aReturn as $value) {
+                $selectedReports[] = $value['report_id'];
             }
-            foreach($tab as $rep => $value) { 
-                $tab[$rep]['checked'] = in_array($tab[$rep]['id'],$tab_id_query);
-            
-            }       
-            return $tab;
 
-        } else {
-            return ['error' => 'xml issue']; 
+            foreach ($reports as $key => $value) {
+                $reports[$key]['checked'] = in_array($value['id'], $selectedReports);
+            }
         }
+
+        return $reports;
     }
 
-    public static function update(array $aArgs = []) 
-    {    
-        static::checkRequired($aArgs, ['id']);
-        static::checkString($aArgs, ['id']);
-    
-        $aReturn = static::select([
-            'select'    => ['*'],
-            'table'     => ['usergroups_reports'],
-            'where'     => ['group_id = ?'],
-            'data'      => [$aArgs['id']]
-        ]);
-
-        $alreadyCheckedReports = [];
-            
-        foreach($aReturn as $value) {
-            $alreadyCheckedReports[] = $value['report_id'];
-        }
-
-        foreach($aArgs['data'] as $value) {
-                        
-            if (!empty($alreadyCheckedReports) && in_array($value['id'], $alreadyCheckedReports)) {
-                if (!$value['checked']) {
-                    $aReturn = static::deleteFrom([
-                        'table' => 'usergroups_reports',
-                        'where' => ['report_id = ?','group_id = ?'],
-                        'data'  => [$value['id'],$aArgs['id']]
-                    ]);
-                }
-            } elseif ($value['checked']) {
-                static::insertInto(
-                [
-                    'group_id' => $aArgs['id'],
-                    'report_id' => $value['id']                  
-                ],
-                    'usergroups_reports'
-                );                            
-            }                     
-        }
-
-        $checkedReports = static::select([
-            'select'    => ['*'],
-            'table'     => ['usergroups_reports'],
-            'where'     => ['group_id = ?'],
-            'data'      => [$aArgs['id']]
-        ]);
-
-        return $checkedReports;
-    }
-
-    
-
-    public static function delete(array $aArgs = [])
+    public static function addForGroupId(array $aArgs)
     {
-        /*static::checkRequired($aArgs, ['report_id']);
-        static::checkString($aArgs, ['group_id']);*/
-        $aReturn = static::deleteFrom([
-            'table' => 'usergroups_reports',
-            'where' => ['report_id = ?','group_id = ?'],
-            'data'  => [$aArgs['report_id'],$aArgs['group_id']]
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'reportId']);
+        ValidatorModel::stringType($aArgs, ['groupId', 'reportId']);
+
+        DatabaseModel::insert([
+            'table'         => 'usergroups_reports',
+            'columnsValues' => [
+                'group_id'  => $aArgs['groupId'],
+                'report_id' => $aArgs['reportId']
+            ]
         ]);
 
-        return $aReturn;
+        return true;
     }
-}      
+
+    public static function deleteForGroupId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'reportIds']);
+        ValidatorModel::stringType($aArgs, ['groupId']);
+        ValidatorModel::arrayType($aArgs, ['reportIds']);
+
+        DatabaseModel::delete([
+            'table' => 'usergroups_reports',
+            'where' => ['group_id = ?', 'report_id in (?)'],
+            'data'  => [$aArgs['groupId'], $aArgs['reportIds']]
+        ]);
+
+        return true;
+    }
+}
