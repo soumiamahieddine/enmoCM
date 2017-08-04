@@ -114,7 +114,7 @@ export class UsersAdministrationComponent implements OnInit {
 
             if (r) {
                 user.enabled = 'N';
-                this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+                this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe((data : any) => {
                         successNotification(data.success);
                     }, (err) => {
@@ -161,7 +161,7 @@ export class UsersAdministrationComponent implements OnInit {
 
         if (r) {
             user.enabled = 'Y';
-            this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+            this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe((data : any) => {
                     successNotification(data.success);
                 }, (err) => {

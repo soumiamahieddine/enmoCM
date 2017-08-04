@@ -100,7 +100,7 @@ var UsersAdministrationComponent = (function () {
             var r = confirm(this.lang.suspendMsg + " ?");
             if (r) {
                 user.enabled = 'N';
-                this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+                this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function (data) {
                     successNotification(data.success);
                 }, function (err) {
@@ -144,7 +144,7 @@ var UsersAdministrationComponent = (function () {
         var r = confirm(this.lang.authorizeMsg + " ?");
         if (r) {
             user.enabled = 'Y';
-            this.http.put(this.coreUrl + 'rest/users/' + user.user_id, user)
+            this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(function (data) {
                 successNotification(data.success);
             }, function (err) {

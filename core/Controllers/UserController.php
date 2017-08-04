@@ -114,31 +114,6 @@ class UserController
 
         return $response->withJson(['success' => _DELETED_USER]);
     }
-    
-    public function suspendUser(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        // TODO
-        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
-        }
-
-        $data = $request->getParams();
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
-            || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
-            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        //update user
-        $r = UserModel::update(['userId' => $aArgs['userId'], 'user' => $data]);
-
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
-        }
-
-        return $response->withJson(['success' => _USER_UPDATED]);
-    }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
     {
