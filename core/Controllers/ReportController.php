@@ -8,81 +8,74 @@
 */
 
 /**
-* @brief Status Controller
+* @brief Report Controller
 * @author dev@maarch.org
 * @ingroup core
 */
 
 namespace Core\Controllers;
 
+use Core\Models\GroupModel;
+use Core\Models\ServiceModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Respect\Validation\Validator;
 use Core\Models\ReportModel;
-use Core\Models\LangModel;
 
 
 class ReportController
 {
-    public function getGroups(RequestInterface $request, ResponseInterface $response)
+    public function getByGroupId(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $obj['group'] = ReportModel::getGroups();
-        $obj['lang'] = LangModel::getReportsLang();
-        
-        
-        return $response->withJson($obj);
-    }
-
-
-
-
-
-
-public function getReportsTypesByXML(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-
-       if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
-            $obj = ReportModel::getReportsTypesByXML([
-                'id' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-        
 
-        /* $datas = [
-            $obj,
-        ];*/
+        $group = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
 
+        $reports = ReportModel::getByGroupId(['groupId' => $aArgs['groupId']]);
 
-        return $response->withJson($obj);
+        return $response->withJson(['reports' => $reports]);
     }
 
-     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+     public function updateForGroupId(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-      
-      
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
-         $data = $request->getParams();
-         //$data = $aArgs['data'];
-          /*
-          *
-          *{"id":{"id" : "entity_late_mail","checked" : false },{"id" : "process_delay","checked" : false },{"id" : "folder_view_stat","checked" : false }}
-          A mettre dans le body du reste client, c'est ce qui sera dans getParams
-          *
-          *
-          */
-         $id = $aArgs['id'];
-         $obj = ReportModel::update([
-                'id' => $id,
-                'data' => $data
-                ]);
+        $group = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
 
-        return $response->withJson($obj);
-       
+        $data = $request->getParams();
+
+        $reports = ReportModel::getByGroupId(['groupId' => $aArgs['groupId']]);
+
+        $selectedReports = [];
+        foreach ($data as $value) {
+            if (!empty($value['checked'])) {
+                $selectedReports[] = $value['id'];
+            }
+        }
+
+        $reportIdsToDelete = [];
+        foreach ($reports as $value) {
+            if (!$value['checked'] && in_array($value['id'], $selectedReports)) {
+                ReportModel::addForGroupId(['groupId' => $aArgs['groupId'], 'reportId' => $value['id']]);
+            } elseif ($value['checked'] && !in_array($value['id'], $selectedReports)) {
+                $reportIdsToDelete[] = $value['id'];
+            }
+        }
+
+        if (!empty($reportIdsToDelete)) {
+            ReportModel::deleteForGroupId(['groupId' => $aArgs['groupId'], 'reportIds' => $reportIdsToDelete]);
+        }
+
+        return $response->withJson(['success' => _SAVED_CHANGE]);
     }
 }
 

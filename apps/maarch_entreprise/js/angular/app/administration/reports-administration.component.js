@@ -11,56 +11,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
+var translate_component_1 = require("../translate.component");
 var ReportsAdministrationComponent = (function () {
     function ReportsAdministrationComponent(http) {
         this.http = http;
-        this.test42 = "Ptit test OKLM";
+        this.lang = translate_component_1.LANG;
+        this.groups = [];
+        this.reports = [];
+        this.selectedGroup = "";
         this.arrayArgsPut = [];
-        this.lang = [];
     }
-    ReportsAdministrationComponent.prototype.prepareState = function () {
-        $j('#inner_content').remove();
+    ReportsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Etats et edition";
+        }
     };
     ReportsAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.prepareState();
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + 'rest/report/groups')
+        this.http.get(this.coreUrl + 'rest/groups')
             .subscribe(function (data) {
-            _this.groups = data['group'];
-            _this.lang = data['lang'];
+            _this.groups = data['groups'];
         });
     };
-    ReportsAdministrationComponent.prototype.loadGroup = function () {
+    ReportsAdministrationComponent.prototype.loadReports = function () {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/report/groups/' + this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id) // SELECTED ANDGULAR  .selected()
+        this.http.get(this.coreUrl + 'rest/reports/groups/' + this.selectedGroup)
             .subscribe(function (data) {
-            _this.checkboxes = data;
-            console.log(_this.checkboxes[0].id);
+            _this.reports = data['reports'];
+        }, function (err) {
+            errorNotification(err.error.errors);
         });
-        $j("#formCategoryId").removeClass("hide");
     };
-    ReportsAdministrationComponent.prototype.clickOnCategory = function (id) {
-        $j(".category").addClass("hide");
-        $j("#" + id).removeClass("hide");
-    };
-    ReportsAdministrationComponent.prototype.updateDB = function () {
-        var _this = this;
-        for (var i = 0; i < $j(":checkbox").length; i++) {
-            this.arrayArgsPut.push({ id: this.checkboxes[i].id, checked: $j(":checkbox")[i].checked });
-        }
-        console.log(this.arrayArgsPut);
-        this.http.put(this.coreUrl + 'rest/report/groups/' + this.groups[$j("#group_id").prop("selectedIndex") - 1].group_id, this.arrayArgsPut) // SELECTED ANDGULAR  .selected()
+    ReportsAdministrationComponent.prototype.onSubmit = function () {
+        this.http.put(this.coreUrl + 'rest/reports/groups/' + this.selectedGroup, this.reports)
             .subscribe(function (data) {
-            _this.arrayArgsPut = [];
+            successNotification(data['success']);
+        }, function (err) {
+            errorNotification(err.error.errors);
         });
     };
     return ReportsAdministrationComponent;
 }());
 ReportsAdministrationComponent = __decorate([
     core_1.Component({
-        templateUrl: 'Views/reports.component.html',
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', '../maarch_entreprise/css/reports.css']
+        templateUrl: angularGlobals["reports-administrationView"],
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
     }),
     __metadata("design:paramtypes", [http_1.HttpClient])
 ], ReportsAdministrationComponent);

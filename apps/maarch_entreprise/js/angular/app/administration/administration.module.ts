@@ -3,6 +3,7 @@ import { CommonModule }     from '@angular/common';
 import { FormsModule }      from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }              from './administration.component';
@@ -23,6 +24,7 @@ import { ReportsAdministrationComponent }       from './reports-administration.c
         CommonModule,
         FormsModule,
         HttpClientModule,
+        AppMaterialModule,
         AdministrationRoutingModule
     ],
     declarations: [
