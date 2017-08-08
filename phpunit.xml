@@ -9,6 +9,7 @@
             <file>core/Test/ResExtControllerTest.php</file-->
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
+	<file>core/Test/NotificationsControllerTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
