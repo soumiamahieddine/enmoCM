@@ -118,7 +118,6 @@ class NotificationController
 
         NotificationModel::update($data);
 
-            //var_dump($aArgs);
             $notification = NotificationModel::getById(['notificationId' => $data['notification_id']]);
 
             HistoryController::add([

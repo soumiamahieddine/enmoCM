@@ -25,9 +25,6 @@ class NotificationControllerTest extends TestCase
         $response     = $NotificationController->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('RED', $responseBody->notifications[6]->notification_id);
-
-//var_dump($responseBody);
-//var_dump($responseBody->notifications[6]->notification_id);
     }
 
 
@@ -156,9 +153,7 @@ class NotificationControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $NotificationController->getById($request, new \Slim\Http\Response(), ['id' => 'warning5']);
-        $responseBody = json_decode((string)$response->getBody());
-        //var_dump($responseBody->notifications);
-        //self::$id = $notification_sid;
+        $responseBody = json_decode((string)$response->getBody());;
         $this->assertSame(self::$id, $responseBody->notifications->notification_sid);
         $this->assertSame('warning5', $responseBody->notifications->notification_id);
         $this->assertSame('BOUBOUP', $responseBody->notifications->description);
