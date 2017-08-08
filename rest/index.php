@@ -109,6 +109,17 @@ $app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize
 //Administration
 $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
+$app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
+$app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
+
+//notifications
+$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
+$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
+$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
+$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
+$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
+
+//status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
