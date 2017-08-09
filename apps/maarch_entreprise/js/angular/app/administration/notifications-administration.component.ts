@@ -46,7 +46,7 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string){
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
-                                            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " + this.lang.admin_status;
+                                            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.admin_notifications;
     }
 
     deleteNotification(notification : any){

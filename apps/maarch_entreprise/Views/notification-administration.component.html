@@ -1,0 +1,31 @@
+ <div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div> 
+<nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" routerLink="/administration/notifications" style="cursor: pointer">
+                <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<h1 style="margin-top: 0"><i class="fa fa-check-circle fa-2x"></i> {{pageTitle}}</h1>
+<div class="container-fluid" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+<div class="col-md-6 col-md-offset-3">
+    <!-- <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hashtag" title="{{lang.identifier}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
+                    <input [(ngModel)]="status.id" class="form-control" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.identifier}}" type="text" required>
+                </div>
+            </div>
+        </div> 
+    </form>    -->
+</div>

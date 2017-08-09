@@ -69,6 +69,7 @@ exports.LANG_FR = {
     "notification": "notification",
     "notificationsListTitle": "Liste des notifications",
     "newNotification": "Nouvelle notification",
+    "admin_notifications": "Administration des notifications",
     //Lists
     available: "disponible",
     display: "affichage",

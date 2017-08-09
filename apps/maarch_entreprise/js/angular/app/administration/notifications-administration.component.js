@@ -38,7 +38,7 @@ var NotificationsAdministrationComponent = (function () {
     };
     NotificationsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " + this.lang.admin_status;
+            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.admin_notifications;
     };
     NotificationsAdministrationComponent.prototype.deleteNotification = function (notification) {
         var _this = this;

@@ -37,7 +37,7 @@ import { NotificationAdministrationComponent }       from './notification-admini
             { path: 'administration/actions/new', component: ActionAdministrationComponent },
             { path: 'administration/actions/:id', component: ActionAdministrationComponent },
             { path: 'administration/notifications', component: NotificationsAdministrationComponent },
-            { path: 'administration/notification', component: NotificationAdministrationComponent },
+            { path: 'administration/notifications/new', component: NotificationAdministrationComponent },
         ]),
     ],
     exports: [

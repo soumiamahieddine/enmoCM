@@ -67,4 +67,5 @@ export const LANG_EN = {
     "notification"              : "notification",
     "notificationsListTitle"    : "Notifications list",
     "newNotification"           : "New notification",
+    "admin_notifications"       : "Administration of notifications",
 };
