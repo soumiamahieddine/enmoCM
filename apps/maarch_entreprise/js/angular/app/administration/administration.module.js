@@ -13,6 +13,8 @@ var http_1 = require("@angular/common/http");
 var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
+var notifications_administration_component_1 = require("./notifications-administration.component");
+//import { NotificationAdministrationComponent }          from './notification-administration.component';
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
@@ -40,6 +42,8 @@ AdministrationModule = __decorate([
         ],
         declarations: [
             administration_component_1.AdministrationComponent,
+            notifications_administration_component_1.NotificationsAdministrationComponent,
+            //NotificationAdministrationComponent,
             users_administration_component_1.UsersAdministrationComponent,
             user_administration_component_1.UserAdministrationComponent,
             statuses_administration_component_1.StatusesAdministrationComponent,

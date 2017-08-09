@@ -66,6 +66,9 @@ exports.LANG_FR = {
     "autoLogoutAbsence": "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes",
     "reports": "Etats et éditions",
     "myProfile": "Mon profil",
+    "notification": "notification",
+    "notificationsListTitle": "Liste des notifications",
+    "newNotification": "Nouvelle notification",
     //Lists
     available: "disponible",
     display: "affichage",

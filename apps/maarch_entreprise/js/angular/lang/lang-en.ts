@@ -64,4 +64,7 @@ export const LANG_EN = {
     "autoLogoutAbsence"         : "You are going to be automaticaly disconnected after your redirections",
     "reports"                   : "Reports",
     "myProfile"                 : "My profile",
+    "notification"              : "notification",
+    "notificationsListTitle"    : "Notifications list",
+    "newNotification"           : "New notification",
 };

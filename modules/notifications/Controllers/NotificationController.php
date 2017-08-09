@@ -149,6 +149,9 @@ class NotificationController
             ]);
 
 
-        return $response->withJson(['success' => _DELETED_NOTIFICATION]);
+        return $response->withJson([
+            'success' => _DELETED_NOTIFICATION,
+            'notifications' => NotificationModel::get(['select' => ['notification_sid', 'notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type']])
+        ]);
     }
 }

@@ -7,6 +7,8 @@ import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }              from './administration.component';
+import { NotificationsAdministrationComponent }         from './notifications-administration.component';
+//import { NotificationAdministrationComponent }          from './notification-administration.component';
 import { UsersAdministrationComponent }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
 import { StatusesAdministrationComponent }      from './statuses-administration.component';
@@ -29,6 +31,8 @@ import { ReportsAdministrationComponent }       from './reports-administration.c
     ],
     declarations: [
         AdministrationComponent,
+        NotificationsAdministrationComponent,
+        //NotificationAdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,
         StatusesAdministrationComponent,

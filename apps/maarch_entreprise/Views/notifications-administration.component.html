@@ -1,0 +1,49 @@
+ <div *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+</div> 
+<div *ngIf="!loading" class="container-fluid">
+    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{lang.notificationsListTitle}} : {{notifications.length}} {{lang.notification}}(s) </h1>
+    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
+                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="cursor: pointer" routerLink="/administration/notifications/new">
+                        <a title="{{lang.newNotification}}"><i class="fa fa-check-circle"></i><sup><i class="fa fa-plus"></i></sup></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="col-md-12" style="margin-top: 15px">
+        <table id="notificationsTable" class="display">
+            <thead>
+                <tr>
+                    <th style="width:33%;"><span>{{lang.id}}</span></th>
+                    <th style="width:33%;"><span>{{lang.desc}}</span></th>
+                    <th style="width:33%;"><span>&nbsp;</span></th>
+                </tr>
+            </thead> 
+            <tbody>
+                <tr *ngFor="let notification of notifications" id="{{notification.id}}">
+                    <td>{{notification.notification_id}}</td>
+                    <td>{{notification.description}}</td>
+                    <td style="text-align:right;">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button routerLink="/administration/notifications/{{notification.identifier}}" type="button" class="btn btn-default" title="{{lang.update}}">
+                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
+                            </button>
+                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteNotification(notification)">
+                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
