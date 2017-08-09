@@ -16,7 +16,8 @@ function triggerAngular(prodmode, locationToGo) {
         'priorities-administration',
         'priority-administration',
         'reports-administration',
-        'notifications-administration'
+        'notifications-administration',
+        'notification-administration'
     ];
 
     $j.ajax({

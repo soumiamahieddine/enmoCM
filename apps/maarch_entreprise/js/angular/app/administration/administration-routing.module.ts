@@ -14,6 +14,7 @@ import { PrioritiesAdministrationComponent }    from './priorities-administratio
 import { PriorityAdministrationComponent }      from './priority-administration.component';
 import { ReportsAdministrationComponent }       from './reports-administration.component';
 import { NotificationsAdministrationComponent }       from './notifications-administration.component';
+import { NotificationAdministrationComponent }       from './notification-administration.component';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { NotificationsAdministrationComponent }       from './notifications-admi
             { path: 'administration/actions/new', component: ActionAdministrationComponent },
             { path: 'administration/actions/:id', component: ActionAdministrationComponent },
             { path: 'administration/notifications', component: NotificationsAdministrationComponent },
+            { path: 'administration/notification', component: NotificationAdministrationComponent },
         ]),
     ],
     exports: [

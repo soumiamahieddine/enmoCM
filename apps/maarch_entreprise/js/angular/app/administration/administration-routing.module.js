@@ -21,6 +21,7 @@ var priorities_administration_component_1 = require("./priorities-administration
 var priority_administration_component_1 = require("./priority-administration.component");
 var reports_administration_component_1 = require("./reports-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
+var notification_administration_component_1 = require("./notification-administration.component");
 var AdministrationRoutingModule = (function () {
     function AdministrationRoutingModule() {
     }
@@ -48,6 +49,7 @@ AdministrationRoutingModule = __decorate([
                 { path: 'administration/actions/new', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: 'administration/actions/:id', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: 'administration/notifications', component: notifications_administration_component_1.NotificationsAdministrationComponent },
+                { path: 'administration/notification', component: notification_administration_component_1.NotificationAdministrationComponent },
             ]),
         ],
         exports: [
