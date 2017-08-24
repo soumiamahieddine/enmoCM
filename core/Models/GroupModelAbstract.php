@@ -23,7 +23,8 @@ class GroupModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroups'],
             'where'     => ['enabled = ?'],
-            'data'      => ['Y']
+            'data'      => ['Y'],
+            'order_by'  => ['group_desc']
         ]);
 
         return $aGroups;

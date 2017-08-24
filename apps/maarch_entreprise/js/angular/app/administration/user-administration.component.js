@@ -13,13 +13,15 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
+var material_1 = require("@angular/material");
 var UserAdministrationComponent = (function () {
-    function UserAdministrationComponent(http, route, router, zone) {
+    function UserAdministrationComponent(http, route, router, zone, snackBar) {
         var _this = this;
         this.http = http;
         this.route = route;
         this.router = router;
         this.zone = zone;
+        this.snackBar = snackBar;
         this.lang = translate_component_1.LANG;
         this.user = {};
         this.signatureModel = {
@@ -45,6 +47,7 @@ var UserAdministrationComponent = (function () {
     };
     UserAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        //$j('#header').remove();
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
@@ -61,25 +64,49 @@ var UserAdministrationComponent = (function () {
                     _this.user = data;
                     _this.userId = data.user_id;
                     _this.loading = false;
-                    setTimeout(function () {
-                        $j("#absenceUser").typeahead({
-                            order: "asc",
-                            display: "formattedUser",
-                            templateValue: "{{user_id}}",
-                            source: {
-                                ajax: {
-                                    type: "GET",
-                                    dataType: "json",
-                                    url: _this.coreUrl + "rest/users/autocompleter",
-                                }
-                            }
-                        });
-                    }, 0);
                 }, function () {
                     location.href = "index.php";
                 });
             }
         });
+    };
+    UserAdministrationComponent.prototype.toogleRedirect = function (basket) {
+        $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
+        $j('#absenceUser_' + basket.group_id + '_' + basket.basket_id).typeahead({
+            order: "asc",
+            display: "formattedUser",
+            templateValue: "{{user_id}}",
+            source: {
+                ajax: {
+                    type: "GET",
+                    dataType: "json",
+                    url: this.coreUrl + "rest/users/autocompleter",
+                }
+            }
+        });
+    };
+    UserAdministrationComponent.prototype.initService = function () {
+        var _this = this;
+        $j('#jstree').jstree({
+            "checkbox": {
+                "three_state": false //no cascade selection
+            },
+            'core': {
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+                'data': this.user.allEntities
+            },
+            "plugins": ["checkbox"]
+        });
+        $j('#jstree')
+            .on('select_node.jstree', function (e, data) {
+            _this.addEntity(data.node.id);
+        }).on('deselect_node.jstree', function (e, data) {
+            _this.deleteEntity(data.node.id);
+        })
+            .jstree();
     };
     UserAdministrationComponent.prototype.processAfterUpload = function (b64Content) {
         var _this = this;
@@ -103,6 +130,7 @@ var UserAdministrationComponent = (function () {
         $j('#' + id).click();
     };
     UserAdministrationComponent.prototype.uploadSignatureTrigger = function (fileInput) {
+        var _this = this;
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
             this.signatureModel.name = fileInput.target.files[0].name;
@@ -114,6 +142,7 @@ var UserAdministrationComponent = (function () {
             reader.readAsDataURL(fileInput.target.files[0]);
             reader.onload = function (value) {
                 window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
+                _this.submitSignature();
             };
         }
     };
@@ -132,20 +161,28 @@ var UserAdministrationComponent = (function () {
             });
         }
     };
-    UserAdministrationComponent.prototype.addGroup = function () {
+    UserAdministrationComponent.prototype.toggleGroup = function (group) {
         var _this = this;
-        var index = $j("#groupsSelect option:selected").index();
-        if (index > 0) {
-            var group = {
-                "groupId": this.user.allGroups[index - 1].group_id,
-                "role": $j("#groupRole")[0].value
+        if ($j('#' + group.group_id + '-input').is(':checked') == true) {
+            var groupReq = {
+                "groupId": group.group_id,
+                "role": group.role
             };
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", groupReq)
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                $j("#groupRole")[0].value = "";
-                $j('#addGroupModal').modal('hide');
+                _this.user.baskets = data.baskets;
+                successNotification(data.success);
+            }, function (err) {
+                errorNotification(err.error.errors);
+            });
+        }
+        else {
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
+                .subscribe(function (data) {
+                _this.user.groups = data.groups;
+                _this.user.allGroups = data.allGroups;
                 successNotification(data.success);
             }, function (err) {
                 errorNotification(err.error.errors);
@@ -174,25 +211,20 @@ var UserAdministrationComponent = (function () {
             });
         }
     };
-    UserAdministrationComponent.prototype.addEntity = function () {
+    UserAdministrationComponent.prototype.addEntity = function (entiyId) {
         var _this = this;
-        var index = $j("#entitiesSelect option:selected").index();
-        if (index > 0) {
-            var entity = {
-                "entityId": this.user.allEntities[index - 1].entity_id,
-                "role": $j("#entityRole")[0].value
-            };
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
-                .subscribe(function (data) {
-                _this.user.entities = data.entities;
-                _this.user.allEntities = data.allEntities;
-                $j("#entityRole")[0].value = "";
-                $j('#addEntityModal').modal('hide');
-                successNotification(data.success);
-            }, function (err) {
-                errorNotification(err.error.errors);
-            });
-        }
+        var entity = {
+            "entityId": entiyId,
+            "role": ''
+        };
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
+            .subscribe(function (data) {
+            _this.user.entities = data.entities;
+            _this.user.allEntities = data.allEntities;
+            successNotification(data.success);
+        }, function (err) {
+            errorNotification(err.error.errors);
+        });
     };
     UserAdministrationComponent.prototype.updateEntity = function (entity) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
@@ -212,19 +244,16 @@ var UserAdministrationComponent = (function () {
             errorNotification(err.error.errors);
         });
     };
-    UserAdministrationComponent.prototype.deleteEntity = function (entity) {
+    UserAdministrationComponent.prototype.deleteEntity = function (entityId) {
         var _this = this;
-        var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
-        if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
-                .subscribe(function (data) {
-                _this.user.entities = data.entities;
-                _this.user.allEntities = data.allEntities;
-                successNotification(data.success);
-            }, function (err) {
-                errorNotification(err.error.errors);
-            });
-        }
+        this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+            .subscribe(function (data) {
+            _this.user.entities = data.entities;
+            _this.user.allEntities = data.allEntities;
+            successNotification(data.success);
+        }, function (err) {
+            errorNotification(err.error.errors);
+        });
     };
     UserAdministrationComponent.prototype.submitSignature = function () {
         var _this = this;
@@ -244,14 +273,13 @@ var UserAdministrationComponent = (function () {
             errorNotification(err.error.errors);
         });
     };
-    UserAdministrationComponent.prototype.updateSignature = function () {
+    UserAdministrationComponent.prototype.updateSignature = function (selectedSignature) {
         var _this = this;
-        var id = this.user.signatures[this.selectedSignature].id;
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": this.selectedSignatureLabel })
+        var id = this.user.signatures[selectedSignature].id;
+        var label = this.user.signatures[selectedSignature].signature_label;
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe(function (data) {
-            _this.user.signatures[_this.selectedSignature].signature_label = data.signature.signature_label;
-            _this.selectedSignature = -1;
-            _this.selectedSignatureLabel = "";
+            _this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
             successNotification(data.success);
         }, function (err) {
             errorNotification(err.error.errors);
@@ -270,25 +298,25 @@ var UserAdministrationComponent = (function () {
             });
         }
     };
-    UserAdministrationComponent.prototype.addBasketRedirection = function () {
-        var index = $j("#selectBasketAbsenceUser option:selected").index();
-        if (index > 0 && $j("#absenceUser")[0].value != "") {
+    UserAdministrationComponent.prototype.addBasketRedirection = function (i, basket) {
+        var r = false;
+        if (this.user.status != 'ABS') {
+            r = confirm('Cela activera automatiquement le mode absent, continuer ?');
+        }
+        if (r || this.user.status == 'ABS') {
+            this.user.baskets[i].userToDisplay = $j('#absenceUser_' + basket.group_id + '_' + basket.basket_id)[0].value;
             this.userAbsenceModel.push({
-                "basketId": this.user.baskets[index - 1].basket_id,
-                "basketName": this.user.baskets[index - 1].basket_name,
-                "virtual": this.user.baskets[index - 1].is_virtual,
-                "basketOwner": this.user.baskets[index - 1].basket_owner,
-                "newUser": $j("#absenceUser")[0].value,
-                "index": index - 1
+                "basketId": this.user.baskets[i].basket_id,
+                "basketName": this.user.baskets[i].basket_name,
+                "virtual": this.user.baskets[i].is_virtual,
+                "basketOwner": this.user.baskets[i].basket_owner,
+                "newUser": this.user.baskets[i].userToDisplay
             });
-            this.user.baskets[index - 1].disabled = true;
-            $j('#selectBasketAbsenceUser option:eq(0)').prop("selected", true);
-            $j("#absenceUser")[0].value = "";
+            this.activateAbsence();
         }
     };
-    UserAdministrationComponent.prototype.delBasketRedirection = function (index) {
-        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
-        this.userAbsenceModel.splice(index, 1);
+    UserAdministrationComponent.prototype.delBasketRedirection = function (i) {
+        this.user.baskets[i].userToDisplay = '';
     };
     UserAdministrationComponent.prototype.activateAbsence = function () {
         var _this = this;
@@ -296,17 +324,19 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
-            $j('#manageAbs').modal('hide');
             successNotification(data.success);
         }, function (err) {
             errorNotification(err.error.errors);
         });
     };
-    UserAdministrationComponent.prototype.deactivateAbsence = function () {
+    UserAdministrationComponent.prototype.desactivateAbsence = function () {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
             .subscribe(function (data) {
             _this.user.status = data.user.status;
+            for (var i in _this.user.baskets) {
+                _this.user.baskets[i].userToDisplay = '';
+            }
             successNotification(data.success);
         }, function (err) {
             errorNotification(err.error.errors);
@@ -326,6 +356,9 @@ var UserAdministrationComponent = (function () {
         else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe(function (data) {
+                /*this.snackBar.open(data.success, 'Undo', {
+                    duration: 2000,
+                  });*/
                 successNotification(data.success);
             }, function (err) {
                 errorNotification(err.error.errors);
@@ -337,8 +370,8 @@ var UserAdministrationComponent = (function () {
 UserAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["user-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css', '../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.css']
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, material_1.MdSnackBar])
 ], UserAdministrationComponent);
 exports.UserAdministrationComponent = UserAdministrationComponent;

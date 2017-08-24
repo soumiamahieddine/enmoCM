@@ -27,7 +27,8 @@ class EntityModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
             'where'     => ['enabled = ?'],
-            'data'      => ['Y']
+            'data'      => ['Y'],
+            'order_by'  => ['entity_label']
         ]);
 
         return $aEntities;
@@ -148,13 +149,21 @@ class EntityModelAbstract
             $userEntities[] = $value['entity_id'];
         }
 
-        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label']]);
+        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label', 'parent_entity_id']]);
 
         foreach ($allEntities as $key => $value) {
-            if (in_array($value['entity_id'], $userEntities) || !in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {
-                $allEntities[$key]['disabled'] = true;
+            $allEntities[$key]['id'] = $value['entity_id'];
+            if (empty($value['parent_entity_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon'] = "fa fa-building";
             } else {
-                $allEntities[$key]['disabled'] = false;
+                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['icon'] = "fa fa-sitemap";
+            }
+            $allEntities[$key]['text'] = $value['entity_label'];
+            if (in_array($value['entity_id'], $userEntities) || !in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {
+                $allEntities[$key]['state']['opened'] = true;
+                $allEntities[$key]['state']['selected'] = true;
             }
         }
 

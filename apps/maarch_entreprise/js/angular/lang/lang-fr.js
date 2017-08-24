@@ -62,7 +62,7 @@ exports.LANG_FR = {
     "newSignature": "Nouvelle signature",
     "manageAbsences": "Gérer les absences",
     "activateAbsence": "Activer l'absence",
-    "deactivateAbsence": "Désactiver l'absence",
+    "desactivateAbsence": "Désactiver l'absence",
     "autoLogoutAbsence": "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes",
     "reports": "Etats et éditions",
     "myProfile": "Mon profil",

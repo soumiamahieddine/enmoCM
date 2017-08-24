@@ -17,11 +17,31 @@ AppMaterialModule = __decorate([
     core_1.NgModule({
         imports: [
             material_1.MdCheckboxModule,
-            material_1.MdSelectModule
+            material_1.MdSelectModule,
+            material_1.MdSlideToggleModule,
+            material_1.MdInputModule,
+            material_1.MdTooltipModule,
+            material_1.MdTabsModule,
+            material_1.MdSidenavModule,
+            material_1.MdButtonModule,
+            material_1.MdCardModule,
+            material_1.MdButtonToggleModule,
+            material_1.MdSnackBarModule,
+            material_1.MdAutocompleteModule
         ],
         exports: [
             material_1.MdCheckboxModule,
-            material_1.MdSelectModule
+            material_1.MdSelectModule,
+            material_1.MdSlideToggleModule,
+            material_1.MdInputModule,
+            material_1.MdTooltipModule,
+            material_1.MdTabsModule,
+            material_1.MdSidenavModule,
+            material_1.MdButtonModule,
+            material_1.MdCardModule,
+            material_1.MdButtonToggleModule,
+            material_1.MdSnackBarModule,
+            material_1.MdAutocompleteModule
         ]
     })
 ], AppMaterialModule);

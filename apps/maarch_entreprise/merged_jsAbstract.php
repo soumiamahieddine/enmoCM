@@ -59,7 +59,8 @@ class MergedJsAbstract {
 		readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js');
 		readfile('node_modules/hammerjs/hammer.min.js'); //Angular Material
 		readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
-		readfile('apps/maarch_entreprise/js/bootstrap-tree.js');
+		readfile('node_modules/jstree-bootstrap-theme/dist/jstree.js');
+		readfile('apps/maarch_entreprise/js/bootstrap-tree.js'); //DEPRECATED use jstree instead
 
 		//Mobile
 		readfile('node_modules/photoswipe/dist/photoswipe.min.js');

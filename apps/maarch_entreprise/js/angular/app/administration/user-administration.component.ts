@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
@@ -12,7 +12,7 @@ declare const angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["user-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/user-administration.component.css','../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.css']
 })
 export class UserAdministrationComponent implements OnInit {
 
@@ -42,6 +42,7 @@ export class UserAdministrationComponent implements OnInit {
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
+        
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -51,6 +52,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        //$j('#header').remove();
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
@@ -69,25 +71,53 @@ export class UserAdministrationComponent implements OnInit {
                         this.userId = data.user_id;
 
                         this.loading = false;
-                        setTimeout(() => {
-                            $j("#absenceUser").typeahead({
-                                order: "asc",
-                                display: "formattedUser",
-                                templateValue: "{{user_id}}",
-                                source: {
-                                    ajax: {
-                                        type: "GET",
-                                        dataType: "json",
-                                        url: this.coreUrl + "rest/users/autocompleter",
-                                    }
-                                }
-                            });
-                        }, 0);
+                        
                     }, () => {
                         location.href = "index.php";
                     });
             }
         });
+    }
+
+    toogleRedirect(basket:any) {
+        $j('#redirectUser_'+basket.group_id+'_'+basket.basket_id).toggle();
+        $j('#absenceUser_'+basket.group_id+'_'+basket.basket_id).typeahead({
+            order: "asc",
+            display: "formattedUser",
+            templateValue: "{{user_id}}",
+            source: {
+                ajax: {
+                    type: "GET",
+                    dataType: "json",
+                    url: this.coreUrl + "rest/users/autocompleter",
+                }
+            }
+        });
+    }
+
+    initService(){
+        $j('#jstree').jstree({ 
+            "checkbox" : {
+                "three_state" : false //no cascade selection
+            },
+            'core' : {
+                'themes': {
+                    'name': 'proton',
+                    'responsive': true
+                },
+                'data' : this.user.allEntities
+            },
+            "plugins" : [ "checkbox" ] 
+        });
+        $j('#jstree')
+        // listen for event
+        .on('select_node.jstree', (e:any, data:any) => {
+            this.addEntity(data.node.id);
+        }).on('deselect_node.jstree', (e:any, data:any) => {
+            this.deleteEntity(data.node.id);
+        })
+        // create the instance
+        .jstree();
     }
 
     processAfterUpload(b64Content: any) {
@@ -126,10 +156,10 @@ export class UserAdministrationComponent implements OnInit {
 
             reader.readAsDataURL(fileInput.target.files[0]);
 
-            reader.onload = function (value: any) {
+            reader.onload = (value: any) => {
                 window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
+                this.submitSignature();
             };
-
         }
     }
 
@@ -151,28 +181,32 @@ export class UserAdministrationComponent implements OnInit {
         }
     }
 
-    addGroup() {
-        var index = $j("#groupsSelect option:selected").index();
-
-        if (index > 0) {
-            var group = {
-                "groupId"   : this.user.allGroups[index - 1].group_id,
-                "role"      : $j("#groupRole")[0].value
+    toggleGroup(group: any){
+        if($j('#'+group.group_id+'-input').is(':checked') == true){
+            var groupReq = {
+                "groupId"   : group.group_id,
+                "role"      : group.role
             };
-
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", group)
-                .subscribe((data : any) => {
-                    this.user.groups = data.groups;
-                    this.user.allGroups = data.allGroups;
-                    $j("#groupRole")[0].value = "";
-                    $j('#addGroupModal').modal('hide');
-                    successNotification(data.success);
-                }, (err) => {
-                    errorNotification(err.error.errors);
-                });
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", groupReq)
+            .subscribe((data : any) => {
+                this.user.groups = data.groups;
+                this.user.allGroups = data.allGroups;
+                this.user.baskets = data.baskets;
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(err.error.errors);
+            });
+        }else{
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
+            .subscribe((data : any) => {
+                this.user.groups = data.groups;
+                this.user.allGroups = data.allGroups;
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(err.error.errors);
+            });
         }
     }
-
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data : any) => {
@@ -197,26 +231,23 @@ export class UserAdministrationComponent implements OnInit {
         }
     }
 
-    addEntity() {
-        var index = $j("#entitiesSelect option:selected").index();
+    addEntity(entiyId:any) {
 
-        if (index > 0) {
-            var entity = {
-                "entityId"   : this.user.allEntities[index - 1].entity_id,
-                "role"      : $j("#entityRole")[0].value
-            };
+        var entity = {
+            "entityId"   : entiyId,
+            "role"      : ''
+        };
 
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
-                .subscribe((data : any) => {
-                    this.user.entities = data.entities;
-                    this.user.allEntities = data.allEntities;
-                    $j("#entityRole")[0].value = "";
-                    $j('#addEntityModal').modal('hide');
-                    successNotification(data.success);
-                }, (err) => {
-                    errorNotification(err.error.errors);
-                });
-        }
+        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
+            .subscribe((data : any) => {
+                this.user.entities = data.entities;
+                this.user.allEntities = data.allEntities;
+
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(err.error.errors);
+            });
+        
     }
 
     updateEntity(entity: any) {
@@ -238,19 +269,17 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
-    deleteEntity(entity: any) {
-        let r = confirm('Voulez-vous vraiment retirer l\'utilisateur de cette entité ?');
+    deleteEntity(entityId: any) {
 
-        if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id)
-                .subscribe((data : any) => {
-                    this.user.entities = data.entities;
-                    this.user.allEntities = data.allEntities;
-                    successNotification(data.success);
-                }, (err) => {
-                    errorNotification(err.error.errors);
-                });
-        }
+        this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+            .subscribe((data : any) => {
+                this.user.entities = data.entities;
+                this.user.allEntities = data.allEntities;
+                successNotification(data.success);
+            }, (err) => {
+                errorNotification(err.error.errors);
+            });
+        
     }
 
     submitSignature() {
@@ -271,14 +300,13 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
-    updateSignature() {
-        var id = this.user.signatures[this.selectedSignature].id;
-
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, {"label" : this.selectedSignatureLabel})
+    updateSignature(selectedSignature:any) {
+        var id = this.user.signatures[selectedSignature].id;
+        var label = this.user.signatures[selectedSignature].signature_label;
+        
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, {"label" : label})
             .subscribe((data : any) => {
-                this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
-                this.selectedSignature = -1;
-                this.selectedSignatureLabel = "";
+                this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
                 successNotification(data.success);
             }, (err) => {
                 errorNotification(err.error.errors);
@@ -299,27 +327,27 @@ export class UserAdministrationComponent implements OnInit {
         }
     }
 
-    addBasketRedirection() {
-        var index = $j("#selectBasketAbsenceUser option:selected").index();
-
-        if (index > 0 && $j("#absenceUser")[0].value != "") {
+    addBasketRedirection(i:number,basket:any) {
+        let r = false;
+        if(this.user.status != 'ABS'){
+            r = confirm('Cela activera automatiquement le mode absent, continuer ?');
+        }
+        
+        if (r || this.user.status == 'ABS') {
+            this.user.baskets[i].userToDisplay = $j('#absenceUser_'+basket.group_id+'_'+basket.basket_id)[0].value;
             this.userAbsenceModel.push({
-                "basketId"      : this.user.baskets[index - 1].basket_id,
-                "basketName"    : this.user.baskets[index - 1].basket_name,
-                "virtual"       : this.user.baskets[index - 1].is_virtual,
-                "basketOwner"   : this.user.baskets[index - 1].basket_owner,
-                "newUser"       : $j("#absenceUser")[0].value,
-                "index"         : index - 1
+                "basketId"      : this.user.baskets[i].basket_id,
+                "basketName"    : this.user.baskets[i].basket_name,
+                "virtual"       : this.user.baskets[i].is_virtual,
+                "basketOwner"   : this.user.baskets[i].basket_owner,
+                "newUser"       : this.user.baskets[i].userToDisplay
             });
-            this.user.baskets[index - 1].disabled = true;
-            $j('#selectBasketAbsenceUser option:eq(0)').prop("selected", true);
-            $j("#absenceUser")[0].value = "";
+            this.activateAbsence();
         }
     }
 
-    delBasketRedirection(index: number) {
-        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
-        this.userAbsenceModel.splice(index, 1);
+    delBasketRedirection(i:number) {
+        this.user.baskets[i].userToDisplay = '';
     }
 
     activateAbsence() {
@@ -327,17 +355,19 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel  = [];
-                $j('#manageAbs').modal('hide');
                 successNotification(data.success);
             }, (err) => {
                 errorNotification(err.error.errors);
             });
     }
 
-    deactivateAbsence() {
+    desactivateAbsence() {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", {"status" : "OK"})
                 .subscribe((data : any) => {
                 this.user.status = data.user.status;
+                for (let i in this.user.baskets) {
+                    this.user.baskets[i].userToDisplay = '';
+                }
                 successNotification(data.success);
             }, (err) => {
                     errorNotification(err.error.errors);

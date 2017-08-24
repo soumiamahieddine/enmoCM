@@ -218,7 +218,7 @@ class UserController
         if (!empty($data['status']) && $data['status'] == 'OK') {
             $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
 
-            UserModel::deactivateAbsenceById(['id' => $aArgs['id']]);
+            UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
                 'table_name'    => 'users',
                 'record_id'     => $user['user_id'],
@@ -528,7 +528,8 @@ class UserController
         return $response->withJson([
             'success'   => _ADDED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
+            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
+            'baskets'   => BasketsModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 

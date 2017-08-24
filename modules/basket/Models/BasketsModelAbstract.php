@@ -103,6 +103,7 @@ class BasketsModelAbstract
             $aBaskets = DatabaseModel::select([
                     'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
                     'table'     => ['groupbasket, baskets'],
+                    'debug'     => ['true'],
                     'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
                     'data'      => [$groupIds],
                     'order_by'  => ['group_id, basket_order, basket_name']
@@ -111,6 +112,14 @@ class BasketsModelAbstract
             foreach ($aBaskets as $key => $value) {
                 $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
+                $aBaskets2 = DatabaseModel::select([
+                        'select'    => ['new_user'],
+                        'table'     => ['user_abs'],
+                        'where'     => ['user_abs = ?', 'basket_id = ?'],
+                        'data'      => [$aArgs['userId'],$value['basket_id']],
+                ]);
+                $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
+                $aBaskets[$key]['enabled'] = true;
             }
             $aBaskets = array_merge($aBaskets, BasketsModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }

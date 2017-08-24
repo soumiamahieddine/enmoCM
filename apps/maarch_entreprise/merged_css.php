@@ -61,5 +61,5 @@ readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 //Custom CSS for V2
 readfile('apps/maarch_entreprise/css/engine.css');
 readfile('apps/maarch_entreprise/css/bootstrap-chosen.css');
-
+readfile('apps/maarch_entreprise/css/jstree-custom.min.css');
 ob_end_flush();
