@@ -1,28 +1,19 @@
 <?php
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-/*
-*    Copyright 2017 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+* @brief   merged_js
+* @author  dev <dev@maarch.org>
+* @ingroup apps
 */
 
-include_once('../../core/init.php');
-include_once($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'apps/maarch_entreprise'.DIRECTORY_SEPARATOR.'merged_jsAbstract.php');
+require_once '../../core/init.php';
+require_once $_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'apps/maarch_entreprise'.DIRECTORY_SEPARATOR.'merged_jsAbstract.php';
 
-class MergedJs extends MergedJsAbstract{
+class MergedJs extends MergedJsAbstract
+{
     // Your stuff her
 }
 

@@ -1,5 +1,16 @@
 <?php
-include_once('../../core/init.php');
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
+* @brief   merged_css
+* @author  dev <dev@maarch.org>
+* @ingroup apps
+*/
+
+require_once '../../core/init.php';
+
 function compress($buffer)
 {
     /* remove comments */
@@ -12,7 +23,7 @@ function compress($buffer)
     return $buffer;
 }
 
-$date = mktime(0, 0, 0, date("m") + 2 , date("d"), date("Y"));
+$date = mktime(0, 0, 0, date("m") + 2, date("d"), date("Y"));
 $date = date("D, d M Y H:i:s", $date);
 $time = 30 * 12 * 60 * 60;
 header("Pragma: public");
@@ -24,7 +35,8 @@ header('Content-type: text/css; charset=utf-8');
 
 ob_start("compress");
 
-include 'apps/' . $_SESSION['config']['app_id'] . '/css/styles.css';
+require 'apps/' . $_SESSION['config']['app_id'] . '/css/styles.css';
+
 foreach (array_keys($_SESSION['modules_loaded']) as $value) {
     if (file_exists(
         $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -42,24 +54,17 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
     }
 }
 
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
 
 //Views
 readfile('apps/maarch_entreprise/css/administration.component.css');
 
 //Dependencies
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');
-readfile('node_modules/datatables/media/css/jquery.dataTables.min.css');
-readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css');
-readfile('node_modules/@angular/material/prebuilt-themes/indigo-pink.css');
 readfile('apps/maarch_entreprise/css/chosen.min.css');
 readfile('node_modules/photoswipe/dist/photoswipe.css');
 readfile('node_modules/photoswipe/dist/default-skin/default-skin.css');
 readfile('apps/maarch_entreprise/css/photoswipe_custom.css');
 
-//Custom CSS for V2
-readfile('apps/maarch_entreprise/css/engine.css');
-readfile('apps/maarch_entreprise/css/bootstrap-chosen.css');
-readfile('apps/maarch_entreprise/css/jstree-custom.min.css');
 ob_end_flush();

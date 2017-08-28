@@ -10,6 +10,7 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
+var md2_1 = require("md2");
 var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
@@ -36,7 +37,8 @@ AdministrationModule = __decorate([
             forms_1.FormsModule,
             http_1.HttpClientModule,
             app_material_module_1.AppMaterialModule,
-            administration_routing_module_1.AdministrationRoutingModule
+            administration_routing_module_1.AdministrationRoutingModule,
+            md2_1.Md2Module
         ],
         declarations: [
             administration_component_1.AdministrationComponent,
@@ -50,7 +52,8 @@ AdministrationModule = __decorate([
             parameter_administration_component_1.ParameterAdministrationComponent,
             priorities_administration_component_1.PrioritiesAdministrationComponent,
             priority_administration_component_1.PriorityAdministrationComponent,
-            reports_administration_component_1.ReportsAdministrationComponent
+            reports_administration_component_1.ReportsAdministrationComponent,
+            users_administration_component_1.DataTablePipe
         ]
     })
 ], AdministrationModule);

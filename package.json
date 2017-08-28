@@ -19,6 +19,7 @@
     "jquery-typeahead": "^2.8.0",
     "jquery.nicescroll": "^3.6.8",
     "jstree-bootstrap-theme": "^1.0.1",
+    "md2": "0.0.28",
     "photoswipe": "^4.1.2",
     "tinymce": "^4.6.2",
     "tooltipster": "^4.2.5",

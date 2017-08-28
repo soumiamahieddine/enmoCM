@@ -26,8 +26,9 @@ AppMaterialModule = __decorate([
             material_1.MdButtonModule,
             material_1.MdCardModule,
             material_1.MdButtonToggleModule,
-            material_1.MdSnackBarModule,
-            material_1.MdAutocompleteModule
+            material_1.MdProgressSpinnerModule,
+            material_1.MdToolbarModule,
+            material_1.MdMenuModule
         ],
         exports: [
             material_1.MdCheckboxModule,
@@ -40,8 +41,9 @@ AppMaterialModule = __decorate([
             material_1.MdButtonModule,
             material_1.MdCardModule,
             material_1.MdButtonToggleModule,
-            material_1.MdSnackBarModule,
-            material_1.MdAutocompleteModule
+            material_1.MdProgressSpinnerModule,
+            material_1.MdToolbarModule,
+            material_1.MdMenuModule
         ]
     })
 ], AppMaterialModule);

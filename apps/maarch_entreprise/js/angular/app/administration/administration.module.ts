@@ -2,12 +2,13 @@ import { NgModule }         from '@angular/core';
 import { CommonModule }     from '@angular/common';
 import { FormsModule }      from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Md2Module }        from 'md2';
 
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }              from './administration.component';
-import { UsersAdministrationComponent }         from './users-administration.component';
+import { UsersAdministrationComponent, DataTablePipe }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
 import { StatusesAdministrationComponent }      from './statuses-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
@@ -19,13 +20,15 @@ import { PrioritiesAdministrationComponent }    from './priorities-administratio
 import { PriorityAdministrationComponent }      from './priority-administration.component';
 import { ReportsAdministrationComponent }       from './reports-administration.component';
 
+
 @NgModule({
     imports:      [
         CommonModule,
         FormsModule,
         HttpClientModule,
         AppMaterialModule,
-        AdministrationRoutingModule
+        AdministrationRoutingModule,
+        Md2Module
     ],
     declarations: [
         AdministrationComponent,
@@ -39,7 +42,8 @@ import { ReportsAdministrationComponent }       from './reports-administration.c
         ParameterAdministrationComponent,
         PrioritiesAdministrationComponent,
         PriorityAdministrationComponent,
-        ReportsAdministrationComponent
+        ReportsAdministrationComponent,
+        DataTablePipe
     ]
 })
 export class AdministrationModule { }
