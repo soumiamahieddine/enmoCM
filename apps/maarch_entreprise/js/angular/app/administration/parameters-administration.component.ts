@@ -1,35 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["parameters-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/parameters-administration.component.css']
+    styleUrls   : ['css/parameters-administration.component.css'],
+    providers   : [NotificationService]
 })
 
 export class ParametersAdministrationComponent implements OnInit {
     coreUrl         : string;
 
-    parametersList  : any;
-    pageTitle       : string;
-    lang            : any           = "";
-    table           : any;
-    
+    lang            : any           = LANG;
+    search          : string        = null;
+
+    parametersList  : any;    
 
     resultInfo      : string        = "";
     loading         : boolean       = false;
+    data            : any           = [];
 
 
-    constructor(public http: HttpClient) {
-    }
-
-    prepareParameter() {
-        $j('#inner_content').remove();
+    constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
     updateBreadcrumb(applicationName: string){
@@ -39,55 +36,15 @@ export class ParametersAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
         
-        this.prepareParameter();
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
         this.http.get(this.coreUrl + 'rest/administration/parameters')
             .subscribe((data : any) => {
-                if(data.errors){
-                    $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                        $j("#resultInfo").slideUp(500);
-                    });
-                } else {                  
-                    this.parametersList = data.parametersList;
-                    this.lang = data.lang;
-                    setTimeout(() => {
-                    this.table = $j('#paramsTable').DataTable({
-                        "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
-                        "lengthMenu": [ 10, 25, 50, 75, 100 ],
-                        "oLanguage": {
-                            "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                            "sZeroRecords": this.lang.noResult,
-                            "sInfo": "_START_ - _END_ / _TOTAL_ "+this.lang.record,
-                            "sSearch": "",
-                            "oPaginate": {
-                                "sFirst":    "<<",
-                                "sLast":    ">>",
-                                "sNext":    this.lang.next+" <i class='fa fa-caret-right'></i>",
-                                "sPrevious": "<i class='fa fa-caret-left'></i> "+this.lang.previous
-                            },
-                            "sInfoEmpty": this.lang.noRecord,
-                            "sInfoFiltered": "(filtré de _MAX_ "+this.lang.record+")"
-                        },
-                        "order": [[ 0, "asc" ]],
-                        "columnDefs": [
-                            { "orderable": false, "targets": 3 }
-                        ],
-                        "fnInitComplete": function () {
-                            $j('#paramsTable').show();
-                        },
-                        stateSave: true
-                    });
-                    $j('.dataTables_filter input').attr("placeholder", this.lang.search);
-                    $j('dataTables_filter input').addClass('form-control');
-                    $j(".datatablesLeft").css({"float":"left"});
-                    $j(".datatablesCenter").css({"text-align":"center"});
-                    $j(".datatablesRight").css({"float":"right"});      
-
+                this.parametersList = data.parametersList;
+                this.data = this.parametersList;
+                setTimeout(() => {
+                    $j("[md2sortby='id']").click();
                 }, 0);
                 this.loading = false;
-                }
+
             });
     }
 
@@ -96,19 +53,14 @@ export class ParametersAdministrationComponent implements OnInit {
     }
 
     deleteParameter(paramId : string){
-        var resp =confirm(this.lang.deleteConfirm+' '+paramId+'?');
+        var resp = confirm(this.lang.deleteConfirm+' '+paramId+'?');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
                 .subscribe((data : any) => {
-                    for(var i = 0; i<this.parametersList.length;i++){
-                        if(this.parametersList[i].id==paramId){
-                            this.parametersList.splice(i,1);
-                        }
-                    }
-                    this.table.row($j("#"+paramId)).remove().draw();
-                    successNotification(data.success);               
+                    this.data = data.parameter;
+                    this.notify.success(data.success);             
                 },(err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    this.notify.error(JSON.parse(err._body).errors);
                 });
         }
     }

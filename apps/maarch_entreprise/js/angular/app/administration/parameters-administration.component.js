@@ -11,70 +11,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
+var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var ParametersAdministrationComponent = (function () {
-    function ParametersAdministrationComponent(http) {
+    function ParametersAdministrationComponent(http, notify) {
         this.http = http;
-        this.lang = "";
+        this.notify = notify;
+        this.lang = translate_component_1.LANG;
+        this.search = null;
         this.resultInfo = "";
         this.loading = false;
+        this.data = [];
     }
-    ParametersAdministrationComponent.prototype.prepareParameter = function () {
-        $j('#inner_content').remove();
-    };
     ParametersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Paramètres";
     };
     ParametersAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
-        this.prepareParameter();
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.http.get(this.coreUrl + 'rest/administration/parameters')
             .subscribe(function (data) {
-            if (data.errors) {
-                $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function () {
-                    $j("#resultInfo").slideUp(500);
-                });
-            }
-            else {
-                _this.parametersList = data.parametersList;
-                _this.lang = data.lang;
-                setTimeout(function () {
-                    _this.table = $j('#paramsTable').DataTable({
-                        "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
-                        "lengthMenu": [10, 25, 50, 75, 100],
-                        "oLanguage": {
-                            "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                            "sZeroRecords": _this.lang.noResult,
-                            "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
-                            "sSearch": "",
-                            "oPaginate": {
-                                "sFirst": "<<",
-                                "sLast": ">>",
-                                "sNext": _this.lang.next + " <i class='fa fa-caret-right'></i>",
-                                "sPrevious": "<i class='fa fa-caret-left'></i> " + _this.lang.previous
-                            },
-                            "sInfoEmpty": _this.lang.noRecord,
-                            "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                        },
-                        "order": [[0, "asc"]],
-                        "columnDefs": [
-                            { "orderable": false, "targets": 3 }
-                        ],
-                        "fnInitComplete": function () {
-                            $j('#paramsTable').show();
-                        },
-                        stateSave: true
-                    });
-                    $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
-                    $j('dataTables_filter input').addClass('form-control');
-                    $j(".datatablesLeft").css({ "float": "left" });
-                    $j(".datatablesCenter").css({ "text-align": "center" });
-                    $j(".datatablesRight").css({ "float": "right" });
-                }, 0);
-                _this.loading = false;
-            }
+            _this.parametersList = data.parametersList;
+            _this.data = _this.parametersList;
+            setTimeout(function () {
+                $j("[md2sortby='id']").click();
+            }, 0);
+            _this.loading = false;
         });
     };
     ParametersAdministrationComponent.prototype.goUrl = function () {
@@ -86,15 +48,10 @@ var ParametersAdministrationComponent = (function () {
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .subscribe(function (data) {
-                for (var i = 0; i < _this.parametersList.length; i++) {
-                    if (_this.parametersList[i].id == paramId) {
-                        _this.parametersList.splice(i, 1);
-                    }
-                }
-                _this.table.row($j("#" + paramId)).remove().draw();
-                successNotification(data.success);
+                _this.data = data.parameter;
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -103,8 +60,9 @@ var ParametersAdministrationComponent = (function () {
 ParametersAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["parameters-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/parameters-administration.component.css']
+        styleUrls: ['css/parameters-administration.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
+    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
 ], ParametersAdministrationComponent);
 exports.ParametersAdministrationComponent = ParametersAdministrationComponent;
