@@ -11,15 +11,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
+var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
+var DataTablePipe = (function () {
+    function DataTablePipe() {
+    }
+    DataTablePipe.prototype.transform = function (array, field, query) {
+        if (query) {
+            query = query.toLowerCase();
+            return array.filter(function (value) {
+                return value[field].toLowerCase().indexOf(query) > -1;
+            });
+        }
+        return array;
+    };
+    return DataTablePipe;
+}());
+DataTablePipe = __decorate([
+    core_1.Pipe({ name: 'dataPipe' })
+], DataTablePipe);
+exports.DataTablePipe = DataTablePipe;
 var UsersAdministrationComponent = (function () {
-    function UsersAdministrationComponent(http) {
+    function UsersAdministrationComponent(http, notify) {
         this.http = http;
+        this.notify = notify;
+        this.search = null;
         this.users = [];
         this.userDestRedirect = {};
         this.userDestRedirectModels = [];
-        this.lang = {};
-        this.resultInfo = "";
+        this.lang = translate_component_1.LANG;
         this.loading = false;
+        this.data = [];
     }
     UsersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -34,37 +56,11 @@ var UsersAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/users')
             .subscribe(function (data) {
             _this.users = data['users'];
-            _this.lang = data.lang;
-            setTimeout(function () {
-                _this.table = $j('#usersTable').DataTable({
-                    "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
-                    "lengthMenu": [10, 25, 50, 75, 100],
-                    "oLanguage": {
-                        "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                        "sZeroRecords": _this.lang.noResult,
-                        "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
-                        "sSearch": "",
-                        "oPaginate": {
-                            "sFirst": "<<",
-                            "sLast": ">>",
-                            "sNext": _this.lang.next + " <i class='fa fa-caret-right'></i>",
-                            "sPrevious": "<i class='fa fa-caret-left'></i> " + _this.lang.previous
-                        },
-                        "sInfoEmpty": _this.lang.noRecord,
-                        "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                    },
-                    "order": [[1, "asc"]],
-                    "columnDefs": [
-                        { "orderable": false, "targets": [3, 5] }
-                    ]
-                });
-                $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
-                $j('dataTables_filter input').addClass('form-control');
-                $j(".datatablesLeft").css({ "float": "left" });
-                $j(".datatablesCenter").css({ "text-align": "center" });
-                $j(".datatablesRight").css({ "float": "right" });
-            }, 0);
+            _this.data = _this.users;
             _this.loading = false;
+            setTimeout(function () {
+                $j("[md2sortby='user_id']").click();
+            }, 0);
         }, function () {
             location.href = "index.php";
         });
@@ -77,20 +73,6 @@ var UsersAdministrationComponent = (function () {
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
                 .subscribe(function (data) {
                 _this.userDestRedirectModels = data.listModels;
-                setTimeout(function () {
-                    $j(".redirectDest").typeahead({
-                        order: "asc",
-                        display: "formattedUser",
-                        templateValue: "{{user_id}}",
-                        source: {
-                            ajax: {
-                                type: "GET",
-                                dataType: "json",
-                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
-                            }
-                        }
-                    });
-                }, 0);
             }, function (err) {
                 console.log(err);
                 location.href = "index.php";
@@ -102,10 +84,10 @@ var UsersAdministrationComponent = (function () {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function (data) {
-                    successNotification(data.success);
+                    _this.notify.success(data.success);
                 }, function (err) {
                     user.enabled = 'Y';
-                    errorNotification(JSON.parse(err._body).errors);
+                    _this.notify.error(JSON.parse(err._body).errors);
                 });
             }
         }
@@ -121,35 +103,36 @@ var UsersAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 if (data.errors) {
                     user.enabled = 'Y';
-                    errorNotification(data.errors);
+                    _this.notify.error(data.errors);
                 }
                 else {
                     //then suspend user
-                    _this.http.put(_this.coreUrl + 'rest/users/' + user.user_id, user)
+                    _this.http.put(_this.coreUrl + 'rest/users/' + user.id, user)
                         .subscribe(function (data) {
                         user.inDiffListDest = 'N';
                         $j('#changeDiffListDest').modal('hide');
-                        successNotification(data.success);
+                        _this.notify.success(data.success);
                     }, function (err) {
                         user.enabled = 'Y';
-                        errorNotification(JSON.parse(err._body).errors);
+                        _this.notify.error(JSON.parse(err._body).errors);
                     });
                 }
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
     UsersAdministrationComponent.prototype.activateUser = function (user) {
+        var _this = this;
         var r = confirm(this.lang.authorizeMsg + " ?");
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(function (data) {
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
                 user.enabled = 'N';
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -161,36 +144,19 @@ var UsersAdministrationComponent = (function () {
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
                 .subscribe(function (data) {
                 _this.userDestRedirectModels = data.listModels;
-                setTimeout(function () {
-                    $j(".redirectDest").typeahead({
-                        order: "asc",
-                        source: {
-                            ajax: {
-                                type: "GET",
-                                dataType: "json",
-                                url: _this.coreUrl + "rest/users/autocompleter/exclude/" + user.user_id,
-                            }
-                        }
-                    });
-                });
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
         else {
             var r = confirm(this.lang.deleteMsg + " ?");
             if (r) {
-                this.http.delete(this.coreUrl + 'rest/users/' + user.user_id, user)
+                this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function (data) {
-                    for (var i = 0; i < _this.users.length; i++) {
-                        if (_this.users[i].user_id == user.user_id) {
-                            _this.users.splice(i, 1);
-                        }
-                    }
-                    _this.table.row($j("#" + user.user_id)).remove().draw();
-                    successNotification(data.success);
+                    _this.data = data.users;
+                    _this.notify.success(data.success);
                 }, function (err) {
-                    errorNotification(JSON.parse(err._body).errors);
+                    _this.notify.error(JSON.parse(err._body).errors);
                 });
             }
         }
@@ -204,27 +170,22 @@ var UsersAdministrationComponent = (function () {
             this.http.put(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
                 .subscribe(function (data) {
                 if (data.errors) {
-                    errorNotification(data.errors);
+                    _this.notify.error(data.errors);
                 }
                 else {
                     //then delete user
-                    _this.http.delete(_this.coreUrl + 'rest/users/' + user.user_id)
+                    _this.http.delete(_this.coreUrl + 'rest/users/' + user.id)
                         .subscribe(function (data) {
                         user.inDiffListDest = 'N';
+                        _this.data = data.users;
                         $j('#changeDiffListDest').modal('hide');
-                        for (var i = 0; i < _this.users.length; i++) {
-                            if (_this.users[i].user_id == user.user_id) {
-                                _this.users.splice(i, 1);
-                            }
-                        }
-                        _this.table.row($j("#" + user.user_id)).remove().draw();
-                        successNotification(data.success);
+                        _this.notify.success(data.success);
                     }, function (err) {
-                        errorNotification(JSON.parse(err._body).errors);
+                        _this.notify.error(JSON.parse(err._body).errors);
                     });
                 }
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -233,8 +194,9 @@ var UsersAdministrationComponent = (function () {
 UsersAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["users-administrationView"],
-        styleUrls: ['css/users-administration.component.css', '../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['css/users-administration.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
+    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
 ], UsersAdministrationComponent);
 exports.UsersAdministrationComponent = UsersAdministrationComponent;

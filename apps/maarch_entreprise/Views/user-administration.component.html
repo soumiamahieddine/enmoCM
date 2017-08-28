@@ -3,7 +3,7 @@
     <h1 *ngIf="userCreation">{{lang.userCreation}} <small>{{user.lastname}} {{user.firstname}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="container-fluid">
@@ -113,13 +113,18 @@
                                             <i (click)="toogleRedirect(basket)" *ngIf="basket.userToDisplay == '' && basket.enabled" mdTooltip="Rediriger la banette à une personne lors de l'activation de l'absence" mdTooltipPosition="above"
                                                 class="fa fa-share-square text-primary" style="cursor:pointer;"></i>
                                             <sup><i style="cursor:pointer;" *ngIf="basket.userToDisplay != '' && basket.enabled" mdTooltip="Supprimer la redirection" class="fa fa-times text-danger" aria-hidden="true" (click)="delBasketRedirection(i)"></i></sup>
-                                            <div *ngIf="basket.userToDisplay == '' && basket.enabled" id="redirectUser_{{basket.group_id}}_{{basket.basket_id}}" class="form-group typeahead__container" style="display:none;">
-                                                <div class="typeahead__field">
-                                                    <input id="absenceUser_{{basket.group_id}}_{{basket.basket_id}}" type="text" class="form-control" placeholder="{{lang.user}}" autocomplete="off" (change)="addBasketRedirection(i,basket)">
-                                                </div>
+                                            <div *ngIf="basket.userToDisplay == '' && basket.enabled" id="redirectUser_{{basket.group_id}}_{{basket.basket_id}}" style="display:none;">
+                                                <md2-autocomplete
+                                                    [items]="userList"
+                                                    item-text="user_id"
+                                                    item-value="user_id"
+                                                    placeholder="utilisateur de redirection"
+                                                    [(ngModel)]="basket.userToDisplay"
+                                                    required
+                                                    (change)="addBasketRedirection(i,basket)">
+                                                </md2-autocomplete>
                                             </div>
                                         </span>
-
                                     </li>
                                 </ul>
                             </div>
@@ -135,6 +140,9 @@
             </md-tab>
             <md-tab *ngIf="!userCreation" label="Entité(s)">
                 <div class="col-md-6">
+                    <md-input-container>
+                        <input mdInput id="jstree_search" type="text" placeholder="Rechercher une entité">
+                    </md-input-container>
                     <div id="jstree"></div>
                 </div>
                 <div class="col-md-4 col-md-offset-1">

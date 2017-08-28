@@ -112,7 +112,53 @@ class UserController
 
         UserModel::delete(['id' => $aArgs['id']]);
 
-        return $response->withJson(['success' => _DELETED_USER]);
+        //get New User List
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $users = UserModel::get(
+                [
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
+                ]
+            );
+        } else {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities(
+                [
+                'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'entities'  => $entities
+                ]
+            );
+        }
+
+        $usersId = [];
+        foreach ($users as $value) {
+            $usersId[] = $value['user_id'];
+        }
+
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
+        
+        $usersListModels = [];
+        foreach ($listModels as $value) {
+            $usersListModels[] = $value['item_id'];
+        }
+        
+        foreach ($users as $key => $value) {
+            if (in_array($value['user_id'], $usersListModels)) {
+                $users[$key]['inDiffListDest'] = 'Y';
+            } else {
+                $users[$key]['inDiffListDest'] = 'N';
+            }
+        }
+        $users;
+
+
+        return $response->withJson(
+            [
+            'success' => _DELETED_USER,
+            'users' => $users
+            ]
+        );
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
@@ -476,8 +522,7 @@ class UserController
                 $users[$key]['inDiffListDest'] = 'N';
             }
         }
-
-        $return['lang'] = LangModel::getUsersAdministrationLang();
+        
         $return['users'] = $users;
 
         return $response->withJson($return);

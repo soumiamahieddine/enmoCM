@@ -37,7 +37,7 @@ class CoreController
         if (!empty($data['views'])) {
             foreach ($data['views'] as $view) {
                 $aInit[$view . 'View'] = 'Views/' . $view . '.component.html';
-                if(file_exists("custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html")) {
+                if (file_exists("custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html")) {
                     $aInit[$view . 'View'] = "../../custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html";
                 }
             }
@@ -50,6 +50,7 @@ class CoreController
     {
         if ($_SESSION['user']['UserId'] == 'superadmin') { //TODO session
             $administration = [];
+            $administration['menu'] = ServiceModel::getApplicationAdministrationMenuByXML();
             $administration['application'] = ServiceModel::getApplicationAdministrationServicesByXML();
             $administration['modules'] = ServiceModel::getModulesAdministrationServicesByXML();
         } else {

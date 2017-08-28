@@ -27,7 +27,7 @@ class ListModelsController
 
     public function getListModelsDiffListDestByUserId(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $return['listModels'] = ListModelsModel::getDiffListByUserId(['select' => ['object_id','description'], 'itemId' => $aArgs['itemId'],'objectType' => $aArgs['objectType'],'itemMode' => $aArgs['itemMode']]);
+        $return['listModels'] = ListModelsModel::getDiffListByUserId(['select' => ['object_id','title'], 'itemId' => $aArgs['itemId'],'objectType' => $aArgs['objectType'],'itemMode' => $aArgs['itemMode']]);
 
         return $response->withJson($return);
     }

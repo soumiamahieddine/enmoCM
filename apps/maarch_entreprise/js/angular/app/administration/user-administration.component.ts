@@ -1,18 +1,18 @@
-import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare const angularGlobals : any;
 
 
 @Component({
     templateUrl : angularGlobals["user-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css','css/user-administration.component.css','../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.css']
+    styleUrls   : ['css/user-administration.component.css'],
+    providers   : [NotificationService]
 })
 export class UserAdministrationComponent implements OnInit {
 
@@ -32,13 +32,13 @@ export class UserAdministrationComponent implements OnInit {
         label                   : "",
     };
     userAbsenceModel            : any[]     = [];
-
+    userList                    : any[]     = [];
+    
     selectedSignature           : number    = -1;
     selectedSignatureLabel      : string    = "";
     loading                     : boolean   = false;
 
-
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -69,8 +69,8 @@ export class UserAdministrationComponent implements OnInit {
                     .subscribe((data : any) => {
                         this.user = data;
                         this.userId = data.user_id;
-
                         this.loading = false;
+
                         
                     }, () => {
                         location.href = "index.php";
@@ -81,43 +81,51 @@ export class UserAdministrationComponent implements OnInit {
 
     toogleRedirect(basket:any) {
         $j('#redirectUser_'+basket.group_id+'_'+basket.basket_id).toggle();
-        $j('#absenceUser_'+basket.group_id+'_'+basket.basket_id).typeahead({
-            order: "asc",
-            display: "formattedUser",
-            templateValue: "{{user_id}}",
-            source: {
-                ajax: {
-                    type: "GET",
-                    dataType: "json",
-                    url: this.coreUrl + "rest/users/autocompleter",
-                }
-            }
+
+        this.http.get(this.coreUrl + 'rest/administration/users')
+        .subscribe((data : any) => {
+            this.userList = data['users'];
+
+        }, () => {
+            location.href = "index.php";
         });
     }
 
     initService(){
-        $j('#jstree').jstree({ 
-            "checkbox" : {
-                "three_state" : false //no cascade selection
-            },
-            'core' : {
-                'themes': {
-                    'name': 'proton',
-                    'responsive': true
+        if($j('.jstree-container-ul').length == 0){
+            $j('#jstree').jstree({ 
+                "checkbox" : {
+                    "three_state" : false //no cascade selection
                 },
-                'data' : this.user.allEntities
-            },
-            "plugins" : [ "checkbox" ] 
-        });
-        $j('#jstree')
-        // listen for event
-        .on('select_node.jstree', (e:any, data:any) => {
-            this.addEntity(data.node.id);
-        }).on('deselect_node.jstree', (e:any, data:any) => {
-            this.deleteEntity(data.node.id);
-        })
-        // create the instance
-        .jstree();
+                'core' : {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    },
+                    'data' : this.user.allEntities
+                },
+                "plugins" : [ "checkbox", "search" ] 
+            });
+            $j('#jstree')
+            // listen for event
+            .on('select_node.jstree', (e:any, data:any) => {
+                this.addEntity(data.node.id);
+            }).on('deselect_node.jstree', (e:any, data:any) => {
+                console.log(data.node.id);
+                this.deleteEntity(data.node.id);
+            })
+            // create the instance
+            .jstree();
+
+            var to : any = false;
+            $j('#jstree_search').keyup(function () {
+              if(to) { clearTimeout(to); }
+              to = setTimeout(function () {
+                var v = $j('#jstree_search').val();
+                $j('#jstree').jstree(true).search(v);
+              }, 250);
+            });
+        }
     }
 
     processAfterUpload(b64Content: any) {
@@ -135,7 +143,7 @@ export class UserAdministrationComponent implements OnInit {
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
 
-            errorNotification("Taille maximum de fichier dépassée (2 MB)");
+            this.notify.error("Taille maximum de fichier dépassée (2 MB)");
         }
     }
 
@@ -174,9 +182,9 @@ export class UserAdministrationComponent implements OnInit {
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .subscribe((data : any) => {
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
@@ -192,27 +200,27 @@ export class UserAdministrationComponent implements OnInit {
                 this.user.groups = data.groups;
                 this.user.allGroups = data.allGroups;
                 this.user.baskets = data.baskets;
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
         }else{
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
             .subscribe((data : any) => {
                 this.user.groups = data.groups;
                 this.user.allGroups = data.allGroups;
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
         }
     }
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data : any) => {
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -224,9 +232,9 @@ export class UserAdministrationComponent implements OnInit {
                 .subscribe((data : any) => {
                     this.user.groups = data.groups;
                     this.user.allGroups = data.allGroups;
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
@@ -242,10 +250,9 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
-
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
         
     }
@@ -253,9 +260,9 @@ export class UserAdministrationComponent implements OnInit {
     updateEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe((data : any) => {
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -263,9 +270,9 @@ export class UserAdministrationComponent implements OnInit {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .subscribe((data : any) => {
                 this.user['entities'] = data.entities;
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -275,9 +282,9 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
         
     }
@@ -294,9 +301,9 @@ export class UserAdministrationComponent implements OnInit {
                     size                    : 0,
                     label                   : "",
                 };
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -307,9 +314,9 @@ export class UserAdministrationComponent implements OnInit {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, {"label" : label})
             .subscribe((data : any) => {
                 this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -320,9 +327,9 @@ export class UserAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
                 .subscribe((data : any) => {
                     this.user.signatures = data.signatures;
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
@@ -334,7 +341,6 @@ export class UserAdministrationComponent implements OnInit {
         }
         
         if (r || this.user.status == 'ABS') {
-            this.user.baskets[i].userToDisplay = $j('#absenceUser_'+basket.group_id+'_'+basket.basket_id)[0].value;
             this.userAbsenceModel.push({
                 "basketId"      : this.user.baskets[i].basket_id,
                 "basketName"    : this.user.baskets[i].basket_name,
@@ -355,9 +361,9 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel  = [];
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -368,9 +374,9 @@ export class UserAdministrationComponent implements OnInit {
                 for (let i in this.user.baskets) {
                     this.user.baskets[i].userToDisplay = '';
                 }
-                successNotification(data.success);
+                this.notify.success(data.success);
             }, (err) => {
-                    errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -378,17 +384,17 @@ export class UserAdministrationComponent implements OnInit {
         if (this.userCreation) {
             this.http.post(this.coreUrl + "rest/users", this.user)
                 .subscribe((data : any) => {
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                     this.router.navigate(["/administration/users/" + data.user.id]);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe((data : any) => {
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

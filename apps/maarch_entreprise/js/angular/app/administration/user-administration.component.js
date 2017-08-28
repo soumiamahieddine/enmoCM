@@ -13,15 +13,15 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
-var material_1 = require("@angular/material");
+var notification_service_1 = require("../notification.service");
 var UserAdministrationComponent = (function () {
-    function UserAdministrationComponent(http, route, router, zone, snackBar) {
+    function UserAdministrationComponent(http, route, router, zone, notify) {
         var _this = this;
         this.http = http;
         this.route = route;
         this.router = router;
         this.zone = zone;
-        this.snackBar = snackBar;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.user = {};
         this.signatureModel = {
@@ -33,6 +33,7 @@ var UserAdministrationComponent = (function () {
             label: "",
         };
         this.userAbsenceModel = [];
+        this.userList = [];
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
         this.loading = false;
@@ -71,42 +72,50 @@ var UserAdministrationComponent = (function () {
         });
     };
     UserAdministrationComponent.prototype.toogleRedirect = function (basket) {
+        var _this = this;
         $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
-        $j('#absenceUser_' + basket.group_id + '_' + basket.basket_id).typeahead({
-            order: "asc",
-            display: "formattedUser",
-            templateValue: "{{user_id}}",
-            source: {
-                ajax: {
-                    type: "GET",
-                    dataType: "json",
-                    url: this.coreUrl + "rest/users/autocompleter",
-                }
-            }
+        this.http.get(this.coreUrl + 'rest/administration/users')
+            .subscribe(function (data) {
+            _this.userList = data['users'];
+        }, function () {
+            location.href = "index.php";
         });
     };
     UserAdministrationComponent.prototype.initService = function () {
         var _this = this;
-        $j('#jstree').jstree({
-            "checkbox": {
-                "three_state": false //no cascade selection
-            },
-            'core': {
-                'themes': {
-                    'name': 'proton',
-                    'responsive': true
+        if ($j('.jstree-container-ul').length == 0) {
+            $j('#jstree').jstree({
+                "checkbox": {
+                    "three_state": false //no cascade selection
                 },
-                'data': this.user.allEntities
-            },
-            "plugins": ["checkbox"]
-        });
-        $j('#jstree')
-            .on('select_node.jstree', function (e, data) {
-            _this.addEntity(data.node.id);
-        }).on('deselect_node.jstree', function (e, data) {
-            _this.deleteEntity(data.node.id);
-        })
-            .jstree();
+                'core': {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    },
+                    'data': this.user.allEntities
+                },
+                "plugins": ["checkbox", "search"]
+            });
+            $j('#jstree')
+                .on('select_node.jstree', function (e, data) {
+                _this.addEntity(data.node.id);
+            }).on('deselect_node.jstree', function (e, data) {
+                console.log(data.node.id);
+                _this.deleteEntity(data.node.id);
+            })
+                .jstree();
+            var to = false;
+            $j('#jstree_search').keyup(function () {
+                if (to) {
+                    clearTimeout(to);
+                }
+                to = setTimeout(function () {
+                    var v = $j('#jstree_search').val();
+                    $j('#jstree').jstree(true).search(v);
+                }, 250);
+            });
+        }
     };
     UserAdministrationComponent.prototype.processAfterUpload = function (b64Content) {
         var _this = this;
@@ -123,7 +132,7 @@ var UserAdministrationComponent = (function () {
             this.signatureModel.type = "";
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
-            errorNotification("Taille maximum de fichier dépassée (2 MB)");
+            this.notify.error("Taille maximum de fichier dépassée (2 MB)");
         }
     };
     UserAdministrationComponent.prototype.clickOnUploader = function (id) {
@@ -151,13 +160,14 @@ var UserAdministrationComponent = (function () {
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     };
     UserAdministrationComponent.prototype.resetPassword = function () {
+        var _this = this;
         var r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .subscribe(function (data) {
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -173,9 +183,9 @@ var UserAdministrationComponent = (function () {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
                 _this.user.baskets = data.baskets;
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
@@ -183,18 +193,19 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
     UserAdministrationComponent.prototype.updateGroup = function (group) {
+        var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe(function (data) {
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.deleteGroup = function (group) {
@@ -205,9 +216,9 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -221,17 +232,18 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.updateEntity = function (entity) {
+        var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe(function (data) {
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.updatePrimaryEntity = function (entity) {
@@ -239,9 +251,9 @@ var UserAdministrationComponent = (function () {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .subscribe(function (data) {
             _this.user['entities'] = data.entities;
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.deleteEntity = function (entityId) {
@@ -250,9 +262,9 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.submitSignature = function () {
@@ -268,9 +280,9 @@ var UserAdministrationComponent = (function () {
                 size: 0,
                 label: "",
             };
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.updateSignature = function (selectedSignature) {
@@ -280,9 +292,9 @@ var UserAdministrationComponent = (function () {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe(function (data) {
             _this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.deleteSignature = function (id) {
@@ -292,9 +304,9 @@ var UserAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -304,7 +316,6 @@ var UserAdministrationComponent = (function () {
             r = confirm('Cela activera automatiquement le mode absent, continuer ?');
         }
         if (r || this.user.status == 'ABS') {
-            this.user.baskets[i].userToDisplay = $j('#absenceUser_' + basket.group_id + '_' + basket.basket_id)[0].value;
             this.userAbsenceModel.push({
                 "basketId": this.user.baskets[i].basket_id,
                 "basketName": this.user.baskets[i].basket_name,
@@ -324,9 +335,9 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.desactivateAbsence = function () {
@@ -337,9 +348,9 @@ var UserAdministrationComponent = (function () {
             for (var i in _this.user.baskets) {
                 _this.user.baskets[i].userToDisplay = '';
             }
-            successNotification(data.success);
+            _this.notify.success(data.success);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.onSubmit = function () {
@@ -347,21 +358,18 @@ var UserAdministrationComponent = (function () {
         if (this.userCreation) {
             this.http.post(this.coreUrl + "rest/users", this.user)
                 .subscribe(function (data) {
-                successNotification(data.success);
+                _this.notify.success(data.success);
                 _this.router.navigate(["/administration/users/" + data.user.id]);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe(function (data) {
-                /*this.snackBar.open(data.success, 'Undo', {
-                    duration: 2000,
-                  });*/
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -370,8 +378,9 @@ var UserAdministrationComponent = (function () {
 UserAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["user-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/user-administration.component.css', '../../node_modules/jstree-bootstrap-theme/dist/themes/proton/style.css']
+        styleUrls: ['css/user-administration.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, material_1.MdSnackBar])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, notification_service_1.NotificationService])
 ], UserAdministrationComponent);
 exports.UserAdministrationComponent = UserAdministrationComponent;
