@@ -1,44 +1,42 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.actions}} <small>{{data.length}} {{lang.actions}}</small></h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-exchange fa-2x"></i> {{lang.admin}} {{lang.actions}} : {{actions.length}} {{lang.actions}}</h1>
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/actions/new">
-                        <a data-toggle="modal" data-target="#manageSign" title="{{lang.new_action}}"><i class="fa fa-exchange"></i><sup><i class="fa fa-plus"></i></sup></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
     <div class="col-md-12">
-        <table id ="actionsTable" class="display" style="display:none;">
+        <table id ="actionsTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'label_action' : search" #md2="md2DataTable" [sortBy]='id' [rowsPerPage]="10">
             <thead>
             <tr>
-                <th style="width:5%;"><span>{{lang.id}}</span></th>
-                <th style="width:45%;"><span>{{lang.desc}}</span></th>
-                <th style="width:15%;"><span>{{lang.action_history}}</span></th>
-                <th style="width:15%;"><span>{{lang.isFolderAction}}</span></th>
+                <td colspan="4">
+                    <md2-pagination></md2-pagination>
+                </td>
+                <td style="text-align:right;">
+                    <md-input-container>
+                            <input mdInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="md2-input" [(ngModel)]="search" />
+                    </md-input-container>
+                    &nbsp;
+                    <a class="text-primary" style="cursor: pointer" routerLink="/administration/actions/new" title="{{lang.new_action}}"><i class="fa fa-exchange fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
+                </td>
+            </tr>
+            <tr>
+                <th style="width:5%;"  md2SortBy="id"><span>{{lang.id}}</span></th>
+                <th style="width:45%;" md2SortBy="label_action"><span>{{lang.desc}}</span></th>
+                <th style="width:15%;" md2SortBy="history"><span>{{lang.actionHistory}}</span></th>
+                <th style="width:15%;" md2SortBy="is_folder_action"><span>{{lang.isFolderAction}}</span></th>
                 <th style="width:30%;"><span>&nbsp;</span></th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let action of actions" id="{{action.id}}">
-                <td style="width:5%;"> {{action.id}} </td>
-                <td style="width:45%;"> {{action.label_action}} </td>
-                <td style="width:15%;" *ngIf="action.history == 'N'"> {{lang.no}} </td>
-                <td style="width:15%;" *ngIf="action.history == 'Y'"> {{lang.yes}}  </td>
-                <td style="width:15%;" *ngIf="action.is_folder_action == 'Y'"> {{lang.yes}}  </td>
-                <td style="width:15%;" *ngIf="action.is_folder_action == 'N'"> {{lang.no}}  </td>
-                <td style="width:30%;" style="text-align:right;">
+            <tr *ngFor="let action of md2.data">
+                <td style="width:5%;vertical-align:middle;"> {{action.id}} </td>
+                <td style="width:45%;vertical-align:middle;"> {{action.label_action}} </td>
+                <td style="width:15%;vertical-align:middle;" *ngIf="action.history == 'N'"> {{lang.no}} </td>
+                <td style="width:15%;vertical-align:middle;" *ngIf="action.history == 'Y'"> {{lang.yes}}  </td>
+                <td style="width:15%;vertical-align:middle;" *ngIf="action.is_folder_action == 'Y'"> {{lang.yes}}  </td>
+                <td style="width:15%;vertical-align:middle;" *ngIf="action.is_folder_action == 'N'"> {{lang.no}}  </td>
+                <td style="width:30%;vertical-align:middle;" style="text-align:right;">
                     <div class="btn-group" role="group" aria-label="...">
                         <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
                             <a><i style="cursor:pointer" class="fa fa-edit"></i></a>

@@ -12,14 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var ActionsAdministrationComponent = (function () {
-    function ActionsAdministrationComponent(http) {
+    function ActionsAdministrationComponent(http, notify) {
         this.http = http;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
+        this.search = null;
         this.actions = [];
         this.titles = [];
-        this.resultInfo = "";
         this.loading = false;
+        this.data = [];
     }
     ActionsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -35,41 +38,12 @@ var ActionsAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/actions')
             .subscribe(function (data) {
             _this.actions = data['actions'];
+            _this.data = _this.actions;
             _this.titles = data['titles'];
-            setTimeout(function () {
-                _this.table = $j('#actionsTable').DataTable({
-                    "dom": '<"datatablesLeft"l><"datatablesRight"f><"datatablesCenter"p>rt<"datatablesCenter"i><"clear">',
-                    "lengthMenu": [10, 25, 50, 75, 100],
-                    "oLanguage": {
-                        "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                        "sZeroRecords": _this.lang.noResult,
-                        "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
-                        "sSearch": "",
-                        "oPaginate": {
-                            "sFirst": "<<",
-                            "sLast": ">>",
-                            "sNext": _this.lang.next + " <i class='fa fa-caret-right'></i>",
-                            "sPrevious": "<i class='fa fa-caret-left'></i> " + _this.lang.previous
-                        },
-                        "sInfoEmpty": _this.lang.noRecord,
-                        "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                    },
-                    "order": [[1, "asc"]],
-                    "columnDefs": [
-                        { "orderable": false, "targets": 4 }
-                    ],
-                    "fnInitComplete": function () {
-                        $j('#actionsTable').show();
-                    },
-                    stateSave: true
-                });
-                $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
-                $j('dataTables_filter input').addClass('form-control');
-                $j(".datatablesLeft").css({ "float": "left" });
-                $j(".datatablesCenter").css({ "text-align": "center" });
-                $j(".datatablesRight").css({ "float": "right" });
-            }, 0);
             _this.loading = false;
+            setTimeout(function () {
+                $j("[md2sortby='id']").click();
+            }, 0);
         }, function (err) {
             console.log(err);
             location.href = "index.php";
@@ -81,16 +55,10 @@ var ActionsAdministrationComponent = (function () {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + id)
                 .subscribe(function (data) {
-                var list = _this.actions;
-                for (var i = 0; i < list.length; i++) {
-                    if (list[i].id == id) {
-                        list.splice(i, 1);
-                    }
-                }
-                _this.table.row($j("#" + id)).remove().draw();
-                successNotification(data.success);
+                _this.data = data.action;
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -99,8 +67,9 @@ var ActionsAdministrationComponent = (function () {
 ActionsAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["actions-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: [],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
+    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
 ], ActionsAdministrationComponent);
 exports.ActionsAdministrationComponent = ActionsAdministrationComponent;

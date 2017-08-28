@@ -12,16 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
+var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var ActionAdministrationComponent = (function () {
-    function ActionAdministrationComponent(http, route, router) {
+    function ActionAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
-        this.mode = null;
+        this.notify = notify;
+        this.lang = translate_component_1.LANG;
+        this._search = '';
         this.action = {};
         this.statusList = [];
         this.actionPagesList = [];
-        this.lang = {};
         this.categoriesList = [];
         this.keywordsList = [];
         this.loading = false;
@@ -42,27 +45,21 @@ var ActionAdministrationComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
-                _this.mode = 'create';
+                _this.actionCreation = true;
                 _this.http.get(_this.coreUrl + 'rest/initAction')
                     .subscribe(function (data) {
                     _this.action = data.action;
-                    _this.lang = data.lang;
-                    _this.lang.pageTitle = _this.lang.add + ' ' + _this.lang.action;
                     _this.categoriesList = data.categoriesList;
                     _this.statusList = data.statusList;
                     _this.actionPagesList = data.action_pagesList;
                     _this.keywordsList = data.keywordsList;
                     _this.loading = false;
-                    setTimeout(function () {
-                        $j("select").chosen({ width: "100%", disable_search_threshold: 10, search_contains: true });
-                    }, 0);
                 });
             }
             else {
-                _this.mode = 'update';
+                _this.actionCreation = false;
                 _this.http.get(_this.coreUrl + 'rest/administration/actions/' + params['id'])
                     .subscribe(function (data) {
-                    _this.lang = data.lang;
                     _this.action = data.action;
                     _this.lang.pageTitle = _this.lang.modify_action + ' : ' + _this.action.id;
                     _this.categoriesList = data.categoriesList;
@@ -70,56 +67,42 @@ var ActionAdministrationComponent = (function () {
                     _this.actionPagesList = data.action_pagesList;
                     _this.keywordsList = data.keywordsList;
                     _this.loading = false;
-                    setTimeout(function () {
-                        $j("select").chosen({ width: "100%", disable_search_threshold: 10, search_contains: true });
-                    }, 0);
                 });
             }
         });
     };
+    ActionAdministrationComponent.prototype.clearSearch = function () {
+        this._search = '';
+    };
     ActionAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        //affect value of select
-        this.action.actionCategories = $j("#categorieslist").chosen().val();
-        this.action.id_status = $j("#status").chosen().val();
-        this.action.keyword = $j("#keyword").chosen().val();
-        this.action.action_page = $j("#action_page").chosen().val();
-        if (this.mode == 'create') {
+        if (this.actionCreation) {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
-        else if (this.mode == 'update') {
+        else {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
-    };
-    ActionAdministrationComponent.prototype.selectAll = function (event) {
-        var target = event.target.getAttribute("data-target");
-        $j('#' + target + ' option').prop('selected', true);
-        $j('#' + target).trigger('chosen:updated');
-    };
-    ActionAdministrationComponent.prototype.unselectAll = function (event) {
-        var target = event.target.getAttribute("data-target");
-        $j('#' + target + ' option').prop('selected', false);
-        $j('#' + target).trigger('chosen:updated');
     };
     return ActionAdministrationComponent;
 }());
 ActionAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["action-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/action-administration.component.css']
+        styleUrls: ['css/action-administration.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
 ], ActionAdministrationComponent);
 exports.ActionAdministrationComponent = ActionAdministrationComponent;
