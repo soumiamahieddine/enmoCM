@@ -14,17 +14,38 @@ var http_1 = require("@angular/common/http");
 var HeaderComponent = (function () {
     function HeaderComponent(http) {
         this.http = http;
-        this.lang = {};
-        this.resultInfo = "";
-        this.loading = false;
+        this.applicationName = "";
+        this.adminList = [];
+        this.adminListModule = [];
+        this.menuList = [];
+        this.profilList = [];
+        this.notifList = [];
     }
     HeaderComponent.prototype.prepareHeader = function () {
-        $j('#header').remove();
+        $j('#maarch_content').remove();
     };
     HeaderComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.prepareHeader();
         this.coreUrl = angularGlobals.coreUrl;
-        this.loading = true;
+        this.http.get(this.coreUrl + 'rest/administration')
+            .subscribe(function (data) {
+            _this.menuList = data.menu.menuList;
+            _this.applicationName = data.menu.applicationName[0];
+            _this.adminList = data.application;
+            _this.adminListModule = data.modules;
+        });
+        this.profilList = [
+            {
+                label: 'Mon profil',
+                link: '/profile',
+                style: 'fa-user'
+            },
+            { label: 'Déconnexion',
+                link: '/logout',
+                style: 'fa-sign-out'
+            }
+        ];
     };
     return HeaderComponent;
 }());
@@ -34,7 +55,6 @@ HeaderComponent = __decorate([
         templateUrl: angularGlobals["headerView"],
         styleUrls: [
             'css/header.component.css',
-            '../../node_modules/bootstrap/dist/css/bootstrap.min.css' //load bootstrap css
         ]
     }),
     __metadata("design:paramtypes", [http_1.HttpClient])
