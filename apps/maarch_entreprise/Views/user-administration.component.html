@@ -1,6 +1,6 @@
 <div class="page-header">
-    <h1 *ngIf="!userCreation">{{lang.userModification}} <small>{{user.lastname}} {{user.firstname}}</small></h1>
-    <h1 *ngIf="userCreation">{{lang.userCreation}} <small>{{user.lastname}} {{user.firstname}}</small></h1>
+    <h1 *ngIf="!creationMode">{{lang.userModification}} <small>{{user.lastname}} {{user.firstname}}</small></h1>
+    <h1 *ngIf="creationMode">{{lang.userCreation}} <small>{{user.lastname}} {{user.firstname}}</small></h1>
 </div>
 <div *ngIf="loading">
     <md-spinner style="margin:auto;"></md-spinner>
@@ -21,10 +21,10 @@
                                     <div class="input-group">
                                         <!--<span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>-->
                                         <md-input-container>
-                                            <input mdInput *ngIf="userCreation" type="text" title="{{lang.id}}" name="user_id" [(ngModel)]="user.userId" placeholder="{{lang.id}}"
+                                            <input mdInput *ngIf="creationMode" type="text" title="{{lang.id}}" name="user_id" [(ngModel)]="user.userId" placeholder="{{lang.id}}"
                                                 pattern="^[\w.@-]*$" required>
 
-                                            <input mdInput *ngIf="!userCreation" type="text" title="{{lang.id}}" value="{{user.user_id}}" placeholder="{{lang.id}}" disabled>
+                                            <input mdInput *ngIf="!creationMode" type="text" title="{{lang.id}}" value="{{user.user_id}}" placeholder="{{lang.id}}" disabled>
                                         </md-input-container>
                                     </div>
                                 </div>
@@ -74,18 +74,18 @@
                             </div>
                             <div class="form-group">
                                 <div style="text-align:center;">
-                                    <button *ngIf="userCreation" type="submit" class="btn btn-success" [disabled]="!profileForm.form.valid"><i class="fa fa-plus"></i> {{lang.save}}</button>
-                                    <button *ngIf="!userCreation" type="submit" class="btn btn-success" [disabled]="!profileForm.form.valid"><i class="fa fa-save"></i> {{lang.update}}</button>
-                                    <button *ngIf="user.status != 'ABS' && !userCreation" type="button" (click)="activateAbsence()" class="btn btn-warning"><i class="fa fa-plane"></i> {{lang.activateAbsence}}</button>
-                                    <button *ngIf="user.status == 'ABS' && !userCreation" type="button" (click)="desactivateAbsence()" class="btn btn-success"><i class="fa fa-check"></i> {{lang.desactivateAbsence}}</button>
-                                    <button type="button" *ngIf="!userCreation" (click)="resetPassword()" class="btn btn-default"><i class="fa fa-key"></i> {{lang.reinitPassword}}</button>
+                                    <button *ngIf="creationMode" type="submit" class="btn btn-success" [disabled]="!profileForm.form.valid"><i class="fa fa-plus"></i> {{lang.save}}</button>
+                                    <button *ngIf="!creationMode" type="submit" class="btn btn-success" [disabled]="!profileForm.form.valid"><i class="fa fa-save"></i> {{lang.update}}</button>
+                                    <button *ngIf="user.status != 'ABS' && !creationMode" type="button" (click)="activateAbsence()" class="btn btn-warning"><i class="fa fa-plane"></i> {{lang.activateAbsence}}</button>
+                                    <button *ngIf="user.status == 'ABS' && !creationMode" type="button" (click)="desactivateAbsence()" class="btn btn-success"><i class="fa fa-check"></i> {{lang.desactivateAbsence}}</button>
+                                    <button type="button" *ngIf="!creationMode" (click)="resetPassword(user)" class="btn btn-default"><i class="fa fa-key"></i> {{lang.reinitPassword}}</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </md-tab>
-            <md-tab *ngIf="!userCreation" label="Groupe(s)">
+            <md-tab *ngIf="!creationMode" label="Groupe(s)">
                 <div class="col-md-6">
                     <div class="groupList">
                         <ul class="list-group col-md-12">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </md-tab>
-            <md-tab *ngIf="!userCreation" label="Entité(s)">
+            <md-tab *ngIf="!creationMode" label="Entité(s)">
                 <div class="col-md-6">
                     <md-input-container>
                         <input mdInput id="jstree_search" type="text" placeholder="Rechercher une entité">
@@ -160,7 +160,7 @@
                     </div>
                 </div>
             </md-tab>
-            <md-tab *ngIf="!userCreation" label="Signature(s)">
+            <md-tab *ngIf="!creationMode" label="Signature(s)">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="form-group">
                         <button (click)="clickOnUploader('uploadSignFile')" mdTooltip="taille de 2 mo maximum" class="form-control btn btn-sm btn-success"
@@ -205,7 +205,7 @@
                                                         (focusout)="updateSignature(i)">
                                                 </md-input-container>
                                             </md-card-title>
-                                            <i class="fa fa-times text-danger" style="cursor:pointer;" (click)="deleteSignature(signature.id)"></i>
+                                            <i class="fa fa-times text-danger" style="cursor:pointer;" (click)="deleteSignature(signature)"></i>
                                         </md-card-header>
 
 

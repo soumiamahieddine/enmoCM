@@ -12,7 +12,8 @@ import {
     MdButtonToggleModule,
     MdProgressSpinnerModule,
     MdToolbarModule,
-    MdMenuModule
+    MdMenuModule,
+    MdGridListModule
 } from '@angular/material';
 
 
@@ -30,7 +31,8 @@ import {
         MdButtonToggleModule,
         MdProgressSpinnerModule,
         MdToolbarModule,
-        MdMenuModule
+        MdMenuModule,
+        MdGridListModule
     ],
     exports: [
         MdCheckboxModule,
@@ -45,7 +47,8 @@ import {
         MdButtonToggleModule,
         MdProgressSpinnerModule,
         MdToolbarModule,
-        MdMenuModule
+        MdMenuModule,
+        MdGridListModule
     ]
 })
 export class AppMaterialModule { }

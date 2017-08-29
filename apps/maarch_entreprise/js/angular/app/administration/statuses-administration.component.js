@@ -11,11 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
+var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var StatusesAdministrationComponent = (function () {
-    function StatusesAdministrationComponent(http) {
+    function StatusesAdministrationComponent(http, notify) {
         this.http = http;
-        this.lang = "";
-        this.resultInfo = "";
+        this.notify = notify;
+        this.lang = translate_component_1.LANG;
+        this.data = [];
         this.loading = false;
     }
     StatusesAdministrationComponent.prototype.ngOnInit = function () {
@@ -26,42 +29,14 @@ var StatusesAdministrationComponent = (function () {
         this.http.get(this.coreUrl + 'rest/administration/status')
             .subscribe(function (data) {
             _this.statusList = data.statusList;
-            _this.lang = data.lang;
-            _this.nbStatus = Object.keys(_this.statusList).length;
+            _this.data = _this.statusList;
             setTimeout(function () {
-                _this.table = $j('#statusTable').DataTable({
-                    "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
-                    "lengthMenu": [10, 25, 50, 75, 100],
-                    "oLanguage": {
-                        "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                        "sZeroRecords": _this.lang.noResult,
-                        "sInfo": "_START_ - _END_ / _TOTAL_ " + _this.lang.record,
-                        "sSearch": "",
-                        "oPaginate": {
-                            "sFirst": "<<",
-                            "sLast": ">>",
-                            "sNext": _this.lang.next + " <i class='fa fa-caret-right'></i>",
-                            "sPrevious": "<i class='fa fa-caret-left'></i> " + _this.lang.previous
-                        },
-                        "sInfoEmpty": _this.lang.noRecord,
-                        "sInfoFiltered": "(filtré de _MAX_ " + _this.lang.record + ")"
-                    },
-                    "order": [[2, "asc"]],
-                    "columnDefs": [
-                        { "orderable": false, "targets": [0, 3] }
-                    ],
-                    "stateSave": true
-                });
-                $j('.dataTables_filter input').attr("placeholder", _this.lang.search);
-                $j('dataTables_filter input').addClass('form-control');
-                $j(".datatablesLeft").css({ "float": "left" });
-                $j(".datatablesCenter").css({ "text-align": "center" });
-                $j(".datatablesRight").css({ "float": "right" });
+                $j("[md2sortby='label_status']").click();
             }, 0);
             _this.updateBreadcrumb(angularGlobals.applicationName);
             _this.loading = false;
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            _this.notify.error(JSON.parse(err._body).errors);
         });
     };
     StatusesAdministrationComponent.prototype.prepareStatus = function () {
@@ -69,25 +44,18 @@ var StatusesAdministrationComponent = (function () {
     };
     StatusesAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " + this.lang.admin_status;
+            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.statuses;
     };
-    StatusesAdministrationComponent.prototype.deleteStatus = function (statusId, statusIdentifier) {
+    StatusesAdministrationComponent.prototype.deleteStatus = function (status) {
         var _this = this;
-        var resp = confirm(this.lang.deleteConfirm + ' ' + statusId + '?');
+        var resp = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + status.id + ' »');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/status/' + statusIdentifier)
-                .subscribe(function () {
-                var list = _this.statusList;
-                for (var i = 0; i < list.length; i++) {
-                    if (list[i].id == statusId) {
-                        list.splice(i, 1);
-                    }
-                }
-                _this.table.row($j("#" + statusId)).remove().draw();
-                successNotification(_this.lang.delStatus + " : " + statusId);
-                _this.nbStatus = Object.keys(_this.statusList).length;
+            this.http.delete(this.coreUrl + 'rest/status/' + status.identifier)
+                .subscribe(function (data) {
+                _this.data = data.statuses;
+                _this.notify.success(_this.lang.statusDeleted + ' « ' + status.id + ' »');
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -96,8 +64,9 @@ var StatusesAdministrationComponent = (function () {
 StatusesAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals['statuses-administrationView'],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: [],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
+    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
 ], StatusesAdministrationComponent);
 exports.StatusesAdministrationComponent = StatusesAdministrationComponent;

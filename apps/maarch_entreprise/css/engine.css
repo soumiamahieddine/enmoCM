@@ -1,3 +1,38 @@
+/******* CORECTION BUG CSS WITH V1 (A SUPPRIMER A LA FIN) *********/
+.page-header h1{
+    margin-top: 10px !important;
+}
+
+#menu{
+    margin-top: 35px !important;
+}
+#menunav{
+    font-size: 90% !important;
+}
+#menu span{
+    background-size: 45% !important;
+}
+
+#gauchemenu{
+    top: 28px !important;
+    height: 38px !important;
+}
+#logo{
+    height: 66px !important;
+}
+#menunav{
+    width: 264px !important;
+}
+#ariane{
+    top: -5px !important;
+    font-size: 0.8em !important;
+}
+.footer_menu{
+    font-size: 0.7em !important;
+    height: 18px !important;
+}
+/************************************************************/
+
 .page-header{
     margin-top: 0px;
 }
@@ -11,7 +46,7 @@
 }
 .md2-toast {
     display: table;
-    /*background-color: #3f51b5 !important;*/
+    background-color: #337ab7 !important;
     vertical-align: middle;
     /*background-color: rgba(63, 81, 181, 0.6) !important;*/
     /*background-color: rgba(0, 0, 0, 0.6) !important;*/

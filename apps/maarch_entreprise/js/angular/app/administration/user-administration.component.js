@@ -23,6 +23,7 @@ var UserAdministrationComponent = (function () {
         this.zone = zone;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
+        this._search = '';
         this.user = {};
         this.signatureModel = {
             base64: "",
@@ -42,28 +43,34 @@ var UserAdministrationComponent = (function () {
         };
     }
     UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>Utilisateurs</a>";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>" + this.lang.users + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.userCreation;
         }
+        else {
+            breadCrumb += this.lang.userModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     UserAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         //$j('#header').remove();
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
-                _this.userCreation = true;
+                _this.creationMode = true;
                 _this.loading = false;
+                _this.updateBreadcrumb(angularGlobals.applicationName);
             }
             else {
-                _this.userCreation = false;
+                _this.creationMode = false;
                 _this.serialId = params['id'];
                 _this.http.get(_this.coreUrl + "rest/users/" + _this.serialId + "/details")
                     .subscribe(function (data) {
                     _this.user = data;
                     _this.userId = data.user_id;
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -159,13 +166,13 @@ var UserAdministrationComponent = (function () {
         this.selectedSignature = index;
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     };
-    UserAdministrationComponent.prototype.resetPassword = function () {
+    UserAdministrationComponent.prototype.resetPassword = function (user) {
         var _this = this;
-        var r = confirm('Voulez-vous vraiment réinitialiser le mot de passe de l\'utilisateur ?');
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.resetPsw);
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .subscribe(function (data) {
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.pswReseted + ' ' + _this.lang.for + ' « ' + user.user_id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -183,7 +190,7 @@ var UserAdministrationComponent = (function () {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
                 _this.user.baskets = data.baskets;
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.groupAdded + ' « ' + group.group_id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -193,7 +200,7 @@ var UserAdministrationComponent = (function () {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.groupDeleted + ' « ' + group.group_id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -203,24 +210,10 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe(function (data) {
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.groupUpdated + ' « ' + group.group_id + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
-    };
-    UserAdministrationComponent.prototype.deleteGroup = function (group) {
-        var _this = this;
-        var r = confirm('Voulez-vous vraiment retirer l\'utilisateur de ce groupe ?');
-        if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
-                .subscribe(function (data) {
-                _this.user.groups = data.groups;
-                _this.user.allGroups = data.allGroups;
-                _this.notify.success(data.success);
-            }, function (err) {
-                _this.notify.error(err.error.errors);
-            });
-        }
     };
     UserAdministrationComponent.prototype.addEntity = function (entiyId) {
         var _this = this;
@@ -232,7 +225,7 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.entityAdded + ' « ' + entiyId + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -241,7 +234,7 @@ var UserAdministrationComponent = (function () {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe(function (data) {
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.entityUpdated + ' « ' + entity.entity_id + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -251,7 +244,7 @@ var UserAdministrationComponent = (function () {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id + "/primaryEntity", {})
             .subscribe(function (data) {
             _this.user['entities'] = data.entities;
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.entityTooglePrimary + ' « ' + entity.entity_id + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -262,7 +255,7 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.entityDeleted + ' « ' + entityId + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -272,6 +265,7 @@ var UserAdministrationComponent = (function () {
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
+            _this.notify.success(_this.lang.signAdded + ' « ' + _this.signatureModel.name + ' »');
             _this.signatureModel = {
                 base64: "",
                 base64ForJs: "",
@@ -280,7 +274,6 @@ var UserAdministrationComponent = (function () {
                 size: 0,
                 label: "",
             };
-            _this.notify.success(data.success);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -292,19 +285,19 @@ var UserAdministrationComponent = (function () {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe(function (data) {
             _this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.signUpdated + ' « ' + data.signature.signature_label + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
     };
-    UserAdministrationComponent.prototype.deleteSignature = function (id) {
+    UserAdministrationComponent.prototype.deleteSignature = function (signature) {
         var _this = this;
-        var r = confirm('Voulez-vous vraiment supprimer la signature ?');
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + signature.signature_label + ' »');
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id)
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + signature.id)
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.signDeleted + ' « ' + signature.signature_label + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -313,7 +306,7 @@ var UserAdministrationComponent = (function () {
     UserAdministrationComponent.prototype.addBasketRedirection = function (i, basket) {
         var r = false;
         if (this.user.status != 'ABS') {
-            r = confirm('Cela activera automatiquement le mode absent, continuer ?');
+            var r_1 = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
         }
         if (r || this.user.status == 'ABS') {
             this.userAbsenceModel.push({
@@ -335,7 +328,7 @@ var UserAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.absOn + ' ' + _this.lang.for + ' « ' + _this.user.user_id + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -348,17 +341,17 @@ var UserAdministrationComponent = (function () {
             for (var i in _this.user.baskets) {
                 _this.user.baskets[i].userToDisplay = '';
             }
-            _this.notify.success(data.success);
+            _this.notify.success(_this.lang.absOff + ' ' + _this.lang.for + ' « ' + _this.user.user_id + ' »');
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
     };
     UserAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        if (this.userCreation) {
+        if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/users", this.user)
                 .subscribe(function (data) {
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.userAdded + ' « ' + data.user.user_id + ' »');
                 _this.router.navigate(["/administration/users/" + data.user.id]);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -367,7 +360,7 @@ var UserAdministrationComponent = (function () {
         else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe(function (data) {
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.userUpdated + ' « ' + _this.user.user_id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });

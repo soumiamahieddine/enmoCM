@@ -45,7 +45,7 @@ var UsersAdministrationComponent = (function () {
     }
     UsersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Utilisateurs";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.users;
         }
     };
     UsersAdministrationComponent.prototype.ngOnInit = function () {
@@ -79,12 +79,12 @@ var UsersAdministrationComponent = (function () {
             });
         }
         else {
-            var r = confirm(this.lang.suspendMsg + " ?");
+            var r = confirm(this.lang.confirmAction + ' ' + this.lang.suspend + ' « ' + user.user_id + ' »');
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function (data) {
-                    _this.notify.success(data.success);
+                    _this.notify.success(_this.lang.userSuspended + ' « ' + user.user_id + ' »');
                 }, function (err) {
                     user.enabled = 'Y';
                     _this.notify.error(JSON.parse(err._body).errors);
@@ -94,7 +94,7 @@ var UsersAdministrationComponent = (function () {
     };
     UsersAdministrationComponent.prototype.suspendUserModal = function (user) {
         var _this = this;
-        var r = confirm(this.lang.suspendMsg + " ?");
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.suspend + ' « ' + user.user_id + ' »');
         if (r) {
             user.enabled = 'N';
             user.redirectListModels = this.userDestRedirectModels;
@@ -111,7 +111,7 @@ var UsersAdministrationComponent = (function () {
                         .subscribe(function (data) {
                         user.inDiffListDest = 'N';
                         $j('#changeDiffListDest').modal('hide');
-                        _this.notify.success(data.success);
+                        _this.notify.success(_this.lang.userSuspended + ' « ' + user.user_id + ' »');
                     }, function (err) {
                         user.enabled = 'Y';
                         _this.notify.error(JSON.parse(err._body).errors);
@@ -124,12 +124,12 @@ var UsersAdministrationComponent = (function () {
     };
     UsersAdministrationComponent.prototype.activateUser = function (user) {
         var _this = this;
-        var r = confirm(this.lang.authorizeMsg + " ?");
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.authorize + ' « ' + user.user_id + ' »');
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(function (data) {
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.userAuthorized + ' « ' + user.user_id + ' »');
             }, function (err) {
                 user.enabled = 'N';
                 _this.notify.error(JSON.parse(err._body).errors);
@@ -149,12 +149,12 @@ var UsersAdministrationComponent = (function () {
             });
         }
         else {
-            var r = confirm(this.lang.deleteMsg + " ?");
+            var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + user.user_id + ' »');
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function (data) {
                     _this.data = data.users;
-                    _this.notify.success(data.success);
+                    _this.notify.success(_this.lang.userDeleted + ' « ' + user.user_id + ' »');
                 }, function (err) {
                     _this.notify.error(JSON.parse(err._body).errors);
                 });
@@ -163,7 +163,7 @@ var UsersAdministrationComponent = (function () {
     };
     UsersAdministrationComponent.prototype.deleteUserModal = function (user) {
         var _this = this;
-        var r = confirm(this.lang.deleteMsg + " ?");
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + user.user_id + ' »');
         if (r) {
             user.redirectListModels = this.userDestRedirectModels;
             //first, update listModels
@@ -179,7 +179,7 @@ var UsersAdministrationComponent = (function () {
                         user.inDiffListDest = 'N';
                         _this.data = data.users;
                         $j('#changeDiffListDest').modal('hide');
-                        _this.notify.success(data.success);
+                        _this.notify.success(_this.lang.userDeleted + ' « ' + user.user_id + ' »');
                     }, function (err) {
                         _this.notify.error(JSON.parse(err._body).errors);
                     });

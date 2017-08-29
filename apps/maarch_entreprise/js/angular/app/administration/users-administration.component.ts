@@ -44,7 +44,7 @@ export class UsersAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Utilisateurs";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.users;
         }
     }
 
@@ -79,13 +79,13 @@ export class UsersAdministrationComponent implements OnInit {
                     location.href = "index.php";
                 });
         } else {
-            let r = confirm(this.lang.suspendMsg + " ?");
+            let r = confirm(this.lang.confirmAction+' '+this.lang.suspend+' « '+user.user_id+' »');
 
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe((data : any) => {
-                        this.notify.success(data.success);
+                        this.notify.success(this.lang.userSuspended+' « '+user.user_id+' »');
                         
                     }, (err) => {
                         user.enabled = 'Y';
@@ -96,7 +96,7 @@ export class UsersAdministrationComponent implements OnInit {
     }
 
     suspendUserModal(user: any) {
-        let r = confirm(this.lang.suspendMsg + " ?");
+        let r = confirm(this.lang.confirmAction+' '+this.lang.suspend+' « '+user.user_id+' »');
 
         if (r) {
             user.enabled = 'N';
@@ -113,7 +113,7 @@ export class UsersAdministrationComponent implements OnInit {
                             .subscribe((data : any) => {
                                 user.inDiffListDest = 'N';
                                 $j('#changeDiffListDest').modal('hide');
-                                this.notify.success(data.success);
+                                this.notify.success(this.lang.userSuspended+' « '+user.user_id+' »');
                                 
                             }, (err) => {
                                 user.enabled = 'Y';
@@ -128,13 +128,13 @@ export class UsersAdministrationComponent implements OnInit {
     }
 
     activateUser(user: any) {
-        let r = confirm(this.lang.authorizeMsg + " ?");
+        let r = confirm(this.lang.confirmAction+' '+this.lang.authorize+' « '+user.user_id+' »');
 
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe((data : any) => {
-                    this.notify.success(data.success);
+                    this.notify.success(this.lang.userAuthorized+' « '+user.user_id+' »');
                     
                 }, (err) => {
                     user.enabled = 'N';
@@ -156,13 +156,13 @@ export class UsersAdministrationComponent implements OnInit {
                     this.notify.error(JSON.parse(err._body).errors);
                 });
         } else {            
-            let r = confirm(this.lang.deleteMsg + " ?");
+            let r = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+user.user_id+' »');
 
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe((data : any) => {
                         this.data = data.users;
-                        this.notify.success(data.success);
+                        this.notify.success(this.lang.userDeleted+' « '+user.user_id+' »');
                         
                     }, (err) => {
                         this.notify.error(JSON.parse(err._body).errors);
@@ -172,7 +172,7 @@ export class UsersAdministrationComponent implements OnInit {
     }
 
     deleteUserModal(user: any) {
-        let r = confirm(this.lang.deleteMsg + " ?");
+        let r = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+user.user_id+' »');
 
         if (r) {
             user.redirectListModels = this.userDestRedirectModels;
@@ -188,8 +188,8 @@ export class UsersAdministrationComponent implements OnInit {
                                 user.inDiffListDest = 'N';
                                 this.data = data.users;
                                 $j('#changeDiffListDest').modal('hide');
-                                this.notify.success(data.success);
-                                
+                                this.notify.success(this.lang.userDeleted+' « '+user.user_id+' »');
+                                                                
                             }, (err) => {
                                 this.notify.error(JSON.parse(err._body).errors);
                             });

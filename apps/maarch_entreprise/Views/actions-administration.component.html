@@ -41,7 +41,7 @@
                         <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
                             <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                         </button>
-                        <button [disabled]="action.is_system == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteAction(action.id)">
+                        <button [disabled]="action.is_system == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteAction(action)">
                             <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                         </button>
                     </div>

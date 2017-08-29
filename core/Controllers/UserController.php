@@ -69,7 +69,7 @@ class UserController
 
         UserModel::create(['user' => $data]);
 
-        $newUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['id']]);
+        $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
         if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }

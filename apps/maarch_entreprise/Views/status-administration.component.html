@@ -1,104 +1,87 @@
+<div class="page-header">
+    <h1 *ngIf="!creationMode">{{lang.statusModification}} <small>{{status.id}}</small></h1>
+    <h1 *ngIf="creationMode">{{lang.statusCreation}} <small>{{status.id}}</small></h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
-<nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" routerLink="/administration/status" style="cursor: pointer">
-                <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-            </a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                
-            </ul>
-        </div>
+<div *ngIf="!loading" class="container-fluid">
+    <div class="col-md-6 col-md-offset-3">
+        <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <md-input-container>
+                        <input mdInput [(ngModel)]="status.id" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" type="text" required>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <md-input-container>
+                        <input mdInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.desc}}" placeholder="{{lang.desc}}" type="text" required>
+                    </md-input-container>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-sm-4" style="white-space:nowrap;">
+                            <md-slide-toggle [(ngModel)]="status.can_be_searched" id="can_be_search" name="can_be_search" color="primary" [checked]="status.can_be_searched == true">
+                                    {{lang.canBeSearched}}
+                            </md-slide-toggle>
+                            <sup>
+                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents."></i>
+                            </sup>
+                        </div>
+                        <div class="col-sm-4" style="white-space:nowrap;">
+                            <md-slide-toggle [(ngModel)]="status.can_be_modified" id="can_be_modified" name="can_be_modified" color="primary" [checked]="status.can_be_modified == true">
+                                {{lang.canBeModified}}
+                            </md-slide-toggle>
+                            <sup>
+                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>."></i>
+                            </sup>
+                        </div>
+                        <div class="col-sm-4" style="white-space:nowrap;">
+                            <md-slide-toggle [(ngModel)]="status.is_folder_status" id="is_folder_status" name="is_folder_status" color="primary" [checked]="status.is_folder_status == true">
+                                {{lang.isFolderStatus}}
+                            </md-slide-toggle>
+                            <sup>
+                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>."></i>
+                            </sup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <i class="fm {{status.img_filename}} fm-2x text-primary"></i>
+                </div>
+                <div class="col-sm-11">
+                    <md2-select 
+                        id="status"
+                        name="status"
+                        placeholder="{{lang.imgRelated}}"
+                        [(ngModel)]="status.img_filename"
+                        required
+                        #searchStatusIcon="ngModel">
+                        <md2-select-header>
+                            <md-input-container>
+                            <input mdInput name="search"
+                                type="text"
+                                placeholder="Filtre"
+                                [(ngModel)]="_search" 
+                                autocomplete="off"
+                                (focusout)="clearSearch()"/>
+                            </md-input-container>
+                        </md2-select-header>
+                        <md2-option *ngFor="let image of statusImages | dataPipe : 'image_name' : _search" [value]="image.image_name"><i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x"></i> {{image.image_name}}</md2-option>
+                    </md2-select>
+                </div>
+            </div>
+            <div class="col-sm-12 panel-body" style="text-align:center;">
+                <button class="btn btn-default" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
+                <button class="btn btn-default" routerLink='/administration/status'>{{lang.cancel}}</button>
+            </div>
+        </form>
     </div>
-</nav>
-<h1 style="margin-top: 0"><i class="fa fa-check-circle fa-2x"></i> {{pageTitle}}</h1>
-<div class="container-fluid" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-<div class="col-md-6 col-md-offset-3">
-    <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hashtag" title="{{lang.identifier}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input [(ngModel)]="status.id" class="form-control" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.identifier}}" type="text" required>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{lang.description}}"></i><sup class="mandatory" title="champ requis"><i class="fa fa-asterisk" aria-hidden="true"></i></sup></span>
-                    <input class="form-control" name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.description}}" type="text" required>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-4">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button data-tooltip-content="#infoSearchableTooltip" class="btn btn-default help" type="button"><i class="fa fa-question-circle"></i></button>
-                    </span>
-                    <label class="form-control" for="can_be_searched">{{lang.can_be_searched}}</label>
-                    <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_searched" name="can_be_searched" id="can_be_searched" type="checkbox">
-                    </span>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button data-tooltip-content="#infoCanBeModifiedTooltip" class="btn btn-default help" type="button"><i class="fa fa-question-circle"></i></button>
-                    </span>
-                    <label class="form-control" for="can_be_modified">{{lang.can_be_modified}}</label>
-                    <span class="input-group-addon">
-                        <input [(ngModel)]="status.can_be_modified" type="checkbox" name="can_be_modified" id="can_be_modified">
-                    </span>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button data-tooltip-content="#infoIsFolderStatusTooltip" class="btn btn-default help" type="button"><i class="fa fa-question-circle"></i></button>
-                    </span>
-                    <label class="form-control" for="is_folder_status">{{lang.is_folder_status}}</label>
-                    <span class="input-group-addon">
-                        <input [(ngModel)]="status.is_folder_status" type="checkbox" name="is_folder_status" id="is_folder_status">
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="statusIconList" class="form-group panel panel-default">
-            <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">
-                <i class="fa fa-picture-o" aria-hidden="true"></i> {{lang.img_related}}
-            </div>
-            <div class="col-sm-12 panel-body">
-                <button *ngFor="let image of statusImages" type="button" [ngClass]="[status.img_filename==image.image_name ? 'btn-primary' : 'btn-default']" class="btn btn-group-lg" (click)="selectImage(image.image_name)">
-                    <i id="img_0" [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}}"></i>
-                </button> 
-            </div>
-        </div>
-        <div class="col-sm-12 panel-body" style="text-align:center;">
-            <button class="btn btn-default" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
-            <button class="btn btn-default" routerLink='/administration/status'>{{lang.cancel}}</button>
-        </div>
-    </form>
-</div>
-</div>
-
-<div class="tooltip_templates" style="display: none">
-    <span id="infoSearchableTooltip">
-        Si <b>coché</b>,<br/>
-        le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents.
-    </span>
-    <span id="infoCanBeModifiedTooltip">
-        Si <b>coché</b>,<br/>
-        vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>.
-   </span>
-   <span id="infoIsFolderStatusTooltip">
-        Si <b>coché</b>,<br/>
-        le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>.
-   </span>
 </div>

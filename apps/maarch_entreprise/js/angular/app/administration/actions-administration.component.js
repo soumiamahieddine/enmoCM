@@ -26,7 +26,7 @@ var ActionsAdministrationComponent = (function () {
     }
     ActionsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Actions";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.actions;
         }
     };
     ActionsAdministrationComponent.prototype.ngOnInit = function () {
@@ -39,7 +39,6 @@ var ActionsAdministrationComponent = (function () {
             .subscribe(function (data) {
             _this.actions = data['actions'];
             _this.data = _this.actions;
-            _this.titles = data['titles'];
             _this.loading = false;
             setTimeout(function () {
                 $j("[md2sortby='id']").click();
@@ -49,14 +48,14 @@ var ActionsAdministrationComponent = (function () {
             location.href = "index.php";
         });
     };
-    ActionsAdministrationComponent.prototype.deleteAction = function (id) {
+    ActionsAdministrationComponent.prototype.deleteAction = function (action) {
         var _this = this;
-        var r = confirm(this.lang.deleteMsg + ' ?');
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + action.label_action + ' »');
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + id)
+            this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe(function (data) {
                 _this.data = data.action;
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.actionDeleted + ' « ' + action.label_action + ' »');
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

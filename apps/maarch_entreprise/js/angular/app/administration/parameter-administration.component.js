@@ -29,9 +29,14 @@ var ParameterAdministrationComponent = (function () {
         $j('#inner_content').remove();
     };
     ParameterAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>Paramètres</a> > Modification";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.parameterCreation;
         }
+        else {
+            breadCrumb += this.lang.parameterModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     ParameterAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -43,6 +48,7 @@ var ParameterAdministrationComponent = (function () {
                 _this.http.get(_this.coreUrl + 'rest/administration/parameters/new')
                     .subscribe(function (data) {
                     _this.type = 'string';
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -54,6 +60,7 @@ var ParameterAdministrationComponent = (function () {
                     .subscribe(function (data) {
                     _this.parameter = data.parameter;
                     _this.type = data.type;
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -79,7 +86,7 @@ var ParameterAdministrationComponent = (function () {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.parameterAdded + ' « ' + _this.parameter.id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -88,7 +95,7 @@ var ParameterAdministrationComponent = (function () {
             this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.parameterUpdated + ' « ' + _this.parameter.id + ' »');
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });

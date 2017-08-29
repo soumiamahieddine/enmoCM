@@ -24,10 +24,13 @@ var ParametersAdministrationComponent = (function () {
         this.data = [];
     }
     ParametersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Paramètres";
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.parameters;
+        }
     };
     ParametersAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.http.get(this.coreUrl + 'rest/administration/parameters')
             .subscribe(function (data) {
@@ -44,12 +47,12 @@ var ParametersAdministrationComponent = (function () {
     };
     ParametersAdministrationComponent.prototype.deleteParameter = function (paramId) {
         var _this = this;
-        var resp = confirm(this.lang.deleteConfirm + ' ' + paramId + '?');
+        var resp = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + paramId + ' »');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .subscribe(function (data) {
-                _this.data = data.parameter;
-                _this.notify.success(data.success);
+                _this.data = data.parameters;
+                _this.notify.success(_this.lang.parameterDeleted + ' « ' + paramId + ' »');
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

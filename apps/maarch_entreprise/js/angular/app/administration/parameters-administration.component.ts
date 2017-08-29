@@ -29,11 +29,14 @@ export class ParametersAdministrationComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
-    updateBreadcrumb(applicationName: string){
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Paramètres";
+    updateBreadcrumb(applicationName: string) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.parameters;
+        }
     }
 
     ngOnInit(): void {
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         
         this.http.get(this.coreUrl + 'rest/administration/parameters')
@@ -53,12 +56,12 @@ export class ParametersAdministrationComponent implements OnInit {
     }
 
     deleteParameter(paramId : string){
-        var resp = confirm(this.lang.deleteConfirm+' '+paramId+'?');
+        let resp = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+paramId+' »');
         if (resp) {
             this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
                 .subscribe((data : any) => {
-                    this.data = data.parameter;
-                    this.notify.success(data.success);             
+                    this.data = data.parameters;
+                    this.notify.success(this.lang.parameterDeleted+' « '+paramId+' »');           
                 },(err) => {
                     this.notify.error(JSON.parse(err._body).errors);
                 });

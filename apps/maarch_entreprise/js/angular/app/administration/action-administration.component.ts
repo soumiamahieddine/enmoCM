@@ -18,7 +18,7 @@ export class ActionAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
     _search                     : string    = '';
     coreUrl                     : string;
-    actionCreation              : boolean;
+    creationMode                : boolean;
     action                      : any       = {};
     statusList                  : any[]     = [];
     actionPagesList             : any[]     = [];
@@ -31,9 +31,14 @@ export class ActionAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>Actions</a> > Modification";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>"+this.lang.actions+"</a> > ";
+
+        if(this.creationMode == true){
+            breadCrumb += this.lang.actionCreation;
+        } else {
+            breadCrumb += this.lang.actionModification;
         }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     }
 
     prepareActions() {
@@ -50,7 +55,7 @@ export class ActionAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if(typeof params['id']== "undefined"){
-                this.actionCreation = true;
+                this.creationMode = true;
                 
                 this.http.get(this.coreUrl + 'rest/initAction')
                     .subscribe((data : any) => {
@@ -64,12 +69,11 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             }
             else {
-                this.actionCreation = false;
+                this.creationMode = false;
 
                 this.http.get(this.coreUrl + 'rest/administration/actions/' + params['id'])
                     .subscribe((data : any) => {
                         this.action = data.action;
-                        this.lang.pageTitle = this.lang.modify_action+' : '+this.action.id;
                         this.categoriesList = data.categoriesList;
                         this.statusList = data.statusList;
 
@@ -86,11 +90,11 @@ export class ActionAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.actionCreation) {
+        if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(data.success);
+                this.notify.success(this.lang.actionAdded+' « '+this.action.label_action+' »');
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);
@@ -99,7 +103,7 @@ export class ActionAdministrationComponent implements OnInit {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(data.success);
+                this.notify.success(this.lang.actionUpdated+' « '+this.action.label_action+' »');
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);

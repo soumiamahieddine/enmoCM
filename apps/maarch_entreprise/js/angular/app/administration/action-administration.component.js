@@ -30,9 +30,14 @@ var ActionAdministrationComponent = (function () {
         this.loading = false;
     }
     ActionAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>Actions</a> > Modification";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>" + this.lang.actions + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.actionCreation;
         }
+        else {
+            breadCrumb += this.lang.actionModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     ActionAdministrationComponent.prototype.prepareActions = function () {
         $j('#inner_content').remove();
@@ -45,7 +50,7 @@ var ActionAdministrationComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
-                _this.actionCreation = true;
+                _this.creationMode = true;
                 _this.http.get(_this.coreUrl + 'rest/initAction')
                     .subscribe(function (data) {
                     _this.action = data.action;
@@ -57,11 +62,10 @@ var ActionAdministrationComponent = (function () {
                 });
             }
             else {
-                _this.actionCreation = false;
+                _this.creationMode = false;
                 _this.http.get(_this.coreUrl + 'rest/administration/actions/' + params['id'])
                     .subscribe(function (data) {
                     _this.action = data.action;
-                    _this.lang.pageTitle = _this.lang.modify_action + ' : ' + _this.action.id;
                     _this.categoriesList = data.categoriesList;
                     _this.statusList = data.statusList;
                     _this.actionPagesList = data.action_pagesList;
@@ -76,11 +80,11 @@ var ActionAdministrationComponent = (function () {
     };
     ActionAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        if (this.actionCreation) {
+        if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.actionAdded + ' « ' + _this.action.label_action + ' »');
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
@@ -89,7 +93,7 @@ var ActionAdministrationComponent = (function () {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(data.success);
+                _this.notify.success(_this.lang.actionUpdated + ' « ' + _this.action.label_action + ' »');
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

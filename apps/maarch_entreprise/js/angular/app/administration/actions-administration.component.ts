@@ -30,7 +30,7 @@ export class ActionsAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Actions";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.actions;
         }
     }
 
@@ -46,7 +46,6 @@ export class ActionsAdministrationComponent implements OnInit {
             .subscribe((data) => {
                 this.actions = data['actions'];
                 this.data = this.actions;
-                this.titles = data['titles'];
                 this.loading = false;
                 setTimeout(() => {
                     $j("[md2sortby='id']").click();
@@ -57,14 +56,14 @@ export class ActionsAdministrationComponent implements OnInit {
             });
     }
 
-    deleteAction(id: number) {
-        let r = confirm(this.lang.deleteMsg+' ?');
+    deleteAction(action: any) {
+        let r = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+action.label_action+' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + id)
+            this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe((data : any) => {
                     this.data = data.action;
-                    this.notify.success(data.success);
+                    this.notify.success(this.lang.actionDeleted+' « '+action.label_action+' »');
                     
                 }, (err) => {
                     this.notify.error(JSON.parse(err._body).errors);
