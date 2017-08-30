@@ -25,6 +25,7 @@ var parameter_administration_component_1 = require("./parameter-administration.c
 var priorities_administration_component_1 = require("./priorities-administration.component");
 var priority_administration_component_1 = require("./priority-administration.component");
 var reports_administration_component_1 = require("./reports-administration.component");
+var history_administration_component_1 = require("./history-administration.component");
 var AdministrationModule = (function () {
     function AdministrationModule() {
     }
@@ -53,6 +54,7 @@ AdministrationModule = __decorate([
             priorities_administration_component_1.PrioritiesAdministrationComponent,
             priority_administration_component_1.PriorityAdministrationComponent,
             reports_administration_component_1.ReportsAdministrationComponent,
+            history_administration_component_1.HistoryAdministrationComponent,
             users_administration_component_1.DataTablePipe
         ]
     })

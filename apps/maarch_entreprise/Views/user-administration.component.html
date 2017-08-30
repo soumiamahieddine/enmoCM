@@ -219,6 +219,34 @@
                         </div>
                     </div>
             </md-tab>
+            <md-tab label="Historique">
+                    <div class="col-md-12">
+                <table id="hisotryTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'info' : search" #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
+                    <thead>
+                    <tr>
+                        <td>
+                            <md2-pagination></md2-pagination>
+                        </td>
+                        <td style="text-align:right;">
+                            <md-input-container>
+                                    <input mdInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="searchTable" [(ngModel)]="search" />
+                            </md-input-container>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th md2SortBy="event_date">{{lang.date}}</th>
+                        <th md2SortBy="info">{{lang.desc}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let history of md2.data">
+                        <td style="vertical-align:middle;">{{history.event_date | date : "dd/MM/y HH:mm"}}</td>
+                        <td style="vertical-align:middle;">{{history.info}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                    </div>
+            </md-tab>
         </md-tab-group>
         </div>
     </div>

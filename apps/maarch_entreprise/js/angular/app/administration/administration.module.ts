@@ -19,6 +19,7 @@ import { ParameterAdministrationComponent }     from './parameter-administration
 import { PrioritiesAdministrationComponent }    from './priorities-administration.component';
 import { PriorityAdministrationComponent }      from './priority-administration.component';
 import { ReportsAdministrationComponent }       from './reports-administration.component';
+import { HistoryAdministrationComponent }       from './history-administration.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ReportsAdministrationComponent }       from './reports-administration.c
         PrioritiesAdministrationComponent,
         PriorityAdministrationComponent,
         ReportsAdministrationComponent,
+        HistoryAdministrationComponent,
         DataTablePipe
     ]
 })

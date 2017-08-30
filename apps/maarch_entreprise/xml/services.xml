@@ -67,11 +67,12 @@
    <id>view_history</id>
    <name>_VIEW_HISTORY</name>
    <comment>_VIEW_HISTORY_DESC</comment>
-   <servicepage>index.php?page=history&amp;admin=history</servicepage>
+   <servicepage>/administration/history</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>fa fa-history</style>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <SERVICE>
    <id>view_history_batch</id>

@@ -33,6 +33,8 @@ exports.LANG_FR = {
     suspend: "Suspendre",
     authorize: "Autoriser",
     for: "pour",
+    noSelection: "aucune sélection",
+    table: "Table",
     //Administration
     "userCreation": "Création d'un utilisateur",
     "userModification": "Modification de l'utilisateur",
@@ -155,5 +157,10 @@ exports.LANG_FR = {
     isFolderStatus: "Statut de dossier",
     statusAdded: "Statut ajouté",
     statusUpdated: "Statut mis à jour",
-    statusDeleted: "Statut supprimé"
+    statusDeleted: "Statut supprimé",
+    //History
+    history: "Historique(s)",
+    entries: "entrée(s)",
+    event: "Événement",
+    dataOfMonth: "Données du mois"
 };
