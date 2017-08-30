@@ -1,0 +1,76 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.historyBatch}} <small>{{data.length}} {{lang.entries}}</small></h1>
+</div>
+<div *ngIf="loading">
+    <md-spinner style="margin:auto;"></md-spinner>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <div class="col-md-12">
+        <table id="usersTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'info' : search | dataPipe : 'user_id' : filterUser | dataPipe : 'event_type' : filterEventType"
+            #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
+            <thead>
+                <tr>
+                    <td colspan="5">
+                        <md2-pagination></md2-pagination>
+                    </td>
+                    <td style="text-align:right;">
+                        <md2-datepicker name="mindate" placeholder="{{lang.dataOfMonth}} :" type="month" [(ngModel)]="minDate" #minDateControl="ngModel"
+                            (change)="refreshHistory()">
+                        </md2-datepicker>
+
+                    </td>
+                </tr>
+                <tr class="filters">
+                    <td colspan="6">
+                        <md2-accordion>
+                            <md2-accordion-tab>
+                                <md2-accordion-header class="text-primary">{{lang.filterBy}} : </md2-accordion-header>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="col-sm-4">
+                                            <md-input-container>
+                                                <input mdInput placeholder="{{lang.desc}}" [(ngModel)]="search" />
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <md2-select placeholder="Module cible" [(ngModel)]="filterModule" #filterUsersSelect="ngModel" style="padding:0px;padding-top: 15px;">
+                                                <md2-select-header>
+                                                    <md-input-container>
+                                                        <input mdInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
+                                                    </md-input-container>
+                                                </md2-select-header>
+                                                <md2-option style="font-style:italic;color:grey;">{{lang.noSelection}}</md2-option>
+                                                <md2-option *ngFor="let filter of filterModules | dataPipe : 'module_name' : _search" [value]="filter.module_name">{{filter.module_name}}</md2-option>
+                                            </md2-select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </md2-accordion-tab>
+                        </md2-accordion>
+                    </td>
+                </tr>
+                <tr>
+                    <th md2SortBy="batch_id" style="width:5%;">{{lang.id}}</th>
+                    <th md2SortBy="event_date" style="width:15%;">{{lang.date}}</th>
+                    <th md2SortBy="total_processed" style="width:15%;">{{lang.totalProcessed}}</th>
+                    <th md2SortBy="total_errors" style="width:15%;">{{lang.totalErrors}}</th>
+                    <th md2SortBy="info" style="width:40%;">{{lang.desc}}</th>
+                    <th md2SortBy="module_name" style="width:10%;">{{lang.module}}</th>  
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let history of md2.data">
+                    <td style="vertical-align:middle;">{{history.batch_id}}</td>
+                    <td style="vertical-align:middle;">{{history.event_date | date : "dd/MM/y HH:mm"}}</td>
+                    <td style="vertical-align:middle;">{{history.total_processed}}</td>
+                    <td style="vertical-align:middle;">{{history.total_errors}}</td>
+                    <td style="vertical-align:middle;">{{history.info}}</td>
+                    <td style="vertical-align:middle;">{{history.module_name}}</td> 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
