@@ -21,6 +21,7 @@ var priorities_administration_component_1 = require("./priorities-administration
 var priority_administration_component_1 = require("./priority-administration.component");
 var reports_administration_component_1 = require("./reports-administration.component");
 var history_administration_component_1 = require("./history-administration.component");
+var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var AdministrationRoutingModule = (function () {
     function AdministrationRoutingModule() {
     }
@@ -48,6 +49,7 @@ AdministrationRoutingModule = __decorate([
                 { path: 'administration/actions/new', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: 'administration/actions/:id', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: 'administration/history', component: history_administration_component_1.HistoryAdministrationComponent },
+                { path: 'administration/historyBatch', component: historyBatch_administration_component_1.HistoryBatchAdministrationComponent },
             ]),
         ],
         exports: [

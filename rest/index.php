@@ -207,6 +207,9 @@ $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . '
 //History
 $app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getForAdministration');
 
+//HistoryBatch
+$app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
+
 
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');

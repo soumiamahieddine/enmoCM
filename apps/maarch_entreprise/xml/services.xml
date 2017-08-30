@@ -78,11 +78,12 @@
    <id>view_history_batch</id>
    <name>_VIEW_HISTORY_BATCH</name>
    <comment>_VIEW_HISTORY_BATCH_DESC</comment>
-   <servicepage>index.php?page=history_batch&amp;admin=history_batch</servicepage>
+   <servicepage>/administration/historyBatch</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>fa fa-history</style>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <!--<SERVICE>
    <id>xml_param_services</id>

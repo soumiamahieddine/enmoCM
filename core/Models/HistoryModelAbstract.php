@@ -132,6 +132,22 @@ class HistoryModelAbstract
         return $aReturn;
     }
 
+    public static function getHistoryBatchList(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['event_date']);
+
+        $aReturn = DatabaseModel::select(
+            [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['history_batch'],
+            'where'     => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
+            'order_by'  => ['event_date DESC']
+            ]
+        );
+
+        return $aReturn;
+    }
+
     public static function getHistoryByUserId(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
@@ -159,6 +175,23 @@ class HistoryModelAbstract
             [
             'select'    => ['DISTINCT('.$aArgs['select'].')'],
             'table'     => ['history'],
+            'where'     => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
+            'order_by'  => [$aArgs['select'].' ASC']
+            ]
+        );
+
+        return $aReturn;
+    }
+
+    public static function getBatchFilter(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['select','event_date']);
+        ValidatorModel::stringType($aArgs, ['select']);
+
+        $aReturn = DatabaseModel::select(
+            [
+            'select'    => ['DISTINCT('.$aArgs['select'].')'],
+            'table'     => ['history_batch'],
             'where'     => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
             'order_by'  => [$aArgs['select'].' ASC']
             ]

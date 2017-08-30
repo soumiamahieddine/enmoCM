@@ -26,6 +26,7 @@ var priorities_administration_component_1 = require("./priorities-administration
 var priority_administration_component_1 = require("./priority-administration.component");
 var reports_administration_component_1 = require("./reports-administration.component");
 var history_administration_component_1 = require("./history-administration.component");
+var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var AdministrationModule = (function () {
     function AdministrationModule() {
     }
@@ -55,6 +56,7 @@ AdministrationModule = __decorate([
             priority_administration_component_1.PriorityAdministrationComponent,
             reports_administration_component_1.ReportsAdministrationComponent,
             history_administration_component_1.HistoryAdministrationComponent,
+            historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
             users_administration_component_1.DataTablePipe
         ]
     })

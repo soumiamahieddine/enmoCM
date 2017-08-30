@@ -10,6 +10,7 @@ function triggerAngular(prodmode, locationToGo) {
         'actions-administration',
         'action-administration',
         'history-administration',
+        'historyBatch-administration',
         'profile',
         'signature-book',
         'parameter-administration',

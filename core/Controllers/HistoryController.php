@@ -262,4 +262,19 @@ class HistoryController
 
         return $response->withJson($return);
     }
+
+    public function getBatchForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'view_history_batch', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+        $return = [];
+        $historyList = HistoryModel::getHistoryBatchList(['event_date' => $aArgs['date']]);
+        $historyListFilters['modules'] = HistoryModel::getBatchFilter(['select' => 'module_name','event_date' => $aArgs['date']]);
+        
+        $return['filters'] = $historyListFilters;
+        $return['historyList'] = $historyList;
+
+        return $response->withJson($return);
+    }
 }

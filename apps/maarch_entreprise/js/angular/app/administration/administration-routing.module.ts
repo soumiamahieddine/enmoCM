@@ -14,6 +14,7 @@ import { PrioritiesAdministrationComponent }    from './priorities-administratio
 import { PriorityAdministrationComponent }      from './priority-administration.component';
 import { ReportsAdministrationComponent }       from './reports-administration.component';
 import { HistoryAdministrationComponent }       from './history-administration.component';
+import { HistoryBatchAdministrationComponent }  from './historyBatch-administration.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { HistoryAdministrationComponent }       from './history-administration.c
             { path: 'administration/actions/new', component: ActionAdministrationComponent },
             { path: 'administration/actions/:id', component: ActionAdministrationComponent },
             { path: 'administration/history', component: HistoryAdministrationComponent },
+            { path: 'administration/historyBatch', component: HistoryBatchAdministrationComponent },
         ]),
     ],
     exports: [
