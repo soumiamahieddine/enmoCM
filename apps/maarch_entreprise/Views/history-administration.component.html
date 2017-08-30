@@ -1,0 +1,84 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.history}} <small>{{data.length}} {{lang.entries}}</small></h1>
+</div>
+<div *ngIf="loading">
+    <md-spinner style="margin:auto;"></md-spinner>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <div class="col-md-12">
+        <table id="usersTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'info' : search | dataPipe : 'user_id' : filterUser | dataPipe : 'event_type' : filterEventType"
+            #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
+            <thead>
+                <tr>
+                    <td colspan="5">
+                        <md2-pagination></md2-pagination>
+                    </td>
+                    <td style="text-align:right;">
+                        <md2-datepicker name="mindate" placeholder="{{lang.dataOfMonth}} :" type="month" [(ngModel)]="minDate" #minDateControl="ngModel"
+                            (change)="refreshHistory()">
+                        </md2-datepicker>
+
+                    </td>
+                </tr>
+                <tr class="filters">
+                    <td colspan="6">
+                        <md2-accordion>
+                            <md2-accordion-tab>
+                                <md2-accordion-header class="text-primary">{{lang.filterBy}} : </md2-accordion-header>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="col-sm-4">
+                                            <md-input-container>
+                                                <input mdInput placeholder="{{lang.desc}}" [(ngModel)]="search" />
+                                            </md-input-container>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <md2-select placeholder="Utilisateur cible" [(ngModel)]="filterUser" #filterUsersSelect="ngModel" style="padding:0px;padding-top: 15px;">
+                                                <md2-select-header>
+                                                    <md-input-container>
+                                                        <input mdInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
+                                                    </md-input-container>
+                                                </md2-select-header>
+                                                <md2-option style="font-style:italic;color:grey;">{{lang.noSelection}}</md2-option>
+                                                <md2-option *ngFor="let filter of filterUsers | dataPipe : 'user_id' : _search" [value]="filter.user_id">{{filter.user_id}}</md2-option>
+                                            </md2-select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <md2-select placeholder="Evenement cible" [(ngModel)]="filterEventType" #filterUsersSelect="ngModel" style="padding:0px;padding-top: 15px;">
+                                                <md2-select-header>
+                                                    <md-input-container>
+                                                        <input mdInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
+                                                    </md-input-container>
+                                                </md2-select-header>
+                                                <md2-option style="font-style:italic;color:grey;">{{lang.noSelection}}</md2-option>
+                                                <md2-option *ngFor="let filter of filterEventTypes | dataPipe : 'event_type' : _search" [value]="filter.event_type">{{filter.event_type}}</md2-option>
+                                            </md2-select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md2-accordion-tab>
+                        </md2-accordion>
+                    </td>
+                </tr>
+                <tr>
+                    <th md2SortBy="event_date" style="width:10%;">{{lang.date}}</th>
+                    <th md2SortBy="event_type" style="width:10%;">{{lang.event}}</th>
+                    <th md2SortBy="user_id" style="width:15%;">{{lang.user}}</th>
+                    <th md2SortBy="table_name" style="width:15%;">{{lang.table}}</th>
+                    <th md2SortBy="info" style="width:40%;">{{lang.desc}}</th>
+                    <th md2SortBy="info" style="width:10%;">{{lang.ip}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let history of md2.data">
+                    <td style="vertical-align:middle;">{{history.event_date | date : "dd/MM/y HH:mm"}}</td>
+                    <td style="vertical-align:middle;">{{history.event_type}}</td>
+                    <td style="vertical-align:middle;">{{history.user_id}}</td>
+                    <td style="vertical-align:middle;">{{history.table_name}}</td>
+                    <td style="vertical-align:middle;">{{history.info}}</td>
+                    <td style="vertical-align:middle;">{{history.remote_ip}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
