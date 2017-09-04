@@ -204,6 +204,13 @@ $app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':ge
 $app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
 $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 
+//History
+$app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getForAdministration');
+
+//HistoryBatch
+$app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
+
+
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
 $app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');

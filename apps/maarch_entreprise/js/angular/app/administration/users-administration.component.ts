@@ -12,6 +12,7 @@ export class DataTablePipe implements PipeTransform {
   transform(array: any[], field: string, query: string): any {
     if (query) {
       query = query.toLowerCase();
+      console.log(array);
       return array.filter((value: any) =>
         value[field].toLowerCase().indexOf(query) > -1);
     }

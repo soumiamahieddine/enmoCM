@@ -9,6 +9,8 @@ function triggerAngular(prodmode, locationToGo) {
         'statuses-administration',
         'actions-administration',
         'action-administration',
+        'history-administration',
+        'historyBatch-administration',
         'profile',
         'signature-book',
         'parameter-administration',

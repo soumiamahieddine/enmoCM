@@ -15,18 +15,19 @@
 
 namespace Core\Controllers;
 
+use Baskets\Models\BasketsModel;
 use Core\Models\CoreConfigModel;
+use Core\Models\GroupModel;
+use Core\Models\HistoryModel;
+use Core\Models\LangModel;
 use Core\Models\SecurityModel;
+use Core\Models\ServiceModel;
+use Core\Models\UserModel;
+use Entities\Models\EntityModel;
+use Entities\Models\ListModelsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Baskets\Models\BasketsModel;
-use Core\Models\GroupModel;
-use Core\Models\LangModel;
-use Core\Models\ServiceModel;
-use Entities\Models\EntityModel;
-use Core\Models\UserModel;
-use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
 
@@ -41,7 +42,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-
+        
         return $response->withJson($user);
     }
 
@@ -543,6 +544,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $user['user_id']]);
+        $user['history'] = HistoryModel::getHistoryByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
     }

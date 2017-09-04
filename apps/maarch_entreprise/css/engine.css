@@ -75,7 +75,7 @@
     padding: 10px;
 }
 
-table .mat-input-container{
+table tr:not(.filters) .mat-input-container{
     width:200px !important;
 }
 

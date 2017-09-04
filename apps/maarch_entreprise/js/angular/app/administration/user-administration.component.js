@@ -37,6 +37,7 @@ var UserAdministrationComponent = (function () {
         this.userList = [];
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
+        this.data = [];
         this.loading = false;
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
@@ -69,6 +70,7 @@ var UserAdministrationComponent = (function () {
                 _this.http.get(_this.coreUrl + "rest/users/" + _this.serialId + "/details")
                     .subscribe(function (data) {
                     _this.user = data;
+                    _this.data = data.history;
                     _this.userId = data.user_id;
                     _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.loading = false;
@@ -122,6 +124,9 @@ var UserAdministrationComponent = (function () {
                     $j('#jstree').jstree(true).search(v);
                 }, 250);
             });
+        }
+        if ($j("[md2sortby='event_date']").length != 0) {
+            $j("[md2sortby='event_date']").click();
         }
     };
     UserAdministrationComponent.prototype.processAfterUpload = function (b64Content) {

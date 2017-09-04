@@ -38,6 +38,7 @@ export class UserAdministrationComponent implements OnInit {
     
     selectedSignature           : number    = -1;
     selectedSignatureLabel      : string    = "";
+    data                        : any       = [];    
     loading                     : boolean   = false;
 
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
@@ -75,6 +76,7 @@ export class UserAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/details")
                     .subscribe((data : any) => {
                         this.user = data;
+                        this.data = data.history;
                         this.userId = data.user_id;
                         this.updateBreadcrumb(angularGlobals.applicationName);
                         this.loading = false;
@@ -133,6 +135,9 @@ export class UserAdministrationComponent implements OnInit {
                 $j('#jstree').jstree(true).search(v);
               }, 250);
             });
+        }
+        if($j("[md2sortby='event_date']").length != 0){
+            $j("[md2sortby='event_date']").click();
         }
     }
 

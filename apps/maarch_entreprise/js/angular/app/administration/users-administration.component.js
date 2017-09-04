@@ -19,6 +19,7 @@ var DataTablePipe = (function () {
     DataTablePipe.prototype.transform = function (array, field, query) {
         if (query) {
             query = query.toLowerCase();
+            console.log(array);
             return array.filter(function (value) {
                 return value[field].toLowerCase().indexOf(query) > -1;
             });

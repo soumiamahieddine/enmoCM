@@ -431,14 +431,23 @@ class Database extends functions
             ' ' . $limit_clause;
 
         if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-            $query = 'SELECT' . 
+            /*$query = 'SELECT' . 
                 ' ' . $select_opts . 
                 ' ' . $select_expr . 
                 ' FROM ' . $table_refs .
                 ' WHERE ' . $where_def .
                 ' ' . $other_clauses .
                 ' ' . $limit_clause .
-                ' ' . $order_by;
+                ' ' . $order_by;*/
+            $query = 'SELECT * FROM (SELECT' . 
+                ' ' . $select_opts . 
+                ' ' . $select_expr . 
+                ' FROM ' . $table_refs .
+                ' WHERE ' . $where_def .
+                ' ' . $other_clauses .
+                // ' ' . $limit_clause .
+                ' ' . $order_by .
+                ') WHERE ' . $limit_clause;
         } else {
             $query = 'SELECT' . 
                 ' ' . $select_opts . 
