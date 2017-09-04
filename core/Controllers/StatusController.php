@@ -31,8 +31,7 @@ class StatusController
         }
 
         return $response->withJson([
-            'statusList' => StatusModel::getList(),
-            'lang'       => StatusModel::getStatusLang()
+            'statusList' => StatusModel::getList()
         ]);
     }
 
@@ -43,8 +42,7 @@ class StatusController
         }
 
         return $response->withJson([
-            'statusImages' => StatusImagesModel::getStatusImages(),
-            'lang'         => StatusModel::getStatusLang()
+            'statusImages' => StatusImagesModel::getStatusImages()
         ]);
     }
 
@@ -147,9 +145,8 @@ class StatusController
         $statusDeleted = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
 
         if (Validator::notEmpty()->validate($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier']) && !empty($statusDeleted)) {
-            $return = [
-                StatusModel::delete(['identifier' => $aArgs['identifier']])
-            ];
+            
+            StatusModel::delete(['identifier' => $aArgs['identifier']]);
 
             HistoryController::add([
                 'table_name' => 'status', 
@@ -164,7 +161,11 @@ class StatusController
                 ->withJson(['errors' => 'identifier not valid']);
         }
 
-        return $response->withJson($return);
+        return $response->withJson(
+            [
+            'statuses' => StatusModel::getList()
+            ]
+        );
     }
 
     protected function manageValue($request)

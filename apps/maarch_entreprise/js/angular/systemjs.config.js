@@ -28,6 +28,7 @@
       '@angular/http': 'npm:@angular/http/bundles/http.umd.min.js',
       '@angular/material': 'npm:@angular/material/bundles/material.umd.min.js',
       '@angular/cdk': 'npm:@angular/cdk/bundles/cdk.umd.min.js',
+      'md2': 'npm:md2/bundles/md2.umd.js',
 
       // other libraries
       'rxjs':     'npm:rxjs',

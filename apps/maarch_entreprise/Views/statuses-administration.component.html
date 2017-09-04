@@ -1,49 +1,47 @@
+
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.statuses}} <small>{{data.length}} {{lang.statuses}}</small></h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/status/new">
-                        <a title="{{lang.newStatus}}"><i class="fa fa-check-circle"></i><sup><i class="fa fa-plus"></i></sup></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <h1 style="margin-top: 0"><i class="fa fa-check-circle fa-2x"></i> {{lang.statusListTitle}} : {{nbStatus}} {{lang.status}}(s)</h1>
-
-    <div class="col-md-12" style="margin-top: 15px">
-        <table id="statusTable" class="display">
+    <div class="col-md-12">
+        <table id="statusTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'label_status' : search" #md2="md2DataTable" [sortBy]='label_status' [rowsPerPage]="10">
             <thead>
                 <tr>
-                    <th style="width:50px;"><span>{{lang.img_related}}</span></th>
-                    <th><span>{{lang.identifier}}</span></th>
-                    <th><span>{{lang.description}}</span></th>
-                    <th><span>&nbsp;</span></th>
+                    <td colspan="3">
+                        <md2-pagination></md2-pagination>
+                    </td>
+                    <td style="text-align:right;">
+                        <md-input-container>
+                                <input mdInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="searchTable" [(ngModel)]="search" />
+                        </md-input-container>
+                        &nbsp;
+                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/status/new" title="{{lang.addStatus}}"><i class="fa fa-check-circle fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th md2SortBy="id" style="width:50px;"><span>{{lang.imgRelated}}</span></th>
+                    <th md2SortBy="img_filename"><span>{{lang.id}}</span></th>
+                    <th md2SortBy="label_status"><span>{{lang.desc}}</span></th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead> 
             <tbody>
-                <tr *ngFor="let status of statusList" id="{{status.id}}">
-                    <td style="text-align:center;">
-                        <i class="fm {{status.img_filename}} fm-2x" *ngIf="status.img_filename.indexOf('fm') == 0"></i>
-                        <i class="fa {{status.img_filename}} fa-2x" *ngIf="status.img_filename.indexOf('fa') == 0"></i>
+                <tr *ngFor="let status of md2.data">
+                    <td style="text-align:center;vertical-align:middle;">
+                        <i class="fm {{status.img_filename}} fm-2x text-primary" *ngIf="status.img_filename.indexOf('fm') == 0"></i>
+                        <i class="fa {{status.img_filename}} fa-2x text-primary" *ngIf="status.img_filename.indexOf('fa') == 0"></i>
                     </td>
-                    <td>{{status.id}}</td>
-                    <td>{{status.label_status}}</td>
-                    <td style="text-align:right;">
+                    <td style="vertical-align:middle;">{{status.id}}</td>
+                    <td style="vertical-align:middle;">{{status.label_status}}</td>
+                    <td style="text-align:right;vertical-align:middle;">
                         <div class="btn-group" role="group" aria-label="...">
                             <button routerLink="/administration/status/{{status.identifier}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status.id, status.identifier)">
+                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status)">
                                 <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
                             </button>
                         </div>

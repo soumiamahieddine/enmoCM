@@ -1,90 +1,123 @@
+<div class="page-header">
+    <h1 *ngIf="!actionCreation">{{lang.actionModification}} <small>{{action.label_action}}</small></h1>
+    <h1 *ngIf="actionCreation">{{lang.actionCreation}} <small>{{action.label_action}}</small></h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration/actions" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <h1 style="margin-top: 0"><i class="fa fa-exchange fa-2x"></i> {{lang.pageTitle}}</h1>
-    <div class="container-fluid" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+    <div class="container-fluid">
         <div class="col-md-6 col-md-offset-3">
-            <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert"><b>{{lang.action}} {{lang.is_system}} !</b> {{lang.do_not_modify_unless_expert}}</div>
+            <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert"><b>{{lang.isSytemAction}} !</b> {{lang.doNotModifyUnlessExpert}}</div>
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{lang.desc}}"></i><sup class="mandatory" title="champ requis">*</sup></span>
-                            <input [(ngModel)]="action.label_action" required class="form-control" name="action_name" id="action_name" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}" required>
+                        <md-input-container>
+                            <input mdInput [(ngModel)]="action.label_action" required name="action_name" id="action_name" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}" required>
+                        </md-input-container>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <md2-select 
+                            id="status"
+                            name="status"
+                            placeholder="{{lang.associatedStatus}}"
+                            [(ngModel)]="action.id_status"
+                            required
+                            #searchStatus="ngModel">
+                            <md2-select-header>
+                                <md-input-container>
+                                <input mdInput name="search"
+                                    type="text"
+                                    placeholder="Filtre"
+                                    [(ngModel)]="_search" 
+                                    autocomplete="off"
+                                    (focusout)="clearSearch()"/>
+                                </md-input-container>
+                            </md2-select-header>
+                            <md2-option *ngFor="let statut of statusList | dataPipe : 'label_status' : _search" [value]="statut.id">{{statut.label_status}}</md2-option>
+                         </md2-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <md2-select 
+                            id="action_page"
+                            name="action_page"
+                            placeholder="{{lang.actionPage}}"
+                            [(ngModel)]="action.action_page"
+                            #searchAction="ngModel">
+                            <md2-select-header>
+                                <md-input-container>
+                                <input mdInput name="search"
+                                    type="text"
+                                    placeholder="Filtre"
+                                    [(ngModel)]="_search" 
+                                    autocomplete="off"
+                                    (focusout)="clearSearch()"/>
+                                </md-input-container>
+                            </md2-select-header>
+                            <md2-option *ngFor="let action of actionPagesList.actionsPageList | dataPipe : 'label' : _search" [value]="action.name">{{action.label}}</md2-option>
+                         </md2-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <md2-select 
+                            id="keyword"
+                            name="keyword"
+                            placeholder="{{lang.keyword}}"
+                            [(ngModel)]="action.keyword"
+                            #searchAction="ngModel">
+                            <!--<md2-select-header>
+                                <md-input-container>
+                                <input mdInput name="search"
+                                    type="text"
+                                    placeholder="Filtre"
+                                    [(ngModel)]="_search" 
+                                    autocomplete="off"
+                                    (focusout)="clearSearch()"/>
+                                </md-input-container>
+                            </md2-select-header>-->
+                            <md2-option *ngFor="let keyword of keywordsList | dataPipe : 'label' : _search" [value]="keyword.value">{{keyword.label}}</md2-option>
+                         </md2-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-6">
+                                <md-slide-toggle name="history" title="{{lang.actionHistoryDesc}}" id="history" color="primary" [(ngModel)]="action.history" [checked]="action.history == 'Y'">{{lang.actionHistory}}</md-slide-toggle>                            
+                            </div>
+                            <div class="col-sm-6">
+                                <md-slide-toggle name="is_folder_action" title="{{lang.isFolderActionDesc}}" id="is_folder_action" color="primary" [(ngModel)]="action.is_folder_action" [checked]="action.is_folder_action == 'Y'">{{lang.isFolderAction}}</md-slide-toggle>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-check-circle" title="{{lang.associated_status}}"></i></span>
-                            <select  [(ngModel)]="action.id_status" class="forms-select form-control" name="status" id="status">
-                                <option *ngFor="let statut of statusList" [value]="statut.id">{{statut.label_status}}</option>
-                            </select>                    
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-retweet" title="{{lang.action_page}}"></i></span>
-                            <select  [(ngModel)]="action.action_page" class="forms-select form-control" name="action_page" id="action_page">
-                                <option title="{{action.desc}}" *ngFor="let action of actionPagesList.actionsPageList" value="{{action.name}}">{{action.label}}</option>
-                            </select>                  
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-code" title="{{lang.keyword}}"></i></span>
-                            <select  [(ngModel)]="action.keyword" class="forms-select form-control" name="keyword" id="keyword">
-                                <option title="{{keyword.desc}}" *ngFor="let keyword of keywordsList" value="{{keyword.value}}">{{keyword.label}}</option>
-                            </select>               
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <label class="form-control" for="history" title="{{lang.action_history_desc}}">{{lang.action_history}}</label>
-                            <span class="input-group-addon">
-                                <input [(ngModel)]="action.history" name="history" id="history" type="checkbox">
-                            </span>                 
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group">
-                            <label class="form-control" for="is_folder_action" title="{{lang.is_folder_action_desc}}">{{lang.is_folder_action}}</label>
-                            <span class="input-group-addon">
-                                <input [(ngModel)]="action.is_folder_action" name="is_folder_action" id="is_folder_action" type="checkbox">
-                            </span>                 
-                        </div>
-                    </div>
-                </div>
-                <div id="categoryAssociationList" class="form-group panel panel-default">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="categorieslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="categorieslist" (click)="unselectAll($event)"></i> {{lang.choose_category_association }}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="categorieslist[]" id="categorieslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let category of categoriesList" [selected]="category.selected" value="{{category.id}}">{{category.label}}</option>
-                        </select>
+                        <md2-select 
+                            id="categorieslist"
+                            name="categorieslist"
+                            placeholder="{{lang.chooseCategoryAssociation}}"
+                            [(ngModel)]="this.action.actionCategories"
+                            required
+                            multiple
+                            #searchCat="ngModel">
+                            <!--<md2-select-header>
+                                <md-input-container>
+                                <input mdInput name="search"
+                                    type="text"
+                                    placeholder="Filtre"
+                                    [(ngModel)]="_search" 
+                                    autocomplete="off"
+                                    (focusout)="clearSearch()"/>
+                                </md-input-container>
+                            </md2-select-header>-->
+                            <md2-option *ngFor="let category of categoriesList | dataPipe : 'label' : _search" [value]="category.id">{{category.label}}</md2-option>
+                        </md2-select>
                     </div>
                 </div>
                 <div class="col-sm-12 panel-body" style="text-align:center;">

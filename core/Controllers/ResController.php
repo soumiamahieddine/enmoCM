@@ -24,7 +24,7 @@ use Core\Models\DocserverTypeModel;
 use Core\Models\UserModel;
 use Core\Models\ResModel;
 use Notes\Models\NoteModel;
-use Entities\Models\EntitiesModel;
+use Entities\Models\EntityModel;
 use Core\Controllers\DocserverController;
 use Core\Controllers\DocserverToolsController;
 
@@ -580,7 +580,7 @@ class ResController
         $fileFormat = $aArgs['fileFormat'];
 
         $userModel = new UserModel();
-        $entityModel = new \Entities\Models\EntitiesModel();
+        $entityModel = new \Entities\Models\EntityModel();
 
         $countD = count($data);
         for ($i = 0; $i < $countD; $i++) {

@@ -9,9 +9,9 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+use PHPUnit\Framework\TestCase;
 
-class DocserverControllerTest extends \PHPUnit_Framework_TestCase
+class DocserverControllerTest extends TestCase
 {
     public function testGetList()
     {

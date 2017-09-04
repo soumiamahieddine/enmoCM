@@ -9,7 +9,6 @@
 
 namespace MaarchTest;
 use PHPUnit\Framework\TestCase;
-//require_once __DIR__.'/define.php';
 
 class StatusControllerTest extends TestCase
 {

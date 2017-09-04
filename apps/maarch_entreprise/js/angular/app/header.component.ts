@@ -10,26 +10,26 @@ declare var angularGlobals : any;
     selector: 'menu-app',
     templateUrl :   angularGlobals["headerView"],
     styleUrls   :   [
-                        'css/header.component.css', //load specific custom css
-                        '../../node_modules/bootstrap/dist/css/bootstrap.min.css' //load bootstrap css
-                    ]
+        'css/header.component.css', //load specific custom css
+    ]
 })
 export class HeaderComponent implements OnInit {
 
     coreUrl                     : string;
 
-    lang                        : any       = {};
-    table                       : any;
-
-    resultInfo                  : string    = "";
-    loading                     : boolean   = false;
+    applicationName             : string    = "";
+    adminList                   : any[]     = [];
+    adminListModule             : any[]     = [];
+    menuList                    : any[]     = [];
+    profilList                  : any[]     = [];
+    notifList                   : any[]     = [];
 
 
     constructor(public http: HttpClient) {
     }
 
     prepareHeader() {
-        $j('#header').remove();
+        $j('#maarch_content').remove();
     }
 
     ngOnInit(): void {
@@ -37,7 +37,24 @@ export class HeaderComponent implements OnInit {
         
         this.coreUrl = angularGlobals.coreUrl;
 
-        this.loading = true;
+        this.http.get(this.coreUrl + 'rest/administration')
+        .subscribe((data : any) => {
+            this.menuList = data.menu.menuList;
+            this.applicationName = data.menu.applicationName[0];
+            this.adminList = data.application;
+            this.adminListModule = data.modules;
+        });
 
+        this.profilList = [
+            {   
+                label   : 'Mon profil',
+                link    : '/profile',
+                style    : 'fa-user'
+            },
+            {   label   : 'Déconnexion',
+                link    : '/logout',
+                style    : 'fa-sign-out'
+            }
+        ]
     }
 }

@@ -111,9 +111,21 @@ $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdmi
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
+
+//notifications
+$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
+$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
+$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
+$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
+$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
+
+//status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
 $app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+
+//groups
+$app->get('/groups', \Core\Controllers\GroupController::class . ':get');
 
 //status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
@@ -127,12 +139,6 @@ $app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':ge
 //docserverType
 $app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
 $app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
-
-//admin_reports
-$app->get('/report/groups', \Core\Controllers\ReportController::class . ':getGroups');
-$app->get('/report/groups/{id}', \Core\Controllers\ReportController::class . ':getReportsTypesByXML');
-$app->put('/report/groups/{id}', \Core\Controllers\ReportController::class . ':update');
-
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
@@ -160,6 +166,7 @@ $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':ge
 $app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
 $app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
+$app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
 $app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
@@ -197,6 +204,13 @@ $app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':ge
 $app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
 $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 
+//History
+$app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getForAdministration');
+
+//HistoryBatch
+$app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
+
+
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
 $app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
@@ -204,5 +218,10 @@ $app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::c
 $app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
 $app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
 $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
+//Reports
+$app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
+$app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+
 
 $app->run();

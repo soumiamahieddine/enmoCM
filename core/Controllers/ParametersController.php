@@ -84,7 +84,7 @@ class ParametersController
 
         return $response->withJson(
             [
-            'success'   =>  _PARAMETER. ' <b>' . $obj['id'] .'</b> ' ._ADDED,
+            'success'   =>  _PARAMETER. ' <b>' . $obj['id'] .'</b> ' ._ADDED
             ]
         );
     }
@@ -123,6 +123,7 @@ class ParametersController
         return $response->withJson(
             [
             'success'   =>  _PARAMETER. ' <b>' . $aArgs['id'] .'</b> ' ._DELETED,
+            'parameters'    =>  ParametersModel::getList()
             ]
         );
     }

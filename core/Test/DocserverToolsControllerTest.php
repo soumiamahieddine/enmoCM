@@ -9,9 +9,9 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+use PHPUnit\Framework\TestCase;
 
-class DocserverToolsControllerTest extends \PHPUnit_Framework_TestCase
+class DocserverToolsControllerTest extends TestCase
 {
     public function testSetRights()
     {

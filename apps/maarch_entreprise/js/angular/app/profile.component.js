@@ -199,27 +199,22 @@ var ProfileComponent = (function () {
             _this.userAbsenceModel = [];
             location.search = "?display=true&page=logout&abs_mode";
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            errorNotification(err.error.errors);
         });
     };
     ProfileComponent.prototype.updatePassword = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .subscribe(function (data) {
-            if (data.errors) {
-                errorNotification(data.errors);
-            }
-            else {
-                _this.showPassword = false;
-                _this.passwordModel = {
-                    currentPassword: "",
-                    newPassword: "",
-                    reNewPassword: "",
-                };
-                successNotification(data.success);
-            }
+            _this.showPassword = false;
+            _this.passwordModel = {
+                currentPassword: "",
+                newPassword: "",
+                reNewPassword: "",
+            };
+            successNotification(data.success);
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            errorNotification(err.error.errors);
         });
     };
     ProfileComponent.prototype.submitEmailSignature = function () {
@@ -296,7 +291,7 @@ var ProfileComponent = (function () {
             };
             successNotification(data.success);
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            errorNotification(err.error.errors);
         });
     };
     ProfileComponent.prototype.updateSignature = function () {
@@ -309,7 +304,7 @@ var ProfileComponent = (function () {
             _this.selectedSignatureLabel = "";
             successNotification(data.success);
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            errorNotification(err.error.errors);
         });
     };
     ProfileComponent.prototype.deleteSignature = function (id) {
@@ -321,7 +316,7 @@ var ProfileComponent = (function () {
                 _this.user.signatures = data.signatures;
                 successNotification(data.success);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                errorNotification(err.error.errors);
             });
         }
     };
@@ -330,7 +325,7 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             successNotification(data.success);
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            errorNotification(err.error.errors);
         });
     };
     return ProfileComponent;

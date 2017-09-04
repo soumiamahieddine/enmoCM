@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
+var translate_component_1 = require("../translate.component");
 var AdministrationComponent = (function () {
     function AdministrationComponent(http, router) {
         this.http = http;
         this.router = router;
+        this.lang = translate_component_1.LANG;
         this.applicationServices = [];
         this.modulesServices = [];
         this.loading = false;

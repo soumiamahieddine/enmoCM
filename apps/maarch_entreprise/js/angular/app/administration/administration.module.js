@@ -10,6 +10,8 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
+var md2_1 = require("md2");
+var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
@@ -23,6 +25,8 @@ var parameter_administration_component_1 = require("./parameter-administration.c
 var priorities_administration_component_1 = require("./priorities-administration.component");
 var priority_administration_component_1 = require("./priority-administration.component");
 var reports_administration_component_1 = require("./reports-administration.component");
+var history_administration_component_1 = require("./history-administration.component");
+var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var AdministrationModule = (function () {
     function AdministrationModule() {
     }
@@ -34,7 +38,9 @@ AdministrationModule = __decorate([
             common_1.CommonModule,
             forms_1.FormsModule,
             http_1.HttpClientModule,
-            administration_routing_module_1.AdministrationRoutingModule
+            app_material_module_1.AppMaterialModule,
+            administration_routing_module_1.AdministrationRoutingModule,
+            md2_1.Md2Module
         ],
         declarations: [
             administration_component_1.AdministrationComponent,
@@ -48,7 +54,10 @@ AdministrationModule = __decorate([
             parameter_administration_component_1.ParameterAdministrationComponent,
             priorities_administration_component_1.PrioritiesAdministrationComponent,
             priority_administration_component_1.PriorityAdministrationComponent,
-            reports_administration_component_1.ReportsAdministrationComponent
+            reports_administration_component_1.ReportsAdministrationComponent,
+            history_administration_component_1.HistoryAdministrationComponent,
+            historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
+            users_administration_component_1.DataTablePipe
         ]
     })
 ], AdministrationModule);

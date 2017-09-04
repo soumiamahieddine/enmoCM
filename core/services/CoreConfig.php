@@ -416,24 +416,6 @@ class Core_CoreConfig_Service {
                 //Loads log keywords of the module
             }
 
-            foreach ($xmlconfig->KEYWORDS as $keyword) {
-                $tmp = (string) $keyword->label;
-                if ( !empty($tmp) && defined($tmp) && constant($tmp) <> NULL ) {
-                    $tmp = constant($tmp);
-                }
-
-                $id = (string) $keyword->id;
-
-                if (!$coreTools->is_var_in_history_keywords_tab($id)) {
-                    array_push(
-                        $_SESSION['history_keywords'],
-                        array(
-                            'id' => $id,
-                            'label' => $tmp
-                        )
-                    );
-                }
-            }
         }
 
 //        if (!$mode_batch) {

@@ -78,5 +78,18 @@ abstract class attachments_Abstract
         $_SESSION['history']['attachup'] = (string) $hist->attachup;
         $_SESSION['history']['attachdel'] = (string) $hist->attachdel;
         $_SESSION['history']['attachview'] = (string) $hist->attachview;
+
+        // RECONCILIATION
+        $reconciliation = $xmlconfig->RECONCILIATION->CONFIG;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['multiple_res_id'] = (string)$reconciliation->multiple_res_id;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['attach_to_empty'] = (string)$reconciliation->attach_to_empty;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['delete_response_project'] = (string)$reconciliation->delete_response_project;
+        $_SESSION['modules_loaded']['attachments']['reconciliation']['close_incoming'] = (string)$reconciliation->close_incoming;
+
+        $reconciliationTab = $xmlconfig->RECONCILIATION->TABLENAME;
+        $_SESSION['tablename']['reconciliation']['attachment'] = (string)$reconciliationTab->attachment;
+        $_SESSION['tablename']['reconciliation']['letterbox'] = (string)$reconciliationTab->letterbox;
+        $_SESSION['tablename']['reconciliation']['contacts_v2'] = (string)$reconciliationTab->contacts_v2;
+        $_SESSION['tablename']['reconciliation']['contact_addresses'] = (string)$reconciliationTab->contact_addresses;
     }
 }

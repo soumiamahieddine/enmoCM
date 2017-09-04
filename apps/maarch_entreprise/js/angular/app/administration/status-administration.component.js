@@ -12,13 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
+var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var StatusAdministrationComponent = (function () {
-    function StatusAdministrationComponent(http, route, router) {
+    function StatusAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
-        this.pageTitle = "";
-        this.mode = null;
+        this.notify = notify;
+        this.lang = translate_component_1.LANG;
         this.status = {
             id: null,
             label_status: null,
@@ -27,7 +29,6 @@ var StatusAdministrationComponent = (function () {
             is_folder_status: null,
             img_filename: null
         };
-        this.lang = "";
         this.statusImages = "";
         this.loading = false;
     }
@@ -40,39 +41,35 @@ var StatusAdministrationComponent = (function () {
             if (typeof params['identifier'] == "undefined") {
                 _this.http.get(_this.coreUrl + 'rest/administration/status/new')
                     .subscribe(function (data) {
-                    _this.lang = data['lang'];
+                    _this.status.img_filename = "fm-letter";
+                    _this.status.can_be_searched = true;
+                    _this.status.can_be_modified = true;
                     _this.statusImages = data['statusImages'];
-                    _this.mode = 'create';
-                    _this.pageTitle = _this.lang.newStatus;
+                    _this.creationMode = true;
                     _this.updateBreadcrumb(angularGlobals.applicationName);
+                    _this.loading = false;
                 });
             }
             else {
-                _this.mode = 'update';
+                _this.creationMode = false;
                 _this.statusIdentifier = params['identifier'];
                 _this.getStatusInfos(_this.statusIdentifier);
+                _this.loading = false;
             }
-            setTimeout(function () {
-                $j(".help").tooltipster({
-                    theme: 'tooltipster-maarch',
-                    interactive: true
-                });
-            }, 0);
         });
-        this.loading = false;
     };
     StatusAdministrationComponent.prototype.prepareStatus = function () {
         $j('#inner_content').remove();
     };
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.admin + "</a> > " +
-            "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>" + this.lang.admin_status + "</a> > ";
-        if (this.mode == 'create') {
-            breadCrumb += this.lang.newItem;
+            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " +
+            "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>" + this.lang.statuses + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.statusCreation;
         }
         else {
-            breadCrumb += this.lang.modification;
+            breadCrumb += this.lang.statusModification;
         }
         $j('#ariane')[0].innerHTML = breadCrumb;
     };
@@ -99,35 +96,30 @@ var StatusAdministrationComponent = (function () {
             else {
                 _this.status.is_folder_status = false;
             }
-            _this.lang = data['lang'];
             _this.statusImages = data['statusImages'];
-            _this.pageTitle = _this.lang.modify_status + ' : ' + _this.status.id;
             _this.updateBreadcrumb(angularGlobals.applicationName);
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            _this.notify.error(JSON.parse(err._body).errors);
         });
-    };
-    StatusAdministrationComponent.prototype.selectImage = function (image_name) {
-        this.status.img_filename = image_name;
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
-        if (this.mode == 'create') {
+        if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/status', this.status)
-                .subscribe(function () {
-                successNotification(_this.lang.newStatusAdded + ' : ' + _this.status.id);
+                .subscribe(function (data) {
+                _this.notify.success(_this.lang.statusAdded + ' « ' + data.status.id + ' »');
                 _this.router.navigate(['administration/status']);
             }, function (err) {
-                errorNotification((JSON.parse(err._body).errors).join("<br>"));
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
-        else if (this.mode == "update") {
+        else if (this.creationMode == false) {
             this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
-                .subscribe(function () {
-                successNotification(_this.lang.statusUpdated + ' : ' + _this.status.id);
+                .subscribe(function (data) {
+                _this.notify.success(_this.lang.statusUpdated + ' « ' + data.status.id + ' »');
                 _this.router.navigate(['administration/status']);
             }, function (err) {
-                errorNotification((JSON.parse(err._body).errors).join("<br>"));
+                _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
@@ -136,8 +128,9 @@ var StatusAdministrationComponent = (function () {
 StatusAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals['status-administrationView'],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
+        styleUrls: ['css/status-administration.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
+    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
 ], StatusAdministrationComponent);
 exports.StatusAdministrationComponent = StatusAdministrationComponent;

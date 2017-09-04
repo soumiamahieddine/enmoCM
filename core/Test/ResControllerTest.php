@@ -9,9 +9,10 @@ namespace MaarchTest;
 *
 */
 
-require_once __DIR__.'/define.php';
+namespace MaarchTest;
+use PHPUnit\Framework\TestCase;
 
-class ResControllerTest extends \PHPUnit_Framework_TestCase
+class ResControllerTest extends TestCase
 {
 
     public function testPrepareStorage()
@@ -131,7 +132,7 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'id'=> $resId[0]['res_id']
@@ -233,7 +234,7 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
     {
         $action = new \Core\Controllers\ResController();
 
-        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'id'=> $resId[0]['res_id']
@@ -265,7 +266,7 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'table'         => 'res_letterbox',
@@ -276,8 +277,8 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
         $response = $action->update($request, $response, $aArgs);
-        //print_r($response);exit;
-        $this->assertGreaterThan(1, json_decode($response->getBody())[0]);
+        //print_r(json_decode($response->getBody())[0]->res_id);exit;
+        $this->assertGreaterThan(1, json_decode($response->getBody())[0]->res_id);
     }
 
     public function testUpdateResource()
@@ -295,7 +296,7 @@ class ResControllerTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $resId = \Core\Models\ResModel::getLastId(['select' => 'res_id']);
+        $resId = \Core\Models\ResModel::getLastId(['select' => ['res_id']]);
 
         $aArgs = [
             'table'         => 'res_letterbox',

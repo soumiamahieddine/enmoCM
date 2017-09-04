@@ -15,18 +15,19 @@
 
 namespace Core\Controllers;
 
+use Baskets\Models\BasketsModel;
 use Core\Models\CoreConfigModel;
+use Core\Models\GroupModel;
+use Core\Models\HistoryModel;
+use Core\Models\LangModel;
 use Core\Models\SecurityModel;
+use Core\Models\ServiceModel;
+use Core\Models\UserModel;
+use Entities\Models\EntityModel;
+use Entities\Models\ListModelsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Baskets\Models\BasketsModel;
-use Core\Models\GroupModel;
-use Core\Models\LangModel;
-use Core\Models\ServiceModel;
-use Entities\Models\EntityModel;
-use Core\Models\UserModel;
-use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
 
@@ -41,7 +42,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-
+        
         return $response->withJson($user);
     }
 
@@ -69,7 +70,7 @@ class UserController
 
         UserModel::create(['user' => $data]);
 
-        $newUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['id']]);
+        $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
         if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
@@ -112,37 +113,58 @@ class UserController
 
         UserModel::delete(['id' => $aArgs['id']]);
 
-        return $response->withJson(['success' => _DELETED_USER]);
-    }
-    
-    public function suspendUser(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        // TODO
-        $error = $this->hasUsersRights(['userId' => $aArgs['userId']]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        //get New User List
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $users = UserModel::get(
+                [
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
+                ]
+            );
+        } else {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities(
+                [
+                'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'entities'  => $entities
+                ]
+            );
         }
 
-        $data = $request->getParams();
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['firstname', 'lastname']])
-            || (!empty($data['mail']) && !filter_var($data['mail'], FILTER_VALIDATE_EMAIL))
-            || (!empty($data['phone']) && !preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $usersId = [];
+        foreach ($users as $value) {
+            $usersId[] = $value['user_id'];
         }
 
-        //update user
-        $r = UserModel::update(['userId' => $aArgs['userId'], 'user' => $data]);
-
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'User Update Error']);
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
+        
+        $usersListModels = [];
+        foreach ($listModels as $value) {
+            $usersListModels[] = $value['item_id'];
         }
+        
+        foreach ($users as $key => $value) {
+            if (in_array($value['user_id'], $usersListModels)) {
+                $users[$key]['inDiffListDest'] = 'Y';
+            } else {
+                $users[$key]['inDiffListDest'] = 'N';
+            }
+        }
+        $users;
 
-        return $response->withJson(['success' => _USER_UPDATED]);
+
+        return $response->withJson(
+            [
+            'success' => _DELETED_USER,
+            'users' => $users
+            ]
+        );
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
     {
-        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id', 'enabled']]);
 
         $data = $request->getParams();
 
@@ -153,6 +175,7 @@ class UserController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+        $data['enabled'] = $user['enabled'];
 
         UserModel::update(['id' => $user['id'], 'user' => $data]);
 
@@ -180,9 +203,9 @@ class UserController
         }
 
         if ($data['newPassword'] != $data['reNewPassword']) {
-            return $response->withStatus(400)->withJson(['errors' => _WRONG_SECOND_PSW]);
-        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'],'password' => $data['currentPassword']])) {
-            return $response->withJson(['errors' => _WRONG_PSW]);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        } elseif (!SecurityModel::authentication(['userId' => $_SESSION['user']['UserId'], 'password' => $data['currentPassword']])) {
+            return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
         }
 
         $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
@@ -242,7 +265,7 @@ class UserController
         if (!empty($data['status']) && $data['status'] == 'OK') {
             $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
 
-            UserModel::deactivateAbsenceById(['id' => $aArgs['id']]);
+            UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
                 'table_name'    => 'users',
                 'record_id'     => $user['user_id'],
@@ -500,14 +523,13 @@ class UserController
                 $users[$key]['inDiffListDest'] = 'N';
             }
         }
-
-        $return['lang'] = LangModel::getUsersAdministrationLang();
+        
         $return['users'] = $users;
 
         return $response->withJson($return);
     }
 
-    public function getUserForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -522,19 +544,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $user['user_id']]);
-        $user['lang'] = LangModel::getUsersAdministrationLang();
-
-        return $response->withJson($user);
-    }
-
-    public function getNewUserForAdministration(RequestInterface $request, ResponseInterface $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $user = [];
-        $user['lang'] = LangModel::getUsersAdministrationLang();
+        $user['history'] = HistoryModel::getHistoryByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
     }
@@ -565,7 +575,8 @@ class UserController
         return $response->withJson([
             'success'   => _ADDED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
+            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
+            'baskets'   => BasketsModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 

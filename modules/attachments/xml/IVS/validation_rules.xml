@@ -28,6 +28,7 @@
 
 	<validationRule name="get_chrono_attachment" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
+		<parameter name="type_id" type="identifier" />
 	</validationRule>
 
 	<validationRule name="frame_list_attachments" extends="standardForm" mode="error">

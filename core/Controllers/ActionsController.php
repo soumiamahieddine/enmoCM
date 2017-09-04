@@ -63,6 +63,11 @@ class ActionsController
             $obj['action']['create_id'] = false;
         }
 
+        //array of id categoriesList
+        foreach ($obj['action']['actionCategories'] as $key => $category) {
+            $arrActionCategories[] = $category['category_id'];
+        }
+        $obj['action']['actionCategories'] = $arrActionCategories;
 
         $obj['categoriesList'] = ActionsModel:: getLettersBoxCategories();
 
@@ -70,23 +75,10 @@ class ActionsController
         foreach ($obj['categoriesList'] as $key => $category) {
             $arrCategoriesList[] = $category['id'];
         }
+
         //array of id actionCategories
-        if (!empty($obj['action']['actionCategories'])) {
-            foreach ($obj['action']['actionCategories'] as $actionCategories) {
-                $arrActionCategories[] = $actionCategories['category_id'];
-            }
-            //check
-            foreach ($arrActionCategories as $key => $category_id) {
-                if (in_array($category_id, $arrCategoriesList)) {
-                    $obj['categoriesList'][$key]['selected'] = true;
-                } else {
-                    $obj['categoriesList'][$key]['selected'] = false;
-                }
-            }
-        } else {
-            foreach ($obj['categoriesList'] as $key => $category) {
-                $obj['categoriesList'][$key]['selected'] = false;
-            }
+        if (empty($obj['action']['actionCategories'])) {
+            $obj['action']['actionCategories'] = $arrCategoriesList;
         }
     
         $obj['statusList'] = StatusModel::getList();
@@ -94,7 +86,6 @@ class ActionsController
         $obj['action_pagesList']=ActionsModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
         $obj['keywordsList']=ActionsModel::getKeywords();
-        $obj['lang'] = LangModel::getActionsForAdministrationLang();
   
         return $response->withJson($obj);
     }
@@ -184,11 +175,10 @@ class ActionsController
                 ->withJson(['errors' => _NOT_DELETE]);
         }
         
-
         return $response->withJson(
             [
             'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
-            'action'      => $obj
+            'action'      => ActionsModel::getList()
             ]
         );
     }

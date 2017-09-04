@@ -484,9 +484,9 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role'],
-            'table'     => ['usergroup_content, usergroups'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?'],
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment'],
+            'table'     => ['usergroup_content, usergroups, security'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$aArgs['userId']]
         ]);
 
@@ -541,7 +541,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function deactivateAbsenceById(array $aArgs = [])
+    public static function desactivateAbsenceById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);

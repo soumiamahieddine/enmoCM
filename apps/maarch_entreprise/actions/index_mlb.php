@@ -359,6 +359,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $hideSelectFile = 'hideSelectFile();';
     }
     /*** Category ***/
+
     $frmStr .= '<tr id="category_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:200px;"><label for="category_id" '
             . 'class="form_title" >' . _CATEGORY . '</label></td>';
@@ -375,7 +376,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . '&resId=' . $resId . '&collId=' . $collId . '\',\'none\',\''.$collId.'\',this.options[this.selectedIndex].value);'.$hideSelectFile.'">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
-        if ($catId <> 'default_category') {
+        if ($catId <> 'default_category' && $catId <> 'attachment') {
             $frmStr .= '<option value="' . functions::xssafe($catId) . '"';
             if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId || (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] == $catId)
             ) {
@@ -1020,7 +1021,7 @@ function check_form($formId, $values)
         $_SESSION['upfile']['error']='0';
         $_SESSION['upfile']['format']='maarch';
     } elseif (empty($_SESSION['upfile']['format'])) {
-        $_SESSION['action_error'] = _FILE . ' ' . _MANDATORY;
+        $_SESSION['action_error'] = _FILE . ' ' . strtolower(_MANDATORY);
         return false;
     }
 
@@ -1272,7 +1273,7 @@ function process_category_check($catId, $values)
 
         if ($priority === '') {
             $_SESSION['action_error'] = $_ENV['categories'][$catId]['priority']['label']
-                . " " . _MANDATORY;
+                . " " . strtolower(_MANDATORY);
             return false;
         }
     }
@@ -1288,7 +1289,7 @@ function process_category_check($catId, $values)
         }
         if (! $contactType) {
             $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['type_contact']['label']
-                . " " . _MANDATORY;
+                . " " . strtolower(_MANDATORY);
             return false;
         }
         $contact = get_value_fields($values, 'contactid');
@@ -1321,7 +1322,7 @@ function process_category_check($catId, $values)
                 || ! isset($_SESSION['indexing']['diff_list']['dest']['users'][0])
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['diff_list']['label']
-                    . " " . _MANDATORY;
+                    . " " . strtolower(_MANDATORY);
                 return false;
             }
         }
