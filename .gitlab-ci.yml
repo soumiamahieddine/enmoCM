@@ -34,6 +34,8 @@ job_php-7.0:
     - cd /var/www/html/MaarchCourrier
     - mkdir -p /var/www/html/MaarchCourrier
     - composer -n install
+    - curl -sL https://deb.nodesource.com/setup_7.x | bash -
+    - apt-get install -yqq nodejs
     - npm install npm@latest -g
     - npm set registry https://registry.npmjs.org/
     - npm install
