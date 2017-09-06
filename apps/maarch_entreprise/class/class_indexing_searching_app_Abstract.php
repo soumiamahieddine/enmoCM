@@ -293,20 +293,30 @@ abstract class indexing_searching_app_Abstract extends Database
             $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT;
         }
         if (!empty($post['process_limit_date'])) {
-
-        $processLimitDate = new datetime($post['process_limit_date']);
-        $processLimitDate = date_add($processLimitDate,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
-        $processLimitDate = (array) $processLimitDate; 
-
-            array_push(
-                $data_ext, 
-                array(
-                    'column' => 'process_limit_date', 
-                    'value' => $func->format_date_db($processLimitDate['date'],'true','','true'), 
-                    'type' => "date"
-                )
-            );
-        }
+            $processLimitDate = new datetime($post['process_limit_date']);
+            $processLimitDate = date_add($processLimitDate,date_interval_create_from_date_string('23 hours + 59 minutes + 59 seconds'));
+            $processLimitDate = (array) $processLimitDate; 
+    
+                array_push(
+                    $data_ext, 
+                    array(
+                        'column' => 'process_limit_date', 
+                        'value' => $func->format_date_db($processLimitDate['date'],'true','','true'), 
+                        'type' => "date"
+                    )
+                );
+            }
+            else
+            {
+                array_push(
+                    $data_ext, 
+                    array(
+                        'column' => 'process_limit_date', 
+                        'value' => null, 
+                        'type' => "date"
+                    )
+                );
+            }
         
         if ($core->is_module_loaded('folder'))
         {
