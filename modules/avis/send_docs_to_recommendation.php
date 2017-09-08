@@ -132,12 +132,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     }
 
-    $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.':</b><br/>';
+    $frm_str .='<b>'._RECOMMENDATION_LIMIT_DATE.' <span class="red_asterisk"><i class="fa fa-star"></i></span> :</b> <br/>';
     $frm_str .= '<input name="recommendation_limit_date_tr" type="text" '
         . 'id="recommendation_limit_date_tr" value="" placeholder="JJ-MM-AAAA" onfocus="checkRealDateAvis();" onChange="checkRealDateAvis();"  onclick="clear_error(\'frm_error_'
         . $actionId . '\');showCalender(this);"  onblur="document.getElementById(\'recommendation_limit_date\').value=document.getElementById(\'recommendation_limit_date_tr\').value;"/>';
     $frm_str .='<br/>';
-    $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.':</b><br/>';
+    $frm_str .='<br/><b>'._RECOMMENDATION_NOTE.' :</b><br/>';
     $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                 . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -195,6 +195,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $_SESSION['action_error'] = _NOTE. " " . _MANDATORY;
         return false;
     }
+
+    $d = DateTime::createFromFormat('d-m-Y', $recommendation_limit_date);
+
+    if ($d && $d->format('d-m-Y') === $recommendation_limit_date) {
+    } else {
+        $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _WRONG_FORMAT;
+        return false;
+    }
+
     return true;
  }
 
