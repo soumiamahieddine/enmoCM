@@ -4,14 +4,24 @@ require_once 'core/Models/UserModel.php';
 <div id="header">
         <div id="nav">
                 <div id="header_username" style="position:absolute;text-align:center;left:675px;font-size: 1.3em;top: 6px;color: white;">
-                        <?php 
-                        $primaryGroup=\Core\Models\UserModel::getPrimaryGroupById(['userId'=> $_SESSION['user']['UserId']]);
+                    <?php                         
+                        $strUserInfos = $_SESSION['user']['FirstName']." ".$_SESSION['user']['LastName'];
+                        $userGroups=\Core\Models\UserModel::getGroupsByUserId(['userId'=> $_SESSION['user']['UserId']]);
                         
-                        echo $_SESSION['user']['FirstName']." ".$_SESSION['user']['LastName'];
-                        if(!empty($primaryGroup)){
-                            echo " (".$primaryGroup['group_desc'].")";
+                        if(!empty($userGroups)){
+                            $strUserInfos.=" (";
+                            for($i=0;$i<count($userGroups);$i++){
+                                if($i==count($userGroups)-1){
+                                    $strUserInfos.=$userGroups[$i]['group_desc'];
+                                } else {
+                                    $strUserInfos.=$userGroups[$i]['group_desc'].", ";
+                                }                                
+                            }
+                            $strUserInfos.=")";
                         }
-                        ?>
+                        
+                        echo $strUserInfos;
+                    ?>
                 </div>
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
                 <p>
