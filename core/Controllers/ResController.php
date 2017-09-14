@@ -448,7 +448,7 @@ class ResController
             }
 
             $resInsert = ResModel::create([
-                'table' => 'res_letterbox',
+                'table' => $table,
                 'data'  => $prepareData
             ]);
 
