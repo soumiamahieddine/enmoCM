@@ -1540,7 +1540,6 @@ class docservers_controler
                     $docserverObject->docserver_type_id
                 );
                 
-                //var_dump($file);
                 if (!file_exists($file) || empty($adr[0][$cptDocserver]['path']) || $adr[0][$cptDocserver]['filename']) {
                     
                     $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
