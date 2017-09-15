@@ -2147,7 +2147,8 @@ class Install extends functions
         $db = new Database();
 
         $query = "UPDATE users SET password=? WHERE user_id='superadmin'";
-        $db->query($query, [\Core\Models\SecurityModel::getPasswordHash($newPass)]);
+        $sec = new security();
+        $db->query($query, [$sec->getPasswordHash($newPass)]);
     }
 
     function copy_dir($dir2copy, $dir_paste, $excludeExt=false)
