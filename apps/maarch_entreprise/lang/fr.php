@@ -2090,3 +2090,6 @@ if (!defined('_STATUS_UPDATED'))
 if(!defined('_SAVED_CHANGE'))
     define('_SAVED_CHANGE', 'Modification enregistrée');
 /** Generic messages **/
+
+if (!defined('_DOC_CREATED_WITH_STATUS'))
+    define('_DOC_CREATED_WITH_STATUS', 'Document créé avec le statut');
