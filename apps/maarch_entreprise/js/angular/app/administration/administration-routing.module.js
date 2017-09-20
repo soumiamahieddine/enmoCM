@@ -50,6 +50,7 @@ AdministrationRoutingModule = __decorate([
                 { path: 'administration/actions/:id', component: action_administration_component_1.ActionAdministrationComponent },
                 { path: 'administration/notifications', component: notifications_administration_component_1.NotificationsAdministrationComponent },
                 { path: 'administration/notifications/new', component: notification_administration_component_1.NotificationAdministrationComponent },
+                { path: 'administration/notifications/:identifier', component: notification_administration_component_1.NotificationAdministrationComponent },
             ]),
         ],
         exports: [

@@ -21,8 +21,8 @@ class UserModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        // ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        // ValidatorModel::arrayType($aArgs, ['where', 'data']);
 
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -255,7 +255,7 @@ class UserModelAbstract
             'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
         ]);
 
-        return true;
+        return $j;
     }
 
     public static function createEmailSignature(array $aArgs = [])

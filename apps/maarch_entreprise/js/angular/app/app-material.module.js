@@ -17,11 +17,13 @@ AppMaterialModule = __decorate([
     core_1.NgModule({
         imports: [
             material_1.MdCheckboxModule,
-            material_1.MdSelectModule
+            material_1.MdSelectModule,
+            material_1.MdRadioModule
         ],
         exports: [
             material_1.MdCheckboxModule,
-            material_1.MdSelectModule
+            material_1.MdSelectModule,
+            material_1.MdRadioModule
         ]
     })
 ], AppMaterialModule);

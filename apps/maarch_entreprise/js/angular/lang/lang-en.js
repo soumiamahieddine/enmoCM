@@ -64,6 +64,10 @@ exports.LANG_EN = {
     "autoLogoutAbsence": "You are going to be automaticaly disconnected after your redirections",
     "reports": "Reports",
     "myProfile": "My profile",
+    "event": "Event",
+    "template": "Modèle",
+    "diffusion_type": "Type de diffusion",
+    //Notifications
     "notification": "notification",
     "notificationsListTitle": "Notifications list",
     "newNotification": "New notification",

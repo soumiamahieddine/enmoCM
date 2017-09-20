@@ -18,20 +18,92 @@ var NotificationAdministrationComponent = (function () {
         this.http = http;
         this.route = route;
         this.router = router;
-        this.notification = {};
+        this.notification = {
+            diffusionType_label: null
+        };
         this.loading = false;
         this.lang = translate_component_1.LANG;
     }
     NotificationAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.coreUrl = angularGlobals.coreUrl;
         this.prepareNotifications();
         this.loading = true;
+        this.coreUrl = angularGlobals.coreUrl;
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
-            if (typeof params['id'] == "undefined") {
+            console.log(params['identifier']);
+            if (typeof params['identifier'] == "undefined") {
+                //if(params['identifier']== "new"){
                 _this.creationMode = true;
-                _this.loading = false;
+                _this.http.get(_this.coreUrl + 'rest/administration/notifications/new')
+                    .subscribe(function (data) {
+                    _this.notification = data.notification;
+                    _this.loading = false;
+                    // setTimeout(() => {
+                    //             $j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true});     
+                    //         }, 0);
+                }, function (err) {
+                    errorNotification(JSON.parse(err._body).errors);
+                });
             }
+            else {
+                _this.creationMode = false;
+                _this.http.get(_this.coreUrl + 'rest/administration/notifications/' + params['identifier'])
+                    .subscribe(function (data) {
+                    _this.notification = data.notification;
+                    console.log(data.notification);
+                    _this.loading = false;
+                    setTimeout(function () {
+                        $j("select").chosen({ width: "100%", disable_search_threshold: 10, search_contains: true });
+                    }, 0);
+                });
+            }
+        });
+    };
+    NotificationAdministrationComponent.prototype.selectAll = function (event) {
+        var target = event.target.getAttribute("data-target");
+        $j('#' + target + ' option').prop('selected', true);
+        $j('#' + target).trigger('chosen:updated');
+    };
+    NotificationAdministrationComponent.prototype.unselectAll = function (event) {
+        var target = event.target.getAttribute("data-target");
+        $j('#' + target + ' option').prop('selected', false);
+        $j('#' + target).trigger('chosen:updated');
+    };
+    NotificationAdministrationComponent.prototype.onSubmit = function () {
+        var _this = this;
+        //affect value of select
+        if ($j("#groupslist").chosen().val()) {
+            this.notification.diffusion_properties = $j("#groupslist").chosen().val();
+        }
+        else if ($j("#entitieslist").chosen().val()) {
+            this.notification.diffusion_properties = $j("#entitieslist").chosen().val();
+        }
+        else if ($j("#statuseslist").chosen().val()) {
+            this.notification.diffusion_properties = $j("#statuseslist").chosen().val();
+        }
+        else if ($j("#userslist").chosen().val()) {
+            this.notification.diffusion_properties = $j("#userslist").chosen().val();
+        }
+        if ($j("#groupslistJd").chosen().val()) {
+            this.notification.attachfor_properties = $j("#groupslistJd").chosen().val();
+        }
+        else if ($j("#entitieslistJd").chosen().val()) {
+            this.notification.attachfor_properties = $j("#entitieslistJd").chosen().val();
+        }
+        else if ($j("#statuseslistJd").chosen().val()) {
+            this.notification.attachfor_properties = $j("#statuseslistJd").chosen().val();
+        }
+        else if ($j("#userslistJd").chosen().val()) {
+            this.notification.attachfor_properties = $j("#userslistJd").chosen().val();
+        }
+        this.http.post(this.coreUrl + 'rest/notifications', this.notification)
+            .subscribe(function (data) {
+            _this.router.navigate(['/administration/notifications']);
+            //successNotification(data.success);
+            successNotification(_this.lang.newNotificationAdded + ' : ' + _this.notification.notification_id);
+        }, function (err) {
+            errorNotification(JSON.parse(err._body).errors);
         });
     };
     NotificationAdministrationComponent.prototype.prepareNotifications = function () {

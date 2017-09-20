@@ -6,7 +6,11 @@
         <script>modules/notifications/diffusion_types/group.php</script>
         <use_email>true</use_email>
         <use_rss>true</use_rss>
-        <use_attachment>true</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select>id, group_id, group_desc</select>
+        <from>usergroups</from>
+        <where>enabled = ?</where>
+        <data>Y</data>
     </diffusion_type>
     <diffusion_type>
         <id>entity</id>
@@ -14,7 +18,11 @@
         <script>modules/notifications/diffusion_types/entity.php</script>
         <use_email>true</use_email>
         <use_rss>true</use_rss>
-        <use_attachment>true</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select>entity_id, entity_label</select>
+        <from>entities</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>dest_entity</id>
@@ -22,7 +30,11 @@
         <script>modules/notifications/diffusion_types/dest_entity.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>false</add_attachment>
+        <select>id, label_status</select>
+        <from>status</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>user</id>
@@ -30,7 +42,11 @@
         <script>modules/notifications/diffusion_types/user.php</script>
         <use_email>true</use_email>
         <use_rss>true</use_rss>
-        <use_attachment>true</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select>user_id, firstname, lastname</select>
+        <from>users</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>dest_user</id>
@@ -38,7 +54,11 @@
         <script>modules/notifications/diffusion_types/dest_user.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>false</add_attachment>
+        <select>id, label_status</select>
+        <from>status</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>copy_list</id>
@@ -46,7 +66,11 @@
         <script>modules/notifications/diffusion_types/copy_list.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>false</add_attachment>
+        <select></select>
+        <from></from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>note_dest_user</id>
@@ -54,7 +78,11 @@
         <script>modules/notifications/diffusion_types/note_dest_user.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>false</add_attachment>
+        <select></select>
+        <from></from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>note_copy_list</id>
@@ -62,7 +90,11 @@
         <script>modules/notifications/diffusion_types/note_copy_list.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>false</add_attachment>
+        <select></select>
+        <from></from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>contact</id>
@@ -70,7 +102,11 @@
         <script>modules/notifications/diffusion_types/contact.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select></select>
+        <from></from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>dest_user_visa</id>
@@ -78,7 +114,11 @@
         <script>modules/notifications/diffusion_types/dest_user_visa.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select>id, label_status</select>
+        <from>status</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
     <diffusion_type>
         <id>dest_user_sign</id>
@@ -86,6 +126,10 @@
         <script>modules/notifications/diffusion_types/dest_user_sign.php</script>
         <use_email>true</use_email>
         <use_rss>false</use_rss>
-        <use_attachment>false</use_attachment>
+        <add_attachment>true</add_attachment>
+        <select>id, label_status</select>
+        <from>status</from>
+        <where></where>
+        <data></data>
     </diffusion_type>
 </root>

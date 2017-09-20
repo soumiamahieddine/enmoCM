@@ -38,6 +38,7 @@ case 'form_content':
     $tab = $request->PDOselect(
         $select, $where, array($choosen_status_tab), $orderstr, $_SESSION['config']['databasetype']
     );
+    var_dump($choosen_status_tab);exit;
     $status_list = $tab;
 
 	$form_content .= '<p class="sstit">' . _NOTIFICATIONS_DEST_ENTITY_DIFF_TYPE_WITH_STATUS . '</p>';

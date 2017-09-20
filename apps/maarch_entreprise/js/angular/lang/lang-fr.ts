@@ -66,11 +66,17 @@ export const LANG_FR = {
     "autoLogoutAbsence"         : "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes",
     "reports"                   : "Etats et éditions",
     "myProfile"                 : "Mon profil",
+    "event"                     : "Evènement",
+    "template"                  : "Modèle",
+    "diffusion_type"            : "Type de diffusion",
+
+
+    //Notifications
     "notification"              : "notification",
     "notificationsListTitle"    : "Liste des notifications",
     "newNotification"           : "Nouvelle notification",
     "admin_notifications"       : "Administration des notifications",
-
+    
 
     //Lists
     available: "disponible",
@@ -106,4 +112,17 @@ export const LANG_FR = {
     isFolderActionDesc: "Permet d'utiliser cette action dans une bannette de dossier",
     keyword: "Mot clé",
     newAction: "Nouvelle action",
+    sendToDestFromGroups : "Envoi aux utilisateurs du(des) groupe(s) spécifié(s):",
+    sendToDestFromentities : "Envoi aux utilisateurs des entité(s) spécifié(s):",
+    sendToMainDestUserWithStatus : "Envoi au destinataire principal du document avec le(s) statut(s):",
+    sendToUsers : "Envoi aux utilisateurs spécifiés:",
+    sendToCopyUsers : "Envoi aux utilisateurs en copie du document",
+    sendToMainDestUser : "Envoi au destinataire principal du document",
+    sendToContact : "Envoi à l'expéditeur du courrier",
+    sendToVisaUserWithStatus : "Envoi à l'utilisateur devant viser avec le(s) statut(s):",
+    sendToSignUserWithStatus : "Envoi à l'utilisateur devant signer avec le(s) statut(s):",
+    authorization : "Autorisé :",
+    joinDoc : "Joindre le document à la notification :",
+    newNotificationAdded : "Nouvelle notification créée ",
+
 };
