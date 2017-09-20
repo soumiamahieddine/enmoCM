@@ -19,12 +19,25 @@
 	float: left;
 }
 
+#tabricatorLeft{
+	height:99.5%;
+	min-width:0;
+	width:99.5%;
+	margin-bottom:0px;
+}
+
 #visa_right{
 	/*border:1px solid green;*/
 	height:95%;
 	width:41%;
 	margin-left:1%;
 	float: left;
+}
+
+#tabricatorRight{
+	height:90%;
+	min-width:0;
+	width:99.5%;
 }
 
 #visa_listDoc .toolbar{
@@ -135,6 +148,7 @@
   opacity: 0.5 !important;
   color : #666 !important;
   border: solid 2px white !important;
+  text-decoration: line-through !important;
 }
 
 .droptarget input{

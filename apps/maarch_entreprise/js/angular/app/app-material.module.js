@@ -18,12 +18,34 @@ AppMaterialModule = __decorate([
         imports: [
             material_1.MdCheckboxModule,
             material_1.MdSelectModule,
-            material_1.MdRadioModule
+            material_1.MdSlideToggleModule,
+            material_1.MdInputModule,
+            material_1.MdTooltipModule,
+            material_1.MdTabsModule,
+            material_1.MdSidenavModule,
+            material_1.MdButtonModule,
+            material_1.MdCardModule,
+            material_1.MdButtonToggleModule,
+            material_1.MdProgressSpinnerModule,
+            material_1.MdToolbarModule,
+            material_1.MdMenuModule,
+            material_1.MdGridListModule
         ],
         exports: [
             material_1.MdCheckboxModule,
             material_1.MdSelectModule,
-            material_1.MdRadioModule
+            material_1.MdSlideToggleModule,
+            material_1.MdInputModule,
+            material_1.MdTooltipModule,
+            material_1.MdTabsModule,
+            material_1.MdSidenavModule,
+            material_1.MdButtonModule,
+            material_1.MdCardModule,
+            material_1.MdButtonToggleModule,
+            material_1.MdProgressSpinnerModule,
+            material_1.MdToolbarModule,
+            material_1.MdMenuModule,
+            material_1.MdGridListModule
         ]
     })
 ], AppMaterialModule);

@@ -1,34 +1,26 @@
-<div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+<div class="page-header">
+    <h1 style="margin-top: 0">{{lang.administration}}</h1>
 </div>
-<div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-cogs fa-2x"></i> {{lang.administration}}</h1>
-    <div class="row row-eq-height">
-        <div *ngIf="applicationServices[0]" class="col-md-12 servicesDiv">
-            <h2 class="administrationTitle">{{lang.application}}</h2>
-            <div class="content">
-                <div *ngFor="let appService of applicationServices" class="admin_item" title="{{appService.comment}}" (click)="goToSpecifiedAdministration(appService)">
-                    <div>
-                        <i class="{{appService.style}} fa-4x"></i>
-                    </div>
-                    <div>
-                        <strong>{{appService.name}}</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="modulesServices[0]" class="col-md-12 servicesDiv">
-            <h2 class="administrationTitle">{{lang.modules}}</h2>
-            <div class="content">
-                <div *ngFor="let modService of modulesServices" class="admin_item" title="{{modService.comment}}" (click)="goToSpecifiedAdministration(modService)">
-                    <div>
-                        <i class="{{modService.style}} fa-4x"></i>
-                    </div>
-                    <div>
-                        <strong>{{modService.name}}</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div *ngIf="loading">
+    <md-spinner style="margin:auto;"></md-spinner>
+</div>
+<div *ngIf="!loading" class="container-fluid" style="color:#666;">
+    <div class="col-md-12">
+        <md-tab-group>
+            <md-tab label="{{lang.application}}">
+                <md-grid-list cols="6" rowHeight="2:1">
+                    <md-grid-tile *ngFor="let appService of applicationServices">
+                        <button md-button tooltip="{{appService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(appService)"><i class="{{appService.style}} fa-4x"></i><br/>{{appService.name}}</button>
+                    </md-grid-tile>
+                </md-grid-list>
+            </md-tab>
+            <md-tab label="{{lang.modules}}">
+                <md-grid-list cols="6" rowHeight="2:1">
+                    <md-grid-tile *ngFor="let modService of modulesServices">
+                        <button md-button tooltip="{{modService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(modService)"><i class="{{modService.style}} fa-4x"></i><br/>{{modService.name}}</button>
+                    </md-grid-tile>
+                </md-grid-list>
+            </md-tab>
+        </md-tab-group>           
     </div>
 </div>

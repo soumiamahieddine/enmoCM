@@ -32,14 +32,14 @@
     include_once '../../core/init.php';
     require_once('install/class/Class_Install.php');
     $Class_Install = new Install;
-
 //CONTROLLER
-    if (!isset($_REQUEST['newSuperadminPass']) || empty($_REQUEST['newSuperadminPass'])) {
+    $trimmedPassword=rtrim($_REQUEST['newSuperadminPass']);
+    if (!isset($_REQUEST['newSuperadminPass']) || empty($trimmedPassword)) {
         header("Location: ../error.php?error=badForm"); exit;
     }
-
-    $Class_Install->setSuperadminPass(
+    $resp=$Class_Install->setSuperadminPass(
         $_REQUEST['newSuperadminPass']
     );
+    
 
-    header("Location: ../index.php?step=resume");
+    header("Location: ../index.php?step=config");

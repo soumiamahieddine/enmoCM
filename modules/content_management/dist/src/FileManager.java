@@ -129,7 +129,7 @@ public class FileManager {
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
-                        if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
+                        if ((fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) || ("".equals(pathToFileToLaunch))) {
                             //out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
                             //    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             out.write("start /WAIT SOFFICE.exe \"-env:UserInstallation=file:///" + pathToFileToLaunch.replace("\\", "/") + idApplet +"/\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
@@ -139,7 +139,8 @@ public class FileManager {
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);
                     } else if ("linux".equals(os)) {
-                        out.write("libreoffice -env:UserInstallation=file://" + pathToFileToLaunch + idApplet +"/ " + pathToFileToLaunch + fileToLaunch + " || ooffice " + pathToFileToLaunch + fileToLaunch +"& wait");
+                        //out.write("libreoffice -env:UserInstallation=file://" + pathToFileToLaunch + idApplet +"/ " + pathToFileToLaunch + fileToLaunch + " || ooffice " + pathToFileToLaunch + fileToLaunch +"&wait");
+                        out.write("libreoffice -env:UserInstallation=file://" + pathToFileToLaunch + idApplet +"/ " + pathToFileToLaunch + fileToLaunch + "&wait");
                     }
                     out.close();
                     File file = new File(pathToBatFile);
@@ -275,6 +276,28 @@ public class FileManager {
                 WinRegistry.HKEY_LOCAL_MACHINE,                                                     //HKEY
                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\" + program,              //Key
                 "");
+        
+        if (path != null && !"soffice.exe".equals(program.toLowerCase())) {
+            int index;
+            String olderVersion = null;
+            boolean isOlderOffice = false;
+
+            for (index = 7; index <= 12; ++index)
+            {
+                olderVersion =  WinRegistry.readString (
+                    WinRegistry.HKEY_LOCAL_MACHINE,                                                     //HKEY
+                    "Software\\Microsoft\\Office\\"+index+".0\\Word",              //Key
+                    "");
+                System.out.println("Older version of Office ? : " + olderVersion);
+                if(olderVersion != null){
+                    isOlderOffice = true;
+                }
+            }
+            if(isOlderOffice == true){
+                path = null;
+            }
+        }
+        
         return "\"" + path + "\"";
     }
     

@@ -2,7 +2,18 @@ import { NgModule } from '@angular/core';
 import {
     MdSelectModule,
     MdCheckboxModule,
-    MdRadioModule
+    MdSlideToggleModule,
+    MdInputModule,
+    MdTooltipModule,
+    MdTabsModule,
+    MdSidenavModule,
+    MdButtonModule,
+    MdCardModule,
+    MdButtonToggleModule,
+    MdProgressSpinnerModule,
+    MdToolbarModule,
+    MdMenuModule,
+    MdGridListModule
 } from '@angular/material';
 
 
@@ -10,12 +21,34 @@ import {
     imports: [
         MdCheckboxModule,
         MdSelectModule,
-        MdRadioModule
+        MdSlideToggleModule,
+        MdInputModule,
+        MdTooltipModule,
+        MdTabsModule,
+        MdSidenavModule,
+        MdButtonModule,
+        MdCardModule,
+        MdButtonToggleModule,
+        MdProgressSpinnerModule,
+        MdToolbarModule,
+        MdMenuModule,
+        MdGridListModule
     ],
     exports: [
         MdCheckboxModule,
         MdSelectModule,
-        MdRadioModule
+        MdSlideToggleModule,
+        MdInputModule,
+        MdTooltipModule,
+        MdTabsModule,
+        MdSidenavModule,
+        MdButtonModule,
+        MdCardModule,
+        MdButtonToggleModule,
+        MdProgressSpinnerModule,
+        MdToolbarModule,
+        MdMenuModule,
+        MdGridListModule
     ]
 })
 export class AppMaterialModule { }

@@ -1136,6 +1136,7 @@ if (!defined("_TO")) define("_TO", "vers");
 if (!defined("_FILE_PROPERTIES")) define("_FILE_PROPERTIES", "Propriétés du fichier");
 if (!defined("_FILE_DATA")) define("_FILE_DATA", "Informations sur le document");
 if (!defined("_VIEW_DOC")) define("_VIEW_DOC", "Voir le document");
+if (!defined("_DOWNLOAD_LOCAL_DOC_COPY")) define("_DOWNLOAD_LOCAL_DOC_COPY", "Télécharger une copie locale");
 if (!defined("_VIEW_DOC_DESC")) define("_VIEW_DOC_DESC", "Ouvre une modal avec le document en visualisation. Incrémente également la donnée 'viewed' de la table listinstance (utile si utilisée dans les clauses de bannettes) ");
 if (!defined("_TYPIST")) define("_TYPIST", "Opérateur");
 if (!defined("_LOT")) define("_LOT", "Lot");
@@ -1631,6 +1632,7 @@ if (!defined("_EMAIL_ACCOUNT")) define("_EMAIL_ACCOUNT", "Email compte");
 if (!defined("_HELP_KEYWORD_EMAIL")) define("_HELP_KEYWORD_EMAIL", "Email de l'utilisateur connecté");
 
 if (!defined("_INITIATOR")) define("_INITIATOR", "Service initiateur");
+if (!defined("_INITIATORS")) define("_INITIATORS", "Service(s) initiateur(s)");
 
 if (!defined("_QUALIF_BUSINESS")) define("_QUALIF_BUSINESS", "Qualification des documents de la collection business");
 if (!defined("_PROCESS_BUSINESS")) define("_PROCESS_BUSINESS", "Traitement des documents de la collection business");
@@ -2090,3 +2092,6 @@ if (!defined('_STATUS_UPDATED'))
 if(!defined('_SAVED_CHANGE'))
     define('_SAVED_CHANGE', 'Modification enregistrée');
 /** Generic messages **/
+
+if (!defined('_DOC_CREATED_WITH_STATUS'))
+    define('_DOC_CREATED_WITH_STATUS', 'Document créé avec le statut');

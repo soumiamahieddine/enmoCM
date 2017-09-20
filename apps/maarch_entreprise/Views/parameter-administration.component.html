@@ -1,64 +1,61 @@
-<div id="resultInfo" class="fade" style="display:none;">
-    {{resultInfo}}
+<div class="page-header">
+    <h1 *ngIf="!creationMode">{{lang.parameterModification}} <small>{{parameter.id}}</small></h1>
+    <h1 *ngIf="creationMode">{{lang.parameterCreation}} <small>{{parameter.id}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <md-spinner style="margin:auto;"></md-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration/parameters" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <h1 style="margin-top: 0"><i class="fa fa-check-wrench fa-2x"></i> {{pageTitle}}</h1>
-    <div class="container-fluid" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+    <div class="container-fluid">
         <div class="col-md-6 col-md-offset-3">
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterFormUp="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hashtag" title="{{this.lang.identifier}}"></i><sup class="mandatory" title="champ requis">*</sup></span>
-                            <input [(ngModel)]="parameter.id" [disabled]="!creationMode" required class="form-control" name="id" id="id" title="{{lang.desc}}" type="text" placeholder="{{this.lang.identifier}}" required>
-                        </div>
+                        <md-input-container>
+                            <input mdInput [(ngModel)]="parameter.id" [disabled]="!creationMode" required  name="id" id="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}" required>                                
+                        </md-input-container>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-tag" title="{{this.lang.description}}"></i><sup class="mandatory" title="champ requis"></sup></span>
-                            <input [(ngModel)]="parameter.description" class="form-control" name="description" id="description" title="{{lang.description}}" type="text" placeholder="{{this.lang.description}}">
-                        </div>
+                        <md-input-container>
+                            <input mdInput [(ngModel)]="parameter.description" name="description" id="description" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}">                                
+                        </md-input-container>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-bullseye" title="{{this.lang.type}}"></i><sup class="mandatory" title="champ requis"></sup></span>
-                            <select name="type" id="type" [disabled]="!creationMode" [(ngModel)]="type" class="forms-select form-control" #selectType>
-                                <option value="string" [(ngValue)]="string">{{this.lang.string}}</option>
-                                <option value="int" [(ngValue)]="int">{{this.lang.integer}}</option>
-                                <option value="date" [(ngValue)]="date">{{this.lang.date}}</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-6">
+                        <md2-select
+                            style="margin-top:10px;" 
+                            id="type"
+                            name="type"
+                            placeholder="{{lang.type}}"
+                            [(ngModel)]="type"
+                            required
+                            [disabled]="!creationMode"
+                            #selectType>
+                            <md2-option value="string" >{{lang.string}}</md2-option>
+                            <md2-option value="int">{{lang.integer}}</md2-option>
+                            <md2-option value="date">{{lang.date}}</md2-option>
+                        </md2-select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-code" title="{{this.lang.value}}"></i><sup class="mandatory" title="champ requis">*</sup></span>
-                            <input *ngIf = "type == 'string'" [(ngModel)]="parameter.param_value_string" class="form-control" name="paramValue" id="paramValue" title="{{this.lang.value}}" type="text" placeholder="{{this.lang.value}}" required>
-                            <input *ngIf = "type == 'int'" [(ngModel)]="parameter.param_value_int" class="form-control" name="paramValue" id="paramValue" title="{{this.lang.value}}" type="number" placeholder="{{this.lang.value}}" required>
-                            <input *ngIf = "type == 'date'" [(ngModel)]="parameter.param_value_date" class="form-control" name="paramValue" id="paramValue" title="{{this.lang.value}}" type="date" placeholder="{{this.lang.value}}" required>
-                        </div>
+                    <div class="col-sm-6">
+                        
+                        <md-input-container *ngIf = "type == 'string'">
+                            <input mdInput [(ngModel)]="parameter.param_value_string" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        </md-input-container>
+                        <md-input-container *ngIf = "type == 'int'">
+                            <input mdInput [(ngModel)]="parameter.param_value_int" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        </md-input-container>
+                        <md2-datepicker *ngIf = "type == 'date'"
+                            name="paramValue"
+                            placeholder="{{this.lang.value}}"
+                            [(ngModel)]="parameter.param_value_date"
+                            mode="auto"
+                            format="dd-MM-y"
+                            #minDateControl="ngModel" 
+                            isOpenOnFocus>
+                        </md2-datepicker>
                     </div>
                 </div>
                 <div class="col-sm-12" style="text-align:center;">

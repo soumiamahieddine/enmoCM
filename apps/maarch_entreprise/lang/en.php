@@ -2043,3 +2043,6 @@ if (!defined("_NEW_ITEM")) define("_NEW_ITEM", "New");
 if(!defined('_SAVED_CHANGE'))
     define('_SAVED_CHANGE', 'Saved change');
 /** Generic messages **/
+
+if (!defined('_DOC_CREATED_WITH_STATUS'))
+    define('_DOC_CREATED_WITH_STATUS', 'Document created with status');

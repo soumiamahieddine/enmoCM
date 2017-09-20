@@ -15,18 +15,19 @@
 
 namespace Core\Controllers;
 
+use Baskets\Models\BasketsModel;
 use Core\Models\CoreConfigModel;
+use Core\Models\GroupModel;
+use Core\Models\HistoryModel;
+use Core\Models\LangModel;
 use Core\Models\SecurityModel;
+use Core\Models\ServiceModel;
+use Core\Models\UserModel;
+use Entities\Models\EntityModel;
+use Entities\Models\ListModelsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Baskets\Models\BasketsModel;
-use Core\Models\GroupModel;
-use Core\Models\LangModel;
-use Core\Models\ServiceModel;
-use Entities\Models\EntityModel;
-use Core\Models\UserModel;
-use Entities\Models\ListModelsModel;
 
 include_once 'core/class/docservers_controler.php';
 
@@ -41,7 +42,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-
+        
         return $response->withJson($user);
     }
 
@@ -69,7 +70,7 @@ class UserController
 
         UserModel::create(['user' => $data]);
 
-        $newUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['id']]);
+        $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
         if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
@@ -112,7 +113,53 @@ class UserController
 
         UserModel::delete(['id' => $aArgs['id']]);
 
-        return $response->withJson(['success' => _DELETED_USER]);
+        //get New User List
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $users = UserModel::get(
+                [
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
+                ]
+            );
+        } else {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $users = UserModel::getByEntities(
+                [
+                'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
+                'entities'  => $entities
+                ]
+            );
+        }
+
+        $usersId = [];
+        foreach ($users as $value) {
+            $usersId[] = $value['user_id'];
+        }
+
+        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
+        
+        $usersListModels = [];
+        foreach ($listModels as $value) {
+            $usersListModels[] = $value['item_id'];
+        }
+        
+        foreach ($users as $key => $value) {
+            if (in_array($value['user_id'], $usersListModels)) {
+                $users[$key]['inDiffListDest'] = 'Y';
+            } else {
+                $users[$key]['inDiffListDest'] = 'N';
+            }
+        }
+        $users;
+
+
+        return $response->withJson(
+            [
+            'success' => _DELETED_USER,
+            'users' => $users
+            ]
+        );
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
@@ -218,7 +265,7 @@ class UserController
         if (!empty($data['status']) && $data['status'] == 'OK') {
             $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
 
-            UserModel::deactivateAbsenceById(['id' => $aArgs['id']]);
+            UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
                 'table_name'    => 'users',
                 'record_id'     => $user['user_id'],
@@ -476,8 +523,7 @@ class UserController
                 $users[$key]['inDiffListDest'] = 'N';
             }
         }
-
-        $return['lang'] = LangModel::getUsersAdministrationLang();
+        
         $return['users'] = $users;
 
         return $response->withJson($return);
@@ -498,6 +544,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $user['user_id']]);
+        $user['history'] = HistoryModel::getHistoryByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
     }
@@ -528,7 +575,8 @@ class UserController
         return $response->withJson([
             'success'   => _ADDED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
+            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
+            'baskets'   => BasketsModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 

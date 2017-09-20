@@ -1,66 +1,66 @@
 import { Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
+
 @Component({
     templateUrl : angularGlobals['status-administrationView'],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/status-administration.component.css']
+    styleUrls   : ['css/status-administration.component.css'],
+    providers   : [NotificationService]
 })
 export class StatusAdministrationComponent implements OnInit {
     coreUrl             : string;
-    pageTitle           : string            = "" ;
-    mode                : string            = null;
+    lang                : any               = LANG;
+    
+    creationMode        : boolean;
+    
     statusIdentifier    : string;
     status              : any               = {
                                                 id              : null,
-                                                label_status     : null,
+                                                label_status    : null,
                                                 can_be_searched : null,
                                                 can_be_modified : null,
-                                                is_folder_status : null,
-                                                img_filename     : null
+                                                is_folder_status: null,
+                                                img_filename    : null
                                             };
-    lang                : any               = "";
     statusImages        : any               = "";
 
     loading             : boolean           = false;
 
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
     }
 
     ngOnInit(): void {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
+            
         this.prepareStatus();
 
         this.route.params.subscribe((params) => {
             if (typeof params['identifier'] == "undefined"){
                 this.http.get(this.coreUrl + 'rest/administration/status/new')
                 .subscribe((data) => {
-                    this.lang         = data['lang'];
+                    this.status.img_filename = "fm-letter";
+                    this.status.can_be_searched = true
+                    this.status.can_be_modified = true
                     this.statusImages = data['statusImages'];
-                    this.mode         = 'create';
-                    this.pageTitle    = this.lang.newStatus;
+                    this.creationMode = true;
                     this.updateBreadcrumb(angularGlobals.applicationName);
+                    this.loading = false;
                 });
             } else {
-                this.mode     = 'update';
+                this.creationMode = false;
                 this.statusIdentifier = params['identifier'];
                 this.getStatusInfos(this.statusIdentifier);
+                this.loading = false;
             }
-            setTimeout(() => {
-                $j(".help").tooltipster({
-                    theme: 'tooltipster-maarch',
-                    interactive: true
-                });
-            }, 0);
         });
-        this.loading = false;
     }
 
     prepareStatus() {
@@ -69,12 +69,12 @@ export class StatusAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string){
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
-                                        "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.admin+"</a> > "+
-                                        "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>"+this.lang.admin_status+"</a> > ";
-        if(this.mode == 'create'){
-            breadCrumb += this.lang.newItem;
+                                        "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+
+                                        "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>"+this.lang.statuses+"</a> > ";
+        if(this.creationMode == true){
+            breadCrumb += this.lang.statusCreation;
         } else {
-            breadCrumb += this.lang.modification;
+            breadCrumb += this.lang.statusModification;
         }
         $j('#ariane')[0].innerHTML = breadCrumb;
     }
@@ -98,36 +98,30 @@ export class StatusAdministrationComponent implements OnInit {
                 }else{
                     this.status.is_folder_status = false;
                 }
-                this.lang         = data['lang'];
                 this.statusImages = data['statusImages'];
-                this.pageTitle    = this.lang.modify_status + ' : ' + this.status.id;
                 this.updateBreadcrumb(angularGlobals.applicationName);
             }, (err) => {
-                errorNotification(JSON.parse(err._body).errors);
+                this.notify.error(JSON.parse(err._body).errors);
             });                
-    }
-
-    selectImage(image_name : string){
-        this.status.img_filename = image_name;
     }
     
     submitStatus() {
-        if(this.mode == 'create'){
+        if(this.creationMode == true){
             this.http.post(this.coreUrl + 'rest/status', this.status)
-            .subscribe(() => {
-                successNotification(this.lang.newStatusAdded + ' : ' + this.status.id);
+            .subscribe((data : any) => {
+                this.notify.success(this.lang.statusAdded+' « '+data.status.id+' »');
                 this.router.navigate(['administration/status']);
             }, (err) => {
-                errorNotification((JSON.parse(err._body).errors).join("<br>"));
+                this.notify.error(JSON.parse(err._body).errors);
             });
-        } else if(this.mode == "update"){
+        } else if(this.creationMode == false){
 
             this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
-            .subscribe(() => {
-                successNotification(this.lang.statusUpdated + ' : ' + this.status.id);
+            .subscribe((data : any) => {
+                this.notify.success(this.lang.statusUpdated+' « '+data.status.id+' »');
                 this.router.navigate(['administration/status']);                    
             }, (err) => {
-                errorNotification((JSON.parse(err._body).errors).join("<br>"));
+                this.notify.error(JSON.parse(err._body).errors);
             });
         }
     }

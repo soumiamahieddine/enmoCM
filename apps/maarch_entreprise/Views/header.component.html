@@ -1,72 +1,53 @@
-<nav id="headerV2" class="navbar navbar-default">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a id="headerLogo" class="navbar-brand" href="index.php"></a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <form class="navbar-form navbar-left">
-        <div class="form-group">
-          <div class="input-group">
-              <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span> Courriers</button>
-                <ul class="dropdown-menu">
-                <li><a href="#">Courriers</a></li>
-                <li><a href="#">Contacts</a></li>
-                <li><a href="#">Pièces jointes</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Globale</a></li>
-                </ul>
-            </div><!-- /btn-group -->
-            <input style="width:400px;" type="text" class="form-control" placeholder="Search for...">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-            </span>
-            </div><!-- /input-group -->
-        </div>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gears fa-2x"></i> <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Gestion utlisateurs</a></li>
-            <li><a href="#">Gestion groupes</a></li>
-            <li><a href="#">Gestion statuts</a></li>
-            <li><a href="#">...</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Panneau d'administration</a></li>
-          </ul>
-        </li>
-        <li class="dropdown" id="headerNotification">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bell fa-2x"></i><sup class="notification"><span color="red" class="badge">5</span></sup> <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li class="alert-info"><a><b>3</b> nouveau(x) courrier(s) dans <i class="link">courrier à traiter</i></a></li>
-            <li class="alert-info"><a><b class="link">2017/A/123</b> nouvelle note ajoutée</a></li>
-            <li class="alert-warning"><a><b class="link">2017/A/123</b> arrive bientôt à échéance ! <i class="badge">1 jour(s)</i></a></li>
-            <li class="alert-warning"><a><b class="link">2017/A/21</b> arrive bientôt à échéance ! <i class="badge">2 jour(s)</i></a></li>
-            <li class="alert-danger"><a><b class="link">2017/A/21</b> est arrivé à échéance ! <i class="badge">- 4 jour(s)</i></a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Voir la liste des notifications</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x"></i> <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Mon profile</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Déconnexion</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-<router-outlet></router-outlet>
+<md-toolbar color="primary">
+    <button tooltip="Menu" tooltip-delay="1000" md-button mdInput [mdMenuTriggerFor]="mySetting">{{applicationName}}</button>
+    <span id="globalSearch">
+        <form class="example-form">
+            <md-input-container>
+                <button md-button mdPrefix [mdMenuTriggerFor]="searchTarget"><i class="fa fa-bars fa-2x"></i></button>                
+                <input type="tel" mdInput placeholder="Rechercher dans : global">
+            </md-input-container>   
+        </form>
+    </span>
+    <span style="flex: 1 1 auto;"></span>
+    <button tooltip="Administration" tooltip-delay="1000" md-icon-button [mdMenuTriggerFor]="myAdmin">
+        <i class="fa fa-cogs fa-2x"></i>
+    </button>
+    <button tooltip="Mes notifications" tooltip-delay="1000" md-icon-button [mdMenuTriggerFor]="myNotif">
+            <i class="fa fa-bell fa-2x"></i>
+            <sub class="badge text-warning">0</sub>
+    </button>
+    <button tooltip="Mes paramètres" tooltip-delay="1000" md-icon-button [mdMenuTriggerFor]="myProfil">
+            <i class="fa fa-user fa-2x"></i>
+    </button>
+    <md-menu #mySetting="mdMenu">
+        <button *ngFor="let menu of menuList" routerLink="{{menu.link}}" md-menu-item>
+            <span><i class="fa {{menu.icon}}"></i> {{menu.label}}</span>
+        </button>
+    </md-menu>
+    <md-menu #myNotif="mdMenu">
+        <button md-menu-item disabled>
+            <span style="opacity:0.5;"><i class="fa fa-times"></i> Aucune notification</span>
+        </button>
+    </md-menu>
+    <md-menu #myProfil="mdMenu">
+        <button *ngFor="let profil of profilList" routerLink="{{profil.link}}" md-menu-item>
+            <span><i class="fa {{profil.style}}"></i> {{profil.label}}</span>
+        </button>
+    </md-menu>
+    <md-menu #myAdmin="mdMenu">
+        <button *ngFor="let admin of adminList" routerLink="{{admin.servicepage}}" tooltip="{{admin.comment}}" tooltip-position="before" tooltip-delay="1000" md-menu-item [disabled]="admin.angular == 'false'">
+            <span><i class="fa {{admin.style}}"></i> {{admin.name}}</span>
+        </button>
+        <button *ngFor="let adminMod of adminListModule" routerLink="{{adminMod.servicepage}}" tooltip="{{adminMod.comment}}" tooltip-position="before" tooltip-delay="1000" md-menu-item [disabled]="adminMod.angular == 'false'">
+            <span><i class="fa {{adminMod.style}}"></i> {{adminMod.name}}</span>
+        </button>
+    </md-menu>
+    <md-menu #searchTarget="mdMenu">
+        <button md-menu-item>
+                <span>Courriers</span>
+            </button>
+        <button md-menu-item>
+                <span>Contacts</span>
+            </button>
+    </md-menu>
+</md-toolbar>

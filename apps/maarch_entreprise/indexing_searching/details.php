@@ -557,7 +557,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             ?>
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
 
-                <div class="fa fa-tachometer detailsTab DetailsTabFunc TabSelected  " id="DetailstachometerTab" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>" onclick="tabClicked('DetailstachometerTab',false);">
+                <div class="fa fa-info-circle detailsTab DetailsTabFunc TabSelected  " id="DetailstachometerTab" style="font-size:2em;padding-left: 15px;<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')){echo 'padding-right: 0px;';}else{echo 'padding-right: 15px;';}?>" title="<?php echo _PROPERTIES;?>" onclick="tabClicked('DetailstachometerTab',false);">
                 <sup><span style="font-size: 10px;<?php echo $style; ?>" class="nbResZero">0</span></sup></div>
 
                
@@ -568,7 +568,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $pathScriptTab = 'index.php?display=true&page=show_technicalInfo_tab';
                                 $uniqueString .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
                                 }
-                                $uniqueString .= '<div class="fa fa-gear DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
+                                $uniqueString .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
                                 if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                         $uniqueString .=  'padding-right: 0px;';
                                 }else {
@@ -616,7 +616,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 
                                 if ($core->is_module_loaded('visa')) {
                                     $pathScriptTab = 'index.php?display=true&page=show_visa_tab&module=visa&resId='.$s_id.'&collId='.$coll_id.'&destination='.$destination.'&fromDetail=true';
-                                    $uniqueString .= '<div id="visa_tab" class="fa fa-certificate DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
+                                    $uniqueString .= '<div id="visa_tab" class="fa fa-retweet DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
                                     $uniqueString .='padding-right: 15px;" title="'._VISA_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'visa_tab\',true);"> <sup id="visa_tab_badge"></sup></div>';
                                     //LOAD TOOLBAR BADGE
                                     $toolbarBagde_script = 'index.php?display=true&module=visa&page=load_toolbar_visa&resId='.$s_id.'&collId='.$coll_id;
@@ -625,7 +625,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 
                                     if ($core->is_module_loaded('avis')) {
                                     $pathScriptTab = 'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
-                                    $uniqueString .= '<div id="avis_tab" class="fa fa-check-square DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
+                                    $uniqueString .= '<div id="avis_tab" class="fa fa-commenting-o DetailsTabFunc " style="font-size:2em;padding-left: 15px;';
                                     $uniqueString .= 'padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup></div><div id="page_circuit_avis" style="overflow-x: hidden;">';
                                     $uniqueString .= '</div>';
                                     
@@ -658,7 +658,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     
                                         $pathScriptTab = 'index.php?display=true&page=show_history_tab&resId='
                                         . $s_id . '&collId=' . $coll_id;
-                                        $uniqueString .= '<div class="fa fa-line-chart  DetailsTabFunc" id="DetailsLineChartTab" style="font-size:2em;padding-left: 15px;';
+                                        $uniqueString .= '<div class="fa fa-history  DetailsTabFunc" id="DetailsLineChartTab" style="font-size:2em;padding-left: 15px;';
                                         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                             $uniqueString .=  'padding-right: 0px;';
                                         } else {
@@ -677,7 +677,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     // $note = '';
                                         $pathScriptTab = 'index.php?display=true&module=notes&page=notes&identifier='
                                     . $s_id . '&origin=document&coll_id=' . $coll_id . '&load&size=full';
-                                        $uniqueString .= '<div id="notes_tab" class="fa fa-pencil  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');;tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup></div>';
+                                        $uniqueString .= '<div id="notes_tab" class="fa fa-sticky-note  DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'. _NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');;tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup></div>';
                                         //LOAD TOOLBAR BADGE
                                         $toolbarBagde_script = 'index.php?display=true&module=notes&page=load_toolbar_notes&resId='.$s_id.'&collId='.$coll_id;
                                         $uniqueString .='<script>loadToolbarBadge(\'notes_tab\',\''.$toolbarBagde_script.'\');</script>';
@@ -1168,7 +1168,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     if ($indexes[$key]['type_field'] == 'input')
                                     {
                                         ?>
-                                        <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($indexes[$key]['show_value']);?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if ($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php functions::xecho($indexes[$key]['show_value']);?>" alt="<?php functions::xecho($indexes[$key]['show_value']);?>"   />
+                                        <textarea name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($indexes[$key]['show_value']);?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if ($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> style="width: 200px; "  title="<?php functions::xecho($indexes[$key]['show_value']);?>" alt="<?php functions::xecho($indexes[$key]['show_value']);?>" ></textarea>
                                         <?php
                                     }
                                     else
