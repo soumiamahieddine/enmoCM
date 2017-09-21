@@ -597,7 +597,6 @@ if (!defined("_THE_USER")) define("_THE_USER", "L'utilisateur ");
 if (!defined("_USER_ID")) define("_USER_ID", "L'identifiant de l'utilisateur");
 if (!defined("_MY_INFO")) define("_MY_INFO", "Mon Profil");
 
-
 //class types
 if (!defined("_UNKNOWN_PARAM")) define("_UNKNOWN_PARAM", "Paramètres inconnus");
 if (!defined("_DOCTYPE_UPDATED")) define("_DOCTYPE_UPDATED", "Type de document modifié");
@@ -2002,6 +2001,15 @@ if (!defined('_UPDATED_PRIORITY'))
     define('_UPDATED_PRIORITY', 'Priorité modifiée');
 if (!defined('_DELETED_PRIORITY'))
     define('_DELETED_PRIORITY', 'Priorité supprimée');
+if (!defined("_FOR_USER"))    define("_FOR_USER", "pour l'utilisateur");
+if (!defined("_BY_USER"))    define("_BY_USER", "par l'utilisateur");
+if (!defined("_ADDED_USER"))    define("_ADDED_USER", "a ajouté l'utilisateur");
+if (!defined("_REMOVED_USER"))    define("_REMOVED_USER", "a retiré l'utilisateur");
+if (!defined("_FROM_GROUP"))    define("_FROM_GROUP", "du groupe");
+if (!defined("_FROM_ENTITY"))    define("_FROM_ENTITY", "de l'entité");
+if (!defined("_IN_GROUP"))    define("_IN_GROUP", "au groupe");
+if (!defined("_IN_ENTITY"))    define("_IN_ENTITY", "à l'entité");
+    
 /***** Administration *****/
 
 /**** admin update control ****/
