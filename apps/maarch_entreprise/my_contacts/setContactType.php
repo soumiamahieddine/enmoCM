@@ -24,7 +24,6 @@ $core->test_user();
 
 require_once 'core/class/class_db_pdo.php';
 $db = new Database();
-
 if ($_POST['contact_target'] == "") {
     $_POST['contact_target'] = "corporate";
 }
@@ -57,6 +56,8 @@ while($res = $stmt->fetchObject()){
     
     $iCount++;
 }
-
+if($stmt->rowCount()==0){
+    echo "false";
+}
 echo $frmStr;
 exit;

@@ -597,7 +597,6 @@ if (!defined("_THE_USER")) define("_THE_USER", "L'utilisateur ");
 if (!defined("_USER_ID")) define("_USER_ID", "L'identifiant de l'utilisateur");
 if (!defined("_MY_INFO")) define("_MY_INFO", "Mon Profil");
 
-
 //class types
 if (!defined("_UNKNOWN_PARAM")) define("_UNKNOWN_PARAM", "Paramètres inconnus");
 if (!defined("_DOCTYPE_UPDATED")) define("_DOCTYPE_UPDATED", "Type de document modifié");
@@ -1136,6 +1135,7 @@ if (!defined("_TO")) define("_TO", "vers");
 if (!defined("_FILE_PROPERTIES")) define("_FILE_PROPERTIES", "Propriétés du fichier");
 if (!defined("_FILE_DATA")) define("_FILE_DATA", "Informations sur le document");
 if (!defined("_VIEW_DOC")) define("_VIEW_DOC", "Voir le document");
+if (!defined("_DOWNLOAD_LOCAL_DOC_COPY")) define("_DOWNLOAD_LOCAL_DOC_COPY", "Télécharger une copie locale");
 if (!defined("_VIEW_DOC_DESC")) define("_VIEW_DOC_DESC", "Ouvre une modal avec le document en visualisation. Incrémente également la donnée 'viewed' de la table listinstance (utile si utilisée dans les clauses de bannettes) ");
 if (!defined("_TYPIST")) define("_TYPIST", "Opérateur");
 if (!defined("_LOT")) define("_LOT", "Lot");
@@ -1631,6 +1631,7 @@ if (!defined("_EMAIL_ACCOUNT")) define("_EMAIL_ACCOUNT", "Email compte");
 if (!defined("_HELP_KEYWORD_EMAIL")) define("_HELP_KEYWORD_EMAIL", "Email de l'utilisateur connecté");
 
 if (!defined("_INITIATOR")) define("_INITIATOR", "Service initiateur");
+if (!defined("_INITIATORS")) define("_INITIATORS", "Service(s) initiateur(s)");
 
 if (!defined("_QUALIF_BUSINESS")) define("_QUALIF_BUSINESS", "Qualification des documents de la collection business");
 if (!defined("_PROCESS_BUSINESS")) define("_PROCESS_BUSINESS", "Traitement des documents de la collection business");
@@ -2000,6 +2001,15 @@ if (!defined('_UPDATED_PRIORITY'))
     define('_UPDATED_PRIORITY', 'Priorité modifiée');
 if (!defined('_DELETED_PRIORITY'))
     define('_DELETED_PRIORITY', 'Priorité supprimée');
+if (!defined("_FOR_USER"))    define("_FOR_USER", "pour l'utilisateur");
+if (!defined("_BY_USER"))    define("_BY_USER", "par l'utilisateur");
+if (!defined("_ADDED_USER"))    define("_ADDED_USER", "a ajouté l'utilisateur");
+if (!defined("_REMOVED_USER"))    define("_REMOVED_USER", "a retiré l'utilisateur");
+if (!defined("_FROM_GROUP"))    define("_FROM_GROUP", "du groupe");
+if (!defined("_FROM_ENTITY"))    define("_FROM_ENTITY", "de l'entité");
+if (!defined("_IN_GROUP"))    define("_IN_GROUP", "au groupe");
+if (!defined("_IN_ENTITY"))    define("_IN_ENTITY", "à l'entité");
+    
 /***** Administration *****/
 
 /**** admin update control ****/
@@ -2090,3 +2100,6 @@ if (!defined('_STATUS_UPDATED'))
 if(!defined('_SAVED_CHANGE'))
     define('_SAVED_CHANGE', 'Modification enregistrée');
 /** Generic messages **/
+
+if (!defined('_DOC_CREATED_WITH_STATUS'))
+    define('_DOC_CREATED_WITH_STATUS', 'Document créé avec le statut');
