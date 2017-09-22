@@ -15,8 +15,9 @@
 
 namespace Core\Models;
 
+require_once 'core/class/class_history.php';
 use Entities\Models\EntityModel;
-
+use  Core\Models\GroupModel;
 class UserModelAbstract
 {
     public static function get(array $aArgs = [])
@@ -600,6 +601,16 @@ class UserModelAbstract
             ]
         ]);
 
+        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+
+        \Core\Controllers\HistoryController::add([
+            'table_name' => 'users', 
+            'record_id'  =>$user['user_id'], 
+            'event_type' => 'GROUP ADD', 
+            'event_id'   => 'groupadded',
+            'info'       =>$_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_GROUP.' '.$groupInfos['group_desc']
+        ]);
+
         return true;
     }
 
@@ -633,6 +644,16 @@ class UserModelAbstract
             'table'     => 'usergroup_content',
             'where'     => ['group_id = ?', 'user_id = ?'],
             'data'      => [$aArgs['groupId'], $user['user_id']]
+        ]);
+
+        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+
+        \Core\Controllers\HistoryController::add([
+            'table_name' => 'users', 
+            'record_id'  =>$user['user_id'], 
+            'event_type' => 'GROUP DELETED', 
+            'event_id'   => 'groupdeleted',
+            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_GROUP.' '.$groupInfos['group_desc']
         ]);
 
         return true;
@@ -670,6 +691,15 @@ class UserModelAbstract
                 'user_role'         => $aArgs['role'],
                 'primary_entity'    => $aArgs['primaryEntity']
             ]
+        ]);
+        $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
+
+        \Core\Controllers\HistoryController::add([
+            'table_name' => 'users', 
+            'record_id'  =>$user['user_id'], 
+            'event_type' => 'ENTITY ADD', 
+            'event_id'   => 'entityadded',
+            'info'       => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label']
         ]);
 
         return true;
@@ -758,6 +788,16 @@ class UserModelAbstract
             'table'     => 'users_entities',
             'where'     => ['entity_id = ?', 'user_id = ?'],
             'data'      => [$aArgs['entityId'], $user['user_id']]
+        ]);
+
+        $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
+
+        \Core\Controllers\HistoryController::add([
+            'table_name' => 'users', 
+            'record_id'  =>$user['user_id'], 
+            'event_type' => 'ENTITY DELETE', 
+            'event_id'   => 'entitydeleted',
+            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_ENTITY.' '.$entityInfos['entity_label']
         ]);
 
         return true;
