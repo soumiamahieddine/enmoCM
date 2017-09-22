@@ -2101,5 +2101,5 @@ if(!defined('_SAVED_CHANGE'))
     define('_SAVED_CHANGE', 'Modification enregistrée');
 /** Generic messages **/
 
-if (!defined('_DOC_CREATED_WITH_STATUS'))
-    define('_DOC_CREATED_WITH_STATUS', 'Document créé avec le statut');
+if (!defined('_DOC_CREATED'))
+    define('_DOC_CREATED', 'Document créé');
