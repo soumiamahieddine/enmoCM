@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -10,7 +11,8 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["notifications-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+    providers   : [NotificationService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
 
@@ -20,7 +22,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
 
 
-    constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
     ngOnInit(): void {
@@ -55,9 +57,9 @@ export class NotificationsAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/notifications/'+notification.notification_sid)
                 .subscribe((data : any) => {
                     this.notifications = data.notifications
-                    successNotification(data.success);
+                    this.notify.success(data.success);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

@@ -68,8 +68,11 @@ exports.LANG_EN = {
     "template": "Modèle",
     "diffusion_type": "Type de diffusion",
     //Notifications
-    "notification": "notification",
-    "notificationsListTitle": "Notifications list",
-    "newNotification": "New notification",
-    "admin_notifications": "Administration of notifications",
+    notification: "notification",
+    notificationsListTitle: "Notifications's list",
+    newNotificationAdded: "New notification",
+    admin_notifications: "Administration of notifications",
+    notificationUpdated: "Notification updated: ",
+    notificationError: "Notification error: ",
+    notificationErrorIdAlreadyExist: "id already exist",
 };

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -11,7 +12,8 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["notification-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+    providers   : [NotificationService]
 })
 export class NotificationAdministrationComponent implements OnInit {
 
@@ -25,7 +27,7 @@ export class NotificationAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
 
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
     }
 
     ngOnInit(): void {
@@ -100,15 +102,23 @@ export class NotificationAdministrationComponent implements OnInit {
         }else if($j("#userslistJd").chosen().val()){
             this.notification.attachfor_properties = $j("#userslistJd").chosen().val();
         }
-        this.http.post(this.coreUrl + 'rest/notifications', this.notification)
-        .subscribe((data : any) => {
-            this.router.navigate(['/administration/notifications']);
-            //successNotification(data.success);
-            successNotification(this.lang.newNotificationAdded + ' : ' + this.notification.notification_id);
-
-        },(err) => {
-            errorNotification(JSON.parse(err._body).errors);
-        });
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + 'rest/notifications', this.notification)
+            .subscribe((data : any) => {
+                this.router.navigate(['/administration/notifications']);
+                this.notify.success(this.lang.newNotificationAdded+' « '+this.notification.notification_id+' »');
+            },(err) => {
+                this.notify.error(err.error.errors);
+            });
+        }else{
+            this.http.put(this.coreUrl + 'rest/notifications/' + this.notification.notification_sid, this.notification)
+            .subscribe((data : any) => {
+                this.router.navigate(['/administration/notifications']);
+                this.notify.success(this.lang.notificationUpdated+' « '+this.notification.notification_id+' »');
+            },(err) => {
+                this.notify.error(err.error.errors);
+            });
+        }
     }
     
 

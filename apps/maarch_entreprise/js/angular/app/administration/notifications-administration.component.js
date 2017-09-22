@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var NotificationsAdministrationComponent = (function () {
-    function NotificationsAdministrationComponent(http) {
+    function NotificationsAdministrationComponent(http, notify) {
         this.http = http;
+        this.notify = notify;
         this.notifications = [];
         this.loading = false;
         this.lang = translate_component_1.LANG;
@@ -47,9 +49,9 @@ var NotificationsAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + 'rest/notifications/' + notification.notification_sid)
                 .subscribe(function (data) {
                 _this.notifications = data.notifications;
-                successNotification(data.success);
+                _this.notify.success(data.success);
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -58,8 +60,9 @@ var NotificationsAdministrationComponent = (function () {
 NotificationsAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["notifications-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
+    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
 ], NotificationsAdministrationComponent);
 exports.NotificationsAdministrationComponent = NotificationsAdministrationComponent;

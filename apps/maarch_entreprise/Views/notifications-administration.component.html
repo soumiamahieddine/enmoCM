@@ -34,7 +34,7 @@
                     <td>{{notification.description}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/notifications/{{notification.notification_id}}" type="button" class="btn btn-default" title="{{lang.update}}">
+                            <button routerLink="/administration/notifications/{{notification.notification_sid}}" type="button" class="btn btn-default" title="{{lang.update}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
                             <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteNotification(notification)">

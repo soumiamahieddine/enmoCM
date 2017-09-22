@@ -36,7 +36,23 @@ class NotificationModelAbstract
 
     public static function getById(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['notificationId']);
+        //ValidatorModel::notEmpty($aArgs, ['notification_sid']);
+        $aNotification = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['notifications'],
+            'where'     => ['notification_sid = ?'],
+            'data'      => [$aArgs['notification_sid']]
+        ]);
+        if (empty($aNotification[0])) {
+            return [];
+        }
+
+        return $aNotification[0];
+    }
+
+    public static function getByNotificationId(array $aArgs = [])
+    {
+        //ValidatorModel::notEmpty($aArgs, ['notificationId']);
         $aNotification = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['notifications'],
@@ -96,7 +112,7 @@ class NotificationModelAbstract
         ValidatorModel::intVal($aArgs, ['notification_sid']);
 
         $where['notification_sid'] = $aArgs['notification_sid'];
-        //unset($aArgs['notification_id']);
+        unset($aArgs['data']);
         unset($aArgs['notification_sid']);
 
         $aReturn = DatabaseModel::update([

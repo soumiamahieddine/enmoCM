@@ -56,10 +56,11 @@ exports.LANG_FR = {
     "template": "Modèle",
     "diffusion_type": "Type de diffusion",
     //Notifications
-    "notification": "notification",
-    "notificationsListTitle": "Liste des notifications",
-    "newNotification": "Nouvelle notification",
-    "admin_notifications": "Administration des notifications",
+    notification: "notification",
+    notificationsListTitle: "Liste des notifications",
+    newNotificationAdded: "Nouvelle notification",
+    admin_notifications: "Administration des notifications",
+    notificationUpdated: "Notification mise à jour: ",
     //Lists
     available: "disponible",
     display: "affichage",
