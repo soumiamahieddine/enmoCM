@@ -109,6 +109,11 @@ $userEntities = [];
 foreach ($aUserEntities as $value) {
     $userEntities[] = $value['entity_id'];
 }
+
+if(empty($userEntities)){
+    $userEntities = [''];
+}
+
 $userTemplates = \Core\Models\DatabaseModel::select(['select'   => ['t.template_id', 't.template_label', 't.template_content'],
                                                     'table'     => ['templates t', 'templates_association ta'],
                                                     'left_join' => ['t.template_id = ta.template_id'],
