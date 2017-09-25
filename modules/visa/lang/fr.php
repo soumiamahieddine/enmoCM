@@ -287,3 +287,6 @@ if(!defined('_DELETE_CONFIRM'))
 
 if(!defined('_CONTROL_TECHNICAL_PARAMS'))
     define('_CONTROL_TECHNICAL_PARAMS','Contrôler les paramètres techniques');
+
+if (!defined('_DRAG_N_DROP_CHANGE_ORDER'))
+    define('_DRAG_N_DROP_CHANGE_ORDER', 'Glisser/déposer pour modifier l\'ordre du circuit');
