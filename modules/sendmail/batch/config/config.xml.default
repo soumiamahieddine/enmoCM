@@ -46,7 +46,7 @@
         <x-mailer></x-mailer><!-- Rewrite X-Mailer header,  default : PHP/[phpversion] -->
         <mailfrom></mailfrom> <!-- if not empty we use this address to send the mail -->
     </MAILER>
-    <NOTIFICATION_ERROR>
+    <NOTIFICATION_ERROR><!-- Notify adminmail if sendmail end with an error-->
         <adminmail>dev@maarch.org</adminmail><!--separate with a coma if multiple recipient-->
         <subjectmail>[Maarch Courrier] Problème avec l'envoi de courriel</subjectmail>
     </NOTIFICATION_ERROR>
