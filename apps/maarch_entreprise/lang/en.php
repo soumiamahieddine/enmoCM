@@ -2046,3 +2046,5 @@ if(!defined('_SAVED_CHANGE'))
 
 if (!defined('_DOC_CREATED'))
     define('_DOC_CREATED', 'Document created');
+if (!defined("_SAVE_POSITION"))
+    define("_SAVE_POSITION", "Save");
