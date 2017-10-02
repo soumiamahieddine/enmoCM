@@ -172,7 +172,7 @@ class Database extends functions
                         . "(SERVICE_NAME = " . $this->database . ")"
                     . ")"
                 . ")";
-            $this->dsn = "oci:dbname=" . $tns;
+            $this->dsn = "oci:dbname=" . $tns . ";charset=utf8";
         } else
             $this->dsn = $this->driver
                 . ':host=' . $this->server
@@ -202,7 +202,7 @@ class Database extends functions
         } elseif ($this->error && $_SESSION['config']['debug'] == 'true') {
             print_r('SQL ERROR:' . $this->error);
         } elseif ($this->driver == 'oci') {
-            $this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
+            //$this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
         }
     }
 
@@ -224,17 +224,24 @@ class Database extends functions
     public function lastInsertId($sequenceName=null)
     {
         switch($_SESSION['config']['databasetype']) {
-        case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
-        case 'POSTGRESQL'   : 
-            $stmt_last_insert = $this->query("SELECT last_value as lastinsertid FROM " . $sequenceName);
-            $resultat_last = $stmt_last_insert->fetchObject();
-            return $resultat_last->lastinsertid;
-        case 'SQLSERVER'    : return '';
-        case 'ORACLE'       : 
-            $stmt_last_insert = $this->query("SELECT " . $sequenceName . ".currval as lastinsertid FROM dual");
-            $resultat_last = $stmt_last_insert->fetchObject();
-            return $resultat_last->lastinsertid;
-        default             : return false;
+            case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
+            case 'POSTGRESQL'   : 
+                $stmt_last_insert = $this->query("SELECT last_value as lastinsertid FROM " . $sequenceName);
+                $resultat_last = $stmt_last_insert->fetchObject();
+                return $resultat_last->lastinsertid;
+            case 'SQLSERVER'    : return '';
+            case 'ORACLE'       : 
+                //$sequenceName = strtoupper($sequenceName);
+                $stmt_last_insert = $this->query("SELECT " . $sequenceName . ".currval as lastinsertid FROM dual");
+                $resultat_last = $stmt_last_insert->fetchObject();
+
+                if (empty($resultat_last->lastinsertid)) {
+                    $stmt_last_insert = $this->query("SELECT to_char(Last_number) as lastinsertid FROM user_sequences where upper(sequence_name) = upper('" . $sequenceName . "')");
+                    $resultat_last = $stmt_last_insert->fetchObject();
+                }
+
+                return $resultat_last->lastinsertid;
+            default             : return false;
         }   
     }
 
@@ -331,6 +338,17 @@ class Database extends functions
                     /*if (empty($parameters[$value])) {
 
                     }*/
+                    if (
+                        $_SESSION['config']['databasetype'] == 'ORACLE' 
+                        /*&& 
+                        (
+                            stripos($queryString, 'insert') !== false ||
+                            stripos($queryString, 'update') !== false
+                        )*/
+                    ) {
+                        //$parameters[$key] = $this->normalizeAccent($value);
+                        //echo $parameters[$key] . '<br/>';
+                    }
                 }
             }
         }
@@ -409,8 +427,9 @@ class Database extends functions
                     break;
                     
                 case 'ORACLE' : 
-                    if($where_def) $where_def .= ' AND ';
-                    $where_def .= ' ROWNUM <= ' . $count;
+                    //if($where_def) $where_def .= ' AND ';
+                    //$where_def .= ' ROWNUM <= ' . $count;
+                    $limit_clause = ' ROWNUM <= ' . $count;
                     break;
                     
                 default : 

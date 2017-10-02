@@ -167,7 +167,7 @@ $_SESSION['doc_id'] = $s_id;
 $right = $security->test_right_doc($coll_id, $s_id);
 //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
 
-$stmt = $db->query("SELECT typist, creation_date FROM ".$table." WHERE res_id = ?", array($s_id));
+$stmt = $db->query("SELECT typist, creation_date, filename FROM ".$table." WHERE res_id = ?", array($s_id));
 $info_mail = $stmt->fetchObject();
 
 $date1 = new DateTime($info_mail->creation_date);
@@ -529,19 +529,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
                 </p>
                 <p id="viewdoc">
-                    <!--<a href="<?php
-                        echo $_SESSION['config']['businessappurl'];
-                        ?>index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=<?php
-                        functions::xecho($s_id);
-                        ?>" target="_blank"><i class="fa fa-gears fa-2x" title="<?php 
-                        echo _PROCESS;?>"></i></a>&nbsp;-->
-                    <a href="<?php
-                        echo $_SESSION['config']['businessappurl'];
-                        ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                        functions::xecho($s_id);
-                        ?>" target="_blank"><i class="fa fa-download fa-2x" title="<?php
-                        echo _VIEW_DOC;
-                        ?>"></i></a>&nbsp;&nbsp;&nbsp;
+                    <?php if($info_mail->filename){?>
+                        <a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php functions::xecho($s_id);?>" 
+                            target="_blank"><i class="fa fa-download fa-2x" title="<?php echo _VIEW_DOC; ?>"></i></a>
+                    <?php } ?>
+                    &nbsp;&nbsp;&nbsp;
                 </p>
                 </b>&nbsp;
             </div>
