@@ -128,6 +128,12 @@ $app->get('/administration/status/{identifier}', \Core\Controllers\StatusControl
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
+$app->post('/groups', \Core\Controllers\GroupController::class . ':create');
+$app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
+$app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
+$app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
+$app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
+$app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
 //status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
