@@ -20,6 +20,24 @@
  */
 
 //communs
+if (!defined("_NOTIFICATIONS_ERROR"))
+    define("_NOTIFICATIONS_ERROR", "Errorr on notification: ");
+if (!defined("_NOTIF_ALREADY_EXIST"))
+    define("_NOTIF_ALREADY_EXIST", "id already exist");
+if (!defined("_NOTIF_DESCRIPTION_TOO_LONG"))
+    define("_NOTIF_DESCRIPTION_TOO_LONG", "description too long");
+if (!defined("_NOTIF_EVENT_TOO_LONG"))
+    define("_NOTIF_EVENT_TOO_LONG", "event_id is too long");
+if (!defined("_NOTIF_MODE_TOO_LONG"))
+    define("_NOTIF_MODE_TOO_LONG", "notification_mode is too long ");
+if (!defined("_NOTIF_TEMPLATE_NOT_A_INT"))
+    define("_NOTIF_TEMPLATE_NOT_A_INT", "template_id not a int ");
+if (!defined("_NOTIF_DIFFUSION_IS_A_INT"))
+    define("_NOTIF_DIFFUSION_IS_A_INT", "diffusion_type is a int ");
+if (!defined("_NOTIF_DIFFUSION_PROPERTIES_NOT_INT"))
+    define("_NOTIF_DIFFUSION_PROPERTIES_NOT_INT", "diffusion_properties not a int ");
+if (!defined("_DELETED_NOTIFICATION"))
+    define("_DELETED_NOTIFICATION", "Notification DELETED");
 if (!defined("_NOTIFICATIONS"))
     define("_NOTIFICATIONS", "Notifications");
 if (!defined("_NOTIFS"))

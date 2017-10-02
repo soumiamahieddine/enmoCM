@@ -20,6 +20,24 @@
  */
 
 //communs
+if (!defined("_NOTIFICATIONS_ERROR"))
+    define("_NOTIFICATIONS_ERROR", "Erreur sur la Notification: ");
+if (!defined("_NOTIF_ALREADY_EXIST"))
+    define("_NOTIF_ALREADY_EXIST", "identifiant déjà existant");
+if (!defined("_NOTIF_DESCRIPTION_TOO_LONG"))
+    define("_NOTIF_DESCRIPTION_TOO_LONG", "description trop longue");
+if (!defined("_NOTIF_EVENT_TOO_LONG"))
+    define("_NOTIF_EVENT_TOO_LONG", "Evénement dans le mauvais format");
+if (!defined("_NOTIF_MODE_TOO_LONG"))
+    define("_NOTIF_MODE_TOO_LONG", "Mode trop long ");
+if (!defined("_NOTIF_TEMPLATE_NOT_A_INT"))
+    define("_NOTIF_TEMPLATE_NOT_A_INT", "identifiant du template n est pas un integer ");
+if (!defined("_NOTIF_DIFFUSION_IS_A_INT"))
+    define("_NOTIF_DIFFUSION_IS_A_INT", "identifiant du type de diffusion est un integer ");
+if (!defined("_NOTIF_DIFFUSION_PROPERTIES_NOT_INT"))
+    define("_NOTIF_DIFFUSION_PROPERTIES_NOT_INT", "identifiant de la propriété de diffusion n est pas un integer ");
+if (!defined("_DELETED_NOTIFICATION"))
+    define("_DELETED_NOTIFICATION", "Notification supprimée");
 if (!defined("_NOTIFICATIONS"))
     define("_NOTIFICATIONS", "Notifications");
 if (!defined("_NOTIFS"))

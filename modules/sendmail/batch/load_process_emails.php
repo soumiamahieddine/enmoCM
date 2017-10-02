@@ -148,6 +148,10 @@ $GLOBALS['batchDirectory'] = $GLOBALS['maarchDirectory'] . 'modules'
                            . DIRECTORY_SEPARATOR . 'sendmail' 
                            . DIRECTORY_SEPARATOR . 'batch';
 
+$notificationErrors = $xmlconfig->NOTIFICATION_ERROR;
+$GLOBALS['adminmail'] = (string)$notificationErrors->adminmail;
+$GLOBALS['subjectmail'] = (string)$notificationErrors->subjectmail;
+
 set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['maarchDirectory']);
 
 //log4php params

@@ -176,7 +176,6 @@ function change_diff_list(
     category,
     specific_role
 ) {
-        console.log('test change_diff_list');
 
     if(category === undefined){
         category = '';
@@ -200,10 +199,8 @@ function change_diff_list(
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
-                //alert(answer.responseText);
                 if(response.status == 0 )
                 {
-                    //alert(window.opener.document);
                     var diff_list_tr = window.opener.$(list_tr);
                     var diff_list_div = window.opener.$(list_div);
                     var diff_list_div_from_action = window.opener.$(list_div_from_action);
@@ -252,8 +249,6 @@ function isIdToken(value)
 }
 
 function validate_difflist_type() {
-        console.log('test validate_difflist_type');
-
   var main_error = $('main_error'); 
   main_error.innerHTML = '';
   
@@ -303,7 +298,6 @@ function validate_difflist_type() {
   
 }
 
-
 function saveListDiff(mode, table, collId, resId, userId, concatList, onlyCC) {
     new Ajax.Request(
         'index.php?display=true&module=entities&page=save_list_diff',
@@ -333,4 +327,9 @@ function saveListDiff(mode, table, collId, resId, userId, concatList, onlyCC) {
             }
         }
     );
+}
+
+function setNoteRedirect(){
+    $j('#note_content_to_dep').val($j('#notes').val().replace(/\n/g, "___"));
+    $j('#note_content_to_user').val($j('#notes').val().replace(/\n/g, "___"));
 }

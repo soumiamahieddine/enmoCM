@@ -43,10 +43,10 @@ class NotificationControllerTest extends TestCase
             'notification_mode'  => 'EMAIL',
             'template_id'  => '4',
             'rss_url_template'  => 'http://localhost/maarch_entreprise',
-            'diffusion_type'  => 'user',
-            'diffusion_properties'  => 'superadmin',
-            'attachfor_type'  => 'zz',
-            'attachfor_properties'  => 'cc' 
+            'diffusion_type'  => 'group',
+            'diffusion_properties'  => ['ADMINISTRATEUR','ARCHIVISTE','DIRECTEUR'],
+            'attachfor_type'  => 'entity',
+            'attachfor_properties'  => ['COU','PJS'] 
 
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -65,10 +65,10 @@ class NotificationControllerTest extends TestCase
         $this->assertSame('EMAIL', $responseBody->notification_mode);
         $this->assertSame(4, $responseBody->template_id);
         $this->assertSame('http://localhost/maarch_entreprise', $responseBody->rss_url_template);
-        $this->assertSame('user', $responseBody->diffusion_type);
-        $this->assertSame('superadmin', $responseBody->diffusion_properties);
-        $this->assertSame('zz', $responseBody->attachfor_type);
-        $this->assertSame('cc', $responseBody->attachfor_properties);
+        $this->assertSame('group', $responseBody->diffusion_type);
+        $this->assertSame('ADMINISTRATEUR,ARCHIVISTE,DIRECTEUR', $responseBody->diffusion_properties);
+        $this->assertSame('entity', $responseBody->attachfor_type);
+        $this->assertSame('COU,PJS', $responseBody->attachfor_properties);
 
     }
 
@@ -123,7 +123,7 @@ class NotificationControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $NotificationController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Notification error : id already exist', $responseBody->errors);
+        $this->assertSame('Erreur sur la Notification:  identifiant déjà existant', $responseBody->errors);
     }
 
 
@@ -137,14 +137,14 @@ class NotificationControllerTest extends TestCase
             'notification_id'    => 'warning5',
             'description' => 'BOUBOUP',
             'is_enabled'  => 'Y',
-            'event_id'      => 'users%',
-            'notification_mode'     => 'EMAIL',
-            'template_id'  => 4,
-            'rss_url_template'   => 'http://localhost/maarch_entreprise',
-            'diffusion_type'   => 'user',
-            'diffusion_properties'   => 'superadmin',
-            'attachfor_type'   => 'NN',
-            'attachfor_type'   => 'NC',
+            'event_id'  => 'users%',
+            'notification_mode'  => 'EMAIL',
+            'template_id'  => '4',
+            'rss_url_template'  => 'http://localhost/maarch_entreprise',
+            'diffusion_type'  => 'group',
+            'diffusion_properties'  => ['ADMINISTRATEUR','ARCHIVISTE','DIRECTEUR'],
+            'attachfor_type'  => 'entity',
+            'attachfor_properties'  => ['COU','PJS'] 
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $NotificationController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -153,7 +153,9 @@ class NotificationControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $NotificationController->getById($request, new \Slim\Http\Response(), ['id' => 'warning5']);
-        $responseBody = json_decode((string)$response->getBody());;
+        $responseBody = json_decode((string)$response->getBody());
+        var_dump(self::$id);
+        var_dump($responseBody->notifications);
         $this->assertSame(self::$id, $responseBody->notifications->notification_sid);
         $this->assertSame('warning5', $responseBody->notifications->notification_id);
         $this->assertSame('BOUBOUP', $responseBody->notifications->description);
@@ -161,9 +163,14 @@ class NotificationControllerTest extends TestCase
         $this->assertSame('users%', $responseBody->notifications->event_id);
         $this->assertSame('EMAIL', $responseBody->notifications->notification_mode);
         $this->assertSame(4, $responseBody->notifications->template_id);
-        $this->assertSame('user', $responseBody->notifications->diffusion_type);
+        $this->assertSame('group', $responseBody->notifications->diffusion_type);
+        //$this->assertSame('ADMINISTRATEUR,ARCHIVISTE,DIRECTEUR', $responseBody->diffusion_properties);
+        //$this->assertSame('entity', $responseBody->attachfor_type);
+        //$this->assertSame('COU,PJS', $responseBody->attachfor_properties);
 
     }
+
+
     public function testRead(){
         //READ
         $NotificationController = new \Notifications\Controllers\NotificationController();
@@ -179,7 +186,7 @@ class NotificationControllerTest extends TestCase
         $this->assertSame('users%', $responseBody->notifications->event_id);
         $this->assertSame('EMAIL', $responseBody->notifications->notification_mode);
         $this->assertSame(4, $responseBody->notifications->template_id);
-        $this->assertSame('user', $responseBody->notifications->diffusion_type);
+        $this->assertSame('group', $responseBody->notifications->diffusion_type);
     }
 
     // public function testReadFail(){
