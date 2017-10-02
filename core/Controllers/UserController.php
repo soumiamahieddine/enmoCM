@@ -560,7 +560,7 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (empty(GroupModel::getById(['groupId' => $data['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $data['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this group']);
@@ -586,7 +586,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
@@ -606,7 +606,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
