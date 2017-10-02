@@ -11,6 +11,8 @@ var router_1 = require("@angular/router");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
+var groups_administration_component_1 = require("./groups-administration.component");
+var group_administration_component_1 = require("./group-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -37,6 +39,9 @@ AdministrationRoutingModule = __decorate([
                 { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
                 { path: 'administration/users/new', component: user_administration_component_1.UserAdministrationComponent },
                 { path: 'administration/users/:id', component: user_administration_component_1.UserAdministrationComponent },
+                { path: 'administration/groups', component: groups_administration_component_1.GroupsAdministrationComponent },
+                { path: 'administration/groups/new', component: group_administration_component_1.GroupAdministrationComponent },
+                { path: 'administration/groups/:id', component: group_administration_component_1.GroupAdministrationComponent },
                 { path: 'administration/status', component: statuses_administration_component_1.StatusesAdministrationComponent },
                 { path: 'administration/status/new', component: status_administration_component_1.StatusAdministrationComponent },
                 { path: 'administration/status/:identifier', component: status_administration_component_1.StatusAdministrationComponent },

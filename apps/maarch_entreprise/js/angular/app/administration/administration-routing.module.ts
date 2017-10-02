@@ -1,9 +1,11 @@
 import { NgModule }              from '@angular/core';
-import { RouterModule, Routes }  from '@angular/router';
+import { RouterModule }  from '@angular/router';
 
 import { AdministrationComponent }              from './administration.component';
 import { UsersAdministrationComponent }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
+import { GroupsAdministrationComponent }        from './groups-administration.component';
+import { GroupAdministrationComponent }         from './group-administration.component';
 import { StatusesAdministrationComponent }      from './statuses-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
 import { ActionsAdministrationComponent }       from './actions-administration.component';
@@ -26,6 +28,9 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
             { path: 'administration/users', component: UsersAdministrationComponent },
             { path: 'administration/users/new', component: UserAdministrationComponent },
             { path: 'administration/users/:id', component: UserAdministrationComponent },
+            { path: 'administration/groups', component: GroupsAdministrationComponent },
+            { path: 'administration/groups/new', component: GroupAdministrationComponent },
+            { path: 'administration/groups/:id', component: GroupAdministrationComponent },
             { path: 'administration/status', component: StatusesAdministrationComponent },
             { path: 'administration/status/new', component: StatusAdministrationComponent },
             { path: 'administration/status/:identifier', component: StatusAdministrationComponent },
