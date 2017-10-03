@@ -24,7 +24,7 @@ class GroupController
         return $response->withJson(['groups' => $groups]);
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function create(RequestInterface $request, ResponseInterface $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
