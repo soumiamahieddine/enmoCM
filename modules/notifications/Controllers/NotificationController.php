@@ -96,6 +96,8 @@ class NotificationController
             
             if($data[attachfor_properties]){
                 $data[attachfor_properties] = implode(",",$data[attachfor_properties]);
+            }else{
+                $data[attachfor_properties] = '';
             }
             
             // elseif(!is_string($data[rss_url_template])){
