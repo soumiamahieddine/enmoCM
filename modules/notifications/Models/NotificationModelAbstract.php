@@ -84,7 +84,7 @@ class NotificationModelAbstract
         ValidatorModel::notEmpty($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type', 'diffusion_properties']);
         ValidatorModel::intVal($aArgs, ['template_id']);
         ValidatorModel::stringType($aArgs, ['notification_id','description','is_enabled','event_id','notification_mode',]);
-               
+         //var_dump($aArgs);exit;      
         DatabaseModel::insert([
             'table'         => 'notifications',
             'columnsValues' => [

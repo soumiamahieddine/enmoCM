@@ -18,6 +18,8 @@ var notifications_administration_component_1 = require("./notifications-administ
 var notification_administration_component_1 = require("./notification-administration.component");
 var users_administration_component_1 = require("./users-administration.component");
 var user_administration_component_1 = require("./user-administration.component");
+var groups_administration_component_1 = require("./groups-administration.component");
+var group_administration_component_1 = require("./group-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -50,6 +52,8 @@ AdministrationModule = __decorate([
             notification_administration_component_1.NotificationAdministrationComponent,
             users_administration_component_1.UsersAdministrationComponent,
             user_administration_component_1.UserAdministrationComponent,
+            groups_administration_component_1.GroupsAdministrationComponent,
+            group_administration_component_1.GroupAdministrationComponent,
             statuses_administration_component_1.StatusesAdministrationComponent,
             status_administration_component_1.StatusAdministrationComponent,
             actions_administration_component_1.ActionsAdministrationComponent,

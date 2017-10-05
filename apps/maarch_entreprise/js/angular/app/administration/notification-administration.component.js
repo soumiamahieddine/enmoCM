@@ -87,10 +87,19 @@ var NotificationAdministrationComponent = (function () {
         else if ($j("#userslist").chosen().val()) {
             this.notification.diffusion_properties = $j("#userslist").chosen().val();
         }
-        if ($j("#groupslistJd").chosen().val()) {
+        console.log($j("#groupslistJd").chosen().val());
+        console.log($j("#entitieslistJd").chosen().val());
+        console.log($j("#statuseslistJd").chosen().val());
+        console.log($j("#userslistJd").chosen().val());
+        console.log($j("#joinDocJd").chosen().val());
+        if ($j("#joinDocJd").chosen().val() == null) {
+            this.notification.attachfor_properties = '';
+        }
+        else if ($j("#groupslistJd").chosen().val()) {
             this.notification.attachfor_properties = $j("#groupslistJd").chosen().val();
         }
         else if ($j("#entitieslistJd").chosen().val()) {
+            console.log($j("#entitieslistJd").chosen().val());
             this.notification.attachfor_properties = $j("#entitieslistJd").chosen().val();
         }
         else if ($j("#statuseslistJd").chosen().val()) {
@@ -100,6 +109,7 @@ var NotificationAdministrationComponent = (function () {
             this.notification.attachfor_properties = $j("#userslistJd").chosen().val();
         }
         if (this.creationMode) {
+            console.log(this.notification);
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/notifications']);

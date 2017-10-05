@@ -169,7 +169,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i aria-hidden="true" class="fa fa-frown-o" title="{{lang.joinDoc}}"></i></span>
-                            <select [(ngModel)]="notification.attachfor_type" class="forms-select form-control" name="joinDoc" id="joinDoc">
+                            <select [(ngModel)]="notification.attachfor_type" class="forms-select form-control" name="joinDocJd" id="joinDocJd">
                                 <option value="">Jamais</option> 
                                 <ng-container *ngFor="let diffusionType of notification.data.diffusionType"> 
                                 <option *ngIf="diffusionType.add_attachment=='true'" [ngValue]="diffusionType.id" >
@@ -192,10 +192,10 @@
                 </div>
                 <div *ngIf="notification.attachfor_type == 'entity'" class="form-group">
                     <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="entitieslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="entitieslist" (click)="unselectAll($event)"></i> {{lang.sendToDestFromentities}}
+                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="entitieslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="entitieslistJd" (click)="unselectAll($event)"></i> {{lang.sendToDestFromentities}}
                     </div>
                     <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="entitieslist[]" id="entitieslist" size="7" multiple="multiple" required>
+                        <select class="forms-select form-control" name="entitieslistJd[]" id="entitieslistJd" size="7" multiple="multiple" required>
                             <option *ngFor="let entity of notification.data.entities" [selected]="notification.attachfor_properties[entity.entity_id]" value="{{entity.entity_id}}">{{entity.entity_label}}</option>
                         </select>
                     </div>
@@ -205,7 +205,7 @@
                         <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslistJd" (click)="unselectAll($event)"></i>{{lang.sendToVisaUserWithStatus}}
                     </div>
                     <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslist[]" id="statuseslist" size="7" multiple="multiple" required>
+                        <select class="forms-select form-control" name="statuseslistJd[]" id="statuseslistJd" size="7" multiple="multiple" required>
                             <option *ngFor="let status of notification.data.status" [selected]="notification.attachfor_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
                         </select>
                     </div> 

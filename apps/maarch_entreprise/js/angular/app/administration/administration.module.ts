@@ -12,6 +12,8 @@ import { NotificationsAdministrationComponent }         from './notifications-ad
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 import { UsersAdministrationComponent, DataTablePipe }         from './users-administration.component';
 import { UserAdministrationComponent }          from './user-administration.component';
+import { GroupsAdministrationComponent }        from './groups-administration.component';
+import { GroupAdministrationComponent }         from './group-administration.component';
 import { StatusesAdministrationComponent }      from './statuses-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
 import { ActionsAdministrationComponent }       from './actions-administration.component';
@@ -40,6 +42,8 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
         NotificationAdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,
+        GroupsAdministrationComponent,
+        GroupAdministrationComponent,
         StatusesAdministrationComponent,
         StatusAdministrationComponent,
         ActionsAdministrationComponent,
