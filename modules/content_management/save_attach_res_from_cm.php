@@ -2,6 +2,14 @@
 
 //FOR ADD NEW ATTACHMENTS
 
+// case onlyConvert
+if (
+    $_SESSION['modules_loaded']['attachments']['convertPdf'] == true &&
+    $objectType == 'newAttachment'
+){
+    $_SESSION['upfile']['fileNamePdfOnTmp'] = $tmpFilePdfName;
+}
+
 require_once 'modules/attachments/attachments_tables.php';
 
 //new attachment from a template

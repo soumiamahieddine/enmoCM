@@ -567,6 +567,15 @@ if (isset($_POST['add']) && $_POST['add']) {
                         unset($_SESSION['transmissionContacts']);
                         
                         //copie de la version PDF de la pièce si mode de conversion sur le client
+                        if (
+                            $_SESSION['upfile']['fileNamePdfOnTmp'] != '' &&
+                            empty($_REQUEST['templateOffice'])
+                        ) {
+                            //case onlyConvert
+                            $query = "select template_id from templates where template_type = 'OFFICE' and template_target = 'attachments'";
+                            $stmt = $db->query($query);
+                            $_REQUEST['templateOffice'] = $stmt->fetchObject()->template_id;
+                        }
                         if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != '' && isset($_REQUEST['templateOffice'])){
 							$_SESSION['new_id'] = $id;
                             $file    = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];

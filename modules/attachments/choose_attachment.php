@@ -92,7 +92,56 @@ $upFileOK = false;
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="choose_attachment" />
         <?php
-            if (!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'])) { ?>
+            if (!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'])) { 
+                //launch auto convert in PDF
+                if (
+                    strtolower($_SESSION['upfile']['format']) == 'odt' ||
+                    strtolower($_SESSION['upfile']['format']) == 'docx'
+                ) {
+                    require_once 'modules/content_management/class/class_content_manager_tools.php';
+                    $cM = new content_management_tools();
+                    if (
+                        file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+                                    . DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+                                    . DIRECTORY_SEPARATOR . 'applet_controller.php'
+                        )
+                    ) {
+                        $path = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/applet_controller.php';
+                    } else {
+                        $path = 'modules/content_management/applet_controller.php';
+                    }
+                    $path_appli = explode('/', $_SESSION['config']['coreurl']);
+                    if(count($path_appli) <> 5){
+                        $path_appli = array_slice($path_appli, 0, 4);
+                        $path_appli = implode('/', $path_appli);
+                    }else{
+                        $path_appli = implode('/', $path_appli);
+                    }
+                    // require_once 'core/class/class_db_pdo.php';
+                    // $database = new Database();
+                    // $query = "select template_id from templates where template_type = 'OFFICE' and template_target = 'attachments'";
+                    // $stmt = $database->query($query);
+                    // $aTemplateId = $stmt->fetchObject()->template_id;
+                    $cookieKey = $_SESSION['sessionName'] . '=' . $_COOKIE[$_SESSION['sessionName']];
+
+                    $onlyConvert = "true";
+                    $cM->generateJNLP(
+                        $path_appli,
+                        $path_appli . '/' . $path,
+                        'newAttachment',
+                        'res_letterbox',
+                        //$aTemplateId,
+                        $_SESSION['doc_id'],
+                        '',
+                        $cookieKey,
+                        $_SESSION['user']['UserId'],
+                        $_SESSION['clientSideCookies'], 
+                        $_SESSION['modules_loaded']['attachments']['convertPdf'],
+                        $onlyConvert
+                    );
+                }
+
+                ?>
                 <i class="fa fa-check-square fa-2x" title="<?php echo _DOWNLOADED_FILE; ?>"></i>
                 <input type="button" id="fileButton" onclick="$j('#file').click();" class="button"
                        value="<?php if($_REQUEST['with_file'] == 'true'){ echo _WITHOUT_FILE; } else {echo $_FILES['file']['name']; }?>"
