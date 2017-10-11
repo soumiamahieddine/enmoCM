@@ -107,3 +107,6 @@ UPDATE users set password = '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJ
 /*BASKETS COLOR*/
 ALTER TABLE baskets DROP COLUMN IF EXISTS color;
 ALTER TABLE baskets ADD color character varying(16);
+/*ENTITIES FULL NAME*/
+ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
+ALTER TABLE entities ADD entity_full_name text;
