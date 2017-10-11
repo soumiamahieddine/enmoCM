@@ -168,4 +168,40 @@ class BasketsModelAbstract
 
         return true;
     }
+
+    public static function deleteBasketRedirection(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId', 'basketId']);
+        ValidatorModel::stringType($aArgs, ['userId', 'basketId']);
+
+        DatabaseModel::delete([
+            'table' => 'user_abs',
+            'where' => ['(user_abs = ? OR basket_owner = ?)', 'basket_id = ?'],
+            'data'  => [$aArgs['userId'], $aArgs['userId'], $aArgs['basketId']]
+        ]);
+
+        return true;
+    }
+
+    public static function getRedirectedBasketsByUserId(array $aArgs) {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        $aBaskets = DatabaseModel::select([
+            'select' => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
+            'table' => ['baskets ba, user_abs ua'],
+            'where' => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
+            'data' => [$aArgs['userId']],
+            'order_by' => 'ua.system_id'
+        ]);
+
+        foreach ($aBaskets as $key => $value) {
+            $user = UserModel::getById(['userId' => $value['new_user'], 'select' => ['firstname', 'lastname']]);
+            $aBaskets[$key]['userToDisplay'] = "{$user['firstname']} {$user['lastname']} ({$value['new_user']})";
+            $aBaskets[$key]['user'] = "{$user['firstname']} {$user['lastname']}";
+        }
+
+        return $aBaskets;
+    }
+
 }

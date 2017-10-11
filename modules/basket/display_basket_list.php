@@ -75,6 +75,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                 <h2><?php echo _MY_BASKETS;?> : </h2>
             
             <?php
+            $redirectedBaskets = \Baskets\Models\BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
             $countColl = count($collWithUserBaskets);
             $currentGroup = '';
             for ($cpt=0;$cpt<$countColl;$cpt++) {
