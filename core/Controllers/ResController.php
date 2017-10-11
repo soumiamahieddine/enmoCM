@@ -34,19 +34,22 @@ class ResController
 {
     public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if(empty($aArgs)) {
-            
-            $aArgs = $request->getQueryParams();
 
-            $aArgs['data'] = json_decode($aArgs['data']);
-
-            $aArgs['data'] = $this->object2array($aArgs['data']);
-
-            //FIX pb if data has parent
-            if (isset($aArgs['data']['data'])) {
-                $aArgs['data'] = $aArgs['data']['data'];
-            }
+        if (empty($aArgs)) {
+            $aArgs = $request->getParsedBody();
         }
+
+        // if(empty($aArgs)) {
+        //     $aArgs = $request->getQueryParams();
+        //     $aArgs['data'] = json_decode($aArgs['data']);
+        //     $aArgs['data'] = $this->object2array($aArgs['data']);
+        //     //FIX pb if data has parent
+        //     if (isset($aArgs['data']['data'])) {
+        //         $aArgs['data'] = $aArgs['data']['data'];
+        //     }
+        // }
+
+        $aArgs['data'] = $this->object2array($aArgs['data']);
 
         //*****************************************************************************************
         //LOG ONLY LOG FOR DEBUG
@@ -641,13 +644,15 @@ class ResController
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
+
                 $mail = explode("<", $theString);
                 $user = $userModel->getByEmail(['mail' => $mail[count($mail) -1]]);
+
                 $userIdFound = $user[0]['user_id'];
                 if (!empty($userIdFound)) {
                     $toAddressFound = true;
                     $destUser = $userIdFound;
-                    $entity = $entityModel->getByUserId(['user_id' => $destUser]);
+                    $entity = $entityModel->getByUserId(['userId' => $destUser]);
                     if (!empty($entity[0]['entity_id'])) {
                         $userEntity = $entity[0]['entity_id'];
                         $userPrimaryEntity = true;

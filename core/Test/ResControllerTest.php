@@ -226,7 +226,7 @@ class ResControllerTest extends TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
         $response = $action->create($request, $response, $aArgs);
-        //print_r($response);exit;
+        
         $this->assertGreaterThan(1, json_decode($response->getBody())->resId);
     }
 
