@@ -188,11 +188,11 @@ class BasketsModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-            'select' => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
-            'table' => ['baskets ba, user_abs ua'],
-            'where' => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
-            'data' => [$aArgs['userId']],
-            'order_by' => 'ua.system_id'
+            'select'    => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
+            'table'     => ['baskets ba, user_abs ua'],
+            'where'     => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
+            'data'      => [$aArgs['userId']],
+            'order_by'  => ['ua.system_id']
         ]);
 
         foreach ($aBaskets as $key => $value) {
