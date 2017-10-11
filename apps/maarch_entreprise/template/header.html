@@ -18,7 +18,7 @@ require_once 'core/Models/UserModel.php';
                                         $strGroupList.=$userGroups[$i]['group_desc']."<br><br>";
                                     }                                
                                 }
-                                $strUserInfos .= ' <div id="header_usergroups"  class="header_usergroups" title="'.$strGroupList.'" style="display:inline-block;cursor:pointer;">('.count($userGroups).' groupes)</div>';
+                                $strUserInfos .= ' <div id="header_usergroups"  class="header_usergroups" title="'.$strGroupList.'" style="display:inline-block;">('.count($userGroups).' groupes)</div>';
                             }else{
                                 $strUserInfos .= ' ('.$userGroups[0]['group_desc'].')';
                             }
