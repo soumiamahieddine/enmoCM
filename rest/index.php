@@ -189,7 +189,9 @@ $app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':upda
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
+$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
+$app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
+
 
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');

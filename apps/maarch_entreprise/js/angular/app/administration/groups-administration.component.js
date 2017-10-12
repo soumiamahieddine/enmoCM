@@ -56,7 +56,6 @@ var GroupsAdministrationComponent = (function () {
                 });
             }
         }
-        console.log(this.groupsForAssign);
     };
     GroupsAdministrationComponent.prototype.reassignUsers = function (group, groupId) {
         var _this = this;
