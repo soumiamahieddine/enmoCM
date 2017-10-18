@@ -42,7 +42,7 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['redirectedBaskets'] = BasketsModel::getBasketsRedirectedByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
 
         return $response->withJson($user);
     }
