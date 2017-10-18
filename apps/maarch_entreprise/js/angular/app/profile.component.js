@@ -40,6 +40,7 @@ var ProfileComponent = (function () {
             title: "",
         };
         this.userAbsenceModel = [];
+        this.basketsToRedirect = [];
         this.showPassword = false;
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";

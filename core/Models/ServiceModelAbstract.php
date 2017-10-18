@@ -17,6 +17,63 @@ namespace Core\Models;
 
 class ServiceModelAbstract
 {
+    public static function getServicesByXML()
+    {
+        $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);
+        $services = [];
+
+        if ($xmlfile) {
+            foreach ($xmlfile->SERVICE as $value) {
+                if ((string)$value->enabled === 'true') {
+                    $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                    $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
+                    $services['application'][] = [
+                        'id'                => (string)$value->id,
+                        'name'              => $name,
+                        'comment'           => $comment,
+                        'servicepage'       => (string)$value->servicepage,
+                        'style'             => (string)$value->style,
+                        'system_service'    => (string)$value->system_service == 'true' ? true : false,
+                        'servicetype'       => (string)$value->servicetype,
+                    ];
+                }
+            }
+        }
+
+        $customId = CoreConfigModel::getCustomId();
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
+        } else {
+            $path = 'apps/maarch_entreprise/xml/config.xml';
+        }
+
+        $xmlfile = simplexml_load_file($path);
+        foreach ($xmlfile->MODULES as $mod) {
+            $module = (string)$mod->moduleid;
+            $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
+
+            if ($xmlModuleFile) {
+                foreach ($xmlModuleFile->SERVICE as $value) {
+                    if ((string)$value->enabled === 'true') {
+                        $name = defined((string)$value->name) ? constant((string)$value->name) : (string)$value->name;
+                        $comment = defined((string)$value->comment) ? constant((string)$value->comment) : (string)$value->comment;
+                        $services[$module][] = [
+                            'id'                => (string)$value->id,
+                            'name'              => $name,
+                            'comment'           => $comment,
+                            'servicepage'       => (string)$value->servicepage,
+                            'style'             => (string)$value->style,
+                            'system_service'    => (string)$value->system_service == 'true' ? true : false,
+                            'servicetype'       => (string)$value->servicetype,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $services;
+    }
+
     public static function getApplicationAdministrationServicesByXML()
     {
         $xmlfile = ServiceModel::getLoadedXml(['location' => 'apps']);

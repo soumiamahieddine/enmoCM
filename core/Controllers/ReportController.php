@@ -30,7 +30,7 @@ class ReportController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        $group = GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
@@ -46,7 +46,7 @@ class ReportController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        $group = GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }

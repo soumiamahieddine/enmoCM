@@ -8,6 +8,8 @@ require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once('modules/entities/class/class_manage_entities.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+        ."class".DIRECTORY_SEPARATOR."class_lists.php";
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
@@ -17,6 +19,7 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
     $servicesCompare = array();
     $cr7 = new chrono();
     $db = new Database();
+    $sec = new security();
     $labelAction = '';
     if ($id_action <> '') {
         $stmt = $db->query("select label_action from actions where id = ?",array($id_action));
@@ -115,6 +118,18 @@ require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php'
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
+        if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
+            $collId = trim($_REQUEST['coll_id']);
+            $parameters .= '&coll_id='.$_REQUEST['coll_id'];
+            $view = $sec->retrieve_view_from_coll_id($collId);
+            $table = $sec->retrieve_table_from_coll($collId);
+            //retrieve the process entity of document
+            $stmt = $db->query(
+                "SELECT destination FROM " . $table . " WHERE res_id in (?)", array($values_str)
+            );
+            $resultDest = $stmt->fetchObject();
+            $destination = $resultDest->destination;
+        }
         if ($destination <> '') {
             $templates = $templatesControler->getAllTemplatesForProcess($destination);
         } else {

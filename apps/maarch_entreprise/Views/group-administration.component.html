@@ -1,0 +1,78 @@
+<div class="page-header">
+</div>
+<div *ngIf="loading">
+    <md-spinner style="margin:auto;"></md-spinner>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <div class="row row-eq-height">
+        <div class="col-md-offset-4 col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>Informations</h2>
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" required>
+                            <input *ngIf="!creationMode" type="text" class="form-control" name="identifier" title="{{lang.id}}" [(ngModel)]="group.group_id" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="description" title="{{lang.desc}}" placeholder="{{lang.desc}}" [(ngModel)]="group.group_desc" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="comment" title="comment" placeholder="comment" [(ngModel)]="group.security.maarch_comment" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="clause" placeholder="where clause" [(ngModel)]="group.security.where_clause" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="startDate" [(ngModel)]="group.security.mr_start_date">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="stopDate" [(ngModel)]="group.security.mr_stop_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-default" [disabled]="!groupForm.form.valid">{{lang.save}}</button>
+                    </div>
+                </div>
+            </form>
+            <div *ngIf="!creationMode" class="form-group">
+                Menu
+                <div class="col-sm-12" *ngFor="let upperService of group.services.menu; let i = index">
+                    <span style="font-weight: bold">{{upperService[0]['location']}}</span>
+                    <div *ngFor="let service of upperService">
+                        {{service.name}}
+                        <input type="checkbox" class="form-control" name="{{service.name}}" [(ngModel)]="service.checked" (click)="updateService(service)">
+                    </div>
+                </div>
+                Administration
+                <div class="col-sm-12" *ngFor="let service of group.services.administration; let i = index">
+                    <span style="font-weight: bold">{{service[0]['location']}}</span>
+                    <div *ngFor="let subService of service">
+                        {{subService.name}}
+                        <input type="checkbox" class="form-control" name="{{subService.name}}" [(ngModel)]="subService.checked">
+                    </div>
+                </div>
+                Use
+                <div class="col-sm-12" *ngFor="let service of group.services.use; let i = index">
+                    <span style="font-weight: bold">{{service[0]['location']}}</span>
+                    <div *ngFor="let subService of service">
+                        {{subService.name}}
+                        <input type="checkbox" class="form-control" name="{{subService.name}}" [(ngModel)]="subService.checked">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

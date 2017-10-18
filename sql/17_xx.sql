@@ -103,3 +103,10 @@ ALTER TABLE sendmail ADD COLUMN res_version_att_id_list character varying(255);
 /*SALT*/
 UPDATE users set password = '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', change_password = 'Y' WHERE user_id != 'superadmin';
 UPDATE users set password = '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.' where user_id = 'superadmin';
+
+/*BASKETS COLOR*/
+ALTER TABLE baskets DROP COLUMN IF EXISTS color;
+ALTER TABLE baskets ADD color character varying(16);
+/*ENTITIES FULL NAME*/
+ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
+ALTER TABLE entities ADD entity_full_name text;

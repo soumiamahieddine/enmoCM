@@ -21,7 +21,6 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Notifications\Models\NotificationModel;
 use Core\Models\ServiceModel;
-use Core\Models\LangModel;
 use Core\Controllers\HistoryController;
 
 
@@ -43,6 +42,7 @@ class NotificationController
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $_SESSION['user']['UserId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
         $notification['notifications'] = NotificationModel::getByNotificationId(['notificationId' => $aArgs['id'], 'select' => ['notification_sid', 'notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type','diffusion_properties', 'attachfor_type','attachfor_properties']]);
         if (empty($notification['notifications'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Notification not found']);
@@ -65,42 +65,37 @@ class NotificationController
         $notificationInDb = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
         
         if($data){
-            if(is_int($notificationInDb['notification_sid'])){
+            if(is_int($notificationInDb['notification_sid'])) {
                  return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_ALREADY_EXIST]);               
-            }elseif(strlen($data[description]) > 255){
+            }elseif(strlen($data['description']) > 255) {
                 return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_DESCRIPTION_TOO_LONG]);
-            }elseif(strlen($data[event_id]) > 255 && is_string($data[event_id])){
+            }elseif(strlen($data['event_id']) > 255 && is_string($data['event_id'])) {
                 return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_EVENT_TOO_LONG]);
-            }elseif(strlen($data[notification_mode]) > 30){
+            }elseif(strlen($data['notification_mode']) > 30){
                 return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_MODE_TOO_LONG]);
-            }elseif(Validator::intType()->notEmpty()->validate($data[template_id])){
+            }elseif(Validator::intType()->notEmpty()->validate($data['template_id'])){
                 return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_TEMPLATE_NOT_A_INT]);
-            }elseif(!is_string($data[diffusion_type])){
+            }elseif(!is_string($data['diffusion_type'])){
                 return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_DIFFUSION_IS_A_INT]);
             }
-            // elseif(!is_array($data[diffusion_properties])){
-            //     return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_DIFFUSION_PROPERTIES_NOT_INT]);
-            // }
 
-            if($data[is_enabled] == true){
-                $data[is_enabled] = 'Y';
+            if($data['is_enabled'] == true){
+                $data['is_enabled'] = 'Y';
             }else{
-                $data[is_enabled] = 'N';
+                $data['is_enabled'] = 'N';
             }
 
-            $data[notification_mode] = 'EMAIL';
+            $data['notification_mode'] = 'EMAIL';
             
-            if($data[diffusion_properties]){
-                $data[diffusion_properties] = implode(",",$data[diffusion_properties]);
+            if($data['diffusion_properties']){
+                $data['diffusion_properties'] = implode(",", $data['diffusion_properties']);
             }
             
-            if($data[attachfor_properties]){
-                $data[attachfor_properties] = implode(",",$data[attachfor_properties]);
+            if($data['attachfor_properties']){
+                $data['attachfor_properties'] = implode(",", $data['attachfor_properties']);
+            }else{
+                $data['attachfor_properties'] = '';
             }
-            
-            // elseif(!is_string($data[rss_url_template])){
-            //     return $response->withStatus(400)->withJson(['errors' => 'Notification error : rss_url_template is not in good format ']);
-            // }
 
             if (NotificationModel::create($data)) {
                 HistoryController::add([
@@ -127,33 +122,26 @@ class NotificationController
         $data = $request->getParams();
 
         $data['notification_sid'] = $aArgs['id'];
-        $data[diffusion_properties] = implode(",",$data[diffusion_properties]);
+        $data['diffusion_properties'] = implode(",", $data['diffusion_properties']);
         
-        $data[attachfor_properties] = implode(",",$data[attachfor_properties]);
-        // var_dump($aArgs);
-        // var_dump($data);
-        
-        //$aArgs   = self::manageValue($request);
-        //$errors  = $this->control($aArgs, 'update');
-
+        $data['attachfor_properties'] = implode(",", $data['attachfor_properties']);
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
         NotificationModel::update($data);
 
-            $notification = NotificationModel::getById(['notificationId' => $data['notification_id']]);
+        $notification = NotificationModel::getById(['notificationId' => $data['notification_id']]);
 
-            HistoryController::add([
-                'table_name' => 'notifications',
-                'record_id'  => $data['notification_sid'],
-                'event_type' => 'UP',
-                'event_id'   => 'notificationsup',
-                'info'       => _MODIFY_NOTIFICATIONS . ' : ' . $data['notification_sid']
-            ]);
+        HistoryController::add([
+            'table_name' => 'notifications',
+            'record_id'  => $data['notification_sid'],
+            'event_type' => 'UP',
+            'event_id'   => 'notificationsup',
+            'info'       => _MODIFY_NOTIFICATIONS . ' : ' . $data['notification_sid']
+        ]);
 
-            return $response->withJson(['notification'=> $notification]);
-         
+        return $response->withJson(['notification'=> $notification]);
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -184,9 +172,10 @@ class NotificationController
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $_SESSION['user']['UserId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
         $notification = [];
-        $notification[diffusion_properties] = [];
-        $notification[attachfor_properties] = []; 
+        $notification['diffusion_properties'] = [];
+        $notification['attachfor_properties'] = [];
         $data = [];
 
         $data['event'] = NotificationModel::getEvent();
@@ -207,9 +196,9 @@ class NotificationController
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $_SESSION['user']['UserId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
+
         $notification = NotificationModel::getById(['notification_sid' => $aArgs['id'], 'select' => ['notification_sid', 'notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type','diffusion_properties', 'attachfor_type','attachfor_properties']]);
-        
-        
+
         $notification['diffusion_properties'] = explode(",",$notification['diffusion_properties']);
         
         foreach ($notification['diffusion_properties'] as $key => $value) {

@@ -3,7 +3,9 @@ export const LANG_EN = {
     "id"                        : "Login",
     "maarchApplication"         : "Maarch App",
     "application"               : "Application",
+    "module"                    : "Module",
     "modules"                   : "Modules",
+    "informations"              : "Informations",
     "add"                       : "Add",
     "back"                      : "Back",
     "cancel"                    : "Cancel",
@@ -12,10 +14,13 @@ export const LANG_EN = {
     "validate"                  : "Validate",
     "update"                    : "Update",
     "delete"                    : "Delete",
+    "suspend"                   : "Suspend",
+    "authorize"                 : "Authorize",
     "yes"                       : "Yes",
     "no"                        : "No",
     "abs"                       : "Absent",
     "chooseGroup"               : "Choose a group",
+    "chooseEntity"              : "Choose a entity",
     "chooseBasket"              : "Choose a basket",
     "selectAll"                 : "Select all",
     "unselectAll"               : "Unselect all",
@@ -25,8 +30,10 @@ export const LANG_EN = {
     "deleteMsg"                 : "Do you really want to delete this element",
     "clickOn"                   : "Click on",
     "to"                        : "to",
+    "for"                       : "for",
+    "value"                     : "value",
+
     "user"                      : "user",
-    "informations"              : "Informations",
     "firstname"                 : "Firstname",
     "lastname"                  : "Lastname",
     "email"                     : "Email",
@@ -44,6 +51,7 @@ export const LANG_EN = {
     "entities"                  : "Entities",
     "primaryEntity"             : "Primary entity",
     "secondaryEntity"           : "Secondary entity",
+    "groups"                    : "Groups",
 
 
     //Administration
@@ -64,17 +72,12 @@ export const LANG_EN = {
     "autoLogoutAbsence"         : "You are going to be automaticaly disconnected after your redirections",
     "reports"                   : "Reports",
     "myProfile"                 : "My profile",
-    "event"                     : "Event",
-    "template"                  : "Modèle",
-    "diffusion_type"            : "Type de diffusion",
+    "groupAdded"                : "Group added",
+    "groupUpdated"              : "Group updated",
+    "groupDeleted"              : "Group deleted",
+    "entityAdded"               : "Entité added",
+    "entityUpdated"             : "Entité updated",
+    "entityDeleted"             : "Entité deleted",
+    "entityTooglePrimary"       : "Pass to primary entity",
 
-
-    //Notifications
-    notification: "notification",
-    notificationsListTitle: "Notifications's list",
-    newNotificationAdded: "New notification",
-    admin_notifications: "Administration of notifications",
-    notificationUpdated: "Notification updated: ",
-    notificationError: "Notification error: ",
-    notificationErrorIdAlreadyExist: "id already exist",
 };

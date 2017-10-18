@@ -5,6 +5,8 @@ function triggerAngular(prodmode, locationToGo) {
         'administration',
         'users-administration',
         'user-administration',
+        'groups-administration',
+        'group-administration',
         'status-administration',
         'statuses-administration',
         'actions-administration',

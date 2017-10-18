@@ -41,6 +41,7 @@ export class ProfileComponent implements OnInit {
         title                   : "",
     };
     userAbsenceModel            : any[]     = [];
+    basketsToRedirect           : string[]  = [];
 
     showPassword                : boolean   = false;
     selectedSignature           : number    = -1;

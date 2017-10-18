@@ -128,6 +128,12 @@ $app->get('/administration/status/{identifier}', \Core\Controllers\StatusControl
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
+$app->post('/groups', \Core\Controllers\GroupController::class . ':create');
+$app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
+$app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
+$app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
+$app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
+$app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
 //status
 $app->post('/status', \Core\Controllers\StatusController::class . ':create');
@@ -183,7 +189,9 @@ $app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':upda
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setBasketsRedirectionForAbsence');
+$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
+$app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
+
 
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');

@@ -42,7 +42,8 @@ class UserController
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        
+        $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+
         return $response->withJson($user);
     }
 
@@ -151,15 +152,8 @@ class UserController
                 $users[$key]['inDiffListDest'] = 'N';
             }
         }
-        $users;
 
-
-        return $response->withJson(
-            [
-            'success' => _DELETED_USER,
-            'users' => $users
-            ]
-        );
+        return $response->withJson(['success' => _DELETED_USER, 'users' => $users]);
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
@@ -214,7 +208,7 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
-    public function setBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response, $aArgs) {
+    public function setRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -252,6 +246,19 @@ class UserController
             'success'   => _ABSENCE_ACTIVATED,
             'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
         ]);
+    }
+
+    public function deleteRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+
+        BasketsModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
+
+        return $response->withJson(['redirectedBaskets' => BasketsModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs) {
@@ -560,7 +567,7 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (empty(GroupModel::getById(['groupId' => $data['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $data['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this group']);
@@ -586,7 +593,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
@@ -606,7 +613,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getById(['groupId' => $aArgs['groupId']]))) {
+        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
