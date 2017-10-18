@@ -1532,6 +1532,7 @@ if (isset($_REQUEST['id'])) {
     $_SESSION['upfile']['format']        = $viewResourceArr['ext'];
     $fileNameOnTmp                       = str_replace($viewResourceArr['tmp_path'].DIRECTORY_SEPARATOR, '', $viewResourceArr['file_path']);
     $_SESSION['upfile']['fileNameOnTmp'] = $fileNameOnTmp;
+    $_SESSION['upfile']['fileNamePdfOnTmp'] = $viewResourceArr['filenamePdf'];
 
 } else {
     $_SESSION['targetAttachment'] = 'add';

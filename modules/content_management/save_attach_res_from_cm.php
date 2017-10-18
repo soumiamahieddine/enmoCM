@@ -1,7 +1,7 @@
 <?php
 
 //FOR ADD NEW ATTACHMENTS
-
+$sec = new security();
 // case onlyConvert
 if (
     $_SESSION['modules_loaded']['attachments']['convertPdf'] == true &&
@@ -19,6 +19,9 @@ if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
 
 $_SESSION['cm']['resMaster'] = '';
 
+if (empty($_SESSION['cm']['collId'])) {
+    $_SESSION['cm']['collId'] = $sec->retrieve_coll_id_from_table($objectTable);
+}
 $docserverControler = new docservers_controler();
 $docserver = $docserverControler->getDocserverToInsert(
     $_SESSION['cm']['collId']
@@ -161,7 +164,6 @@ if (empty($docserver)) {
             } else {
                 if ($_SESSION['history']['attachadd'] == "true") {
                     $hist = new history();
-                    $sec = new security();
                     $view = $sec->retrieve_view_from_coll_id(
                         $collId
                     );
