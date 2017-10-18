@@ -152,15 +152,8 @@ class UserController
                 $users[$key]['inDiffListDest'] = 'N';
             }
         }
-        $users;
 
-
-        return $response->withJson(
-            [
-            'success' => _DELETED_USER,
-            'users' => $users
-            ]
-        );
+        return $response->withJson(['success' => _DELETED_USER, 'users' => $users]);
     }
 
     public function updateProfile(RequestInterface $request, ResponseInterface $response)
