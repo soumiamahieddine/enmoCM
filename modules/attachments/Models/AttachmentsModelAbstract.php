@@ -15,6 +15,32 @@ use Core\Models\ValidatorModel;
 
 class AttachmentsModelAbstract
 {
+    public static function getById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion'] == 'true') {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+
+        $aAttachment = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => [$table],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        if (empty($aAttachment[0])) {
+            return [];
+        }
+
+        return $aAttachment[0];
+    }
+
     public static function getAttachmentsTypesByXML()
     {
         $customId = CoreConfigModel::getCustomId();
@@ -87,7 +113,7 @@ class AttachmentsModelAbstract
         $select = [
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')"],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']],
         ];
         if (!empty($aArgs['orderBy'])) {
@@ -134,6 +160,36 @@ class AttachmentsModelAbstract
             'set'       => ['status' => 'DEL'],
             'where'     => ['origin = ?', 'status != ?'],
             'data'      => ["{$aArgs['resId']},{$aArgs['table']}", 'DEL']
+        ]);
+
+        return true;
+    }
+
+    public static function setInSignatureBook(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['isVersion']);
+        ValidatorModel::boolType($aArgs, ['inSignatureBook']);
+
+        if ($aArgs['isVersion'] == 'true') {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+        if ($aArgs['inSignatureBook']) {
+            $aArgs['inSignatureBook'] =  'true';
+        } else {
+            $aArgs['inSignatureBook'] =  'false';
+        }
+
+        DatabaseModel::update([
+            'table'     => $table,
+            'set'       => [
+                'in_signature_book'   => $aArgs['inSignatureBook']
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['id']],
         ]);
 
         return true;

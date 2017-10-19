@@ -167,9 +167,23 @@ function duplicateTemplate(id) {
             success: function(answer) {
                 location.href = "index.php?page=templates_management_controler&mode=up&module=templates&id=" + answer.id + "&start=0&order=asc&order_field=&what=";
             }, error: function(err) {
-                alert(err);
+                alert("Une erreur s'est produite");
             }
         });
     }
 }
 
+function setAttachmentInSignatureBook(id, isVersion) {
+    $j.ajax({
+        url      : '../../rest/attachments/' + id + '/inSignatureBook',
+        type     : 'PUT',
+        dataType : 'json',
+        data: {
+            isVersion   : isVersion
+        },
+        success: function(answer) {
+        }, error: function(err) {
+            alert("Une erreur s'est produite");
+        }
+    });
+}

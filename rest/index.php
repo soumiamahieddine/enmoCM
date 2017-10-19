@@ -113,13 +113,6 @@ $app->get('/administration/users/{id}', \Core\Controllers\UserController::class 
 $app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
 $app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
 
-//notifications
-$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
-$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
-$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
-$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
-$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
-
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
 $app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
@@ -158,6 +151,7 @@ $app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Co
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
+$app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
@@ -226,6 +220,13 @@ $app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::c
 $app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
 $app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
 $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+
+//Notifications
+$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
+$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
+$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
+$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
+$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
 
 //Reports
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
