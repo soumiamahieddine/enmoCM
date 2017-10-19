@@ -255,7 +255,7 @@ class BasketsModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
 
         $coloredBaskets = DatabaseModel::select([
             'select'    => ['basket_id', 'group_id', 'color'],
