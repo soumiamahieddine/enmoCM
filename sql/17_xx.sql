@@ -107,6 +107,18 @@ UPDATE users set password = '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJ
 /*BASKETS COLOR*/
 ALTER TABLE baskets DROP COLUMN IF EXISTS color;
 ALTER TABLE baskets ADD color character varying(16);
+DROP TABLE IF EXISTS users_baskets;
+CREATE TABLE users_baskets
+(
+  id serial NOT NULL,
+  user_serial_id integer NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  group_id character varying(32) NOT NULL,
+  color character varying(16),
+  CONSTRAINT users_baskets_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 /*ENTITIES FULL NAME*/
 ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
 ALTER TABLE entities ADD entity_full_name text;

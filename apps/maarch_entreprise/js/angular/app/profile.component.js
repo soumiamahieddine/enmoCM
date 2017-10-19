@@ -193,6 +193,13 @@ var ProfileComponent = (function () {
         this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
         this.userAbsenceModel.splice(index, 1);
     };
+    ProfileComponent.prototype.updateBasketColor = function (i, y) {
+        this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
+            .subscribe(function (data) {
+        }, function (err) {
+            errorNotification(err.error.errors);
+        });
+    };
     ProfileComponent.prototype.activateAbsence = function () {
         var _this = this;
         this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)

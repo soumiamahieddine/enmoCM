@@ -15,21 +15,20 @@
 
 namespace Core\Models;
 
-require_once 'core/class/class_history.php';
+use Core\Controllers\HistoryController;
 use Entities\Models\EntityModel;
-use  Core\Models\GroupModel;
+
 class UserModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        // ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        // ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data']
         ]);
 
         return $aUsers;
@@ -256,7 +255,7 @@ class UserModelAbstract
             'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
         ]);
 
-        return $j;
+        return true;
     }
 
     public static function createEmailSignature(array $aArgs = [])
@@ -603,7 +602,7 @@ class UserModelAbstract
 
         $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
 
-        \Core\Controllers\HistoryController::add([
+        HistoryController::add([
             'table_name' => 'users', 
             'record_id'  =>$user['user_id'], 
             'event_type' => 'GROUP ADD', 
@@ -648,7 +647,7 @@ class UserModelAbstract
 
         $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
 
-        \Core\Controllers\HistoryController::add([
+        HistoryController::add([
             'table_name' => 'users', 
             'record_id'  =>$user['user_id'], 
             'event_type' => 'GROUP DELETED', 
@@ -692,11 +691,12 @@ class UserModelAbstract
                 'primary_entity'    => $aArgs['primaryEntity']
             ]
         ]);
-        $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
-        \Core\Controllers\HistoryController::add([
+        $entityInfos = EntityModel::getByID(['entityId' => $aArgs['entityId']]);
+
+        HistoryController::add([
             'table_name' => 'users', 
-            'record_id'  =>$user['user_id'], 
+            'record_id'  => $user['user_id'],
             'event_type' => 'ENTITY ADD', 
             'event_id'   => 'entityadded',
             'info'       => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label']
@@ -792,7 +792,7 @@ class UserModelAbstract
 
         $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
-        \Core\Controllers\HistoryController::add([
+        HistoryController::add([
             'table_name' => 'users', 
             'record_id'  =>$user['user_id'], 
             'event_type' => 'ENTITY DELETE', 
@@ -803,4 +803,42 @@ class UserModelAbstract
         return true;
     }
 
+    public static function updateBasketColor(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'basketId', 'color']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['groupId', 'basketId', 'color']);
+
+        $isPresent = DatabaseModel::select([
+            'select'    => ['1'],
+            'table'     => ['users_baskets'],
+            'where'     => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
+            'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']]
+        ]);
+
+        if (empty($isPresent)) {
+            DatabaseModel::insert(
+                [
+                    'table'         => 'users_baskets',
+                    'columnsValues' => [
+                        'user_serial_id'    => $aArgs['id'],
+                        'basket_id'         => $aArgs['basketId'],
+                        'group_id'          => $aArgs['groupId'],
+                        'color'             => $aArgs['color']
+                    ]
+                ]
+            );
+        } else {
+            DatabaseModel::update([
+                'table'     => 'users_baskets',
+                'set'       => [
+                    'color'    => $aArgs['color']
+                ],
+                'where'     => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
+                'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']]
+            ]);
+        }
+
+        return true;
+    }
 }

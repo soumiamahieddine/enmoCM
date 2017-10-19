@@ -23,20 +23,16 @@ var NotificationsAdministrationComponent = (function () {
     }
     NotificationsAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        this.prepareNotifications();
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/notifications')
             .subscribe(function (data) {
             _this.notifications = data.notifications;
-            _this.updateBreadcrumb(angularGlobals.applicationName);
             _this.loading = false;
         }, function (err) {
-            errorNotification(JSON.parse(err._body).errors);
+            _this.notify.error(err.error.errors);
         });
-    };
-    NotificationsAdministrationComponent.prototype.prepareNotifications = function () {
-        $j('#inner_content').remove();
     };
     NotificationsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
@@ -44,8 +40,8 @@ var NotificationsAdministrationComponent = (function () {
     };
     NotificationsAdministrationComponent.prototype.deleteNotification = function (notification) {
         var _this = this;
-        var resp = confirm(this.lang.deleteMsg + " ?");
-        if (resp) {
+        var r = confirm(this.lang.deleteMsg);
+        if (r) {
             this.http.delete(this.coreUrl + 'rest/notifications/' + notification.notification_sid)
                 .subscribe(function (data) {
                 _this.notifications = data.notifications;

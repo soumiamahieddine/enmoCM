@@ -221,6 +221,14 @@ export class ProfileComponent implements OnInit {
         this.userAbsenceModel.splice(index, 1);
     }
 
+    updateBasketColor(i: number, y: number) {
+        this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, {"color" : this.user.regroupedBaskets[i].baskets[y].color})
+            .subscribe((data: any) => {
+            }, (err) => {
+                errorNotification(err.error.errors);
+            });
+    }
+
     activateAbsence() {
         this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
             .subscribe(() => {

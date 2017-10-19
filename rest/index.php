@@ -191,6 +191,7 @@ $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':u
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
 
 //parameters
 $app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
