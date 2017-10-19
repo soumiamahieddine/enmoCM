@@ -820,6 +820,23 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (exp_user_id in (select user_id from users where firstname ilike :contactIdInternal or lastname ilike :contactIdInternal )) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":contactIdInternal" => "%".$contactid_internal."%"));
             }
+            //VISA USER
+            elseif ($tab_id_fields[$j] == 'visa_user' && !empty($_REQUEST['user_visa']))
+            {
+                $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['user_visa']))."']";
+                    $userVisa = $_REQUEST['user_visa'];
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and process_date is not null and signatory = false and item_id in (select user_id from users where user_id = :user_visa))) and  ";
+                    $arrayPDO = array_merge($arrayPDO, array(":user_visa" => $userVisa));
+            }
+            //signatory = false et difflist_type = ‘VISA_CIRCUIT' et process_date != null
+            elseif ($tab_id_fields[$j] == 'visa_user' && empty($_REQUEST['user_visa']) && !empty($_REQUEST['visa_user']))
+            {
+                $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['visa_user']))."']";
+                    $visaUser = pg_escape_string($_REQUEST['visa_user']);
+                    //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and process_date is not null and signatory = false and item_id in (select user_id from users where firstname ilike :visa_user or lastname ilike :visa_user))) and ";
+                    $arrayPDO = array_merge($arrayPDO, array(":visa_user" => "%".$visaUser."%"));
+            }
             // Nom du signataire
             elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['signatory_name_id']))
             {

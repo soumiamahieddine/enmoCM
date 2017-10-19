@@ -230,7 +230,7 @@ var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minC
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 afterUpdateElement: function (text, li){
-                    $j('#'+new_value).value = li.id; 
+                    $j('#'+new_value).val(li.id); 
                 }
             });
     };
