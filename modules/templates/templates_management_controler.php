@@ -263,7 +263,8 @@ function validate_cs_submit($mode)
  */
 function display_up($templateId)
 {
-    $state=true;
+    init_session();
+    $state = true;
     $templatesControler = new templates_controler();
     $stylesArray = array();
     if (is_dir('custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles')) {

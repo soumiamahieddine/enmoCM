@@ -8,7 +8,8 @@
             "Entities\\": "modules/entities/",
             "Notes\\": "modules/notes/",
             "Notifications\\": "modules/notifications/",
-    	    "Visa\\": "modules/visa/"
+            "Templates\\": "modules/templates/",
+            "Visa\\": "modules/visa/"
     	}
     },
     "require": {

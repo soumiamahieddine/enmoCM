@@ -41,6 +41,27 @@ class DatabaseModel
     }
 
     /**
+     * Database Nextval Sequence Function
+     * @param array $args
+     *
+     * @return int
+     */
+    public static function getNextSequenceValue(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['sequenceId']);
+        ValidatorModel::stringType($args, ['sequenceId']);
+
+        $query = "SELECT nextval('{$args['sequenceId']}')";
+
+        $db = new DatabasePDO();
+        $stmt = $db->query($query);
+
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $row['nextval'];
+    }
+
+    /**
     * Database Select Function
     * @param array $args
     * @throws \Exception if number of tables is different from number of joins

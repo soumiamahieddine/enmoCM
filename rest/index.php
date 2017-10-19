@@ -80,7 +80,6 @@ if (empty($_SESSION['user'])) {
 }
 
 if ($_SESSION['error']) {
-    //TODO : return http bad authent error
     echo $_SESSION['error'];
     exit();
 }
@@ -220,7 +219,6 @@ $app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryC
 //HistoryBatch
 $app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
 
-
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
 $app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
@@ -232,6 +230,9 @@ $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':del
 //Reports
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+
+//Templates
+$app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
 
 
 $app->run();
