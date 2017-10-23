@@ -451,7 +451,7 @@ $arr_tmp2 = array('label' => _SIGNATORY_GROUP, 'type' => 'select_simple', 'param
 $param['signatory_group'] = $arr_tmp2;
 
 // signatory name
-$arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' => array('field_label' => _SIGNATORY_NAME, 'other' => $size));
+$arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' => array('field_label' => _SIGNATORY_NAME, 'other' => $size, 'autocompletion' => true));
 $param['signatory_name'] = $arr_tmp2;
 
 
