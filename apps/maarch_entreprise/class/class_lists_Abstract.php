@@ -1126,8 +1126,11 @@ abstract class lists_Abstract extends Database
                         else
                             return "false";
                     } else {
-                        // return $this->_highlightWords($resultTheLine[$i]['value'], $this->whatSearch); //highlight mode
-                        return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                        if($resultTheLine[$i]['column']=='subject'){
+                            return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                        } else {
+                            return $resultTheLine[$i]['value'];
+                        }
                     }
                 }
             }
