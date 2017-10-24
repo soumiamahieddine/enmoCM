@@ -16,6 +16,7 @@ namespace Visa\Controllers;
 use Apps\Models\ActionModel;
 use Apps\Models\ContactModel;
 use Attachments\Models\AttachmentsModel;
+use Core\Models\ListinstanceModel;
 use Core\Models\ResModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
@@ -92,6 +93,13 @@ class VisaController
     public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
         AttachmentsModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
+
+        $isVersion = ($aArgs['collId'] == 'res_attachments' ? 'false' : 'true');
+        $user = UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
+            $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
+            ListinstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $_SESSION['user']['UserId']]);
+        }
 
         return $response->withJson(['success' => 'success']);
     }

@@ -17,7 +17,7 @@ class AttachmentsModelAbstract
 {
     public static function getById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['isVersion']);
 
@@ -150,7 +150,7 @@ class AttachmentsModelAbstract
 
         DatabaseModel::update([
             'table'     => $aArgs['table'],
-            'set'       => ['status' => 'A_TRA'],
+            'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => NULL],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);
@@ -167,7 +167,7 @@ class AttachmentsModelAbstract
 
     public static function setInSignatureBook(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['isVersion']);
         ValidatorModel::boolType($aArgs, ['inSignatureBook']);
@@ -191,6 +191,39 @@ class AttachmentsModelAbstract
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
+
+        return true;
+    }
+
+    public static function hasAttachmentsSignedForUserById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'user_serial_id', 'isVersion']);
+        ValidatorModel::intVal($aArgs, ['id', 'user_serial_id']);
+        ValidatorModel::stringType($aArgs, ['isVersion']);
+
+        if ($aArgs['isVersion'] == 'true') {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+
+        $attachment = DatabaseModel::select([
+            'select'    => ['res_id_master'],
+            'table'     => [$table],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        $attachments = DatabaseModel::select([
+            'select'    => ['res_id_master'],
+            'table'     => ['res_view_attachments'],
+            'where'     => ['res_id_master = ?', 'signatory_user_serial_id = ?'],
+            'data'      => [$attachment[0]['res_id_master'], $aArgs['user_serial_id']],
+        ]);
+
+        if (empty($attachments)) {
+            return false;
+        }
 
         return true;
     }
