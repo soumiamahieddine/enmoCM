@@ -1,7 +1,7 @@
 var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
-        'header',
+        //'header',
         'administration',
         'users-administration',
         'user-administration',
@@ -34,8 +34,8 @@ function triggerAngular(prodmode, locationToGo) {
         success: function(answer) {
 
             angularGlobals = answer;
+            $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
             if (prodmode) {
-                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var alreadyLoaded = false;
                 $j('script').each(function(i, element) {

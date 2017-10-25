@@ -3,7 +3,7 @@
     <h1 *ngIf="creationMode">{{lang.parameterCreation}} <small>{{parameter.id}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <md-spinner style="margin:auto;"></md-spinner>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="container-fluid">
@@ -11,16 +11,16 @@
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterFormUp="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <md-input-container>
-                            <input mdInput [(ngModel)]="parameter.id" [disabled]="!creationMode" required  name="id" id="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}" required>                                
-                        </md-input-container>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="parameter.id" [disabled]="!creationMode" required  name="id" id="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}" required>                                
+                        </mat-form-field>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <md-input-container>
-                            <input mdInput [(ngModel)]="parameter.description" name="description" id="description" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}">                                
-                        </md-input-container>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="parameter.description" name="description" id="description" title="{{lang.desc}}" type="text" placeholder="{{lang.desc}}">                                
+                        </mat-form-field>
                     </div>
                 </div>
                 <div class="form-group">
@@ -41,12 +41,12 @@
                     </div>
                     <div class="col-sm-6">
                         
-                        <md-input-container *ngIf = "type == 'string'">
-                            <input mdInput [(ngModel)]="parameter.param_value_string" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
-                        </md-input-container>
-                        <md-input-container *ngIf = "type == 'int'">
-                            <input mdInput [(ngModel)]="parameter.param_value_int" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
-                        </md-input-container>
+                        <mat-form-field *ngIf = "type == 'string'">
+                            <input matInput [(ngModel)]="parameter.param_value_string" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        </mat-form-field>
+                        <mat-form-field *ngIf = "type == 'int'">
+                            <input matInput [(ngModel)]="parameter.param_value_int" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        </mat-form-field>
                         <md2-datepicker *ngIf = "type == 'date'"
                             name="paramValue"
                             placeholder="{{this.lang.value}}"

@@ -2,7 +2,7 @@
     <h1>{{lang.administration}} {{lang.history}} <small>{{data.length}} {{lang.entries}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <md-spinner style="margin:auto;"></md-spinner>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
@@ -28,16 +28,16 @@
                                 <div class="panel panel-default">
                                     <div class="panel-body">
                                         <div class="col-sm-4">
-                                            <md-input-container>
-                                                <input mdInput placeholder="{{lang.desc}}" [(ngModel)]="search" />
-                                            </md-input-container>
+                                            <mat-form-field>
+                                                <input matInput placeholder="{{lang.desc}}" [(ngModel)]="search" />
+                                            </mat-form-field>
                                         </div>
                                         <div class="col-sm-4">
                                             <md2-select placeholder="Utilisateur cible" [(ngModel)]="filterUser" #filterUsersSelect="ngModel" style="padding:0px;padding-top: 15px;">
                                                 <md2-select-header>
-                                                    <md-input-container>
-                                                        <input mdInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
-                                                    </md-input-container>
+                                                    <mat-form-field>
+                                                        <input matInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
+                                                    </mat-form-field>
                                                 </md2-select-header>
                                                 <md2-option style="font-style:italic;color:grey;">{{lang.noSelection}}</md2-option>
                                                 <md2-option *ngFor="let filter of filterUsers | dataPipe : 'user_id' : _search" [value]="filter.user_id">{{filter.user_id}}</md2-option>
@@ -46,9 +46,9 @@
                                         <div class="col-sm-4">
                                             <md2-select placeholder="Evenement cible" [(ngModel)]="filterEventType" #filterUsersSelect="ngModel" style="padding:0px;padding-top: 15px;">
                                                 <md2-select-header>
-                                                    <md-input-container>
-                                                        <input mdInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
-                                                    </md-input-container>
+                                                    <mat-form-field>
+                                                        <input matInput name="search" type="text" placeholder="Filtre" [(ngModel)]="_search" autocomplete="off" />
+                                                    </mat-form-field>
                                                 </md2-select-header>
                                                 <md2-option style="font-style:italic;color:grey;">{{lang.noSelection}}</md2-option>
                                                 <md2-option *ngFor="let filter of filterEventTypes | dataPipe : 'event_type' : _search" [value]="filter.event_type">{{filter.event_type}}</md2-option>
