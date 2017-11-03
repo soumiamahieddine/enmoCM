@@ -211,7 +211,7 @@ class BasketsModelAbstract
 
         $regroupedBaskets = [];
 
-        $user = UserModel::getById(['userId' => $aArgs['userId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
 
         $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         foreach ($groups as $group) {
