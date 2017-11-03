@@ -21,8 +21,6 @@ select setval('doctypes_second_level_id_seq', (select max(doctypes_second_level_
 select setval('res_attachment_res_id_seq', (select max(res_id)+1 from res_attachments), false);
 select setval('res_linked_mlb_seq', (select max(id)+1 from res_linked), false);
 select setval('notif_email_stack_seq', (select max(email_stack_sid)+1 from notif_email_stack), false);
-select setval('notif_email_stack_seq', (select max(email_stack_sid)+1 from notif_email_stack), false);
-select setval('notif_email_stack_seq', (select max(email_stack_sid)+1 from notif_email_stack), false);
 select setval('notif_event_stack_seq', (select max(event_stack_sid)+1 from notif_event_stack), false);
 select setval('notes_seq', (select max(id)+1 from notes), false);
 select setval('notes_entities_id_seq', (select max(id)+1 from note_entities), false);
