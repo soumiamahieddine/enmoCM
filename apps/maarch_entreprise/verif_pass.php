@@ -64,8 +64,8 @@ else
 	$tmp_ln = $_SESSION['user']['LastName'];
 	$tmp_dep = $_SESSION['user']['department'];
 
-	$db->query("UPDATE ".$_SESSION['tablename']['users']." SET password = ? ,firstname = ?, lastname = ?, phone = ?, mail = ? , department = ? , change_password = 'N' where user_id = ?",
-		array($_SESSION['user']['pass'], $tmp_fn, $tmp_ln, $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $tmp_dep, $_SESSION['user']['UserId']));
+	$db->query("UPDATE ".$_SESSION['tablename']['users']." SET password = ? ,firstname = ?, lastname = ?, phone = ?, mail = ? , change_password = 'N' where user_id = ?",
+		array($_SESSION['user']['pass'], $tmp_fn, $tmp_ln, $_SESSION['user']['Phone'], $_SESSION['user']['Mail'], $_SESSION['user']['UserId']));
 
 	header("location: ".$_SESSION['config']['businessappurl']."index.php");
 	exit();

@@ -1,11 +1,11 @@
 <md-toolbar color="primary">
-    <button tooltip="Menu" tooltip-delay="1000" md-button mdInput [mdMenuTriggerFor]="mySetting">{{applicationName}}</button>
+    <button tooltip="Menu" tooltip-delay="1000" mat-button matInput [mdMenuTriggerFor]="mySetting">{{applicationName}}</button>
     <span id="globalSearch">
         <form class="example-form">
-            <md-input-container>
-                <button md-button mdPrefix [mdMenuTriggerFor]="searchTarget"><i class="fa fa-bars fa-2x"></i></button>                
-                <input type="tel" mdInput placeholder="Rechercher dans : global">
-            </md-input-container>   
+            <mat-form-field>
+                <button mat-button mdPrefix [mdMenuTriggerFor]="searchTarget"><i class="fa fa-bars fa-2x"></i></button>                
+                <input type="tel" matInput placeholder="Rechercher dans : global">
+            </mat-form-field>   
         </form>
     </span>
     <span style="flex: 1 1 auto;"></span>

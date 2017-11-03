@@ -13,7 +13,7 @@ var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
 var app_material_module_1 = require("./app-material.module");
 var md2_1 = require("md2");
-var header_component_1 = require("./header.component");
+//import { HeaderComponent }                      from './header.component';
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
 var administration_module_1 = require("./administration/administration.module");
@@ -34,10 +34,11 @@ AppModule = __decorate([
             administration_module_1.AdministrationModule,
             app_routing_module_1.AppRoutingModule,
             app_material_module_1.AppMaterialModule,
-            md2_1.Md2Module
+            md2_1.Md2Module,
+            md2_1.NoConflictStyleCompatibilityMode
         ],
         declarations: [
-            header_component_1.HeaderComponent,
+            //HeaderComponent,
             app_component_1.AppComponent,
             profile_component_1.ProfileComponent,
             signature_book_component_1.SignatureBookComponent,

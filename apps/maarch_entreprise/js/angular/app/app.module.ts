@@ -4,9 +4,9 @@ import { BrowserAnimationsModule }              from '@angular/platform-browser/
 import { FormsModule }                          from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { AppMaterialModule }                    from './app-material.module';
-import { Md2Module }                            from 'md2';
+import { Md2Module,NoConflictStyleCompatibilityMode }                            from 'md2';
 
-import { HeaderComponent }                      from './header.component';
+//import { HeaderComponent }                      from './header.component';
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
 import { AdministrationModule }                 from './administration/administration.module';
@@ -23,10 +23,11 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
         AdministrationModule,
         AppRoutingModule,
         AppMaterialModule,
-        Md2Module
+        Md2Module,
+        NoConflictStyleCompatibilityMode
     ],
     declarations: [
-        HeaderComponent,
+        //HeaderComponent,
         AppComponent,
         ProfileComponent,
         SignatureBookComponent,

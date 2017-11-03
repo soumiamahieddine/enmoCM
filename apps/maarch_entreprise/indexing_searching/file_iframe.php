@@ -76,25 +76,20 @@ if ($_SESSION['origin'] == "scan") {
 	}
 	exit();
 }else if (!empty($_SESSION['upfile']['fileNamePdfOnTmp'])) {
-	$mimeType = $is->get_mime_type('pdf');
-	//print_r($_SESSION['upfile']);exit;
-	header("Pragma: public");
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	header("Cache-Control: public");
-	header("Content-Description: File Transfer");
-	header("Content-Type: ".$mimeType);
-	header(
-		"Content-Disposition: inline; filename=" . basename('maarch') . "."
-		. $ext . ";"
-	);
-	header("Content-Transfer-Encoding: binary");
-	$ext = strtolower('pdf');
-	if (file_exists($_SESSION['upfile']['local_path'])) {
-		$loc = $_SESSION['config']['tmppath'] . $_SESSION['upfile']['fileNamePdfOnTmp'];
-		readfile($loc);
-	}
-	exit();
+    $mimeType = $is->get_mime_type('pdf');
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: public");
+    header("Content-Description: File Transfer");
+    header("Content-Type: ".$mimeType);
+    header("Content-Disposition: inline; filename=" . basename('maarch') . ".pdf");
+    header("Content-Transfer-Encoding: binary");
+    if (file_exists($_SESSION['config']['tmppath'] . $_SESSION['upfile']['fileNamePdfOnTmp'])) {
+        $loc = $_SESSION['config']['tmppath'] . $_SESSION['upfile']['fileNamePdfOnTmp'];
+        readfile($loc);
+    }
+    exit();
 
 } else if (isset($_SESSION['upfile']['mime'])
     && ! empty($_SESSION['upfile']['mime'])

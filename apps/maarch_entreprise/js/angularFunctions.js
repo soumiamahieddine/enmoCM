@@ -1,7 +1,7 @@
 var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
-        'header',
+        //'header',
         'administration',
         'users-administration',
         'user-administration',
@@ -34,8 +34,8 @@ function triggerAngular(prodmode, locationToGo) {
         success: function(answer) {
 
             angularGlobals = answer;
+            $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
             if (prodmode) {
-                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
 
                 var alreadyLoaded = false;
                 $j('script').each(function(i, element) {
@@ -153,4 +153,37 @@ if (Prototype.BrowserFeatures.ElementExtensions) {
     var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover','tab'];
     disablePrototypeJS('show', pluginsToDisable);
     disablePrototypeJS('hide', pluginsToDisable);
+}
+
+function duplicateTemplate(id) {
+    var r = confirm("Voulez-vous vraiment dupliquer le modèle ?");
+
+    if (r) {
+        $j.ajax({
+            url      : '../../rest/templates/' + id + '/duplicate',
+            type     : 'POST',
+            dataType : 'json',
+            data: {},
+            success: function(answer) {
+                location.href = "index.php?page=templates_management_controler&mode=up&module=templates&id=" + answer.id + "&start=0&order=asc&order_field=&what=";
+            }, error: function(err) {
+                alert("Une erreur s'est produite");
+            }
+        });
+    }
+}
+
+function setAttachmentInSignatureBook(id, isVersion) {
+    $j.ajax({
+        url      : '../../rest/attachments/' + id + '/inSignatureBook',
+        type     : 'PUT',
+        dataType : 'json',
+        data: {
+            isVersion   : isVersion
+        },
+        success: function(answer) {
+        }, error: function(err) {
+            alert("Une erreur s'est produite");
+        }
+    });
 }

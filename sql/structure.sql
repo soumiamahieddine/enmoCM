@@ -448,6 +448,7 @@ CREATE TABLE res_attachments
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
+  in_signature_book boolean DEFAULT FALSE,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
@@ -524,6 +525,7 @@ CREATE TABLE baskets
   is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
+  color character varying(16),
   basket_res_order character varying(255),
   flag_notif character varying(1),
   except_notif text,
@@ -1323,7 +1325,7 @@ CREATE TABLE contacts_v2
   lastname character varying(255),
   title character varying(255),
   function character varying(255),
-  other_data character varying(255),
+  other_data text,
   user_id character varying(255) NOT NULL,
   entity_id character varying(32) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
@@ -2893,6 +2895,7 @@ CREATE TABLE res_version_attachments
   is_multicontacts character(1),
   res_id_master bigint,
   attachment_id_master bigint,
+  in_signature_book boolean DEFAULT FALSE,
   CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (
@@ -2908,7 +2911,7 @@ CREATE VIEW res_view_attachments AS
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
   envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
@@ -2917,7 +2920,7 @@ CREATE VIEW res_view_attachments AS
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
   envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0'
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book
   FROM res_attachments;
 
 -- thesaurus
@@ -3009,3 +3012,15 @@ CREATE TABLE unit_identifier
   "tablename" character varying(255) NOT NULL,
   "res_id" character varying(255) NOT NULL
 );
+
+DROP TABLE IF EXISTS users_baskets;
+CREATE TABLE users_baskets
+(
+  id serial NOT NULL,
+  user_serial_id integer NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  group_id character varying(32) NOT NULL,
+  color character varying(16),
+  CONSTRAINT users_baskets_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

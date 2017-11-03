@@ -26,26 +26,25 @@ var NotificationAdministrationComponent = (function () {
         this.loading = false;
         this.lang = translate_component_1.LANG;
     }
+    NotificationAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>notifications</a>";
+        }
+    };
     NotificationAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.prepareNotifications();
+        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
-            console.log(params['identifier']);
             if (typeof params['identifier'] == "undefined") {
-                //if(params['identifier']== "new"){
                 _this.creationMode = true;
                 _this.http.get(_this.coreUrl + 'rest/administration/notifications/new')
                     .subscribe(function (data) {
                     _this.notification = data.notification;
                     _this.loading = false;
-                    // setTimeout(() => {
-                    //             $j("select").chosen({width:"100%",disable_search_threshold: 10, search_contains: true});     
-                    //         }, 0);
                 }, function (err) {
-                    errorNotification(JSON.parse(err._body).errors);
+                    _this.notify.error(err.error.errors);
                 });
             }
             else {
@@ -53,11 +52,9 @@ var NotificationAdministrationComponent = (function () {
                 _this.http.get(_this.coreUrl + 'rest/administration/notifications/' + params['identifier'])
                     .subscribe(function (data) {
                     _this.notification = data.notification;
-                    console.log(data.notification);
                     _this.loading = false;
-                    setTimeout(function () {
-                        $j("select").chosen({ width: "100%", disable_search_threshold: 10, search_contains: true });
-                    }, 0);
+                }, function (err) {
+                    _this.notify.error(err.error.errors);
                 });
             }
         });
@@ -74,42 +71,34 @@ var NotificationAdministrationComponent = (function () {
     };
     NotificationAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
-        //affect value of select
-        if ($j("#groupslist").chosen().val()) {
-            this.notification.diffusion_properties = $j("#groupslist").chosen().val();
+        if ($j("#groupslist").val()) {
+            this.notification.diffusion_properties = $j("#groupslist").val();
         }
-        else if ($j("#entitieslist").chosen().val()) {
-            this.notification.diffusion_properties = $j("#entitieslist").chosen().val();
+        else if ($j("#entitieslist").val()) {
+            this.notification.diffusion_properties = $j("#entitieslist").val();
         }
-        else if ($j("#statuseslist").chosen().val()) {
-            this.notification.diffusion_properties = $j("#statuseslist").chosen().val();
+        else if ($j("#statuseslist").val()) {
+            this.notification.diffusion_properties = $j("#statuseslist").val();
         }
-        else if ($j("#userslist").chosen().val()) {
-            this.notification.diffusion_properties = $j("#userslist").chosen().val();
+        else if ($j("#userslist").val()) {
+            this.notification.diffusion_properties = $j("#userslist").val();
         }
-        console.log($j("#groupslistJd").chosen().val());
-        console.log($j("#entitieslistJd").chosen().val());
-        console.log($j("#statuseslistJd").chosen().val());
-        console.log($j("#userslistJd").chosen().val());
-        console.log($j("#joinDocJd").chosen().val());
-        if ($j("#joinDocJd").chosen().val() == null) {
+        if ($j("#joinDocJd").val() == null) {
             this.notification.attachfor_properties = '';
         }
-        else if ($j("#groupslistJd").chosen().val()) {
-            this.notification.attachfor_properties = $j("#groupslistJd").chosen().val();
+        else if ($j("#groupslistJd").val()) {
+            this.notification.attachfor_properties = $j("#groupslistJd").val();
         }
-        else if ($j("#entitieslistJd").chosen().val()) {
-            console.log($j("#entitieslistJd").chosen().val());
-            this.notification.attachfor_properties = $j("#entitieslistJd").chosen().val();
+        else if ($j("#entitieslistJd").val()) {
+            this.notification.attachfor_properties = $j("#entitieslistJd").val();
         }
-        else if ($j("#statuseslistJd").chosen().val()) {
-            this.notification.attachfor_properties = $j("#statuseslistJd").chosen().val();
+        else if ($j("#statuseslistJd").val()) {
+            this.notification.attachfor_properties = $j("#statuseslistJd").val();
         }
-        else if ($j("#userslistJd").chosen().val()) {
-            this.notification.attachfor_properties = $j("#userslistJd").chosen().val();
+        else if ($j("#userslistJd").val()) {
+            this.notification.attachfor_properties = $j("#userslistJd").val();
         }
         if (this.creationMode) {
-            console.log(this.notification);
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/notifications']);
@@ -126,14 +115,6 @@ var NotificationAdministrationComponent = (function () {
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
-        }
-    };
-    NotificationAdministrationComponent.prototype.prepareNotifications = function () {
-        $j('#inner_content').remove();
-    };
-    NotificationAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>notifications</a>";
         }
     };
     return NotificationAdministrationComponent;

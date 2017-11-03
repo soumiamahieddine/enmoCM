@@ -1126,8 +1126,11 @@ abstract class lists_Abstract extends Database
                         else
                             return "false";
                     } else {
-                        // return $this->_highlightWords($resultTheLine[$i]['value'], $this->whatSearch); //highlight mode
-                        return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                        if($resultTheLine[$i]['column']=='subject'){
+                            return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                        } else {
+                            return $resultTheLine[$i]['value'];
+                        }
                     }
                 }
             }
@@ -1254,10 +1257,10 @@ abstract class lists_Abstract extends Database
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
 		if ($core->is_module_loaded('thumbnails') === true && !$isAttachment){
             $return .= '<div align="center" class="iconDoc" onmouseover="showThumb(\'thumb_\',\'' . $res_id . '\', \'letterbox_coll\')"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="' . _DOWNLOAD_LOCAL_DOC_COPY . '"></i><span id="thumb_' . $res_id . '" name="thumb_' . $res_id . '"></span></a></div>';			
+                    ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="' . _VISUALIZE . '"></i><span id="thumb_' . $res_id . '" name="thumb_' . $res_id . '"></span></a></div>';			
 		}
 		else $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="' . _DOWNLOAD_LOCAL_DOC_COPY . '"></i></a></div>';
+                    ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="' ._VISUALIZE . '"></i></a></div>';
            
         return $return;
     }
@@ -1595,9 +1598,10 @@ abstract class lists_Abstract extends Database
         $core_tools = new core_tools();
         if ($core_tools->test_service('delete_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) {
             $return = '<a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                            . '&module=attachments&page=del_attachment&relation=' . $resultTheLine[1]['value'] . '&id=' . $resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'" class="delete"'
+                            . '&module=attachments&page=del_attachment&relation=' . $resultTheLine[1]['value'] . '&id=' . $resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'"'
                             . 'onclick="return(confirm(\'' . _REALLY_DELETE . ' ?\n\r\n\r'
-                            . _DEFINITIVE_ACTION . '\'));"><i class="tooltip fa fa-trash-o fa-2x" title="'._DELETE.'"></i></a>';
+                            . _DEFINITIVE_ACTION . '\'));"><i class="tooltip fa fa-trash-o fa-2x visaPjDel" style="color:white;font-size: 21px;padding-right: 12px;padding-bottom: 12px;padding-top:11px;margin-right:10px;" title="'._DELETE.'"></i></a>';
+
         }else{
             $return = '<a href="" class="delete" style="visibility:hidden;"><i class="tooltip fa fa-trash-o fa-2x" title="'._DELETE.'"></i></a>';
         }
@@ -1626,12 +1630,12 @@ abstract class lists_Abstract extends Database
 
         $core_tools = new core_tools();
         if (($core_tools->test_service('modify_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && $status <> "TRA") {
-            $return = '<a style="padding-left:10px;" href="javascript://" class="change" onclick="modifyAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');">
-                                <i class="tooltip fa fa-pencil fa-2x fa-lg" title="'._MODIFY.'"></i></a>';
+            $return = '<i style="font-size: 21px;padding-bottom: 11px;padding-left: 13px;margin-right:10px;padding-top:12px" class="tooltip fa fa-pencil-square-o fa-2x visaPjUp" title="'._MODIFY.'" onclick="modifyAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');"></i>';
+       
         }else{
             $return = '<a href="javascript://" disabled="disabled" class="change" style="visibility:hidden;">
-                                <i class="tooltip fa fa-pencil fa-2x" title="'._MODIFY.'"></i></a>';
+                                <i class="tooltip fa fa-pencil-square-o fa-2x" title="'._MODIFY.'"></i></a>';
         }
 
         return $return;
@@ -1651,25 +1655,24 @@ abstract class lists_Abstract extends Database
 
     public function tmplt_func_final_version($resultTheLine)
     {
-        $nbresult_I = count($resultTheLine);
-        for($iresults=0;$iresults<$nbresult_I;$iresults++){
-            if($resultTheLine[$iresults]['relation']){
-                $relation = $resultTheLine[$iresults]['relation'];
-            }
-            if($resultTheLine[$iresults]['fromDetail']){
-                $fromDetail = $resultTheLine[$iresults]['fromDetail'];
+        foreach ($resultTheLine as $value){
+            if ($value['column'] == 'in_signature_book') {
+                $inSignatureBook = $value['value'];
             }
         }
-        $return = '<input type="checkbox" name="final" id="final" align="left"';
-        
 
-        if ($resultTheLine[2]['value_bis'] == "TRA") {
+        $return = '<input type="checkbox" name="final" id="final" align="left"';
+
+        if (!empty($inSignatureBook)) {
             $return .= 'checked ';
         }
 
-        $return .= 'onclick="setFinalVersion(\'' . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=attachments&page=setFinalVersion&relation='.$resultTheLine[1]['value'].'&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\');"/>'
-                            . _FINAL_VERSION;
+        $isVersion = 'false';
+        if ($resultTheLine[1]['value'] > 1) {
+            $isVersion = 'true';
+        }
+        $return .= 'onclick="setAttachmentInSignatureBook(' . $resultTheLine[0]['value'] . ', ' . $isVersion . ');"/>Intégrer au parapheur';
+
         return $return;
     }
 	

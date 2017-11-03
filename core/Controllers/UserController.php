@@ -43,6 +43,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['regroupedBaskets'] = BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
 
         return $response->withJson($user);
     }
@@ -721,6 +722,19 @@ class UserController
             'entities'      => UserModel::getEntitiesById(['userId' => $user['user_id']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']])
         ]);
+    }
+
+    public function updateBasketPreference(RequestInterface $request, ResponseInterface $response, $aArgs)
+    {
+        $data = $request->getParams();
+
+        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+
+        if (!empty($data['color'])) {
+            UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
+        }
+
+        return $response->withJson(['success' => 'success']);
     }
 
     private function hasUsersRights(array $aArgs = [])

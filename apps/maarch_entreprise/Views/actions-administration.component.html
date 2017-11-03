@@ -2,7 +2,7 @@
     <h1>{{lang.administration}} {{lang.actions}} <small>{{data.length}} {{lang.actions}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <md-spinner style="margin:auto;"></md-spinner>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
@@ -13,9 +13,9 @@
                     <md2-pagination></md2-pagination>
                 </td>
                 <td style="text-align:right;">
-                    <md-input-container>
-                            <input mdInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="md2-input" [(ngModel)]="search" />
-                    </md-input-container>
+                    <mat-form-field>
+                            <input matInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="md2-input" [(ngModel)]="search" />
+                    </mat-form-field>
                     &nbsp;
                     <a class="text-primary" style="cursor: pointer" routerLink="/administration/actions/new" title="{{lang.new_action}}"><i class="fa fa-exchange fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
                 </td>

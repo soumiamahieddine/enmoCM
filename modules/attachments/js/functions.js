@@ -296,6 +296,7 @@ function showAttachmentsForm(path, width, height) {
             if(response.status == 0){
                 var modal_content = convertToTextVisibleNewLine(response.content);
                 createModalinAttachmentList(modal_content, 'form_attachments', height, width, 'fullscreen');
+                eval(response.exec_js);
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
@@ -398,6 +399,7 @@ function modifyAttachmentsForm(path, width, height) {
             if(response.status == 0){
                 var modal_content = convertToTextVisibleNewLine(response.content);
                 createModalinAttachmentList(modal_content, 'form_attachments', height, width, 'fullscreen'); 
+                eval(response.exec_js);
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
@@ -610,4 +612,31 @@ function fillHiddenInput(chrono_number){ // Function used to fill the chrono num
             }
         }
     }
+}
+
+function activeOngletAttachement() {
+  $j('#viewframevalid_attachment').css('display', 'inline');
+  $j('#viewframevalid_main').css('display', 'none');
+  $j('#viewframevalid_attachment').addClass('activeOngletAttachement');
+  $j('#viewframevalid_main').removeClass('activeOngletAttachement');
+  $j('#liAttachement').css('background-color', 'white');
+  $j('#liAttachement').css('height', '23px');
+  $j('#liAttachement').css('display', 'inline');
+  if(typeof($j('#liMainDocument')) != 'undefined'){
+    $j('#liMainDocument').css('background-color', 'rgb(197, 197, 197)');
+    $j('#liMainDocument').css('height', '21px');
+  }
+}
+
+function activeOngletMainDocument() {
+  $j('#viewframevalid_attachment').css('display', 'none');
+  $j('#viewframevalid_main').css('display', 'inline');
+  $j('#viewframevalid_attachment').removeClass('activeOngletAttachement');
+  $j('#viewframevalid_main').addClass('activeOngletAttachement');
+  $j('#liAttachement').css('background-color', 'rgb(197, 197, 197)');
+  $j('#liAttachement').css('height', '21px');
+  if(typeof($j('#liMainDocument')) != 'undefined'){
+    $j('#liMainDocument').css('background-color', 'white');
+    $j('#liMainDocument').css('height', '23px');
+  }
 }

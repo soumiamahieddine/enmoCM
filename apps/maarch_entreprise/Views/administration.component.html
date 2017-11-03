@@ -2,25 +2,25 @@
     <h1 style="margin-top: 0">{{lang.administration}}</h1>
 </div>
 <div *ngIf="loading">
-    <md-spinner style="margin:auto;"></md-spinner>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid" style="color:#666;">
     <div class="col-md-12">
-        <md-tab-group>
-            <md-tab label="{{lang.application}}">
-                <md-grid-list cols="6" rowHeight="2:1">
-                    <md-grid-tile *ngFor="let appService of applicationServices">
-                        <button md-button tooltip="{{appService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(appService)"><i class="{{appService.style}} fa-4x"></i><br/>{{appService.name}}</button>
-                    </md-grid-tile>
-                </md-grid-list>
-            </md-tab>
-            <md-tab label="{{lang.modules}}">
-                <md-grid-list cols="6" rowHeight="2:1">
-                    <md-grid-tile *ngFor="let modService of modulesServices">
-                        <button md-button tooltip="{{modService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(modService)"><i class="{{modService.style}} fa-4x"></i><br/>{{modService.name}}</button>
-                    </md-grid-tile>
-                </md-grid-list>
-            </md-tab>
-        </md-tab-group>           
+        <mat-tab-group>
+            <mat-tab label="{{lang.application}}">
+                <mat-grid-list cols="6" rowHeight="2:1">
+                    <mat-grid-tile *ngFor="let appService of applicationServices">
+                        <button mat-button tooltip="{{appService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(appService)"><i class="{{appService.style}} fa-4x"></i><br/>{{appService.name}}</button>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab label="{{lang.modules}}">
+                <mat-grid-list cols="6" rowHeight="2:1">
+                    <mat-grid-tile *ngFor="let modService of modulesServices">
+                        <button mat-button tooltip="{{modService.comment}}" tooltip-delay="1000" (click)="goToSpecifiedAdministration(modService)"><i class="{{modService.style}} fa-4x"></i><br/>{{modService.name}}</button>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>           
     </div>
 </div>

@@ -3,48 +3,48 @@
     <h1 *ngIf="creationMode">{{lang.statusCreation}} <small>{{status.id}}</small></h1>
 </div>
 <div *ngIf="loading">
-    <md-spinner style="margin:auto;"></md-spinner>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-6 col-md-offset-3">
         <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <md-input-container>
-                        <input mdInput [(ngModel)]="status.id" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" type="text" required>
-                    </md-input-container>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="status.id" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" type="text" required>
+                    </mat-form-field>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
-                    <md-input-container>
-                        <input mdInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.desc}}" placeholder="{{lang.desc}}" type="text" required>
-                    </md-input-container>
+                    <mat-form-field>
+                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.desc}}" placeholder="{{lang.desc}}" type="text" required>
+                    </mat-form-field>
                 </div>
             </div>
             <div class="form-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="col-sm-4" style="white-space:nowrap;">
-                            <md-slide-toggle [(ngModel)]="status.can_be_searched" id="can_be_search" name="can_be_search" color="primary" [checked]="status.can_be_searched == true">
+                            <mat-slide-toggle [(ngModel)]="status.can_be_searched" id="can_be_search" name="can_be_search" color="primary" [checked]="status.can_be_searched == true">
                                     {{lang.canBeSearched}}
-                            </md-slide-toggle>
+                            </mat-slide-toggle>
                             <sup>
                                 <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents."></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
-                            <md-slide-toggle [(ngModel)]="status.can_be_modified" id="can_be_modified" name="can_be_modified" color="primary" [checked]="status.can_be_modified == true">
+                            <mat-slide-toggle [(ngModel)]="status.can_be_modified" id="can_be_modified" name="can_be_modified" color="primary" [checked]="status.can_be_modified == true">
                                 {{lang.canBeModified}}
-                            </md-slide-toggle>
+                            </mat-slide-toggle>
                             <sup>
                                 <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>."></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
-                            <md-slide-toggle [(ngModel)]="status.is_folder_status" id="is_folder_status" name="is_folder_status" color="primary" [checked]="status.is_folder_status == true">
+                            <mat-slide-toggle [(ngModel)]="status.is_folder_status" id="is_folder_status" name="is_folder_status" color="primary" [checked]="status.is_folder_status == true">
                                 {{lang.isFolderStatus}}
-                            </md-slide-toggle>
+                            </mat-slide-toggle>
                             <sup>
                                 <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>."></i>
                             </sup>
@@ -65,14 +65,14 @@
                         required
                         #searchStatusIcon="ngModel">
                         <md2-select-header>
-                            <md-input-container>
-                            <input mdInput name="search"
+                            <mat-form-field>
+                            <input matInput name="search"
                                 type="text"
                                 placeholder="Filtre"
                                 [(ngModel)]="_search" 
                                 autocomplete="off"
                                 (focusout)="clearSearch()"/>
-                            </md-input-container>
+                            </mat-form-field>
                         </md2-select-header>
                         <md2-option *ngFor="let image of statusImages | dataPipe : 'image_name' : _search" [value]="image.image_name"><i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x"></i> {{image.image_name}}</md2-option>
                     </md2-select>

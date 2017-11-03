@@ -80,7 +80,6 @@ if (empty($_SESSION['user'])) {
 }
 
 if ($_SESSION['error']) {
-    //TODO : return http bad authent error
     echo $_SESSION['error'];
     exit();
 }
@@ -113,13 +112,6 @@ $app->get('/administration/users/new', \Core\Controllers\UserController::class .
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 $app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
 $app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
-
-//notifications
-$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
-$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
-$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
-$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
-$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
@@ -159,6 +151,7 @@ $app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Co
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
+$app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
@@ -198,6 +191,7 @@ $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':u
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
 
 //parameters
 $app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
@@ -220,7 +214,6 @@ $app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryC
 //HistoryBatch
 $app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
 
-
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
 $app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
@@ -229,9 +222,19 @@ $app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
 $app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
 $app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
 
+//Notifications
+$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
+$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
+$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
+$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
+$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
+
 //Reports
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+
+//Templates
+$app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
 
 
 $app->run();

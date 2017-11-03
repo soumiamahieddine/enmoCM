@@ -808,6 +808,7 @@ if (!defined("_ADD_COPIES")) define("_ADD_COPIES","Add persons on copy");
 //Circuits de visa
 if (!defined("_TO_SIGN")) define("_TO_SIGN","For signature");
 if (!defined("_VISA_USER"))    define("_VISA_USER", "For visa");
+if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "Visa user");
 
 //Circuits d'avis
 if (!defined("_TO_VIEW")) define("_TO_VIEW","For recommendation");
@@ -1124,6 +1125,7 @@ if (!defined("_TO")) define("_TO", "To");
 if (!defined("_FILE_PROPERTIES")) define("_FILE_PROPERTIES", "File properties");
 if (!defined("_FILE_DATA")) define("_FILE_DATA", "Information on the document");
 if (!defined("_VIEW_DOC")) define("_VIEW_DOC", "See the document");
+if (!defined("_VISUALIZE")) define("_VISUALIZE", "Visualize");
 if (!defined("_TYPIST")) define("_TYPIST", "Operator");
 if (!defined("_LOT")) define("_LOT", "Batch");
 if (!defined("_ARBOX")) define("_ARBOX", "Box");

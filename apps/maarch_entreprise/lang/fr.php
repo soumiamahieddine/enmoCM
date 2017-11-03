@@ -817,6 +817,7 @@ if (!defined("_ADD_COPIES")) define("_ADD_COPIES","Ajouter des personnes en copi
 //Circuits de visa
 if (!defined("_TO_SIGN")) define("_TO_SIGN","Pour signature");
 if (!defined("_VISA_USER"))    define("_VISA_USER", "Pour visa");
+if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "Viseur");
 //Circuits d'avis
 if (!defined("_TO_VIEW")) define("_TO_VIEW","Pour avis");
 if (!defined("_TO_SHARED_VIEW")) define("_TO_SHARED_VIEW","Pour avis partagé");
@@ -1136,6 +1137,7 @@ if (!defined("_FILE_PROPERTIES")) define("_FILE_PROPERTIES", "Propriétés du fi
 if (!defined("_FILE_DATA")) define("_FILE_DATA", "Informations sur le document");
 if (!defined("_VIEW_DOC")) define("_VIEW_DOC", "Voir le document");
 if (!defined("_DOWNLOAD_LOCAL_DOC_COPY")) define("_DOWNLOAD_LOCAL_DOC_COPY", "Télécharger une copie locale");
+if (!defined("_VISUALIZE")) define("_VISUALIZE", "Visualiser");
 if (!defined("_VIEW_DOC_DESC")) define("_VIEW_DOC_DESC", "Ouvre une modal avec le document en visualisation. Incrémente également la donnée 'viewed' de la table listinstance (utile si utilisée dans les clauses de bannettes) ");
 if (!defined("_TYPIST")) define("_TYPIST", "Opérateur");
 if (!defined("_LOT")) define("_LOT", "Lot");
@@ -1516,7 +1518,7 @@ if (!defined("_SQL_QUERY_NOT_SECURE"))    define("_SQL_QUERY_NOT_SECURE","requet
 //service to put doc on validation from details page
 if (!defined("_PUT_DOC_ON_VALIDATION_FROM_DETAILS"))    define("_PUT_DOC_ON_VALIDATION_FROM_DETAILS","Envoyer le document en validation depuis la page détails");
 if (!defined("_PUT_DOC_ON_VALIDATION"))    define("_PUT_DOC_ON_VALIDATION","Envoyer le document en validation");
-if (!defined("_REALLY_PUT_DOC_ON_VALIDATION"))    define("_REALLY_PUT_DOC_ON_VALIDATION","Confirmer l'envoi en validation");
+if (!defined("_REALLY_PUT_DOC_ON_VALIDATION"))    define("_REALLY_PUT_DOC_ON_VALIDATION","Confirmer l\'envoi en validation");
 
 /*******************************************************************************
  * RA_CODE
