@@ -139,21 +139,21 @@ if (! empty($_SESSION['error'])) {
             }
 
             $docserver = $line->docserver_id;
-            $path = $line->path;
-            $filename = $line->filename;
-	    $nameShow = $function->normalize($line->title);
-	    $nameShow = preg_replace('/([^.a-z0-9]+)/i', '_', $nameShow);
-	    $nameShow .= '_'. date("j_m_Y__G_i");
-            $format = $line->format;
+            $path      = $line->path;
+            $filename  = $line->filename;
+            $nameShow  = $function->normalize($line->title);
+            $nameShow  = preg_replace('/([^.a-z0-9]+)/i', '_', $nameShow);
+            $nameShow  .= '_'. date("j_m_Y__G_i");
+            $format    = $line->format;
             $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
                 . " where docserver_id = ?",array($docserver)
             );
             //$db->show();
-            $lineDoc = $stmt->fetchObject();
+            $lineDoc   = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
-            $file = $docserver . $path . $filename;
-            $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+            $file      = $docserver . $path . $filename;
+            $file      = str_replace("#", DIRECTORY_SEPARATOR, $file);
 
             if (strtoupper($format) == "MAARCH") {
                 if (file_exists($file)) {
@@ -177,6 +177,12 @@ if (! empty($_SESSION['error'])) {
                     $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS . "...";
                     ?><script type="text/javascript">window.opener.top.location.href='index.php';self.close();</script><?php
                 }
+            } else if(!empty($_GET['editingMode']) && $format != 'pdf'){
+                ?>
+                <div style="border: dashed;font-weight: bold;opacity: 0.5;font-size: 30px;height: 96%;text-align: center">
+                    <div style="padding-top: 25%;"><?php echo _NO_PREVIEW_AVAILABLE;?><br><sub><?php echo _FILE_HAS_NO_PDF;?></sub></div>
+                </div>
+                <?php
             } else {
                 require_once 'core/docservers_tools.php';
                 $arrayIsAllowed = array();
