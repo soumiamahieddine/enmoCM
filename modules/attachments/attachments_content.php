@@ -1915,7 +1915,7 @@ $content .= '</div>';
     $content .= '<div id="transmission"></div>';
     $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
         $content .= '<p class="buttons">';
-            if (isset($_REQUEST['id']) && $attachmentFormat != "pdf") {
+            if (isset($_REQUEST['id']) && !in_array($attachmentFormat, ["pdf", "jpg", "jpeg", "png"])) {
                 $content .= '<input type="button" value="';
                 $content .= _EDIT_MODEL;
                 /*$content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
@@ -2029,7 +2029,6 @@ if(empty($_REQUEST['id'])){
 } else {
     $js = 'setTimeout(function(){window.top.document.getElementById(\'liAttachement\').click()}, 1000)';
 }
-
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
