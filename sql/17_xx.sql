@@ -153,3 +153,8 @@ CREATE VIEW res_view_attachments AS
     envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
     coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;
+
+UPDATE res_attachments SET in_signature_book = TRUE;
+UPDATE res_version_attachments SET in_signature_book = TRUE;
+UPDATE listinstance SET signatory = TRUE WHERE item_mode = 'sign';
+
