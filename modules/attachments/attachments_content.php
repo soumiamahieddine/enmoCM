@@ -254,6 +254,11 @@ function setTransmissionDataPdf($nb, $storeResult) {
         'value' => 1,
         'type' => 'int'
     ];
+    $transmissionDataPdf[] = [
+        'column' => 'in_signature_book',
+        'value' => 1,
+        'type' => 'bool'
+    ];
 
     return $transmissionDataPdf;
 }
@@ -341,10 +346,11 @@ if (isset($_POST['add']) && $_POST['add']) {
                     <?php
                     exit();
                 } else {
+                    $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
                     $fileInfos = array(
                         "tmpDir"      => $_SESSION['config']['tmppath'],
                         "size"        => $_SESSION['upfile']['size'],
-                        "format"      => $_SESSION['upfile']['format'],
+                        "format"      => $path_parts['extension'],
                         "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
                     );
 
@@ -370,7 +376,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $_SESSION['data'],
                             array(
                                 'column' => "format",
-                                'value' => $_SESSION['upfile']['format'],
+                                'value' => $fileInfos['format'],
                                 'type' => "string",
                             )
                         );
@@ -698,6 +704,15 @@ if (isset($_POST['add']) && $_POST['add']) {
 								)
 							);
 
+                            array_push(
+                                $_SESSION['data_pdf'],
+                                array(
+                                    'column' => "in_signature_book",
+                                    'value' => 1,
+                                    'type' => "bool",
+                                )
+                            );
+
 							$id_up = $resAttach->load_into_db(
 								RES_ATTACHMENTS_TABLE,
 								$storeResult['destination_dir'],
@@ -812,10 +827,11 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 ORDER BY relation desc", array($_REQUEST['res_id'],$_SESSION['doc_id']));
             $previous_attachment = $stmt->fetchObject();
 
+            $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
             $fileInfos = array(
                 "tmpDir"      => $_SESSION['config']['tmppath'],
                 "size"        => $_SESSION['upfile']['size'],
-                "format"      => $_SESSION['upfile']['format'],
+                "format"      => $path_parts['extension'],
                 "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
             );
 
@@ -842,7 +858,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $_SESSION['data'],
                     array(
                         'column' => "format",
-                        'value' => $_SESSION['upfile']['format'],
+                        'value' => $fileInfos['format'],
                         'type' => "string",
                     )
                 );
@@ -1160,6 +1176,15 @@ if (isset($_POST['add']) && $_POST['add']) {
 						)
 					);
 
+                    array_push(
+                        $_SESSION['data_pdf'],
+                        array(
+                            'column' => "in_signature_book",
+                            'value' => 1,
+                            'type' => "bool",
+                        )
+                    );
+
 					$id_up = $resAttach->load_into_db(
 						RES_ATTACHMENTS_TABLE,
 						$storeResult['destination_dir'],
@@ -1230,10 +1255,11 @@ if (isset($_POST['add']) && $_POST['add']) {
 
             if ($_SESSION['upfile']['upAttachment'] && $OriginalHash <> $NewHash) {
                 $_SESSION['upfile']['upAttachment'] = false;
+                $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
                 $fileInfos = array(
                     "tmpDir"      => $_SESSION['config']['tmppath'],
                     "size"        => $_SESSION['upfile']['size'],
-                    "format"      => $_SESSION['upfile']['format'],
+                    "format"      => $path_parts['extension'],
                     "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
                 );
 
