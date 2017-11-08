@@ -117,6 +117,19 @@ if ($s_id == '') {
         $res_outgoing = $stmt->fetchObject(); 
 
         if ($res_outgoing->category_id == 'outgoing' && $res_outgoing->source == 'with_empty_file') {
+            if(!empty($_REQUEST['editingMode'])){
+                $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                    . "and res_id_master = ? and coll_id = ? "
+                    . "and attachment_type = 'outgoing_mail' order by res_id desc", 
+                    array($s_id, $_SESSION['collection_id_choice']));
+                $res_att = $stmt->fetchObject();
+                if ($stmt->rowCount() > 0) { ?>
+                    <script type="text/javascript">
+                    window.location.href = 'index.php?display=true&editingMode=true&module=attachments&page=view_attachment&res_id_master=<?php echo $s_id;?>&id=<?php echo $res_att->res_id;?>'
+                    </script>
+                    <?php exit();
+                }
+            } else {
             $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
                 . "and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) "
                 . "OR (attachment_type = 'outgoing_mail' and format = 'pdf')"
@@ -150,6 +163,7 @@ if ($s_id == '') {
 	            <?php
 	            exit();
 	        }
+            }
             }
         }
     }
