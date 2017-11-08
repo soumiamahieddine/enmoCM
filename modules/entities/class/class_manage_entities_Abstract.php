@@ -110,7 +110,7 @@ abstract class entity_Abstract extends functions
             else
             {
                 ?>
-                <div class="block" style="float:left;width:65%;height:700px;">
+                <div class="block" style="float:left;width:65%;">
                 <form name="formentity" id="formentity" method="post" style="width:500px;margin:auto;" action="<?php  if($mode == 'up') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_up_db'; } elseif($mode == 'add') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_add_db'; } ?>" class="forms">
                     <input type="hidden" name="display" value="true" />
                     <input type="hidden" name="module" value="entities" />
@@ -1008,7 +1008,7 @@ abstract class entity_Abstract extends functions
         }
         else
         {
-            $_SESSION['error'].= _TYPE_MISSING.'<br/>';
+            $_SESSION['error'].= _TYPE_MISSING;
         }
         $_SESSION['service_tag'] = 'entity_check';
         $core->execute_modules_services($_SESSION['modules_services'], 'entity_check', "include");
@@ -1072,7 +1072,7 @@ abstract class entity_Abstract extends functions
                 $stmt= $db->query('select entity_id from '.ENT_ENTITIES.' where entity_id = ?',array(trim($_SESSION['m_admin']['entity']['entityId'])));
                 if($stmt->rowCount() > 0)
                 {
-                    $_SESSION['error'] = $_SESSION['m_admin']['entity']['entityId'] .' '._ALREADY_EXISTS.'<br />';
+                    $_SESSION['error'] = $_SESSION['m_admin']['entity']['entityId'] .' '._ALREADY_EXISTS;
                     header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=entity_add&module=entities');
                     exit();
                 }
