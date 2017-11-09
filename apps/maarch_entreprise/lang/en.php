@@ -2052,3 +2052,8 @@ if (!defined('_DOC_CREATED'))
     define('_DOC_CREATED', 'Document created');
 if (!defined("_SAVE_POSITION"))
     define("_SAVE_POSITION", "Save");
+
+/***** History *****/
+if (!defined('_UPDATE_STATUS'))
+    define('_UPDATE_STATUS', 'Status update');
+/***** History *****/

@@ -156,6 +156,7 @@ $app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\Attachme
 //resource
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
 $app->put('/res', \Core\Controllers\ResController::class . ':update');
+$app->put('/res/{resId}/status', \Core\Controllers\ResController::class . ':updateStatus');
 $app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
 $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
 

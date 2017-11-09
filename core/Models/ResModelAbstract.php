@@ -47,6 +47,25 @@ class ResModelAbstract
         return $aReturn[0];
     }
 
+    public static function updateStatus(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['status']);
+
+        DatabaseModel::update([
+            'table'     => 'res_letterbox',
+            'set'       => [
+                'status'    => $aArgs['status']
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        return true;
+    }
+
+
     /**
      * Retrieve info of last resId
      * @param  $aArgs array
