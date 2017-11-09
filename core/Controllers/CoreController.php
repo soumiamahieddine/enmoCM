@@ -18,7 +18,6 @@ namespace Core\Controllers;
 use Core\Models\CoreConfigModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Respect\Validation\Validator;
 use Core\Models\ServiceModel;
 
 class CoreController
