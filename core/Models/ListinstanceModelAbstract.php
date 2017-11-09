@@ -17,6 +17,26 @@ namespace Core\Models;
 
 class ListinstanceModelAbstract
 {
+    public static function getById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aListinstance = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['listinstance'],
+            'where'     => ['listinstance_id = ?'],
+            'data'      => [$aArgs['id']],
+        ]);
+
+        if (empty($aListinstance[0])) {
+            return [];
+        }
+
+        return $aListinstance[0];
+    }
+
     public static function setSignatory(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'signatory', 'userId']);
