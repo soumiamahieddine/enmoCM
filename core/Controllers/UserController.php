@@ -241,10 +241,10 @@ class UserController
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
         HistoryController::add([
-            'table_name'    => 'users',
-            'record_id'     => $user['user_id'],
-            'event_type'    => 'ABS',
-            'event_id'      => 'userabs',
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'ABS',
+            'eventId'      => 'userabs',
             'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
         ]);
 
@@ -280,10 +280,10 @@ class UserController
 
             UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
-                'table_name'    => 'users',
-                'record_id'     => $user['user_id'],
-                'event_type'    => 'RET',
-                'event_id'      => 'userabs',
+                'tableName'    => 'users',
+                'recordId'     => $user['user_id'],
+                'eventType'    => 'RET',
+                'eventId'      => 'userabs',
                 'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
             ]);
 
