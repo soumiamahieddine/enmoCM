@@ -11,12 +11,12 @@
 /**
 * @brief Contact Model
 * @author dev@maarch.org
-* @ingroup apps
+* @ingroup core
 */
 
-namespace Apps\Models;
+namespace Core\Models;
+
 
 class ContactModel extends ContactModelAbstract
 {
-    // Do your stuff in this class
 }

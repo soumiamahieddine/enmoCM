@@ -14,8 +14,8 @@
 namespace Visa\Controllers;
 
 use Apps\Models\ActionModel;
-use Apps\Models\ContactModel;
 use Attachments\Models\AttachmentsModel;
+use Core\Models\ContactModel;
 use Core\Models\ListinstanceModel;
 use Core\Models\ResModel;
 use Core\Models\UserModel;
