@@ -234,6 +234,9 @@ $app->delete('/notifications/{id}', \Notifications\Controllers\NotificationContr
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
 
+//Listinstance
+$app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
+
 //Contacts
 $app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
 
