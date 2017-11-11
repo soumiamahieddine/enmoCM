@@ -562,7 +562,6 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
     }
 
 
-
 /****************************************/
 
 
@@ -786,28 +785,27 @@ var BrowserDetect = {
 BrowserDetect.init();
 
 function resize_frame_contact(mode) {
-    var width = $(parent.document.documentElement).getWidth();
-    if( width < 1200) {
-        $('inner_content').style.width = width - 600 + "px";
-    } else {
-        if ($('inner_content')) {
-            $('inner_content').style.width = "700px";            
-        } else if ($('inner_content_contact')) {
-            //$('inner_content_contact').style.width = "700px"; 
+    if (parent.$('iframe_tab') && mode == 'contact'){
+        if($j('#divList').length) {
+            var contentHeight = Math.round($j('#divList').height())+2;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
+        } else if($j('#inner_content_contact').length) {
+            var contentHeight = Math.round($j('#inner_content_contact').height())+180;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
+        } else {
+            var contentHeight = Math.round($j('#inner_content').height())+20;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
         }
-    }
-    if (mode == 'contact') {
-        if ($('frmcontact_table')) {
-            $('frmcontact_table').style.width = "90%"; 
-        }
-        if (parent.$('contact_iframe'))
-            parent.$('contact_iframe').style.height="550px"
+        
+    } else if (parent.$('contact_iframe_attach') && mode == 'contact') {
+        var contentHeight = 370;
+        parent.$('contact_iframe_attach').style.height=contentHeight+"px";   
+    } else if (parent.$('info_contact_iframe_attach') && mode != 'contact') {
+        var contentHeight = Math.round($j('#inner_content_contact').height())+100;
+        parent.$('info_contact_iframe_attach').style.height=contentHeight+"px";   
     } else {
-        $('info_contact_div').style.width = "65%";
-        $('frmaddress_table1').style.width = "65%";
-        $('frmaddress_table2').style.width = "65%";
-        if (parent.$('contact_iframe'))
-            parent.$('contact_iframe').style.height="850px"
+        var contentHeight = Math.round($j('#inner_content_contact').height())+100;
+        parent.$('iframe_tab').style.height=contentHeight+"px";   
     }
 }
 
@@ -1041,7 +1039,6 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-
     if ($j('#divList')) {
         $j('#divList').css('display','block');
     }
@@ -1193,6 +1190,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
+
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -1222,7 +1220,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-
                 $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
@@ -1821,7 +1818,6 @@ function checkContactType(mode,creation){
  **/
 function show_admin_contacts( is_corporate, display)
 {
-    
     var display_value = display || 'inline';
     var title = $j("#title_p");
     var lastname = $j("#lastname_p");
@@ -1961,7 +1957,7 @@ function clear_form(form_id)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_userlogs(url) 
+function valid_userlogs(url)
 {
     var user_div = $('user_id');
     var user_id_val = '';
@@ -1980,7 +1976,7 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-                //alert(answer.responseText);
+            	//alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -1996,7 +1992,7 @@ function valid_userlogs(url)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_report_by_period(url) 
+function valid_report_by_period(url)
 {
     var type_period = '';
     var type_report = 'graph';
@@ -3148,7 +3144,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
-
             },
         success: function(answer){
             document.getElementById('show_tab').style.display='block';
@@ -3161,8 +3156,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             document.getElementById('show_tab').innerHTML = answer;
         }
     });
- 
-
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){
