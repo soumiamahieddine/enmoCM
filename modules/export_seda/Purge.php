@@ -72,8 +72,6 @@ Class Purge{
 
     private function purgeContact($contactId)
     {
-        $contactDetails = \Apps\Models\ContactModel::purgeContact([
-            'id' => $contactId
-        ]);
+        \Core\Models\ContactModel::purgeContact(['id' => $contactId]);
     }
 }

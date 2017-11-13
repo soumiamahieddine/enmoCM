@@ -124,6 +124,7 @@ ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
 ALTER TABLE entities ADD entity_full_name text;
 
 /*SIGNATURE BOOK*/
+DROP VIEW IF EXISTS res_view_attachments;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_signature_book;
 ALTER TABLE res_attachments ADD in_signature_book boolean default false;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS in_signature_book;
@@ -134,7 +135,6 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS signatory_user_serial_
 ALTER TABLE res_version_attachments ADD signatory_user_serial_id int;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS signatory;
 ALTER TABLE listinstance ADD signatory boolean default false;
-DROP VIEW IF EXISTS res_view_attachments;
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
     creation_date, fulltext_result, ocr_result, author, author_name, identifier, source,

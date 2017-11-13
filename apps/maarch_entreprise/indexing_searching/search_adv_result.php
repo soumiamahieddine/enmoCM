@@ -140,7 +140,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $multifield = trim($_REQUEST['multifield']);
-                $json_txt .= "'multifield' : ['".addslashes($multifield)."'],";
+                $json_txt .= "'multifield' : ['".addslashes(trim($multifield))."'],";
+
                 $where_request .= "(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
                     ."or lower(title) LIKE lower(:multifield) "
@@ -150,7 +151,7 @@ if (count($_REQUEST['meta']) > 0) {
                 if (ctype_digit($_REQUEST['multifield']))
                 {
                     $where_request .= "or res_id = :multifield2 ";
-                    $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $_REQUEST['multifield'])); 
+                    $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $multifield)); 
                 }
 
                 $multifield = \Core\Models\TextFormatModel::normalize(['string' => $multifield]);
@@ -257,7 +258,7 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
             {
                 $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
-                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar(128)) from view_contacts where contact_type = :contactType)) or ";
+                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
@@ -323,10 +324,10 @@ if (count($_REQUEST['meta']) > 0) {
             // SUBJECT
             elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
             {
-                //var_dump($_REQUEST['subject']);exit();
                 $subject = trim($_REQUEST['subject']);
                 $subject = $func->normalize($subject);
-                $json_txt .= " 'subject' : ['".addslashes($subject)."'],";
+                $json_txt .= " 'subject' : ['".addslashes(trim($subject))."'],";
+
                 $where_request .= " (lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:subject) "
                     ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))  like lower(:subject) ))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":subject" => "%".$subject."%"));
@@ -806,7 +807,7 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contact_internal_id']))
             {
                 $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contact_internal_id']))."']";
-                	$contact_id = $_REQUEST['contact_internal_id'];
+                    $contact_id = $_REQUEST['contact_internal_id'];
                     $where_request .= " ((exp_user_id = :contactInternalId or dest_user_id = :contactInternalId) or ";
                     $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactInternalId and coll_id = '" . $coll_id . "'))) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":contactInternalId" => $contact_id));
@@ -824,27 +825,25 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'visa_user' && !empty($_REQUEST['ac_visa_user']))
             {
                 $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['ac_visa_user']))."']";
-                $userVisa = $_REQUEST['ac_visa_user'];
-                $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and process_date is not null and signatory = false and item_id in (select user_id from users where user_id = :user_visa))) and  ";
-                $arrayPDO = array_merge($arrayPDO, array(":user_visa" => $userVisa));
+                    $userVisa = $_REQUEST['ac_visa_user'];
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where user_id = :user_visa))) and  ";
+                    $arrayPDO = array_merge($arrayPDO, array(":user_visa" => $userVisa));
             }
-            //signatory = false et difflist_type = ‘VISA_CIRCUIT' et process_date != null
             elseif ($tab_id_fields[$j] == 'visa_user' && empty($_REQUEST['ac_visa_user']) && !empty($_REQUEST['visa_user']))
             {
                 $json_txt .= " 'visa_user' : ['".addslashes(trim($_REQUEST['visa_user']))."'], 'user_visa' : ['".addslashes(trim($_REQUEST['visa_user']))."']";
                     $visaUser = pg_escape_string($_REQUEST['visa_user']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and process_date is not null and signatory = false and item_id in (select user_id from users where firstname ilike :visa_user or lastname ilike :visa_user))) and ";
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and signatory = false and item_id in (select user_id from users where firstname ilike :visa_user or lastname ilike :visa_user))) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":visa_user" => "%".$visaUser."%"));
             }
             // Nom du signataire
-            elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['ac_signatory_name']))            
+            elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['ac_signatory_name']))
             {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."'], 'signatory_name_id' : ['".addslashes(trim($_REQUEST['ac_signatory_name']))."']";
-                $signatory_name = $_REQUEST['ac_signatory_name'];
-                $where_request .= " (res_id in (select res_id_master from res_attachments where coll_id = '" . $coll_id . "' and signatory_user_serial_id in (select id from users where user_id = :signatory_name_id))) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":signatory_name_id" => $signatory_name));
-
+                    $signatory_name = $_REQUEST['ac_signatory_name'];
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id = :signatory_name_id)) and  ";
+                    $arrayPDO = array_merge($arrayPDO, array(":signatory_name_id" => $signatory_name));
             }
             //recherche sur les signataires en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'signatory_name' && empty($_REQUEST['signatory_name_id']) && !empty($_REQUEST['signatory_name']))
@@ -852,8 +851,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."']";
                     $signatory_name = pg_escape_string($_REQUEST['signatory_name']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where firstname ilike :signatoryName or lastname ilike :signatoryName) "
-                        ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
+                    $where_request .= " (res_id in (select res_id from listinstance where difflist_type = 'VISA_CIRCUIT' and (signatory = true or (process_date is null and requested_signature = true)) and item_id in (select user_id from users where firstname ilike :signatoryName or lastname ilike :signatoryName))) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":signatoryName" => "%".$signatory_name."%"));
             }
             // SEARCH IN BASKETS

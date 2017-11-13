@@ -14,8 +14,8 @@
 namespace Visa\Controllers;
 
 use Apps\Models\ActionModel;
-use Apps\Models\ContactModel;
 use Attachments\Models\AttachmentsModel;
+use Core\Models\ContactModel;
 use Core\Models\ListinstanceModel;
 use Core\Models\ResModel;
 use Core\Models\UserModel;
@@ -84,6 +84,7 @@ class VisaController
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+        $datas['listinstance']  = ListinstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $_SESSION['user']['UserId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
 

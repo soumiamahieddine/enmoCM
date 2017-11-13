@@ -99,11 +99,11 @@ class NotificationController
 
             if (NotificationModel::create($data)) {
                 HistoryController::add([
-                'table_name' => 'notifications',
-                'record_id'  => $data['notification_id'],
-                'event_type' => 'ADD',
-                'event_id'   => 'notificationsadd',
-                'info'       => _ADD_NOTIFICATIONS . ' : ' . $data['notification_id']
+                    'tableName' => 'notifications',
+                    'recordId'  => $data['notification_id'],
+                    'eventType' => 'ADD',
+                    'eventId'   => 'notificationsadd',
+                    'info'       => _ADD_NOTIFICATIONS . ' : ' . $data['notification_id']
                 ]);
                 return $response->withJson(NotificationModel::getByNotificationId(['notificationId' => $data['notification_id']]));
             } else {
@@ -134,10 +134,10 @@ class NotificationController
         $notification = NotificationModel::getById(['notificationId' => $data['notification_id']]);
 
         HistoryController::add([
-            'table_name' => 'notifications',
-            'record_id'  => $data['notification_sid'],
-            'event_type' => 'UP',
-            'event_id'   => 'notificationsup',
+            'tableName' => 'notifications',
+            'recordId'  => $data['notification_sid'],
+            'eventType' => 'UP',
+            'eventId'   => 'notificationsup',
             'info'       => _MODIFY_NOTIFICATIONS . ' : ' . $data['notification_sid']
         ]);
 
@@ -153,10 +153,10 @@ class NotificationController
         NotificationModel::delete(['notification_sid' => $aArgs['id']]);
 
         HistoryController::add([
-                'table_name' => 'notifications',
-                'record_id'  => $aArgs['id'],
-                'event_type' => 'DEL',
-                'event_id'   => 'notificationsdel',
+                'tableName' => 'notifications',
+                'recordId'  => $aArgs['id'],
+                'eventType' => 'DEL',
+                'eventId'   => 'notificationsdel',
                 'info'       => _DELETE_NOTIFICATIONS . ' : ' . $aArgs['id']
             ]);
 

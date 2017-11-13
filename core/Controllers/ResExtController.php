@@ -15,7 +15,7 @@
 
 namespace Core\Controllers;
 
-use Apps\Models\ContactModel;
+use Core\Models\ContactModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;

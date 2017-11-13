@@ -603,10 +603,10 @@ class UserModelAbstract
         $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
 
         HistoryController::add([
-            'table_name' => 'users', 
-            'record_id'  =>$user['user_id'], 
-            'event_type' => 'GROUP ADD', 
-            'event_id'   => 'groupadded',
+            'tableName' => 'users',
+            'recordId'  =>$user['user_id'],
+            'eventType' => 'GROUP ADD',
+            'eventId'   => 'groupadded',
             'info'       =>$_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_GROUP.' '.$groupInfos['group_desc']
         ]);
 
@@ -648,10 +648,10 @@ class UserModelAbstract
         $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
 
         HistoryController::add([
-            'table_name' => 'users', 
-            'record_id'  =>$user['user_id'], 
-            'event_type' => 'GROUP DELETED', 
-            'event_id'   => 'groupdeleted',
+            'tableName' => 'users',
+            'recordId'  =>$user['user_id'],
+            'eventType' => 'GROUP DELETED',
+            'eventId'   => 'groupdeleted',
             'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_GROUP.' '.$groupInfos['group_desc']
         ]);
 
@@ -695,10 +695,10 @@ class UserModelAbstract
         $entityInfos = EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
         HistoryController::add([
-            'table_name' => 'users', 
-            'record_id'  => $user['user_id'],
-            'event_type' => 'ENTITY ADD', 
-            'event_id'   => 'entityadded',
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'ENTITY ADD',
+            'eventId'   => 'entityadded',
             'info'       => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label']
         ]);
 
@@ -793,10 +793,10 @@ class UserModelAbstract
         $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
         HistoryController::add([
-            'table_name' => 'users', 
-            'record_id'  =>$user['user_id'], 
-            'event_type' => 'ENTITY DELETE', 
-            'event_id'   => 'entitydeleted',
+            'tableName' => 'users',
+            'recordId'  =>$user['user_id'],
+            'eventType' => 'ENTITY DELETE',
+            'eventId'   => 'entitydeleted',
             'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_ENTITY.' '.$entityInfos['entity_label']
         ]);
 

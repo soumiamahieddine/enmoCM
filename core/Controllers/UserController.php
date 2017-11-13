@@ -19,7 +19,6 @@ use Baskets\Models\BasketsModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\HistoryModel;
-use Core\Models\LangModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
@@ -44,6 +43,12 @@ class UserController
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['regroupedBaskets'] = BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['canModifyPassword'] = true;
+
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($loggingMethod['id'] == 'ozwillo') {
+            $user['canModifyPassword'] = false;
+        }
 
         return $response->withJson($user);
     }
@@ -236,10 +241,10 @@ class UserController
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
         HistoryController::add([
-            'table_name'    => 'users',
-            'record_id'     => $user['user_id'],
-            'event_type'    => 'ABS',
-            'event_id'      => 'userabs',
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'ABS',
+            'eventId'      => 'userabs',
             'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
         ]);
 
@@ -275,10 +280,10 @@ class UserController
 
             UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
-                'table_name'    => 'users',
-                'record_id'     => $user['user_id'],
-                'event_type'    => 'RET',
-                'event_id'      => 'userabs',
+                'tableName'    => 'users',
+                'recordId'     => $user['user_id'],
+                'eventType'    => 'RET',
+                'eventId'      => 'userabs',
                 'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
             ]);
 

@@ -914,6 +914,7 @@ if (!defined("_UPDATE_CONTACT")) define("_UPDATE_CONTACT", "Contacts modificatio
 if (!defined("_PHONE")) define("_PHONE", "Phone");
 if (!defined("_ADDRESS")) define("_ADDRESS", "Address");
 if (!defined("_NO_ADDRESS_GIVEN")) define("_NO_ADDRESS_GIVEN", "No address given");
+if (!defined("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO")) define("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO", "If you want search on firstname AND lastname, you must write your search in this order.");
 if (!defined("_STREET")) define("_STREET", "Street");
 if (!defined("_COMPLEMENT")) define("_COMPLEMENT", "Complement");
 if (!defined("_TOWN")) define("_TOWN", "City");
@@ -2054,3 +2055,6 @@ if (!defined("_SAVE_POSITION"))
 
 if (!defined("_NO_ADDRESS_GIVEN"))
     define("_NO_ADDRESS_GIVEN", "No address");
+/***** History *****/
+if (!defined('_UPDATE_STATUS'))
+    define('_UPDATE_STATUS', 'Status update');

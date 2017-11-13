@@ -153,9 +153,10 @@ $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\Vi
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
 $app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
-//resource
+//Res
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
 $app->put('/res', \Core\Controllers\ResController::class . ':update');
+$app->put('/res/{resId}/status', \Core\Controllers\ResController::class . ':updateStatus');
 $app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
 $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
@@ -232,6 +233,12 @@ $app->delete('/notifications/{id}', \Notifications\Controllers\NotificationContr
 //Reports
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+
+//Listinstance
+$app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
+
+//Contacts
+$app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
 
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
