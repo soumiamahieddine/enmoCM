@@ -32,6 +32,22 @@ class ResController
     public function create(RequestInterface $request, ResponseInterface $response)
     {
         $data = $request->getParams();
+        //*****************************************************************************************
+        //LOG ONLY LOG FOR DEBUG
+        // $file = fopen('storeResourceLogs.log', a);
+        // fwrite($file, '[' . date('Y-m-d H:i:s') . '] new request' . PHP_EOL);
+        // foreach ($data as $key => $value) {
+        //     if ($key <> 'encodedFile') {
+        //         fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $key . ' : ' . $value . PHP_EOL);
+        //     }
+        // }
+        // fclose($file);
+        // ob_flush();
+        // ob_start();
+        // print_r($data);
+        // file_put_contents("storeResourceLogs.log", ob_get_flush());
+        //END LOG FOR DEBUG ONLY
+        //*****************************************************************************************
 
         $check = Validator::notEmpty()->validate($data['encodedFile']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['fileFormat']);
