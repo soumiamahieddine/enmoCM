@@ -680,6 +680,8 @@ CREATE TABLE listinstance
   difflist_type character varying(50),
   process_date timestamp without time zone,
   process_comment character varying(255),
+  signatory boolean default false,
+  requested_signature boolean default false
   CONSTRAINT listinstance_pkey PRIMARY KEY (listinstance_id)
 )
 WITH (OIDS=FALSE);
