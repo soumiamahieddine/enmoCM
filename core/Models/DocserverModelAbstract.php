@@ -57,6 +57,30 @@ class DocserverModelAbstract
         return $aReturn[0];
     }
 
+    public static function getByCollId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId']);
+        ValidatorModel::boolType($aArgs, ['priority']);
+
+        $data = [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['docservers'],
+            'where'     => ['coll_id = ?'],
+            'data'      => [$aArgs['collId']]
+        ];
+        if (!empty($aArgs['priority'])) {
+            $data['order_by'] = ['priority_number'];
+        }
+        $aReturn = DatabaseModel::select($data);
+
+        if (!empty($aArgs['priority'])) {
+            return $aReturn[0];
+        }
+
+        return $aReturn;
+    }
+
     public static function create(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['docserver_id']);

@@ -731,6 +731,8 @@ if (!defined("_CHOOSE_ONE_OBJECT")) define("_CHOOSE_ONE_OBJECT", "Choisissez au 
 if (!defined("_CLICK_LINE_TO_CHECK_INVOICE")) define("_CLICK_LINE_TO_CHECK_INVOICE", "Cliquer sur une ligne pour vérifier une facture");
 if (!defined("_FOUND_INVOICES")) define("_FOUND_INVOICES", " facture(s) trouvée(s)");
 if (!defined("_SIMPLE_CONFIRM")) define("_SIMPLE_CONFIRM", "Confirmation simple");
+if (!defined("_SEND_FILE_WS")) define("_SEND_FILE_WS", "Envoi du document via Web Service");
+if (!defined("_SEND_DATA_WS")) define("_SEND_DATA_WS", "Envoi de données via Web Service");
 if (!defined("_SIMPLE_CONFIRM_DESC")) define("_SIMPLE_CONFIRM_DESC", "Ouvre simplement une modal de confirmation de l'action à effetuer.");
 if (!defined("_CHECK_INVOICE")) define("_CHECK_INVOICE", "Vérifier facture");
 
