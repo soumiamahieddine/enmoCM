@@ -351,11 +351,7 @@ class ReconciliationController{
             }
 
             unset($prepareData['res_id']); // NCH01
-            //var_dump($prepareData);
-            $resInsert = ResModel::create([
-                'table' => 'res_attachments',
-                'data'  => $prepareData
-            ]);
+            AttachmentsModel::create($prepareData);
 
             return true;
         }

@@ -11,26 +11,25 @@
 
 namespace Core\Controllers;
 
+use Core\Models\ParameterModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Core\Models\LangModel;
-use Core\Models\ParametersModel;
 
 class ParametersController
 {
     public function getParametersForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         $obj = [
-                'parametersList'    =>  ParametersModel::getList(),
-                'lang'              =>  ParametersModel::getParametersLang()
+                'parametersList'    =>  ParameterModel::getList(),
+                'lang'              =>  ParameterModel::getParametersLang()
         ];
         return $response->withJson($obj);
     }
 
     public function getParameterForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $obj['parameter'] = ParametersModel::getById(['id' => $aArgs['id']]);
+        $obj['parameter'] = ParameterModel::getById(['id' => $aArgs['id']]);
         
         if (empty($obj)) {
             return $response->withStatus(400)->withJson(['errors' => 'User not found']);
@@ -44,20 +43,20 @@ class ParametersController
             $obj['type'] = 'string';
         }
 
-        $obj['lang'] = ParametersModel::getParametersLang();
+        $obj['lang'] = ParameterModel::getParametersLang();
 
         return $response->withJson($obj);
     }
 
     public function getNewParameterForAdministration(RequestInterface $request, ResponseInterface $response)
     {
-        $obj['lang'] = ParametersModel::getParametersLang();
+        $obj['lang'] = ParameterModel::getParametersLang();
         return $response->withJson($obj);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $obj = ParametersModel::getById(['id' => $aArgs['id']]);
+        $obj = ParameterModel::getById(['id' => $aArgs['id']]);
         return $response->withJson($obj);
     }
     public function create(RequestInterface $request, ResponseInterface $response)
@@ -72,10 +71,10 @@ class ParametersController
         
         $datas = $request->getParams();
 
-        $return = ParametersModel::create($datas);
+        $return = ParameterModel::create($datas);
 
         if ($return) {
-            $obj = ParametersModel::getById(['id' => $datas['id']]);
+            $obj = ParameterModel::getById(['id' => $datas['id']]);
         } else {
             return $response
                 ->withStatus(500)
@@ -100,10 +99,10 @@ class ParametersController
         }
 
         $aArgs = $request->getParams();
-        $return = ParametersModel::update($aArgs);
+        $return = ParameterModel::update($aArgs);
 
         if ($return) {
-            $obj = ParametersModel::getById(['id' => $aArgs['id']]);
+            $obj = ParameterModel::getById(['id' => $aArgs['id']]);
         } else {
             return $response
                 ->withStatus(500)
@@ -119,11 +118,11 @@ class ParametersController
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        $obj = ParametersModel::delete(['id' => $aArgs['id']]);
+        $obj = ParameterModel::delete(['id' => $aArgs['id']]);
         return $response->withJson(
             [
             'success'   =>  _PARAMETER. ' <b>' . $aArgs['id'] .'</b> ' ._DELETED,
-            'parameters'    =>  ParametersModel::getList()
+            'parameters'    =>  ParameterModel::getList()
             ]
         );
     }
@@ -133,7 +132,7 @@ class ParametersController
         $errors = [];
 
         if ($mode == 'update') {
-            $obj = ParametersModel::getById(
+            $obj = ParameterModel::getById(
                 [
                 'id' => $request->getParam('id'),
                 'param_value_int' => $request->getParam('param_value_int')
@@ -158,7 +157,7 @@ class ParametersController
             if (!Validator::regex('/^[0-9]*$/')->validate($request->getParam('param_value_int')) && $request->getParam('param_value_int')!=null) {
                 array_push($errors, _INVALID_INTEGER);
             }
-            $obj = ParametersModel::getById(['id' => $request->getParam('id')]);
+            $obj = ParameterModel::getById(['id' => $request->getParam('id')]);
             if (!empty($obj)) {
                 array_push($errors, _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS);
             }

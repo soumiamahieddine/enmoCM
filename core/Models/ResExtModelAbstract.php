@@ -17,56 +17,8 @@ namespace Core\Models;
 
 class ResExtModelAbstract
 {
-    /**
-     * Retrieve info of resId
-     * @param  $aArgs array
-     *
-     * @return array
-     */
-    public static function getById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
 
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'mlb_coll_ext';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        return $aReturn;
-    }
-
-    /**
-     * Retrieve info of last resId
-     * @param  $aArgs array
-     *
-     * @return array
-     */
-    public static function getLastId(array $aArgs = [])
-    {
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'mlb_coll_ext';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'order_by'  => ['res_id desc'],
-            'limit'     => 1,
-        ]);
-
-        return $aReturn;
-    }
+    //TODO Remove model after refactoring retrieveProcessLimitDate in ResModel
 
     /**
      * Retrieve process_limit_date for resource in extension table if mlb
@@ -74,7 +26,7 @@ class ResExtModelAbstract
      *
      * @return integer $processLimitDate
      */
-    public function retrieveProcessLimitDate(array $aArgs)
+    public static function retrieveProcessLimitDate(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
@@ -147,49 +99,5 @@ class ResExtModelAbstract
         $processLimitDate = $func->dateformat($date, '-');
 
         return $processLimitDate;
-    }
-
-    /**
-     * insert into a resTable
-     * @param  $aArgs array
-     *
-     * @return boolean
-     */
-    public static function create(array $aArgs = [])
-    {
-        if (empty($aArgs['table'])) {
-            $aArgs['table'] = 'mlb_coll_ext';
-        }
-
-        DatabaseModel::insert([
-            'table'         => $aArgs['table'],
-            'columnsValues' => $aArgs['data']
-        ]);
-
-        return true;
-    }
-
-    /**
-     * deletes into a resTable
-     * @param  $aArgs array
-     *
-     * @return boolean
-     */
-    public static function delete(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-
-        if (empty($aArgs['table'])) {
-            $aArgs['table'] = 'mlb_coll_ext';
-        }
-
-        DatabaseModel::delete([
-                'table' => $aArgs['table'],
-                'where' => ['res_id = ?'],
-                'data'  => [$aArgs['id']]
-        ]);
-
-        return true;
     }
 }

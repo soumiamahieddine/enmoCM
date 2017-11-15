@@ -11,12 +11,10 @@
 
 namespace Core\Models;
 
-class ParametersModelAbstract
+class ParameterModelAbstract
 {
     public static function getList()
     {
-        $func = new \functions();
-
         $aReturn = DatabaseModel::select(
             ['select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['parameters']]
@@ -25,8 +23,8 @@ class ParametersModelAbstract
         foreach ($aReturn as $key => $parameter) {
 
             if ($parameter['param_value_date'] != null) {
-                $aReturn[$key]['param_value_date'] = $func->format_date($aReturn[$key]['param_value_date']);
-            }                
+                $aReturn[$key]['param_value_date'] =  TextFormatModel::formatDate($aReturn[$key]['param_value_date']);
+            }
         }
 
         return $aReturn;
@@ -38,39 +36,47 @@ class ParametersModelAbstract
         return $aLang;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $parameter = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     =>['parameters'],
+            'table'     => ['parameters'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
-            ]
-        );
-        if ($aReturn[0]['param_value_date'] != null) {
-            $aReturn[0]['param_value_date'] = TextFormatModel::format_date($aReturn[0]['param_value_date']);
+        ]);
+
+        if (empty($parameter[0])) {
+            return [];
         }
-        
-        return $aReturn[0];
+        if (!empty($parameter[0]['param_value_date'])) {
+            $parameter[0]['param_value_date'] = TextFormatModel::formatDate($parameter[0]['param_value_date']);
+        }
+
+        return $parameter[0];
     }
 
-    public static function create(array $aArgs = [])
+
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id', 'description', 'param_value_string']);
+        ValidatorModel::intVal($aArgs, ['param_value_int']);
 
-        $aReturn = DatabaseModel::insert(
-            [
+        DatabaseModel::insert([
             'table'         => 'parameters',
-            'columnsValues' => $aArgs
+            'columnsValues' => [
+                'id'                    => $aArgs['id'],
+                'description'           => $aArgs['description'],
+                'param_value_string'    => $aArgs['param_value_string'],
+                'param_value_int'       => $aArgs['param_value_int'],
+                'param_value_date'      => $aArgs['param_value_date'],
             ]
-        );
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function update(array $aArgs = [])
@@ -95,16 +101,12 @@ class ParametersModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::delete(
-            [
+        $aReturn = DatabaseModel::delete([
             'table' => 'parameters',
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         return $aReturn;
     }
-
 }
-?>

@@ -36,6 +36,25 @@ class ResModelAbstract
         return $aReturn[0];
     }
 
+    public static function getExtById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['mlb_coll_ext'],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        if (empty($aReturn[0])) {
+            return [];
+        }
+
+        return $aReturn[0];
+    }
+
     public static function updateStatus(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
@@ -53,62 +72,8 @@ class ResModelAbstract
 
         return true;
     }
-
-
-    /**
-     * Retrieve info of last resId
-     * @param  $aArgs array
-
-     * @return array $res
-     */
-    public static function getLastId(array $aArgs = [])
-    {
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'res_letterbox';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'order_by'  => ['res_id desc'],
-            'limit'     => 1,
-        ]);
-
-        return $aReturn;
-    }
-
-    /**
-     * Retrieve info of resId by path
-     * @param  $aArgs array
-     *
-     * @return array $res
-     */
-    public static function getByPath(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['docserverId', 'path', 'filename']);
-        ValidatorModel::stringType($aArgs, ['docserverId', 'path', 'filename', 'table']);
-
-
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'res_letterbox';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'where'     => ['docserver_id = ? and path = ? and filename = ?'],
-            'data'      => [$aArgs['docserverId'], $aArgs['path'], $aArgs['filename']],
-            'order_by'  => ['res_id desc'],
-        ]);
-
-        return $aReturn;
-    }
-
-    public static function create(array $aArgs = [])
+    
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
         ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
@@ -125,26 +90,15 @@ class ResModelAbstract
         return $nextSequenceId;
     }
 
-    /**
-     * deletes into a resTable
-     * @param  $aArgs array
-     *
-     * @return boolean
-     */
-    public static function delete(array $aArgs = [])
+    public static function createExt(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['table']);
+        ValidatorModel::notEmpty($aArgs, ['res_id', 'category_id']);
+        ValidatorModel::stringType($aArgs, ['category_id']);
+        ValidatorModel::intVal($aArgs, ['res_id']);
 
-        if (empty($aArgs['table'])) {
-            $aArgs['table'] = 'res_letterbox';
-        }
-
-        DatabaseModel::delete([
-            'table' => $aArgs['table'],
-            'where' => ['res_id = ?'],
-            'data'  => [$aArgs['id']]
+        DatabaseModel::insert([
+            'table'         => 'mlb_coll_ext',
+            'columnsValues' => $aArgs
         ]);
 
         return true;
@@ -202,4 +156,99 @@ class ResModelAbstract
 
         return ['lock' => $lock, 'lockBy' => $lockBy];
     }
+
+    // In Progress
+//    public static function getProcessLimitDate(array $aArgs)
+//    {
+//        ValidatorModel::notEmpty($aArgs, ['resId']);
+//        ValidatorModel::intVal($aArgs, ['resId']);
+//
+//
+//
+//
+//        if (!empty($aArgs['table'])) {
+//            $table = $aArgs['table'];
+//        } else {
+//            $table = 'res_view_letterbox';
+//        }
+//        $aArgs['select'] = ['creation_date, admission_date, type_id'];
+//        $aReturn = static::select([
+//            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+//            'table'     => [$table],
+//            'where'     => ['res_id = ?'],
+//            'data'      => [$aArgs['resId']]
+//        ]);
+//        require_once('core/class/class_functions.php');
+//        $func = new \functions();
+//        if ($aReturn[0]['type_id'] <> '') {
+//            $typeId = $aReturn[0]['type_id'];
+//            $admissionDate = $aReturn[0]['admission_date'];
+//            $creationDate = $aReturn[0]['creation_date'];
+//            $aArgs['select'] = ['process_delay'];
+//            $aReturnT = static::select([
+//                'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+//                'table'     => ['mlb_doctype_ext'],
+//                'where'     => ['type_id = ?'],
+//                'data'      => [$aReturn[0]['type_id']]
+//            ]);
+//            $delay = $aReturnT[0]['process_delay'];
+//        }
+//        if ($admissionDate == '') {
+//            $dateToCompute = $creationDate;
+//        } else {
+//            $dateToCompute = $admissionDate;
+//        }
+//
+//
+//
+//
+//
+//        $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['creation_date', 'type_id']]);
+//
+//        if (!empty($document['type_id'])) {
+//            $doctypeExt = DatabaseModel::select([
+//                'select'    => ['process_delay'],
+//                'table'     => ['mlb_doctype_ext'],
+//                'where'     => ['type_id = ?'],
+//                'data'      => [$document['type_id']]
+//            ]);
+//            $processDelay = $doctypeExt[0]['process_delay'];
+//        }
+//
+//
+//
+//
+//        require_once('core/class/class_alert_engine.php');
+//        $alert_engine = new \alert_engine();
+//        if (isset($dateToCompute) && !empty($dateToCompute)) {
+//            $convertedDate = $alert_engine->dateFR2Time(
+//                str_replace(
+//                    "-",
+//                    "/",
+//                    $func->format_date_db(
+//                        $dateToCompute,
+//                        'true',
+//                        '',
+//                        'true'
+//                    )
+//                ),
+//                true
+//            );
+//
+//
+//            $date = $alert_engine->WhenOpenDay(
+//                $convertedDate,
+//                $delay,
+//                false,
+//                $aArgs['calendarType']
+//            );
+//        } else {
+//            $date = $alert_engine->date_max_treatment($delay, false);
+//        }
+//
+//        $processLimitDate = $func->dateformat($date, '-');
+//
+//        return $processLimitDate;
+//    }
+
 }
