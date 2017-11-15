@@ -176,11 +176,11 @@
                 <div class="alert alert-danger" role="alert">{{lang.autoLogoutAbsence}}</div>
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
-                        <form class="navbar-form navbar-left">
-                            <div class="form-group">
-                                <select id="selectBasketAbsenceUser" class="form-control">
-                                    <option>{{lang.chooseBasket}}</option>
-                                    <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
+                        <form class="navbar-form navbar-left" style="width: 100%">
+                            <div style="margin-left: 16%;padding-top: 15px">Ctrl + Clic pour sélectionner plusieurs corbeilles</div>
+                            <div class="form-group" style="margin-left: 16%;max-width: 51%;">
+                                <select style="height: 150px;max-width: 87%;" id="selectBasketAbsenceUser" class="form-control">
+                                    <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled" title="{{basket.basket_name}}">
                                         {{basket.basket_name}}
                                         <span *ngIf="basket.group_id">({{basket.group_id}})</span>
                                         <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
