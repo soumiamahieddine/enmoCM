@@ -6,10 +6,10 @@
 --                                                                          --
 -- *************************************************************************--
 
-DROP TABLE IF EXISTS ar_batch;
 DROP VIEW IF EXISTS view_postindexing;
 DROP VIEW IF EXISTS res_view_attachments;
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP TABLE IF EXISTS ar_batch;
 
 DROP SEQUENCE IF EXISTS priorities_seq CASCADE;
 
