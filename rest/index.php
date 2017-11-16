@@ -241,5 +241,8 @@ $app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
 
+//liste documents
+$app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
+
 
 $app->run();
