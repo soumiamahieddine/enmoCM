@@ -6,6 +6,11 @@
 --                                                                          --
 -- *************************************************************************--
 
+DROP TABLE IF EXISTS ar_batch;
+DROP VIEW IF EXISTS view_postindexing;
+DROP VIEW IF EXISTS res_view_attachments;
+DROP VIEW IF EXISTS res_view_letterbox;
+
 DROP SEQUENCE IF EXISTS priorities_seq CASCADE;
 
 DROP TABLE IF EXISTS priorities;
@@ -124,9 +129,6 @@ ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
 ALTER TABLE entities ADD entity_full_name text;
 
 /*PERFS ON VIEW*/
-DROP TABLE IF EXISTS ar_batch;
-DROP VIEW IF EXISTS view_postindexing;
-DROP VIEW res_view_letterbox;
 
 CREATE OR REPLACE VIEW res_view_letterbox AS 
  SELECT r.tablename,
@@ -321,7 +323,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 
 
 /*SIGNATURE BOOK*/
-DROP VIEW IF EXISTS res_view_attachments;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_signature_book;
 ALTER TABLE res_attachments ADD in_signature_book boolean default false;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS in_signature_book;
