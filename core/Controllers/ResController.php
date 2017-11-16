@@ -249,7 +249,7 @@ class ResController
                     }
                     else if ($column == "date_end"){
                         $v_date = explode("-",$v);
-                        array_push($tmp_values, "creation_date <= '".$v_date[2]."-".$v_date[1]."-".$v_date[0]."'");
+                        array_push($tmp_values, "creation_date <= '".$v_date[2]."-".$v_date[1]."-".$v_date[0]." 23:59:59'");
                     }
                     else
                         array_push($tmp_values, $column."='".trim($v)."'");
