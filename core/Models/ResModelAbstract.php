@@ -171,7 +171,7 @@ class ResModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => [$aArgs['clause']],
-            'order_by'  => ['res_letterbox.res_id']
+            'order_by'  => ['res_id']
         ]);
 
         return $aReturn;

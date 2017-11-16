@@ -251,6 +251,9 @@ class ResController
                         $v_date = explode("-",$v);
                         array_push($tmp_values, "creation_date <= '".$v_date[2]."-".$v_date[1]."-".$v_date[0]." 23:59:59'");
                     }
+                    else if ($column == "type_id"){
+                        array_push($tmp_values, "type_id = '".trim($v)."'");
+                    }
                     else
                         array_push($tmp_values, $column."='".trim($v)."'");
                 }
@@ -285,7 +288,7 @@ class ResController
         $resList = ResModel::getDocsByClause(
             [
                 'select'  => [$colSelect],
-                'table'  => implode(",",$tab_tables),
+                //'table'  => implode(",",$tab_tables),
                 'clause'   => $clause
             ]
         );
