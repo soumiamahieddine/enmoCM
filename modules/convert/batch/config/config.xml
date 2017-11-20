@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <CONFIG>
+        <Lang>fr</Lang> <!-- fr, en-->
+        <MaarchDirectory>/var/www/html/oem_V2/</MaarchDirectory>
+        <TmpDirectory>/var/www/html/oem_V2/modules/convert/batch/tmp/</TmpDirectory>
+        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <StackSizeLimit>50</StackSizeLimit>
+        <ApacheUserAndGroup>lgi:lgi</ApacheUserAndGroup>
+        <UnoconvPath>unoconv</UnoconvPath> <!-- only for Windows -->
+        <OpenOfficePath>soffice</OpenOfficePath> <!-- only for Windows -->
+        <UnoconvOptions>--port 8100</UnoconvOptions>
+        <RegExResId>false</RegExResId>
+        <StartDateRecovery>false</StartDateRecovery> <!-- false or date dd/mm/yyyy -->
+        <CurrentMonthOnly>false</CurrentMonthOnly> <!-- true or false -->
+    </CONFIG>
+    <CONVERT>
+        <OutputFormat>pdf</OutputFormat>
+        <InputFormat>odt,ott,odm,html,oth,ods,ots,odg,otg,odp,otp,odf,doc,docx,xls,xlsx,ppt,pptx,tiff,tif,png,jpeg,jpg,gif</InputFormat>
+    </CONVERT>
+    <CONVERT>
+        <OutputFormat>html</OutputFormat>
+        <InputFormat>odt,ods,doc,docx,xls,xlsx,ppt,pptx</InputFormat>
+    </CONVERT>
+    <CONVERT>
+        <OutputFormat>png</OutputFormat>
+        <InputFormat>odt,ods,doc,docx,xls,xlsx,ppt,pptx</InputFormat>
+    </CONVERT>
+    <CONFIG_BASE>
+        <databaseserver>127.0.0.1</databaseserver>
+        <databaseserverport>5432</databaseserverport>
+        <databasetype>POSTGRESQL</databasetype>
+        <databasename>sipol_v2</databasename>
+        <databaseuser>maarch</databaseuser>
+        <databasepassword>maarch</databasepassword>
+    </CONFIG_BASE>
+    <COLLECTION>
+        <Id>letterbox_coll</Id>
+        <Table>res_letterbox</Table>
+        <View>res_view_letterbox</View>
+        <Adr>adr_letterbox</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/letterbox_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>attachments_coll</Id>
+        <Table>res_attachments</Table>
+        <View>res_view_attachments</View>
+        <Adr>adr_attachments</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/attachments_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>attachments_version_coll</Id>
+        <Table>res_version_attachments</Table>
+        <View>res_version_attachments</View>
+        <Adr>adr_attachments_version</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/attachments_version_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>calendar_coll</Id>
+        <Table>calendar_event_attachments</Table>
+        <View>calendar_event_attachments</View>
+        <Adr>calendar_event_adr_attachments</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/calendar_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>folder_coll</Id>
+        <Table>res_folder</Table>
+        <View>res_folder</View>
+        <Adr>adr_folder</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/folder_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>chrono_coll</Id>
+        <Table>res_chrono</Table>
+        <View>res_chrono</View>
+        <Adr>adr_chrono</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/chrono_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>reprise_coll</Id>
+        <Table>res_reprise</Table>
+        <View>res_reprise</View>
+        <Adr>adr_reprise</Adr>
+        <path_to_lucene_index>/opt/maarch/docservers/indexes/reprise_coll/</path_to_lucene_index>
+    </COLLECTION>
+    <LOG4PHP>
+        <enabled>true</enabled>
+        <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+        <Log4PhpBusinessCode>Convert</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/html/oem_V2/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+    </LOG4PHP>
+</ROOT>

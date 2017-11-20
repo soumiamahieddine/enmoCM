@@ -120,6 +120,6 @@ class ReconciliationControllerTest extends TestCase
 
         $response = $action->storeAttachmentResource($aArgs);
 
-        $this->assertTrue($response;
+        $this->assertTrue($response);
     }
 }

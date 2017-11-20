@@ -5,6 +5,7 @@
     	    "Apps\\": "apps/maarch_entreprise/",
             "Attachments\\": "modules/attachments/",
             "Baskets\\": "modules/basket/",
+            "Convert\\": "modules/convert/",
             "Entities\\": "modules/entities/",
             "Notes\\": "modules/notes/",
             "Notifications\\": "modules/notifications/",

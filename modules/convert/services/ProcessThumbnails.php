@@ -1,8 +1,9 @@
 <?php
+
 /*
-*    Copyright 2008-2017 Maarch
+*   Copyright 2008-2016 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,20 +16,27 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * Ce fichier a mettre en paralléle dans le custom, permet de mettre des definitions spécifique au custom (exemple langue ou remplacement de define de ce fichier de base)
- **/
- if(file_exists('apps/maarch_entreprise/define_custom.php')) {
-	require_once 'apps/maarch_entreprise/define_custom.php';
- }
+* @brief process thumbnails class
+*
+* <ul>
+* <li>Services to process the thumbnails of resources</li>
+* </ul>
+*
+* @file
+* @author Laurent Giovannoni <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup convert
+*/
 
-// Variable pour activer les vues V2
-if (!defined('V2_ENABLED')) {
-	define('V2_ENABLED', false);
-}
-if (!defined('PROD_MODE')) {
-	define('PROD_MODE', false);
+
+require_once 'modules/convert/services/ProcessThumbnailsAbstract.php';
+
+class Convert_ProcessThumbnails_Service extends Convert_ProcessThumbnailsAbstract_Service {
+	
+	
 }

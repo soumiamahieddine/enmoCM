@@ -219,4 +219,20 @@ class HistoryController
 
         return $response->withJson($return);
     }
+
+    /*
+    timestart : timestamp Debut
+    timeend : timestamp Fin
+    level : level log4php
+    message : message dans les logs
+    */
+    public function executionTimeLog($timestart, $timeend, $level, $message){
+        if (empty($timeend)){
+            $timeend = microtime(true);
+        }
+        $time = $timeend - $timestart;
+
+        self::$level(['message' => $message.'. Done in ' . number_format($time, 3) . ' secondes.']);
+
+    }
 }

@@ -139,4 +139,35 @@ class DocserverModelAbstract
 
         return $aReturn;
     }
+
+    /**
+     * Get docservers to insert a new doc converted.
+     * Can return null if no corresponding object.
+     * @param  $collId  string Collection identifier
+     * @param  string $typeId [description]
+     * @return docservers 
+     */
+    public function findTargetDs(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId']);
+
+        if (empty($aArgs['typeId'])) {
+            $aArgs['typeId'] = 'CONVERT';
+        }
+
+        $aReturn = DatabaseModel::select([
+            'select'    => ['*'],
+            'table'     => ['docservers'],
+            'where'     => [
+                "is_readonly = 'N' and enabled = 'Y' and " . 
+                "coll_id = ? and docserver_type_id = ?"
+                        ],
+            'data'      => [$aArgs['collId'], $aArgs['typeId']],
+            'order_by'  => ['priority_number'],
+            'limit'     => 1,
+        ]);
+
+        return $aReturn;
+    }
 }

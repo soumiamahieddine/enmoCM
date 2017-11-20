@@ -307,4 +307,8 @@
         <moduleid>export_seda</moduleid>
         <comment>_EXPORT_SEDA_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>convert</moduleid>
+        <comment>_CONVERT_COMMENT</comment>
+    </MODULES>
 </ROOT>

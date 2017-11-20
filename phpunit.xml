@@ -9,6 +9,7 @@
             <file>core/Test/ResExtControllerTest.php</file-->
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
+            <file>modules/convert/Test/ProcessFulltextTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
@@ -27,6 +28,8 @@
           <directory suffix=".php">modules/entities/Models</directory>
           <directory suffix=".php">modules/basket/Models</directory>
           <directory suffix=".php">modules/notes/Models</directory>
+          <directory suffix=".php">modules/convert/Controllers</directory>
+          <directory suffix=".php">modules/convert/Models</directory>
       </whitelist>
     </filter>
     <logging>
