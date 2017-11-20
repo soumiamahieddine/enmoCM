@@ -129,7 +129,7 @@ ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
 ALTER TABLE entities ADD entity_full_name text;
 
 /*PERFS ON VIEW*/
-
+DROP VIEW IF EXISTS res_view_letterbox;
 CREATE OR REPLACE VIEW res_view_letterbox AS 
  SELECT r.tablename,
     r.is_multi_docservers,
@@ -302,8 +302,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     cont.society AS contact_society,
     u.lastname AS user_lastname,
     u.firstname AS user_firstname,
-    list.item_id AS dest_user_from_listinstance,
-    list.viewed,
     r.is_frozen AS res_is_frozen
    FROM doctypes d,
     doctypes_first_level dfl,
@@ -317,9 +315,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
      LEFT JOIN cases ca ON cr.case_id = ca.case_id
      LEFT JOIN contacts_v2 cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
-     LEFT JOIN listinstance list ON r.res_id = list.res_id AND list.item_mode::text = 'dest'::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-
 
 
 /*SIGNATURE BOOK*/
