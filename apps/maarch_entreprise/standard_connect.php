@@ -24,12 +24,10 @@ if ($restMode) {
     ) {
         list($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])
             = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
-    }
-    else if (isset($http_header['LOGIN']) && isset($http_header['PASSWORD'])){
+    } elseif (isset($http_header['LOGIN']) && isset($http_header['PASSWORD'])) {
         $force_login = $http_header['LOGIN'];
         $force_psw = $http_header['PASSWORD'];
-    }
-    else{
+    } elseif(!isset($_SERVER["PHP_AUTH_USER"])) {
         header("WWW-Authenticate: Basic realm=\"Maarch WebServer Engine\"");
         if (preg_match("/Microsoft/", $_SERVER["SERVER_SOFTWARE"])) {
             header("Status: 401 Unauthorized");
