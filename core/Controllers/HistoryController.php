@@ -8,7 +8,7 @@
 */
 
 /**
-* @brief Status Controller
+* @brief History Controller
 * @author dev@maarch.org
 * @ingroup core
 */
@@ -22,6 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 use Core\Models\HistoryModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
+use Core\Controllers\UtilsController;
 use Notifications\Controllers\NotificationsEventsController;
 
 class HistoryController
@@ -45,6 +46,11 @@ class HistoryController
         }
         if(empty($aArgs['level'])){
             $aArgs['level'] = 'DEBUG';
+        }
+        if (empty($_SESSION['user']['UserId'])) {
+            $user = 'BOT';
+        } else {
+            $user = $_SESSION['user']['UserId'];
         }
 
         $traceInformations = [
@@ -152,41 +158,13 @@ class HistoryController
         );
 
         $logLine = TextFormatModel::htmlWasher($logLine);
-        $logLine = HistoryController::wd_remove_accents(['string' => $logLine]);
+        $logLine = UtilsController::wd_remove_accents(['string' => $logLine]);
 
         HistoryModel::writeLog([
             'logger'  => $logger,
             'logLine' => $logLine,
             'level'   => $traceInformations['LEVEL']
         ]);
-    }
-
-
-    public static function wd_remove_accents(array $aArgs = [])
-    {
-        if(empty($aArgs['charset'])){
-            $aArgs['charset'] = 'utf-8';
-        }
-
-        $str = htmlentities($aArgs['string'], ENT_NOQUOTES, $aArgs['charset']);
-
-        $str = preg_replace(
-            '#\&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring)\;#',
-            '\1',
-            $str
-        );
-        $str = preg_replace(
-            '#\&([A-za-z]{2})(?:lig)\;#',
-            '\1',
-            $str
-        );
-        $str = preg_replace(
-            '#\&[^;]+\;#',
-            '',
-            $str
-        );
-
-        return $str;
     }
 
     public function getForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -218,21 +196,5 @@ class HistoryController
         $return['historyList'] = $historyList;
 
         return $response->withJson($return);
-    }
-
-    /*
-    timestart : timestamp Debut
-    timeend : timestamp Fin
-    level : level log4php
-    message : message dans les logs
-    */
-    public function executionTimeLog($timestart, $timeend, $level, $message){
-        if (empty($timeend)){
-            $timeend = microtime(true);
-        }
-        $time = $timeend - $timestart;
-
-        self::$level(['message' => $message.'. Done in ' . number_format($time, 3) . ' secondes.']);
-
     }
 }

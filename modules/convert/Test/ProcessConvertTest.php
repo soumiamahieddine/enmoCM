@@ -20,14 +20,13 @@ class ProcessConvertTest extends TestCase
         $aArgs = [
             'collId' => 'letterbox_coll', 
             'resTable' => 'res_letterbox', 
-            'adrTable' => 'adr_x', 
-            'resId' => 100, 
+            'adrTable' => 'adr_letterbox', 
+            'resId' => 137, 
             'tmpDir' => $_SESSION['config']['tmppath']
         ];
 
         $response = $action->convert($aArgs);
-        var_dump($response);
-
+        
         $this->assertArrayHasKey('status', $response);
     }
 }

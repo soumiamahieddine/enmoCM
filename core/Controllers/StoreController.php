@@ -95,6 +95,10 @@ class StoreController
         ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'format', 'tmpFileName']);
         ValidatorModel::intVal($aArgs['fileInfos'], ['size']);
 
+        if (empty($aArgs['docserverTypeId'])) {
+            $aArgs['docserverTypeId'] = 'DOC';
+        }
+
         if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];
         }
@@ -102,7 +106,9 @@ class StoreController
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpFileName does not exist'];
         }
 
-        $docserver = DocserverModel::getDocserverToInsert(['collId' => $aArgs['collId']])[0];
+        $docserver = DocserverModel::getDocserverToInsert(
+            ['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]
+        )[0];
         if (empty($docserver)) {
             return ['errors' => '[storeRessourceOnDocserver] No available Docserver'];
         }

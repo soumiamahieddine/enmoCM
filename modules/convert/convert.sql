@@ -27,12 +27,77 @@ ALTER TABLE res_x ADD COLUMN tnl_result character varying(10) DEFAULT NULL::char
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_version_attachments ADD COLUMN tnl_result character varying(10) DEFAULT NULL::character varying;
 
+-- adr_letterbox
+DROP TABLE IF EXISTS adr_letterbox;
+CREATE TABLE adr_letterbox
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+
+-- adr_attachments
+DROP TABLE IF EXISTS adr_attachments;
+CREATE TABLE adr_attachments
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+
+-- adr_attachments_version
+DROP TABLE IF EXISTS adr_attachments_version;
+CREATE TABLE adr_attachments_version
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_version_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+
+-- convert working table
+DROP TABLE IF EXISTS convert_stack;
+CREATE TABLE convert_stack
+(
+  coll_id character varying(32) NOT NULL,
+  res_id bigint NOT NULL,
+  convert_format character varying(32) NOT NULL DEFAULT 'pdf'::character varying,
+  cnt_retry integer,
+  status character(1) NOT NULL,
+  work_batch bigint,
+  regex character varying(32),
+  CONSTRAINT convert_stack_pkey PRIMARY KEY (coll_id, res_id, convert_format)
+)
+WITH (OIDS=FALSE);
+
 
 -- ************************************************************************* --
 --                               DATAS                             --
 -- ************************************************************************* --
 
 -- docservers
+UPDATE docservers set docserver_type_id = 'DOC';
+
 
 DELETE FROM docserver_types where docserver_type_id = 'CONVERT';
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 

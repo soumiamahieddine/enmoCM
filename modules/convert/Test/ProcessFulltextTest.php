@@ -21,7 +21,7 @@ class ProcessFulltextTest extends TestCase
         $aArgs = [
             'collId' => 'letterbox_coll', 
             'resTable' => 'res_letterbox', 
-            'adrTable' => 'adr_x', 
+            'adrTable' => 'adr_letterbox', 
             'resId' => 100,
             'tmpDir' => $_SESSION['config']['tmppath']
         ];

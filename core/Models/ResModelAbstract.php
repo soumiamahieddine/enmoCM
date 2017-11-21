@@ -21,10 +21,14 @@ class ResModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
+        
+        if (empty($aArgs['resTable'])) {
+            $aArgs['resTable'] = 'res_letterbox';
+        }
 
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_letterbox'],
+            'table'     => [$aArgs['resTable']],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

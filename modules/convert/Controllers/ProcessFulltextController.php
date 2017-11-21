@@ -27,6 +27,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Convert\Models\ProcessFulltextModel;
 use Core\Models\ResDocserverModel;
+use Core\Controllers\LogsController;
 
 require_once 'core/class/class_functions.php';
 require_once 'core/class/class_db_pdo.php';
@@ -192,7 +193,7 @@ class ProcessFulltextController
         
         if ($resultOfConversion['status'] <> '0') {
             $this->manageErrorOnDb($resTable, $resId, '-1');
-            HistoryController::executionTimeLog(
+            LogsController::executionTimeLog(
                 $timestart, 
                 '', 
                 'debug', 
@@ -242,7 +243,7 @@ class ProcessFulltextController
             'value' => '',
             'error' => '',
         );
-        HistoryController::executionTimeLog(
+        LogsController::executionTimeLog(
             $timestart, 
             '', 
             'debug', 
@@ -325,7 +326,7 @@ class ProcessFulltextController
             $resultExtraction = exec("pdftotext " . escapeshellarg($pathToFile)
                     . " " . escapeshellarg($tmpFile) 
                 );
-            HistoryController::executionTimeLog($timestart_fulltext, '', 'debug', '[TIMER] Convert_ProcessFulltextAbstract_Service::prepareIndexFullTextPdf__exec');
+            LogsController::executionTimeLog($timestart_fulltext, '', 'debug', '[TIMER] Convert_ProcessFulltextAbstract_Service::prepareIndexFullTextPdf__exec');
             
             $fileContent = trim($this->readFileF($tmpFile));
             
@@ -345,7 +346,7 @@ class ProcessFulltextController
         } else {
             $result = 'file not found ' . $pathToFile;
         }
-        HistoryController::executionTimeLog(
+        LogsController::executionTimeLog(
             $timestart, 
             '', 
             'debug', 
@@ -726,7 +727,7 @@ class ProcessFulltextController
                 $_SESSION['config']['corepath'] . ' > /dev/null 2>&1 &'
             );
         }
-        HistoryController::executionTimeLog(
+        LogsController::executionTimeLog(
             $timestart, 
             '', 
             'debug', 
