@@ -98,4 +98,3 @@ if($webService->authentication()) {
         exit();
     }
 }
-
