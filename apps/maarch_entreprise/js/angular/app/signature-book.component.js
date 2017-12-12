@@ -389,6 +389,12 @@ var SignatureBookComponent = (function () {
                     if (_this.signatureBook.resList.length > 0) {
                         _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = allSigned;
                     }
+                    if (_this.headerTab == 3) {
+                        _this.changeSignatureBookLeftContent(0);
+                        setTimeout(function () {
+                            _this.changeSignatureBookLeftContent(3);
+                        }, 0);
+                    }
                 }
                 else {
                     alert(data.error);
@@ -421,6 +427,12 @@ var SignatureBookComponent = (function () {
             _this.signatureBook.attachments[_this.rightSelectedThumbnail].idToDl = resId;
             if (_this.signatureBook.resList.length > 0) {
                 _this.signatureBook.resList[_this.signatureBook.resListIndex].allSigned = false;
+            }
+            if (_this.headerTab == 3) {
+                _this.changeSignatureBookLeftContent(0);
+                setTimeout(function () {
+                    _this.changeSignatureBookLeftContent(3);
+                }, 0);
             }
         });
     };

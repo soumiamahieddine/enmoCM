@@ -111,7 +111,6 @@ if (count($_REQUEST['meta']) > 0) {
         //$func->show_array($tab_id_fields);
         for ($j=0; $j<count($tab_id_fields);$j++) {
             // ENTITIES
-            
             if ($tab_id_fields[$j] == 'services_chosen' && isset($_REQUEST['services_chosen'])) {
                 $json_txt .= " 'services_chosen' : [";
 
@@ -142,7 +141,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $multifield = trim($_REQUEST['multifield']);
                 $json_txt .= "'multifield' : ['".addslashes(trim($multifield))."'],";
 
-                $where_request .= "(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield) "
+                $where_request .= "(REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) "
@@ -328,7 +327,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $subject = $func->normalize($subject);
                 $json_txt .= " 'subject' : ['".addslashes(trim($subject))."'],";
 
-                $where_request .= " (lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:subject) "
+                $where_request .= " (REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:subject) "
                     ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))  like lower(:subject) ))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":subject" => "%".$subject."%"));
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
@@ -474,7 +473,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request_welcome .= "(res_id = :resIdWelcome) or ";
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
-                $where_request_welcome .= "( lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome) "
+                $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
                     ."or lower(identifier) LIKE lower(:multifieldWelcome) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(title) LIKE lower(:multifieldWelcome) "
@@ -783,7 +782,7 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
                     $contact_id = $_REQUEST['contactid_external'];
-					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactIdExternal and coll_id = '" . $coll_id . "') or ";
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = :contactIdExternal and coll_id = '" . $coll_id . "') or ";
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id.") )) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":contactIdExternal" => $contact_id));
             }

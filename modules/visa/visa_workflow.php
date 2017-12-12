@@ -10,13 +10,15 @@
 */
 require_once 'modules/visa/class/class_modules_tools.php';
 $visa = new visa();
+$confirm = true;
 
-if ($visa->currentUserSignRequired($_SESSION['doc_id']) == 'true') {
-    $confirm = true;
+$error_visa_workflow_signature_book = false;
+if($visa->isAllAttachementSigned($_SESSION['doc_id']) == 'noAttachment'){
+    $error_visa_workflow_signature_book = true;
+} else if ($visa->currentUserSignRequired($_SESSION['doc_id']) == 'true') {
     $label_action .=" ("._NO_USER_SIGNED_DOC.")";
-} else {
-    $confirm = false;
-}
+} 
+
 $etapes = ['empty_error'];
 
 function manage_empty_error($arr_id, $history, $id_action, $label_action, $status)
@@ -45,7 +47,7 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
 
         //enables to process the visa if i am not the item_id
         if ($stepDetails['item_id'] <> $_SESSION['user']['UserId']) {
-            $stmt = $db->query(
+            $db->query(
                 "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
                 . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?",
                 array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $stepDetails['item_id'], 'VISA_CIRCUIT')
@@ -62,7 +64,7 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
 
             $message[] = " " ._VISA_BY . " " . $user1 . " " . _INSTEAD_OF . " " . $user2;
         } else {
-            $stmt = $db->query(
+            $db->query(
                 "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP "
                 . " WHERE listinstance_id = ? AND item_mode = ? AND res_id = ? AND item_id = ? AND difflist_type = ?",
                 array($stepDetails['listinstance_id'], $stepDetails['item_mode'], $res_id, $_SESSION['user']['UserId'], 'VISA_CIRCUIT')
@@ -70,9 +72,11 @@ function manage_empty_error($arr_id, $history, $id_action, $label_action, $statu
             $message[] = "";
         }
 
-        if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)) {
-            $mailStatus = 'ESIG';
-            $db->query("UPDATE res_letterbox SET status = ? WHERE res_id = ? ", [$mailStatus, $res_id]);
+        $stmt = $db->query("SELECT status FROM res_letterbox WHERE res_id = ?", array($res_id));
+        $resource  = $stmt->fetchObject();
+
+        if ($resource->status == 'EVIS' || $resource->status == 'ESIG') {
+            $circuit_visa->setStatusVisa($res_id, 'letterbox_coll');
         }
         $result .= $arr_id[$i] . '#';
     }

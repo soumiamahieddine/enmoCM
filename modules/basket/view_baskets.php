@@ -50,10 +50,6 @@ $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappur
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
         $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
-
-
-        
-
         if ($_SESSION['save_list']['template'] <> "") {
             $urlParameters .= '&template='.BasketsModel::getTemplateById(['basketId'=>$_SESSION['current_basket']['id']]);
         }
@@ -160,7 +156,7 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
 }
 
 if ((isset($_REQUEST['id']) && !empty($_REQUEST['id'])) && !isset($_REQUEST['resid'])) {
-	$_REQUEST['resid'] = $_REQUEST['id'];
+    $_REQUEST['resid'] = $_REQUEST['id'];
 }
 
 if (
@@ -228,8 +224,21 @@ if (count($_SESSION['user']['baskets']) > 0) {
             <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
+                $redirectedBaskets = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
-        if($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y') {
+
+        foreach ($redirectedBaskets as $redirectBasketValue) {
+            if ($redirectBasketValue['basket_owner'] == $_SESSION['user']['UserId']) {
+                if ($redirectBasketValue['basket_id'] == $_SESSION['user']['baskets'][$i]['id']) {
+                    $redirectedTo = $redirectBasketValue['user'];
+                }
+            } elseif ($_SESSION['user']['baskets'][$i]['id'] == $redirectBasketValue['basket_id'] . '_' . $redirectBasketValue['basket_owner']) {
+                $redirectedTo = $redirectBasketValue['user'];
+            }
+        }
+
+        if(($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' &&  $_SESSION['user']['baskets'][$i]['abs_basket'] == false) 
+            || $_SESSION['user']['baskets'][$i]['abs_basket'] == true && empty($redirectedTo)) {
         ?>
         <option value="<?php
         if (isset($_SESSION['user']['baskets'][$i]['id'])) {

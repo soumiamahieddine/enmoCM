@@ -819,7 +819,8 @@ if (!defined("_ADD_COPIES")) define("_ADD_COPIES","Ajouter des personnes en copi
 //Circuits de visa
 if (!defined("_TO_SIGN")) define("_TO_SIGN","Pour signature");
 if (!defined("_VISA_USER"))    define("_VISA_USER", "Pour visa");
-if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "Viseur");
+if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "VISEUR");
+if (!defined("_VISA_USER_SEARCH_MIN"))    define("_VISA_USER_SEARCH_MIN", "Viseur");
 //Circuits d'avis
 if (!defined("_TO_VIEW")) define("_TO_VIEW","Pour avis");
 if (!defined("_TO_SHARED_VIEW")) define("_TO_SHARED_VIEW","Pour avis partagé");
@@ -831,7 +832,7 @@ if (!defined("_NO_ANSWER")) define("_NO_ANSWER","Pas de réponse");
 if (!defined("_ANSWER")) define("_ANSWER","Réponse");
 if (!defined("_DETAILS")) define("_DETAILS", "Fiche détaillée");
 if (!defined("_VISIBLEBY")) define("_VISIBLEBY", "Visible par");
-if (!defined("_DOWNLOAD")) define("_DOWNLOAD", "Télécharger le courrier");
+if (!defined("_DOWNLOAD")) define("_DOWNLOAD", "Télécharger");
 if (!defined("_SEARCH_RESULTS")) define("_SEARCH_RESULTS", "Résultat de la recherche");
 
 if (!defined("_THE_SEARCH")) define("_THE_SEARCH", "La recherche");

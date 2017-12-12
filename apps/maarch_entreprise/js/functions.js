@@ -1058,6 +1058,15 @@ function destroyModal(id_mod){
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
     $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
+    // FIX IE 11
+    if($j('#leftPanelShowDocumentIframe')){
+       $j('#leftPanelShowDocumentIframe').show(); 
+    }
+    if($j('#rightPanelShowDocumentIframe')){
+       $j('#rightPanelShowDocumentIframe').show(); 
+    }
+
 }
 
 /**
@@ -1554,7 +1563,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     eval('response='+answer.responseText);
                     if(response.status == 0 ) //Form or confirm processed ok
                     {
-                        res_ids = response.result_id;
+                        /*res_ids = response.result_id;
                         if(res_id_values == 'none' && res_ids != '')
                         {
                             res_id_values = res_ids;
@@ -1567,7 +1576,29 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                         }
                         var page_result = response.page_result;
                         page_result_final = response.page_result;
-                        close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
+                        close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);*/
+                        var modal = $('modal_'+id_action);
+                        if(modal) {
+                            destroyModal('modal_'+id_action);
+                        }
+                        if(pile_actions.values.length > 0) {
+                            end_actions();
+                        } else {
+                            res_ids = response.result_id;
+                            if(res_id_values == 'none' && res_ids != '')
+                            {
+                                res_id_values = res_ids;
+                            }
+                            var table_name = tablename;
+                            if(response.table && response.table != '')
+                            {
+                                table_name = response.table;
+                            }
+                            var page_result = response.page_result;
+                            page_result_final = response.page_result;
+                            close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);                            
+                        }
+
                     }
                     else //  Form Params errors
                     {
@@ -1601,7 +1632,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
             },
             success: function(answer) {
 
-                setTimeout(function(){
+                // setTimeout(function(){
                     if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
@@ -1640,7 +1671,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                }, 200);
+                // }, 200);
             }
         });
     }

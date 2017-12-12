@@ -5,7 +5,8 @@ function addVisaUser(users) {
         if(nb_visa == 0){
             $j("#emptyVisa").hide();      
         }
-        if ($j("select[id^=signRequest_] option:selected[value=true]").length >= 1 && $j("select[id^=signRequest_] option:last:selected[value=true]").length == 0) {
+        if ($j("select[id^=signRequest_] option:selected[value=true]").length >= 2 || 
+            ($j("select[id^=signRequest_] option:selected[value=true]").length == 1 && $j("select[id^=signRequest_] option:last:selected[value=true]").length == 0)) {
             selected = '';
         } else {
             if (!$j('#signRequest_'+nb_visa).is(':disabled')) {
@@ -16,9 +17,11 @@ function addVisaUser(users) {
         
 
         if ($j("#isAllAttachementSigned").val() == 'false') {
-            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false">Viseur</option><option value="true" '+selected+'>Signataire</option></select></sub>';
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false">VISEUR</option><option value="true" '+selected+'>SIGNATAIRE</option></select></sub>';
+        } else if($j("#isAllAttachementSigned").val() == 'allsigned'){
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
         } else {
-            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'" disabled="disabled"><option value="false">Viseur</option><option value="true" '+selected+'>Signataire</option></select></sub>';
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'" disabled="disabled"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
         }
 
         $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
@@ -62,9 +65,11 @@ function addVisaUser(users) {
         }
 
         if ($j("#isAllAttachementSigned").val() == 'false') {
-            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false">Viseur</option><option value="true" '+selected+'>Signataire</option></select></sub>';
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false">VISEUR</option><option value="true" '+selected+'>SIGNATAIRE</option></select></sub>';
+        } else if($j("#isAllAttachementSigned").val() == 'allsigned'){
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';
         } else {
-            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'" disabled="disabled"><option value="false">Viseur</option><option value="true" '+selected+'>Signataire</option></select></sub>';            
+            signRequest = '<br/><sub><select id="signRequest_'+next_visa+'" disabled="disabled"><option value="false" '+selected+'>VISEUR</option><option value="true">SIGNATAIRE</option></select></sub>';            
         }
         $j("#visa_content").append('<div class="droptarget" id="visa_' + next_visa + '" draggable="true">'
             +'<span class="visaUserStatus">'
@@ -107,17 +112,43 @@ function resetPosVisa () {
     i = 1;
     $j(".droptarget").each(function() {
         this.id = 'visa_' + i;
+        $j("#" + this.id).find("select[id^=signRequest_]")[0].id='signRequest_'+i;
+        $j("#" + this.id).find("[id^=signedUser_]")[0].id='signedUser_'+i;
         $j("#" + this.id).find(".visaUserPos").text(i);
         i++;
     });
+
+    i = 1;
+    var hasSignatory = false;
+    $j(".droptarget").each(function() {
+        if ($j("#signRequest_"+(i)+" option:selected[value=true]").length) {
+            userRequestSign=true;
+        } else {
+            userRequestSign=false;
+        }
+        if ($j("#signedUser_"+(i)).css('visibility') == 'visible') {
+            userSignatory=true;
+        } else {
+            userSignatory=false;
+        }
+
+        if(userRequestSign || userSignatory){
+            hasSignatory = true;
+        }
+        if ($j("#signRequest_"+(i+1)).length == 0 && !hasSignatory) {
+            $j('#signRequest_'+(i)).val("true");
+        }
+        i++;
+
+    });
     i--;
 
-    //$j("#visa_" + i).find(".visaUserSign").css("visibility","visible");
 
 }
 function updateVisaWorkflow(resId) {
     var i = 0;
     var userList = [];
+    var hasSignatory = false;
     if (($j("select[id^=signRequest_] option:selected[value=true]").length == 0) && $j(".droptarget").length != 0) {
         $j('#signRequest_'+i).val("true");
     }
@@ -138,6 +169,14 @@ function updateVisaWorkflow(resId) {
             userConsigne = $j("#" + this.id).find(".consigne").val();
             userVisaDate = $j("#" + this.id).find(".visaDate").val();
             userPos = i;
+            // last one is signatory if no one selected
+            if(userRequestSign || userSignatory){
+                hasSignatory = true;
+            }
+            if ($j("#signRequest_"+(i+2)).length == 0 && !hasSignatory) {
+                userRequestSign=true;
+                $j('#signRequest_'+(i+1)).val("true");
+            }
             userList.push({userId: userId, userPos: userPos, userConsigne: userConsigne, userVisaDate: userVisaDate, userRequestSign: userRequestSign, userSignatory: userSignatory});
             i++;
         });

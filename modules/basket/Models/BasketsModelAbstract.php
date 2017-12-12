@@ -169,6 +169,23 @@ class BasketsModelAbstract
         return true;
     }
 
+    public static function updateBasketsRedirection(array $aArgs = [])
+    {
+        static::checkRequired($aArgs, ['userId', 'basketOwner', 'basketId', 'userAbs', 'newUser']);
+        static::checkString($aArgs, ['userId']);
+
+        $isUpdated = parent::update([
+            'table'     => 'user_abs',
+            'set'       => [
+                'new_user' => $aArgs['newUser']
+            ],
+            'where'     => ['basket_id = ?', 'basket_owner = ?', 'user_abs = ?', 'new_user = ?'],
+            'data'      => [$aArgs['basketId'], $aArgs['basketOwner'], $aArgs['userAbs'], $aArgs['userId']]
+        ]);
+
+        return true;
+    }
+
     public static function deleteBasketRedirection(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'basketId']);
@@ -196,9 +213,10 @@ class BasketsModelAbstract
         ]);
 
         foreach ($aBaskets as $key => $value) {
-            $user = UserModel::getById(['userId' => $value['new_user'], 'select' => ['firstname', 'lastname']]);
-            $aBaskets[$key]['userToDisplay'] = "{$user['firstname']} {$user['lastname']} ({$value['new_user']})";
-            $aBaskets[$key]['user'] = "{$user['firstname']} {$user['lastname']}";
+            $user = UserModel::getByUserId(['userId' => $value['new_user'], 'select' => ['firstname', 'lastname']]);
+            $aBaskets[$key]['userToDisplay']     = "{$user['firstname']} {$user['lastname']}";
+            $aBaskets[$key]['userIdRedirection'] = $value['new_user'];
+            $aBaskets[$key]['user']              = "{$user['firstname']} {$user['lastname']}" ;
         }
 
         return $aBaskets;

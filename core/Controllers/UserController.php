@@ -214,6 +214,46 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
+    public function setCurrentUserBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response) {
+        if (empty($_SESSION['user']['UserId'])) {
+            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+        }
+
+        $data = $request->getParams();
+
+        foreach ($data as $key => $value) {
+            if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
+                return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
+            }
+            $newUser = strrchr($value['newUser'], '(');
+            $newUser = str_replace(['(', ')'], '', $newUser);
+            if (!empty($newUser)) {
+                $check = UserModel::getById(['userId' => $newUser, 'select' => ['1']]);
+            }
+            if (empty($newUser) || empty($check)) {
+                return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
+            }
+            $data[$key]['newUser'] = $newUser;
+
+            if($value['basketOwner'] != $_SESSION['user']['UserId']){
+                BasketsModel::updateBasketsRedirection([
+                    'userId'      => $_SESSION['user']['UserId'],
+                    'basketOwner' => $value['basketOwner'],
+                    'basketId'    => $value['basketId'],
+                    'userAbs'     => $value['basketOwner'],
+                    'newUser'     => $newUser
+                ]);
+                unset($data[$key]);
+            }
+        }
+
+        if (!empty($data)) {
+            BasketsModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
+        }
+
+        return $response->withJson(['redirectedBaskets' => BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
     public function setRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
@@ -735,11 +775,16 @@ class UserController
 
         $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
 
-        if (!empty($data['color'])) {
+        if(isset($data['color']) && $data['color'] == ''){
+            UserModel::eraseBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]);
+        } else if (!empty($data['color'])) {
             UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
         }
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson([
+            'userBaskets' => BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])
+        ]);
+
     }
 
     private function hasUsersRights(array $aArgs = [])

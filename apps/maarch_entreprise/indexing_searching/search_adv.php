@@ -455,7 +455,7 @@ $arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' =>
 $param['signatory_name'] = $arr_tmp2;
 
 //Visa user
-$arr_tmp2 = array('label' => _VISA_USER_SEARCH, 'type' => 'input_text', 'param' => array('field_label' => _VISA_USER_SEARCH, 'other' => $size, 'autocompletion' => true));
+$arr_tmp2 = array('label' => _VISA_USER_SEARCH_MIN, 'type' => 'input_text', 'param' => array('field_label' => _VISA_USER_SEARCH_MIN, 'other' => $size, 'autocompletion' => true));
 $param['visa_user'] = $arr_tmp2;
 
  //Addresses contact externe

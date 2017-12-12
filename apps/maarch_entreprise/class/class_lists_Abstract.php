@@ -1209,7 +1209,25 @@ abstract class lists_Abstract extends Database
            
         return $return;
     }
-    
+
+    protected function _tmplt_visualizeIconDocument($resultTheLine, $listKey) {
+        
+        $href = $this->_buildMyLink($this->params['visualizeDocumentLink'], $resultTheLine, $listKey);
+
+        $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank"><i class="tooltip fa fa-eye fa-2x" title="' . _VISUALIZE . '"></i></a></div>';
+           
+        return $return;
+    }
+
+    protected function _tmplt_downloadIconDocument($resultTheLine, $listKey) {
+        
+        $href = $this->_buildMyLink($this->params['downloadDocumentLink'], $resultTheLine, $listKey);
+
+        $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank"><i class="tooltip fa fa-download fa-2x" title="' . _DOWNLOAD . '"></i></a></div>';
+           
+        return $return;
+    }
+
     protected function _tmplt_showIconDetails($resultTheLine, $listKey) {
         
         $return = '';
@@ -1728,6 +1746,12 @@ abstract class lists_Abstract extends Database
 		##showIconDocument## : show document icon and link
         } elseif (preg_match("/^showIconDocument$/", $parameter)) {
             $var = $this->_tmplt_showIconDocument($resultTheLine, $listKey);
+        ##visualizeIconDocument## : show document icon and link
+        } elseif (preg_match("/^visualizeIconDocument$/", $parameter)) {
+            $var = $this->_tmplt_visualizeIconDocument($resultTheLine, $listKey);
+        ##downloadIconDocument## : show download document icon and link
+        } elseif (preg_match("/^downloadIconDocument$/", $parameter)) {
+            $var = $this->_tmplt_downloadIconDocument($resultTheLine, $listKey);
         ##showIconDetails## : show details icon and link
         } elseif (preg_match("/^showIconDetails$/", $parameter)) {
             $var = $this->_tmplt_showIconDetails($resultTheLine, $listKey);

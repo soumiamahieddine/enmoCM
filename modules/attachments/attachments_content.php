@@ -360,6 +360,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                         $_SESSION['collection_id_choice'], $fileInfos
                     );
 
+                    if($attachment_types == 'outgoing_mail' && strpos($fileInfos['format'], 'xl') === false && strpos($fileInfos['format'], 'ppt') === false){
+                        $_SESSION['upfile']['outgoingMail'] = true;
+                    }
+
                     if (isset($storeResult['error']) && $storeResult['error'] <> '') {
                         $_SESSION['error'] = $storeResult['error'];
                     } else {
@@ -1445,6 +1449,16 @@ if (isset($_POST['add']) && $_POST['add']) {
 							'type' => "int",
 						)
 					);
+
+                    array_push(
+                        $_SESSION['data_pdf'],
+                        array(
+                            'column' => "in_signature_book",
+                            'value' => 1,
+                            'type' => "bool",
+                        )
+                    );
+
 					$resAttach = new resource();
 					$id_up = $resAttach->load_into_db(
 						RES_ATTACHMENTS_TABLE,
@@ -2051,16 +2065,16 @@ $content .= '</div>';
 $content .= '<div style="float: right; width: 65%">';
 
 $content .= '<div id="menuOnglet">
-                <ul id="ongletAttachement">
+                <ul id="ongletAttachement" style="cursor:pointer">
                     <li id="liAttachement" ';
 
                 if(empty($_REQUEST['id'])){
                     $content .= ' style="display:none" ';
                 }
 
-                    $content .= 'onclick="activeOngletAttachement()"><a href="#"> Pièce jointe </a></li>';
+                    $content .= 'onclick="activeOngletAttachement()"><span> Pièce jointe </span></li>';
                     if($_GET['cat'] != 'outgoing' && $data_attachment->attachment_type != 'outgoing_mail'){
-                        $content .='<li id="liMainDocument" onclick="activeOngletMainDocument()"><a href="#"> Document principal </a></li>';
+                        $content .='<li id="liMainDocument" onclick="activeOngletMainDocument()"><span> Document principal </span></li>';
                     }
                 $content .='</ul>
             </div>';

@@ -501,13 +501,13 @@ abstract class visa_Abstract extends Database
 		$db = new Database();
 		$where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
         $order = "ORDER BY listinstance_id ASC";
-        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
+        $query = $db->limit_select(0, 1, 'requested_signature', 'listinstance', $where, '', '', $order);
 
 		$stmt = $db->query($query, array($res_id, $coll_id, 'VISA_CIRCUIT'));
 		$resListDiffVisa = $stmt->fetchObject();
 
 		// If there is only one step in the visa workflow, we set status to ESIG
-		if ((count($curr_visa_wf['visa']) == 0 && count($curr_visa_wf['sign']) == 1) || $resListDiffVisa->item_mode == "sign"){
+		if ($resListDiffVisa->requested_signature){
 	        $mailStatus = 'ESIG';
 	    } else {
 	        $mailStatus = 'EVIS';
@@ -519,14 +519,15 @@ abstract class visa_Abstract extends Database
 	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false, $fromDetail = ""){
 			$core = new core_tools();      
 			$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
-			if ($this->isAllAttachementSigned($res_id) == 'noAttachment') {
+			$sAllAttachmentSigned = $this->isAllAttachementSigned($res_id);
+			if ($sAllAttachmentSigned == 'noAttachment') {
 				$str = '<input type="hidden" id="isAllAttachementSigned" value="true"/>';
 				$isAllAttachementSigned = " disabled='disabled'";
 				$isAllAttachementSignedInfo = _IS_ALL_ATTACHMENT_SIGNED_INFO;
 
-			} else if ($this->isAllAttachementSigned($res_id) == 'yes') {
-				$str = '<input type="hidden" id="isAllAttachementSigned" value="true"/>';
-				$isAllAttachementSigned = " disabled='disabled'";
+			} else if ($sAllAttachmentSigned == 'yes') {
+				$str = '<input type="hidden" id="isAllAttachementSigned" value="allsigned"/>';
+				$isAllAttachementSigned = "";
 				$isAllAttachementSignedInfo = _IS_ALL_ATTACHMENT_SIGNED_INFO2;				
 			}else{
 				$str = '<input type="hidden" id="isAllAttachementSigned" value="false"/>';
@@ -581,7 +582,7 @@ abstract class visa_Abstract extends Database
                 $str .= '</script>';
                 $str .= '<br/><br/>';
             }
-            if (!empty($isAllAttachementSigned)) {
+            if (!empty($isAllAttachementSignedInfo)) {
 				$str .= '<b style="color:red;">'.$isAllAttachementSignedInfo.'</b>';
 			}
             $str .= '<div id="visa_content">';
@@ -1219,11 +1220,9 @@ abstract class visa_Abstract extends Database
 	public function isAllAttachementSigned($res_id){
 		
 		$db = new Database();
-		$stmt = $db->query("SELECT count(res_id) as nb from res_attachments WHERE in_signature_book = false AND signatory_user_serial_id IS NULL AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') AND res_id_master = ?", array($res_id));
-		$res = $stmt->fetchObject();
-		$stmt2 = $db->query("SELECT count(res_id) as nb from res_attachments WHERE in_signature_book = true AND signatory_user_serial_id IS NULL AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') AND res_id_master = ?", array($res_id));
+		$stmt2 = $db->query("SELECT count(res_id) as nb from res_attachments WHERE in_signature_book = true AND signatory_user_serial_id IS NULL AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
 		$res2 = $stmt2->fetchObject();
-		$stmt3 = $db->query("SELECT count(res_id) as nb from res_attachments WHERE in_signature_book = true AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder') AND res_id_master = ?", array($res_id));
+		$stmt3 = $db->query("SELECT count(res_id) as nb from res_view_attachments WHERE in_signature_book = true AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
 		$res3 = $stmt3->fetchObject();
 		if ($res3->nb == 0) {
 			return 'noAttachment';
@@ -1233,6 +1232,7 @@ abstract class visa_Abstract extends Database
 			return false;
 		}
 	}
+
 	public function currentUserSignRequired($res_id){
 		$user_id = $this->getCurrentUserStep($res_id);
 		$db = new Database();

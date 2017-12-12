@@ -164,7 +164,7 @@ if (!defined("_NO_SIGNATORY"))
     define("_NO_SIGNATORY", "Aucun signataire");
 
 if (!defined("_SIGNATORY"))
-    define("_SIGNATORY", "Signataire");
+    define("_SIGNATORY", "SIGNATAIRE");
 
 if (!defined("_SIGNED_TO"))
     define("_SIGNED_TO", "Signé le");
@@ -301,4 +301,4 @@ if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO'))
     define('_IS_ALL_ATTACHMENT_SIGNED_INFO', "Vous ne pourrez pas demander de signature aux utilisateurs, aucune pièce jointe présente dans le parapheur");
 
 if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO2'))
-    define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', "Vous ne pourrez pas demander de signature aux utilsateurs, toutes les pièces jointes présentes dans le parapheur ont été signées.");
+    define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', "Toutes les pièces jointes présentes dans le parapheur ont été signées.");
