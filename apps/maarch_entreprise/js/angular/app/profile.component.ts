@@ -243,7 +243,7 @@ export class ProfileComponent implements OnInit {
         this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
         this.userAbsenceModel.splice(index, 1);
     }
- 
+
     updateBasketColor(i: number, y: number) {
         this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, {"color" : this.user.regroupedBaskets[i].baskets[y].color})
             .subscribe((data: any) => {
@@ -268,7 +268,7 @@ export class ProfileComponent implements OnInit {
     }
 
     askRedirectBasket() {
-        let r = confirm('Voulez-vous rediriger vos corbeilles avant de vous mettre en absence ?');
+        let r = confirm('Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?');
 
         if (r) {
             this.displayAbsenceButton=true;
