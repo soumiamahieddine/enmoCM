@@ -57,7 +57,7 @@ class UserModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['user']);
         ValidatorModel::notEmpty($aArgs['user'], ['userId', 'firstname', 'lastname']);
-        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone']);
+        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'changePassword']);
 
         DatabaseModel::insert([
             'table'         => 'users',
@@ -71,7 +71,7 @@ class UserModelAbstract
                 'thumbprint'        => $aArgs['user']['thumbprint'],
                 'enabled'           => 'Y',
                 'status'            => 'OK',
-                'change_password'   => 'Y',
+                'change_password'   => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
                 'loginmode'         => 'standard',
                 'password'          => SecurityModel::getPasswordHash('maarch')
             ]
