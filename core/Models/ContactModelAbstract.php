@@ -156,15 +156,16 @@ class ContactModelAbstract
         return $labelledContact;
     }
 
-    public static function getByEmail(array $aArgs = [])
+    public static function getByEmail(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['email']);
         ValidatorModel::stringType($aArgs, ['email']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $aContacts = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['view_contacts'],
-            'where'     => ['email = ? and enabled = ?'],
+            'table'     => ['contact_addresses, contacts_v2'],
+            'where'     => ['contact_addresses.email = ?', 'contacts_v2.enabled = ?', 'contact_addresses.contact_id = contacts_v2.contact_id'],
             'data'      => [$aArgs['email'], 'Y'],
             'order_by'  => ['creation_date'],
         ]);
