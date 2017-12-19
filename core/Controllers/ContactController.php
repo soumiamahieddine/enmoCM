@@ -44,7 +44,12 @@ class ContactController
         }
         if ($data['isCorporatePerson'] != 'Y') {
             $data['isCorporatePerson'] = 'N';
+        } else {
+            $data['addressFirstname'] = $data['firstname'];
+            $data['addressLastname'] = $data['lastname'];
+            unset($data['firstname'], $data['lastname']);
         }
+
         if (empty($data['isPrivate'])) {
             $data['isPrivate'] = 'N';
         } elseif ($data['isPrivate'] != 'N') {

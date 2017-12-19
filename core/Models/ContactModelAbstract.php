@@ -39,10 +39,10 @@ class ContactModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['firstname', 'lastname', 'contactType', 'isCorporatePerson', 'email', 'userId', 'entityId']);
+        ValidatorModel::notEmpty($aArgs, ['firstname', 'lastname', 'contactType', 'isCorporatePerson', 'userId', 'entityId']);
         ValidatorModel::intVal($aArgs, ['contactType']);
         ValidatorModel::stringType($aArgs, [
-            'firstname', 'lastname', 'isCorporatePerson', 'email', 'society',
+            'firstname', 'lastname', 'isCorporatePerson', 'society',
             'societyShort', 'title', 'function', 'otherData', 'userId', 'entityId'
         ]);
 
@@ -74,11 +74,11 @@ class ContactModelAbstract
 
     public static function createAddress(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['contactId', 'contactPurposeId', 'userId', 'entityId', 'isPrivate']);
+        ValidatorModel::notEmpty($aArgs, ['contactId', 'contactPurposeId', 'userId', 'entityId', 'isPrivate', 'email']);
         ValidatorModel::intVal($aArgs, ['contactId', 'contactPurposeId']);
         ValidatorModel::stringType($aArgs, [
             'departement', 'addressFirstname', 'addressLastname', 'addressTitle', 'addressFunction', 'occupancy', 'addressNum', 'addressStreet', 'addressComplement',
-            'addressTown', 'addressZip', 'addressCountry', 'phone', 'addressEmail', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
+            'addressTown', 'addressZip', 'addressCountry', 'phone', 'email', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
             'userId', 'entityId', 'isPrivate'
         ]);
 
@@ -103,7 +103,7 @@ class ContactModelAbstract
                 'address_postal_code'   => $aArgs['addressZip'],
                 'address_country'       => $aArgs['addressCountry'],
                 'phone'                 => $aArgs['phone'],
-                'email'                 => $aArgs['addressEmail'],
+                'email'                 => $aArgs['email'],
                 'website'               => $aArgs['website'],
                 'salutation_header'     => $aArgs['salutationHeader'],
                 'salutation_footer'     => $aArgs['salutationFooter'],
