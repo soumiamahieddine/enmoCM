@@ -197,7 +197,6 @@ $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserContr
 $app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
 $app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
 
-
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
@@ -254,9 +253,11 @@ $app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
 
+//Links
+$app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
+
 //liste documents
 $app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
-
 
 $app->run();
 
