@@ -165,7 +165,7 @@ class ContactModelAbstract
         $aContacts = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['contact_addresses, contacts_v2'],
-            'where'     => ['contact_addresses.email = ?', 'contacts_v2.enabled = ?', 'contact_addresses.contact_id = contacts_v2.contact_id'],
+            'where'     => ['email = ?', 'contact_addresses.enabled = ?', 'contact_addresses.contact_id = contacts_v2.contact_id'],
             'data'      => [$aArgs['email'], 'Y'],
             'order_by'  => ['creation_date'],
         ]);
