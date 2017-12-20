@@ -281,16 +281,16 @@ class ReconciliationController{
         $filetmp .= $filename;
 
         $docserver = DocserverModel::getById([
-            'docserver_id' => $docserverId
+            'id' => $docserverId
         ]);
         $docserverType = DocserverTypeModel::getById([
-            'docserver_type_id' => $docserver[0]['docserver_type_id']
+            'id' => $docserver['docserver_type_id']
         ]);
 
         $fingerprint = DocserverToolsController::doFingerprint(
             [
                 'path'            => $filetmp,
-                'fingerprintMode' => $docserverType[0]['fingerprint_mode'],
+                'fingerprintMode' => $docserverType['fingerprint_mode'],
             ]
         );
 

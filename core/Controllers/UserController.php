@@ -28,8 +28,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 
-include_once 'core/class/docservers_controler.php';
-
 
 class UserController
 {
@@ -386,16 +384,16 @@ class UserController
 
         file_put_contents(CoreConfigModel::getTmpPath() . $tmpName, $file);
 
-        $docservers_controler = new \docservers_controler();
-        $storeInfos = $docservers_controler->storeResourceOnDocserver(
-            'templates',
-            [
-                'tmpDir'      => CoreConfigModel::getTmpPath(),
-                'size'        => $data['size'],
-                'format'      => $ext,
-                'tmpFileName' => $tmpName
+        $storeInfos = StoreController::storeResourceOnDocServer([
+            'collId'            => 'templates',
+            'docserverTypeId'   => 'TEMPLATES',
+            'fileInfos'         => [
+                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'size'          => $data['size'],
+                'format'        => $ext,
+                'tmpFileName'   => $tmpName,
             ]
-        );
+        ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
             return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' templates']);

@@ -96,7 +96,7 @@ WITH (OIDS=FALSE);
 -- ************************************************************************* --
 
 -- docservers
-UPDATE docservers set docserver_type_id = 'DOC';
+UPDATE docservers set docserver_type_id = 'DOC' where docserver_type_id <> 'TEMPLATES' and docserver_type_id <> 'TNL';
 
 
 DELETE FROM docserver_types where docserver_type_id = 'CONVERT';
@@ -136,7 +136,7 @@ update docservers set docserver_id = 'TNL_MLB', priority_number = 12 where docse
 
 DELETE FROM docserver_types where docserver_type_id = 'FULLTEXT';
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('FULLTEXT', 'Fulltext', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
+VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
 
 DELETE FROM docservers where docserver_id = 'FULLTEXT_MLB';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 

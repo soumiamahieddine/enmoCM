@@ -145,13 +145,13 @@ $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
 
-//docserver
-$app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList');
-$app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
+//Docservers
+$app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
+$app->get('/docservers/{id}', \Core\Controllers\DocserverController::class . ':getById');
 
-//docserverType
-$app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
-$app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+//DocserverTypes
+$app->get('/docserverTypes', \core\Controllers\DocserverTypeController::class . ':get');
+$app->get('/docserverTypes/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');

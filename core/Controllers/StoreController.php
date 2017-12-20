@@ -90,14 +90,10 @@ class StoreController
     {
         ValidatorModel::notEmpty($aArgs, ['collId', 'fileInfos']);
         ValidatorModel::arrayType($aArgs, ['fileInfos']);
-        ValidatorModel::stringType($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId']);
         ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'size', 'format', 'tmpFileName']);
         ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'format', 'tmpFileName']);
         ValidatorModel::intVal($aArgs['fileInfos'], ['size']);
-
-        if (empty($aArgs['docserverTypeId'])) {
-            $aArgs['docserverTypeId'] = 'DOC';
-        }
 
         if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];
@@ -106,9 +102,8 @@ class StoreController
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpFileName does not exist'];
         }
 
-        $docserver = DocserverModel::getDocserverToInsert(
-            ['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]
-        )[0];
+        $aArgs['docserverTypeId'] = empty($aArgs['docserverTypeId']) ? 'DOC' : $aArgs['docserverTypeId'];
+        $docserver = DocserverModel::getDocserverToInsert(['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]);
         if (empty($docserver)) {
             return ['errors' => '[storeRessourceOnDocserver] No available Docserver'];
         }
@@ -125,7 +120,7 @@ class StoreController
         $pathInfoOnTmp = pathinfo($aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName']);
         $docinfo['fileDestinationName'] .= '.' . strtolower($pathInfoOnTmp['extension']);
 
-        $docserverTypeObject = DocserverTypeModel::getById(['docserver_type_id' => $docserver['docserver_type_id']])[0];
+        $docserverTypeObject = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
         $copyResult = StoreController::copyOnDocServer([
             'sourceFilePath'             => $aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName'],
             'destinationDir'             => $docinfo['destinationDir'],
