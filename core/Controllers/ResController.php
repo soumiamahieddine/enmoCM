@@ -152,7 +152,6 @@ class ResController
         }
 
         $return = $this->updateResource($aArgs);
-
         if ($return) {
             $id = $aArgs['res_id'];
             $obj = ResModel::getById([
