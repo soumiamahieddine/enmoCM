@@ -47,11 +47,12 @@
    <id>admin_groups</id>
    <name>_ADMIN_GROUPS</name>
    <comment>_ADMIN_GROUPS_DESC</comment>
-   <servicepage>index.php?page=usergroups_management_controler&amp;mode=list&amp;admin=groups</servicepage>
+   <servicepage>/administration/groups</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>fa fa-users</style>
    <enabled>true</enabled>
+   <angular>true</angular>
  </SERVICE>
  <SERVICE>
    <id>admin_architecture</id>

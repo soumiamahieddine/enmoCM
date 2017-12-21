@@ -84,6 +84,11 @@ class ResController
 
         $formatedData = StoreController::prepareExtStorage(['resId' => $data['resId'], 'data' => $data['data']]);
 
+        $check = Validator::stringType()->notEmpty()->validate($formatedData['category_id']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
         ResModel::createExt($formatedData);
 
         return $response->withJson(['resId' => $data['resId']]);
