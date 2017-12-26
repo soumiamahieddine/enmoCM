@@ -13,8 +13,8 @@
 */
 namespace Visa\Controllers;
 
-use Apps\Models\ActionModel;
 use Attachments\Models\AttachmentsModel;
+use Core\Models\ActionModel;
 use Core\Models\ContactModel;
 use Core\Models\LinkModel;
 use Core\Models\ListinstanceModel;

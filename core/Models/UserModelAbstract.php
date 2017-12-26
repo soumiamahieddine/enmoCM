@@ -459,7 +459,7 @@ class UserModelAbstract
         return $aGroup[0];
     }
 
-    public static function getPrimaryEntityByUserId(array $aArgs = [])
+    public static function getPrimaryEntityByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);

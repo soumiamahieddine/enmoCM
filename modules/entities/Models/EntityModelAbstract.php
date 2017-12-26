@@ -77,19 +77,20 @@ class EntityModelAbstract
         return $aReturn;
     }
 
-    public static function getByUserId(array $aArgs = [])
+    public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aReturn = DatabaseModel::select([
+        $aEntities = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
             'data'      => [$aArgs['userId']]
         ]);
 
-        return $aReturn;
+        return $aEntities;
     }
 
     private static function getEntityChilds(array $aArgs = [])

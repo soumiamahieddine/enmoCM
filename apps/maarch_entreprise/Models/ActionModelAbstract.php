@@ -20,24 +20,6 @@ use Core\Models\ValidatorModel;
 
 class ActionModelAbstract
 {
-    public static function getActionPageById(array $aArgs = []) {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-
-        $action = DatabaseModel::select([
-            'select'    => ['action_page'],
-            'table'     => ['actions'],
-            'where'     => ['id = ? AND enabled = ?'],
-            'data'      => [$aArgs['id'], 'Y']
-        ]);
-
-        if (empty($action[0])) {
-            return '';
-        }
-
-        return $action[0]['action_page'];
-    }
-
     public static function getDefaultActionByGroupBasketId(array $aArgs) {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'basketId']);
         ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);

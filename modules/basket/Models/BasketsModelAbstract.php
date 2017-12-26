@@ -18,6 +18,7 @@ namespace Baskets\Models;
 use Core\Models\DatabaseModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
+use Entities\Models\EntityModel;
 
 require_once 'core/class/SecurityControler.php';
 
@@ -169,12 +170,12 @@ class BasketsModelAbstract
         return true;
     }
 
-    public static function updateBasketsRedirection(array $aArgs = [])
+    public static function updateBasketsRedirection(array $aArgs)
     {
-        static::checkRequired($aArgs, ['userId', 'basketOwner', 'basketId', 'userAbs', 'newUser']);
-        static::checkString($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'basketOwner', 'basketId', 'userAbs', 'newUser']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
-        $isUpdated = parent::update([
+        DatabaseModel::update([
             'table'     => 'user_abs',
             'set'       => [
                 'new_user' => $aArgs['newUser']
@@ -200,7 +201,8 @@ class BasketsModelAbstract
         return true;
     }
 
-    public static function getRedirectedBasketsByUserId(array $aArgs) {
+    public static function getRedirectedBasketsByUserId(array $aArgs)
+    {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
@@ -283,5 +285,58 @@ class BasketsModelAbstract
         ]);
 
         return $coloredBaskets;
+    }
+
+    // TODO In Progress
+    public static function getPreparedClauseById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'userId']);
+        ValidatorModel::stringType($aArgs, ['id', 'userId']);
+
+        $aBasket = DatabaseModel::select([
+            'select'    => ['basket_clause'],
+            'table'     => ['baskets'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        $clause = $aBasket[0]['basket_clause'];
+
+        if (preg_match('/@user/', $clause)) {
+            $clause = str_replace('@user', "'{$aArgs['userId']}'", $clause);
+        }
+        if (preg_match('/@email/', $clause)) {
+            $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['mail']]);
+            $clause = str_replace('@email', "'{$user['mail']}'", $clause);
+        }
+        if (preg_match('/@my_entities/', $clause)) {
+            $entities = EntityModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['entity_id']]);
+
+            $myEntitiesClause = '';
+            foreach ($entities as $key => $entity) {
+                if ($key > 0) {
+                    $myEntitiesClause .= ", ";
+                }
+                $myEntitiesClause .= "'{$entity['entity_id']}'";
+            }
+
+            if (empty($myEntitiesClause)) {
+                $myEntitiesClause = "''";
+            }
+
+            $clause = str_replace('@my_entities', $myEntitiesClause, $clause);
+        }
+        if (preg_match('/@my_primary_entity/', $clause)) {
+            $entity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
+
+            $primaryEntity = $entity['entity_id'];
+            if (empty($entity)) {
+                $primaryEntity = "''";
+            }
+
+            $clause = str_replace('@my_primary_entity', $primaryEntity, $clause);
+        }
+
+        return $clause;
     }
 }

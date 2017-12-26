@@ -22,7 +22,6 @@ use Psr\Http\Message\ResponseInterface;
 use Core\Models\HistoryModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
-use Core\Controllers\UtilsController;
 use Notifications\Controllers\NotificationsEventsController;
 
 class HistoryController
@@ -46,11 +45,6 @@ class HistoryController
         }
         if(empty($aArgs['level'])){
             $aArgs['level'] = 'DEBUG';
-        }
-        if (empty($_SESSION['user']['UserId'])) {
-            $user = 'BOT';
-        } else {
-            $user = $_SESSION['user']['UserId'];
         }
 
         $traceInformations = [
@@ -158,7 +152,7 @@ class HistoryController
         );
 
         $logLine = TextFormatModel::htmlWasher($logLine);
-        $logLine = UtilsController::wd_remove_accents(['string' => $logLine]);
+        $logLine = TextFormatModel::removeAccent(['string' => $logLine]);
 
         HistoryModel::writeLog([
             'logger'  => $logger,

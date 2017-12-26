@@ -15,11 +15,11 @@
 
 namespace Core\Controllers;
 
+use Core\Models\TextFormatModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Core\Models\ValidatorModel;
 use Core\Controllers\HistoryController;
-use Core\Controllers\UtilsController;
 
 if (!defined('_LOG4PHP'))
     define(
@@ -194,11 +194,8 @@ class LogsController
         $aArgs['message'] = str_replace("\n", '\n', $aArgs['message']);
 
         // Old method :
-        $aArgs['message'] = UtilsController::wash_html(
-            $aArgs['message'],
-            ''
-        );
-        $aArgs['message'] = UtilsController::wd_remove_accents(['string' => $aArgs['message']]);
+        $aArgs['message'] = TextFormatModel::htmlWasher($aArgs['message'], '');
+        $aArgs['message'] = TextFormatModel::removeAccent(['string' => $aArgs['message']]);
 
         if(!empty($_SESSION['user']['UserId'])){
             $aArgs['message'] = '[' . $_SESSION['user']['UserId'] . '] ' . $aArgs['message'];

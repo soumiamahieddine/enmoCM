@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Status Model
+* @brief Action Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
 namespace Core\Models;
 
-class ActionsModel extends ActionsModelAbstract
+class ActionModel extends ActionModelAbstract
 {
     // Do your stuff in this class
 }

@@ -50,23 +50,59 @@ class TextFormatModelAbstract
         return $last_date;
     }
 
-    public static function htmlWasher($html)
+    public static function removeAccent(array $aArgs)
     {
-        $html = str_replace("<br/>", "\\n", $html);
-        $html = str_replace("<br />", "\\n", $html);
-        $html = str_replace("<br/>", "\\n", $html);
-        $html = str_replace("&nbsp;", " ", $html);
-        $html = str_replace("&eacute;", "\u00e9", $html);
-        $html = str_replace("&egrave;", "\u00e8", $html);
-        $html = str_replace("&ecirc;", "\00ea", $html);
-        $html = str_replace("&agrave;", "\u00e0", $html);
-        $html = str_replace("&acirc;", "\u00e2", $html);
-        $html = str_replace("&icirc;", "\u00ee", $html);
-        $html = str_replace("&ocirc;", "\u00f4", $html);
-        $html = str_replace("&ucirc;", "\u00fb", $html);
-        $html = str_replace("&acute;", "\u0027", $html);
-        $html = str_replace("&deg;", "\u00b0", $html);
-        $html = str_replace("&rsquo;", "\u2019", $html);
+        ValidatorModel::notEmpty($aArgs, ['string']);
+        ValidatorModel::stringType($aArgs, ['string', 'charset']);
+
+        if(empty($aArgs['charset'])){
+            $aArgs['charset'] = 'utf-8';
+        }
+
+        $string = htmlentities($aArgs['string'], ENT_NOQUOTES, $aArgs['charset']);
+
+        $string = preg_replace('#\&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring)\;#', '\1', $string);
+        $string = preg_replace('#\&([A-za-z]{2})(?:lig)\;#', '\1', $string);
+        $string = preg_replace('#\&[^;]+\;#', '', $string);
+
+        return $string;
+    }
+
+    public static function htmlWasher($html, $mode = 'unicode')
+    {
+        if ($mode == 'unicode') {
+            $html = str_replace("<br/>", "\\n", $html);
+            $html = str_replace("<br />", "\\n", $html);
+            $html = str_replace("<br/>", "\\n", $html);
+            $html = str_replace("&nbsp;", " ", $html);
+            $html = str_replace("&eacute;", "\u00e9", $html);
+            $html = str_replace("&egrave;", "\u00e8", $html);
+            $html = str_replace("&ecirc;", "\00ea", $html);
+            $html = str_replace("&agrave;", "\u00e0", $html);
+            $html = str_replace("&acirc;", "\u00e2", $html);
+            $html = str_replace("&icirc;", "\u00ee", $html);
+            $html = str_replace("&ocirc;", "\u00f4", $html);
+            $html = str_replace("&ucirc;", "\u00fb", $html);
+            $html = str_replace("&acute;", "\u0027", $html);
+            $html = str_replace("&deg;", "\u00b0", $html);
+            $html = str_replace("&rsquo;", "\u2019", $html);
+        } else {
+            $html = str_replace("<br/>", "\\n", $html);
+            $html = str_replace("<br />", "\\n", $html);
+            $html = str_replace("<br/>", "\\n", $html);
+            $html = str_replace("&nbsp;", " ", $html);
+            $html = str_replace("&eacute;", "é", $html);
+            $html = str_replace("&egrave;", "è", $html);
+            $html = str_replace("&ecirc;", "ê", $html);
+            $html = str_replace("&agrave;", "à", $html);
+            $html = str_replace("&acirc;", "â", $html);
+            $html = str_replace("&icirc;", "î", $html);
+            $html = str_replace("&ocirc;", "ô", $html);
+            $html = str_replace("&ucirc;", "û", $html);
+            $html = str_replace("&acute;", "", $html);
+            $html = str_replace("&deg;", "°", $html);
+            $html = str_replace("&rsquo;", "'", $html);
+        }
 
         return $html;
     }
