@@ -2055,8 +2055,6 @@ if (!defined('_DOC_CREATED'))
 if (!defined("_SAVE_POSITION"))
     define("_SAVE_POSITION", "Save");
 
-if (!defined("_NO_ADDRESS_GIVEN"))
-    define("_NO_ADDRESS_GIVEN", "No address");
 /***** History *****/
 if (!defined('_UPDATE_STATUS'))
     define('_UPDATE_STATUS', 'Status update');

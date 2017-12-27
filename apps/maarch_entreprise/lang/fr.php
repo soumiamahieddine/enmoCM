@@ -2113,8 +2113,6 @@ if (!defined('_DOC_CREATED'))
 if (!defined("_SAVE_POSITION"))
     define("_SAVE_POSITION", "Enregistrer");
 
-if (!defined("_NO_ADDRESS_GIVEN"))
-    define("_NO_ADDRESS_GIVEN", "Aucune adresse");
 /***** History *****/
 if (!defined('_UPDATE_STATUS'))
-    define('_UPDATE_STATUS', 'Modification du status');
+    define('_UPDATE_STATUS', 'Modification du statut');
