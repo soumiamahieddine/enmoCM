@@ -52,13 +52,13 @@ if (empty($docserver)) {
         } else {
 			require_once "core/class/class_request.php";
 			$db = new Database();
-            $signatoryUser = \Core\Models\UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
-            if ($_SESSION['visa']['repSignRel'] > 1) {
+			$signatoryUser = \Core\Models\UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+			if ($_SESSION['visa']['repSignRel'] > 1) {
                 //$target_table = 'res_version_attachments';
                 $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             } else {
                 //$target_table = 'res_attachments';
-                $db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
+				$db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?",[$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
             }
 			unset($_SESSION['visa']['repSignRel']);
 			if (isset($_SESSION['visa']['repSignId'])) unset($_SESSION['visa']['repSignId']);
@@ -188,6 +188,14 @@ if (empty($docserver)) {
                     'column' => 'dest_address_id',
                     'value' => $_SESSION['visa']['last_resId_signed']['dest_address'],
                     'type' => 'int',
+                )
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'in_signature_book',
+                    'value' => 1,
+                    'type' => 'bool',
                 )
             );
             $_SESSION['data'][] = [

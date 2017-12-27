@@ -196,6 +196,7 @@ abstract class lists_Abstract extends Database
                     
                 $ent = new entity();
                 $sec = new security();
+                $ent = new entity();
                 
                 $view = $sec->retrieve_view_from_table($this->params['tableName']);
                 if (empty($view)) {
@@ -206,103 +207,40 @@ abstract class lists_Abstract extends Database
                         $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
                         $where = 'where (' . $this->params['basketClause'] . ')';
                     }
-
-                    $stmt = $db->query(
-                        "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
-                        . " as total, e.entity_label , e.short_label FROM " 
-                        . $view. " r left join " . ENT_ENTITIES
-                        . " e on e.entity_id = r.destination " .$where . " and (e.entity_id <> '' or e.entity_id IS NOT NULL)"
-                        . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
-                    );
-                    while ($res = $stmt->fetchObject()) {
-                        
-                        if ((isset($_SESSION['filters']['entity']['VALUE']) || isset($_SESSION['filters']['entity_subentities']))
-                            && $_SESSION['filters']['entity']['VALUE'] == $res->entity_id
-                            )  $selected = 'selected="selected"'; else $selected =  '';
-                            
-                        if ($ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id)) $style = 'style="font-weight:bold;"';  else $style =  '';
-
-                        $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res->total.')</option>';
-                    }
                 }
+                if ((isset($_SESSION['filters']['entity']['VALUE']) || isset($_SESSION['filters']['entity_subentities']))) {
+
+                    $options = '<option selected="selected" value="'.$_SESSION['filters']['entity']['VALUE'].'" style="text-align:center;">'.$ent->getentityshortlabel($_SESSION['filters']['entity']['VALUE']).'</option>';
+                }
+
                 $filters .='<select data-placeholder="'._ENTITY.'" name="entity_id" id="entity_id" onChange="loadList(\''.$this->link
                             .'&filter=entity&value=\' + document.filters.entity_id.value, \''
                             .$this->divListId.'\', '.$this->modeReturn.');">'
                             .'<option value="none" style="text-align:center;"></option>'
                             .$options.'</select>';
-                //$filters .= '<script>new c($(\'entity_id\'),{width:"300px",allow_single_deselect: true});</script>';
-                $filters .= '<script> $j("#entity_id").chosen({width:"300px",allow_single_deselect: true});</script>';
+				$filters .= '<script>$j("#entity_id").chosen({width:"300px",allow_single_deselect: true});$j("#entity_id").bind("chosen:showing_dropdown", function() {loadToolbarEntities("'.$where.'");}); </script>';
 
             break;
 
             case 'entity_subentities':
-                require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
-                    . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
-                require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
-                    . "entities_tables.php";
-                    
-                $ent = new entity();
-                $sec = new security();
-
-                $view = $sec->retrieve_view_from_table($this->params['tableName']);
-                if (empty($view)) {
-                    $view = $this->params['tableName'];
-                }
-                if (!empty($view)) {
-                    if (! empty($this->params['basketClause'])) {
-                        $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
-                        $where = 'where (' . $this->params['basketClause'] . ')';
-                    }
-
-                    $stmt = $db->query(
-                        "SELECT distinct(r.destination) as entity_id, count(distinct r.res_id)"
-                        . " as total, e.entity_label , e.short_label FROM " 
-                        . $view. " r left join " . ENT_ENTITIES
-                        . " e on e.entity_id = r.destination " .$where . " and entity_id <> ''"
-                        . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
-                    );
-                    while ($res = $stmt->fetchObject()) {
-                        
-                        if (isset($_SESSION['filters']['entity_subentities']['VALUE']) 
-                            && $_SESSION['filters']['entity_subentities']['VALUE'] == $res->entity_id
-                            )  $selected = 'selected="selected"'; else $selected =  '';
-                            
-                        if ($ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id)) $style = 'style="font-weight:bold;"';  else $style =  '';
-
-                        $subEntities_tmp = array();
-                        $subEntities = array();
-                        $subEntities_tmp = $ent->getEntityChildrenTree($subEntities_tmp, $res->entity_id);
-
-                        for($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++){
-                            array_push($subEntities, "'".$subEntities_tmp[$iSubEntities]['ID']."'");
-                        }
-                        array_push($subEntities, "'" . $res->entity_id . "'");
-
-                        if(isset($_SESSION['current_basket']['view']) && $_SESSION['current_basket']['view'] <> ""){
-                            $view = $_SESSION['current_basket']['view'];
-                        }
-
-                        $this->params['basketClause'] = str_replace('r.', 'res_view_letterbox.', $this->params['basketClause']);
-                        $stmt2 = $db->query("SELECT count(res_id) as total FROM ".$view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
-                        $res2 = $stmt2->fetchObject();
-
-                        $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res2->total.')</option>';
-                    }
-                }
+                
                   if (isset($_SESSION['filters']['entity']['VALUE']) && $_SESSION['filters']['entity_subentities']['checked'] == true && $_SESSION['filters']['entity']['VALUE'] != ''){
                     $checked = 'checked="checked"';
                   }else{
                         $checked =  '';
                   }
                     
-                $filters .='<input type="checkbox" '.$checked.' style="margin-left:0px" title="inclure les sous-entités" onclick="loadList(\''.$this->link
-                            .'&filter=entity_subentities&value=\' + document.filters.entity_id.value, \''
-                            .$this->divListId.'\', '.$this->modeReturn.');" />&nbsp;';
-                /*$filters .='<select name="entity_subentities" id="entity_subentities" onChange="loadList(\''.$this->link
-                            .'&filter=entity_subentities&value=\' + document.filters.entity_subentities.value, \''
-                            .$this->divListId.'\', '.$this->modeReturn.');">'
-                            .'<option value="none">'._CHOOSE_ENTITY_SUBENTITIES.'</option>'
-                            .$options.'</select>&nbsp;';*/
+                  if($_SESSION['filters']['entity_subentities']['checked']){
+                        $filters .='<input type="checkbox" '.$checked.' style="margin-left:0px" title="inclure les sous-entités" onclick="loadList(\''.$this->link
+                        .'&filter=entity&value=\' + document.filters.entity_id.value, \''
+                        .$this->divListId.'\', '.$this->modeReturn.');" />&nbsp;';
+                    } else {
+                        $filters .='<input type="checkbox" '.$checked.' style="margin-left:0px" title="inclure les sous-entités" onclick="loadList(\''.$this->link
+                        .'&filter=entity_subentities&value=\' + document.filters.entity_id.value, \''
+                        .$this->divListId.'\', '.$this->modeReturn.');" />&nbsp;';
+                    }
+
+
             break;
             
             case 'typist':
@@ -792,8 +730,15 @@ abstract class lists_Abstract extends Database
                     } else if ($_REQUEST['filter'] == 'entity_subentities') {
 
                         //$_SESSION['filters']['entity']['VALUE'] = '';
-                        $_SESSION['filters']['entity']['CLAUSE'] = '';
-                        $_SESSION['filters']['entity_subentities']['checked'] = true;
+                        if($_SESSION['filters']['entity_subentities']['checked'] == true){
+                            
+                            $_SESSION['filters']['entity_subentities']['checked'] = false;
+                            $_SESSION['filters']['entity_subentities']['VALUE'] = '';
+                            $_SESSION['filters']['entity_subentities']['CLAUSE'] = '';
+                        } else {
+                            $_SESSION['filters']['entity']['CLAUSE'] = '';
+                            $_SESSION['filters']['entity_subentities']['checked'] = true;                            
+                        }
 
                         require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
                             . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
@@ -1264,7 +1209,25 @@ abstract class lists_Abstract extends Database
            
         return $return;
     }
-    
+
+    protected function _tmplt_visualizeIconDocument($resultTheLine, $listKey) {
+        
+        $href = $this->_buildMyLink($this->params['visualizeDocumentLink'], $resultTheLine, $listKey);
+
+        $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank"><i class="tooltip fa fa-eye fa-2x" title="' . _VISUALIZE . '"></i></a></div>';
+           
+        return $return;
+    }
+
+    protected function _tmplt_downloadIconDocument($resultTheLine, $listKey) {
+        
+        $href = $this->_buildMyLink($this->params['downloadDocumentLink'], $resultTheLine, $listKey);
+
+        $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank"><i class="tooltip fa fa-download fa-2x" title="' . _DOWNLOAD . '"></i></a></div>';
+           
+        return $return;
+    }
+
     protected function _tmplt_showIconDetails($resultTheLine, $listKey) {
         
         $return = '';
@@ -1376,7 +1339,7 @@ abstract class lists_Abstract extends Database
     protected function _tmplt_func_isConfidential($resultTheLine) {
 
             $db = new Database();
-            $stmt = $db->query("SELECT confidentiality FROM res_view_letterbox WHERE res_id = ?",
+            $stmt = $db->query("SELECT confidentiality FROM res_letterbox WHERE res_id = ?",
                                 [$resultTheLine[0]['res_id']]);
             $color = '';
             $result = $stmt->fetchObject();
@@ -1460,7 +1423,7 @@ abstract class lists_Abstract extends Database
                     $keyValue = $resultTheLine[$i]['value'];
                 }
             }
-            $sAction = \Apps\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+            $sAction = \Core\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
             if ($sAction == 'visa_mail') {
                 if (PROD_MODE) {
                     $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', \'' .$_SESSION['current_basket']['group_id']. '\', true)"';
@@ -1783,6 +1746,12 @@ abstract class lists_Abstract extends Database
 		##showIconDocument## : show document icon and link
         } elseif (preg_match("/^showIconDocument$/", $parameter)) {
             $var = $this->_tmplt_showIconDocument($resultTheLine, $listKey);
+        ##visualizeIconDocument## : show document icon and link
+        } elseif (preg_match("/^visualizeIconDocument$/", $parameter)) {
+            $var = $this->_tmplt_visualizeIconDocument($resultTheLine, $listKey);
+        ##downloadIconDocument## : show download document icon and link
+        } elseif (preg_match("/^downloadIconDocument$/", $parameter)) {
+            $var = $this->_tmplt_downloadIconDocument($resultTheLine, $listKey);
         ##showIconDetails## : show details icon and link
         } elseif (preg_match("/^showIconDetails$/", $parameter)) {
             $var = $this->_tmplt_showIconDetails($resultTheLine, $listKey);
@@ -1942,7 +1911,7 @@ abstract class lists_Abstract extends Database
                     
                     // echo '<- '.$output[1][$i].'<br><br>';
 
-                    if (empty($parameters) || empty($parameters['noModification']) || ($output[1][$i] != 'func_modify' && $output[1][$i] != 'func_delete' && $output[1][$i] != 'func_final_version')) {
+                    if (empty($parameters) || empty($parameters['noModification']) || ($output[1][$i] != 'func_modify' && $output[1][$i] != 'func_delete')) {
                         $remplacement = $this->_tmplt_loadVarSys($output[1][$i], $resultArray[$theLine], $listKey, $lineIsDisabled);
                     } else {
                         $remplacement = '';
@@ -3330,7 +3299,7 @@ abstract class lists_Abstract extends Database
                         !empty($this->params['defaultAction']) && 
                         $lineIsDisabled === false
                     ) {
-                        $sAction = \Apps\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+                        $sAction = \Core\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
                         if ($sAction == 'visa_mail') {
                             if (PROD_MODE) {
                                 $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
@@ -3448,7 +3417,7 @@ abstract class lists_Abstract extends Database
         if (!isset($parameters['searchBoxAutoCompletionMinChars'])){ $parameters['searchBoxAutoCompletionMinChars']= 1; }
         if (!isset($parameters['searchBoxAutoCompletionUpdate'])){ $parameters['searchBoxAutoCompletionUpdate']= false; }
         if (!isset($parameters['viewDocumentLink'])){ $parameters['viewDocumentLink'] = $_SESSION['config']['businessappurl']
-            .'index.php?display=true&dir=indexing_searching&page=view_resource_controler';}
+            .'index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler';}
         if (!isset($parameters['viewDetailsLink'])){ $parameters['viewDetailsLink'] = $_SESSION['config']['businessappurl']
             .'index.php?page=details&dir=indexing_searching';}
         if (!isset($parameters['bool_changeLinesToShow'])){ $parameters['bool_changeLinesToShow'] =  true;}

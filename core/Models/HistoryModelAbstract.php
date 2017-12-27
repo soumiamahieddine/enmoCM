@@ -25,30 +25,23 @@ class HistoryModelAbstract
     /**
     * Get the logging method in the configuration file
     */
-    public static function build_logging_method()
+    public static function buildLoggingMethod()
     {
-        $logging_methods = [];
+        $loggingMethods = [];
 
-        $pathToXmlLogin = HistoryController::getXmlFilePath(['filePath' => 'apps/maarch_entreprise/xml/logging_method.xml']);
-
-        if (!$pathToXmlLogin) {
-            $noXml = true;
-            $logging_methods[0]['ID']               = 'database';
-            $logging_methods[0]['ACTIVATED']        = true;
-            $logging_methods[1]['ID']               = 'log4php';
-            $logging_methods[1]['ACTIVATED']        = true;
-            $logging_methods[1]['LOGGER_NAME_TECH'] = 'loggerTechnique';
-            $logging_methods[1]['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
-            $logging_methods[1]['LOG_FORMAT']       = '[%RESULT%][%CODE_METIER%][%WHERE%][%ID%][%HOW%][%USER%][%WHAT%][%ID_MODULE%][%REMOTE_IP%]';
-            $logging_methods[1]['CODE_METIER']      = 'MAARCH';
+        $customId = CoreConfigModel::getCustomId();
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/logging_method.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/logging_method.xml";
+        } else {
+            $path = 'apps/maarch_entreprise/xml/logging_method.xml';
         }
 
-        if (!isset($noXml)) {
-            $xmlConfig = simplexml_load_file($pathToXmlLogin);
+        if (file_exists($path)) {
+            $xmlConfig = simplexml_load_file($path);
 
             if ($xmlConfig) {
                 foreach ($xmlConfig->METHOD as $METHOD) {
-                    $logging_methods[] = [
+                    $loggingMethods[] = [
                         'ID'               => (string)$METHOD->ID,
                         'ACTIVATED'        => (boolean)$METHOD->ENABLED,
                         'LOGGER_NAME_TECH' => (string)$METHOD->LOGGER_NAME_TECH,
@@ -58,76 +51,84 @@ class HistoryModelAbstract
                     ];
                 }
             }
+        } else {
+            $loggingMethods[0]['ID']               = 'database';
+            $loggingMethods[0]['ACTIVATED']        = true;
+            $loggingMethods[1]['ID']               = 'log4php';
+            $loggingMethods[1]['ACTIVATED']        = true;
+            $loggingMethods[1]['LOGGER_NAME_TECH'] = 'loggerTechnique';
+            $loggingMethods[1]['LOGGER_NAME_FUNC'] = 'loggerFonctionnel';
+            $loggingMethods[1]['LOG_FORMAT']       = '[%RESULT%][%CODE_METIER%][%WHERE%][%ID%][%HOW%][%USER%][%WHAT%][%ID_MODULE%][%REMOTE_IP%]';
+            $loggingMethods[1]['CODE_METIER']      = 'MAARCH';
         }
 
-        return $logging_methods;
+        return $loggingMethods;
     }
 
     /**
-    * Write a log entry with a specific log level
-    *
-    * @param  $logger (object) => Log4php logger
-    * @param  $logLine (string) => Line we want to trace
-    * @param  $level (enum) => Log level
-    */
-    public static function writeLog(array $aArgs = [])
+     * Write a log entry with a specific log level
+     *
+     * @param  $aArgs array
+     */
+    public static function writeLog(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['logger', 'logLine', 'level']);
-        ValidatorModel::stringType($aArgs, ['logLine']);
+        ValidatorModel::stringType($aArgs, ['logLine', 'level']);
 
         $logger  = $aArgs['logger'];
-        $logLine = $aArgs['logLine'];
 
         switch ($aArgs['level']) {
-            case _LEVEL_DEBUG:
-                $logger->debug($logLine);
+            case 'DEBUG':
+                $logger->debug($aArgs['logLine']);
                 break;
-
-             case _LEVEL_INFO:
-                $logger->info($logLine);
+            case 'INFO':
+                $logger->info($aArgs['logLine']);
                 break;
-
-            case _LEVEL_WARN:
-                $logger->warn($logLine);
+            case 'WARN':
+                $logger->warn($aArgs['logLine']);
                 break;
-
-            case _LEVEL_ERROR:
-                $logger->error($logLine);
+            case 'ERROR':
+                $logger->error($aArgs['logLine']);
                 break;
-
-            case _LEVEL_FATAL:
-                $logger->fatal($logLine);
+            case 'FATAL':
+                $logger->fatal($aArgs['logLine']);
                 break;
         }
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['event_type', 'user_id']);
-        ValidatorModel::stringType($aArgs, ['event_type', 'user_id']);
+        ValidatorModel::notEmpty($aArgs, ['tableName', 'recordId', 'eventType', 'userId', 'info', 'moduleId', 'eventId']);
+        ValidatorModel::stringType($aArgs, ['tableName', 'recordId', 'eventType', 'userId', 'info', 'moduleId', 'eventId']);
 
-        $db = new \Database();
-        $aArgs['event_date'] = $db->current_datetime();
-        $aReturn = DatabaseModel::insert([
+        DatabaseModel::insert([
             'table'         => 'history',
-            'columnsValues' => $aArgs
+            'columnsValues' => [
+                'table_name'    => $aArgs['tableName'],
+                'record_id'     => $aArgs['recordId'],
+                'event_type'    => $aArgs['eventType'],
+                'user_id'       => $aArgs['userId'],
+                'event_date'    => 'CURRENT_TIMESTAMP',
+                'info'          => $aArgs['info'],
+                'id_module'     => $aArgs['moduleId'],
+                'remote_ip'     => $_SERVER['REMOTE_ADDR'],
+                'event_id'      => $aArgs['eventId'],
+            ]
         ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function getHistoryList(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['event_date']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['history'],
             'where'     => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
             'order_by'  => ['event_date DESC']
-            ]
-        );
+        ]);
 
         return $aReturn;
     }
@@ -136,14 +137,12 @@ class HistoryModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['event_date']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['history_batch'],
             'where'     => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
             'order_by'  => ['event_date DESC']
-            ]
-        );
+        ]);
 
         return $aReturn;
     }

@@ -16,10 +16,13 @@
                         <a data-toggle="modal" data-target="#managePreferences"><i class="fa fa-cog"></i> Préférences </a>
                     </li>
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageAbs"><i class="fa fa-user-times" title=""></i> {{lang.manageAbsences}} </a>
+                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{lang.manageSignatures}} </a>
+                    </li>
+                    <li style="cursor: pointer" (click)="displayAbsenceButton=false">
+                        <a data-toggle="modal" data-target="#manageAbs" id="redirectBasketCard"><i class="fa fa-share"></i> {{lang.manageAbsences}} </a>
                     </li>
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageSign"><i class="fa fa-vcard-o"></i> {{lang.manageSignatures}} </a>
+                        <a (click)="askRedirectBasket()" ><i class="fa fa-user-times"></i> Activer mon absence </a>
                     </li>
                 </ul>
             </div>
@@ -53,7 +56,7 @@
                          <div class="input-group">
                              <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
                              <input type="text" class="form-control" id="userId" title="{{lang.id}}" value="{{user.user_id}}" disabled>
-                             <span class="input-group-btn">
+                             <span *ngIf="user.canModifyPassword" class="input-group-btn">
                                 <button (click)="displayPassword()" class="btn btn-success" type="button" title="{{lang.changeMyPassword}}"><i class="fa fa-key" aria-hidden="true"></i></button>
                             </span>
                          </div>
@@ -144,17 +147,17 @@
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#manageBaskets" aria-controls="manageBaskets" role="tab" data-toggle="tab">Gérer mes corbeilles</a></li>
+                    <li role="presentation" class="active"><a href="#manageBaskets" aria-controls="manageBaskets" role="tab" data-toggle="tab">Gérer mes bannettes</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="manageBaskets">
+                    <div role="tabpanel" class="tab-pane active" id="manageBaskets" style="max-height: calc(100vh - 200px);overflow-y: auto;">
                         <ul class="list-group" *ngFor="let regroupedBasket of user.regroupedBaskets; let i = index">
                             <h4 *ngIf="regroupedBasket.baskets[0]">{{regroupedBasket.groupDesc}}</h4>
                             <li class="list-group-item" *ngFor="let basket of regroupedBasket.baskets; let y = index">
                                 <i class="fa fa-tasks" title="{{basket.basket_id}}"></i> {{basket.basket_name}}
                                 <span class="pull-right">
                                     <input name="color" type="color" style="background: none;border: none;height: 20px;width:20px;padding: 0;margin-right: 15px" [(ngModel)]="user.regroupedBaskets[i].baskets[y].color" (change)="updateBasketColor(i, y)"/>
-                                    <a (click)="user.regroupedBaskets[i].baskets[y].color = '#666666'; updateBasketColor(i, y)" title="Réinitialiser la couleur" style="cursor: pointer;color: #666666"><i class="fa fa-magic"></i></a>
+                                    <a (click)="user.regroupedBaskets[i].baskets[y].color = ''; updateBasketColor(i, y)" title="Réinitialiser la couleur" style="cursor: pointer;color: #666666"><i class="fa fa-magic"></i></a>
                                 </span>
                             </li>
                         </ul>
@@ -166,51 +169,54 @@
 </div>
 
 <div id="manageAbs" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="width: 55%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{lang.manageAbsences}}</h4>
+                <h4 class="modal-title" id="myModalLabel">Rediriger mes bannettes</h4>
             </div>
-            <div class="modal-body">
-                <div class="alert alert-danger" role="alert">{{lang.autoLogoutAbsence}}</div>
+            <div class="modal-body" style="max-height: calc(100vh - 170px);overflow-y: auto;">
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
-                        <form class="navbar-form navbar-left">
-                            <div class="form-group">
-                                <select id="selectBasketAbsenceUser" class="form-control">
-                                    <option>{{lang.chooseBasket}}</option>
-                                    <option *ngFor="let basket of user.baskets" [disabled]="basket.disabled">
+                        <form class="navbar-form navbar-left" style="width: 100%">
+                            <div style="margin-left: 3%;padding-top: 15px">Ctrl + Clic pour sélectionner plusieurs bannettes</div>
+                            <div class="form-group" style="margin-left: 3%;width: 66%;">
+                                <select style="height: 150px;width: 84%;" id="selectBasketAbsenceUser" class="form-control" multiple name="basketsToRedirect" [(ngModel)]="basketsToRedirect">
+                                    <option *ngFor="let basket of user.baskets; let i = index" [disabled]="basket.disabled" [value]="i" title="{{basket.basket_name}} {{basket.userToDisplay ? '('+basket.userToDisplay+')' : ''}}">
                                         {{basket.basket_name}}
-                                        <span *ngIf="basket.group_id">({{basket.group_id}})</span>
                                         <span *ngIf="basket.userToDisplay">({{basket.userToDisplay}})</span>
                                     </option>
                                 </select>
-                                <span>&nbsp;{{lang.to}}&nbsp;</span>
+                                <span style="margin-left: 25px; margin-right: 12px">vers</span>
                             </div>
-                            <div class="form-group typeahead__container">
-                                <div class="typeahead__field">
-                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{lang.user}}" autocomplete="off">
+                            <div class="form-group typeahead__container" style="width: 28%">
+                                <div class="typeahead__field" style="width: 100%">
+                                    <input id="absenceUser" type="text" class="form-control" placeholder="{{lang.user}}" autocomplete="off" style="width: 100%">
                                 </div>
                             </div>
                         </form>
-                        <ul class="nav navbar-nav navbar-right" (click)="addBasketRedirection()" style="cursor: pointer">
-                            <li><a title="{{lang.save}}"><i class="fa fa-plus"></i></a></li>
-                        </ul>
+                    </div>
+                    <div style="padding: 15px;text-align: center">
+                        En validant, les modifications de redirection des bannettes sont automatiquement enregistrées<br><br>
+                        <button type="button" (click)="addBasketRedirection()" class="btn btn-success">Valider</button>
                     </div>
                 </nav>
                 <ul class="list-group">
-                    <li class="list-group-item" *ngFor="let uam of userAbsenceModel; let i = index">
-                        <i class="fa fa-tasks" title="{{uam.basketId}}"></i> {{uam.basketName}}
+                    <li class="list-group-item" *ngFor="let basket of user.redirectedBaskets">
+                        <i class="fa fa-tasks" title="{{basket.basket_id}}"></i> {{basket.basket_name}}
                         <span class="pull-right">
-                            <span class="label label-primary">{{uam.newUser}}</span>
-                        <a (click)="delBasketRedirection(i)" style="cursor: pointer" title="{{lang.delete}}"><i class="fa fa-trash" style="color:red;"></i></a>
+                            <span class="label label-primary" title="{{basket.userIdRedirection}}">{{basket.userToDisplay}}</span>
+                            <a (click)="delBasketRedirection(basket)" style="cursor: pointer" title="Supprimer la redirection"><i class="fa fa-trash fa-lg" style="color:red;"></i></a>
                         </span>
                     </li>
                 </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" (click)="activateAbsence()" class="btn btn-default">{{lang.activateAbsence}}</button>
+                <span *ngIf="displayAbsenceButton">
+                    <hr>
+                    <div style="padding-bottom: 10px;text-align: center">
+                        <button type="button" (click)="activateAbsence()" class="btn btn-warning"><i class="fa fa-user-times"></i> Activer mon absence</button>
+                    </div>
+                </span>
+
             </div>
         </div>
     </div>

@@ -19,7 +19,6 @@ use Baskets\Models\BasketsModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\HistoryModel;
-use Core\Models\LangModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
@@ -28,8 +27,6 @@ use Entities\Models\ListModelsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-
-include_once 'core/class/docservers_controler.php';
 
 
 class UserController
@@ -44,6 +41,12 @@ class UserController
         $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['regroupedBaskets'] = BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['canModifyPassword'] = true;
+
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($loggingMethod['id'] == 'ozwillo') {
+            $user['canModifyPassword'] = false;
+        }
 
         return $response->withJson($user);
     }
@@ -209,6 +212,46 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
+    public function setCurrentUserBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response) {
+        if (empty($_SESSION['user']['UserId'])) {
+            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+        }
+
+        $data = $request->getParams();
+
+        foreach ($data as $key => $value) {
+            if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
+                return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
+            }
+            $newUser = strrchr($value['newUser'], '(');
+            $newUser = str_replace(['(', ')'], '', $newUser);
+            if (!empty($newUser)) {
+                $check = UserModel::getById(['userId' => $newUser, 'select' => ['1']]);
+            }
+            if (empty($newUser) || empty($check)) {
+                return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
+            }
+            $data[$key]['newUser'] = $newUser;
+
+            if($value['basketOwner'] != $_SESSION['user']['UserId']){
+                BasketsModel::updateBasketsRedirection([
+                    'userId'      => $_SESSION['user']['UserId'],
+                    'basketOwner' => $value['basketOwner'],
+                    'basketId'    => $value['basketId'],
+                    'userAbs'     => $value['basketOwner'],
+                    'newUser'     => $newUser
+                ]);
+                unset($data[$key]);
+            }
+        }
+
+        if (!empty($data)) {
+            BasketsModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
+        }
+
+        return $response->withJson(['redirectedBaskets' => BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])]);
+    }
+
     public function setRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
@@ -236,10 +279,10 @@ class UserController
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
         HistoryController::add([
-            'table_name'    => 'users',
-            'record_id'     => $user['user_id'],
-            'event_type'    => 'ABS',
-            'event_id'      => 'userabs',
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'ABS',
+            'eventId'      => 'userabs',
             'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
         ]);
 
@@ -275,10 +318,10 @@ class UserController
 
             UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
             HistoryController::add([
-                'table_name'    => 'users',
-                'record_id'     => $user['user_id'],
-                'event_type'    => 'RET',
-                'event_id'      => 'userabs',
+                'tableName'    => 'users',
+                'recordId'     => $user['user_id'],
+                'eventType'    => 'RET',
+                'eventId'      => 'userabs',
                 'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
             ]);
 
@@ -341,16 +384,16 @@ class UserController
 
         file_put_contents(CoreConfigModel::getTmpPath() . $tmpName, $file);
 
-        $docservers_controler = new \docservers_controler();
-        $storeInfos = $docservers_controler->storeResourceOnDocserver(
-            'templates',
-            [
-                'tmpDir'      => CoreConfigModel::getTmpPath(),
-                'size'        => $data['size'],
-                'format'      => $ext,
-                'tmpFileName' => $tmpName
+        $storeInfos = StoreController::storeResourceOnDocServer([
+            'collId'            => 'templates',
+            'docserverTypeId'   => 'TEMPLATES',
+            'fileInfos'         => [
+                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'size'          => $data['size'],
+                'format'        => $ext,
+                'tmpFileName'   => $tmpName,
             ]
-        );
+        ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
             return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' templates']);
@@ -730,11 +773,16 @@ class UserController
 
         $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
 
-        if (!empty($data['color'])) {
+        if(isset($data['color']) && $data['color'] == ''){
+            UserModel::eraseBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]);
+        } else if (!empty($data['color'])) {
             UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
         }
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson([
+            'userBaskets' => BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])
+        ]);
+
     }
 
     private function hasUsersRights(array $aArgs = [])

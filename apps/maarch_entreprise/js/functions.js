@@ -562,7 +562,6 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
     }
 
 
-
 /****************************************/
 
 
@@ -786,28 +785,27 @@ var BrowserDetect = {
 BrowserDetect.init();
 
 function resize_frame_contact(mode) {
-    var width = $(parent.document.documentElement).getWidth();
-    if( width < 1200) {
-        $('inner_content').style.width = width - 600 + "px";
-    } else {
-        if ($('inner_content')) {
-            $('inner_content').style.width = "700px";            
-        } else if ($('inner_content_contact')) {
-            //$('inner_content_contact').style.width = "700px"; 
+    if (parent.$('iframe_tab') && mode == 'contact'){
+        if($j('#divList').length) {
+            var contentHeight = Math.round($j('#divList').height())+2;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
+        } else if($j('#inner_content_contact').length) {
+            var contentHeight = Math.round($j('#inner_content_contact').height())+180;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
+        } else {
+            var contentHeight = Math.round($j('#inner_content').height())+20;
+            parent.$('iframe_tab').style.height=contentHeight+"px";
         }
-    }
-    if (mode == 'contact') {
-        if ($('frmcontact_table')) {
-            $('frmcontact_table').style.width = "90%"; 
-        }
-        if (parent.$('contact_iframe'))
-            parent.$('contact_iframe').style.height="550px"
+        
+    } else if (parent.$('contact_iframe_attach') && mode == 'contact') {
+        var contentHeight = 370;
+        parent.$('contact_iframe_attach').style.height=contentHeight+"px";   
+    } else if (parent.$('info_contact_iframe_attach') && mode != 'contact') {
+        var contentHeight = Math.round($j('#inner_content_contact').height())+100;
+        parent.$('info_contact_iframe_attach').style.height=contentHeight+"px";   
     } else {
-        $('info_contact_div').style.width = "65%";
-        $('frmaddress_table1').style.width = "65%";
-        $('frmaddress_table2').style.width = "65%";
-        if (parent.$('contact_iframe'))
-            parent.$('contact_iframe').style.height="850px"
+        var contentHeight = Math.round($j('#inner_content_contact').height())+100;
+        parent.$('iframe_tab').style.height=contentHeight+"px";   
     }
 }
 
@@ -1023,11 +1021,11 @@ function test_form()
     }
     else if(error_num == 3)
     {
-        alert("Le propriétaire des corbeilles n'est pas défini.");
+        alert("Le propriétaire des bannettes n'est pas défini.");
     }
     else if(error_num == 4)
     {
-        alert("Vous devez rediriger au moins une des corbeilles vers un utilisateur.");
+        alert("Vous devez rediriger au moins une des bannettes vers un utilisateur.");
     }
     else
     {
@@ -1041,7 +1039,6 @@ function test_form()
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-
     if ($j('#divList')) {
         $j('#divList').css('display','block');
     }
@@ -1061,6 +1058,15 @@ function destroyModal(id_mod){
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
     $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+
+    // FIX IE 11
+    if($j('#leftPanelShowDocumentIframe')){
+       $j('#leftPanelShowDocumentIframe').show(); 
+    }
+    if($j('#rightPanelShowDocumentIframe')){
+       $j('#rightPanelShowDocumentIframe').show(); 
+    }
+
 }
 
 /**
@@ -1193,6 +1199,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 {
     var frm_values;
     var chosen_action_id;
+
     if (typeof advancedMode !== "undefined") {
         frm_values = "so#use#less"; // Sert juste a remplir frm_values pour manage_actions
         chosen_action_id = advancedMode[0];
@@ -1222,7 +1229,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             },
             onCreate: function(answer) {
                 //show loading image in toolbar
-
                 $j("input[type='button']").prop("disabled", true).css("opacity", "0.5");
             },
             onSuccess: function(answer){
@@ -1557,7 +1563,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     eval('response='+answer.responseText);
                     if(response.status == 0 ) //Form or confirm processed ok
                     {
-                        res_ids = response.result_id;
+                        /*res_ids = response.result_id;
                         if(res_id_values == 'none' && res_ids != '')
                         {
                             res_id_values = res_ids;
@@ -1570,7 +1576,29 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                         }
                         var page_result = response.page_result;
                         page_result_final = response.page_result;
-                        close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
+                        close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);*/
+                        var modal = $('modal_'+id_action);
+                        if(modal) {
+                            destroyModal('modal_'+id_action);
+                        }
+                        if(pile_actions.values.length > 0) {
+                            end_actions();
+                        } else {
+                            res_ids = response.result_id;
+                            if(res_id_values == 'none' && res_ids != '')
+                            {
+                                res_id_values = res_ids;
+                            }
+                            var table_name = tablename;
+                            if(response.table && response.table != '')
+                            {
+                                table_name = response.table;
+                            }
+                            var page_result = response.page_result;
+                            page_result_final = response.page_result;
+                            close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);                            
+                        }
+
                     }
                     else //  Form Params errors
                     {
@@ -1604,7 +1632,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
             },
             success: function(answer) {
 
-                setTimeout(function(){
+                // setTimeout(function(){
                     if(answer.status == 0 ) {
                         actions_status.values = [];
                         // Status changed
@@ -1643,7 +1671,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     }
                     
                     do_nothing = false;
-                }, 200);
+                // }, 200);
             }
         });
     }
@@ -1821,7 +1849,6 @@ function checkContactType(mode,creation){
  **/
 function show_admin_contacts( is_corporate, display)
 {
-    
     var display_value = display || 'inline';
     var title = $j("#title_p");
     var lastname = $j("#lastname_p");
@@ -1961,7 +1988,7 @@ function clear_form(form_id)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_userlogs(url) 
+function valid_userlogs(url)
 {
     var user_div = $('user_id');
     var user_id_val = '';
@@ -1980,7 +2007,7 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-                //alert(answer.responseText);
+            	//alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -1996,7 +2023,7 @@ function valid_userlogs(url)
  *
  * @param url String Form Url of the php script which gets the results
  **/
-function valid_report_by_period(url) 
+function valid_report_by_period(url)
 {
     var type_period = '';
     var type_report = 'graph';
@@ -2417,6 +2444,9 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
 
                 eval("response = "+answer.responseText);
                 if(response.status == 0 || response.status == 1) {
+                    if (typeof window.parent['angularSignatureBookComponent'] != "undefined") {
+                        window.parent.angularSignatureBookComponent.componentAfterLinks();
+                    }
                     if(response.status == 0) {
                         $(divName).innerHTML = response.links;
                         
@@ -3148,7 +3178,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             collId : collId,
             titleTab : titleTab,
             pathScriptTab : pathScriptTab
-
             },
         success: function(answer){
             document.getElementById('show_tab').style.display='block';
@@ -3161,8 +3190,6 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
             document.getElementById('show_tab').innerHTML = answer;
         }
     });
- 
-
 }
 
 function loadSpecificTab(id_iframe,pathScriptTab){

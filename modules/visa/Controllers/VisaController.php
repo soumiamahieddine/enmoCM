@@ -13,17 +13,18 @@
 */
 namespace Visa\Controllers;
 
-use Apps\Models\ActionModel;
-use Apps\Models\ContactModel;
 use Attachments\Models\AttachmentsModel;
+use Core\Models\ActionModel;
+use Core\Models\ContactModel;
+use Core\Models\LinkModel;
 use Core\Models\ListinstanceModel;
 use Core\Models\ResModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
 use Core\Models\DocserverModel;
 use Core\Models\ServiceModel;
-use Notes\Models\NoteModel;
 use Baskets\Models\BasketsModel;
+use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Visa\Models\VisaModel;
@@ -81,9 +82,11 @@ class VisaController
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
         $datas['nbNotes']       = NoteModel::countForCurrentUserByResId(['resId' => $resId]);
+        $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+        $datas['listinstance']  = ListinstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $_SESSION['user']['UserId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
 
@@ -125,7 +128,7 @@ class VisaController
         $incomingMail = ResModel::getById([
             'resId'     => $resId,
             'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id'],
-            'table'     => 'res_view_letterbox'
+            'resTable'  => 'res_view_letterbox'
         ]);
 
         if (empty($incomingMail)) {

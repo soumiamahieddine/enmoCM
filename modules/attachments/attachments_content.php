@@ -39,6 +39,7 @@ require_once "core/class/docservers_controler.php";
 require_once 'modules/attachments/attachments_tables.php';
 require_once "core/class/class_history.php";
 require_once 'modules/attachments/class/attachments_controler.php';
+require_once 'modules/attachments/Models/AttachmentsModel.php';
 
 
 $core               = new core_tools();
@@ -254,6 +255,11 @@ function setTransmissionDataPdf($nb, $storeResult) {
         'value' => 1,
         'type' => 'int'
     ];
+    $transmissionDataPdf[] = [
+        'column' => 'in_signature_book',
+        'value' => 1,
+        'type' => 'bool'
+    ];
 
     return $transmissionDataPdf;
 }
@@ -341,10 +347,11 @@ if (isset($_POST['add']) && $_POST['add']) {
                     <?php
                     exit();
                 } else {
+                    $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
                     $fileInfos = array(
                         "tmpDir"      => $_SESSION['config']['tmppath'],
                         "size"        => $_SESSION['upfile']['size'],
-                        "format"      => $_SESSION['upfile']['format'],
+                        "format"      => $path_parts['extension'],
                         "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
                     );
 
@@ -352,6 +359,10 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $storeResult = $docserverControler->storeResourceOnDocserver(
                         $_SESSION['collection_id_choice'], $fileInfos
                     );
+
+                    if($attachment_types == 'outgoing_mail' && strpos($fileInfos['format'], 'xl') === false && strpos($fileInfos['format'], 'ppt') === false){
+                        $_SESSION['upfile']['outgoingMail'] = true;
+                    }
 
                     if (isset($storeResult['error']) && $storeResult['error'] <> '') {
                         $_SESSION['error'] = $storeResult['error'];
@@ -370,7 +381,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             $_SESSION['data'],
                             array(
                                 'column' => "format",
-                                'value' => $_SESSION['upfile']['format'],
+                                'value' => $fileInfos['format'],
                                 'type' => "string",
                             )
                         );
@@ -422,6 +433,21 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 'type' => "string",
                             )
                         );
+
+                        $attachmentTypesList = \Attachments\Models\AttachmentsModel::getAttachmentsTypesByXML();
+                        foreach ($attachmentTypesList as $keyAttachment => $valueAttachment) {
+                            if ($keyAttachment == $attachment_types && $valueAttachment['sign']) {
+                                array_push(
+                                    $_SESSION['data'],
+                                    array(
+                                        'column' => "in_signature_book",
+                                        'value' => 1,
+                                        'type' => "bool",
+                                    )
+                                );
+                            }
+                        }
+
                         array_push(
                             $_SESSION['data'],
                             array(
@@ -698,6 +724,15 @@ if (isset($_POST['add']) && $_POST['add']) {
 								)
 							);
 
+                            array_push(
+                                $_SESSION['data_pdf'],
+                                array(
+                                    'column' => "in_signature_book",
+                                    'value' => 1,
+                                    'type' => "bool",
+                                )
+                            );
+
 							$id_up = $resAttach->load_into_db(
 								RES_ATTACHMENTS_TABLE,
 								$storeResult['destination_dir'],
@@ -812,10 +847,11 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 ORDER BY relation desc", array($_REQUEST['res_id'],$_SESSION['doc_id']));
             $previous_attachment = $stmt->fetchObject();
 
+            $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
             $fileInfos = array(
                 "tmpDir"      => $_SESSION['config']['tmppath'],
                 "size"        => $_SESSION['upfile']['size'],
-                "format"      => $_SESSION['upfile']['format'],
+                "format"      => $path_parts['extension'],
                 "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
             );
 
@@ -842,7 +878,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $_SESSION['data'],
                     array(
                         'column' => "format",
-                        'value' => $_SESSION['upfile']['format'],
+                        'value' => $fileInfos['format'],
                         'type' => "string",
                     )
                 );
@@ -902,6 +938,19 @@ if (isset($_POST['add']) && $_POST['add']) {
                         'type' => "string",
                     )
                 );
+                $attachmentTypesList = \Attachments\Models\AttachmentsModel::getAttachmentsTypesByXML();
+                foreach ($attachmentTypesList as $keyAttachment => $valueAttachment) {
+                    if ($keyAttachment == $previous_attachment->attachment_type && $valueAttachment['sign']) {
+                        array_push(
+                            $_SESSION['data'],
+                            array(
+                                'column' => "in_signature_book",
+                                'value' => 1,
+                                'type' => "bool",
+                            )
+                        );
+                    }
+                }
                 array_push(
                     $_SESSION['data'],
                     array(
@@ -1160,6 +1209,15 @@ if (isset($_POST['add']) && $_POST['add']) {
 						)
 					);
 
+                    array_push(
+                        $_SESSION['data_pdf'],
+                        array(
+                            'column' => "in_signature_book",
+                            'value' => 1,
+                            'type' => "bool",
+                        )
+                    );
+
 					$id_up = $resAttach->load_into_db(
 						RES_ATTACHMENTS_TABLE,
 						$storeResult['destination_dir'],
@@ -1230,10 +1288,11 @@ if (isset($_POST['add']) && $_POST['add']) {
 
             if ($_SESSION['upfile']['upAttachment'] && $OriginalHash <> $NewHash) {
                 $_SESSION['upfile']['upAttachment'] = false;
+                $path_parts = pathinfo($_SESSION['upfile']['fileNameOnTmp']);
                 $fileInfos = array(
                     "tmpDir"      => $_SESSION['config']['tmppath'],
                     "size"        => $_SESSION['upfile']['size'],
-                    "format"      => $_SESSION['upfile']['format'],
+                    "format"      => $path_parts['extension'],
                     "tmpFileName" => $_SESSION['upfile']['fileNameOnTmp'],
                 );
 
@@ -1390,6 +1449,16 @@ if (isset($_POST['add']) && $_POST['add']) {
 							'type' => "int",
 						)
 					);
+
+                    array_push(
+                        $_SESSION['data_pdf'],
+                        array(
+                            'column' => "in_signature_book",
+                            'value' => 1,
+                            'type' => "bool",
+                        )
+                    );
+
 					$resAttach = new resource();
 					$id_up = $resAttach->load_into_db(
 						RES_ATTACHMENTS_TABLE,
@@ -1836,9 +1905,9 @@ $content .= '<span style="position:relative;"><input type="text" name="contact_a
 $content .= $data_contact;
 $content .= '"/><div id="show_contacts_attach" class="autocomplete autocompleteIndex" style="width: 100%;left: 0px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete" style="display: none;text-align:left;padding:5px;width: 100%;left: 0px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';
 $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
-    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'\';new Effect.toggle(\'info_contact_div_attach\', '
+    . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&fromAttachmentContact=Y&seeAllAddresses&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'\';new Effect.toggle(\'info_contact_div_attach\', '
     . '\'blind\', {delay:0.2});return false;"'
-    . ' style="visibility:hidden;"> <i class="fa fa-book fa-lg"></i></a>';
+    . ' style=""> <i class="fa fa-book fa-lg"></i></a>';
 $content .= '</div>';
 $content .= '<input type="hidden" id="contactidAttach" name="contactidAttach" value="';
 if (isset($_REQUEST['id']) && !empty($data_attachment->dest_contact_id)) {
@@ -1915,7 +1984,7 @@ $content .= '</div>';
     $content .= '<div id="transmission"></div>';
     $content .= '<input type="hidden" id="hiddenValidateStatus" value="1"/>';
         $content .= '<p class="buttons">';
-            if (isset($_REQUEST['id']) && $attachmentFormat != "pdf") {
+            if (isset($_REQUEST['id']) && !in_array($attachmentFormat, ["pdf", "jpg", "jpeg", "png"])) {
                 $content .= '<input type="button" value="';
                 $content .= _EDIT_MODEL;
                 /*$content .= '" name="editModel" id="editModel" class="button" onclick="$(\'hiddenValidateStatus\').value=\'2\';$(\'edit\').style.visibility=\'visible\';window.open(\''
@@ -1996,16 +2065,16 @@ $content .= '</div>';
 $content .= '<div style="float: right; width: 65%">';
 
 $content .= '<div id="menuOnglet">
-                <ul id="ongletAttachement">
+                <ul id="ongletAttachement" style="cursor:pointer">
                     <li id="liAttachement" ';
 
                 if(empty($_REQUEST['id'])){
                     $content .= ' style="display:none" ';
                 }
 
-                    $content .= 'onclick="activeOngletAttachement()"><a href="#"> Attachement </a></li>';
+                    $content .= 'onclick="activeOngletAttachement()"><span> Pièce jointe </span></li>';
                     if($_GET['cat'] != 'outgoing' && $data_attachment->attachment_type != 'outgoing_mail'){
-                        $content .='<li id="liMainDocument" onclick="activeOngletMainDocument()"><a href="#"> Document principal </a></li>';
+                        $content .='<li id="liMainDocument" onclick="activeOngletMainDocument()"><span> Document principal </span></li>';
                     }
                 $content .='</ul>
             </div>';
@@ -2020,7 +2089,7 @@ if(empty($_REQUEST['id'])){
 $content .= '<iframe src="'.$srcAttachment.'" name="viewframevalid_attachment" id="viewframevalid_attachment" scrolling="auto" frameborder="0" style="width:100% !important;height:90vh;display:none" onmouseover="this.focus()"></iframe>';
 
 // DOCUMENT PRINCIPAL //
-$content .= '<iframe src="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='. functions::xssafe($_SESSION['doc_id']).'" name="viewframevalid_main" id="viewframevalid_main" scrolling="auto" frameborder="0" style="width:100% !important;height:90vh;display:none" onmouseover="this.focus()"></iframe>';
+$content .= '<iframe src="index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id='. functions::xssafe($_SESSION['doc_id']).'" name="viewframevalid_main" id="viewframevalid_main" scrolling="auto" frameborder="0" style="width:100% !important;height:90vh;display:none" onmouseover="this.focus()"></iframe>';
     
 $content .= '</div>';
 
@@ -2029,7 +2098,6 @@ if(empty($_REQUEST['id'])){
 } else {
     $js = 'setTimeout(function(){window.top.document.getElementById(\'liAttachement\').click()}, 1000)';
 }
-
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();

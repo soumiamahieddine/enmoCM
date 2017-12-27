@@ -249,7 +249,7 @@ if (!defined("_WELCOME_TITLE")) define("_WELCOME_TITLE", "Accueil");
 if (!defined("_HELP")) define("_HELP", "Aide");
 if (!defined("_SEARCH_ADV_SHORT")) define("_SEARCH_ADV_SHORT", "Recherche Avancée");
 if (!defined("_SEARCH_SCOPE")) define("_SEARCH_SCOPE", "Portée de la recherche");
-if (!defined("_SEARCH_SCOPE_HELP")) define("_SEARCH_SCOPE_HELP", "Etend la recherche aux corbeilles; autorise les actions si une corbeille particulière est sélectionnée");
+if (!defined("_SEARCH_SCOPE_HELP")) define("_SEARCH_SCOPE_HELP", "Etend la recherche aux bannettes; autorise les actions si une bannette particulière est sélectionnée");
 if (!defined("_RESULTS")) define("_RESULTS", "Résultat(s)");
 if (!defined("_USERS_LIST_SHORT")) define("_USERS_LIST_SHORT", "Liste utilisateurs");
 if (!defined("_MODELS_LIST_SHORT")) define("_MODELS_LIST_SHORT", "Liste modèles");
@@ -731,6 +731,8 @@ if (!defined("_CHOOSE_ONE_OBJECT")) define("_CHOOSE_ONE_OBJECT", "Choisissez au 
 if (!defined("_CLICK_LINE_TO_CHECK_INVOICE")) define("_CLICK_LINE_TO_CHECK_INVOICE", "Cliquer sur une ligne pour vérifier une facture");
 if (!defined("_FOUND_INVOICES")) define("_FOUND_INVOICES", " facture(s) trouvée(s)");
 if (!defined("_SIMPLE_CONFIRM")) define("_SIMPLE_CONFIRM", "Confirmation simple");
+if (!defined("_SEND_FILE_WS")) define("_SEND_FILE_WS", "Envoi du document via Web Service");
+if (!defined("_SEND_DATA_WS")) define("_SEND_DATA_WS", "Envoi de données via Web Service");
 if (!defined("_SIMPLE_CONFIRM_DESC")) define("_SIMPLE_CONFIRM_DESC", "Ouvre simplement une modal de confirmation de l'action à effetuer.");
 if (!defined("_CHECK_INVOICE")) define("_CHECK_INVOICE", "Vérifier facture");
 
@@ -817,7 +819,8 @@ if (!defined("_ADD_COPIES")) define("_ADD_COPIES","Ajouter des personnes en copi
 //Circuits de visa
 if (!defined("_TO_SIGN")) define("_TO_SIGN","Pour signature");
 if (!defined("_VISA_USER"))    define("_VISA_USER", "Pour visa");
-if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "Viseur");
+if (!defined("_VISA_USER_SEARCH"))    define("_VISA_USER_SEARCH", "VISEUR");
+if (!defined("_VISA_USER_SEARCH_MIN"))    define("_VISA_USER_SEARCH_MIN", "Viseur");
 //Circuits d'avis
 if (!defined("_TO_VIEW")) define("_TO_VIEW","Pour avis");
 if (!defined("_TO_SHARED_VIEW")) define("_TO_SHARED_VIEW","Pour avis partagé");
@@ -829,7 +832,7 @@ if (!defined("_NO_ANSWER")) define("_NO_ANSWER","Pas de réponse");
 if (!defined("_ANSWER")) define("_ANSWER","Réponse");
 if (!defined("_DETAILS")) define("_DETAILS", "Fiche détaillée");
 if (!defined("_VISIBLEBY")) define("_VISIBLEBY", "Visible par");
-if (!defined("_DOWNLOAD")) define("_DOWNLOAD", "Télécharger le courrier");
+if (!defined("_DOWNLOAD")) define("_DOWNLOAD", "Télécharger");
 if (!defined("_SEARCH_RESULTS")) define("_SEARCH_RESULTS", "Résultat de la recherche");
 
 if (!defined("_THE_SEARCH")) define("_THE_SEARCH", "La recherche");
@@ -923,6 +926,8 @@ if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Ajouter un nouveau
 if (!defined("_UPDATE_CONTACT")) define("_UPDATE_CONTACT", "Modification des contacts");
 if (!defined("_PHONE")) define("_PHONE", "Téléphone");
 if (!defined("_ADDRESS")) define("_ADDRESS", "Adresse");
+if (!defined("_NO_ADDRESS_GIVEN")) define("_NO_ADDRESS_GIVEN", "Aucune information sur l'adresse");
+if (!defined("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO")) define("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO", "Si vous voulez faire une recherche sur le prénom ET le nom, assurez-vous de l'avoir écrit dans cet ordre.");
 if (!defined("_STREET")) define("_STREET", "Voie");
 if (!defined("_COMPLEMENT")) define("_COMPLEMENT", "Complément");
 if (!defined("_TOWN")) define("_TOWN", "Ville");
@@ -1276,7 +1281,7 @@ if (!defined("_CLOSE_MAIL")) define("_CLOSE_MAIL", "Clôturer un courrier");
 /************** Réouverture courrier **************/
 if (!defined("_MAIL_SENTENCE2")) define("_MAIL_SENTENCE2", "En saisissant le n° chrono ou le n°GED du document, vous modifierez le statut du courrier.");
 if (!defined("_MAIL_SENTENCE3")) define("_MAIL_SENTENCE3", "Cette fonction a pour but de changer le statut d' un courrier.");
-if (!defined("_MAIL_SENTENCE4")) define("_MAIL_SENTENCE4", "Le courrier sera disponible dans la corbeille des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.");
+if (!defined("_MAIL_SENTENCE4")) define("_MAIL_SENTENCE4", "Le courrier sera disponible dans la bannette des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.");
 if (!defined("_MAIL_SENTENCE5")) define("_MAIL_SENTENCE5", "d'accueil suite à la réouverture du courrier.");
 if (!defined("_ENTER_DOC_ID")) define("_ENTER_DOC_ID", " ou le n° GED du document ");
 if (!defined("_ENTER_REF_ID")) define("_ENTER_REF_ID", "Saisissez le n° chrono");
@@ -2107,3 +2112,7 @@ if (!defined('_DOC_CREATED'))
     define('_DOC_CREATED', 'Document créé');
 if (!defined("_SAVE_POSITION"))
     define("_SAVE_POSITION", "Enregistrer");
+
+/***** History *****/
+if (!defined('_UPDATE_STATUS'))
+    define('_UPDATE_STATUS', 'Modification du statut');

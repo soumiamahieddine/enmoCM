@@ -17,7 +17,7 @@ class ActionsControllerTest extends TestCase
 {
     public function testCRUD()
     {
-        $actionController = new \Core\Controllers\ActionsController();
+        $actionController = new \Core\Controllers\ActionController();
 
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);

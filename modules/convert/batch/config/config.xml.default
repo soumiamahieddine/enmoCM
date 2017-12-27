@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <CONFIG>
+        <Lang>fr</Lang> <!-- fr, en-->
+        <MaarchDirectory>/var/www/html/maarch_oem/</MaarchDirectory>
+        <TmpDirectory>/var/www/html/maarch_oem/modules/convert/batch/tmp/</TmpDirectory>
+        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <StackSizeLimit>100</StackSizeLimit>
+        <ApacheUserAndGroup>www-data:www-data</ApacheUserAndGroup>
+        <UnoconvPath>C:\xampp\htdocs\unoconv\</UnoconvPath> <!-- only for Windows -->
+        <OpenOfficePath>C:\Program Files\OpenOffice.org 4\program\</OpenOfficePath> <!-- only for Windows -->
+        <UnoconvOptions>--port 8100</UnoconvOptions>
+        <RegExResId>false</RegExResId>
+        <StartDateRecovery>false</StartDateRecovery> <!-- false or date dd/mm/yyyy -->
+        <CurrentMonthOnly>false</CurrentMonthOnly> <!-- true or false -->
+    </CONFIG>
+    <CONVERT>
+        <OutputFormat>pdf</OutputFormat>
+        <InputFormat>odt,ott,odm,html,oth,ods,ots,odg,otg,odp,otp,odf,doc,docx,xls,xlsx,ppt,pptx,tiff,tif,png,jpeg,jpg,gif</InputFormat>
+    </CONVERT>
+    <CONVERT>
+        <OutputFormat>html</OutputFormat>
+        <InputFormat>odt,ods,doc,docx,xls,xlsx,ppt,pptx</InputFormat>
+    </CONVERT>
+    <CONVERT>
+        <OutputFormat>png</OutputFormat>
+        <InputFormat>odt,ods,doc,docx,xls,xlsx,ppt,pptx</InputFormat>
+    </CONVERT>
+    <CONFIG_BASE>
+        <databaseserver>127.0.0.1</databaseserver>
+        <databaseserverport>5432</databaseserverport>
+        <databasetype>POSTGRESQL</databasetype>
+        <databasename>maarch_oem</databasename>
+        <databaseuser>maarch</databaseuser>
+        <databasepassword>maarch</databasepassword>
+    </CONFIG_BASE>
+    <COLLECTION>
+        <Id>letterbox_coll</Id>
+        <Table>res_letterbox</Table>
+        <View>res_view_letterbox</View>
+        <Adr>adr_letterbox</Adr>
+    </COLLECTION>
+    <COLLECTION>
+        <Id>attachments_coll</Id>
+        <Table>res_attachments</Table>
+        <View>res_view_attachments</View>
+        <Adr>adr_attachments</Adr>
+    </COLLECTION>
+    <LOG4PHP>
+        <enabled>true</enabled>
+        <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+        <Log4PhpBusinessCode>Convert</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/html/maarch_oem/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+    </LOG4PHP>
+</ROOT>

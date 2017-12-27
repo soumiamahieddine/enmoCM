@@ -70,13 +70,26 @@ if (empty($_SESSION['user'])) {
 
 //login management
 if (empty($_SESSION['user'])) {
-    require_once('apps/maarch_entreprise/class/class_login.php');
-    $loginObj = new login();
-    $loginMethods = $loginObj->build_login_method();
-    require_once('core/services/Session.php');
-    $oSessionService = new \Core_Session_Service();
+    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+        $_SESSION['error'] = '';
+        $security = new security();
+        $pass = $security->getPasswordHash($_SERVER['PHP_AUTH_PW']);
+        $res  = $security->login($_SERVER['PHP_AUTH_USER'], $pass);
 
-    $loginObj->execute_login_script($loginMethods, true);
+        $_SESSION['user'] = $res['user'];
+        if (!empty($res['error'])) {
+            $_SESSION['error'] = $res['error'];
+        }
+    } else {
+        require_once('apps/maarch_entreprise/class/class_login.php');
+        $loginObj = new login();
+        $loginMethods = $loginObj->build_login_method();
+        require_once('core/services/Session.php');
+        $oSessionService = new \Core_Session_Service();
+
+        $loginObj->execute_login_script($loginMethods, true);
+    }
+
 }
 
 if ($_SESSION['error']) {
@@ -132,13 +145,13 @@ $app->post('/status', \Core\Controllers\StatusController::class . ':create');
 $app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
 $app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
 
-//docserver
-$app->get('/docserver', \Core\Controllers\DocserverController::class . ':getList');
-$app->get('/docserver/{id}', \Core\Controllers\DocserverController::class . ':getById');
+//Docservers
+$app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
+$app->get('/docservers/{id}', \Core\Controllers\DocserverController::class . ':getById');
 
-//docserverType
-$app->get('/docserverType', \core\Controllers\DocserverTypeController::class . ':getList');
-$app->get('/docserverType/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+//DocserverTypes
+$app->get('/docserverTypes', \core\Controllers\DocserverTypeController::class . ':get');
+$app->get('/docserverTypes/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
@@ -153,14 +166,13 @@ $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\Vi
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
 $app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
-//resource
+//Res
 $app->post('/res', \Core\Controllers\ResController::class . ':create');
+$app->post('/resExt', \Core\Controllers\ResController::class . ':createExt');
 $app->put('/res', \Core\Controllers\ResController::class . ':update');
+$app->put('/res/{resId}/status', \Core\Controllers\ResController::class . ':updateStatus');
 $app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
 $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
-
-//extresource
-$app->post('/resExt', \Core\Controllers\ResExtController::class . ':create');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
@@ -184,7 +196,6 @@ $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserControll
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
 $app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
-
 
 //CurrentUser
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
@@ -215,12 +226,12 @@ $app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryC
 $app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
 
 //actions
-$app->get('/administration/actions', \Core\Controllers\ActionsController::class . ':getForAdministration');
-$app->get('/initAction', \Core\Controllers\ActionsController::class . ':initAction');
-$app->get('/administration/actions/{id}', \Core\Controllers\ActionsController::class . ':getByIdForAdministration');
-$app->post('/actions', \Core\Controllers\ActionsController::class . ':create');
-$app->put('/actions/{id}', \Core\Controllers\ActionsController::class . ':update');
-$app->delete('/actions/{id}', \Core\Controllers\ActionsController::class . ':delete');
+$app->get('/administration/actions', \Core\Controllers\ActionController::class . ':getForAdministration');
+$app->get('/initAction', \Core\Controllers\ActionController::class . ':initAction');
+$app->get('/administration/actions/{id}', \Core\Controllers\ActionController::class . ':getByIdForAdministration');
+$app->post('/actions', \Core\Controllers\ActionController::class . ':create');
+$app->put('/actions/{id}', \Core\Controllers\ActionController::class . ':update');
+$app->delete('/actions/{id}', \Core\Controllers\ActionController::class . ':delete');
 
 //Notifications
 $app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
@@ -233,8 +244,31 @@ $app->delete('/notifications/{id}', \Notifications\Controllers\NotificationContr
 $app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
 
+//Listinstance
+$app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
+
+//Contacts
+$app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
+
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
 
+//Links
+$app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
+
+//liste documents
+$app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
 
 $app->run();
+
+if ($_SESSION['user']['UserId'] == 'restUser') {
+    $name = $_SESSION['sessionName'];
+
+    setcookie ($name, "", 1);
+    setcookie ($name, false);
+    unset($_COOKIE[$name]);
+
+    session_unset();
+    session_destroy();
+    unset($_SESSION['sessionName']);
+}

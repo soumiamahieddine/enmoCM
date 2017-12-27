@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief   Contains all the functions to manage the users groups security 
+* @brief   Contains all the functions to manage the users groups security
 * and connexion to the application
 *
 * @file
@@ -30,7 +30,7 @@
 */
 
 /**
-* @brief   contains all the functions to manage the users groups security 
+* @brief   contains all the functions to manage the users groups security
 * through session variables
 *
 *<ul>
@@ -66,10 +66,8 @@ class security extends Database
     */
     public function get_ind_collection($coll_id)
     {
-        for($i=0;$i< count($_SESSION['collections']); $i++)
-        {
-            if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
-            {
+        for ($i=0;$i< count($_SESSION['collections']); $i++) {
+            if (trim($_SESSION['collections'][$i]['id']) == trim($coll_id)) {
                 return $i;
             }
         }
@@ -82,7 +80,7 @@ class security extends Database
     * @param  $s_login  string User login
     * @param  $pass string User password
     */
-    public function login($s_login,$pass, $method = false, $ra_code=false)
+    public function login($s_login, $pass, $method = false, $ra_code=false)
     {
         $array = array();
         $error = '';
@@ -105,7 +103,7 @@ class security extends Database
             // #TODO : do evolution of the loginmethod in sql query
             if ($method == 'activex') {
                 $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
-            } else if ($method == 'ldap') {
+            } elseif ($method == 'ldap') {
                 $comp =" and STATUS <> 'DEL'";
             } else {
                 if ($ra_code <> false) {
@@ -142,12 +140,11 @@ class security extends Database
                 $sec_controler  = new SecurityControler();
                 $serv_controler = new ServiceControler();
                 if (isset($_SESSION['modules_loaded']['visa'])) {
-
                     require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
                     $us = new UserSignatures();
                     $db = new Database();
-                    $query = "select path_template from " 
-                        . _DOCSERVERS_TABLE_NAME 
+                    $query = "select path_template from "
+                        . _DOCSERVERS_TABLE_NAME
                         . " where docserver_id = 'TEMPLATES'";
                     $stmt     = $db->query($query);
                     $resDs    = $stmt->fetchObject();
@@ -157,8 +154,8 @@ class security extends Database
                     $_SESSION['user']['pathToSignature'] = array();
                     foreach ($tab_sign as $sign) {
                         $path = $pathToDs . str_replace(
-                            "#", 
-                            DIRECTORY_SEPARATOR, 
+                            "#",
+                            DIRECTORY_SEPARATOR,
                             $sign['signature_path']
                         )
                         . $sign['signature_file_name'];
@@ -166,7 +163,6 @@ class security extends Database
                     }
 
                     $_SESSION['user']['code_session'] = $ra_code;
-
                 }
                 $array = array(
                     'change_pass'     => $user->__get('change_password'),
@@ -197,7 +193,7 @@ class security extends Database
                 $business_app_tools->load_app_var_session($array);
                 $core_tools->load_var_session($_SESSION['modules'], $array);
                 
-                /************Temporary fix*************/ 
+                /************Temporary fix*************/
                 // #TODO : revoir les functions load_var_session dans class_modules_tools pour ne plus charger en session les infos
                 if (isset($_SESSION['user']['baskets'])) {
                     $array['baskets'] = $_SESSION['user']['baskets'];
@@ -220,7 +216,11 @@ class security extends Database
                 if ($_SESSION['history']['userlogin'] == 'true') {
                     //add new instance in history table for the user's connexion
                     $hist = new history();
-                    $ip = $_SERVER['REMOTE_ADDR'];
+                    if ($_SERVER['REMOTE_ADDR'] == '::1') {
+                        $ip = 'localhost';
+                    } else {
+                        $ip = $_SERVER['REMOTE_ADDR'];
+                    }
                     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
                     $_SESSION['user']['UserId']       = $s_login;
                     $_SESSION['user']['department']   = $array['department'];
@@ -229,7 +229,7 @@ class security extends Database
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,
-                        'LOGIN','userlogin',
+                        'LOGIN', 'userlogin',
                         _LOGIN_HISTORY . ' '. $s_login . ' IP : ' . $ip,
                         $_SESSION['config']['databasetype']
                     );
@@ -241,7 +241,7 @@ class security extends Database
                         'error' => $error,
                         'url'   => 'index.php?display=true&page=change_pass'
                     );
-                } else if (isset($_SESSION['requestUri'])
+                } elseif (isset($_SESSION['requestUri'])
                     && trim($_SESSION['requestUri']) <> ''
                     && ! preg_match('/page=login/', $_SESSION['requestUri'])) {
                     return array(
@@ -276,22 +276,31 @@ class security extends Database
         }
     }
 
-    public function test_allowed_ip(){
+    public function test_allowed_ip()
+    {
         $db = new Database();
-        $current_ip = $_SERVER['REMOTE_ADDR'];
-        
-        $list_ip = "SELECT ip from allowed_ip";
-        $stmt = $db->query($list_ip,array());
-        while ($res = $stmt->fetchObject()){
-            if ($res->ip == $current_ip) return true;
+        if ($_SERVER['REMOTE_ADDR'] == '::1') {
+            $current_ip = 'localhost';
+        } else {
+            $current_ip = $_SERVER['REMOTE_ADDR'];
         }
-        if ($stmt->rowCount() == 0) return true;
+        $list_ip = "SELECT ip from allowed_ip";
+        $stmt = $db->query($list_ip, array());
+        while ($res = $stmt->fetchObject()) {
+            if ($res->ip == $current_ip) {
+                return true;
+            }
+        }
+        if ($stmt->rowCount() == 0) {
+            return true;
+        }
         return false;
     }
 
-    public function generateRaCode($login, $password = '', $redirect = true){
+    public function generateRaCode($login, $password = '', $redirect = true)
+    {
         require_once 'apps/maarch_entreprise/class/class_users.php';
-        $users = new class_users(); 
+        $users = new class_users();
         $userInfo = $users->get_user($_SESSION['user']['UserId']);
         
         $authorized_characters = '0123456789';
@@ -303,7 +312,7 @@ class security extends Database
             $raCodeGenerated .= rand(1, $max_rand);
             $cpt_motDePasse++;
         }
-        $expireTSamp  = mktime(date("H"), date("i")+15, date("s"), date("m"),   date("d"),   date("Y"));
+        $expireTSamp  = mktime(date("H"), date("i")+15, date("s"), date("m"), date("d"), date("Y"));
         $expiration_date = date("d-m-Y H:i:s", $expireTSamp);
         
         $db = new Database();
@@ -312,25 +321,24 @@ class security extends Database
         
         /* GENERATION DU MAIL */
         $mailToSend = '<html>';
-            $mailToSend .= '<body>';
-                $mailToSend .= '<p>';
-                    $mailToSend .= _CONFIRM_ASK_RA_CODE_1 . '<br />';
-                    $mailToSend .= _CONFIRM_ASK_RA_CODE_2 . $raCodeGenerated . ' <br />';
-                    $mailToSend .= _CONFIRM_ASK_RA_CODE_3 . $expiration_date . '<br />';
-                $mailToSend .= '</p>';
-            $mailToSend .= '</body>';
+        $mailToSend .= '<body>';
+        $mailToSend .= '<p>';
+        $mailToSend .= _CONFIRM_ASK_RA_CODE_1 . '<br />';
+        $mailToSend .= _CONFIRM_ASK_RA_CODE_2 . $raCodeGenerated . ' <br />';
+        $mailToSend .= _CONFIRM_ASK_RA_CODE_3 . $expiration_date . '<br />';
+        $mailToSend .= '</p>';
+        $mailToSend .= '</body>';
         $mailToSend .= '</html>';
         
-         if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
+        if (file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
             .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'
             .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-            .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml')){
+            .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml')) {
             $path_to_config = $_SESSION['config']['corepath']
                 .'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
                 .DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR
                 .$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml';
-        } 
-        else {
+        } else {
             $path_to_config = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
             .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml';
         }
@@ -352,9 +360,11 @@ class security extends Database
         $mailer->Password = (string)$mailerParams->smtp_password;
         $mailer->Helo     = (string)$mailerParams->domains;
         
-        if ((string)$mailerParams->type == "smtp") $mailer->isSMTP();
-        $mailer->setFrom((string)$mailerParams->mailfrom,(string)$mailerParams->mailfromname);
-        $mailer->addReplyTo((string)$mailerParams->mailfrom,(string)$mailerParams->mailfromname);
+        if ((string)$mailerParams->type == "smtp") {
+            $mailer->isSMTP();
+        }
+        $mailer->setFrom((string)$mailerParams->mailfrom, (string)$mailerParams->mailfromname);
+        $mailer->addReplyTo((string)$mailerParams->mailfrom, (string)$mailerParams->mailfromname);
         $mailer->addAddress($userInfo['mail']);
         $mailer->Subject = (string)$mailerParams->subject;
         $mailer->CharSet = (string)$mailerParams->charset;
@@ -362,17 +372,23 @@ class security extends Database
         if (!$mailer->send()) {
             $_SESSION['error'] .= ' mail not send to '.$userInfo['mail'].': '.$mailer->ErrorInfo;
 
-            if ($redirect){
-                if ($_SESSION['isSmartphone']) header('location: smartphone/index.php?page=login');
-                else header('location: index.php?page=login&display=true');
+            if ($redirect) {
+                if ($_SESSION['isSmartphone']) {
+                    header('location: smartphone/index.php?page=login');
+                } else {
+                    header('location: index.php?page=login&display=true');
+                }
             }
         } else {
             $_SESSION['error'] .= ' '._CONFIRM_ASK_RA_CODE_7;
             $_SESSION['recup_user']['login'] = $login;
             $_SESSION['recup_user']['password'] = $password;
-            if ($redirect){
-                if ($_SESSION['isSmartphone']) header('location: smartphone/index.php?page=login&withRA_CODE=true');
-                else  header('location: index.php?page=login&withRA_CODE=true&display=true');
+            if ($redirect) {
+                if ($_SESSION['isSmartphone']) {
+                    header('location: smartphone/index.php?page=login&withRA_CODE=true');
+                } else {
+                    header('location: index.php?page=login&withRA_CODE=true&display=true');
+                }
             }
         }
     }
@@ -383,7 +399,7 @@ class security extends Database
     * @param  $s_UserId  string User identifier
     * @param  $s_key string Cookie key
     */
-    public function reopen($s_UserId,$s_key)
+    public function reopen($s_UserId, $s_key)
     {
         header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
         exit();
@@ -399,10 +415,8 @@ class security extends Database
     public function retrieve_insert_collections()
     {
         $arr = array();
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if (isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table'])) {
                 array_push($arr, $_SESSION['collections'][$i]);
             }
         }
@@ -428,10 +442,8 @@ class security extends Database
     */
     public function get_script_from_coll($coll_id, $script_name)
     {
-        for($i=0; $i < count($_SESSION['collections']);$i++)
-        {
-            if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
-            {
+        for ($i=0; $i < count($_SESSION['collections']);$i++) {
+            if (trim($_SESSION['collections'][$i]['id']) == trim($coll_id)) {
                 return trim($_SESSION['collections'][$i][$script_name]);
             }
         }
@@ -513,10 +525,8 @@ class security extends Database
     */
     public function retrieve_coll_table_from_view($view)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['view'] == $view)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['view'] == $view) {
                 return $_SESSION['collections'][$i]['table'];
             }
         }
@@ -531,10 +541,8 @@ class security extends Database
     */
     public function retrieve_coll_id_from_view($view)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['view'] == $view)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['view'] == $view) {
                 return $_SESSION['collections'][$i]['id'];
             }
         }
@@ -550,10 +558,8 @@ class security extends Database
     */
     public function retrieve_view_from_coll_id($coll_id)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['id'] == $coll_id)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $coll_id) {
                 return $_SESSION['collections'][$i]['view'];
             }
         }
@@ -568,10 +574,8 @@ class security extends Database
     */
     public function retrieve_view_from_table($table)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['table'] == $table)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['table'] == $table) {
                 return $_SESSION['collections'][$i]['view'];
             }
         }
@@ -586,10 +590,8 @@ class security extends Database
     */
     public function retrieve_table_from_coll($coll_id)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['id'] == $coll_id)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $coll_id) {
                 return $_SESSION['collections'][$i]['table'];
             }
         }
@@ -620,10 +622,8 @@ class security extends Database
     */
     public function retrieve_table_from_view($view)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['view'] == $view)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['view'] == $view) {
                 return $_SESSION['collections'][$i]['table'];
             }
         }
@@ -638,10 +638,8 @@ class security extends Database
     */
     public function retrieve_coll_label_from_table($table)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['table'] == $table)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['table'] == $table) {
                 return $_SESSION['collections'][$i]['label'];
             }
         }
@@ -656,10 +654,8 @@ class security extends Database
     */
     public function retrieve_coll_label_from_coll_id($coll_id)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['id'] == $coll_id)
-            {
+        for ($i=0; $i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $coll_id) {
                 return $_SESSION['collections'][$i]['label'];
             }
         }
@@ -699,10 +695,8 @@ class security extends Database
     public function retrieve_user_insert_coll()
     {
         $arr = array();
-        for($i=0; $i<count($_SESSION['user']['security']);$i++)
-        {
-            if(isset($_SESSION['user']['security'][$i]['table']) && !empty( $_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y')
-            {
+        for ($i=0; $i<count($_SESSION['user']['security']);$i++) {
+            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y') {
                 $ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
                 array_push($arr, array('coll_id'=> $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'] , 'table' => $_SESSION['user']['security'][$i]['table']));
             }
@@ -720,16 +714,13 @@ class security extends Database
     */
     public function collection_user_right($coll_id, $action)
     {
-        if(!isset($coll_id))
-        {
+        if (!isset($coll_id)) {
             return false;
         }
         $func = new functions();
         $flag = false;
-        for($i=0; $i<count($_SESSION['user']['security']);$i++)
-        {
-            if((isset($_SESSION['user']['security'][$i]['coll_id']) && $_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y')
-            {
+        for ($i=0; $i<count($_SESSION['user']['security']);$i++) {
+            if ((isset($_SESSION['user']['security'][$i]['coll_id']) && $_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y') {
                 $flag = true;
             }
         }
@@ -745,8 +736,7 @@ class security extends Database
     */
     public function get_where_clause_from_coll_id($coll_id)
     {
-        if(isset($_SESSION['user']['security'][$coll_id]['DOC']['where']))
-        {
+        if (isset($_SESSION['user']['security'][$coll_id]['DOC']['where'])) {
             return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
         }
         return '';
@@ -762,22 +752,22 @@ class security extends Database
     {
         $collectionWhereClause = $this->get_where_clause_from_coll_id($coll_id);
 
-        if(empty($collectionWhereClause)){
+        if (empty($collectionWhereClause)) {
             $collectionWhereClause = '1=0';
         }
 
         $userBaskets = count($_SESSION['user']['baskets']);
 
-        for($ind_bask = 0; $ind_bask < $userBaskets; $ind_bask++) {
-            if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
-                && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N' 
-                && isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
+        for ($ind_bask = 0; $ind_bask < $userBaskets; $ind_bask++) {
+            if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
+                && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
+                && isset($_SESSION['user']['baskets'][$ind_bask]['clause'])
                 && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                    $basketWhereClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                $basketWhereClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
             }
         }
 
-        if(empty($basketWhereClause)){
+        if (empty($basketWhereClause)) {
             $basketWhereClause = '1=0';
         } else {
             $basketWhereClause = preg_replace('/^ or/', '', $basketWhereClause);
@@ -786,7 +776,6 @@ class security extends Database
         $whereRequest = '('.$collectionWhereClause.' or '. $basketWhereClause .')';
         
         return $whereRequest;
-
     }
 
     /**
@@ -797,10 +786,8 @@ class security extends Database
     */
     public function get_where_clause_from_view($view)
     {
-        foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-        {
-            if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
-            {
+        foreach (array_keys($_SESSION['user']['security']) as $coll_id) {
+            if ($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view) {
                 return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
             }
         }
@@ -815,10 +802,8 @@ class security extends Database
     */
     public function retrieve_user_coll_table($view)
     {
-        foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-        {
-            if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
-            {
+        foreach (array_keys($_SESSION['user']['security']) as $coll_id) {
+            if ($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view) {
                 return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
             }
         }
@@ -879,21 +864,21 @@ class security extends Database
                 if (
                     $_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
                 ) {
-                    if(
-                        isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
+                    if (
+                        isset($_SESSION['user']['baskets'][$ind_bask]['clause'])
                         && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
-                        ) <> '' 
+                        ) <> ''
                         && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
                     ) {
-                        $basketQuery .= ' or (' 
-                            . $_SESSION['user']['baskets'][$ind_bask]['clause'] 
+                        $basketQuery .= ' or ('
+                            . $_SESSION['user']['baskets'][$ind_bask]['clause']
                             . ')';
                     }
-                 }
+                }
             }
             if ($basketQuery <> '') {
                 $basketQuery = preg_replace('/^ or/', '', $basketQuery);
-                $query = "select res_id from " 
+                $query = "select res_id from "
                     . $view . " where (" . $basketQuery . ") and res_id = ?";
                 $stmt = $this->query($query, array($s_id));
                 if ($stmt->rowCount() < 1) {

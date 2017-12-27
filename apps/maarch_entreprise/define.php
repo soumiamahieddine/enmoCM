@@ -30,5 +30,5 @@ if (!defined('V2_ENABLED')) {
 	define('V2_ENABLED', false);
 }
 if (!defined('PROD_MODE')) {
-	define('PROD_MODE', true);
+	define('PROD_MODE', false);
 }

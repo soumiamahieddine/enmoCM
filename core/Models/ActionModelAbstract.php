@@ -4,14 +4,14 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   ActionsModelAbstract
+* @brief   ActionModelAbstract
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
 
 namespace Core\Models;
 
-class ActionsModelAbstract
+class ActionModelAbstract
 {
     public static function getList()
     {
@@ -67,7 +67,7 @@ class ActionsModelAbstract
             ]
         );
 
-        $tab['action_id'] = max(ActionsModel::getList())['id'];
+        $tab['action_id'] = max(ActionModel::getList())['id'];
 
         for ($i=0;$i<count($actioncategories);$i++) {
 
@@ -284,6 +284,44 @@ class ActionsModelAbstract
         //$tabKeyword[] = ['value' => 'workflow', label => _WF];
 
         return $tabKeyword;
+    }
+
+    public static function getActionPageById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+
+        $action = DatabaseModel::select([
+            'select'    => ['action_page'],
+            'table'     => ['actions'],
+            'where'     => ['id = ? AND enabled = ?'],
+            'data'      => [$aArgs['id'], 'Y']
+        ]);
+
+        if (empty($action[0])) {
+            return '';
+        }
+
+        return $action[0]['action_page'];
+    }
+
+    public static function getDefaultActionByGroupBasketId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'basketId']);
+        ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);
+
+        $action = DatabaseModel::select([
+            'select'    => ['id_action'],
+            'table'     => ['actions_groupbaskets'],
+            'where'     => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
+            'data'      => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
+        ]);
+
+        if (empty($action[0])) {
+            return '';
+        }
+
+        return $action[0]['id_action'];
     }
 }
 

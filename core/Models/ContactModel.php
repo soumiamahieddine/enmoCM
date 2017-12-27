@@ -1,5 +1,6 @@
 <?php
 
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -8,14 +9,14 @@
 */
 
 /**
-* @brief Status Model
+* @brief Contact Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
 namespace Core\Models;
 
-class ActionsModel extends ActionsModelAbstract
+
+class ContactModel extends ContactModelAbstract
 {
-    // Do your stuff in this class
 }

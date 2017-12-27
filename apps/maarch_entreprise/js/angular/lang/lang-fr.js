@@ -66,7 +66,7 @@ exports.LANG_FR = {
     "renewPsw": "Retaper le mot de passe",
     "manageSignatures": "Gérer les signatures",
     "newSignature": "Nouvelle signature",
-    "manageAbsences": "Gérer les absences",
+    "manageAbsences": "Rediriger mes bannettes",
     "activateAbsence": "Activer l'absence",
     "desactivateAbsence": "Désactiver l'absence",
     "autoLogoutAbsence": "Vous allez être automatiquement déconnecté après avoir défini vos redirections de bannettes",

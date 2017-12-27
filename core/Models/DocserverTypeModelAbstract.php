@@ -17,30 +17,35 @@ namespace Core\Models;
 
 class DocserverTypeModelAbstract
 {
-    public static function getList()
+    public static function get(array $aArgs = [])
     {
-        $aReturn = DatabaseModel::select([
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aDocserverTypes = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docserver_types'],
         ]);
 
-        return $aReturn;
+        return $aDocserverTypes;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-
-        $aReturn = DatabaseModel::select([
+        $aDocserverType = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docserver_types'],
             'where'     => ['docserver_type_id = ?'],
-            'data'      => [$aArgs['docserver_type_id']]
+            'data'      => [$aArgs['id']]
         ]);
 
-        return $aReturn;
+        if (empty($aDocserverType[0])) {
+            return [];
+        }
+
+        return $aDocserverType[0];
     }
 
     public static function create(array $aArgs = [])
@@ -71,15 +76,15 @@ class DocserverTypeModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         DatabaseModel::delete([
-                'table' => 'docserver_types',
-                'where' => ['docserver_type_id = ?'],
-                'data'  => [$aArgs['docserver_type_id']]
+            'table' => 'docserver_types',
+            'where' => ['docserver_type_id = ?'],
+            'data'  => [$aArgs['id']]
         ]);
 
         return true;

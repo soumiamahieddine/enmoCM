@@ -723,6 +723,8 @@ if (!defined("_CHOOSE_ONE_OBJECT")) define("_CHOOSE_ONE_OBJECT", "Choose an elem
 if (!defined("_CLICK_LINE_TO_CHECK_INVOICE")) define("_CLICK_LINE_TO_CHECK_INVOICE", "Click on a lign to check a bill");
 if (!defined("_FOUND_INVOICES")) define("_FOUND_INVOICES", " Found bill(s)");
 if (!defined("_SIMPLE_CONFIRM")) define("_SIMPLE_CONFIRM", "Simple confirmation");
+if (!defined("_SEND_FILE_WS")) define("_SEND_FILE_WS", "Send file via Web Service");
+if (!defined("_SEND_DATA_WS")) define("_SEND_DATA_WS", "Send data via Web Service");
 if (!defined("_CHECK_INVOICE")) define("_CHECK_INVOICE", "Check bill");
 
 if (!defined("_REDIRECT_TO")) define("_REDIRECT_TO", "Redirected to");
@@ -913,6 +915,8 @@ if (!defined("_ADD_NEW_CONTACT")) define("_ADD_NEW_CONTACT", "Add a new contact"
 if (!defined("_UPDATE_CONTACT")) define("_UPDATE_CONTACT", "Contacts modification");
 if (!defined("_PHONE")) define("_PHONE", "Phone");
 if (!defined("_ADDRESS")) define("_ADDRESS", "Address");
+if (!defined("_NO_ADDRESS_GIVEN")) define("_NO_ADDRESS_GIVEN", "No address given");
+if (!defined("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO")) define("_NO_RESULTS_AUTOCOMPLETE_CONTACT_INFO", "If you want search on firstname AND lastname, you must write your search in this order.");
 if (!defined("_STREET")) define("_STREET", "Street");
 if (!defined("_COMPLEMENT")) define("_COMPLEMENT", "Complement");
 if (!defined("_TOWN")) define("_TOWN", "City");
@@ -2050,3 +2054,7 @@ if (!defined('_DOC_CREATED'))
     define('_DOC_CREATED', 'Document created');
 if (!defined("_SAVE_POSITION"))
     define("_SAVE_POSITION", "Save");
+
+/***** History *****/
+if (!defined('_UPDATE_STATUS'))
+    define('_UPDATE_STATUS', 'Status update');

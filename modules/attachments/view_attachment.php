@@ -126,11 +126,11 @@ if (! empty($_SESSION['error'])) {
         } else {
             $line = $stmt->fetchObject();
 
-            if(!empty($_GET['editingMode'])){
+            if((!empty($_GET['editingMode']) || !empty($_GET['viewpdf'])) && strpos($line->format, 'xl') === false && strpos($line->format, 'ppt') === false){
                 $stmtPdf = $db->query(
                     "SELECT docserver_id, path, filename, format, title
                      FROM res_view_attachments
-                     WHERE filename=? AND status = 'TRA'", array(substr($line->filename, 0, strrpos($line->filename, ".")).'.pdf')
+                     WHERE filename=? AND (status = 'TRA' or status = 'A_TRA')", array(substr($line->filename, 0, strrpos($line->filename, ".")).'.pdf')
                 );
                 $linePdf = $stmtPdf->fetchObject();
                 if(!empty($linePdf)){
@@ -139,21 +139,21 @@ if (! empty($_SESSION['error'])) {
             }
 
             $docserver = $line->docserver_id;
-            $path = $line->path;
-            $filename = $line->filename;
-	    $nameShow = $function->normalize($line->title);
-	    $nameShow = preg_replace('/([^.a-z0-9]+)/i', '_', $nameShow);
-	    $nameShow .= '_'. date("j_m_Y__G_i");
-            $format = $line->format;
+            $path      = $line->path;
+            $filename  = $line->filename;
+            $nameShow  = $function->normalize($line->title);
+            $nameShow  = preg_replace('/([^.a-z0-9]+)/i', '_', $nameShow);
+            $nameShow  .= '_'. date("j_m_Y__G_i");
+            $format    = $line->format;
             $stmt = $db->query(
                 "select path_template from " . _DOCSERVERS_TABLE_NAME
                 . " where docserver_id = ?",array($docserver)
             );
             //$db->show();
-            $lineDoc = $stmt->fetchObject();
+            $lineDoc   = $stmt->fetchObject();
             $docserver = $lineDoc->path_template;
-            $file = $docserver . $path . $filename;
-            $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+            $file      = $docserver . $path . $filename;
+            $file      = str_replace("#", DIRECTORY_SEPARATOR, $file);
 
             if (strtoupper($format) == "MAARCH") {
                 if (file_exists($file)) {
@@ -177,6 +177,12 @@ if (! empty($_SESSION['error'])) {
                     $_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS . "...";
                     ?><script type="text/javascript">window.opener.top.location.href='index.php';self.close();</script><?php
                 }
+            } else if(!empty($_GET['editingMode']) && !in_array($format, ['pdf', 'jpg', 'jpeg', 'png'])){
+                ?>
+                <div style="border: dashed;font-weight: bold;opacity: 0.5;font-size: 30px;height: 96%;text-align: center">
+                    <div style="padding-top: 25%;"><?php echo _NO_PREVIEW_AVAILABLE;?><br><sub><?php echo _FILE_HAS_NO_PDF;?></sub></div>
+                </div>
+                <?php
             } else {
                 require_once 'core/docservers_tools.php';
                 $arrayIsAllowed = array();
@@ -191,6 +197,10 @@ if (! empty($_SESSION['error'])) {
                     }
                     //WATERMARK
                     if (strtoupper($format) == 'PDF') {
+                        if($_REQUEST['watermark_outgoing'] == 'true'){
+                            $_SESSION['modules_loaded']['attachments']['watermark']['enabled'] = 'true';
+                        }
+                        
                         if ($_SESSION['modules_loaded']['attachments']['watermark']['enabled'] == 'true') {
                             $table = 'res_attachments';
                             $watermarkForAttachments = true;

@@ -40,7 +40,7 @@ if (!defined("_VISA_ANSWERS_DESC"))
 if (!defined("_NO_VISA"))
     define("_NO_VISA", "Aucune personne désignée en visa");
 if (!defined("_NO_RESPONSE_PROJECT_VISA"))
-    define("_NO_RESPONSE_PROJECT_VISA", "Veuillez au moins créer une pièce jointe et l'éditer");
+    define("_NO_RESPONSE_PROJECT_VISA", "Veuillez intégrer au moins une pièce jointe au parapheur.");
 if (!defined("_NO_CONVERTED_PDF_VISA"))
     define("_NO_CONVERTED_PDF_VISA", "Veuillez éditer votre/vos pièce(s) jointe(s)");
 if (!defined("_PLEASE_CONVERT_PDF_VISA"))
@@ -164,7 +164,7 @@ if (!defined("_NO_SIGNATORY"))
     define("_NO_SIGNATORY", "Aucun signataire");
 
 if (!defined("_SIGNATORY"))
-    define("_SIGNATORY", "Signataire");
+    define("_SIGNATORY", "SIGNATAIRE");
 
 if (!defined("_SIGNED_TO"))
     define("_SIGNED_TO", "Signé le");
@@ -290,3 +290,15 @@ if(!defined('_CONTROL_TECHNICAL_PARAMS'))
 
 if (!defined('_DRAG_N_DROP_CHANGE_ORDER'))
     define('_DRAG_N_DROP_CHANGE_ORDER', 'Glisser/déposer pour modifier l\'ordre du circuit');
+
+if (!defined('_DRAG_N_DROP_CHANGE_ORDER'))
+    define('_DRAG_N_DROP_CHANGE_ORDER', 'Glisser/déposer pour modifier l\'ordre du circuit');
+
+if (!defined('_NO_USER_SIGNED_DOC'))
+    define('_NO_USER_SIGNED_DOC', "vous n'avez PAS signé de pièce jointe !");
+
+if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO'))
+    define('_IS_ALL_ATTACHMENT_SIGNED_INFO', "Vous ne pourrez pas demander de signature aux utilisateurs, aucune pièce jointe présente dans le parapheur");
+
+if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO2'))
+    define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', "Toutes les pièces jointes présentes dans le parapheur ont été signées.");

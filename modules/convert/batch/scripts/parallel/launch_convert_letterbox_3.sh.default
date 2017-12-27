@@ -1,0 +1,8 @@
+#!/bin/bash
+Mypath='/var/www/html/maarch_oem/modules/convert/batch'
+cd $Mypath
+ConfigPath='/var/www/html/maarch_oem/modules/convert/batch/parallel/config'
+
+for (( i=0; i < 3; i++ ));
+    do php $Mypath/fill_stack.php -c $ConfigPath/config_3.xml -coll letterbox_coll
+done

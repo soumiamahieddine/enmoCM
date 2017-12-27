@@ -4,7 +4,7 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   ActionsController
+* @brief   ActionController
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
@@ -14,16 +14,16 @@ namespace Core\Controllers;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Core\Models\ActionsModel;
+use Core\Models\ActionModel;
 use Core\Models\StatusModel;
 use Core\Models\LangModel;
 
-class ActionsController
+class ActionController
 {
     public function getForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         
-        $obj ['actions']= ActionsModel::getList();
+        $obj ['actions']= ActionModel::getList();
        
         return $response->withJson($obj);
     }
@@ -32,7 +32,7 @@ class ActionsController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj['action'] = ActionsModel::getById(['id' => $id]);
+            $obj['action'] = ActionModel::getById(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
@@ -69,7 +69,7 @@ class ActionsController
         }
         $obj['action']['actionCategories'] = $arrActionCategories;
 
-        $obj['categoriesList'] = ActionsModel:: getLettersBoxCategories();
+        $obj['categoriesList'] = ActionModel:: getLettersBoxCategories();
 
         //array of id categoriesList
         foreach ($obj['categoriesList'] as $key => $category) {
@@ -83,9 +83,9 @@ class ActionsController
     
         $obj['statusList'] = StatusModel::getList();
         array_unshift($obj['statusList'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList']=ActionsModel::getAction_pages();
+        $obj['action_pagesList']=ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
-        $obj['keywordsList']=ActionsModel::getKeywords();
+        $obj['keywordsList']=ActionModel::getKeywords();
   
         return $response->withJson($obj);
     }
@@ -107,12 +107,12 @@ class ActionsController
                 ->withJson(['errors' => $errors]);
         }
     
-        $return = ActionsModel::create($aArgs);
+        $return = ActionModel::create($aArgs);
 
         if ($return) {
             $id = $aArgs['id'];
 
-            $obj = max(ActionsModel::getList());
+            $obj = max(ActionModel::getList());
         } else {
             return $response
                 ->withStatus(500)
@@ -144,11 +144,11 @@ class ActionsController
                 ->withJson(['errors' => $errors]);
         }
 
-        $return = ActionsModel::update($obj);
+        $return = ActionModel::update($obj);
 
         if ($return) {
             $id = $aArgs['id'];
-            $obj = ActionsModel::getById(['id' => $id]);
+            $obj = ActionModel::getById(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
@@ -168,7 +168,7 @@ class ActionsController
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
-            $obj = ActionsModel::delete(['id' => $id]);
+            ActionModel::delete(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
@@ -178,7 +178,7 @@ class ActionsController
         return $response->withJson(
             [
             'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
-            'action'      => ActionsModel::getList()
+            'action'      => ActionModel::getList()
             ]
         );
     }
@@ -199,7 +199,7 @@ class ActionsController
         }
 
         if ($mode == 'update') {
-            $obj = ActionsModel::getById(['id' => $aArgs['id']]);
+            $obj = ActionModel::getById(['id' => $aArgs['id']]);
            
             if (empty($obj)) {
         
@@ -244,16 +244,16 @@ class ActionsController
         $obj['action']['action_page'] = '';
         $obj['action']['id_status'] = '_NOSTATUS_';
         $obj['action']['create_id'] = false;
-        $obj['categoriesList'] = ActionsModel::getLettersBoxCategories();
+        $obj['categoriesList'] = ActionModel::getLettersBoxCategories();
         foreach ($obj['categoriesList'] as $key => $value) {
             $obj['categoriesList'][$key]['selected'] = true;
         }
 
         $obj['statusList'] = StatusModel::getList();
         array_unshift($obj['statusList'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList'] = ActionsModel::getAction_pages();
+        $obj['action_pagesList'] = ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
-        $obj['keywordsList']=ActionsModel::getKeywords();
+        $obj['keywordsList'] = ActionModel::getKeywords();
         $obj['lang'] = LangModel::getActionsForAdministrationLang();
         
         return $response->withJson($obj);

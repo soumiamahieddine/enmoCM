@@ -18,8 +18,8 @@ $core->load_lang();
 //$name = 'maarch';
 $name = $_SESSION['sessionName'];
 
-setcookie ($name, "", 1);
-setcookie ($name, false);
+setcookie($name, "", 1);
+setcookie($name, false);
 unset($_COOKIE[$name]);
 
 $_SESSION['error'] = _NOW_LOGOUT;
@@ -37,21 +37,24 @@ if ($_SESSION['history']['userlogout'] == "true"
     && isset($_SESSION['user']['UserId'])
 ) {
     $hist = new history();
-    $ip = $_SERVER['REMOTE_ADDR'];
+    if ($_SERVER['REMOTE_ADDR'] == '::1') {
+        $ip = 'localhost';
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
     //$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     $host = $_SERVER['REMOTE_ADDR'];
     $hist->add(
-        USERS_TABLE, $_SESSION['user']['UserId'], "LOGOUT",'userlogout',
+        USERS_TABLE, $_SESSION['user']['UserId'], "LOGOUT", 'userlogout',
         _LOGOUT_HISTORY . ' '. $_SESSION['user']['UserId'] . ' IP : ' . $ip,
         $_SESSION['config']['databasetype']
     );
 }
+
 $custom   = $_SESSION['custom_override_id'];
 $corePath = $_SESSION['config']['corepath'];
-
 $appUrl   = $_SESSION['config']['businessappurl'];
-
 $appId    = $_SESSION['config']['app_id'];
 
 // Destruction du cookie. La session est entièrement détruite et revenir sur le site attribuera un nouvel identifiant
@@ -59,17 +62,21 @@ $args = array_merge(array(session_name(), ''), array_values(session_get_cookie_p
 $args[2] = time() - 3600;
 call_user_func_array('setcookie', $args);
 
-if(isset($_SESSION['web_sso_url'])){
+if (isset($_SESSION['web_sso_url'])) {
     $webSSOurl = $_SESSION['web_sso_url'];
-} else if(isset($_SESSION['web_cas_url'])){
+} elseif (isset($_SESSION['web_cas_url'])) {
     $webSSOurl = $_SESSION['web_cas_url'];
+}
+
+if (!empty($_SESSION['ozwillo']['accessToken'])) {
+    $accessToken = $_SESSION['ozwillo']['accessToken'];
 }
 
 session_unset();
 session_destroy(); // Suppression physique de la session
 unset($_SESSION['sessionName']);
 
-$_SESSION = array();
+$_SESSION = [];
 $_SESSION['custom_override_id'] = $custom;
 $_SESSION['config']['corepath'] = $corePath ;
 $_SESSION['config']['app_id'] = $appId ;
@@ -80,9 +87,13 @@ if (isset($_GET['logout']) && $_GET['logout']) {
     $logoutExtension = "";
 }
 
-if(isset($webSSOurl) && $webSSOurl <> ''){
-    header("location: " . $webSSOurl );
+if (isset($webSSOurl) && $webSSOurl <> '') {
+    header("location: " . $webSSOurl);
     exit();
+} elseif (!empty($accessToken)) {
+    $ozwilloConfig = \Core\Models\CoreConfigModel::getOzwilloConfiguration();
+    $oidc = new OpenIDConnectClient($ozwilloConfig['uri'], $ozwilloConfig['clientId'], $ozwilloConfig['clientSecret']);
+    $oidc->signOut($accessToken, null);
 } else {
     header(
      "location: " . $appUrl . "index.php?display=true&page=login"

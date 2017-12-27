@@ -17,29 +17,35 @@ namespace Core\Models;
 
 class DocserverModelAbstract
 {
-    public static function getList()
+    public static function get(array $aArgs = [])
     {
-        $aReturn = DatabaseModel::select([
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aDocservers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
         ]);
 
-        return $aReturn;
+        return $aDocservers;
     }
 
     public static function getById(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select([
+        $aDocserver = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_id = ?'],
-            'data'      => [$aArgs['docserver_id']]
+            'data'      => [$aArgs['id']]
         ]);
 
-        return $aReturn;
+        if (empty($aDocserver[0])) {
+            return [];
+        }
+
+        return $aDocserver[0];
     }
 
     public static function getByTypeId(array $aArgs = [])
@@ -55,6 +61,30 @@ class DocserverModelAbstract
         ]);
 
         return $aReturn[0];
+    }
+
+    public static function getByCollId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId']);
+        ValidatorModel::boolType($aArgs, ['priority']);
+
+        $data = [
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['docservers'],
+            'where'     => ['coll_id = ?'],
+            'data'      => [$aArgs['collId']]
+        ];
+        if (!empty($aArgs['priority'])) {
+            $data['order_by'] = ['priority_number'];
+        }
+        $aReturn = DatabaseModel::select($data);
+
+        if (!empty($aArgs['priority'])) {
+            return $aReturn[0];
+        }
+
+        return $aReturn;
     }
 
     public static function create(array $aArgs = [])
@@ -85,34 +115,49 @@ class DocserverModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         DatabaseModel::delete([
             'table'     => 'docservers',
             'where'     => ['docserver_id = ?'],
-            'data'      => [$aArgs['docserver_id']]
+            'data'      => [$aArgs['id']]
         ]);
 
         return true;
     }
 
-    public static function getDocserverToInsert(array $aArgs = [])
+
+    /**
+     * Get docservers to insert a new doc.
+     * Can return null if no corresponding object.
+     * @param  $aArgs array
+     * @return array
+     */
+    public static function getDocserverToInsert(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['collId']);
         ValidatorModel::stringType($aArgs, ['collId']);
 
-        $aReturn = DatabaseModel::select([
+        if (empty($aArgs['typeId'])) {
+            $aArgs['typeId'] = 'DOC';
+        }
+
+        $aDocserver = DatabaseModel::select([
             'select'    => ['*'],
             'table'     => ['docservers'],
-            'where'     => ["is_readonly = 'N' and enabled = 'Y' and coll_id = ?"],
-            'data'      => [$aArgs['collId']],
+            'where'     => ['is_readonly = ?', 'enabled = ?', 'coll_id = ?', 'docserver_type_id = ?'],
+            'data'      => ['N', 'Y', $aArgs['collId'], $aArgs['typeId']],
             'order_by'  => ['priority_number'],
             'limit'     => 1,
         ]);
 
-        return $aReturn;
+        if (empty($aDocserver[0])) {
+            return [];
+        }
+
+        return $aDocserver[0];
     }
 }

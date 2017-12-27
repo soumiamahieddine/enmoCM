@@ -530,7 +530,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </p>
                 <p id="viewdoc">
                     <?php if($info_mail->filename){?>
-                        <a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php functions::xecho($s_id);?>" 
+                        <a href="index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id=<?php functions::xecho($s_id);?>" 
                             target="_blank"><i class="fa fa-download fa-2x" title="<?php echo _VIEW_DOC; ?>"></i></a>
                     <?php } ?>
                     &nbsp;&nbsp;&nbsp;
@@ -949,7 +949,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     } else if ($key == 'priority') {
                                         echo 'onchange="updateProcessDate(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=update_process_date\', ' . $s_id . ')"';
                                     } else if ($key == 'nature_id') {
-                                        echo 'disabled';
+                                        echo 'disabled style="background-color : #e6e6d1;"';
                                     }
                                     ?>
                                     >
@@ -961,10 +961,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 
                                                 for($k=0; $k<count($data[$key]['select']);$k++)
                                                 {
-                                                ?><option value="" class="doctype_level1"><?php functions::xecho($data[$key]['select'][$k]['label']);?></option><?php
+                                                ?><option value="" class="doctype_level1" disabled><?php functions::xecho($data[$key]['select'][$k]['label']);?></option><?php
                                                     for($j=0; $j<count($data[$key]['select'][$k]['level2']);$j++)
                                                     {
-                                                        ?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php functions::xecho($data[$key]['select'][$k]['level2'][$j]['label']);?></option><?php
+                                                        ?><option value="" class="doctype_level2" disabled>&nbsp;&nbsp;<?php functions::xecho($data[$key]['select'][$k]['level2'][$j]['label']);?></option><?php
                                                         for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
                                                         {
                                                             ?><option

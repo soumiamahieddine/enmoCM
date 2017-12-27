@@ -47,6 +47,8 @@ export class ProfileComponent implements OnInit {
     selectedSignature           : number    = -1;
     selectedSignatureLabel      : string    = "";
     loading                     : boolean   = false;
+    displayAbsenceButton        : boolean   = false;
+
 
 
     constructor(public http: HttpClient, private zone: NgZone) {
@@ -199,20 +201,41 @@ export class ProfileComponent implements OnInit {
     }
 
     addBasketRedirection() {
-        var index = $j("#selectBasketAbsenceUser option:selected").index();
-
-        if (index > 0) {
-            this.userAbsenceModel.push({
-                "basketId"      : this.user.baskets[index - 1].basket_id,
-                "basketName"    : this.user.baskets[index - 1].basket_name,
-                "virtual"       : this.user.baskets[index - 1].is_virtual,
-                "basketOwner"   : this.user.baskets[index - 1].basket_owner,
-                "newUser"       : $j("#absenceUser")[0].value,
-                "index"         : index - 1
+        if (typeof this.basketsToRedirect[0] != 'undefined' && $j("#absenceUser")[0].value) {
+            var redirectModel :any[] = [];
+                console.log(this.basketsToRedirect);
+            this.basketsToRedirect.forEach((value: any) => {
+                redirectModel.push({
+                    "basketId"      : this.user.baskets[value].basket_id,
+                    "basketName"    : this.user.baskets[value].basket_name,
+                    "virtual"       : this.user.baskets[value].is_virtual,
+                    "basketOwner"   : this.user.baskets[value].basket_owner,
+                    "newUser"       : $j("#absenceUser")[0].value,
+                });
             });
-            this.user.baskets[index - 1].disabled = true;
-            $j('#selectBasketAbsenceUser option:eq(0)').prop('selected', true);
-            $j("#absenceUser")[0].value = "";
+
+            this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', redirectModel)
+                .subscribe((data: any) => {
+                    $j('#selectBasketAbsenceUser option').prop('selected', false);
+                    $j("#absenceUser")[0].value = "";
+                    this.basketsToRedirect = [];
+                    this.http.get(this.coreUrl + 'rest/user/profile')
+                        .subscribe((data) => {
+                            this.user = data;
+                            this.user.baskets.forEach((value: any, index: number) => {
+                                this.user.baskets[index]['disabled'] = false;
+                                this.user.redirectedBaskets.forEach((value2: any) => {
+                                    if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                                        this.user.baskets[index]['disabled'] = true;
+                                    }
+                                });
+                            });
+                         });
+                }, (err) => {
+                    errorNotification(err.error.errors);
+                });
+        } else {
+            errorNotification("Veuillez sélectionner au moins une bannette et un utilisateur");
         }
     }
 
@@ -224,19 +247,35 @@ export class ProfileComponent implements OnInit {
     updateBasketColor(i: number, y: number) {
         this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, {"color" : this.user.regroupedBaskets[i].baskets[y].color})
             .subscribe((data: any) => {
+                this.user.regroupedBaskets = data.userBaskets;
             }, (err) => {
                 errorNotification(err.error.errors);
             });
     }
 
     activateAbsence() {
-        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
-            .subscribe(() => {
-                this.userAbsenceModel  = [];
-                location.search = "?display=true&page=logout&abs_mode";
-            }, (err) => {
-                errorNotification(err.error.errors);
-            });
+        let r = confirm('Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté.');
+
+        if (r) {
+            this.http.put(this.coreUrl + 'rest/currentUser/absence', {})
+                .subscribe(() => {
+                        location.hash = "";
+                        location.search = "?display=true&page=logout&abs_mode";
+                }, (err) => {
+                    errorNotification(err.error.errors);
+                });
+        }
+    }
+
+    askRedirectBasket() {
+        let r = confirm('Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?');
+
+        if (r) {
+            this.displayAbsenceButton=true;
+            $j('#redirectBasketCard').click();
+        } else {
+            this.activateAbsence();
+        }
     }
 
     updatePassword() {

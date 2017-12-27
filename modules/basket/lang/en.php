@@ -71,7 +71,7 @@ if (!defined("_BASKET_VISIBLE"))
 if (!defined("_BASKETS_LIST"))
     define("_BASKETS_LIST", "Baskets list");
 
-/////// frame corbeilles
+/////// frame bannettes
 if (!defined("_BASKETS"))
     define("_BASKETS", "Baskets");
 if (!defined("_CHOOSE_BASKET"))

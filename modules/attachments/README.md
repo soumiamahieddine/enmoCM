@@ -271,12 +271,12 @@ Rajouter après la ligne 55 :
     (Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories)
     Aucune
 
-**Créer une nouvelle corbeille**
+**Créer une nouvelle bannette**
 
     Collection : Collection des courriers
     Identifiant : AttBasket
-    Corbeille : Courriers à rapprocher
-    Description : Corbeille des courriers à rapprocher
+    Bannette : Courriers à rapprocher
+    Description : Bannette des courriers à rapprocher
     Vue sur la table : status = 'PJQUAL'
 
 **Ajouter un groupe**

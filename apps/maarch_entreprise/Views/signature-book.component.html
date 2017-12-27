@@ -19,7 +19,9 @@
                 <i class="fa fa-history fa-2x"></i>
             </div>
             <div title="{{signatureBook.lang.links}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 5}" (click)="changeSignatureBookLeftContent(5)">
-                <i class="fa fa-link fa-2x"></i>
+                <i class="fa fa-link fa-2x">
+                    <sup *ngIf="signatureBook.nbLinks > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbLinks}}</sup>
+                </i>
             </div>
         </div>
         <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
@@ -115,8 +117,8 @@
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
-            <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="contentShow">
-                <div *ngIf="!showAttachmentPanel" style="height:100%;">
+            <div *ngIf="signatureBook.hasWorkflow" class="contentShow">
+                <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentPanel" style="height:100%;">
                     <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                             <label>Type : </label>
@@ -184,7 +186,7 @@
                         </div>
                     </div>
                     <div *ngIf="signatureBook.signatures[0] && signatureBook.canSign && signatureBook.attachments[rightSelectedThumbnail].status != 'TMP' && signatureBook.attachments[rightSelectedThumbnail].sign && (signatureBook.attachments[rightSelectedThumbnail].format == 'pdf' || signatureBook.attachments[rightSelectedThumbnail].isConverted)"
-                         (mouseenter)="showSignaturesPanel = true" (mouseleave)="showSignaturesPanel = false" class="pjSign" [ngClass]="[signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' ? 'signed' : '']">
+                         (mouseenter)="showSignaturesPanel = true" (mouseleave)="showSignaturesPanel = false" class="pjSign" [ngClass]="[signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' ? 'signed' : '']" [ngStyle]="{'box-shadow': signatureBook.listinstance.requested_signature ? 'inset 0px 0px 5px 0px red' : 'inset 0px 0px 5px 0px #656565;'}">
                         <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signatures[0]" style="cursor: pointer">
                             <span *ngIf="!loadingSign">
                                 <img *ngFor="let signature of signatureBook.signatures; let i = index" src="{{signature.pathToSignatureOnTmp}}" (click)="signFile(signatureBook.attachments[rightSelectedThumbnail], signature)" [ngStyle]="{'display': !showSignaturesPanel && i > 0 ? 'none' : ''}" title="{{signature.signature_label}}">

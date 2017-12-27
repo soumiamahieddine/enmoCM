@@ -25,7 +25,10 @@ class CoreConfigModel
         }
 
         $explodeUrl = explode('/', $_SERVER['SCRIPT_NAME']);
-        if (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise') === false) {
+
+        if (strpos($_SERVER['SCRIPT_NAME'], 'ws_server') !== false) {
+            $path = $explodeUrl[count($explodeUrl) - 2];
+        } elseif (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise') === false) {
             $path = $explodeUrl[count($explodeUrl) - 3];
         } else {
             $path = $explodeUrl[count($explodeUrl) - 4];
@@ -95,5 +98,64 @@ class CoreConfigModel
         $tmpPath .= 'apps/maarch_entreprise/tmp/';
 
         return $tmpPath;
+    }
+
+    public static function getLoggingMethod()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/login_method.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/login_method.xml";
+        } else {
+            $path = 'apps/maarch_entreprise/xml/login_method.xml';
+        }
+
+        $loggingMethod = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                foreach ($loadedXml->METHOD as $value) {
+                    if (!empty((string)$value->ENABLED)) {
+                        $loggingMethod['id']        = (string)$value->ID;
+                        $loggingMethod['name']      = (string)$value->NAME;
+                        $loggingMethod['script']    = (string)$value->SCRIPT;
+                    }
+                }
+            }
+        }
+
+        return $loggingMethod;
+    }
+
+    public static function getOzwilloConfiguration(array $aArgs = [])
+    {
+        ValidatorModel::stringType($aArgs, ['customId']);
+
+        if (empty($aArgs['customId'])) {
+            $customId = CoreConfigModel::getCustomId();
+        } else {
+            $customId = $aArgs['customId'];
+        }
+
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/ozwilloConfig.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/ozwilloConfig.xml";
+        } else {
+            $path = 'apps/maarch_entreprise/xml/ozwilloConfig.xml';
+        }
+
+        $ozwilloConfig = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                $ozwilloConfig['instanceUri']           = (string)$loadedXml->INSTANCE_URI;
+                $ozwilloConfig['instantiationSecret']   = (string)$loadedXml->INSTANTIATION_SECRET;
+                $ozwilloConfig['destructionSecret']     = (string)$loadedXml->DESTRUCTION_SECRET;
+                $ozwilloConfig['uri']                   = (string)$loadedXml->URI;
+                $ozwilloConfig['clientId']              = (string)$loadedXml->CLIENT_ID;
+                $ozwilloConfig['clientSecret']          = (string)$loadedXml->CLIENT_SECRET;
+            }
+        }
+
+        return $ozwilloConfig;
     }
 }

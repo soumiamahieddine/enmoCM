@@ -45,6 +45,7 @@ var ProfileComponent = (function () {
         this.selectedSignature = -1;
         this.selectedSignatureLabel = "";
         this.loading = false;
+        this.displayAbsenceButton = false;
         window['angularProfileComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
@@ -174,19 +175,42 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.addBasketRedirection = function () {
-        var index = $j("#selectBasketAbsenceUser option:selected").index();
-        if (index > 0) {
-            this.userAbsenceModel.push({
-                "basketId": this.user.baskets[index - 1].basket_id,
-                "basketName": this.user.baskets[index - 1].basket_name,
-                "virtual": this.user.baskets[index - 1].is_virtual,
-                "basketOwner": this.user.baskets[index - 1].basket_owner,
-                "newUser": $j("#absenceUser")[0].value,
-                "index": index - 1
+        var _this = this;
+        if (typeof this.basketsToRedirect[0] != 'undefined' && $j("#absenceUser")[0].value) {
+            var redirectModel = [];
+            console.log(this.basketsToRedirect);
+            this.basketsToRedirect.forEach(function (value) {
+                redirectModel.push({
+                    "basketId": _this.user.baskets[value].basket_id,
+                    "basketName": _this.user.baskets[value].basket_name,
+                    "virtual": _this.user.baskets[value].is_virtual,
+                    "basketOwner": _this.user.baskets[value].basket_owner,
+                    "newUser": $j("#absenceUser")[0].value,
+                });
             });
-            this.user.baskets[index - 1].disabled = true;
-            $j('#selectBasketAbsenceUser option:eq(0)').prop('selected', true);
-            $j("#absenceUser")[0].value = "";
+            this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', redirectModel)
+                .subscribe(function (data) {
+                $j('#selectBasketAbsenceUser option').prop('selected', false);
+                $j("#absenceUser")[0].value = "";
+                _this.basketsToRedirect = [];
+                _this.http.get(_this.coreUrl + 'rest/user/profile')
+                    .subscribe(function (data) {
+                    _this.user = data;
+                    _this.user.baskets.forEach(function (value, index) {
+                        _this.user.baskets[index]['disabled'] = false;
+                        _this.user.redirectedBaskets.forEach(function (value2) {
+                            if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                                _this.user.baskets[index]['disabled'] = true;
+                            }
+                        });
+                    });
+                });
+            }, function (err) {
+                errorNotification(err.error.errors);
+            });
+        }
+        else {
+            errorNotification("Veuillez sélectionner au moins une bannette et un utilisateur");
         }
     };
     ProfileComponent.prototype.delBasketRedirection = function (index) {
@@ -194,21 +218,35 @@ var ProfileComponent = (function () {
         this.userAbsenceModel.splice(index, 1);
     };
     ProfileComponent.prototype.updateBasketColor = function (i, y) {
+        var _this = this;
         this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
             .subscribe(function (data) {
+            _this.user.regroupedBaskets = data.userBaskets;
         }, function (err) {
             errorNotification(err.error.errors);
         });
     };
     ProfileComponent.prototype.activateAbsence = function () {
-        var _this = this;
-        this.http.post(this.coreUrl + "rest/users/" + this.user.user_id + "/baskets/absence", this.userAbsenceModel)
-            .subscribe(function () {
-            _this.userAbsenceModel = [];
-            location.search = "?display=true&page=logout&abs_mode";
-        }, function (err) {
-            errorNotification(err.error.errors);
-        });
+        var r = confirm('Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté.');
+        if (r) {
+            this.http.put(this.coreUrl + 'rest/currentUser/absence', {})
+                .subscribe(function () {
+                location.hash = "";
+                location.search = "?display=true&page=logout&abs_mode";
+            }, function (err) {
+                errorNotification(err.error.errors);
+            });
+        }
+    };
+    ProfileComponent.prototype.askRedirectBasket = function () {
+        var r = confirm('Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?');
+        if (r) {
+            this.displayAbsenceButton = true;
+            $j('#redirectBasketCard').click();
+        }
+        else {
+            this.activateAbsence();
+        }
     };
     ProfileComponent.prototype.updatePassword = function () {
         var _this = this;

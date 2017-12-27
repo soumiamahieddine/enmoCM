@@ -408,13 +408,18 @@ abstract class diffusion_list_Abstract extends functions
             
             $cptUsers = count($diffList[$role_id]['users']);
             for ($i=0;$i<$cptUsers;$i++) {
-                $userFound      = false;
-                $userId         = trim($diffList[$role_id]['users'][$i]['user_id']);
-                $processComment = trim($diffList[$role_id]['users'][$i]['process_comment']);
-                $processDate    = trim($diffList[$role_id]['users'][$i]['process_date']);
-                $visible        = $diffList[$role_id]['users'][$i]['visible'];
-                $viewed         = (integer)$diffList[$role_id]['users'][$i]['viewed'];
-                $cptOldUsers    = count($oldListInst[$role_id]['users']);
+                $userFound              = false;
+                $userId                 = trim($diffList[$role_id]['users'][$i]['user_id']);
+                $processComment         = trim($diffList[$role_id]['users'][$i]['process_comment']);
+                $processDate            = trim($diffList[$role_id]['users'][$i]['process_date']);
+                $visible                = $diffList[$role_id]['users'][$i]['visible'];
+                $viewed                 = (integer)$diffList[$role_id]['users'][$i]['viewed'];
+
+                $signatory = ($diffList[$role_id]['users'][$i]['signatory'] ? 'true' : 'false');
+                $requested_signature = ($diffList[$role_id]['users'][$i]['requested_signature'] ? 'true' : 'false');
+                
+
+                $cptOldUsers            = count($oldListInst[$role_id]['users']);
                 for ($h=0;$h<$cptOldUsers;$h++) {
                     if ($userId == $oldListInst[$role_id]['users'][$h]['user_id']) {
                         $userFound = true;
@@ -430,7 +435,7 @@ abstract class diffusion_list_Abstract extends functions
                 if ($processDate != '') {
                     $stmt = $db->query(
                         "insert into " . ENT_LISTINSTANCE
-                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date) "
+                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) "
                         . "values ("
                             . "?, ?, "
                             . "'DOC', ?, "
@@ -442,13 +447,15 @@ abstract class diffusion_list_Abstract extends functions
                             . "?, ?, "
                             . "?, "
                             . "?, "
+                            . "?, "
+                            . "?, "
                             . "?"
-                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$processDate)
+                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$processDate,$signatory,$requested_signature)
                     );
                 } else {
                     $stmt = $db->query(
                         "insert into " . ENT_LISTINSTANCE
-                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
+                            . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, signatory, requested_signature) "
                         . "values ("
                             . "?, ?, "
                             . "'DOC', ?, "
@@ -459,8 +466,10 @@ abstract class diffusion_list_Abstract extends functions
                             . "?, "
                             . "?, ?, "
                             . "?, "
+                            . "?, "
+                            . "?, "
                             . "?"
-                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment)
+                        . " )", array($collId,$resId,$i,$userId,$item_mode,$creatorUser,$creatorEntity,$visible,$viewed,$difflistType,$processComment,$signatory,$requested_signature)
                     );
                 }
                 
@@ -636,8 +645,8 @@ abstract class diffusion_list_Abstract extends functions
         # OTHER ROLES USERS
         #**********************************************************************
         $stmt = $db->query(
-            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from "
+            "select l.listinstance_id ,l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label,"
+            . " l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment, l.signatory, l.requested_signature from "
             . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId . "' "
@@ -652,23 +661,24 @@ abstract class diffusion_list_Abstract extends functions
             else 
                 $role_id = $res->item_mode;
                 
-            if(!isset($listinstance[$role_id]['users']))
-                $listinstance[$role_id]['users'] = array();
-            array_push(
-                $listinstance[$role_id]['users'],
-                array(
-                    'user_id'         => functions::show_string($res->item_id),
-                    'lastname'        => functions::show_string($res->lastname),
-                    'firstname'       => functions::show_string($res->firstname),
-                    'entity_id'       => functions::show_string($res->entity_id),
-                    'entity_label'    => functions::show_string($res->entity_label),
-                    'visible'         => functions::show_string($res->visible),
-                    'viewed'          => functions::show_string($res->viewed),
-                    'difflist_type'   => functions::show_string($res->difflist_type),
-                    'process_date'    => functions::show_string($res->process_date),
-                    'process_comment' => functions::show_string($res->process_comment)
-                )
-            );
+            if(!isset($listinstance[$role_id]['users'])) {
+                $listinstance[$role_id]['users'] = [];
+            }
+            $listinstance[$role_id]['users'][] = [
+                'listinstance_id'       => $res->listinstance_id,
+                'user_id'               => functions::show_string($res->item_id),
+                'lastname'              => functions::show_string($res->lastname),
+                'firstname'             => functions::show_string($res->firstname),
+                'entity_id'             => functions::show_string($res->entity_id),
+                'entity_label'          => functions::show_string($res->entity_label),
+                'visible'               => functions::show_string($res->visible),
+                'viewed'                => functions::show_string($res->viewed),
+                'difflist_type'         => functions::show_string($res->difflist_type),
+                'process_date'          => functions::show_string($res->process_date),
+                'process_comment'       => functions::show_string($res->process_comment),
+                'signatory'             => (empty($res->signatory) ? false : true),
+                'requested_signature'   => (empty($res->requested_signature) ? false : true)
+            ];
         }
 
         # OTHER ROLES ENTITIES

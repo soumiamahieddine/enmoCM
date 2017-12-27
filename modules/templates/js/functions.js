@@ -103,11 +103,11 @@ function select_template(path_to_script, attachment_type)
 
 function addTemplateBase(file)
 {
-    if (confirm('En cliquant sur ok, le modèle sera ajouté dans la liste des natures de modèle.')) {
-        saveTemplateBase = "yes";
-    }else{
+    // if (confirm('En cliquant sur ok, le modèle sera ajouté dans la liste des natures de modèle.')) {
+    //     saveTemplateBase = "yes";
+    // }else{
         saveTemplateBase = "no";
-    }
+    // }
     var reader = new FileReader();
     reader.readAsDataURL(file.files[0]);
     reader.onload = function () {
@@ -127,6 +127,7 @@ function addTemplateBase(file)
                 $j('#template_style').hide();
                 $j('#addTemplate').val(file.files[0].name);
                 $j('#addTemplate').show();
+                $j('#templateEditTr').hide();
             } else {
                 alert(response.error_txt);
             }

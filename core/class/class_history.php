@@ -39,29 +39,33 @@
 * @ingroup core
 */
 
-if (!defined('_LOG4PHP'))
+if (!defined('_LOG4PHP')) {
     define(
         '_LOG4PHP',
         'log4php'
     );
+}
 
-if (!defined('_BDD'))
+if (!defined('_BDD')) {
     define(
         '_BDD',
         'database'
     );
+}
 
-if (!defined('_LOGGER_NAME_TECH_DEFAULT'))
+if (!defined('_LOGGER_NAME_TECH_DEFAULT')) {
     define(
         '_LOGGER_NAME_TECH_DEFAULT',
         'loggerTechnique'
     );
+}
 
-if (!defined('_LOGGER_NAME_FUNC_DEFAULT'))
+if (!defined('_LOGGER_NAME_FUNC_DEFAULT')) {
     define(
         '_LOGGER_NAME_FUNC_DEFAULT',
         'loggerFonctionnel'
     );
+}
 
 require_once('core/class/class_functions.php');
 require_once('core/class/class_db_pdo.php');
@@ -99,10 +103,14 @@ class history
         $result = _OK,
         $level = _LEVEL_DEBUG,
         $user = ''
-    )
-    {
+    ) {
         $db = new Database();
-        $remote_ip = $_SERVER['REMOTE_ADDR'];
+        if ($_SERVER['REMOTE_ADDR'] == '::1') {
+            $REMOTE_ADDR = 'localhost';
+        } else {
+            $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+        }
+        $remote_ip = $REMOTE_ADDR;
 
         $user = '';
         if (isset($_SESSION['user']['UserId'])) {
@@ -155,8 +163,8 @@ class history
                         ."id_module, "
                         ."remote_ip"
                     .") "
-                ."VALUES (?, ?, ?, ?, ?, " 
-                    . $db->current_datetime() 
+                ."VALUES (?, ?, ?, ?, ?, "
+                    . $db->current_datetime()
                     . ", ?, ?, ?)";
             $db->query(
                 $queryHist,
@@ -173,19 +181,20 @@ class history
             );
         } else {
             //write on a log
-            echo $info;exit;
+            echo $info;
+            exit;
         }
 
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-			require_once(
+            require_once(
                 "modules"
                 .DIRECTORY_SEPARATOR."notifications"
                 .DIRECTORY_SEPARATOR."class"
-				.DIRECTORY_SEPARATOR."events_controler.php"
+                .DIRECTORY_SEPARATOR."events_controler.php"
             );
-			$eventsCtrl = new events_controler();
-			$eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+            $eventsCtrl = new events_controler();
+            $eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
@@ -198,8 +207,7 @@ class history
     */
     public function get_label_history_keyword(
         $id
-    )
-    {
+    ) {
         if (empty($id)) {
             return '';
         } else {
@@ -224,8 +232,7 @@ class history
     private function wd_remove_accents(
         $str,
         $charset ='utf-8'
-    )
-    {
+    ) {
         $str = htmlentities(
             $str,
             ENT_NOQUOTES,
@@ -340,8 +347,7 @@ class history
         $logger,
         $logLine,
         $level
-    )
-    {
+    ) {
         $formatter = new functions();
 
         $logLine = $formatter->wash_html(
@@ -398,8 +404,7 @@ class history
         $traceInformations,
         $logging_method,
         $isTech
-    )
-    {
+    ) {
         if (!isset($_SESSION['user']['loginmode'])) {
             $_SESSION['user']['loginmode'] = '';
         }
@@ -424,7 +429,6 @@ class history
                 . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . "xml"
                 . DIRECTORY_SEPARATOR . "log4php.xml";
-
         } elseif (file_exists(
             "apps"
             . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']

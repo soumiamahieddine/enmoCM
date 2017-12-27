@@ -15,6 +15,7 @@
 
 namespace Attachments\Controllers;
 
+use Core\Controllers\StoreController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -85,8 +86,7 @@ class AttachmentsController
             'status'        => $returnPrepare['status'],
         ];
 
-        $res = new \Core\Controllers\ResController();
-        $response = $res->storeResource($aArgs);
+        $response = StoreController::storeResource($aArgs);
 
         //return $response;
         if (!is_numeric($response[0])) {
@@ -411,6 +411,11 @@ class AttachmentsController
             'column' => 'res_id_master',
             'value' => $_SESSION['doc_id'],
             'type' => 'integer'
+        ];
+        $transmissionDataPdf[] = [
+            'column' => 'in_signature_book',
+            'value' => 1,
+            'type' => 'bool'
         ];
         
         return $transmissionDataPdf;

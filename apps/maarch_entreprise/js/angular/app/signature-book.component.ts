@@ -72,7 +72,8 @@ export class SignatureBookComponent implements OnInit {
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction(),
-            componentAfterNotes: () => this.processAfterNotes()
+            componentAfterNotes: () => this.processAfterNotes(),
+            componentAfterLinks: () => this.processAfterLinks()
         };
     }
 
@@ -168,6 +169,10 @@ export class SignatureBookComponent implements OnInit {
 
     processAfterNotes() {
         this.zone.run(() => this.refreshNotes());
+    }
+
+    processAfterLinks() {
+        this.zone.run(() => this.refreshLinks());
     }
 
     processAfterAction() {
@@ -365,6 +370,13 @@ export class SignatureBookComponent implements OnInit {
             });
     }
 
+    refreshLinks() {
+        this.http.get(this.coreUrl + 'rest/links/resId/' + this.resId)
+            .subscribe((data : any) => {
+                this.signatureBook.nbLinks = data.length;
+            });
+    }
+
     signFile(attachment: any, signature: any) {
         if (!this.loadingSign && this.signatureBook.canSign) {
             this.loadingSign = true;
@@ -400,6 +412,13 @@ export class SignatureBookComponent implements OnInit {
                         if (this.signatureBook.resList.length > 0) {
                             this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
                         }
+
+                        if(this.headerTab==3){
+                            this.changeSignatureBookLeftContent(0);
+                            setTimeout(() => {
+                                this.changeSignatureBookLeftContent(3);
+                            }, 0);
+                        }
                     } else {
                         alert(data.error);
                     }
@@ -434,6 +453,13 @@ export class SignatureBookComponent implements OnInit {
                 if (this.signatureBook.resList.length > 0) {
                     this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 }
+                if(this.headerTab==3){
+                    this.changeSignatureBookLeftContent(0);
+                    setTimeout(() => {
+                        this.changeSignatureBookLeftContent(3);
+                    }, 0);
+                }
+
             });
 
     }
@@ -469,42 +495,61 @@ export class SignatureBookComponent implements OnInit {
 
     validForm() {
         if ($j("#signatureBookActions option:selected")[0].value != "") {
-            unlockDocument(this.resId);
+            if (this.signatureBook['listinstance']['requested_signature'] == true) {
+                this.http.get(this.coreUrl + 'rest/listinstance/' + this.signatureBook['listinstance']['listinstance_id'])
+                    .subscribe((data: any) => {
+                        var r = true;
+                        if (data['signatory'] == false) {
+                            r = confirm("Vous n’avez signé aucun document. Êtes-vous sûr de vouloir continuer ?");
+                        }
 
-            if (this.signatureBook.resList.length == 0) {
-                this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
-                    .subscribe((data : any) => {
-                        this.signatureBook.resList = data.resList;
-
-                        valid_action_form(
-                            'empty',
-                            'index.php?display=true&page=manage_action&module=core',
-                            this.signatureBook.currentAction.id,
-                            this.resId,
-                            'res_letterbox',
-                            'null',
-                            'letterbox_coll',
-                            'page',
-                            false,
-                            [$j("#signatureBookActions option:selected")[0].value]
-                        );
+                        if (r) {
+                            this.sendActionForm();
+                        }
                     });
             } else {
-                valid_action_form(
-                    'empty',
-                    'index.php?display=true&page=manage_action&module=core',
-                    this.signatureBook.currentAction.id,
-                    this.resId,
-                    'res_letterbox',
-                    'null',
-                    'letterbox_coll',
-                    'page',
-                    false,
-                    [$j("#signatureBookActions option:selected")[0].value]
-                );
+                this.sendActionForm();
             }
         } else {
             alert("Aucune action choisie");
         }
     }
+
+    sendActionForm() {
+        unlockDocument(this.resId);
+
+        if (this.signatureBook.resList.length == 0) {
+            this.http.get(this.coreUrl + 'rest/' + this.basketId + '/signatureBook/resList')
+                .subscribe((data: any) => {
+                    this.signatureBook.resList = data.resList;
+
+                    valid_action_form(
+                        'empty',
+                        'index.php?display=true&page=manage_action&module=core',
+                        this.signatureBook.currentAction.id,
+                        this.resId,
+                        'res_letterbox',
+                        'null',
+                        'letterbox_coll',
+                        'page',
+                        false,
+                        [$j("#signatureBookActions option:selected")[0].value]
+                    );
+                });
+        } else {
+            valid_action_form(
+                'empty',
+                'index.php?display=true&page=manage_action&module=core',
+                this.signatureBook.currentAction.id,
+                this.resId,
+                'res_letterbox',
+                'null',
+                'letterbox_coll',
+                'page',
+                false,
+                [$j("#signatureBookActions option:selected")[0].value]
+            );
+        }
+    }
+
 }

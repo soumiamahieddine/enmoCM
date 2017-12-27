@@ -39,7 +39,7 @@ if (!defined("_VISA_ANSWERS_DESC"))
 if (!defined("_NO_VISA"))
     define("_NO_VISA", "No designed person on visa");
 if (!defined("_NO_RESPONSE_PROJECT_VISA"))
-    define("_NO_RESPONSE_PROJECT_VISA", "Please, create one attachment at least and edit it.");
+    define("_NO_RESPONSE_PROJECT_VISA", "Please, integrate at least one attachment to signature book");
 if (!defined("_NO_CONVERTED_PDF_VISA"))
     define("_NO_CONVERTED_PDF_VISA", "Please edit your attachment(s)");
 if (!defined("_PLEASE_CONVERT_PDF_VISA"))
@@ -180,3 +180,12 @@ if (!defined('_DISPLAY_ATTACHMENTS'))
 
 if (!defined('_DRAG_N_DROP_CHANGE_ORDER'))
     define('_DRAG_N_DROP_CHANGE_ORDER', 'Drag/Drop to change order');
+
+if (!defined('_NO_USER_SIGNED_DOC'))
+    define('_NO_USER_SIGNED_DOC', "you have NOT signed any attachment!");
+
+    if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO'))
+    define('_IS_ALL_ATTACHMENT_SIGNED_INFO', "You can't request a signed document to users, no attachment in signature book");
+
+if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO2'))
+    define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', "You can't request a signed document to users, all attachments in signature book are signed.");

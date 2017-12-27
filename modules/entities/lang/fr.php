@@ -119,7 +119,7 @@ if (!defined("_ENTITY_LABEL"))
 if (!defined("_SHORT_LABEL"))
     define("_SHORT_LABEL", "Nom court");
 if (!defined("_ENTITY_FULL_NAME"))
-    define("_ENTITY_FULL_NAME", "Nom complet");
+    define("_ENTITY_FULL_NAME", "Bloc arborescence");
 if (!defined("_ENTITY_ADR_1"))
     define("_ENTITY_ADR_1", "Adresse 1");
 if (!defined("_ENTITY_ADR_2"))
@@ -241,7 +241,7 @@ if (!defined("_HELP_KEYWORD_EXEMPLE"))
 if (!defined("_HELP_BY_ENTITY"))
     define("_HELP_BY_ENTITY", "Mots clés du module Entités");
 if (!defined("_BASKET_REDIRECTIONS_OCCURS_LINKED_TO"))
-    define("_BASKET_REDIRECTIONS_OCCURS_LINKED_TO", "occurence(s) de redirection(s) de corbeille(s) associé(s) à l'entité");
+    define("_BASKET_REDIRECTIONS_OCCURS_LINKED_TO", "occurence(s) de redirection(s) de bannette(s) associé(s) à l'entité");
 if (!defined("_TEMPLATES_LINKED_TO"))
     define("_TEMPLATES_LINKED_TO", "modèle(s) de réponse(s) associé(s) à l'entité");
 if (!defined("_LISTISTANCES_OCCURS_LINKED_TO"))

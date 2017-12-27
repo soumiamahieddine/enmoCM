@@ -229,7 +229,7 @@ if($mode == 'normal') {
     array_push($select[$view],  "res_id", "res_id as is_labeled", "alt_identifier", "priority", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "category_id", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "address_id", "exp_user_id", "count_attachment", "is_multicontacts","filename");
+                                "creation_date", "entity_label", "address_id", "exp_user_id", "doc_custom_n1 as count_attachment", "is_multicontacts","filename");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -317,8 +317,8 @@ if($mode == 'normal') {
         }
     } else {
         $list->setOrder();
-        $list->setOrderField('creation_date');
-        $orderstr = "order by creation_date desc";
+        $list->setOrderField('res_id');
+        $orderstr = "order by res_id desc";
     }
     
 //URL extra Parameters  

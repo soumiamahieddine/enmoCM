@@ -435,6 +435,14 @@ function loadSelectedContact() {
 }
 
 function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){
+    // FIX IE 11
+    if($j('#leftPanelShowDocumentIframe')){
+       $j('#leftPanelShowDocumentIframe').hide(); 
+    }
+    if($j('#rightPanelShowDocumentIframe')){
+       $j('#rightPanelShowDocumentIframe').hide(); 
+    }
+
     if(height == undefined || height=='') {
         height = '100px';
     }

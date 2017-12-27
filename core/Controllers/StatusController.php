@@ -87,10 +87,10 @@ class StatusController
             $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
 
             HistoryController::add([
-                'table_name' => 'status', 
-                'record_id'  => $return['status']['id'], 
-                'event_type' => 'ADD', 
-                'event_id'   => 'statusup',
+                'tableName' => 'status',
+                'recordId'  => $return['status']['id'],
+                'eventType' => 'ADD',
+                'eventId'   => 'statusup',
                 'info'       => _STATUS_ADDED . ' : ' . $return['status']['id']
             ]);
 
@@ -120,10 +120,10 @@ class StatusController
             $return['status'] = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])[0];
 
             HistoryController::add([
-                'table_name' => 'status', 
-                'record_id'  => $return['status']['id'], 
-                'event_type' => 'UP', 
-                'event_id'   => 'statusup',
+                'tableName' => 'status',
+                'recordId'  => $return['status']['id'],
+                'eventType' => 'UP',
+                'eventId'   => 'statusup',
                 'info'       => _MODIFY_STATUS . ' : ' . $return['status']['id']
             ]);
             
@@ -149,10 +149,10 @@ class StatusController
             StatusModel::delete(['identifier' => $aArgs['identifier']]);
 
             HistoryController::add([
-                'table_name' => 'status', 
-                'record_id'  => $statusDeleted[0]['id'], 
-                'event_type' => 'DEL', 
-                'event_id'   => 'statusdel',
+                'tableName' => 'status',
+                'recordId'  => $statusDeleted[0]['id'],
+                'eventType' => 'DEL',
+                'eventId'   => 'statusdel',
                 'info'       => _STATUS_DELETED . ' : ' . $statusDeleted[0]['id']
             ]);
         } else {

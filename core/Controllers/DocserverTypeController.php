@@ -22,133 +22,34 @@ use Core\Models\DocserverTypeModel;
 
 class DocserverTypeController
 {
-    public function getList(RequestInterface $request, ResponseInterface $response)
+    public function get(RequestInterface $request, ResponseInterface $response)
     {
-        $obj = DocserverTypeModel::getList();
-        
-        $datas = [
-            [
-                'DocserverType' => $obj,
-            ]
-        ];
-        
-        return $response->withJson($datas);
+        return $response->withJson(['docserverTypes' => DocserverTypeModel::get()]);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['docserver_type_id'])) {
-            $id = $aArgs['docserver_type_id'];
-            $obj = DocserverTypeModel::getById([
-                'docserver_type_id' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _DOCSERVER_TYPE_ID . ' ' . _IS_EMPTY]);
-        }
-        
-        $datas = [
-            [
-                'DocserverType' => $obj,
-            ]
-        ];
+        $docserverType = DocserverTypeModel::getById(['id' => $aArgs['id']]);
 
-        return $response->withJson($datas);
-    }
-
-    public function create(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $errors = [];
-
-        $errors = $this->control($request, 'create');
-
-        if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+        if(empty($docserverType)){
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver Type not found']);
         }
 
-        $aArgs = $request->getQueryParams();
-
-        $return = DocserverTypeModel::create($aArgs);
-
-        if ($return) {
-            $id = $aArgs['docserver_type_id'];
-            $obj = DocserverTypeModel::getById([
-                'docserver_type_id' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_CREATE]);
-        }
-
-        $datas = [
-            [
-                'DocserverType' => $obj,
-            ]
-        ];
-
-        return $response->withJson($datas);
-    }
-
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
-    {
-        $errors = [];
-
-        $errors = $this->control($request, 'update');
-
-        if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
-        }
-
-        $aArgs = $request->getQueryParams();
-
-        $return = DocserverTypeModel::update($aArgs);
-
-        if ($return) {
-            $id = $aArgs['docserver_type_id'];
-            $obj = DocserverTypeModel::getById([
-                'docserver_type_id' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
-        }
-
-        $datas = [
-            [
-                'DocserverType' => $obj,
-            ]
-        ];
-
-        return $response->withJson($datas);
+        return $response->withJson($docserverType);
     }
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        if (isset($aArgs['docserver_type_id'])) {
-            $id = $aArgs['docserver_type_id'];
-            $obj = DocserverTypeModel::delete([
-                'docserver_type_id' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_DELETE]);
-        }
-        
-        $datas = [
-            [
-                'DocserverType' => $obj,
-            ]
-        ];
+        //TODO Droit de suppression
+        $docserverType = DocserverTypeModel::getById(['id' => $aArgs['id']]);
 
-        return $response->withJson($datas);
+        if(empty($docserverType)){
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver Type does not exist']);
+        }
+
+        DocserverTypeModel::delete(['id' => $aArgs['id']]);
+
+        return $response->withJson(['docserverTypes' => DocserverTypeModel::get()]);
     }
 
     protected function control($request, $mode)

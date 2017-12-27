@@ -241,7 +241,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             .'onclick="$j.ajax({url :\'index.php?display=true&dir=actions&page=docLocker\', type : \'POST\',data : {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, success: function (answer) { ' ;
 //        .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
   //      . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
-    $frm_str .= 'window.location.href=window.location.href;} });var tmp_bask=$(\'baskets\');';
+    $frm_str .= 'window.location.href=window.location.href.replace(\'&directLinkToAction\', \'\');} });var tmp_bask=$(\'baskets\');';
     $frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
     $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
     $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
@@ -353,7 +353,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str.= 'onclick="showCalender(this);"';
                 }
                 $frm_str .= 'style="width: 200px; max-width: 150px; border: medium none; color: rgb(102, 102, 102); height: 60px;"';
-                $frm_str .=  'title="'.$indexes[$key]['show_value'].'" alt="'.$indexes[$key]['show_value'].'" >'.$values_fields->{$key};
+                $frm_str .=  '>'.str_replace(array("\n", "\r"), " ", $values_fields->{$key});
                 $frm_str .= '</textarea>';
                 $frm_str .= '</td >';
             $frm_str .= '</tr>';
@@ -745,7 +745,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //RESOURCE FRAME
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-        . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%" style="width:100% !important;"></iframe>';
+        . $res_id . '&watermark_outgoing=true" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%" style="width:100% !important;"></iframe>';
 
     $frm_str .= '</div>';
 
