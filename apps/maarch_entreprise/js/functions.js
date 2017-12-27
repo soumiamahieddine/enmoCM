@@ -284,7 +284,7 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
                 paramName: paramNameSrv,
                 minChars: minCharsSrv,
                 callback: function (element, entry){
-                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).value; 
+                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).val(); 
                 },
                 afterUpdateElement: function (text, li){
                     $j("#"+new_value).value = li.id;
