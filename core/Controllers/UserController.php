@@ -38,7 +38,7 @@ class UserController
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
-        $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['regroupedBaskets'] = BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['canModifyPassword'] = true;
