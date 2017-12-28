@@ -21,6 +21,6 @@
 
 namespace Baskets\Models;
 
-class BasketsModel extends BasketsModelAbstract {
+class BasketModel extends BasketModelAbstract {
     // Do your stuff in this class
 }

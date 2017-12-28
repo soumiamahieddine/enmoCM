@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Core\Models\ServiceModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -24,11 +25,19 @@ class DocserverTypeController
 {
     public function get(RequestInterface $request, ResponseInterface $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         return $response->withJson(['docserverTypes' => DocserverTypeModel::get()]);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $docserverType = DocserverTypeModel::getById(['id' => $aArgs['id']]);
 
         if(empty($docserverType)){
@@ -40,7 +49,10 @@ class DocserverTypeController
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        //TODO Droit de suppression
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $docserverType = DocserverTypeModel::getById(['id' => $aArgs['id']]);
 
         if(empty($docserverType)){

@@ -22,7 +22,7 @@ use Entities\Models\EntityModel;
 
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract
+class BasketModelAbstract
 {
 
     public static function getResListById(array $aArgs = [])
@@ -128,7 +128,7 @@ class BasketsModelAbstract
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
             }
-            $aBaskets = array_merge($aBaskets, BasketsModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }
 
         return $aBaskets;

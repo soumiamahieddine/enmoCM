@@ -23,7 +23,7 @@ use Core\Models\UserModel;
 use Core\Models\LangModel;
 use Core\Models\DocserverModel;
 use Core\Models\ServiceModel;
-use Baskets\Models\BasketsModel;
+use Baskets\Models\BasketModel;
 use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -346,7 +346,7 @@ class VisaController
     {
         $basketId = $aArgs['basketId'];
 
-        $resList = BasketsModel::getResListById(
+        $resList = BasketModel::getResListById(
             [
                 'basketId' => $basketId,
                 'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
@@ -398,7 +398,7 @@ class VisaController
     {
         $basketId = $aArgs['basketId'];
 
-        $resList = BasketsModel::getResListById([
+        $resList = BasketModel::getResListById([
             'basketId' => $basketId,
             'select'  => ['res_id']
         ]);

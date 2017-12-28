@@ -15,7 +15,7 @@
 
 namespace Core\Controllers;
 
-use Baskets\Models\BasketsModel;
+use Baskets\Models\BasketModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\HistoryModel;
@@ -38,9 +38,9 @@ class UserController
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
-        $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['redirectedBaskets'] = BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['regroupedBaskets'] = BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         $user['canModifyPassword'] = true;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
@@ -234,7 +234,7 @@ class UserController
             $data[$key]['newUser'] = $newUser;
 
             if($value['basketOwner'] != $_SESSION['user']['UserId']){
-                BasketsModel::updateBasketsRedirection([
+                BasketModel::updateBasketsRedirection([
                     'userId'      => $_SESSION['user']['UserId'],
                     'basketOwner' => $value['basketOwner'],
                     'basketId'    => $value['basketId'],
@@ -246,10 +246,10 @@ class UserController
         }
 
         if (!empty($data)) {
-            BasketsModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
+            BasketModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
         }
 
-        return $response->withJson(['redirectedBaskets' => BasketsModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])]);
+        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])]);
     }
 
     public function setRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
@@ -274,7 +274,7 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
         if (!empty($data)) {
-            BasketsModel::setBasketsRedirection(['userId' => $user['user_id'], 'data' => $data]);
+            BasketModel::setBasketsRedirection(['userId' => $user['user_id'], 'data' => $data]);
         }
 
         UserModel::activateAbsenceById(['userId' => $user['user_id']]);
@@ -300,9 +300,9 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
 
-        BasketsModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
+        BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
-        return $response->withJson(['redirectedBaskets' => BasketsModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs) {
@@ -594,7 +594,7 @@ class UserController
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
-        $user['baskets'] = BasketsModel::getBasketsByUserId(['userId' => $user['user_id']]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id']]);
         $user['history'] = HistoryModel::getHistoryByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
@@ -627,7 +627,7 @@ class UserController
             'success'   => _ADDED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
             'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
-            'baskets'   => BasketsModel::getBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 
@@ -780,7 +780,7 @@ class UserController
         }
 
         return $response->withJson([
-            'userBaskets' => BasketsModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])
+            'userBaskets' => BasketModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])
         ]);
 
     }

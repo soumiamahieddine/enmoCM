@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use Core\Models\ServiceModel;
 use Core\Models\StatusModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +43,10 @@ class ResController
     //*****************************************************************************************
     public function create(RequestInterface $request, ResponseInterface $response)
     {
+        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $data = $request->getParams();
 
         $check = Validator::notEmpty()->validate($data['encodedFile']);
@@ -65,6 +70,10 @@ class ResController
 
     public function createExt(RequestInterface $request, ResponseInterface $response)
     {
+        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $data = $request->getParams();
 
         $check = Validator::intVal()->notEmpty()->validate($data['resId']);
