@@ -22,7 +22,7 @@ export class DataTablePipe implements PipeTransform {
 
 @Component({
     templateUrl : angularGlobals["users-administrationView"],
-    styleUrls   : ['css/users-administration.component.css'],
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/users-administration.component.css'],
     providers   : [NotificationService]
 })
 

@@ -195,7 +195,7 @@ var UsersAdministrationComponent = (function () {
 UsersAdministrationComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals["users-administrationView"],
-        styleUrls: ['css/users-administration.component.css'],
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/users-administration.component.css'],
         providers: [notification_service_1.NotificationService]
     }),
     __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])

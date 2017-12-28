@@ -98,7 +98,7 @@ class VisaController
         AttachmentsModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($aArgs['collId'] == 'res_attachments' ? 'false' : 'true');
-        $user = UserModel::getById(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
         if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
             ListinstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $_SESSION['user']['UserId']]);
@@ -127,13 +127,19 @@ class VisaController
 
         $incomingMail = ResModel::getById([
             'resId'     => $resId,
-            'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id'],
+            'select'    => ['res_id', 'subject'],
             'resTable'  => 'res_view_letterbox'
         ]);
 
         if (empty($incomingMail)) {
             return ['error' => 'No Document Found'];
         }
+        $incomingExtMail = ResModel::getExtById([
+            'resId'     => $resId,
+            'select'    => ['alt_identifier', 'category_id']
+        ]);
+        $incomingMail['alt_identifier'] = $incomingExtMail['alt_identifier'];
+        $incomingMail['category_id'] = $incomingExtMail['category_id'];
 
         $incomingMailAttachments = AttachmentsModel::getAvailableAttachmentsInByResIdMaster([
             'resIdMaster' => $resId,
