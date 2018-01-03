@@ -127,8 +127,7 @@ class VisaController
 
         $incomingMail = ResModel::getById([
             'resId'     => $resId,
-            'select'    => ['res_id', 'subject'],
-            'resTable'  => 'res_view_letterbox'
+            'select'    => ['res_id', 'subject']
         ]);
 
         if (empty($incomingMail)) {
