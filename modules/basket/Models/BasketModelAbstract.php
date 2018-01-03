@@ -22,7 +22,7 @@ use Entities\Models\EntityModel;
 
 require_once 'core/class/SecurityControler.php';
 
-class BasketsModelAbstract
+class BasketModelAbstract
 {
 
     public static function getResListById(array $aArgs = [])
@@ -88,10 +88,11 @@ class BasketsModelAbstract
         return $aAction[0]['id_action'];
     }
 
-    public static function getBasketsByUserId(array $aArgs = [])
+    public static function getBasketsByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
 
         $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupIds = [];
@@ -101,12 +102,17 @@ class BasketsModelAbstract
 
         $aBaskets = [];
         if (!empty($groupIds)) {
+            $where = ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'];
+            $data = [$groupIds];
+            if (!empty($aArgs['unneededBasketId'])) {
+                $where[] = 'groupbasket.basket_id not in (?)';
+                $data[]  = $aArgs['unneededBasketId'];
+            }
             $aBaskets = DatabaseModel::select([
                     'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc'],
                     'table'     => ['groupbasket, baskets'],
-                    'debug'     => ['true'],
-                    'where'     => ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'],
-                    'data'      => [$groupIds],
+                    'where'     => $where,
+                    'data'      => $data,
                     'order_by'  => ['group_id, basket_order, basket_name']
             ]);
 
@@ -122,7 +128,7 @@ class BasketsModelAbstract
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
             }
-            $aBaskets = array_merge($aBaskets, BasketsModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }
 
         return $aBaskets;

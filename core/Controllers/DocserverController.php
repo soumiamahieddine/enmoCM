@@ -15,20 +15,29 @@
 
 namespace Core\Controllers;
 
+use Core\Models\ServiceModel;
+use Core\Models\ValidatorModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Respect\Validation\Validator;
 use Core\Models\DocserverModel;
 
 class DocserverController
 {
     public function get(RequestInterface $request, ResponseInterface $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         return $response->withJson(['docservers' => DocserverModel::get()]);
     }
 
     public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
 
         if(empty($docserver)){
@@ -40,7 +49,10 @@ class DocserverController
 
     public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        //TODO Droit de suppression
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
 
         if(empty($docserver)){
@@ -52,105 +64,223 @@ class DocserverController
         return $response->withJson(['docservers' => DocserverModel::get()]);
     }
 
+    public static function createPathOnDocServer(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
 
-    // Modèle pour le create et update
-//    protected function control($request, $mode)
-//    {
-//        $errors = [];
-//
-//        if ($mode == 'update') {
-//            $obj = DocserverModel::getById([
-//                'id' => $request->getParam('id')
-//            ]);
-//            if (empty($obj)) {
-//                array_push(
-//                    $errors,
-//                    _ID . ' ' . $request->getParam('id') . ' ' . _NOT_EXISTS
-//                );
-//            }
-//        }
-//
-//        if (!Validator::notEmpty()->validate($request->getParam('id'))) {
-//            array_push($errors, _ID . ' ' . _IS_EMPTY);
-//        } elseif ($mode == 'create') {
-//            $obj = DocserverModel::getById([
-//                'id' => $request->getParam('id')
-//            ]);
-//            if (!empty($obj)) {
-//                array_push(
-//                    $errors,
-//                    _ID . ' ' . $obj[0]['id'] . ' ' . _ALREADY_EXISTS
-//                );
-//            }
-//        }
-//
-//        if (!Validator::regex('/^[\w.-]*$/')->validate($request->getParam('id'))) {
-//            array_push($errors, _ID . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (!Validator::notEmpty()
-//                ->validate($request->getParam('label_status'))) {
-//            array_push($errors, _LABEL_STATUS . ' ' . _IS_EMPTY);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('is_system')) &&
-//            !Validator::contains('Y')
-//                ->validate($request->getParam('is_system')) &&
-//            !Validator::contains('N')
-//                ->validate($request->getParam('is_system'))
-//        ) {
-//            array_push($errors, _IS_SYSTEM . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('is_folder_status')) &&
-//            !Validator::contains('Y')
-//                ->validate($request->getParam('is_folder_status')) &&
-//            !Validator::contains('N')
-//                ->validate($request->getParam('is_folder_status'))
-//        ) {
-//            array_push($errors, _IS_FOLDER_STATUS . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('img_filename')) &&
-//            (!Validator::regex('/^[\w-.]+$/')
-//                ->validate($request->getParam('img_filename')) ||
-//            !Validator::length(null, 255)
-//                ->validate($request->getParam('img_filename')))
-//        ) {
-//            array_push($errors, _IMG_FILENAME . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('maarch_module')) &&
-//            !Validator::length(null, 255)
-//                ->validate($request->getParam('maarch_module'))
-//        ) {
-//            array_push($errors, _MAARCH_MODULE . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('can_be_searched')) &&
-//            !Validator::contains('Y')
-//                ->validate($request->getParam('can_be_searched')) &&
-//            !Validator::contains('N')
-//                ->validate($request->getParam('can_be_searched'))
-//        ) {
-//            array_push($errors, _CAN_BE_SEARCHED . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        if (Validator::notEmpty()
-//                ->validate($request->getParam('can_be_modified')) &&
-//            !Validator::contains('Y')
-//                ->validate($request->getParam('can_be_modified')) &&
-//            !Validator::contains('N')
-//                ->validate($request->getParam('can_be_modified'))
-//        ) {
-//            array_push($errors, _CAN_BE_MODIFIED . ' ' . _NOT . ' ' . _VALID);
-//        }
-//
-//        return $errors;
-//    }
+        if (!is_dir($aArgs['path'])) {
+            return ['errors' => '[createPathOnDocServer] Path does not exist'];
+        }
+
+        error_reporting(0);
+        umask(0022);
+
+        $yearPath = $aArgs['path'] . date('Y') . '/';
+        if (!is_dir($yearPath)) {
+            mkdir($yearPath, 0770);
+            if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($yearPath));
+            }
+            umask(0022);
+            chmod($yearPath, 0770);
+        }
+
+        $monthPath = $yearPath . date('m') . '/';
+        if (!is_dir($monthPath)) {
+            mkdir($monthPath, 0770);
+            if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($monthPath));
+            }
+            umask(0022);
+            chmod($monthPath, 0770);
+        }
+
+        $pathToDS = $monthPath;
+        if (!empty($GLOBALS['wb'])) {
+            $pathToDS = "{$monthPath}BATCH/{$GLOBALS['wb']}/";
+            if (!is_dir($pathToDS)) {
+                mkdir($pathToDS, 0770, true);
+                if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                    exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($monthPath));
+                }
+                umask(0022);
+                chmod($monthPath, 0770);
+            } else {
+                return ['errors' => '[createPathOnDocServer] Folder alreay exists, workbatch already exist:' . $pathToDS];
+            }
+        }
+
+        return $pathToDS;
+    }
+
+    public static function getNextFileNameInDocServer(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['pathOnDocserver']);
+        ValidatorModel::stringType($aArgs, ['pathOnDocserver']);
+
+        if (!is_dir($aArgs['pathOnDocserver'])) {
+            return ['errors' => '[getNextFileNameInDocServer] PathOnDocserver does not exist'];
+        }
+
+        umask(0022);
+
+        $aFiles = scandir($aArgs['pathOnDocserver']);
+        array_shift($aFiles); // Remove . line
+        array_shift($aFiles); // Remove .. line
+
+        if (file_exists($aArgs['pathOnDocserver'] . '/package_information')) {
+            unset($aFiles[array_search('package_information', $aFiles)]);
+        }
+        if (is_dir($aArgs['pathOnDocserver'] . '/BATCH')) {
+            unset($aFiles[array_search('BATCH', $aFiles)]);
+        }
+
+        $filesNb = count($aFiles);
+        if ($filesNb == 0) {
+            $zeroOnePath = $aArgs['pathOnDocserver'] . '0001/';
+
+            if (!mkdir($zeroOnePath, 0770)) {
+                return ['errors' => '[getNextFileNameInDocServer] Directory creation failed: ' . $zeroOnePath];
+            } else {
+                if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                    exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($zeroOnePath));
+                }
+                umask(0022);
+                chmod($zeroOnePath, 0770);
+
+                return [
+                    'destinationDir'        => $zeroOnePath,
+                    'fileDestinationName'   => '0001_' . mt_rand(),
+                ];
+            }
+        } else {
+            $destinationDir = $aArgs['pathOnDocserver'] . str_pad(count($aFiles), 4, '0', STR_PAD_LEFT) . '/';
+            $aFilesBis = scandir($aArgs['pathOnDocserver'] . strval(str_pad(count($aFiles), 4, '0', STR_PAD_LEFT)));
+            array_shift($aFilesBis); // Remove . line
+            array_shift($aFilesBis); // Remove .. line
+
+            $filesNbBis = count($aFilesBis);
+            if ($filesNbBis >= 1000) { //If number of files >= 1000 then creates a new subdirectory
+                $zeroNumberPath = $aArgs['pathOnDocserver'] . str_pad($filesNb + 1, 4, '0', STR_PAD_LEFT) . '/';
+
+                if (!mkdir($zeroNumberPath, 0770)) {
+                    return ['errors' => '[getNextFileNameInDocServer] Directory creation failed: ' . $zeroNumberPath];
+                } else {
+                    if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                        exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($zeroNumberPath));
+                    }
+                    umask(0022);
+                    chmod($zeroNumberPath, 0770);
+
+                    return [
+                        'destinationDir'        => $zeroNumberPath,
+                        'fileDestinationName'   => '0001_' . mt_rand(),
+                    ];
+                }
+            } else {
+                $higher = $filesNbBis + 1;
+                foreach ($aFilesBis as $value) {
+                    $currentFileName = explode('.', $value);
+                    if ($higher <= (int)$currentFileName[0]) {
+                        $higher = (int)$currentFileName[0] + 1;
+                    }
+                }
+
+                return [
+                    'destinationDir'        => $destinationDir,
+                    'fileDestinationName'   => str_pad($higher, 4, '0', STR_PAD_LEFT) . '_' . mt_rand(),
+                ];
+            }
+        }
+    }
+
+    public static function copyOnDocServer(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['destinationDir', 'fileDestinationName', 'sourceFilePath']);
+        ValidatorModel::stringType($aArgs, ['destinationDir', 'fileDestinationName', 'sourceFilePath']);
+
+        if (file_exists($aArgs['destinationDir'] . $aArgs['fileDestinationName'])) {
+            return ['errors' => '[copyOnDocserver] File already exists: ' . $aArgs['destinationDir'] . $aArgs['fileDestinationName']];
+        }
+
+        if (!file_exists($aArgs['sourceFilePath'])) {
+            return ['errors' => '[copyOnDocserver] File does not exist'];
+        }
+
+        error_reporting(0);
+        $aArgs['sourceFilePath'] = str_replace('\\\\', '\\', $aArgs['sourceFilePath']);
+
+        if (!is_dir($aArgs['destinationDir'])) {
+            mkdir($aArgs['destinationDir'], 0770, true);
+            if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+                exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($aArgs['destinationDir']));
+            }
+            umask(0022);
+            chmod($aArgs['destinationDir'], 0770);
+        }
+
+        if (!copy($aArgs['sourceFilePath'], $aArgs['destinationDir'] . $aArgs['fileDestinationName'])) {
+            return ['errors' => '[copyOnDocserver] Copy on the docserver failed'];
+        }
+        if (DIRECTORY_SEPARATOR == '/' && !empty($GLOBALS['apacheUserAndGroup'])) {
+            exec('chown ' . escapeshellarg($GLOBALS['apacheUserAndGroup']) . ' ' . escapeshellarg($aArgs['destinationDir'] . $aArgs['fileDestinationName']));
+        }
+        umask(0022);
+        chmod($aArgs['destinationDir'] . $aArgs['fileDestinationName'], 0770);
+
+        $fingerprintControl = StoreController::controlFingerPrint([
+            'pathInit'          => $aArgs['sourceFilePath'],
+            'pathTarget'        => $aArgs['destinationDir'] . $aArgs['fileDestinationName'],
+            'fingerprintMode'   => $aArgs['docserverSourceFingerprint'],
+        ]);
+        if (!empty($fingerprintControl['errors'])) {
+            return ['errors' => '[copyOnDocserver] ' . $fingerprintControl['errors']];
+        }
+
+        if (!empty($GLOBALS['currentStep'])) { // For batch like life cycle
+            $aArgs['destinationDir'] = str_replace($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'], '', $aArgs['destinationDir']);
+        }
+        $aArgs['destinationDir'] = str_replace(DIRECTORY_SEPARATOR, '#', $aArgs['destinationDir']);
+
+        $dataToReturn = [
+            'copyOnDocserver' =>
+                [
+                    'destinationDir'        => $aArgs['destinationDir'],
+                    'fileDestinationName'   => $aArgs['fileDestinationName'],
+                    'fileSize'              => filesize(str_replace('#', '/', $aArgs['destinationDir']) . $aArgs['fileDestinationName']),
+                ]
+        ];
+
+        if (!empty($GLOBALS['TmpDirectory'])) {
+            DocserverController::directoryWasher(['path' => $GLOBALS['TmpDirectory']]);
+        }
+
+        return $dataToReturn;
+    }
+
+    private static function directoryWasher(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        if (!is_dir($aArgs['path'])) {
+            return ['errors' => '[directoryWasher] Path does not exist'];
+        }
+
+        $aFiles = scandir($aArgs['path']);
+        foreach ($aFiles as $file) {
+            if ($file != '.' && $file != '..') {
+                if (filetype($aArgs['path'] . '/' . $file) == 'dir') {
+                    DocserverController::directoryWasher(['path' => $aArgs['path'] . '/' . $file]);
+                } else {
+                    unlink($aArgs['path'] . '/' . $file);
+                }
+            }
+        }
+
+        reset($aFiles);
+
+        return true;
+    }
 }
