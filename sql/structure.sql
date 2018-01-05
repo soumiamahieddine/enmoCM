@@ -558,9 +558,6 @@ CREATE TABLE groupbasket
 (
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
-  "sequence" integer NOT NULL DEFAULT 0,
-  redirect_basketlist character varying(2048) DEFAULT NULL::character varying,
-  redirect_grouplist character varying(2048) DEFAULT NULL::character varying,
   result_page character varying(255) DEFAULT 'show_list1.php'::character varying,
   can_redirect character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,

@@ -52,8 +52,6 @@ abstract class admin_basket_Abstract extends Database
         {
             $stmt2 = $db->query("select agb.group_id, agb.basket_id, agb.id_action, agb.where_clause,  ba.label_action, agb.used_in_basketlist as mass, agb.used_in_action_page as page, agb.default_action_list from ".$_SESSION['tablename']['bask_actions_groupbaskets']." agb, ".$_SESSION['tablename']['actions']." ba
             where ba.id = agb.id_action and agb.group_id = ? and agb.basket_id = ?",array($line2->group_id,$id) );
-            //$basketlist = $line2->redirect_basketlist;
-            //$grouplist = $line2->redirect_grouplist;
 
             $actions = array();
             while($res = $stmt2->fetchObject())

@@ -828,9 +828,8 @@ abstract class basket_Abstract extends Database
             $groupId = $res->group_id;
         }
         $stmt = $db->query(
-            "select sequence, can_redirect, can_delete, can_insert, "
-            . "result_page, list_lock_clause, sublist_lock_clause, "
-            ."redirect_basketlist, redirect_grouplist from "
+            "select can_redirect, can_delete, can_insert, "
+            . "result_page, list_lock_clause, sublist_lock_clause from "
             . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
         $res = $stmt->fetchObject();
 
@@ -977,9 +976,9 @@ abstract class basket_Abstract extends Database
             $primaryGroup = $_SESSION['user']['primarygroup'];
         }
         $stmt = $db->query(
-            "select  sequence, can_redirect, can_delete, can_insert, "
-            . "result_page, redirect_basketlist, list_lock_clause, "
-            ."sublist_lock_clause, redirect_grouplist from "
+            "select  can_redirect, can_delete, can_insert, "
+            . "result_page, list_lock_clause, "
+            ."sublist_lock_clause from "
             . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ? ",array($primaryGroup,$basketId));
 
         $res = $stmt->fetchObject();
@@ -1009,10 +1008,6 @@ abstract class basket_Abstract extends Database
 
         $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
-        $tab['redirect_services'] = trim(
-            stripslashes($res->redirect_basketlist)
-        );
-        $tab['redirect_users'] = trim(stripslashes($res->redirect_grouplist));
         $tab['abs_basket'] = $absBasket;
 
         $tab['clause'] = $secCtrl->process_security_where_clause(

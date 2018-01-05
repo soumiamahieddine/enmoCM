@@ -355,3 +355,9 @@ UPDATE res_version_attachments SET in_signature_book = TRUE;
 UPDATE listinstance SET signatory = TRUE WHERE item_mode = 'sign';
 
 ALTER TABLE notif_event_stack ALTER COLUMN record_id TYPE character varying(128);
+
+/*BASKETS*/
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS sequence;
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS redirect_basketlist;
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS redirect_grouplist;
+
