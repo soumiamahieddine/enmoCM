@@ -45,7 +45,7 @@ abstract class admin_basket_Abstract extends Database
         $default_action_list = '';
         $db = new Database();
 
-        $stmt = $db->query("select gb.group_id,  gb.sequence, gb.result_page, gb.list_lock_clause, gb.sublist_lock_clause, u.group_desc from "
+        $stmt = $db->query("select gb.group_id,  gb.result_page, gb.list_lock_clause, gb.sublist_lock_clause, u.group_desc from "
             .$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['usergroups']
             ." u where gb.basket_id = ? and gb.group_id = u.group_id order by u.group_desc",array($id));
         while($line2 = $stmt->fetchObject())
@@ -69,8 +69,7 @@ abstract class admin_basket_Abstract extends Database
             $_SESSION['m_admin']['basket']['groups'][$i] = array(
                 "GROUP_ID"          =>  $line2->group_id , 
                 "GROUP_LABEL"       =>  functions::show_string($line2->group_desc), 
-                "SEQUENCE"          =>  $line2->sequence,  
-                "RESULT_PAGE"       =>  $line2->result_page, 
+                "RESULT_PAGE"       =>  $line2->result_page,
                 "LOCK_LIST"         =>  $line2->list_lock_clause, 
                 "LOCK_SUBLIST"      =>  $line2->sublist_lock_clause, 
                 "DEFAULT_ACTION"    =>  $default_action_list,  
