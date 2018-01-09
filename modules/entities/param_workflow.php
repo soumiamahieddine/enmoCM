@@ -217,19 +217,7 @@ if ($_SESSION['service_tag'] == 'group_basket') {
             $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
         }
         //ROLES
-        $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = array();
-        if (!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'])) {
-            $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES 
-                . " where basket_id= ?"
-                . " and group_id = ?"
-                . " and action_id = ?";
-            $stmt = $db->query($query,array(trim($_SESSION['m_admin']['basket']['basketId']),trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']),$_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION']));
-            $array = array();
-            while ($roles = $stmt->fetchObject()) {
-                $array[] = array('ID' => $roles->difflist_role_id);
-            }
-            $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = $array;
-        }
+        $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = [];
         //STATUS
         for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
             $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
@@ -247,16 +235,7 @@ if ($_SESSION['service_tag'] == 'group_basket') {
         $j=0;
         //ROLES
         for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
-            $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
-                . " where basket_id= ?"
-                . " and group_id = ?"
-                . " and action_id = ?";
-            $stmt = $db->query($query,array(trim($_SESSION['m_admin']['basket']['basketId']),trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']),$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION']));
-            $array = array();
-            while ($roles = $stmt->fetchObject()) {
-                $array[] = array('ID' => $roles->difflist_role_id);
-            }
-            $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ROLES_LIST'] = $array;
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ROLES_LIST'] = [];
         }
     }
 } elseif ($_SESSION['service_tag'] == 'load_basket_db') {
@@ -271,13 +250,8 @@ if ($_SESSION['service_tag'] == 'group_basket') {
         $GroupBasket = $_SESSION['m_admin']['basket']['groups'][$cpt];
         if (!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $workflow_actions)) {
             //STATUS
-            $stmt = $db->query(
+            $db->query(
                 "DELETE FROM " . GROUPBASKET_STATUS
-                . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasket['DEFAULT_ACTION'])
-            );
-            //ROLES
-            $stmt = $db->query(
-                "DELETE FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
                 . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasket['DEFAULT_ACTION'])
             );
             //STATUS
@@ -290,14 +264,6 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                     );
                 }
             }
-            //ROLES
-            for ($k=0;$k<count($GroupBasket['PARAM_DEFAULT_ACTION']['ROLES_LIST']);$k++) {
-                $Roles = $GroupBasket['PARAM_DEFAULT_ACTION']['ROLES_LIST'][$k];
-                $stmt = $db->query(
-                    "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_ROLES
-                    . " (group_id, basket_id, action_id, difflist_role_id) values (?, ?, ?, ?)",array(trim($GroupBasket['GROUP_ID']),trim($_SESSION['m_admin']['basket']['basketId']),$GroupBasket['DEFAULT_ACTION'],$Roles['ID'])
-                );
-            }
         }
         for ($j=0;$j<count($GroupBasket['ACTIONS']);$j++) {
             $GroupBasketAction = $GroupBasket['ACTIONS'][$j];
@@ -305,11 +271,6 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                 //STATUS
                 $stmt = $db->query(
                     "DELETE FROM " . GROUPBASKET_STATUS
-                    . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasketAction['ID_ACTION'])
-                );
-                //ROLES
-                $stmt = $db->query(
-                    "DELETE FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
                     . " where basket_id= ? and group_id = ? and action_id = ?",array(trim($_SESSION['m_admin']['basket']['basketId']),trim($GroupBasket['GROUP_ID']),$GroupBasketAction['ID_ACTION'])
                 );
                 //STATUS
@@ -324,22 +285,11 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                         }
                     }
                 }
-                //ROLES
-                 if (isset($GroupBasketAction['ROLES_LIST'])) {
-                    for ($k = 0; $k < count($GroupBasketAction['ROLES_LIST']); $k++) {
-                        $Roles = $GroupBasketAction['ROLES_LIST'][$k];
-                        $stmt = $db->query(
-                            "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_ROLES
-                            . " (group_id, basket_id, action_id, difflist_role_id) values (?, ?, ?, ?)",array(trim($GroupBasket['GROUP_ID']),trim($_SESSION['m_admin']['basket']['basketId']),$GroupBasketAction['ID_ACTION'],$Roles['ID'])
-                        );
-                    }
-                }
             }
         }
     }
 } else if ($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id'])) {
     $db = new Database();
     $stmt = $db->query("delete from ".GROUPBASKET_STATUS." where basket_id = ?",array($_SESSION['temp_basket_id']));
-    $stmt = $db->query("delete from ".ENT_GROUPBASKET_DIFFLIST_ROLES." where basket_id = ?",array($_SESSION['temp_basket_id']));
     unset($_SESSION['temp_basket_id']);
 }

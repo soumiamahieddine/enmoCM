@@ -83,16 +83,11 @@ else
     }
     
 	$old_group = "";
-	$seq = "";
 
 	if(isset($_REQUEST['old_group']) && !empty($_REQUEST['old_group']))
 	{
 		$old_group = $_REQUEST['old_group'];
 	}
-
-	$stmt = $db->query("select max(sequence) as seq from ".$_SESSION['tablename']['bask_groupbasket']." where group_id = ?",array($groupe));
-	$line = $stmt->fetchObject();
-	$seq = $line->seq +1;
 
 	$actions = array();
 
@@ -155,8 +150,7 @@ else
 		$tab = array(
                 "GROUP_ID"          => $groupe, 
                 "GROUP_LABEL"       => $res->group_desc, 
-                "SEQUENCE"          => $seq, 
-                "RESULT_PAGE"       => $respage, 
+                "RESULT_PAGE"       => $respage,
                 "LOCK_LIST"         => $list_whrere_clause, 
                 "LOCK_SUBLIST"      => $sublist_whrere_clause, 
                 "DEFAULT_ACTION"    => $default_action_page,  

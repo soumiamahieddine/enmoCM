@@ -743,8 +743,8 @@ abstract class admin_basket_Abstract extends Database
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
         {
             // Update groupbasket table
-            $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id, sequence,  result_page, list_lock_clause, sublist_lock_clause)
-            VALUES (?,?,?,?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['SEQUENCE'],$_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_LIST'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_SUBLIST']));
+            $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id,  result_page, list_lock_clause, sublist_lock_clause)
+            VALUES (?,?,?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_LIST'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_SUBLIST']));
 
             // Browses the actions array for the current basket - group couple and inserts the action in actions_groupbasket table  if needed
             for($j=0; $j < count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']); $j++)

@@ -990,33 +990,5 @@ abstract class diffusion_list_Abstract extends functions
             . " WHERE difflist_type_id = ?",array($difflist_type_id) 
         );
     }
-        
-    #**************************************************************************
-    # GROUPBASKET_DIFFLIST_TYPES
-    # Types of lists available for a given group in basket
-    #**************************************************************************   
-    #  Get list of available list model types for a given groupbasket
-    public function list_groupbasket_difflist_types(
-        $group_id,
-        $basket_id,
-        $action_id
-    ) {
-        $types = array();
-        $db = new Database();
-        $stmt = $db->query(
-            "select difflist_type_id from " . ENT_GROUPBASKET_DIFFLIST_TYPES
-            . " where group_id = ?" 
-                . " and basket_id = ?"
-                . " and action_id = ?",array($group_id,$basket_id,$action_id)
-        );
-        
-        $types = array();
-                
-        while ($type = $stmt->fetchObject()) { 
-            $types[] = (string) $type->difflist_type_id;
-        }
-        return $types;
-    }
 
-    
 }
