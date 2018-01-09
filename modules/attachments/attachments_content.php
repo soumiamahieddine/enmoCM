@@ -2094,10 +2094,11 @@ $content .= '<iframe src="index.php?display=true&editingMode=true&dir=indexing_s
 $content .= '</div>';
 
 if(empty($_REQUEST['id'])){
-    $js = 'setTimeout(function(){window.parent.document.getElementById(\'liMainDocument\').click()}, 1000)';
+    $js = 'setTimeout(function(){window.parent.document.getElementById(\'liMainDocument\').click()}, 1000);';
 } else {
-    $js = 'setTimeout(function(){window.top.document.getElementById(\'liAttachement\').click()}, 1000)';
+    $js = 'setTimeout(function(){window.top.document.getElementById(\'liAttachement\').click()}, 1000);';
 }
 
+$js .= "setInterval(function(){window.top.clearTimeout(window.top.chronoExpiration);window.top.chronoExpiration=window.top.setTimeout('redirect_to_url(\'index.php?display=true&page=logout&logout=true\')', ".$_SESSION['config']['cookietime']."*60*1000); }, 60000);";
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();

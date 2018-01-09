@@ -560,22 +560,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $pathScriptTab = 'index.php?display=true&page=show_technicalInfo_tab';
                                 $uniqueString .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
                                 }
-                                $uniqueString .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
+                                $uniqueString .= '<div class="DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
                                 if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-                                        $uniqueString .=  'padding-right: 0px;';
+                                        $uniqueString .=  'padding-right: 0px;height:29px;';
                                 }else {
-                                        $uniqueString .=  'padding-right: 15px;';
+                                        $uniqueString .=  'padding-right: 15px;height:30px;';
                                 }
                                 require_once('modules/entities/class/class_manage_listdiff.php');
                                     $diff_list = new diffusion_list();
                                     $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
                                     $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
                                     $roles = $diff_list->list_difflist_roles();
-                                    json_encode($roles);
                                     $roles_str = json_encode($roles);
                                     $category = $data['category_id']['value'];
                                     $pathScriptTab = 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
-                                    $uniqueString .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"> <sup><span style="font-size: 10px;';
+                                    $uniqueString .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"><i class="fa fa-share-alt" onclick="this.closest(\'div\').click()"></i> <sup><span style="font-size: 10px;';
                                         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                             $style = 'visibility:hidden;"';
                                         }else {
@@ -948,8 +947,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                         echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';
                                     } else if ($key == 'priority') {
                                         echo 'onchange="updateProcessDate(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=update_process_date\', ' . $s_id . ')"';
-                                    } else if ($key == 'nature_id') {
-                                        echo 'disabled style="background-color : #e6e6d1;"';
                                     }
                                     ?>
                                     >

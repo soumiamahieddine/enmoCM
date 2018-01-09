@@ -153,7 +153,8 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":multifield2" => $multifield)); 
                 }
 
-                $multifield = \Core\Models\TextFormatModel::normalize(['string' => $multifield]);
+		$multifield = \Core\Models\TextFormatModel::normalize(['string' => $multifield]);
+                $multifield = preg_replace('/\s+/', ' ', $multifield);
                 $arrayPDO = array_merge($arrayPDO, array(":multifield" => "%".$multifield."%"));
                 
                 $where_request .=" and  ";
@@ -324,7 +325,7 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
             {
                 $subject = trim($_REQUEST['subject']);
-                $subject = $func->normalize($subject);
+                $subject = preg_replace('/\s+/', ' ',$func->normalize($subject));
                 $json_txt .= " 'subject' : ['".addslashes(trim($subject))."'],";
 
                 $where_request .= " (REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:subject) "
@@ -481,7 +482,8 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
 
-                $multifieldWelcome = \Core\Models\TextFormatModel::normalize(['string' => $welcome]);
+		$multifieldWelcome = \Core\Models\TextFormatModel::normalize(['string' => $welcome]);
+                $multifieldWelcome = preg_replace('/\s+/', ' ', $multifieldWelcome);
                 $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcome" => "%".$multifieldWelcome."%"));
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 

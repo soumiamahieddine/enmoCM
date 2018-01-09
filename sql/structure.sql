@@ -558,13 +558,7 @@ CREATE TABLE groupbasket
 (
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
-  "sequence" integer NOT NULL DEFAULT 0,
-  redirect_basketlist character varying(2048) DEFAULT NULL::character varying,
-  redirect_grouplist character varying(2048) DEFAULT NULL::character varying,
   result_page character varying(255) DEFAULT 'show_list1.php'::character varying,
-  can_redirect character(1) NOT NULL DEFAULT 'N'::bpchar,
-  can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,
-  can_insert character(1) NOT NULL DEFAULT 'N'::bpchar,
   list_lock_clause text,
   sublist_lock_clause text,
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id)
@@ -1984,32 +1978,6 @@ CREATE TABLE groupbasket_status
   action_id integer NOT NULL,
   status_id character varying(32),
   CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE TABLE groupbasket_difflist_types
-(
-  system_id serial NOT NULL,
-  group_id character varying(32) NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  action_id integer NOT NULL,
-  difflist_type_id character varying(50) NOT NULL,
-  CONSTRAINT groupbasket_difflist_types_pkey PRIMARY KEY (system_id )
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE TABLE groupbasket_difflist_roles
-(
-  system_id serial NOT NULL,
-  group_id character varying(32) NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  action_id integer NOT NULL,
-  difflist_role_id character varying(50) NOT NULL,
-  CONSTRAINT groupbasket_difflist_roles_pkey PRIMARY KEY (system_id)
 )
 WITH (
   OIDS=FALSE
