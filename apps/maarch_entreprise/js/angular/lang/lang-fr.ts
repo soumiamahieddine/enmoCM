@@ -76,9 +76,9 @@ export const LANG_FR = {
     "groupAdded"                : "Groupe ajouté",
     "groupUpdated"              : "Groupe modifié",
     "groupDeleted"              : "Groupe supprimé",
-    "entityAdded"               : "Entité ajouté",
-    "entityUpdated"             : "Entité modifié",
-    "entityDeleted"             : "Entité supprimé",
+    "entityAdded"               : "Entité ajoutée",
+    "entityUpdated"             : "Entité modifiée",
+    "entityDeleted"             : "Entité supprimée",
     "entityTooglePrimary"       : "Passage en entité primaire",
 
 
