@@ -363,6 +363,8 @@ ALTER TABLE groupbasket DROP COLUMN IF EXISTS redirect_grouplist;
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS can_redirect;
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS can_delete;
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS can_insert;
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_lock_clause;
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS sublist_lock_clause;
 DROP TABLE IF EXISTS groupbasket_difflist_types;
 DROP TABLE IF EXISTS groupbasket_difflist_roles;
 

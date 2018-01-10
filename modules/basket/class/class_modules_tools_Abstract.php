@@ -810,7 +810,7 @@ abstract class basket_Abstract extends Database
             $groupId = $res->group_id;
         }
         $stmt = $db->query(
-            "select result_page, list_lock_clause, sublist_lock_clause from "
+            "select result_page from "
             . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ?",array($groupId,$basketId));
         $res = $stmt->fetchObject();
 
@@ -846,16 +846,9 @@ abstract class basket_Abstract extends Database
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
         
-        $tab['lock_list'] = $secCtrl->process_security_where_clause(
-            $res->list_lock_clause, $userId
-        );
-		$tab['lock_list'] = str_replace('where', '', $tab['lock_list']);
-		
-        $tab['lock_sublist'] = $secCtrl->process_security_where_clause(
-            $res->sublist_lock_clause, $userId
-        );
+        $tab['lock_list'] = '';
+        $tab['lock_sublist'] = '';
         
-		$tab['lock_sublist'] = str_replace('where', '', $tab['lock_sublist']);
 
         $db = new Database();
         $stmt = $db->query(
@@ -956,10 +949,7 @@ abstract class basket_Abstract extends Database
         } else {
             $primaryGroup = $_SESSION['user']['primarygroup'];
         }
-        $stmt = $db->query(
-            "select result_page, list_lock_clause, "
-            ."sublist_lock_clause from "
-            . GROUPBASKET_TABLE . " where group_id = ? and basket_id = ? ",array($primaryGroup,$basketId));
+        $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($primaryGroup,$basketId));
 
         $res = $stmt->fetchObject();
 
@@ -995,12 +985,8 @@ abstract class basket_Abstract extends Database
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
         
-        $tab['lock_list'] = $secCtrl->process_security_where_clause(
-            $res->list_lock_clause, $userId
-        );
-        $tab['lock_sublist'] = $secCtrl->process_security_where_clause(
-            $res->sublist_lock_clause, $userId
-        );
+        $tab['lock_list'] = '';
+        $tab['lock_sublist'] = '';
         
         return $tab;
     }

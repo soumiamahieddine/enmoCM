@@ -45,7 +45,7 @@ abstract class admin_basket_Abstract extends Database
         $default_action_list = '';
         $db = new Database();
 
-        $stmt = $db->query("select gb.group_id,  gb.result_page, gb.list_lock_clause, gb.sublist_lock_clause, u.group_desc from "
+        $stmt = $db->query("select gb.group_id,  gb.result_page, u.group_desc from "
             .$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['usergroups']
             ." u where gb.basket_id = ? and gb.group_id = u.group_id order by u.group_desc",array($id));
         while($line2 = $stmt->fetchObject())
@@ -70,8 +70,8 @@ abstract class admin_basket_Abstract extends Database
                 "GROUP_ID"          =>  $line2->group_id , 
                 "GROUP_LABEL"       =>  functions::show_string($line2->group_desc), 
                 "RESULT_PAGE"       =>  $line2->result_page,
-                "LOCK_LIST"         =>  $line2->list_lock_clause, 
-                "LOCK_SUBLIST"      =>  $line2->sublist_lock_clause, 
+                "LOCK_LIST"         =>  '',
+                "LOCK_SUBLIST"      =>  '',
                 "DEFAULT_ACTION"    =>  $default_action_list,  
                 "ACTIONS"           =>  $actions);
             $i++;
@@ -743,8 +743,8 @@ abstract class admin_basket_Abstract extends Database
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
         {
             // Update groupbasket table
-            $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id,  result_page, list_lock_clause, sublist_lock_clause)
-            VALUES (?,?,?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_LIST'],$_SESSION['m_admin']['basket']['groups'][$i]['LOCK_SUBLIST']));
+            $db->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id,  result_page)
+            VALUES (?,?,?)",array($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],$_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE']));
 
             // Browses the actions array for the current basket - group couple and inserts the action in actions_groupbasket table  if needed
             for($j=0; $j < count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']); $j++)

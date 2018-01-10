@@ -559,8 +559,6 @@ CREATE TABLE groupbasket
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
   result_page character varying(255) DEFAULT 'show_list1.php'::character varying,
-  list_lock_clause text,
-  sublist_lock_clause text,
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id)
 )
 WITH (OIDS=FALSE);
