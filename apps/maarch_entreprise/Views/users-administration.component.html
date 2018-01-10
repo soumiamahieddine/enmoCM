@@ -43,7 +43,7 @@
             <td style="vertical-align:middle;">{{user.mail}}</td>
             <td style="text-align:right;">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                    <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
                         <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                     </button>
                     <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
