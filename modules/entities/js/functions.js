@@ -222,6 +222,9 @@ function change_diff_list(
                     if(window.opener.parent.document.getElementById('iframe_tab')){
                         window.opener.parent.document.getElementById('iframe_tab').src = window.opener.parent.document.getElementById('iframe_tab').src;
                     }
+                    if(window.opener.parent.document.getElementById('uniqueDetailsIframe')){
+                        window.opener.parent.document.getElementById('uniqueDetailsIframe').src = window.opener.parent.document.getElementById('uniqueDetailsIframe').src;
+                    }
                     window.close();
                 }
                 else
