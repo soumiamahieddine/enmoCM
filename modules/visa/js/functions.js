@@ -118,30 +118,32 @@ function resetPosVisa () {
         i++;
     });
 
-    i = 1;
-    var hasSignatory = false;
-    $j(".droptarget").each(function() {
-        if ($j("#signRequest_"+(i)+" option:selected[value=true]").length) {
-            userRequestSign=true;
-        } else {
-            userRequestSign=false;
-        }
-        if ($j("#signedUser_"+(i)).css('visibility') == 'visible') {
-            userSignatory=true;
-        } else {
-            userSignatory=false;
-        }
+    if($j("#cannotaddsignatory").length == 0){
+        i = 1;
+        var hasSignatory = false;
+        $j(".droptarget").each(function() {
+            if ($j("#signRequest_"+(i)+" option:selected[value=true]").length) {
+                userRequestSign=true;
+            } else {
+                userRequestSign=false;
+            }
+            if ($j("#signedUser_"+(i)).css('visibility') == 'visible') {
+                userSignatory=true;
+            } else {
+                userSignatory=false;
+            }
 
-        if(userRequestSign || userSignatory){
-            hasSignatory = true;
-        }
-        if ($j("#signRequest_"+(i+1)).length == 0 && !hasSignatory) {
-            $j('#signRequest_'+(i)).val("true");
-        }
-        i++;
+            if(userRequestSign || userSignatory){
+                hasSignatory = true;
+            }
+            if ($j("#signRequest_"+(i+1)).length == 0 && !hasSignatory) {
+                $j('#signRequest_'+(i)).val("true");
+            }
+            i++;
 
-    });
-    i--;
+        });
+        i--;
+    }
 
 
 }
@@ -173,7 +175,7 @@ function updateVisaWorkflow(resId) {
             if(userRequestSign || userSignatory){
                 hasSignatory = true;
             }
-            if ($j("#signRequest_"+(i+2)).length == 0 && !hasSignatory) {
+            if ($j("#signRequest_"+(i+2)).length == 0 && !hasSignatory && $j("#cannotaddsignatory").length == 0) {
                 userRequestSign=true;
                 $j('#signRequest_'+(i+1)).val("true");
             }
