@@ -42,6 +42,19 @@ class SecurityModelAbstract
         return password_verify($args['password'], $aReturn[0]['password']);
     }
 
+    public static function getCookieAuth()
+    {
+        $rawCookie = $_COOKIE['maarchCourrierAuth'];
+        if (empty($rawCookie)) {
+            return [];
+        }
+
+        $cookieDecoded = base64_decode($rawCookie);
+        $cookie = json_decode($cookieDecoded);
+
+        return (array)$cookie;
+    }
+
     public static function cookieAuthentication(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId', 'cookieKey']);
@@ -107,16 +120,25 @@ class SecurityModelAbstract
         return true;
     }
 
-    public static function getCookieAuth()
+    public static function deleteCookieAuth()
     {
-        $rawCookie = $_COOKIE['maarchCourrierAuth'];
-        if (empty($rawCookie)) {
-            return [];
+        $previousCookie = SecurityModel::getCookieAuth();
+
+        if (!empty($previousCookie)) {
+            DatabaseModel::update([
+                'table' => 'users',
+                'set'   => [
+                    'cookie_key'    => '',
+                    'cookie_date'   => date('Y-m-d H:i:s', time() - 1),
+                ],
+                'where' => ['user_id = ?'],
+                'data'  => [$previousCookie['userId']]
+            ]);
+
+            $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
+            setcookie('maarchCourrierAuth', '', time() - 1, $cookiePath, '', false, true);
         }
 
-        $cookieDecoded = base64_decode($rawCookie);
-        $cookie = json_decode($cookieDecoded);
-
-        return (array)$cookie;
+        return true;
     }
 }
