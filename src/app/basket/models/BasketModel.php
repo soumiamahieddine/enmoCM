@@ -19,7 +19,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Baskets\Models;
+namespace Basket\models;
 
 class BasketModel extends BasketModelAbstract {
     // Do your stuff in this class
