@@ -136,57 +136,38 @@ class GroupModelAbstract
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'usergroup_content',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'usergroups_reports',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'usergroups_services',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'security',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'groupbasket',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'groupbasket_redirect',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
-
         DatabaseModel::delete([
             'table'     => 'groupbasket_status',
-            'where'     => ['group_id = ?'],
-            'data'      => [$group['group_id']]
-        ]);
-
-        DatabaseModel::delete([
-            'table'     => 'groupbasket_difflist_roles',
-            'where'     => ['group_id = ?'],
-            'data'      => [$group['group_id']]
-        ]);
-
-        DatabaseModel::delete([
-            'table'     => 'groupbasket_difflist_types',
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);

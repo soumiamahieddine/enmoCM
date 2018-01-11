@@ -4,7 +4,7 @@
             "Core\\": "core/",
     	    "Apps\\": "apps/maarch_entreprise/",
             "Attachments\\": "modules/attachments/",
-            "Baskets\\": "modules/basket/",
+            "Basket\\": "src/app/basket/",
             "Convert\\": "modules/convert/",
             "Entities\\": "modules/entities/",
             "Notes\\": "modules/notes/",

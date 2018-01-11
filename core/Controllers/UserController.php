@@ -15,7 +15,7 @@
 
 namespace Core\Controllers;
 
-use Baskets\Models\BasketModel;
+use Basket\models\BasketModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\HistoryModel;
@@ -70,7 +70,7 @@ class UserController
 
         $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['1']]);
         if (!empty($existingUser)) {
-            return $response->withStatus(400)->withJson(['errors' => _THE_ID. ' ' ._ALREADY_EXISTS]);
+            return $response->withStatus(400)->withJson(['errors' => 'User already exists']);
         }
 
         UserModel::create(['user' => $data]);

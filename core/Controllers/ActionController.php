@@ -23,7 +23,7 @@ class ActionController
     public function getForAdministration(RequestInterface $request, ResponseInterface $response)
     {
         
-        $obj ['actions']= ActionModel::getList();
+        $obj ['actions']= ActionModel::get();
        
         return $response->withJson($obj);
     }
@@ -112,7 +112,7 @@ class ActionController
         if ($return) {
             $id = $aArgs['id'];
 
-            $obj = max(ActionModel::getList());
+            $obj = max(ActionModel::get());
         } else {
             return $response
                 ->withStatus(500)
@@ -178,7 +178,7 @@ class ActionController
         return $response->withJson(
             [
             'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
-            'action'      => ActionModel::getList()
+            'action'      => ActionModel::get()
             ]
         );
     }

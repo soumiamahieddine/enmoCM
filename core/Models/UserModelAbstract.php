@@ -105,7 +105,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);

@@ -13,16 +13,16 @@ namespace Core\Models;
 
 class ActionModelAbstract
 {
-    public static function getList()
+    public static function get(array $aArgs = [])
     {
-        $aReturn = DatabaseModel::select(
-            [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions'],
-            ]
-        );
+        ValidatorModel::arrayType($aArgs, ['select']);
 
-        return $aReturn;
+        $actions = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['actions']
+        ]);
+
+        return $actions;
     }
 
     public static function getById(array $aArgs = [])
@@ -67,7 +67,7 @@ class ActionModelAbstract
             ]
         );
 
-        $tab['action_id'] = max(ActionModel::getList())['id'];
+        $tab['action_id'] = max(ActionModel::get())['id'];
 
         for ($i=0;$i<count($actioncategories);$i++) {
 
