@@ -9,7 +9,7 @@ export const LANG_EN = {
     "add"                       : "Add",
     "back"                      : "Back",
     "cancel"                    : "Cancel",
-    "desc"                      : "Description",
+    "description"               : "Description",
     "save"                      : "Save",
     "validate"                  : "Validate",
     "update"                    : "Update",
@@ -18,6 +18,8 @@ export const LANG_EN = {
     "authorize"                 : "Authorize",
     "yes"                       : "Yes",
     "no"                        : "No",
+    "basket"                    : "Basket",
+    "baskets"                   : "Baskets",
     "abs"                       : "Absent",
     "chooseGroup"               : "Choose a group",
     "chooseEntity"              : "Choose a entity",
@@ -32,6 +34,7 @@ export const LANG_EN = {
     "to"                        : "to",
     "for"                       : "for",
     "value"                     : "value",
+    "clause"                    : "Clause",
 
     "user"                      : "user",
     "firstname"                 : "Firstname",
@@ -55,6 +58,7 @@ export const LANG_EN = {
 
 
     //Administration
+    "newElement"                : "New element",
     "userCreation"              : "User Creation",
     "userModification"          : "User Modification",
     "active"                    : "Active",
@@ -78,6 +82,9 @@ export const LANG_EN = {
     "entityAdded"               : "Entité added",
     "entityUpdated"             : "Entité updated",
     "entityDeleted"             : "Entité deleted",
+    "basketAdded"               : "Basket added",
+    "basketUpdated"             : "Basket updated",
+    "basketDeleted"             : "Basket deleted",
     "entityTooglePrimary"       : "Pass to primary entity",
 
 };

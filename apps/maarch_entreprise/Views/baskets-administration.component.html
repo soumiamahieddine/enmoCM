@@ -2,7 +2,7 @@
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> {{lang.admin}}</h1>
+    <h1 style="margin-top: 0"><i class="fa fa-inbox fa-2x"></i> {{lang.administration}}</h1>
     <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -12,8 +12,8 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/groups/new">
-                        <a title="{{lang.addUser}}"><i class="fa fa-user-plus"></i></a>
+                    <li style="cursor: pointer" routerLink="/administration/baskets/new">
+                        <a title="{{lang.newElement}}"><i class="fa fa-user-plus"></i></a>
                     </li>
                 </ul>
             </div>
@@ -24,25 +24,22 @@
             <thead>
                 <tr>
                     <th style="width:15%;" valign="bottom" align="left"><span>{{lang.id}}</span></th>
+                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.basket}}</span></th>
                     <th style="width:20%;" valign="bottom" align="left"><span>{{lang.description}}</span></th>
-                    <th style="width:5%;" valign="bottom" align="left"><span>{{lang.status}}</span></th>
                     <th style="width:20%;"><span>&nbsp;</span></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let group of groups" id="{{group.id}}">
-                    <td>{{group.group_id}}</td>
-                    <td>{{group.group_desc}}</td>
-                    <td>
-                        <span *ngIf="group.enabled == 'Y'" class="label label-primary">{{lang.active}}</span>
-                        <span *ngIf="group.enabled == 'N'" class="label label-danger">{{lang.inactive}}</span>
-                    </td>
+                <tr *ngFor="let basket of baskets">
+                    <td>{{basket.basket_id}}</td>
+                    <td>{{basket.basket_name}}</td>
+                    <td>{{basket.basket_desc}}</td>
                     <td style="text-align:right;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/groups/{{group.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
+                            <button routerLink="/administration/baskets/{{basket.basket_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
-                            <button (click)="preDelete(group)" type="button" class="btn btn-danger" title="{{lang.delete}}">
+                            <button (click)="delete(basket)" type="button" class="btn btn-danger" title="{{lang.delete}}">
                                 <a><i style="cursor:pointer" class="fa fa-times"></i></a>
                             </button>
                         </div>

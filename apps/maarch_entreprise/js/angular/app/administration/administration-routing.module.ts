@@ -6,6 +6,8 @@ import { UsersAdministrationComponent }         from './users-administration.com
 import { UserAdministrationComponent }          from './user-administration.component';
 import { GroupsAdministrationComponent }        from './groups-administration.component';
 import { GroupAdministrationComponent }         from './group-administration.component';
+import { BasketsAdministrationComponent }       from './baskets-administration.component';
+import { BasketAdministrationComponent }        from './basket-administration.component';
 import { StatusesAdministrationComponent }      from './statuses-administration.component';
 import { StatusAdministrationComponent }        from './status-administration.component';
 import { ActionsAdministrationComponent }       from './actions-administration.component';
@@ -31,6 +33,9 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
             { path: 'administration/groups', component: GroupsAdministrationComponent },
             { path: 'administration/groups/new', component: GroupAdministrationComponent },
             { path: 'administration/groups/:id', component: GroupAdministrationComponent },
+            { path: 'administration/baskets', component: BasketsAdministrationComponent },
+            { path: 'administration/baskets/new', component: BasketAdministrationComponent },
+            { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
             { path: 'administration/status', component: StatusesAdministrationComponent },
             { path: 'administration/status/new', component: StatusAdministrationComponent },
             { path: 'administration/status/:identifier', component: StatusAdministrationComponent },

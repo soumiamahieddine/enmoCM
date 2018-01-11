@@ -9,7 +9,7 @@ export const LANG_FR = {
     "add"                       : "Ajouter",
     "back"                      : "Retour",
     "cancel"                    : "Annuler",
-    "desc"                      : "Description",
+    "description"               : "Description",
     "save"                      : "Enregistrer",
     "validate"                  : "Valider",
     "update"                    : "Modifier",
@@ -18,6 +18,8 @@ export const LANG_FR = {
     "authorize"                 : "Autoriser",
     "yes"                       : "Oui",
     "no"                        : "Non",
+    "basket"                    : "Bannette",
+    "baskets"                   : "Bannettes",
     "abs"                       : "Absent",
     "chooseGroup"               : "Choisissez un groupe",
     "chooseEntity"              : "Choisissez une entité",
@@ -33,6 +35,7 @@ export const LANG_FR = {
     "to"                        : "vers",
     "for"                       : "pour",
     "value"                     : "valeur",
+    "clause"                    : "Clause",
 
     "user"                      : "utilisateur",
     "firstname"                 : "Prénom",
@@ -56,6 +59,7 @@ export const LANG_FR = {
 
 
     //Administration
+    "newElement"                : "Nouvel élément",
     "userCreation"              : "Création d'un utilisateur",
     "userModification"          : "Modification de l'utilisateur",
     "active"                    : "Actif",
@@ -79,6 +83,9 @@ export const LANG_FR = {
     "entityAdded"               : "Entité ajoutée",
     "entityUpdated"             : "Entité modifiée",
     "entityDeleted"             : "Entité supprimée",
+    "basketAdded"               : "Bannette ajoutée",
+    "basketUpdated"             : "Bannette modifiée",
+    "basketDeleted"             : "Bannette supprimée",
     "entityTooglePrimary"       : "Passage en entité primaire",
 
 
