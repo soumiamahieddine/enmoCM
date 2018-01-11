@@ -6,14 +6,10 @@
 * This file is part of Maarch software.
 *
 */
+
 /**
-* @brief Maarch rest root file
-*
-* @file
+* @brief Rest Routes File
 * @author dev@maarch.org
-* @date $date$
-* @version $Revision$
-* @ingroup core
 */
 
 require '../vendor/autoload.php';
@@ -70,7 +66,7 @@ if (empty($_SESSION['user'])) {
 
 //login management
 if (empty($_SESSION['user'])) {
-    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) { //TODO Gestion cookie basic
         $_SESSION['error'] = '';
         $security = new security();
         $pass = $security->getPasswordHash($_SERVER['PHP_AUTH_PW']);
@@ -97,16 +93,18 @@ if ($_SESSION['error']) {
     exit();
 }
 
-$cookie = \Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie)) {
-    if (\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
-        \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
-//    } else {
-//        echo 'Authentication Failed';
-//        exit();
-    }
+if (strpos(getcwd(), '/rest')) {
+    chdir('..');
 }
 
+$cookie = \Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
+    \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+    $userId = $cookie['userId'];
+} else {
+    echo 'Authentication Failed';
+    exit();
+}
 
 $app = new \Slim\App([
     'settings' => [
@@ -125,6 +123,18 @@ $app->get('/administration/users/new', \Core\Controllers\UserController::class .
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 $app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
 $app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
+
+//Baskets
+$app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
+$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
+$app->post('/baskets', \Basket\controllers\BasketController::class . ':create');
+$app->put('/baskets/{id}', \Basket\controllers\BasketController::class . ':update');
+$app->delete('/baskets/{id}', \Basket\controllers\BasketController::class . ':delete');
+$app->get('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':getGroups');
+$app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':createGroup');
+$app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
+$app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
+$app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
