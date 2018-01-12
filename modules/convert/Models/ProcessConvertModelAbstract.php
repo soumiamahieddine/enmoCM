@@ -155,20 +155,20 @@ class ProcessConvertModelAbstract
             ]);
 
             $queryCpt = DatabaseModel::select([
-                'select'    => ["coalesce(custom_t9, '0') as custom_t9"],
+                'select'    => ["convert_attempts"],
                 'table'     => [$aArgs['resTable']],
                 'where'     => ['res_id = ?'],
                 'data'      => [$aArgs['resId']],
             ]);
 
-            $cptConvert = $queryCpt[0]['custom_t9'] + 1;
+            $cptConvert = $queryCpt[0]['convert_attempts'] + 1;
 
             DatabaseModel::update([
                 'table'     => $aArgs['resTable'],
                 'set'       => [
                     'convert_result'      => '1',
                     'is_multi_docservers' => 'Y',
-                    'custom_t9'           => $cptConvert,
+                    'convert_attempts'    => $cptConvert,
                 ],
                 'where'     => ['res_id = ?'],
                 'data'      => [$aArgs['resId']]
@@ -197,15 +197,26 @@ class ProcessConvertModelAbstract
      * @param string $result error code
      * @return nothing
      */
-    public static function manageErrorOnDb(
-        $resTable, 
-        $resId,
-        $result
-    ) {
+    public static function manageErrorOnDb(array $aArgs = [])
+    {
+        $attemptsRecord = DatabaseModel::select([
+            'select'    => ['convert_attempts'],
+            'table'     => [$aArgs['resTable']],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']],
+        ]);
+
+        if (empty($attemptsRecord)) {
+            $attempts = 0;
+        } else {
+            $attempts = $attemptsRecord[0]['convert_attempts'] + 1;
+        }
+
         DatabaseModel::update([
             'table'     => $aArgs['resTable'],
             'set'       => [
-                'convert_result' => $result,
+                'convert_result'   => $aArgs['result'],
+                'convert_attempts' => $attempts,
             ],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]

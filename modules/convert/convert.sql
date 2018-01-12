@@ -17,6 +17,38 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_result;
 ALTER TABLE res_version_attachments ADD COLUMN convert_result character varying(10) DEFAULT NULL::character varying;
 
 
+--convert attempts
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_attachments ADD COLUMN convert_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_letterbox ADD COLUMN convert_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_x DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_x ADD COLUMN convert_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_attempts;
+ALTER TABLE res_version_attachments ADD COLUMN convert_attempts integer DEFAULT NULL::integer;
+
+--fulltext attempts
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_attachments ADD COLUMN fulltext_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_letterbox ADD COLUMN fulltext_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_x DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_x ADD COLUMN fulltext_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS fulltext_attempts;
+ALTER TABLE res_version_attachments ADD COLUMN fulltext_attempts integer DEFAULT NULL::integer;
+
+--tnl attempts
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_attachments ADD COLUMN tnl_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_letterbox ADD COLUMN tnl_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_x DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_x ADD COLUMN tnl_attempts integer DEFAULT NULL::integer;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_attempts;
+ALTER TABLE res_version_attachments ADD COLUMN tnl_attempts integer DEFAULT NULL::integer;
+
+
+
 --thumbnails result
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments ADD COLUMN tnl_result character varying(10) DEFAULT NULL::character varying;
@@ -99,9 +131,13 @@ WITH (OIDS=FALSE);
 UPDATE docservers set docserver_type_id = 'DOC' where docserver_type_id <> 'TEMPLATES' and docserver_type_id <> 'TNL';
 
 
+DELETE FROM docserver_types where docserver_type_id = 'DOC';
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('DOC', 'Documents', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA512');
+
 DELETE FROM docserver_types where docserver_type_id = 'CONVERT';
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('CONVERT', 'Conversions', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
+VALUES ('CONVERT', 'Conversions', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 DELETE FROM docservers where docserver_id = 'CONVERT_MLB';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
@@ -136,7 +172,7 @@ update docservers set docserver_id = 'TNL_MLB', priority_number = 12 where docse
 
 DELETE FROM docserver_types where docserver_type_id = 'FULLTEXT';
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
+VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 DELETE FROM docservers where docserver_id = 'FULLTEXT_MLB';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 

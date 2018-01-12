@@ -70,7 +70,7 @@ class DocserverController
         ValidatorModel::stringType($aArgs, ['path']);
 
         if (!is_dir($aArgs['path'])) {
-            return ['errors' => '[createPathOnDocServer] Path does not exist'];
+            return ['errors' => '[createPathOnDocServer] Path does not exist ' . $aArgs['path']];
         }
 
         error_reporting(0);
