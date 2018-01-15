@@ -58,6 +58,7 @@ exports.LANG_EN = {
     "groups": "Groups",
     //Administration
     "newElement": "New element",
+    "modificationSaved": "Modification has been saved",
     "userCreation": "User Creation",
     "userModification": "User Modification",
     "active": "Active",

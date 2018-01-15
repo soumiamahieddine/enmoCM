@@ -186,11 +186,11 @@ $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . '
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
-$app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
 $app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
+$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
 $app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
@@ -199,15 +199,15 @@ $app->post('/users/{id}/entities', \Core\Controllers\UserController::class . ':a
 $app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
-$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
-$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
-$app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
+$app->post('/users/{id}/redirectedBaskets', \Core\Controllers\UserController::class . ':setRedirectedBaskets');
+$app->delete('/users/{id}/redirectedBaskets/{basketId}', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets');
 
 //CurrentUser
+$app->get('/currentUser/profile', \Core\Controllers\UserController::class . ':getProfile');
+$app->put('/currentUser/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
@@ -258,7 +258,7 @@ $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class
 $app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
 
 //Contacts
-$app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
+$app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');

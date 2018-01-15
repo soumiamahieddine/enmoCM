@@ -27,41 +27,23 @@ use Entities\Models\ListModelsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 
 class UserController
 {
-    public function getCurrentUserInfos(RequestInterface $request, ResponseInterface $response)
+    public function create(Request $request, Response $response)
     {
-        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
-        $user['signatures'] = UserModel::getSignaturesById(['id' => $user['id']]);
-        $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $_SESSION['user']['UserId']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['entities'] = UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-        $user['canModifyPassword'] = true;
-
-        $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if ($loggingMethod['id'] == 'ozwillo') {
-            $user['canModifyPassword'] = false;
-        }
-
-        return $response->withJson($user);
-    }
-
-    public function create(RequestInterface $request, ResponseInterface $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['userId']) && preg_match("/^[\w.@-]*$/", $data['userId']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()::notEmpty()->validate($data['userId']) && preg_match("/^[\w.@-]*$/", $data['userId']);
+        $check = $check && Validator::stringType()::notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -76,7 +58,7 @@ class UserController
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
-        if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
+        if (!Validator::intType()::notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
 
@@ -86,7 +68,7 @@ class UserController
         ]);
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -95,9 +77,9 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['user_id']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()::notEmpty()->validate($data['user_id']);
+        $check = $check && Validator::stringType()::notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -109,7 +91,7 @@ class UserController
         return $response->withJson(['success' => _USER_UPDATED]);
     }
 
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -160,14 +142,44 @@ class UserController
         return $response->withJson(['success' => _DELETED_USER, 'users' => $users]);
     }
 
-    public function updateProfile(RequestInterface $request, ResponseInterface $response)
+    public function getProfile(Request $request, Response $response)
+    {
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user['signatures'] = UserModel::getSignaturesById(['id' => $user['id']]);
+        $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+        $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
+        $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['canModifyPassword'] = true;
+
+        $baskets = [];
+        foreach ($user['baskets'] as $key => $basket) {
+            if (in_array($basket['basket_id'], $baskets) && $basket['basket_owner'] == $user['user_id']) {
+                unset($user['baskets'][$key]);
+            } else {
+                $baskets[] = $basket['basket_id'];
+            }
+        }
+        $user['baskets'] = array_values($user['baskets']);
+
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($loggingMethod['id'] == 'ozwillo') {
+            $user['canModifyPassword'] = false;
+        }
+
+        return $response->withJson($user);
+    }
+
+    public function updateProfile(Request $request, Response $response)
     {
         $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id', 'enabled']]);
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()::notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -212,87 +224,55 @@ class UserController
         return $response->withJson(['success' => _UPDATED_PASSWORD]);
     }
 
-    public function setCurrentUserBasketsRedirectionForAbsence(RequestInterface $request, ResponseInterface $response) {
-        if (empty($_SESSION['user']['UserId'])) {
-            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+    public function setRedirectedBaskets(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
 
         $data = $request->getParams();
 
         foreach ($data as $key => $value) {
             if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
-                return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
             }
-            $newUser = strrchr($value['newUser'], '(');
-            $newUser = str_replace(['(', ')'], '', $newUser);
-            if (!empty($newUser)) {
-                $check = UserModel::getById(['userId' => $newUser, 'select' => ['1']]);
+            $check = UserModel::getByUserId(['userId' => $value['newUser'], 'select' => ['1']]);
+            if (empty($check)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
-            if (empty($newUser) || empty($check)) {
-                return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
-            }
-            $data[$key]['newUser'] = $newUser;
 
-            if($value['basketOwner'] != $_SESSION['user']['UserId']){
-                BasketModel::updateBasketsRedirection([
-                    'userId'      => $_SESSION['user']['UserId'],
+            if($value['basketOwner'] != $user['user_id']){
+                BasketModel::updateRedirectedBaskets([
+                    'userId'      => $user['user_id'],
                     'basketOwner' => $value['basketOwner'],
                     'basketId'    => $value['basketId'],
                     'userAbs'     => $value['basketOwner'],
-                    'newUser'     => $newUser
+                    'newUser'     => $value['newUser']
                 ]);
                 unset($data[$key]);
             }
         }
 
         if (!empty($data)) {
-            BasketModel::setBasketsRedirection(['userId' => $_SESSION['user']['UserId'], 'data' => $data]);
-        }
-
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']])]);
-    }
-
-    public function setRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
-        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
-        }
-
-        $data = $request->getParams();
-
-        foreach ($data as $value) {
-            if (empty($value['newUser']) || empty($value['basketId']) || empty($value['basketOwner']) || empty($value['virtual'])) {
-                return $response->withStatus(400)->withJson(['errors' => _FORM_ERROR]);
-            }
-
-            $check = UserModel::getByUserId(['userId' => $value['newUser'], 'select' => ['1']]);
-
-            if (empty($check)) {
-                return $response->withStatus(400)->withJson(['errors' => _UNDEFINED_USER]);
+            foreach ($data as $value) {
+                BasketModel::setRedirectedBaskets([
+                    'userAbs'       => $user['user_id'],
+                    'newUser'       => $value['newUser'],
+                    'basketId'      => $value['basketId'],
+                    'basketOwner'   => $value['basketOwner'],
+                    'isVirtual'     => $value['virtual']
+                ]);
             }
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
-        if (!empty($data)) {
-            BasketModel::setBasketsRedirection(['userId' => $user['user_id'], 'data' => $data]);
-        }
-
-        UserModel::activateAbsenceById(['userId' => $user['user_id']]);
-        HistoryController::add([
-            'tableName'    => 'users',
-            'recordId'     => $user['user_id'],
-            'eventType'    => 'ABS',
-            'eventId'      => 'userabs',
-            'info'          => _ABS_USER. " {$user['firstname']} {$user['lastname']}"
-        ]);
-
-        return $response->withJson([
-            'success'   => _ABSENCE_ACTIVATED,
-            'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
-        ]);
+        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
-    public function deleteRedirectedBaskets(RequestInterface $request, ResponseInterface $response, $aArgs) {
+    public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
+    {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -305,7 +285,8 @@ class UserController
         return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
-    public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs) {
+    public function updateStatus(Request $request, Response $response, array $aArgs)
+    {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -313,25 +294,26 @@ class UserController
 
         $data = $request->getParams();
 
-        if (!empty($data['status']) && $data['status'] == 'OK') {
-            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
-
-            UserModel::desactivateAbsenceById(['id' => $aArgs['id']]);
-            HistoryController::add([
-                'tableName'    => 'users',
-                'recordId'     => $user['user_id'],
-                'eventType'    => 'RET',
-                'eventId'      => 'userabs',
-                'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
-            ]);
-
-            return $response->withJson([
-                'success'   => _ABSENCE_DEACTIVATED,
-                'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
-            ]);
+        $check = Validator::stringType()::notEmpty()->validate($data['status']);
+        $check = $check && ($data['status'] == 'OK' || $data['status'] == 'ABS');
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        UserModel::updateStatus(['id' => $aArgs['id'], 'status' => $data['status']]);
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'RET',
+            'eventId'      => 'userabs',
+            'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+        ]);
+
+        return $response->withJson([
+            'user'      => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])
+        ]);
     }
 
     public function addSignature(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -785,7 +767,7 @@ class UserController
 
     }
 
-    private function hasUsersRights(array $aArgs = [])
+    private function hasUsersRights(array $aArgs)
     {
         $error = [
             'status'    => 200,
@@ -797,13 +779,13 @@ class UserController
             $error['status'] = 400;
             $error['error'] = 'User not found';
         } else {
-            if (empty($aArgs['himself']) || $_SESSION['user']['UserId'] != $user['user_id']) {
-                if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+            if (empty($aArgs['himself']) || $GLOBALS['userId'] != $user['user_id']) {
+                if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
                     $error['status'] = 403;
                     $error['error'] = 'Service forbidden';
                 }
                 if ($_SESSION['user']['UserId'] != 'superadmin') {
-                    $entities = EntityModel::getAllEntitiesByUserId(['userId' => $_SESSION['user']['UserId']]);
+                    $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
                     $users = UserModel::getByEntities([
                         'select'    => ['users.id'],
                         'entities'  => $entities
@@ -825,7 +807,7 @@ class UserController
         return $error;
     }
 
-    private function checkNeededParameters(array $aArgs = [])
+    private function checkNeededParameters(array $aArgs)
     {
         foreach ($aArgs['needed'] as $value) {
             if (empty($aArgs['data'][$value])) {

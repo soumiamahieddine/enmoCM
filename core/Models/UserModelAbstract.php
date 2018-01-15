@@ -20,7 +20,7 @@ use Entities\Models\EntityModel;
 
 class UserModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $aArgs)
     {
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
@@ -34,7 +34,7 @@ class UserModelAbstract
         return $aUsers;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -524,40 +524,16 @@ class UserModelAbstract
         return $aServices;
     }
 
-    public static function activateAbsenceById(array $aArgs = [])
+    public static function updateStatus(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'status'    => 'ABS'
-            ],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
-        ]);
-
-        return true;
-    }
-
-    public static function desactivateAbsenceById(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'status']);
         ValidatorModel::intVal($aArgs, ['id']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-
-        DatabaseModel::delete([
-            'table'     => 'user_abs',
-            'where'     => ['user_abs = ?'],
-            'data'      => [$user['user_id']]
-        ]);
+        ValidatorModel::stringType($aArgs, ['status']);
 
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'status'    => 'OK'
+                'status'    => $aArgs['status']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

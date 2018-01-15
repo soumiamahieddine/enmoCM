@@ -59,6 +59,7 @@ export const LANG_EN = {
 
     //Administration
     "newElement"                : "New element",
+    "modificationSaved"         : "Modification has been saved",
     "userCreation"              : "User Creation",
     "userModification"          : "User Modification",
     "active"                    : "Active",

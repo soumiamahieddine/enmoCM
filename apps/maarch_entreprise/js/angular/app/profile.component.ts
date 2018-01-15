@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
+import { NotificationService } from './notification.service';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -12,7 +13,8 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals.profileView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
+    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+    providers   : [NotificationService]
 })
 export class ProfileComponent implements OnInit {
 
@@ -51,7 +53,7 @@ export class ProfileComponent implements OnInit {
 
 
 
-    constructor(public http: HttpClient, private zone: NgZone) {
+    constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -112,10 +114,18 @@ export class ProfileComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/users/profile')
+        this.http.get(this.coreUrl + 'rest/currentUser/profile')
             .subscribe((data : any) => {
                 this.user = data;
 
+                this.user.baskets.forEach((value: any, index: number) => {
+                    this.user.baskets[index]['disabled'] = false;
+                    this.user.redirectedBaskets.forEach((value2: any) => {
+                        if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                            this.user.baskets[index]['disabled'] = true;
+                        }
+                    });
+                });
                 setTimeout(() => {
                     $j("#absenceUser").typeahead({
                         order: "asc",
@@ -203,7 +213,7 @@ export class ProfileComponent implements OnInit {
     addBasketRedirection() {
         if (typeof this.basketsToRedirect[0] != 'undefined' && $j("#absenceUser")[0].value) {
             var redirectModel :any[] = [];
-                console.log(this.basketsToRedirect);
+
             this.basketsToRedirect.forEach((value: any) => {
                 redirectModel.push({
                     "basketId"      : this.user.baskets[value].basket_id,
@@ -214,34 +224,46 @@ export class ProfileComponent implements OnInit {
                 });
             });
 
-            this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', redirectModel)
+            this.http.post(this.coreUrl + 'rest/users/' + this.user.id + '/redirectedBaskets', redirectModel)
                 .subscribe((data: any) => {
                     $j('#selectBasketAbsenceUser option').prop('selected', false);
                     $j("#absenceUser")[0].value = "";
                     this.basketsToRedirect = [];
-                    this.http.get(this.coreUrl + 'rest/user/profile')
-                        .subscribe((data) => {
-                            this.user = data;
-                            this.user.baskets.forEach((value: any, index: number) => {
-                                this.user.baskets[index]['disabled'] = false;
-                                this.user.redirectedBaskets.forEach((value2: any) => {
-                                    if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
-                                        this.user.baskets[index]['disabled'] = true;
-                                    }
-                                });
-                            });
-                         });
+
+                    this.user.redirectedBaskets = data["redirectedBaskets"];
+                    this.user.baskets.forEach((value: any, index: number) => {
+                        this.user.baskets[index]['disabled'] = false;
+                        this.user.redirectedBaskets.forEach((value2: any) => {
+                            if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                                this.user.baskets[index]['disabled'] = true;
+                            }
+                        });
+                    });
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         } else {
-            errorNotification("Veuillez sélectionner au moins une bannette et un utilisateur");
+            this.notify.error("Veuillez sélectionner au moins une bannette et un utilisateur");
         }
     }
 
-    delBasketRedirection(index: number) {
-        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
-        this.userAbsenceModel.splice(index, 1);
+    delBasketRedirection(basket: any) {
+        this.http.delete(this.coreUrl + 'rest/users/' + this.user.id + '/redirectedBaskets/' + basket.basket_id)
+            .subscribe((data: any) => {
+                this.user.redirectedBaskets = data["redirectedBaskets"];
+                this.user.baskets.forEach((value: any, index: number) => {
+                    this.user.baskets[index]['disabled'] = false;
+                    this.user.redirectedBaskets.forEach((value2: any) => {
+                        if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                            this.user.baskets[index]['disabled'] = true;
+                        }
+                    });
+                });
+
+                this.notify.success(this.lang.modificationSaved);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
     updateBasketColor(i: number, y: number) {
@@ -249,7 +271,7 @@ export class ProfileComponent implements OnInit {
             .subscribe((data: any) => {
                 this.user.regroupedBaskets = data.userBaskets;
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -257,12 +279,12 @@ export class ProfileComponent implements OnInit {
         let r = confirm('Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté.');
 
         if (r) {
-            this.http.put(this.coreUrl + 'rest/currentUser/absence', {})
+            this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/status', {"status" : "ABS"})
                 .subscribe(() => {
-                        location.hash = "";
-                        location.search = "?display=true&page=logout&abs_mode";
+                    location.hash = "";
+                    location.search = "?display=true&page=logout&abs_mode";
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
@@ -271,7 +293,7 @@ export class ProfileComponent implements OnInit {
         let r = confirm('Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?');
 
         if (r) {
-            this.displayAbsenceButton=true;
+            this.displayAbsenceButton = true;
             $j('#redirectBasketCard').click();
         } else {
             this.activateAbsence();
@@ -400,11 +422,11 @@ export class ProfileComponent implements OnInit {
     }
 
     onSubmit() {
-        this.http.put(this.coreUrl + 'rest/users/profile', this.user)
-            .subscribe((data : any) => {
-                successNotification(data.success);
+        this.http.put(this.coreUrl + 'rest/currentUser/profile', this.user)
+            .subscribe(() => {
+                this.notify.success(this.lang.modificationSaved);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 }

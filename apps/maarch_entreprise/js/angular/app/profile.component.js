@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("./translate.component");
+var notification_service_1 = require("./notification.service");
 var ProfileComponent = (function () {
-    function ProfileComponent(http, zone) {
+    function ProfileComponent(http, zone, notify) {
         var _this = this;
         this.http = http;
         this.zone = zone;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.user = {
             baskets: []
@@ -99,9 +101,17 @@ var ProfileComponent = (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/users/profile')
+        this.http.get(this.coreUrl + 'rest/currentUser/profile')
             .subscribe(function (data) {
             _this.user = data;
+            _this.user.baskets.forEach(function (value, index) {
+                _this.user.baskets[index]['disabled'] = false;
+                _this.user.redirectedBaskets.forEach(function (value2) {
+                    if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                        _this.user.baskets[index]['disabled'] = true;
+                    }
+                });
+            });
             setTimeout(function () {
                 $j("#absenceUser").typeahead({
                     order: "asc",
@@ -178,7 +188,6 @@ var ProfileComponent = (function () {
         var _this = this;
         if (typeof this.basketsToRedirect[0] != 'undefined' && $j("#absenceUser")[0].value) {
             var redirectModel = [];
-            console.log(this.basketsToRedirect);
             this.basketsToRedirect.forEach(function (value) {
                 redirectModel.push({
                     "basketId": _this.user.baskets[value].basket_id,
@@ -188,34 +197,45 @@ var ProfileComponent = (function () {
                     "newUser": $j("#absenceUser")[0].value,
                 });
             });
-            this.http.post(this.coreUrl + 'rest/currentUser/baskets/absence', redirectModel)
+            this.http.post(this.coreUrl + 'rest/users/' + this.user.id + '/redirectedBaskets', redirectModel)
                 .subscribe(function (data) {
                 $j('#selectBasketAbsenceUser option').prop('selected', false);
                 $j("#absenceUser")[0].value = "";
                 _this.basketsToRedirect = [];
-                _this.http.get(_this.coreUrl + 'rest/user/profile')
-                    .subscribe(function (data) {
-                    _this.user = data;
-                    _this.user.baskets.forEach(function (value, index) {
-                        _this.user.baskets[index]['disabled'] = false;
-                        _this.user.redirectedBaskets.forEach(function (value2) {
-                            if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
-                                _this.user.baskets[index]['disabled'] = true;
-                            }
-                        });
+                _this.user.redirectedBaskets = data["redirectedBaskets"];
+                _this.user.baskets.forEach(function (value, index) {
+                    _this.user.baskets[index]['disabled'] = false;
+                    _this.user.redirectedBaskets.forEach(function (value2) {
+                        if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                            _this.user.baskets[index]['disabled'] = true;
+                        }
                     });
                 });
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
-            errorNotification("Veuillez sélectionner au moins une bannette et un utilisateur");
+            this.notify.error("Veuillez sélectionner au moins une bannette et un utilisateur");
         }
     };
-    ProfileComponent.prototype.delBasketRedirection = function (index) {
-        this.user.baskets[this.userAbsenceModel[index].index].disabled = false;
-        this.userAbsenceModel.splice(index, 1);
+    ProfileComponent.prototype.delBasketRedirection = function (basket) {
+        var _this = this;
+        this.http.delete(this.coreUrl + 'rest/users/' + this.user.id + '/redirectedBaskets/' + basket.basket_id)
+            .subscribe(function (data) {
+            _this.user.redirectedBaskets = data["redirectedBaskets"];
+            _this.user.baskets.forEach(function (value, index) {
+                _this.user.baskets[index]['disabled'] = false;
+                _this.user.redirectedBaskets.forEach(function (value2) {
+                    if (value.basket_id == value2.basket_id && value.basket_owner == value2.basket_owner) {
+                        _this.user.baskets[index]['disabled'] = true;
+                    }
+                });
+            });
+            _this.notify.success(_this.lang.modificationSaved);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
     };
     ProfileComponent.prototype.updateBasketColor = function (i, y) {
         var _this = this;
@@ -223,18 +243,19 @@ var ProfileComponent = (function () {
             .subscribe(function (data) {
             _this.user.regroupedBaskets = data.userBaskets;
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     ProfileComponent.prototype.activateAbsence = function () {
+        var _this = this;
         var r = confirm('Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté.');
         if (r) {
-            this.http.put(this.coreUrl + 'rest/currentUser/absence', {})
+            this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/status', { "status": "ABS" })
                 .subscribe(function () {
                 location.hash = "";
                 location.search = "?display=true&page=logout&abs_mode";
             }, function (err) {
-                errorNotification(err.error.errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -367,11 +388,12 @@ var ProfileComponent = (function () {
         }
     };
     ProfileComponent.prototype.onSubmit = function () {
-        this.http.put(this.coreUrl + 'rest/users/profile', this.user)
-            .subscribe(function (data) {
-            successNotification(data.success);
+        var _this = this;
+        this.http.put(this.coreUrl + 'rest/currentUser/profile', this.user)
+            .subscribe(function () {
+            _this.notify.success(_this.lang.modificationSaved);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     return ProfileComponent;
@@ -379,8 +401,9 @@ var ProfileComponent = (function () {
 ProfileComponent = __decorate([
     core_1.Component({
         templateUrl: angularGlobals.profileView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
+        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+        providers: [notification_service_1.NotificationService]
     }),
-    __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone])
+    __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone, notification_service_1.NotificationService])
 ], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;

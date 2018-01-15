@@ -60,6 +60,7 @@ export const LANG_FR = {
 
     //Administration
     "newElement"                : "Nouvel élément",
+    "modificationSaved"         : "Modification enregistrée",
     "userCreation"              : "Création d'un utilisateur",
     "userModification"          : "Modification de l'utilisateur",
     "active"                    : "Actif",

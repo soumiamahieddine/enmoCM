@@ -418,29 +418,26 @@ class BasketModelAbstract
         return $aBaskets;
     }
 
-    public static function setBasketsRedirection(array $aArgs = [])
+    public static function setRedirectedBaskets(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId', 'data']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-        ValidatorModel::arrayType($aArgs, ['data']);
+        ValidatorModel::notEmpty($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
+        ValidatorModel::stringType($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
 
-        foreach ($aArgs['data'] as $value) {
-            DatabaseModel::insert([
-                'table'         => 'user_abs',
-                'columnsValues' => [
-                    'user_abs'      => $aArgs['userId'],
-                    'new_user'      => $value['newUser'],
-                    'basket_id'     => $value['basketId'],
-                    'basket_owner'  => $value['basketOwner'],
-                    'is_virtual'    => $value['virtual']
-                ]
-            ]);
-        }
+        DatabaseModel::insert([
+            'table'         => 'user_abs',
+            'columnsValues' => [
+                'user_abs'      => $aArgs['userAbs'],
+                'new_user'      => $aArgs['newUser'],
+                'basket_id'     => $aArgs['basketId'],
+                'basket_owner'  => $aArgs['basketOwner'],
+                'is_virtual'    => $aArgs['isVirtual']
+            ]
+        ]);
 
         return true;
     }
 
-    public static function updateBasketsRedirection(array $aArgs)
+    public static function updateRedirectedBaskets(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'basketOwner', 'basketId', 'userAbs', 'newUser']);
         ValidatorModel::stringType($aArgs, ['userId']);
