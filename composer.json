@@ -3,6 +3,7 @@
     	"psr-4": {
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
+            "History\\"       : "src/app/history/",
 
             "Core\\"          : "core/",
     	    "Apps\\"          : "apps/maarch_entreprise/",
