@@ -13,9 +13,7 @@ import {
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatMenuModule,
-    MatGridListModule,
-    MatPaginator,
-    MatTableDataSource
+    MatGridListModule
 } from '@angular/material';
 
 
@@ -34,9 +32,7 @@ import {
         MatProgressSpinnerModule,
         MatToolbarModule,
         MatMenuModule,
-        MatGridListModule,
-        MatPaginator,
-        MatTableDataSource
+        MatGridListModule
     ],
     exports: [
         MatCheckboxModule,
@@ -52,9 +48,7 @@ import {
         MatProgressSpinnerModule,
         MatToolbarModule,
         MatMenuModule,
-        MatGridListModule,
-        MatPaginator,
-        MatTableDataSource
+        MatGridListModule
     ]
 })
 export class AppMaterialModule { }

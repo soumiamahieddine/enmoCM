@@ -27,9 +27,7 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatProgressSpinnerModule,
                 material_1.MatToolbarModule,
                 material_1.MatMenuModule,
-                material_1.MatGridListModule,
-                material_1.MatPaginator,
-                material_1.MatTableDataSource
+                material_1.MatGridListModule
             ],
             exports: [
                 material_1.MatCheckboxModule,
@@ -45,9 +43,7 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatProgressSpinnerModule,
                 material_1.MatToolbarModule,
                 material_1.MatMenuModule,
-                material_1.MatGridListModule,
-                material_1.MatPaginator,
-                material_1.MatTableDataSource
+                material_1.MatGridListModule
             ]
         })
     ], AppMaterialModule);
