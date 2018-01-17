@@ -27,11 +27,11 @@ class ContactController
         $data = $request->getParams();
 
         $check = Validator::notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
-        $check = $check && Validator::intVal()::notEmpty()->validate($data['contactType']);
-        $check = $check && Validator::intVal()::notEmpty()->validate($data['contactPurposeId']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['isCorporatePerson']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['email']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactType']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactPurposeId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['isCorporatePerson']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['email']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }

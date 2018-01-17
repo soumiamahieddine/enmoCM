@@ -56,10 +56,10 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['id']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['description']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['clause']);
+        $check = Validator::stringType()->notEmpty()->validate($data['id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -91,9 +91,9 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['description']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['clause']);
+        $check = Validator::stringType()->notEmpty()->validate($data['name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -196,9 +196,9 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['group_id']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['result_page']);
-        $check = $check && Validator::arrayType()::notEmpty()->validate($data['groupActions']);
+        $check = Validator::stringType()->notEmpty()->validate($data['group_id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['result_page']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -263,8 +263,8 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['result_page']);
-        $check = $check && Validator::arrayType()::notEmpty()->validate($data['groupActions']);
+        $check = Validator::stringType()->notEmpty()->validate($data['result_page']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['groupActions']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }

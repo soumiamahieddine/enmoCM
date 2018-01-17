@@ -42,9 +42,9 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['userId']) && preg_match("/^[\w.@-]*$/", $data['userId']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()->notEmpty()->validate($data['userId']) && preg_match("/^[\w.@-]*$/", $data['userId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -59,7 +59,7 @@ class UserController
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
-        if (!Validator::intType()::notEmpty()->validate($newUser['id'])) {
+        if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
 
@@ -78,9 +78,9 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['user_id']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()->notEmpty()->validate($data['user_id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -180,8 +180,8 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['lastname']);
+        $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
         $check = $check && (empty($data['phone']) || preg_match("/^(?:0|\+\d\d\s?)[1-9]([\.\-\s]?\d\d){4}$/", $data['phone']));
         if (!$check) {
@@ -296,7 +296,7 @@ class UserController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()::notEmpty()->validate($data['status']);
+        $check = Validator::stringType()->notEmpty()->validate($data['status']);
         $check = $check && ($data['status'] == 'OK' || $data['status'] == 'ABS');
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
