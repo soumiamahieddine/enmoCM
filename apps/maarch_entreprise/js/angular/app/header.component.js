@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
-var HeaderComponent = (function () {
+var HeaderComponent = /** @class */ (function () {
     function HeaderComponent(http) {
         this.http = http;
         this.applicationName = "";
@@ -47,16 +47,16 @@ var HeaderComponent = (function () {
             }
         ];
     };
+    HeaderComponent = __decorate([
+        core_1.Component({
+            selector: 'menu-app',
+            templateUrl: angularGlobals["headerView"],
+            styleUrls: [
+                'css/header.component.css',
+            ]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient])
+    ], HeaderComponent);
     return HeaderComponent;
 }());
-HeaderComponent = __decorate([
-    core_1.Component({
-        selector: 'menu-app',
-        templateUrl: angularGlobals["headerView"],
-        styleUrls: [
-            'css/header.component.css',
-        ]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
-], HeaderComponent);
 exports.HeaderComponent = HeaderComponent;

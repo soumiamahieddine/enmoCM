@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var ParameterAdministrationComponent = (function () {
+var ParameterAdministrationComponent = /** @class */ (function () {
     function ParameterAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -101,14 +101,14 @@ var ParameterAdministrationComponent = (function () {
             });
         }
     };
+    ParameterAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals['parameter-administrationView'],
+            styleUrls: [],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], ParameterAdministrationComponent);
     return ParameterAdministrationComponent;
 }());
-ParameterAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals['parameter-administrationView'],
-        styleUrls: [],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], ParameterAdministrationComponent);
 exports.ParameterAdministrationComponent = ParameterAdministrationComponent;

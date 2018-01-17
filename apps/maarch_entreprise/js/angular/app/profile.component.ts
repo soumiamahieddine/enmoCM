@@ -52,7 +52,6 @@ export class ProfileComponent implements OnInit {
     displayAbsenceButton        : boolean   = false;
 
 
-
     constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),

@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
-var AdministrationComponent = (function () {
+var AdministrationComponent = /** @class */ (function () {
     function AdministrationComponent(http, router) {
         this.http = http;
         this.router = router;
@@ -60,13 +60,13 @@ var AdministrationComponent = (function () {
             window.location.assign(service.servicepage);
         }
     };
+    AdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals.administrationView,
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.Router])
+    ], AdministrationComponent);
     return AdministrationComponent;
 }());
-AdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals.administrationView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.Router])
-], AdministrationComponent);
 exports.AdministrationComponent = AdministrationComponent;

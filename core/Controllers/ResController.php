@@ -17,11 +17,14 @@ namespace Core\Controllers;
 
 use Core\Models\ServiceModel;
 use Core\Models\StatusModel;
+use History\controllers\HistoryController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\ResModel;
 use Notes\Models\NoteModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class ResController
 {
@@ -41,7 +44,7 @@ class ResController
     // file_put_contents("storeResourceLogs.log", ob_get_flush());
     //END LOG FOR DEBUG ONLY
     //*****************************************************************************************
-    public function create(RequestInterface $request, ResponseInterface $response)
+    public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);

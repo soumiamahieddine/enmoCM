@@ -8,45 +8,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var material_1 = require("@angular/material");
-var AppMaterialModule = (function () {
+var AppMaterialModule = /** @class */ (function () {
     function AppMaterialModule() {
     }
+    AppMaterialModule = __decorate([
+        core_1.NgModule({
+            imports: [
+                material_1.MatCheckboxModule,
+                material_1.MatSelectModule,
+                material_1.MatSlideToggleModule,
+                material_1.MatInputModule,
+                material_1.MatTooltipModule,
+                material_1.MatTabsModule,
+                material_1.MatSidenavModule,
+                material_1.MatButtonModule,
+                material_1.MatCardModule,
+                material_1.MatButtonToggleModule,
+                material_1.MatProgressSpinnerModule,
+                material_1.MatToolbarModule,
+                material_1.MatMenuModule,
+                material_1.MatGridListModule,
+                material_1.MatPaginator,
+                material_1.MatTableDataSource
+            ],
+            exports: [
+                material_1.MatCheckboxModule,
+                material_1.MatSelectModule,
+                material_1.MatSlideToggleModule,
+                material_1.MatInputModule,
+                material_1.MatTooltipModule,
+                material_1.MatTabsModule,
+                material_1.MatSidenavModule,
+                material_1.MatButtonModule,
+                material_1.MatCardModule,
+                material_1.MatButtonToggleModule,
+                material_1.MatProgressSpinnerModule,
+                material_1.MatToolbarModule,
+                material_1.MatMenuModule,
+                material_1.MatGridListModule,
+                material_1.MatPaginator,
+                material_1.MatTableDataSource
+            ]
+        })
+    ], AppMaterialModule);
     return AppMaterialModule;
 }());
-AppMaterialModule = __decorate([
-    core_1.NgModule({
-        imports: [
-            material_1.MatCheckboxModule,
-            material_1.MatSelectModule,
-            material_1.MatSlideToggleModule,
-            material_1.MatInputModule,
-            material_1.MatTooltipModule,
-            material_1.MatTabsModule,
-            material_1.MatSidenavModule,
-            material_1.MatButtonModule,
-            material_1.MatCardModule,
-            material_1.MatButtonToggleModule,
-            material_1.MatProgressSpinnerModule,
-            material_1.MatToolbarModule,
-            material_1.MatMenuModule,
-            material_1.MatGridListModule
-        ],
-        exports: [
-            material_1.MatCheckboxModule,
-            material_1.MatSelectModule,
-            material_1.MatSlideToggleModule,
-            material_1.MatInputModule,
-            material_1.MatTooltipModule,
-            material_1.MatTabsModule,
-            material_1.MatSidenavModule,
-            material_1.MatButtonModule,
-            material_1.MatCardModule,
-            material_1.MatButtonToggleModule,
-            material_1.MatProgressSpinnerModule,
-            material_1.MatToolbarModule,
-            material_1.MatMenuModule,
-            material_1.MatGridListModule
-        ]
-    })
-], AppMaterialModule);
 exports.AppMaterialModule = AppMaterialModule;

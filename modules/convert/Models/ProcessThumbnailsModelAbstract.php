@@ -17,7 +17,7 @@ namespace Convert\Models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
-use Core\Controllers\HistoryController;
+use History\controllers\HistoryController;
 
 class ProcessThumbnailsModelAbstract
 {

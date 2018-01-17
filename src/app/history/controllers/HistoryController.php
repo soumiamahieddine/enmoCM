@@ -10,28 +10,21 @@
 /**
 * @brief History Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Controllers;
+namespace History\controllers;
 
-use Core\Models\CoreConfigModel;
 use Core\Models\TextFormatModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Core\Models\HistoryModel;
+use Core\Models\UserModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
-use Notifications\Controllers\NotificationsEventsController;
+use History\models\HistoryModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class HistoryController
 {
 
-    /**
-     * Inserts a record in the history table
-     *
-     * @param $aArgs array
-     */
     public static function add(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['tableName', 'recordId', 'eventType', 'info', 'eventId']);
@@ -95,35 +88,10 @@ class HistoryController
 //        }
     }
 
-    /**
-     * Insert a log line into log4php
-     *
-     * @param $aArgs array
-     */
     private static function addToLog4php(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['traceInformations', 'loggingMethod']);
         ValidatorModel::arrayType($aArgs, ['traceInformations', 'loggingMethod']);
-
-        $loggingMethod    = $aArgs['loggingMethod'];
-        $traceInformations = $aArgs['traceInformations'];
-
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/log4php.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/log4php.xml";
-        } else if (file_exists('apps/maarch_entreprise/xml/log4php.xml')) {
-            $path = 'apps/maarch_entreprise/xml/log4php.xml';
-        } else {
-            $path = 'apps/maarch_entreprise/xml/log4php.default.xml';
-        }
-
-        \Logger::configure($path);
-
-        if (!empty($aArgs['isTech'])) {
-            $logger = \Logger::getLogger($loggingMethod['LOGGER_NAME_TECH']);
-        } else {
-            $logger = \Logger::getLogger($loggingMethod['LOGGER_NAME_FUNC']);
-        }
 
         $logLine = str_replace(
             [
@@ -139,56 +107,51 @@ class HistoryController
             ],
             [
                 'OK',
-                $loggingMethod['CODE_METIER'],
-                $traceInformations['WHERE'],
-                $traceInformations['ID'],
-                $traceInformations['HOW'],
-                $traceInformations['USER'],
-                $traceInformations['WHAT'],
-                $traceInformations['ID_MODULE'],
-                $traceInformations['REMOTE_IP']
+                $aArgs['loggingMethod']['CODE_METIER'],
+                $aArgs['traceInformations']['WHERE'],
+                $aArgs['traceInformations']['ID'],
+                $aArgs['traceInformations']['HOW'],
+                $aArgs['traceInformations']['USER'],
+                $aArgs['traceInformations']['WHAT'],
+                $aArgs['traceInformations']['ID_MODULE'],
+                $aArgs['traceInformations']['REMOTE_IP']
             ],
-            $loggingMethod['LOG_FORMAT']
+            $aArgs['loggingMethod']['LOG_FORMAT']
         );
 
+        $loggerName = (empty($aArgs['isTech']) ? $aArgs['loggingMethod']['LOGGER_NAME_FUNC'] : $aArgs['loggingMethod']['LOGGER_NAME_TECH']);
         $logLine = TextFormatModel::htmlWasher($logLine);
         $logLine = TextFormatModel::removeAccent(['string' => $logLine]);
 
         HistoryModel::writeLog([
-            'logger'  => $logger,
-            'logLine' => $logLine,
-            'level'   => $traceInformations['LEVEL']
+            'loggerName'    => $loggerName,
+            'logLine'       => $logLine,
+            'level'         => $aArgs['traceInformations']['LEVEL']
         ]);
     }
 
-    public function getForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getForAdministration(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'history', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-        $return = [];
-        $historyList = HistoryModel::getHistoryList(['event_date' => $aArgs['date']]);
-        $historyListFilters['users'] = HistoryModel::getFilter(['select' => 'user_id','event_date' => $aArgs['date']]);
-        $historyListFilters['eventType'] = HistoryModel::getFilter(['select' => 'event_type','event_date' => $aArgs['date']]);
-        
-        $return['filters'] = $historyListFilters;
-        $return['historyList'] = $historyList;
 
-        return $response->withJson($return);
+        $historyList = HistoryModel::getHistoryList(['event_date' => $aArgs['date']]);
+        $historyListFilters['users'] = HistoryModel::getFilter(['select' => 'user_id', 'event_date' => $aArgs['date']]);
+        $historyListFilters['eventType'] = HistoryModel::getFilter(['select' => 'event_type', 'event_date' => $aArgs['date']]);
+
+        return $response->withJson(['filters' => $historyListFilters, 'historyList' => $historyList]);
     }
 
-    public function getBatchForAdministration(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getBatchForAdministration(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'view_history_batch', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'view_history_batch', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-        $return = [];
-        $historyList = HistoryModel::getHistoryBatchList(['event_date' => $aArgs['date']]);
-        $historyListFilters['modules'] = HistoryModel::getBatchFilter(['select' => 'module_name','event_date' => $aArgs['date']]);
-        
-        $return['filters'] = $historyListFilters;
-        $return['historyList'] = $historyList;
 
-        return $response->withJson($return);
+        $historyList = HistoryModel::getHistoryBatchList(['event_date' => $aArgs['date']]);
+        $historyListFilters['modules'] = HistoryModel::getBatchFilter(['select' => 'module_name', 'event_date' => $aArgs['date']]);
+        
+        return $response->withJson(['filters' => $historyListFilters, 'historyList' => $historyList]);
     }
 }

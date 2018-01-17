@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var GroupAdministrationComponent = (function () {
+var GroupAdministrationComponent = /** @class */ (function () {
     function GroupAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -80,13 +80,13 @@ var GroupAdministrationComponent = (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    GroupAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["group-administrationView"],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], GroupAdministrationComponent);
     return GroupAdministrationComponent;
 }());
-GroupAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["group-administrationView"],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], GroupAdministrationComponent);
 exports.GroupAdministrationComponent = GroupAdministrationComponent;

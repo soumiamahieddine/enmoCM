@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var StatusAdministrationComponent = (function () {
+var StatusAdministrationComponent = /** @class */ (function () {
     function StatusAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -123,14 +123,14 @@ var StatusAdministrationComponent = (function () {
             });
         }
     };
+    StatusAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals['status-administrationView'],
+            styleUrls: ['css/status-administration.component.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], StatusAdministrationComponent);
     return StatusAdministrationComponent;
 }());
-StatusAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals['status-administrationView'],
-        styleUrls: ['css/status-administration.component.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], StatusAdministrationComponent);
 exports.StatusAdministrationComponent = StatusAdministrationComponent;

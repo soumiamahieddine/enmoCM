@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("./translate.component");
 var notification_service_1 = require("./notification.service");
-var ProfileComponent = (function () {
+var ProfileComponent = /** @class */ (function () {
     function ProfileComponent(http, zone, notify) {
         var _this = this;
         this.http = http;
@@ -396,14 +396,14 @@ var ProfileComponent = (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    ProfileComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals.profileView,
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone, notification_service_1.NotificationService])
+    ], ProfileComponent);
     return ProfileComponent;
 }());
-ProfileComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals.profileView,
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone, notification_service_1.NotificationService])
-], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;

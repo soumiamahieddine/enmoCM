@@ -22,6 +22,9 @@
                         <a data-toggle="modal" data-target="#manageAbs" id="redirectBasketCard"><i class="fa fa-share"></i> {{lang.manageAbsences}} </a>
                     </li>
                     <li style="cursor: pointer">
+                        <a data-toggle="modal" data-target="#manageHistory"><i class="fa fa-history"></i> {{lang.history}} </a>
+                    </li>
+                    <li style="cursor: pointer">
                         <a (click)="askRedirectBasket()" ><i class="fa fa-user-times"></i> Activer mon absence </a>
                     </li>
                 </ul>
@@ -326,3 +329,36 @@
         </div>
     </div>
 </div>
+
+<div id="manageHistory" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{lang.history}}</h4>
+            </div>
+            <div class="modal-body">
+                <table id="historyTable" class="table table-hover table-condensed" [md2Data]="user.histories" #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
+                    <thead>
+                        <tr>
+                            <td>
+                                <md2-pagination></md2-pagination>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th md2SortBy="event_date">{{lang.date}}</th>
+                            <th md2SortBy="info">{{lang.description}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let history of md2.data">
+                            <td style="vertical-align:middle;">{{history.event_date | date : "dd/MM/y HH:mm"}}</td>
+                            <td style="vertical-align:middle;">{{history.info}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

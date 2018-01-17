@@ -35,6 +35,7 @@ export const LANG_EN = {
     "for"                       : "for",
     "value"                     : "value",
     "clause"                    : "Clause",
+    "history"                   : "Historique",
 
     "user"                      : "user",
     "firstname"                 : "Firstname",

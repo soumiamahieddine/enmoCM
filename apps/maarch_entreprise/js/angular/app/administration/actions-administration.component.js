@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var ActionsAdministrationComponent = (function () {
+var ActionsAdministrationComponent = /** @class */ (function () {
     function ActionsAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -61,14 +61,14 @@ var ActionsAdministrationComponent = (function () {
             });
         }
     };
+    ActionsAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["actions-administrationView"],
+            styleUrls: [],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], ActionsAdministrationComponent);
     return ActionsAdministrationComponent;
 }());
-ActionsAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["actions-administrationView"],
-        styleUrls: [],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], ActionsAdministrationComponent);
 exports.ActionsAdministrationComponent = ActionsAdministrationComponent;

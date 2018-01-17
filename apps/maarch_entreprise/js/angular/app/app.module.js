@@ -19,32 +19,32 @@ var app_routing_module_1 = require("./app-routing.module");
 var administration_module_1 = require("./administration/administration.module");
 var profile_component_1 = require("./profile.component");
 var signature_book_component_1 = require("./signature-book.component");
-var AppModule = (function () {
+var AppModule = /** @class */ (function () {
     function AppModule() {
     }
+    AppModule = __decorate([
+        core_1.NgModule({
+            imports: [
+                platform_browser_1.BrowserModule,
+                animations_1.BrowserAnimationsModule,
+                forms_1.FormsModule,
+                http_1.HttpClientModule,
+                administration_module_1.AdministrationModule,
+                app_routing_module_1.AppRoutingModule,
+                app_material_module_1.AppMaterialModule,
+                md2_1.Md2Module,
+                md2_1.NoConflictStyleCompatibilityMode
+            ],
+            declarations: [
+                //HeaderComponent,
+                app_component_1.AppComponent,
+                profile_component_1.ProfileComponent,
+                signature_book_component_1.SignatureBookComponent,
+                signature_book_component_1.SafeUrlPipe
+            ],
+            bootstrap: [app_component_1.AppComponent]
+        })
+    ], AppModule);
     return AppModule;
 }());
-AppModule = __decorate([
-    core_1.NgModule({
-        imports: [
-            platform_browser_1.BrowserModule,
-            animations_1.BrowserAnimationsModule,
-            forms_1.FormsModule,
-            http_1.HttpClientModule,
-            administration_module_1.AdministrationModule,
-            app_routing_module_1.AppRoutingModule,
-            app_material_module_1.AppMaterialModule,
-            md2_1.Md2Module,
-            md2_1.NoConflictStyleCompatibilityMode
-        ],
-        declarations: [
-            //HeaderComponent,
-            app_component_1.AppComponent,
-            profile_component_1.ProfileComponent,
-            signature_book_component_1.SignatureBookComponent,
-            signature_book_component_1.SafeUrlPipe
-        ],
-        bootstrap: [app_component_1.AppComponent]
-    })
-], AppModule);
 exports.AppModule = AppModule;

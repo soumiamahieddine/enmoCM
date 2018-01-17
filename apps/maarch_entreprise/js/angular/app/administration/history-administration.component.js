@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var HistoryAdministrationComponent = (function () {
+var HistoryAdministrationComponent = /** @class */ (function () {
     function HistoryAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -70,14 +70,14 @@ var HistoryAdministrationComponent = (function () {
             location.href = "index.php";
         });
     };
+    HistoryAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["history-administrationView"],
+            styleUrls: [],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], HistoryAdministrationComponent);
     return HistoryAdministrationComponent;
 }());
-HistoryAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["history-administrationView"],
-        styleUrls: [],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], HistoryAdministrationComponent);
 exports.HistoryAdministrationComponent = HistoryAdministrationComponent;

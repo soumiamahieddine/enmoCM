@@ -8,23 +8,21 @@
 */
 
 /**
-* @brief Status Model
+* @brief History Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace History\models;
 
-use Core\Controllers\HistoryController;
 
-require_once('apps/maarch_entreprise/tools/log4php/Logger.php');
+use Core\Models\CoreConfigModel;
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
+
+require_once('apps/maarch_entreprise/tools/log4php/Logger.php'); //TODO composer
 
 class HistoryModelAbstract
 {
-
-    /**
-    * Get the logging method in the configuration file
-    */
     public static function buildLoggingMethod()
     {
         $loggingMethods = [];
@@ -65,17 +63,22 @@ class HistoryModelAbstract
         return $loggingMethods;
     }
 
-    /**
-     * Write a log entry with a specific log level
-     *
-     * @param  $aArgs array
-     */
     public static function writeLog(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['logger', 'logLine', 'level']);
-        ValidatorModel::stringType($aArgs, ['logLine', 'level']);
+        ValidatorModel::notEmpty($aArgs, ['logLine', 'level', 'loggerName']);
+        ValidatorModel::stringType($aArgs, ['logLine', 'level', 'loggerName']);
 
-        $logger  = $aArgs['logger'];
+        $customId = CoreConfigModel::getCustomId();
+        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/log4php.xml")) {
+            $path = "custom/{$customId}/apps/maarch_entreprise/xml/log4php.xml";
+        } else if (file_exists('apps/maarch_entreprise/xml/log4php.xml')) {
+            $path = 'apps/maarch_entreprise/xml/log4php.xml';
+        } else {
+            $path = 'apps/maarch_entreprise/xml/log4php.default.xml';
+        }
+
+        \Logger::configure($path);
+        $logger = \Logger::getLogger($aArgs['loggerName']);
 
         switch ($aArgs['level']) {
             case 'DEBUG':
@@ -147,22 +150,21 @@ class HistoryModelAbstract
         return $aReturn;
     }
 
-    public static function getHistoryByUserId(array $aArgs = [])
+    public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aHistories = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['history'],
-            'where'     => ['user_id = ?'],
+            'where'     => ['user_id = ?', 'event_date > (CURRENT_TIMESTAMP - interval \'30 DAYS\')'],
             'data'      => [$aArgs['userId']],
-            'order_by'  => ['event_date DESC']
-            ]
-        );
+            'order_by'  => ['event_date DESC'],
+            'limit'     => 200
+        ]);
 
-        return $aReturn;
+        return $aHistories;
     }
 
     public static function getFilter(array $aArgs = [])

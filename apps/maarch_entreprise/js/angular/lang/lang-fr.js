@@ -38,6 +38,7 @@ exports.LANG_FR = {
     "for": "pour",
     "value": "valeur",
     "clause": "Clause",
+    "history": "Historique",
     "user": "utilisateur",
     "firstname": "Prénom",
     "lastname": "Nom",
@@ -167,7 +168,6 @@ exports.LANG_FR = {
     dataOfMonth: "Données du mois",
     entries: "entrée(s)",
     event: "Événement",
-    history: "Historique",
     ip: "Adresse IP",
     //HistoryBatch
     historyBatch: "Historique des batchs",

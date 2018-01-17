@@ -15,8 +15,8 @@
 
 namespace Core\Models;
 
-use Core\Controllers\HistoryController;
 use Entities\Models\EntityModel;
+use History\controllers\HistoryController;
 
 class UserModelAbstract
 {

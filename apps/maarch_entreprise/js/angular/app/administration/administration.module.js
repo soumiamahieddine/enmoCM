@@ -33,44 +33,44 @@ var history_administration_component_1 = require("./history-administration.compo
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
 var notification_administration_component_1 = require("./notification-administration.component");
-var AdministrationModule = (function () {
+var AdministrationModule = /** @class */ (function () {
     function AdministrationModule() {
     }
+    AdministrationModule = __decorate([
+        core_1.NgModule({
+            imports: [
+                common_1.CommonModule,
+                forms_1.FormsModule,
+                http_1.HttpClientModule,
+                app_material_module_1.AppMaterialModule,
+                administration_routing_module_1.AdministrationRoutingModule,
+                md2_1.Md2Module
+            ],
+            declarations: [
+                administration_component_1.AdministrationComponent,
+                users_administration_component_1.UsersAdministrationComponent,
+                user_administration_component_1.UserAdministrationComponent,
+                groups_administration_component_1.GroupsAdministrationComponent,
+                group_administration_component_1.GroupAdministrationComponent,
+                baskets_administration_component_1.BasketsAdministrationComponent,
+                basket_administration_component_1.BasketAdministrationComponent,
+                statuses_administration_component_1.StatusesAdministrationComponent,
+                status_administration_component_1.StatusAdministrationComponent,
+                actions_administration_component_1.ActionsAdministrationComponent,
+                action_administration_component_1.ActionAdministrationComponent,
+                parameters_administration_component_1.ParametersAdministrationComponent,
+                parameter_administration_component_1.ParameterAdministrationComponent,
+                priorities_administration_component_1.PrioritiesAdministrationComponent,
+                priority_administration_component_1.PriorityAdministrationComponent,
+                reports_administration_component_1.ReportsAdministrationComponent,
+                history_administration_component_1.HistoryAdministrationComponent,
+                historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
+                notifications_administration_component_1.NotificationsAdministrationComponent,
+                notification_administration_component_1.NotificationAdministrationComponent,
+                users_administration_component_1.DataTablePipe
+            ]
+        })
+    ], AdministrationModule);
     return AdministrationModule;
 }());
-AdministrationModule = __decorate([
-    core_1.NgModule({
-        imports: [
-            common_1.CommonModule,
-            forms_1.FormsModule,
-            http_1.HttpClientModule,
-            app_material_module_1.AppMaterialModule,
-            administration_routing_module_1.AdministrationRoutingModule,
-            md2_1.Md2Module
-        ],
-        declarations: [
-            administration_component_1.AdministrationComponent,
-            users_administration_component_1.UsersAdministrationComponent,
-            user_administration_component_1.UserAdministrationComponent,
-            groups_administration_component_1.GroupsAdministrationComponent,
-            group_administration_component_1.GroupAdministrationComponent,
-            baskets_administration_component_1.BasketsAdministrationComponent,
-            basket_administration_component_1.BasketAdministrationComponent,
-            statuses_administration_component_1.StatusesAdministrationComponent,
-            status_administration_component_1.StatusAdministrationComponent,
-            actions_administration_component_1.ActionsAdministrationComponent,
-            action_administration_component_1.ActionAdministrationComponent,
-            parameters_administration_component_1.ParametersAdministrationComponent,
-            parameter_administration_component_1.ParameterAdministrationComponent,
-            priorities_administration_component_1.PrioritiesAdministrationComponent,
-            priority_administration_component_1.PriorityAdministrationComponent,
-            reports_administration_component_1.ReportsAdministrationComponent,
-            history_administration_component_1.HistoryAdministrationComponent,
-            historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
-            notifications_administration_component_1.NotificationsAdministrationComponent,
-            notification_administration_component_1.NotificationAdministrationComponent,
-            users_administration_component_1.DataTablePipe
-        ]
-    })
-], AdministrationModule);
 exports.AdministrationModule = AdministrationModule;

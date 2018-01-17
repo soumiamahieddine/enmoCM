@@ -66,26 +66,13 @@ if (empty($_SESSION['user'])) {
 
 //login management
 if (empty($_SESSION['user'])) {
-    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) { //TODO Gestion cookie basic
-        $_SESSION['error'] = '';
-        $security = new security();
-        $pass = $security->getPasswordHash($_SERVER['PHP_AUTH_PW']);
-        $res  = $security->login($_SERVER['PHP_AUTH_USER'], $pass);
+    require_once('apps/maarch_entreprise/class/class_login.php');
+    $loginObj = new login();
+    $loginMethods = $loginObj->build_login_method();
+    require_once('core/services/Session.php');
+    $oSessionService = new \Core_Session_Service();
 
-        $_SESSION['user'] = $res['user'];
-        if (!empty($res['error'])) {
-            $_SESSION['error'] = $res['error'];
-        }
-    } else {
-        require_once('apps/maarch_entreprise/class/class_login.php');
-        $loginObj = new login();
-        $loginMethods = $loginObj->build_login_method();
-        require_once('core/services/Session.php');
-        $oSessionService = new \Core_Session_Service();
-
-        $loginObj->execute_login_script($loginMethods, true);
-    }
-
+    $loginObj->execute_login_script($loginMethods, true);
 }
 
 if ($_SESSION['error']) {
@@ -97,20 +84,25 @@ if (strpos(getcwd(), '/rest')) {
     chdir('..');
 }
 
-$cookie = \Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
-    \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
-    $userId = $cookie['userId'];
+if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+    if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+        $userId = $_SERVER['PHP_AUTH_USER'];
+    }
 } else {
+    $cookie = \Core\Models\SecurityModel::getCookieAuth();
+    if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
+        \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+        $userId = $cookie['userId'];
+    }
+}
+
+if (empty($userId)) {
     echo 'Authentication Failed';
     exit();
 }
 
-$app = new \Slim\App([
-    'settings' => [
-        'displayErrorDetails' => true
-    ]
-]);
+
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
@@ -230,10 +222,10 @@ $app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':up
 $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getForAdministration');
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
 
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionController::class . ':getForAdministration');
@@ -270,15 +262,3 @@ $app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':ge
 $app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
 
 $app->run();
-
-if ($_SESSION['user']['UserId'] == 'restUser') {
-    $name = $_SESSION['sessionName'];
-
-    setcookie ($name, "", 1);
-    setcookie ($name, false);
-    unset($_COOKIE[$name]);
-
-    session_unset();
-    session_destroy();
-    unset($_SESSION['sessionName']);
-}

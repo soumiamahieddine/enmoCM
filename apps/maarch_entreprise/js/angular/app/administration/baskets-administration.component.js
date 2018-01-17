@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var BasketsAdministrationComponent = (function () {
+var BasketsAdministrationComponent = /** @class */ (function () {
     function BasketsAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -49,14 +49,14 @@ var BasketsAdministrationComponent = (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    BasketsAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["baskets-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], BasketsAdministrationComponent);
     return BasketsAdministrationComponent;
 }());
-BasketsAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["baskets-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], BasketsAdministrationComponent);
 exports.BasketsAdministrationComponent = BasketsAdministrationComponent;

@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use History\controllers\HistoryController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;

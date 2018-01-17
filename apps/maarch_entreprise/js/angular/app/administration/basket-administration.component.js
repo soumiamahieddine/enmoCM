@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var BasketAdministrationComponent = (function () {
+var BasketAdministrationComponent = /** @class */ (function () {
     function BasketAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -87,14 +87,14 @@ var BasketAdministrationComponent = (function () {
             });
         }
     };
+    BasketAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["basket-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], BasketAdministrationComponent);
     return BasketAdministrationComponent;
 }());
-BasketAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["basket-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], BasketAdministrationComponent);
 exports.BasketAdministrationComponent = BasketAdministrationComponent;

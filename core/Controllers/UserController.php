@@ -18,12 +18,13 @@ namespace Core\Controllers;
 use Basket\models\BasketModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
-use Core\Models\HistoryModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
 use Entities\Models\EntityModel;
 use Entities\Models\ListModelsModel;
+use History\controllers\HistoryController;
+use History\models\HistoryModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -152,6 +153,7 @@ class UserController
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']]);
         $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['histories'] = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
         $user['canModifyPassword'] = true;
 
         $baskets = [];
@@ -577,7 +579,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $_SESSION['user']['UserId']]);
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id']]);
-        $user['history'] = HistoryModel::getHistoryByUserId(['userId' => $user['user_id']]);
+        $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
     }
