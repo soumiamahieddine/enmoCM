@@ -8,64 +8,64 @@
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
         <table id="usersTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'user_id' : search" #md2="md2DataTable" [sortBy]='user_id' [rowsPerPage]="10">
-        <thead>
-        <tr>
-            <td colspan="5">
-                <md2-pagination></md2-pagination>
-            </td>
-            <td style="text-align:right;">
-                <mat-form-field>
-                        <input matInput placeholder="{{lang.filterBy}} : {{lang.id}}" class="searchTable" [(ngModel)]="search" />
-                </mat-form-field>
-                &nbsp;
-                <a class="text-primary" style="cursor: pointer" routerLink="/administration/users/new" title="{{lang.addUser}}"><i class="fa fa-user-plus fa-2x"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <th md2SortBy="user_id">{{lang.id}}</th>
-            <th md2SortBy="lastname">{{lang.lastname}}</th>
-            <th md2SortBy="firstname">{{lang.firstname}}</th>
-            <th md2SortBy="status">{{lang.status}}</th>
-            <th md2SortBy="mail">{{lang.email}}</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of md2.data">
-            <td style="vertical-align:middle;">{{user.user_id}}</td>
-            <td style="vertical-align:middle;">{{user.lastname}}</td>
-            <td style="vertical-align:middle;">{{user.firstname}}</td>
-            <td style="vertical-align:middle;">
-                <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.active}}</span>
-                <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.inactive}}</span>
-                <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.abs}}</span>
-            </td>
-            <td style="vertical-align:middle;">{{user.mail}}</td>
-            <td style="text-align:right;">
-                <div class="btn-group" role="group" aria-label="...">
-                    <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
-                        <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                    </button>
-                    <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
-                        <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
-                    </button>
-                    <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
-                        <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
-                    </button>
+            <thead>
+                <tr>
+                    <td colspan="5">
+                        <md2-pagination></md2-pagination>
+                    </td>
+                    <td style="text-align:right;">
+                        <mat-form-field>
+                            <input matInput placeholder="{{lang.filterBy}} : {{lang.id}}" class="searchTable" [(ngModel)]="search" />
+                        </mat-form-field>
+                        &nbsp;
+                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/users/new" title="{{lang.addUser}}"><i class="fa fa-user-plus fa-2x"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th md2SortBy="user_id">{{lang.id}}</th>
+                    <th md2SortBy="lastname">{{lang.lastname}}</th>
+                    <th md2SortBy="firstname">{{lang.firstname}}</th>
+                    <th md2SortBy="status">{{lang.status}}</th>
+                    <th md2SortBy="mail">{{lang.email}}</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of md2.data">
+                    <td style="vertical-align:middle;">{{user.user_id}}</td>
+                    <td style="vertical-align:middle;">{{user.lastname}}</td>
+                    <td style="vertical-align:middle;">{{user.firstname}}</td>
+                    <td style="vertical-align:middle;">
+                        <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.active}}</span>
+                        <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.inactive}}</span>
+                        <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.abs}}</span>
+                    </td>
+                    <td style="vertical-align:middle;">{{user.mail}}</td>
+                    <td style="text-align:right;">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
+                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
+                            </button>
+                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
+                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
+                            </button>
+                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
+                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
+                            </button>
 
-                    <button *ngIf="user.enabled == 'N'" type="button" class="btn btn-default" title="{{lang.authorize}}" (click)="activateUser(user)">
-                        <a><i style="cursor:pointer;color:#5cb85c;" class="fa fa-check"></i></a>
-                    </button>
-                    <button *ngIf="user.inDiffListDest == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest" (click)="deleteUser(user)">
-                        <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                    </button>
-                    <button *ngIf="user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user)">
-                        <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
+                            <button *ngIf="user.enabled == 'N'" type="button" class="btn btn-default" title="{{lang.authorize}}" (click)="activateUser(user)">
+                                <a><i style="cursor:pointer;color:#5cb85c;" class="fa fa-check"></i></a>
+                            </button>
+                            <button *ngIf="user.inDiffListDest == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest" (click)="deleteUser(user)">
+                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                            </button>
+                            <button *ngIf="user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user)">
+                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>

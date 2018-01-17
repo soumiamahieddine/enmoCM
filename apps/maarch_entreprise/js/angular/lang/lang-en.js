@@ -87,4 +87,8 @@ exports.LANG_EN = {
     "basketUpdated": "Basket updated",
     "basketDeleted": "Basket deleted",
     "entityTooglePrimary": "Pass to primary entity",
+    "addStatus": "Add a status",
+    "tooltipSearchStatus": "Si <b>coché</b>,<br/>le statut vous sera <b>proposé</b> dans le critère de recherche STATUTS de la recherche avancée",
+    "tooltipIndexStatus": "Si <b>coché</b>,<br/>vous pourrez <b>modifier</b> les meta-données des documents ayant ce statut",
+    "tooltipFolderStatus": "Si <b>coché</b>,<br/>le statut pourra être utilisé pour des <b>bannettes de dossiers</b>",
 };
