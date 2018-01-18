@@ -29,6 +29,11 @@ job_php-7.0:
   image: php:7.0-apache
   stage: test
   script:
+    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
+    - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
+    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
     - mkdir -p /var/www/html/
     - cp -R /builds/maarch/MaarchCourrier/ /var/www/html/
     - cd /var/www/html/MaarchCourrier
