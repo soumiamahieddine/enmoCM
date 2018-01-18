@@ -10,10 +10,10 @@
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
-            <!-- <file>modules/convert/Test/ProcessConvertTest.php</file>
+            <file>modules/convert/Test/ProcessConvertTest.php</file>
             <file>modules/convert/Test/ProcessFulltextTest.php</file>
             <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
-            <file>modules/convert/Test/ProcessManageConvertTest.php</file> -->
+            <file>modules/convert/Test/ProcessManageConvertTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
