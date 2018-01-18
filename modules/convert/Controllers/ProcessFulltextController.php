@@ -43,19 +43,19 @@ class ProcessFulltextController
 
     public function __construct($pdftotext = 'pdftotext')
     {
-        // Storing text in lucpreene index
+        // Storing text in lucene index
         set_include_path('apps/maarch_entreprise/tools/' 
             . PATH_SEPARATOR . get_include_path()
         );
 
-        if(!@include('Zend/Search/Lucene.php')) {
+        //if(!@include('Zend/Search/Lucene.php')) {
             set_include_path($GLOBALS['MaarchDirectory'] 
                 . 'apps/maarch_entreprise/tools/' 
                 . PATH_SEPARATOR . get_include_path()
             );
 
             require_once("Zend/Search/Lucene.php");
-        }
+        //}
 
         $this->pdftotext = $pdftotext;
     }
@@ -256,7 +256,7 @@ class ProcessFulltextController
         $storeResult = StoreController::storeResourceOnDocServer([
             'collId'    => $collId,
             'fileInfos' => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'tmpDir'        => $tmpDir,
                 'size'          => filesize($fileNameOnTmp),
                 'format'        => 'TXT',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.txt',

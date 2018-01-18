@@ -131,7 +131,7 @@ class ProcessConvertController
         }
 
         $res = ResModel::getById(['resId' => $resId, 'resTable' => $args['resTable']]);
-        
+
         if ($res['res_id'] <> '') {
             $resourcePath = ResDocserverModel::getSourceResourcePath(
                 [
@@ -182,7 +182,6 @@ class ProcessConvertController
                 'error' => '',
             );
         }
-        
         if ($resultOfConversion['status'] <> '0') {
             ProcessConvertModel::manageErrorOnDb(
                 ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
@@ -194,7 +193,7 @@ class ProcessConvertController
         $storeResult = StoreController::storeResourceOnDocServer([
             'collId'    => $collId,
             'fileInfos' => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'tmpDir'        => $tmpDir,
                 'size'          => filesize($fileNameOnTmp),
                 'format'        => 'PDF',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.pdf',
@@ -202,13 +201,25 @@ class ProcessConvertController
             'docserverTypeId'   => 'CONVERT'
         ]);
 
-
         if (empty($storeResult)) {
             $returnArray = array(
                 'status' => '1',
                 'value' => '',
                 'error' => 'Ds of collection and ds type not found for convert:' 
                     . $collId . ' CONVERT',
+            );
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
+            return $returnArray;
+        }
+
+        if (!empty($storeResult['errors'])) {
+            $returnArray = array(
+                'status' => '1',
+                'value' => '',
+                'error' => $storeResult['errors'] . ' error for convert:' 
+                    . $fileNameOnTmp,
             );
             ProcessConvertModel::manageErrorOnDb(
                 ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']

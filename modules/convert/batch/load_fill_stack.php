@@ -1,22 +1,10 @@
 <?php
 
-/*
- *   Copyright 2008-2016 Maarch
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
  *
- *   This file is part of Maarch Framework.
- *
- *   Maarch Framework is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   Maarch Framework is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -297,6 +285,7 @@ unset($xmlconfig);
 
 // Include library
 try {
+    Bt_myInclude($GLOBALS['MaarchDirectory'] . 'vendor/autoload.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/class/class_functions.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/class/class_db.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/class/class_db_pdo.php');
@@ -305,7 +294,7 @@ try {
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/class/docservers_controler.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/docservers_tools.php');
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core/class/docserver_types_controler.php');
-    Bt_myInclude($GLOBALS['MaarchDirectory'] . 'modules/convert/services/ManageConvert.php');
+    //Bt_myInclude($GLOBALS['MaarchDirectory'] . 'modules/convert/services/ManageConvert.php');
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' 
@@ -314,24 +303,27 @@ try {
     exit(111);
 }
 if (!is_dir($GLOBALS['tmpDirectoryRoot'])) {
-    $GLOBALS['logger']->write(
-        'Problem with the tmp dir:' . $GLOBALS['tmpDirectory'], 'ERROR', 17
-    );
-    exit(17);
+    mkdir($GLOBALS['tmpDirectoryRoot']);
+    // echo PHP_EOL.'tmpDirectoryRoot '.$GLOBALS['tmpDirectoryRoot'].PHP_EOL;
+    // $GLOBALS['logger']->write(
+    //     'Problem with the tmp dir:' . $GLOBALS['tmpDirectoryRoot'], 'ERROR', 17
+    // );
+    // exit(17);
 }
 
 $coreTools = new core_tools();
 $coreTools->load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 session_start();
 $_SESSION['modules_loaded']    = array();
+$_SESSION['user']['UserId']    = 'BOT_CONVERT';
 $GLOBALS['func']               = new functions();
 $GLOBALS['db']                 = new Database($GLOBALS['configFile']);
 $GLOBALS['db2']                = new Database($GLOBALS['configFile']);
 $GLOBALS['db3']                = new Database($GLOBALS['configFile']);
 $GLOBALS['dbLog']              = new Database($GLOBALS['configFile']);
 $GLOBALS['docserverControler'] = new docservers_controler();
-$GLOBALS['processConvert']     = new Convert_ManageConvert_Service($GLOBALS['openOfficePath']);
-$GLOBALS['processIndexes']     = new Convert_ProcessFulltext_Service();
+$GLOBALS['processConvert']     = new \Convert\Controllers\ProcessManageConvertController($GLOBALS['openOfficePath']);
+$GLOBALS['processIndexes']     = new \Convert\Controllers\ProcessFulltextController();
 
 $configFileName = basename($GLOBALS['configFile'], '.xml');
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . '/' 

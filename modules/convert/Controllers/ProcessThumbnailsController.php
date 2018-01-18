@@ -199,7 +199,7 @@ class ProcessThumbnailsController
         $storeResult = StoreController::storeResourceOnDocServer([
             'collId'    => $collId,
             'fileInfos' => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'tmpDir'        => $tmpDir,
                 'size'          => filesize($fileNameOnTmp),
                 'format'        => 'PNG',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.png',

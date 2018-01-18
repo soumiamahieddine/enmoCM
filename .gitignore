@@ -13,3 +13,7 @@ core/Test/build/
 apps/maarch_entreprise/tmp/*
 /nbproject/private/apps/maarch_entreprise/define_custom.php
 apps/maarch_entreprise/js/angular/main.bundle.js
+modules/convert/batch/scripts/launch_fulltext_letterbox.sh
+modules/convert/batch/scripts/launch_convert_letterbox.sh
+modules/convert/batch/config/config_only_indexes.xml
+modules/convert/batch/tmp/

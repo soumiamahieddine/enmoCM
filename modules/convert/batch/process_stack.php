@@ -1,22 +1,10 @@
 <?php
 
-/*
- *  Copyright 2008-2016 Maarch
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
  *
- *  This file is part of Maarch Framework.
- *
- *  Maarch Framework is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Maarch Framework is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -122,7 +110,8 @@ while ($GLOBALS['state'] <> "END") {
                 $query, 
                 array($GLOBALS['collection'])
             );
-            if ($stmt->rowCount() == 0) {
+            $stmtCpt = $stmt;
+            if ($stmtCpt->fetchObject()->docserver_id == '') {
                  Bt_exitBatch(13, 'Docserver not found');
                 break;
             } else {
@@ -151,7 +140,8 @@ while ($GLOBALS['state'] <> "END") {
                     $GLOBALS['wb']
                 )
             );
-            if ($stmt->rowCount() == 0) {
+            $stackRecordset = $stmt->fetchObject();
+            if (!($stackRecordset->res_id)) {
                 if ($GLOBALS['OnlyIndexes']) {
                     $GLOBALS['processIndexes']->commitZendIndex($GLOBALS['zendIndex']);
                 }
@@ -159,7 +149,6 @@ while ($GLOBALS['state'] <> "END") {
                 $GLOBALS['logger']->write('No more records to process', 'INFO');
                 break;
             } else {
-                $stackRecordset = $stmt->fetchObject();
                 $currentRecordInStack = array();
                 $currentRecordInStack = $GLOBALS['func']->object2array(
                     $stackRecordset
@@ -197,7 +186,7 @@ while ($GLOBALS['state'] <> "END") {
                         'resId'          => $currentRecordInStack['res_id'],
                         'tmpDir'         => $GLOBALS['tmpDirectory'],
                         'path_to_lucene' => $GLOBALS['path_to_lucene'],
-                        //'zendIndex'      => $GLOBALS['zendIndex']
+                        //'createZendIndex'      => false
                     )
                 );
             }

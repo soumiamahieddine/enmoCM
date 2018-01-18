@@ -188,8 +188,10 @@ class ProcessManageConvertController
                 'path_to_lucene' => $path_to_lucene
             );
         }
-        $ProcessConvertService = new ProcessFulltextController();
-        $resultOfConversion = $ProcessConvertService->fulltext($params);
+        $ProcessConvertServiceFulltext = new ProcessFulltextController();
+
+        $resultOfConversion = $ProcessConvertServiceFulltext->fulltext($params);
+
         if ($resultOfConversion['status'] <> '0') {
             $returnArray = array(
                 'status' => '1',

@@ -35,6 +35,19 @@ class DatabasePDO
             $path = 'apps/maarch_entreprise/xml/config.xml';
         }
 
+        if (!file_exists($path)) {
+            if (
+                file_exists($GLOBALS['MaarchDirectory'] 
+                    . "custom/{$customId}/apps/maarch_entreprise/xml/config.xml")
+            ) {
+                $path = $GLOBALS['MaarchDirectory'] 
+                    . "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
+            } else {
+                $path = $GLOBALS['MaarchDirectory'] 
+                    . 'apps/maarch_entreprise/xml/config.xml';
+            }
+        }
+
         $server = '';
         $port = '';
         $name = '';

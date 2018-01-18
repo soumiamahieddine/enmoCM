@@ -22,23 +22,13 @@ class ProcessConvertTest extends TestCase
             ]
         );
 
-        $path = $_SESSION['config']['tmppath'] . '/test/';
+        $samplePath = 'modules/convert/Test/Samples/';
 
-        if (!is_dir($path)) {
-            mkdir($path);
-        }
+        //SAMPLE TXT
+        $fileSource = 'test.txt';
+        $fileFormat = 'txt';
 
-        $fileSource = 'test_source.txt';
-        
-        if (file_exists($path . $fileSource)) {
-            unlink($path . $fileSource);
-        }
-
-        $fp = fopen($path . $fileSource, 'a');
-        fwrite($fp, 'a unit test for PHP CONVERSION lorem ipsum...');
-        fclose($fp);
-
-        $fileContent = file_get_contents($path . $fileSource, FILE_BINARY);
+        $fileContent = file_get_contents($samplePath . $fileSource, FILE_BINARY);
         $encodedFile = base64_encode($fileContent);
         //echo $encodedFile . PHP_EOL;exit;
         
@@ -48,7 +38,7 @@ class ProcessConvertTest extends TestCase
             $data,
             array(
                 'column' => 'subject',
-                'value' => 'UNIT TEST from slim',
+                'value' => 'UNIT TEST CONVERT from slim',
                 'type' => 'string',
             )
         );
@@ -85,7 +75,7 @@ class ProcessConvertTest extends TestCase
             'data'          => $data,
             'collId'        => 'letterbox_coll',
             'table'         => 'res_letterbox',
-            'fileFormat'    => 'txt',
+            'fileFormat'    => $fileFormat,
             'status'        => 'new',
         ];
 
