@@ -53,7 +53,7 @@ var StatusesAdministrationComponent = /** @class */ (function () {
             this.http.delete(this.coreUrl + 'rest/status/' + status.identifier)
                 .subscribe(function (data) {
                 _this.data = data.statuses;
-                _this.notify.success(_this.lang.statusDeleted + ' « ' + status.id + ' »');
+                _this.notify.success(_this.lang.statusDeleted);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

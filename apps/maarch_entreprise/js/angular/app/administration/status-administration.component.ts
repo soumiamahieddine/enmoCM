@@ -46,11 +46,11 @@ export class StatusAdministrationComponent implements OnInit {
             if (typeof params['identifier'] == "undefined"){
                 this.http.get(this.coreUrl + 'rest/administration/status/new')
                 .subscribe((data) => {
-                    this.status.img_filename = "fm-letter";
+                    this.status.img_filename    = "fm-letter";
                     this.status.can_be_searched = true
                     this.status.can_be_modified = true
-                    this.statusImages = data['statusImages'];
-                    this.creationMode = true;
+                    this.statusImages           = data['statusImages'];
+                    this.creationMode           = true;
                     this.updateBreadcrumb(angularGlobals.applicationName);
                     this.loading = false;
                 });
@@ -109,7 +109,7 @@ export class StatusAdministrationComponent implements OnInit {
         if(this.creationMode == true){
             this.http.post(this.coreUrl + 'rest/status', this.status)
             .subscribe((data : any) => {
-                this.notify.success(this.lang.statusAdded+' « '+data.status.id+' »');
+                this.notify.success(this.lang.statusAdded);
                 this.router.navigate(['administration/status']);
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);
@@ -118,7 +118,7 @@ export class StatusAdministrationComponent implements OnInit {
 
             this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
             .subscribe((data : any) => {
-                this.notify.success(this.lang.statusUpdated+' « '+data.status.id+' »');
+                this.notify.success(this.lang.statusUpdated);
                 this.router.navigate(['administration/status']);                    
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);

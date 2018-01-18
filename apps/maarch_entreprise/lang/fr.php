@@ -56,7 +56,7 @@ if (!defined("_XML_PARAM_SERVICE_DESC"))    define("_XML_PARAM_SERVICE_DESC", "V
 if (!defined("_XML_PARAM_SERVICE"))    define("_XML_PARAM_SERVICE", "Visualisation configuration XML des services");
 if (!defined("_MODULES_SERVICES"))    define("_MODULES_SERVICES", "Services définis par les modules");
 if (!defined("_APPS_SERVICES"))    define("_APPS_SERVICES", "Services définis par l'application");
-if (!defined("_ADMIN_STATUS_DESC"))    define("_ADMIN_STATUS_DESC", "Créer ou modifier des statuts.");
+if (!defined("_ADMIN_STATUS_DESC"))    define("_ADMIN_STATUS_DESC", "Créer ou modifier des statuts");
 if (!defined("_ADMIN_ACTIONS_DESC"))    define("_ADMIN_ACTIONS_DESC", "Créer ou modifier des actions.");
 if (!defined("_ADMIN_SERVICES_UNKNOWN"))    define("_ADMIN_SERVICES_UNKNOWN", "Service d'administration inconnu");
 if (!defined("_NO_RIGHTS_ON"))    define("_NO_RIGHTS_ON", "Aucun droit sur");

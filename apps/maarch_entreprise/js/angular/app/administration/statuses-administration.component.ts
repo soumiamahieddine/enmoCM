@@ -63,7 +63,7 @@ export class StatusesAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/status/'+status.identifier)
                 .subscribe((data : any) => {
                     this.data = data.statuses;
-                    this.notify.success(this.lang.statusDeleted+' « '+status.id+' »');
+                    this.notify.success(this.lang.statusDeleted);
                     
                 }, (err) => {
                     this.notify.error(JSON.parse(err._body).errors);
