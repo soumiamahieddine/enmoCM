@@ -14,6 +14,7 @@ var user_administration_component_1 = require("./user-administration.component")
 var groups_administration_component_1 = require("./groups-administration.component");
 var group_administration_component_1 = require("./group-administration.component");
 var baskets_administration_component_1 = require("./baskets-administration.component");
+var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
@@ -43,6 +44,7 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/groups/new', component: group_administration_component_1.GroupAdministrationComponent },
                     { path: 'administration/groups/:id', component: group_administration_component_1.GroupAdministrationComponent },
                     { path: 'administration/baskets', component: baskets_administration_component_1.BasketsAdministrationComponent },
+                    { path: 'administration/baskets-sorted', component: baskets_order_administration_component_1.BasketsOrderAdministrationComponent },
                     { path: 'administration/baskets/new', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/baskets/:id', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/status', component: statuses_administration_component_1.StatusesAdministrationComponent },

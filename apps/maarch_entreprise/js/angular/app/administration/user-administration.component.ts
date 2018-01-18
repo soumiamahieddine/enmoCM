@@ -189,7 +189,7 @@ export class UserAdministrationComponent implements OnInit {
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     }
 
-    resetPassword(user:any) {
+    resetPassword(user: any) {
         let r = confirm(this.lang.confirmAction+' '+this.lang.resetPsw);
 
         if (r) {
@@ -237,7 +237,7 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
-    addEntity(entiyId:any) {
+    addEntity(entiyId: any) {
 
         var entity = {
             "entityId"   : entiyId,
