@@ -11,16 +11,18 @@ stages:
 
 before_script:
   - apt-get update > /dev/null
+  - apt-get install apt-utils -yqq > /dev/null
+  - apt-get install tar -yqq > /dev/null
+  - apt-get install wkhtmltopdf -yqq > /dev/null
+  - wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - mv wkhtmltox/bin/wkhtmlto* /usr/bin
   - apt-get install libreoffice -yqq > /dev/null
   - apt-get install xpdf-utils -yqq > /dev/null
   - apt-get install imagemagick -yqq > /dev/null
-  - apt-get install wkhtmltopdf -yqq > /dev/null
   - apt-get install wget -yqq > /dev/null
   - apt-get install npm -yqq > /dev/null
   - apt-get install git -yqq > /dev/null
-  - wget wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-  - tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-  - mv wkhtmltox/bin/wkhtmlto* /usr/bin
   - bash ci/docker_install_php.sh > /dev/null
   - bash ci/docker_install_database.sh > /dev/null
   - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
