@@ -154,8 +154,8 @@ class BasketController
 
         $allowedMethods = ['UP', 'DOWN'];
         $allowedPowers = ['ONE', 'ALL'];
-        $check = Validator::stringType()::notEmpty()->validate($data['method']) && in_array($data['method'], $allowedMethods);
-        $check = $check && Validator::stringType()::notEmpty()->validate($data['power']) && in_array($data['power'], $allowedPowers);
+        $check = Validator::stringType()->notEmpty()->validate($data['method']) && in_array($data['method'], $allowedMethods);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['power']) && in_array($data['power'], $allowedPowers);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
