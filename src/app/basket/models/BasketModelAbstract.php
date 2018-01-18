@@ -26,11 +26,14 @@ class BasketModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aBaskets = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['baskets']
+            'table'     => ['baskets'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aBaskets;
@@ -91,6 +94,24 @@ class BasketModelAbstract
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
                 'coll_id'           => 'letterbox_coll',
+            ],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
+    public static function updateOrder(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'order']);
+        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['order']);
+
+        DatabaseModel::update([
+            'table'     => 'baskets',
+            'set'       => [
+                'basket_order'  => $aArgs['order']
             ],
             'where'     => ['basket_id = ?'],
             'data'      => [$aArgs['id']]
