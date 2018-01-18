@@ -1,7 +1,7 @@
 #!/bin/bash
-Mypath='/var/www/html/oem/modules/convert/batch'
+Mypath='/var/www/html/MaarchCourrier/modules/convert/batch'
 cd $Mypath
-ConfigPath='/var/www/html/oem/modules/convert/batch/config'
+ConfigPath='/var/www/html/MaarchCourrier/modules/convert/batch/config'
 
 rm convert_letterbox_coll_config_only_indexes.lck
 rm convert_letterbox_coll_config_only_indexes_error.lck

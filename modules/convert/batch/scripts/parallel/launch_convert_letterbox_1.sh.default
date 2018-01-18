@@ -1,7 +1,7 @@
 #!/bin/bash
-Mypath='/var/www/html/maarch_oem/modules/convert/batch'
+Mypath='/var/www/html/MaarchCourrier/modules/convert/batch'
 cd $Mypath
-ConfigPath='/var/www/html/maarch_oem/modules/convert/batch/parallel/config'
+ConfigPath='/var/www/html/MaarchCourrier/modules/convert/batch/config/parallel'
 
 for (( i=0; i < 3; i++ ));
     do php $Mypath/fill_stack.php -c $ConfigPath/config_1.xml -coll letterbox_coll
