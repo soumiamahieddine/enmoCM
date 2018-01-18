@@ -398,8 +398,6 @@ CREATE TABLE res_attachments
   format character varying(50) NOT NULL,
   typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL::character varying,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
   author character varying(255) DEFAULT NULL::character varying,
   author_name text,
   identifier character varying(255) DEFAULT NULL::character varying,
@@ -449,7 +447,28 @@ CREATE TABLE res_attachments
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
   in_signature_book boolean DEFAULT FALSE,
+  convert_result character varying(10) DEFAULT NULL::character varying,
+  convert_attempts integer DEFAULT NULL::integer,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  fulltext_attempts integer DEFAULT NULL::integer,
+  tnl_result character varying(10) DEFAULT NULL::character varying,
+  tnl_attempts integer DEFAULT NULL::integer,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE adr_attachments
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
 
@@ -1440,8 +1459,6 @@ CREATE TABLE res_x
   format character varying(50) NOT NULL,
   typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL,
-  ocr_result character varying(10) DEFAULT NULL,
   converter_result character varying(10) DEFAULT NULL,
   author character varying(255) DEFAULT NULL::character varying,
   author_name text,
@@ -1535,6 +1552,13 @@ CREATE TABLE res_x
   locker_time timestamp without time zone,
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
+  convert_result character varying(10) DEFAULT NULL::character varying,
+  convert_attempts integer DEFAULT NULL::integer,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  fulltext_attempts integer DEFAULT NULL::integer,
+  tnl_result character varying(10) DEFAULT NULL::character varying,
+  tnl_attempts integer DEFAULT NULL::integer,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1548,6 +1572,7 @@ CREATE TABLE adr_x
   offset_doc character varying(255) DEFAULT NULL::character varying,
   fingerprint character varying(255) DEFAULT NULL::character varying,
   adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
   CONSTRAINT adr_x_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
@@ -1572,8 +1597,6 @@ CREATE TABLE res_letterbox
   typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   modification_date timestamp without time zone DEFAULT NOW(),
-  fulltext_result character varying(10) DEFAULT NULL,
-  ocr_result character varying(10) DEFAULT NULL,
   converter_result character varying(10) DEFAULT NULL,
   author character varying(255) DEFAULT NULL::character varying,
   author_name text,
@@ -1668,7 +1691,28 @@ CREATE TABLE res_letterbox
   confidentiality character(1),
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
+  convert_result character varying(10) DEFAULT NULL::character varying,
+  convert_attempts integer DEFAULT NULL::integer,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  fulltext_attempts integer DEFAULT NULL::integer,
+  tnl_result character varying(10) DEFAULT NULL::character varying,
+  tnl_attempts integer DEFAULT NULL::integer,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE adr_letterbox
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
 
@@ -2019,268 +2063,6 @@ CREATE TABLE priorities
 )
 WITH (OIDS=FALSE);
 
-
--- ************************************************************************* --
---                                  VUES                                     --
--- ************************************************************************* --
-
-DROP TABLE IF EXISTS adr_attachments;
-CREATE TABLE adr_attachments
-(
-  res_id bigint NOT NULL,
-  docserver_id character varying(32) NOT NULL,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
-  adr_priority integer NOT NULL,
-  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
-  CONSTRAINT adr_attachments_pkey PRIMARY KEY (res_id, docserver_id)
-)
-WITH (OIDS=FALSE);
-
--- ************************************************************************* --
---                                                                           --
---                               BUSINESS COLLECTION                          --
---                                                                           --
--- ************************************************************************* --
-
-DROP TABLE IF EXISTS res_business CASCADE;
-CREATE TABLE res_business
-(
-  res_id SERIAL,
-  title character varying(255) DEFAULT NULL::character varying,
-  subject text,
-  description text,
-  publisher character varying(255) DEFAULT NULL::character varying,
-  contributor character varying(255) DEFAULT NULL::character varying,
-  type_id bigint NOT NULL,
-  format character varying(50) NOT NULL,
-  typist character varying(128) NOT NULL,
-  creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL,
-  ocr_result character varying(10) DEFAULT NULL,
-  converter_result character varying(10) DEFAULT NULL,
-  author character varying(255) DEFAULT NULL::character varying,
-  author_name text,
-  identifier character varying(255) DEFAULT NULL::character varying,
-  source character varying(255) DEFAULT NULL::character varying,
-  doc_language character varying(50) DEFAULT NULL::character varying,
-  relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
-  doc_date timestamp without time zone,
-  docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
-  arbox_id character varying(32) DEFAULT NULL::character varying,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
-  logical_adr character varying(255) DEFAULT NULL::character varying,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
-  filesize bigint,
-  is_paper character(1) DEFAULT NULL::bpchar,
-  page_count integer,
-  scan_date timestamp without time zone,
-  scan_user character varying(50) DEFAULT NULL::character varying,
-  scan_location character varying(255) DEFAULT NULL::character varying,
-  scan_wkstation character varying(255) DEFAULT NULL::character varying,
-  scan_batch character varying(50) DEFAULT NULL::character varying,
-  burn_batch character varying(50) DEFAULT NULL::character varying,
-  scan_postmark character varying(50) DEFAULT NULL::character varying,
-  envelop_id bigint,
-  status character varying(10) NOT NULL,
-  destination character varying(50) DEFAULT NULL::character varying,
-  approver character varying(50) DEFAULT NULL::character varying,
-  validation_date timestamp without time zone,
-  work_batch bigint,
-  origin character varying(50) DEFAULT NULL::character varying,
-  is_ingoing character(1) DEFAULT NULL::bpchar,
-  priority smallint,
-  arbatch_id bigint DEFAULT NULL,
-  policy_id character varying(32) DEFAULT NULL::character varying,
-  cycle_id character varying(32) DEFAULT NULL::character varying,
-  cycle_date timestamp without time zone,
-  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
-  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_t1 text,
-  custom_n1 bigint,
-  custom_f1 numeric,
-  custom_d1 timestamp without time zone,
-  custom_t2 character varying(255) DEFAULT NULL::character varying,
-  custom_n2 bigint,
-  custom_f2 numeric,
-  custom_d2 timestamp without time zone,
-  custom_t3 character varying(255) DEFAULT NULL::character varying,
-  custom_n3 bigint,
-  custom_f3 numeric,
-  custom_d3 timestamp without time zone,
-  custom_t4 character varying(255) DEFAULT NULL::character varying,
-  custom_n4 bigint,
-  custom_f4 numeric,
-  custom_d4 timestamp without time zone,
-  custom_t5 character varying(255) DEFAULT NULL::character varying,
-  custom_n5 bigint,
-  custom_f5 numeric,
-  custom_d5 timestamp without time zone,
-  custom_t6 character varying(255) DEFAULT NULL::character varying,
-  custom_d6 timestamp without time zone,
-  custom_t7 character varying(255) DEFAULT NULL::character varying,
-  custom_d7 timestamp without time zone,
-  custom_t8 character varying(255) DEFAULT NULL::character varying,
-  custom_d8 timestamp without time zone,
-  custom_t9 character varying(255) DEFAULT NULL::character varying,
-  custom_d9 timestamp without time zone,
-  custom_t10 character varying(255) DEFAULT NULL::character varying,
-  custom_d10 timestamp without time zone,
-  custom_t11 character varying(255) DEFAULT NULL::character varying,
-  custom_t12 character varying(255) DEFAULT NULL::character varying,
-  custom_t13 character varying(255) DEFAULT NULL::character varying,
-  custom_t14 character varying(255) DEFAULT NULL::character varying,
-  custom_t15 character varying(255) DEFAULT NULL::character varying,
-  reference_number character varying(255) DEFAULT NULL::character varying,
-  tablename character varying(32) DEFAULT 'res_business'::character varying,
-  initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(128) DEFAULT NULL::character varying,
-  video_batch integer DEFAULT NULL,
-  video_time integer DEFAULT NULL,
-  video_user character varying(128)  DEFAULT NULL,
-  video_date timestamp without time zone,
-  esign_proof_id character varying(255),
-  esign_proof_content text,
-  esign_content text,
-  esign_date timestamp without time zone,
-  locker_user_id character varying(255) DEFAULT NULL::character varying,
-  locker_time timestamp without time zone,
-  CONSTRAINT res_business_pkey PRIMARY KEY  (res_id)
-)
-WITH (OIDS=FALSE);
-
-DROP TABLE IF EXISTS res_version_business;
-CREATE TABLE res_version_business
-(
-  res_id serial,
-  title character varying(255) DEFAULT NULL::character varying,
-  subject text,
-  description text,
-  publisher character varying(255) DEFAULT NULL::character varying,
-  contributor character varying(255) DEFAULT NULL::character varying,
-  type_id bigint NOT NULL,
-  format character varying(50) NOT NULL,
-  typist character varying(128) NOT NULL,
-  creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL::character varying,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
-  converter_result character varying(10) DEFAULT NULL::character varying,
-  author character varying(255) DEFAULT NULL::character varying,
-  author_name text,
-  identifier character varying(255) DEFAULT NULL::character varying,
-  source character varying(255) DEFAULT NULL::character varying,
-  doc_language character varying(50) DEFAULT NULL::character varying,
-  relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
-  doc_date timestamp without time zone,
-  docserver_id character varying(32) NOT NULL,
-  folders_system_id bigint,
-  arbox_id character varying(32) DEFAULT NULL::character varying,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
-  logical_adr character varying(255) DEFAULT NULL::character varying,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
-  filesize bigint,
-  is_paper character(1) DEFAULT NULL::bpchar,
-  page_count integer,
-  scan_date timestamp without time zone,
-  scan_user character varying(50) DEFAULT NULL::character varying,
-  scan_location character varying(255) DEFAULT NULL::character varying,
-  scan_wkstation character varying(255) DEFAULT NULL::character varying,
-  scan_batch character varying(50) DEFAULT NULL::character varying,
-  burn_batch character varying(50) DEFAULT NULL::character varying,
-  scan_postmark character varying(50) DEFAULT NULL::character varying,
-  envelop_id bigint,
-  status character varying(10) NOT NULL,
-  destination character varying(50) DEFAULT NULL::character varying,
-  approver character varying(50) DEFAULT NULL::character varying,
-  validation_date timestamp without time zone,
-  work_batch bigint,
-  origin character varying(50) DEFAULT NULL::character varying,
-  is_ingoing character(1) DEFAULT NULL::bpchar,
-  priority smallint,
-  arbatch_id bigint,
-  policy_id character varying(32),
-  cycle_id character varying(32),
-  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
-  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
-  custom_t1 text,
-  custom_n1 bigint,
-  custom_f1 numeric,
-  custom_d1 timestamp without time zone,
-  custom_t2 character varying(255) DEFAULT NULL::character varying,
-  custom_n2 bigint,
-  custom_f2 numeric,
-  custom_d2 timestamp without time zone,
-  custom_t3 character varying(255) DEFAULT NULL::character varying,
-  custom_n3 bigint,
-  custom_f3 numeric,
-  custom_d3 timestamp without time zone,
-  custom_t4 character varying(255) DEFAULT NULL::character varying,
-  custom_n4 bigint,
-  custom_f4 numeric,
-  custom_d4 timestamp without time zone,
-  custom_t5 character varying(255) DEFAULT NULL::character varying,
-  custom_n5 bigint,
-  custom_f5 numeric,
-  custom_d5 timestamp without time zone,
-  custom_t6 character varying(255) DEFAULT NULL::character varying,
-  custom_d6 timestamp without time zone,
-  custom_t7 character varying(255) DEFAULT NULL::character varying,
-  custom_d7 timestamp without time zone,
-  custom_t8 character varying(255) DEFAULT NULL::character varying,
-  custom_d8 timestamp without time zone,
-  custom_t9 character varying(255) DEFAULT NULL::character varying,
-  custom_d9 timestamp without time zone,
-  custom_t10 character varying(255) DEFAULT NULL::character varying,
-  custom_d10 timestamp without time zone,
-  custom_t11 character varying(255) DEFAULT NULL::character varying,
-  custom_t12 character varying(255) DEFAULT NULL::character varying,
-  custom_t13 character varying(255) DEFAULT NULL::character varying,
-  custom_t14 character varying(255) DEFAULT NULL::character varying,
-  custom_t15 character varying(255) DEFAULT NULL::character varying,
-  tablename character varying(32) DEFAULT 'res_version_business'::character varying,
-  initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(128) DEFAULT NULL::character varying,
-  video_batch integer,
-  video_time integer,
-  video_user character varying(128) DEFAULT NULL::character varying,
-  video_date timestamp without time zone,
-  cycle_date timestamp without time zone,
-  coll_id character varying(32) NOT NULL,
-  res_id_master bigint,
-  CONSTRAINT res_version_business_pkey PRIMARY KEY (res_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-DROP TABLE IF EXISTS business_coll_ext CASCADE;
-CREATE TABLE business_coll_ext (
-  res_id bigint NOT NULL,
-  category_id character varying(50)  NOT NULL,
-  contact_id integer default NULL,
-  currency character varying(10) default NULL,
-  net_sum float default NULL,
-  tax_sum float default NULL,
-  total_sum float default NULL,
-  process_limit_date timestamp without time zone default NULL,
-  closing_date timestamp without time zone default NULL,
-  alarm1_date timestamp without time zone default NULL,
-  alarm2_date timestamp without time zone default NULL,
-  flag_notif char(1)  default 'N'::character varying ,
-  flag_alarm1 char(1)  default 'N'::character varying ,
-  flag_alarm2 char(1) default 'N'::character varying,
-  address_id bigint
-)WITH (OIDS=FALSE);
-
 -- sendmail module
 CREATE TABLE sendmail
 (
@@ -2453,81 +2235,6 @@ CREATE VIEW res_view AS
    WHERE r.type_id = d.type_id
    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
    AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-
---view for business
-DROP VIEW IF EXISTS res_view_business;
-CREATE VIEW res_view_business AS
-    SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id,
-    d.description AS type_label, d.doctypes_first_level_id,
-    d.doctypes_second_level_id, dfl.doctypes_first_level_label, 
-    dfl.css_style as doctype_first_level_style,
-    dsl.doctypes_second_level_label,
-    dsl.css_style as doctype_second_level_style, r.format, r.typist,
-    r.creation_date, r.relation, r.docserver_id, r.folders_system_id,
-    f.folder_id, f.is_frozen as folder_is_frozen, r.path, r.filename, 
-    r.fingerprint, r.offset_doc, r.filesize,
-    r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper,
-    r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation,
-    r.scan_batch, r.doc_language, r.description, r.source, r.author, r.reference_number,
-    r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2,
-    r.custom_t3 AS doc_custom_t3, r.custom_t4 AS doc_custom_t4,
-    r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6,
-    r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8,
-    r.custom_t9 AS doc_custom_t9, r.custom_t10 AS doc_custom_t10,
-    r.custom_t11 AS doc_custom_t11, r.custom_t12 AS doc_custom_t12,
-    r.custom_t13 AS doc_custom_t13, r.custom_t14 AS doc_custom_t14,
-    r.custom_t15 AS doc_custom_t15, r.custom_d1 AS doc_custom_d1,
-    r.custom_d2 AS doc_custom_d2, r.custom_d3 AS doc_custom_d3,
-    r.custom_d4 AS doc_custom_d4, r.custom_d5 AS doc_custom_d5,
-    r.custom_d6 AS doc_custom_d6, r.custom_d7 AS doc_custom_d7,
-    r.custom_d8 AS doc_custom_d8, r.custom_d9 AS doc_custom_d9,
-    r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1,
-    r.custom_n2 AS doc_custom_n2, r.custom_n3 AS doc_custom_n3,
-    r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5,
-    r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2,
-    r.custom_f3 AS doc_custom_f3, r.custom_f4 AS doc_custom_f4,
-    r.custom_f5 AS doc_custom_f5, f.foldertype_id,
-    f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2,
-    f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4,
-    f.custom_t5 AS fold_custom_t5, f.custom_t6 AS fold_custom_t6,
-    f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8,
-    f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10,
-    f.custom_t11 AS fold_custom_t11, f.custom_t12 AS fold_custom_t12,
-    f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14,
-    f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1,
-    f.custom_d2 AS fold_custom_d2, f.custom_d3 AS fold_custom_d3,
-    f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5,
-    f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7,
-    f.custom_d8 AS fold_custom_d8, f.custom_d9 AS fold_custom_d9,
-    f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1,
-    f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3,
-    f.custom_n4 AS fold_custom_n4, f.custom_n5 AS fold_custom_n5,
-    f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2,
-    f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4,
-    f.custom_f5 AS fold_custom_f5, f.is_complete AS fold_complete,
-    f.status AS fold_status, f.subject AS fold_subject,
-    f.parent_id AS fold_parent_id, f.folder_level, f.folder_name,
-    f.creation_date AS fold_creation_date, r.initiator, r.destination,
-    r.dest_user, busi.category_id, busi.contact_id, busi.address_id, busi.currency,
-	r.locker_user_id, r.locker_time,	
-    busi.net_sum, busi.tax_sum, busi.total_sum, 
-    busi.process_limit_date, busi.closing_date, busi.alarm1_date, busi.alarm2_date,
-    busi.flag_notif, busi.flag_alarm1, busi.flag_alarm2, r.video_user, r.video_time,
-    r.video_batch, r.subject, r.identifier, r.title, r.priority,
-    en.entity_label,
-    cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
-    cont.society AS contact_society, list.item_id AS dest_user_from_listinstance,  list.viewed, 
-    r.is_frozen as res_is_frozen 
-    FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_business r
-    LEFT JOIN entities en ON ((r.destination)::text = (en.entity_id)::text)
-    LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id))
-    LEFT JOIN business_coll_ext busi ON (busi.res_id = r.res_id)
-    LEFT JOIN contacts_v2 cont ON (busi.contact_id = cont.contact_id)
-    LEFT JOIN listinstance list ON ((r.res_id = list.res_id)
-        AND ((list.item_mode)::text = 'dest'::text))
-    WHERE r.type_id = d.type_id 
-    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
-    AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
 -- view for letterbox
 DROP VIEW IF EXISTS res_view_letterbox;
@@ -2818,8 +2525,6 @@ CREATE TABLE res_version_attachments
   format character varying(50) NOT NULL,
   typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  fulltext_result character varying(10) DEFAULT NULL::character varying,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
   converter_result character varying(10) DEFAULT NULL::character varying,
   author character varying(255) DEFAULT NULL::character varying,
   author_name text,
@@ -2914,11 +2619,32 @@ CREATE TABLE res_version_attachments
   res_id_master bigint,
   attachment_id_master bigint,
   in_signature_book boolean DEFAULT FALSE,
+  convert_result character varying(10) DEFAULT NULL::character varying,
+  convert_attempts integer DEFAULT NULL::integer,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  fulltext_attempts integer DEFAULT NULL::integer,
+  tnl_result character varying(10) DEFAULT NULL::character varying,
+  tnl_attempts integer DEFAULT NULL::integer,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (
   OIDS=FALSE
 );
+
+CREATE TABLE adr_attachments_version
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
+  CONSTRAINT adr_attachments_version_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
 
 -- view for attachments
 DROP VIEW IF EXISTS res_view_attachments;
@@ -3040,5 +2766,21 @@ CREATE TABLE users_baskets
   group_id character varying(32) NOT NULL,
   color character varying(16),
   CONSTRAINT users_baskets_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+
+-- convert working table
+DROP TABLE IF EXISTS convert_stack;
+CREATE TABLE convert_stack
+(
+  coll_id character varying(32) NOT NULL,
+  res_id bigint NOT NULL,
+  convert_format character varying(32) NOT NULL DEFAULT 'pdf'::character varying,
+  cnt_retry integer,
+  status character(1) NOT NULL,
+  work_batch bigint,
+  regex character varying(32),
+  CONSTRAINT convert_stack_pkey PRIMARY KEY (coll_id, res_id, convert_format)
 )
 WITH (OIDS=FALSE);

@@ -4,8 +4,8 @@
         <Lang>fr</Lang> <!-- fr, en-->
         <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
         <TmpDirectory>/var/www/html/MaarchCourrier/modules/convert/batch/tmp/</TmpDirectory>
-        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
-        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <LogLevel>DEBUG</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <DisplayedLogLevel>DEBUG</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>1000</StackSizeLimit>
         <ApacheUserAndGroup>lgi:lgi</ApacheUserAndGroup>
         <UnoconvPath>unoconv</UnoconvPath> <!-- only for Windows -->
@@ -31,7 +31,7 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>MaarchCourrier</databasename>
+        <databasename>MaarchCourrierTest</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>

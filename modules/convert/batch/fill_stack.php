@@ -108,12 +108,12 @@ while ($state <> 'END') {
 
             if ($GLOBALS['OnlyIndexes']) {
                 $where_clause = " convert_result = '1' and ( (fulltext_result = '0' or fulltext_result = '' "
-                    . "or fulltext_result is null) or (fulltext_result= '-1' and (cast(coalesce(custom_t15, '0') as integer) < 3))) ";
+                    . "or fulltext_result is null) or (fulltext_result= '-1' and (convert_attempts < 3))) ";
                 $where_clause .= $GLOBALS['creationDateClause'] 
                     . $GLOBALS['whereRegex'];
             } else {
                 $where_clause = " (convert_result = '0' or convert_result = '' " 
-                    . "or convert_result is null) or (convert_result= '-1' and (cast(coalesce(custom_t9, '0') as integer) < 3)) "
+                    . "or convert_result is null) or (convert_result= '-1' and (convert_attempts < 3)) "
                     . $GLOBALS['creationDateClause']
                     . $GLOBALS['whereRegex'];
             }
@@ -128,28 +128,27 @@ while ($state <> 'END') {
             );
             $stmt = Bt_doQuery($GLOBALS['db'], $query);
             $resourcesArray = array();
-            $stmtCpt = $stmt;
 
-            if ($stmtCpt->fetchObject()->res_id > 0) {
-                while ($resoucesRecordset = $stmt->fetchObject()) {
-                    array_push(
-                        $resourcesArray,
-                            array('res_id' => $resoucesRecordset->res_id)
-                    );
-                }
-            } else {
+            while ($resoucesRecordset = $stmt->fetchObject()) {
+                array_push(
+                    $resourcesArray,
+                        array('res_id' => $resoucesRecordset->res_id)
+                );
+            }
+
+            if (count($resourcesArray) == 0) {
                 if ($GLOBALS['creationDateClause'] <> '') {
                     $GLOBALS['logger']->write('No resource found for collection', 'INFO');
                     // test if we have to change the current date
                     if ($GLOBALS['currentMonthOnly'] == 'false') {
                         if ($GLOBALS['OnlyIndexes']) {
                             $queryTestDate = " convert_result = '1' and ( (fulltext_result = '0' or fulltext_result = '' "
-                                    . "or fulltext_result is null) or (fulltext_result= '-1' and (cast(coalesce(custom_t15, '0') as integer) < 3))) ";
+                                    . "or fulltext_result is null) or (fulltext_result= '-1' and (fulltext_attempts < 3))) ";
                             $queryTestDate .= $GLOBALS['creationDateClause'];
                         } else {
                             $queryTestDate = " select count(res_id) as totalres from " 
                                 . $GLOBALS['table'] . " (convert_result = '0' or convert_result = '' " 
-                                . "or convert_result is null) or (convert_result= '-1' and (cast(coalesce(custom_t9, '0') as integer) < 3)) "
+                                . "or convert_result is null) or (convert_result= '-1' and (convert_attempts < 3)) "
                                 . $GLOBALS['creationDateClause'];
                         }
                         $stmt = Bt_doQuery(
@@ -163,12 +162,12 @@ while ($state <> 'END') {
                             Bt_updateCurrentDateToProcess();
                             if ($GLOBALS['OnlyIndexes']) {
                                 $where_clause = " convert_result = '1' and ( (fulltext_result = '0' or fulltext_result = '' "
-                                    . "or fulltext_result is null) or (fulltext_result= '-1' and (cast(coalesce(custom_t15, '0') as integer) < 3))) ";
+                                    . "or fulltext_result is null) or (fulltext_result= '-1' and (fulltext_attempts < 3))) ";
                                 $where_clause .= $GLOBALS['creationDateClause']
                                     . $GLOBALS['whereRegex'];
                             } else {
                                 $where_clause = " (convert_result = '0' or convert_result = '' " 
-                                    . "or convert_result is null) or (convert_result= '-1' and (cast(coalesce(custom_t9, '0') as integer) < 3)) "
+                                    . "or convert_result is null) or (convert_result= '-1' and (convert_attempts < 3)) "
                                     . $GLOBALS['creationDateClause']
                                     . $GLOBALS['whereRegex'];
                             }
@@ -186,15 +185,13 @@ while ($state <> 'END') {
                                 $query
                             );
                             $resourcesArray = array();
-                            $stmtCpt = $stmt;
-                            if ($stmtCpt->fetchObject()->res_id > 0) {
-                                while ($resoucesRecordset = $stmt->fetchObject()) {
-                                    array_push(
-                                        $resourcesArray,
-                                            array('res_id' => $resoucesRecordset->res_id)
-                                        );
-                                }
-                            } else {
+                            while ($resoucesRecordset = $stmt->fetchObject()) {
+                                array_push(
+                                    $resourcesArray,
+                                        array('res_id' => $resoucesRecordset->res_id)
+                                    );
+                            }
+                            if (count($resourcesArray) == 0) {
                                 $GLOBALS['logger']->write('No resource found for collection', 'INFO');
                             }
                         }
