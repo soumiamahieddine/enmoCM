@@ -128,7 +128,7 @@ $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
 $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
-$app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSorted');
+$app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
@@ -225,6 +225,7 @@ $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . '
 
 //History
 $app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
+$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
 $app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');

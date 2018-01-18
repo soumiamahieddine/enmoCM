@@ -139,7 +139,7 @@ class BasketController
         return $response->withJson(['baskets' => $baskets]);
     }
 
-    public function updateSorted(Request $request, Response $response, $aArgs)
+    public function updateSort(Request $request, Response $response, $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);

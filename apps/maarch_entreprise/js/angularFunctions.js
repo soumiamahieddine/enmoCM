@@ -8,6 +8,7 @@ function triggerAngular(prodmode, locationToGo) {
         'groups-administration',
         'group-administration',
         'baskets-administration',
+        'baskets-order-administration',
         'basket-administration',
         'status-administration',
         'statuses-administration',

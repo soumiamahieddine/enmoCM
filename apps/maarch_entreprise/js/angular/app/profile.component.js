@@ -23,6 +23,7 @@ var ProfileComponent = /** @class */ (function () {
         this.user = {
             baskets: []
         };
+        this.histories = [];
         this.passwordModel = {
             currentPassword: "",
             newPassword: "",
@@ -384,6 +385,17 @@ var ProfileComponent = /** @class */ (function () {
                 successNotification(data.success);
             }, function (err) {
                 errorNotification(err.error.errors);
+            });
+        }
+    };
+    ProfileComponent.prototype.getHistories = function () {
+        var _this = this;
+        if (this.histories.length == 0) {
+            this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
+                .subscribe(function (data) {
+                _this.histories = data.histories;
+            }, function (err) {
+                _this.notify.error(err.error.errors);
             });
         }
     };

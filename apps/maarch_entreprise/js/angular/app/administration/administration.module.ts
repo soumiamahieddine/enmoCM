@@ -13,6 +13,7 @@ import { UserAdministrationComponent }                  from './user-administrat
 import { GroupsAdministrationComponent }                from './groups-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
+import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
 import { BasketAdministrationComponent }                from './basket-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
@@ -45,6 +46,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         GroupsAdministrationComponent,
         GroupAdministrationComponent,
         BasketsAdministrationComponent,
+        BasketsOrderAdministrationComponent,
         BasketAdministrationComponent,
         StatusesAdministrationComponent,
         StatusAdministrationComponent,
