@@ -62,7 +62,6 @@ class StatusController
 
             return $response->withJson([
                 'status'       => $obj,
-                'lang'         => StatusModel::getStatusLang(),
                 'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
         } else {

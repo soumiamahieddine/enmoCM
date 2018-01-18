@@ -109,7 +109,6 @@ class StatusControllerTest extends TestCase
 
         $this->assertNotNull($responseBody->status);
         $this->assertNotNull($responseBody->statusImages);
-        $this->assertNotNull($responseBody->lang);
 
         $compare = [
             'identifier'       => $lastIdentifier,

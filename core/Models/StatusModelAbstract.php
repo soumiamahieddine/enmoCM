@@ -28,12 +28,6 @@ class StatusModelAbstract
         return $aReturn;
     }
 
-    public static function getStatusLang()
-    {
-        $aLang = LangModel::getStatusLang();
-        return $aLang;
-    }
-
     public static function getById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
