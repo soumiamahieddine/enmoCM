@@ -130,6 +130,18 @@ class HistoryController
         ]);
     }
 
+    public function getByUserId(Request $request, Response $response, array $aArgs)
+    {
+        $user = UserModel::getById(['id' => $aArgs['userSerialId'], 'select' => ['user_id']]);
+        if ($user['user_id'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
+
+        return $response->withJson(['histories' => $aHistories]);
+    }
+
     public function getForAdministration(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {

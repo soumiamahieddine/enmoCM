@@ -225,6 +225,7 @@ $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . '
 
 //History
 $app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
+$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
 $app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');

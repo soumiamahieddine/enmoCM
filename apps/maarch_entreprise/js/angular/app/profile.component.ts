@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
     user                        : any       = {
         baskets                 : []
     };
+    histories                   : any[]     = [];
     passwordModel               : any       = {
         currentPassword         : "",
         newPassword             : "",
@@ -416,6 +417,17 @@ export class ProfileComponent implements OnInit {
                     successNotification(data.success);
                 }, (err) => {
                     errorNotification(err.error.errors);
+                });
+        }
+    }
+
+    getHistories() {
+        if (this.histories.length == 0) {
+            this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
+                .subscribe((data : any) => {
+                    this.histories = data.histories;
+                }, (err) => {
+                    this.notify.error(err.error.errors);
                 });
         }
     }

@@ -22,7 +22,7 @@
                         <a data-toggle="modal" data-target="#manageAbs" id="redirectBasketCard"><i class="fa fa-share"></i> {{lang.manageAbsences}} </a>
                     </li>
                     <li style="cursor: pointer">
-                        <a data-toggle="modal" data-target="#manageHistory"><i class="fa fa-history"></i> {{lang.history}} </a>
+                        <a data-toggle="modal" data-target="#manageHistory" (click)="getHistories()"><i class="fa fa-history"></i> {{lang.history}} </a>
                     </li>
                     <li style="cursor: pointer">
                         <a (click)="askRedirectBasket()" ><i class="fa fa-user-times"></i> Activer mon absence </a>
@@ -337,8 +337,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">{{lang.history}}</h4>
             </div>
-            <div class="modal-body">
-                <table id="historyTable" class="table table-hover table-condensed" [md2Data]="user.histories" #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
+            <div class="modal-body" style="height: 70vh">
+                <table id="historyTable" class="table table-hover table-condensed" [md2Data]="histories" #md2="md2DataTable" [sortBy]='event_date' [rowsPerPage]="10">
                     <thead>
                         <tr>
                             <td>
