@@ -11,6 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class BasketControllerTest extends TestCase
 {
+    private static $id = null;
+
     public function testCreate()
     {
         $basketController = new \Basket\controllers\BasketController();
@@ -333,6 +335,103 @@ class BasketControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Basket not found', $responseBody->errors);
+    }
+
+    public function testGetSorted()
+    {
+        $basketController = new \Basket\controllers\BasketController();
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $basketController->getSorted($request, new \Slim\Http\Response());
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->baskets);
+
+        self::$id = $responseBody->baskets[0]->basket_id;
+    }
+
+    public function testUpdateSort()
+    {
+        $basketController = new \Basket\controllers\BasketController();
+
+        //  PUT
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'method'                => 'DOWN',
+            'power'                 => 'ALL'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertSame(self::$id, $responseBody->baskets[count($responseBody->baskets) - 1]->basket_id);
+
+        $aArgs = [
+            'method'                => 'UP',
+            'power'                 => 'ONE'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertSame(self::$id, $responseBody->baskets[count($responseBody->baskets) - 2]->basket_id);
+
+        $aArgs = [
+            'method'                => 'DOWN',
+            'power'                 => 'ONE'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertSame(self::$id, $responseBody->baskets[count($responseBody->baskets) - 1]->basket_id);
+
+        $aArgs = [
+            'method'                => 'UP',
+            'power'                 => 'ALL'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertSame(self::$id, $responseBody->baskets[0]->basket_id);
+
+        //  Errors
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => 'ABasketWichDoesNotExist']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Basket not found', $responseBody->errors);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Basket is already sorted', $responseBody->errors);
+
+        $aArgs = [
+            'method'                => 'UPOUSE',
+            'power'                 => 'ALL'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Bad Request', $responseBody->errors);
     }
 
 }
