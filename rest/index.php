@@ -128,7 +128,7 @@ $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
 $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
-$app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSorted');
+$app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
