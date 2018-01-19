@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var StatusAdministrationComponent = (function () {
+var StatusAdministrationComponent = /** @class */ (function () {
     function StatusAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -107,7 +107,7 @@ var StatusAdministrationComponent = (function () {
         if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/status', this.status)
                 .subscribe(function (data) {
-                _this.notify.success(_this.lang.statusAdded + ' « ' + data.status.id + ' »');
+                _this.notify.success(_this.lang.statusAdded);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
@@ -116,21 +116,21 @@ var StatusAdministrationComponent = (function () {
         else if (this.creationMode == false) {
             this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
                 .subscribe(function (data) {
-                _this.notify.success(_this.lang.statusUpdated + ' « ' + data.status.id + ' »');
+                _this.notify.success(_this.lang.statusUpdated);
                 _this.router.navigate(['administration/status']);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
+    StatusAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals['status-administrationView'],
+            styleUrls: ['css/status-administration.component.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], StatusAdministrationComponent);
     return StatusAdministrationComponent;
 }());
-StatusAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals['status-administrationView'],
-        styleUrls: ['css/status-administration.component.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], StatusAdministrationComponent);
 exports.StatusAdministrationComponent = StatusAdministrationComponent;

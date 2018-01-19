@@ -1,16 +1,19 @@
 {
     "autoload": {
     	"psr-4": {
-            "Core\\": "core/",
-    	    "Apps\\": "apps/maarch_entreprise/",
-            "Attachments\\": "modules/attachments/",
-            "Baskets\\": "modules/basket/",
-            "Convert\\": "modules/convert/",
-            "Entities\\": "modules/entities/",
-            "Notes\\": "modules/notes/",
-            "Notifications\\": "modules/notifications/",
-            "Templates\\": "modules/templates/",
-            "Visa\\": "modules/visa/"
+            "Basket\\"        : "src/app/basket/",
+            "Contact\\"       : "src/app/contact/",
+            "History\\"       : "src/app/history/",
+
+            "Core\\"          : "core/",
+    	    "Apps\\"          : "apps/maarch_entreprise/",
+            "Attachments\\"   : "modules/attachments/",
+            "Convert\\"       : "modules/convert/",
+            "Entities\\"      : "modules/entities/",
+            "Notes\\"         : "modules/notes/",
+            "Notifications\\" : "modules/notifications/",
+            "Templates\\"     : "modules/templates/",
+            "Visa\\"          : "modules/visa/"
     	}
     },
     "require": {

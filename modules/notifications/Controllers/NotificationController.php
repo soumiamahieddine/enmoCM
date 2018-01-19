@@ -16,12 +16,12 @@
 namespace Notifications\Controllers;
 
 
+use History\controllers\HistoryController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Notifications\Models\NotificationModel;
 use Core\Models\ServiceModel;
-use Core\Controllers\HistoryController;
 
 
 class NotificationController

@@ -11,7 +11,17 @@ stages:
 
 before_script:
   - apt-get update > /dev/null
+  - apt-get install apt-utils -yqq > /dev/null
+  - apt-get install tar -yqq > /dev/null
+  - apt-get install wkhtmltopdf -yqq > /dev/null
   - apt-get install wget -yqq > /dev/null
+  - wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+  - mv wkhtmltox/bin/wkhtmlto* /usr/bin
+  - chmod +x /usr/bin/wkhtmlto*
+  - apt-get install libreoffice -yqq > /dev/null
+  - apt-get install xpdf-utils -yqq > /dev/null
+  - apt-get install imagemagick -yqq > /dev/null
   - apt-get install npm -yqq > /dev/null
   - apt-get install git -yqq > /dev/null
   - bash ci/docker_install_php.sh > /dev/null
@@ -29,6 +39,11 @@ job_php-7.0:
   image: php:7.0-apache
   stage: test
   script:
+    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
+    - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
+    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
     - mkdir -p /var/www/html/
     - cp -R /builds/maarch/MaarchCourrier/ /var/www/html/
     - cd /var/www/html/MaarchCourrier

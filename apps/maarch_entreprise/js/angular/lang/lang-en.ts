@@ -9,7 +9,7 @@ export const LANG_EN = {
     "add"                       : "Add",
     "back"                      : "Back",
     "cancel"                    : "Cancel",
-    "desc"                      : "Description",
+    "description"               : "Description",
     "save"                      : "Save",
     "validate"                  : "Validate",
     "update"                    : "Update",
@@ -18,6 +18,8 @@ export const LANG_EN = {
     "authorize"                 : "Authorize",
     "yes"                       : "Yes",
     "no"                        : "No",
+    "basket"                    : "Basket",
+    "baskets"                   : "Baskets",
     "abs"                       : "Absent",
     "chooseGroup"               : "Choose a group",
     "chooseEntity"              : "Choose a entity",
@@ -32,6 +34,8 @@ export const LANG_EN = {
     "to"                        : "to",
     "for"                       : "for",
     "value"                     : "value",
+    "clause"                    : "Clause",
+    "history"                   : "Historique",
 
     "user"                      : "user",
     "firstname"                 : "Firstname",
@@ -55,6 +59,8 @@ export const LANG_EN = {
 
 
     //Administration
+    "newElement"                : "New element",
+    "modificationSaved"         : "Modification has been saved",
     "userCreation"              : "User Creation",
     "userModification"          : "User Modification",
     "active"                    : "Active",
@@ -78,6 +84,13 @@ export const LANG_EN = {
     "entityAdded"               : "Entité added",
     "entityUpdated"             : "Entité updated",
     "entityDeleted"             : "Entité deleted",
+    "basketAdded"               : "Basket added",
+    "basketUpdated"             : "Basket updated",
+    "basketDeleted"             : "Basket deleted",
     "entityTooglePrimary"       : "Pass to primary entity",
+    "addStatus"                 : "Add a status",
+    "tooltipSearchStatus"       : "Si <b>coché</b>,<br/>le statut vous sera <b>proposé</b> dans le critère de recherche STATUTS de la recherche avancée",
+    "tooltipIndexStatus"        : "Si <b>coché</b>,<br/>vous pourrez <b>modifier</b> les meta-données des documents ayant ce statut",
+    "tooltipFolderStatus"       : "Si <b>coché</b>,<br/>le statut pourra être utilisé pour des <b>bannettes de dossiers</b>",
 
 };

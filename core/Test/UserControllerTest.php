@@ -7,7 +7,6 @@
 *
 */
 
-namespace MaarchTest;
 use PHPUnit\Framework\TestCase;
 
 use Core\Models\DatabaseModel;

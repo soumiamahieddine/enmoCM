@@ -10,23 +10,23 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var profile_component_1 = require("./profile.component");
 var signature_book_component_1 = require("./signature-book.component");
-var AppRoutingModule = (function () {
+var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
     }
+    AppRoutingModule = __decorate([
+        core_1.NgModule({
+            imports: [
+                router_1.RouterModule.forRoot([
+                    { path: 'profile', component: profile_component_1.ProfileComponent },
+                    { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
+                    { path: '**', redirectTo: '', pathMatch: 'full' },
+                ], { useHash: true }),
+            ],
+            exports: [
+                router_1.RouterModule
+            ]
+        })
+    ], AppRoutingModule);
     return AppRoutingModule;
 }());
-AppRoutingModule = __decorate([
-    core_1.NgModule({
-        imports: [
-            router_1.RouterModule.forRoot([
-                { path: 'profile', component: profile_component_1.ProfileComponent },
-                { path: 'groups/:groupId/baskets/:basketId/signatureBook/:resId', component: signature_book_component_1.SignatureBookComponent },
-                { path: '**', redirectTo: '', pathMatch: 'full' },
-            ], { useHash: true }),
-        ],
-        exports: [
-            router_1.RouterModule
-        ]
-    })
-], AppRoutingModule);
 exports.AppRoutingModule = AppRoutingModule;

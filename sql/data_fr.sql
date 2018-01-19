@@ -894,65 +894,65 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
 DELETE FROM groupbasket WHERE basket_id = 'QualificationBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'QualificationBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'QualificationBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'IndexingBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'IndexingBasket', 'redirect_to_action', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'IndexingBasket', 'redirect_to_action', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'IndexingBasket', 'redirect_to_action', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'IndexingBasket', 'redirect_to_action', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ELU', 'IndexingBasket', 'redirect_to_action', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'IndexingBasket', 'redirect_to_action');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'IndexingBasket', 'redirect_to_action');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'IndexingBasket', 'redirect_to_action');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'IndexingBasket', 'redirect_to_action');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'IndexingBasket', 'redirect_to_action');
 DELETE FROM groupbasket WHERE basket_id = 'CopyMailBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'CopyMailBasket', 'list_copies', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'CopyMailBasket', 'list_copies', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'CopyMailBasket', 'list_copies', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ELU', 'CopyMailBasket', 'list_copies', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'CopyMailBasket', 'list_copies');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'CopyMailBasket', 'list_copies');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'CopyMailBasket', 'list_copies');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'CopyMailBasket', 'list_copies');
 DELETE FROM groupbasket WHERE basket_id = 'RetourCourrier';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'RetourCourrier', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'RetourCourrier', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'RetourCourrier', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'RetourCourrier', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'DdeAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'DdeAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'DdeAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ELU', 'DdeAvisBasket', 'list_with_avis', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'DdeAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'DdeAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'DdeAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'DdeAvisBasket', 'list_with_avis');
 DELETE FROM groupbasket WHERE basket_id = 'SupAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'SupAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'SupAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'SupAvisBasket', 'list_with_avis', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'SupAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'SupAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'SupAvisBasket', 'list_with_avis');
 DELETE FROM groupbasket WHERE basket_id = 'RetAvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'RetAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'RetAvisBasket', 'list_with_avis', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'RetAvisBasket', 'list_with_avis', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'RetAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'RetAvisBasket', 'list_with_avis');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'RetAvisBasket', 'list_with_avis');
 DELETE FROM groupbasket WHERE basket_id = 'ValidationBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'ValidationBasket', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('DIRECTEUR', 'ValidationBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'ValidationBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('DIRECTEUR', 'ValidationBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'InValidationBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'InValidationBasket', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'InValidationBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'InValidationBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'InValidationBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'MyBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'MyBasket', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESP_COURRIER', 'MyBasket', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'MyBasket', 'list_with_attachments', NULL, NULL);
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ELU', 'MyBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'MyBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESP_COURRIER', 'MyBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'MyBasket', 'list_with_attachments');
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ELU', 'MyBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'LateMailBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'LateMailBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'LateMailBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'DepartmentBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'DepartmentBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'DepartmentBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'EvisBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'EvisBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'EvisBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'EsigBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'EsigBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'EsigBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'EsigARBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('RESPONSABLE', 'EsigARBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('RESPONSABLE', 'EsigARBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'EenvBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'EenvBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'EenvBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'EenvARBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('AGENT', 'EenvARBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('AGENT', 'EenvARBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'ToArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ARCHIVISTE', 'ToArcBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'ToArcBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'SentArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ARCHIVISTE', 'SentArcBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'SentArcBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'AckArcBasket';
-INSERT INTO groupbasket (group_id, basket_id, result_page, list_lock_clause, sublist_lock_clause) VALUES ('ARCHIVISTE', 'AckArcBasket', 'list_with_attachments', NULL, NULL);
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'AckArcBasket', 'list_with_attachments');
 
 
 -- Create Security
@@ -979,20 +979,53 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_inser
 --DOCSERVERS
 ------------
 TRUNCATE TABLE docserver_locations;
+INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) 
+VALUES ('NANTERRE', '127.0.0.1', '', 'MAARCH', '255.255.255.0', NULL, 'Y');
+INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) 
+VALUES ('NICE', '192.168.21.63', '', '', '', NULL, 'Y');
+
 TRUNCATE TABLE docserver_types;
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('DOC', 'Documents', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA512');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('CONVERT', 'Conversions', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
+
 TRUNCATE TABLE docservers;
-INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NANTERRE', '127.0.0.1', '', 'MAARCH', '255.255.255.0', NULL, 'Y');
-INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NICE', '192.168.21.63', '', '', '', NULL, 'Y');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('FASTHD', 'FASTHD', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_MAIN', 'Main OAIS store', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'letterbox_coll', 11, 'NANTERRE', 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TNL', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 11, 'NANTERRE', 3);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/opt/maarch/docservers/manual/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_AI', 'DOC', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'letterbox_coll', 11, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_MAN', 'DOC', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/opt/maarch/docservers/manual/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'attachments_coll', 2, 'NANTERRE', 3);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_ATTACH_VERSION', 'FASTHD', 'Fast internal disc bay for attachments version', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments_version/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'attachments_version_coll', 100, 'NANTERRE', 100);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('CONVERT_MLB', 'CONVERT', 'Server for mlb documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 13, 'NANTERRE', 4);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('CONVERT_ATTACH', 'CONVERT', 'Server for attachments documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_coll', 14, 'NANTERRE', 5);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('CONVERT_ATTACH_VERSION', 'CONVERT', 'Server for attachments version documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 101, 'NANTERRE', 101);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('TNL_MLB', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 12, 'NANTERRE', 3);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('TNL_ATTACH', 'TNL', 'Server for thumbnails of attachments', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_coll', 15, 'NANTERRE', 6);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('TNL_ATTACH_VERSION', 'TNL', 'Server for thumbnails of attachments version', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 102, 'NANTERRE', 102);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FULLTEXT_MLB', 'FULLTEXT', 'Server for mlb documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 16, 'NANTERRE', 7);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FULLTEXT_ATTACH', 'FULLTEXT', 'Server for attachments documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_coll', 17, 'NANTERRE', 8);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+
 ------------
 --SUPERADMIN USER
 ------------

@@ -63,6 +63,10 @@ class ResControllerTest extends TestCase
 
         $fileSource = 'test_source.txt';
 
+        if (file_exists($path . $fileSource)) {
+            unlink($path . $fileSource);
+        }
+
         $fp = fopen($path . $fileSource, 'a');
         fwrite($fp, 'a unit test');
         fclose($fp);
@@ -162,6 +166,10 @@ class ResControllerTest extends TestCase
         }
 
         $fileSource = 'test_source.txt';
+
+        if (file_exists($path . $fileSource)) {
+            unlink($path . $fileSource);
+        }
 
         $fp = fopen($path . $fileSource, 'a');
         fwrite($fp, 'a unit test');

@@ -583,7 +583,7 @@ abstract class visa_Abstract extends Database
                 $str .= '<br/><br/>';
             }
             if (!empty($isAllAttachementSignedInfo)) {
-				$str .= '<b style="color:red;">'.$isAllAttachementSignedInfo.'</b>';
+				$str .= '<b style="color:red;" id="cannotaddsignatory">'.$isAllAttachementSignedInfo.'</b>';
 			}
             $str .= '<div id="visa_content">';
             //VISA USER IN DOCUMENT

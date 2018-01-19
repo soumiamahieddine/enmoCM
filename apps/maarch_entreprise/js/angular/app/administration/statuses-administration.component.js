@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var StatusesAdministrationComponent = (function () {
+var StatusesAdministrationComponent = /** @class */ (function () {
     function StatusesAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -53,20 +53,20 @@ var StatusesAdministrationComponent = (function () {
             this.http.delete(this.coreUrl + 'rest/status/' + status.identifier)
                 .subscribe(function (data) {
                 _this.data = data.statuses;
-                _this.notify.success(_this.lang.statusDeleted + ' « ' + status.id + ' »');
+                _this.notify.success(_this.lang.statusDeleted);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
+    StatusesAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals['statuses-administrationView'],
+            styleUrls: [],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], StatusesAdministrationComponent);
     return StatusesAdministrationComponent;
 }());
-StatusesAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals['statuses-administrationView'],
-        styleUrls: [],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], StatusesAdministrationComponent);
 exports.StatusesAdministrationComponent = StatusesAdministrationComponent;

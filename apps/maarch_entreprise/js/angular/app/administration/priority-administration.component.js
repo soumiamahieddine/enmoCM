@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
-var PriorityAdministrationComponent = (function () {
+var PriorityAdministrationComponent = /** @class */ (function () {
     function PriorityAdministrationComponent(http, route, router) {
         this.http = http;
         this.route = route;
@@ -73,13 +73,13 @@ var PriorityAdministrationComponent = (function () {
             });
         }
     };
+    PriorityAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["priority-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
+    ], PriorityAdministrationComponent);
     return PriorityAdministrationComponent;
 }());
-PriorityAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["priority-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
-], PriorityAdministrationComponent);
 exports.PriorityAdministrationComponent = PriorityAdministrationComponent;

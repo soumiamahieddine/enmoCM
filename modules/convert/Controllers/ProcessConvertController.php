@@ -25,6 +25,7 @@ namespace Convert\Controllers;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Respect\Validation\Validator;
 use Convert\Models\ProcessConvertModel;
 use Core\Models\CoreConfigModel;
 use Core\Models\DocserverModel;
@@ -42,6 +43,28 @@ class ProcessConvertController
     //public function __construct($libreOfficeExecutable = 'unoconv')
     {
         $this->libreOfficeExecutable = $libreOfficeExecutable;
+    }
+
+    public function create(RequestInterface $request, ResponseInterface $response)
+    {
+        $data = $request->getParams();
+
+        $check = Validator::notEmpty()->validate($data['collId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['resTable']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['adrTable']);
+        $check = $check && Validator::intType()->notEmpty()->validate($data['resId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['tmpDir']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $return = ProcessConvertController::convert($data);
+
+        if (empty($return) || !empty($return['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[ProcessConvertController create] ' . $return['errors']]);
+        }
+
+        return $response->withJson($return);
     }
 
     /**
@@ -108,7 +131,7 @@ class ProcessConvertController
         }
 
         $res = ResModel::getById(['resId' => $resId, 'resTable' => $args['resTable']]);
-        
+
         if ($res['res_id'] <> '') {
             $resourcePath = ResDocserverModel::getSourceResourcePath(
                 [
@@ -125,7 +148,9 @@ class ProcessConvertController
                 'value' => '',
                 'error' => 'file not exists : ' . $resourcePath,
             );
-            ProcessConvertModel::manageErrorOnDb($resTable, $resId, '-1');
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
             return $returnArray;
         }
         //copy the resource on tmp directory
@@ -136,7 +161,9 @@ class ProcessConvertController
                 'value' => '',
                 'error' => 'copy on tmp failed',
             );
-            ProcessConvertModel::manageErrorOnDb($resTable, $resId, '-1');
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
             return $returnArray;
         }
         //now do the conversion !
@@ -155,9 +182,10 @@ class ProcessConvertController
                 'error' => '',
             );
         }
-        
         if ($resultOfConversion['status'] <> '0') {
-            ProcessConvertModel::manageErrorOnDb($resTable, $resId, '-1');
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+        );
             return $resultOfConversion;
         }
         //copy the result on docserver
@@ -165,7 +193,7 @@ class ProcessConvertController
         $storeResult = StoreController::storeResourceOnDocServer([
             'collId'    => $collId,
             'fileInfos' => [
-                'tmpDir'        => CoreConfigModel::getTmpPath(),
+                'tmpDir'        => $tmpDir,
                 'size'          => filesize($fileNameOnTmp),
                 'format'        => 'PDF',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.pdf',
@@ -180,7 +208,22 @@ class ProcessConvertController
                 'error' => 'Ds of collection and ds type not found for convert:' 
                     . $collId . ' CONVERT',
             );
-            ProcessConvertModel::manageErrorOnDb($resTable, $resId, '-1');
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
+            return $returnArray;
+        }
+
+        if (!empty($storeResult['errors'])) {
+            $returnArray = array(
+                'status' => '1',
+                'value' => '',
+                'error' => $storeResult['errors'] . ' error for convert:' 
+                    . $fileNameOnTmp,
+            );
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
             return $returnArray;
         }
 
@@ -209,7 +252,9 @@ class ProcessConvertController
         // LogsController::info(['message'=>var_export($resultCopyDs, true), 'code'=>7, ]);
 
         if ($resultOfUpDb['status'] <> '0') {
-            ProcessConvertModel::manageErrorOnDb($resTable, $resId, '-1');
+            ProcessConvertModel::manageErrorOnDb(
+                ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
+            );
             return $resultOfUpDb;
         }
 

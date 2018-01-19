@@ -70,7 +70,7 @@ class DocserverController
         ValidatorModel::stringType($aArgs, ['path']);
 
         if (!is_dir($aArgs['path'])) {
-            return ['errors' => '[createPathOnDocServer] Path does not exist'];
+            return ['errors' => '[createPathOnDocServer] Path does not exist ' . $aArgs['path']];
         }
 
         error_reporting(0);
@@ -107,7 +107,7 @@ class DocserverController
                 umask(0022);
                 chmod($monthPath, 0770);
             } else {
-                return ['errors' => '[createPathOnDocServer] Folder alreay exists, workbatch already exist:' . $pathToDS];
+                //return ['errors' => '[createPathOnDocServer] Folder alreay exists, workbatch already exist:' . $pathToDS];
             }
         }
 

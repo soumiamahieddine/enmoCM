@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
-var PrioritiesAdministrationComponent = (function () {
+var PrioritiesAdministrationComponent = /** @class */ (function () {
     function PrioritiesAdministrationComponent(http) {
         this.http = http;
         this.lang = translate_component_1.LANG;
@@ -79,13 +79,13 @@ var PrioritiesAdministrationComponent = (function () {
             });
         }
     };
+    PrioritiesAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["priorities-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient])
+    ], PrioritiesAdministrationComponent);
     return PrioritiesAdministrationComponent;
 }());
-PrioritiesAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["priorities-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient])
-], PrioritiesAdministrationComponent);
 exports.PrioritiesAdministrationComponent = PrioritiesAdministrationComponent;

@@ -28,7 +28,6 @@
 * @version $Revision$
 * @ingroup basket
 */
-use Baskets\Models\BasketModel;
 
 $_SESSION['count_view_baskets']++;
 $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets'];
@@ -51,7 +50,7 @@ $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappur
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
         $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
         if ($_SESSION['save_list']['template'] <> "") {
-            $urlParameters .= '&template='.BasketModel::getTemplateById(['basketId'=>$_SESSION['current_basket']['id']]);
+            $urlParameters .= '&template='.\Basket\models\BasketModel::getTemplateById(['basketId'=>$_SESSION['current_basket']['id']]);
         }
         $_SESSION['save_list']['fromDetail'] = "false";
         $_SESSION['save_list']['fromValidateMail'] = "false";
@@ -224,7 +223,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
             <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
-                $redirectedBaskets = BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+                $redirectedBaskets = \Basket\models\BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
 
         foreach ($redirectedBaskets as $redirectBasketValue) {

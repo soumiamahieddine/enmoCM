@@ -387,7 +387,9 @@
             if($line->is_multi_docservers == "Y") {
                 if (
                     $adrTable == 'adr_x' ||
-                    $adrTable == 'adr_attachments'
+                    $adrTable == 'adr_letterbox' ||
+                    $adrTable == 'adr_attachments' ||
+                    $adrTable == 'adr_attachments_version'
 
                 ) {
                     $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 

@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var GroupsAdministrationComponent = (function () {
+var GroupsAdministrationComponent = /** @class */ (function () {
     function GroupsAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -82,14 +82,14 @@ var GroupsAdministrationComponent = (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    GroupsAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["groups-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], GroupsAdministrationComponent);
     return GroupsAdministrationComponent;
 }());
-GroupsAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["groups-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], GroupsAdministrationComponent);
 exports.GroupsAdministrationComponent = GroupsAdministrationComponent;

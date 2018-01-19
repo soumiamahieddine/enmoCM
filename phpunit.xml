@@ -9,13 +9,17 @@
             <file>core/Test/ResExtControllerTest.php</file-->
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
-            <!--file>modules/convert/Test/ProcessConvertTest.php</file-->
-            <!--file>modules/convert/Test/ProcessFulltextTest.php</file-->
+            <file>core/Test/BasketControllerTest.php</file>
+            <file>modules/convert/Test/ProcessConvertTest.php</file>
+            <file>modules/convert/Test/ProcessFulltextTest.php</file>
+            <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
+            <file>modules/convert/Test/ProcessManageConvertTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
       <whitelist>
           <directory suffix="Test.php">core/Test</directory>
+          <directory suffix=".php">src</directory>
           <directory suffix=".php">core/Controllers</directory>
           <directory suffix=".php">core/Models</directory>
           <directory suffix=".php">apps/maarch_entreprise/Models</directory>
@@ -27,7 +31,6 @@
           <directory suffix=".php">modules/attachments/Models</directory>          
           <directory suffix=".php">modules/entities/Controllers</directory>
           <directory suffix=".php">modules/entities/Models</directory>
-          <directory suffix=".php">modules/basket/Models</directory>
           <directory suffix=".php">modules/notes/Models</directory>
           <directory suffix=".php">modules/convert/Controllers</directory>
           <directory suffix=".php">modules/convert/Models</directory>

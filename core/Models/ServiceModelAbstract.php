@@ -354,7 +354,7 @@ class ServiceModelAbstract
         return $administration;
     }
 
-    public static function hasService(array $aArgs = [])
+    public static function hasService(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'location', 'type']);
         ValidatorModel::stringType($aArgs, ['id', 'userId', 'location', 'type']);

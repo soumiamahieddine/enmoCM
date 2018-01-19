@@ -166,51 +166,6 @@ class LangModelAbstract
         return $aLang;
     }
 
-    public static function getStatusLang()
-    {
-        $aLang = [
-            'description'      => _DESCRIPTION,
-            'noResult'         => _NO_RESULTS,
-            'noRecord'         => _NO_RECORD,
-            'previous'         => _PREVIOUS_PAGE,
-            'next'             => _NEXT_PAGE,
-            'record'           => _RECORD,
-            'search'           => _SEARCH,
-            'identifier'       => _ID,
-            'edit'             => _MODIFY,
-            'delete'           => _DELETE,
-            'newStatus'        => _NEW_STATUS,
-            'status'           => _STATUS,
-            'statusListTitle'  => _STATUS_LIST,
-            'page'             => _PAGE,
-            'outOf'            => _OUT_OF,
-            'recordsPerPage'   => _RECORDS_PER_PAGE,
-            'display'          => _DISPLAY,
-            'noRecords'        => _NO_RECORDS,
-            'available'        => _AVAILABLE,
-            'filteredFrom'     => _FILTERED_FROM,
-            'records'          => _RECORDS,
-            'img_related'      => _IMG_RELATED,
-            'validate'         => _VALIDATE,
-            'cancel'           => _CANCEL,
-            'can_be_modified'  => _CAN_BE_MODIFIED,
-            'can_be_searched'  => _CAN_BE_SEARCHED,
-            'is_folder_status' => _IS_FOLDER_STATUS,
-            'yes'              => _YES,
-            'no'               => _NO,
-            'modify_status'    => _MODIFY_STATUS,
-            'deleteConfirm'    => _REALLY_DELETE,
-            'admin_status'     => _ADMIN_STATUS,
-            'admin'            => _ADMIN,
-            'modification'     => _MODIFICATION,
-            'delStatus'        => _DEL_STATUS,
-            'newStatusAdded'   => _NEW_STATUS_ADDED,
-            'statusUpdated'    => _STATUS_UPDATED,
-            'newItem'          => _NEW_ITEM,
-        ];
-        return $aLang;
-    }
-
     public static function getUsersAdministrationLang()
     {
         $aLang = [

@@ -11,14 +11,14 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <mat-form-field>
-                        <input matInput [(ngModel)]="status.id" [disabled]="mode == 'update'" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" type="text" required>
+                        <input matInput [(ngModel)]="status.id" [disabled]="!creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" type="text" required>
                     </mat-form-field>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <mat-form-field>
-                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.desc}}" placeholder="{{lang.desc}}" type="text" required>
+                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.description}}" placeholder="{{lang.description}}" type="text" required>
                     </mat-form-field>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                                     {{lang.canBeSearched}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> vous <b>proposé</b> pour le critère de recherche STATUS de la recherche avancée de documents."></i>
+                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipSearchStatus}}"></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
@@ -38,7 +38,7 @@
                                 {{lang.canBeModified}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>vous pourrez <b>modifier</b> les meta-données des documents ayant le statut <b>{{status.id}}</b>."></i>
+                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipIndexStatus}}"></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
@@ -46,7 +46,7 @@
                                 {{lang.isFolderStatus}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="Si <b>coché</b>,<br/>le statut <b>{{status.id}}</b> pourra être utilisé pour des <b>bannettes de dossiers</b>."></i>
+                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipFolderStatus}}"></i>
                             </sup>
                         </div>
                     </div>
@@ -79,8 +79,8 @@
                 </div>
             </div>
             <div class="col-sm-12 panel-body" style="text-align:center;">
-                <button class="btn btn-default" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
-                <button class="btn btn-default" routerLink='/administration/status'>{{lang.cancel}}</button>
+                <button class="btn btn-success" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
+                <button class="btn btn-warning" routerLink='/administration/status'>{{lang.cancel}}</button>
             </div>
         </form>
     </div>

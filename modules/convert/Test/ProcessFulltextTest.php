@@ -9,25 +9,45 @@
 
 namespace MaarchTest;
 use PHPUnit\Framework\TestCase;
-use MaarchTest\DocserverControllerTest;
 
 class ProcessFulltextTest extends TestCase
 {
 
     public function testfulltext ()
     {
+        
+        if (!defined("_RES_ID_TEST_CONVERT")) {
+            define("_RES_ID_TEST_CONVERT", 100);
+        }
+
         $action = new \Convert\Controllers\ProcessFulltextController();
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'POST',
+            ]
+        );
+
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
             'collId' => 'letterbox_coll', 
             'resTable' => 'res_letterbox', 
             'adrTable' => 'adr_letterbox', 
-            'resId' => 100,
-            'tmpDir' => $_SESSION['config']['tmppath']
+            'resId' => _RES_ID_TEST_CONVERT,
+            'tmpDir' => $_SESSION['config']['tmppath'],
+            'createZendIndex' => true
         ];
 
-        $response = $action->fulltext($aArgs);
+        $response = new \Slim\Http\Response();
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $this->assertArrayHasKey('status', $response);
+        $response = $action->create($fullRequest, $response);
+        //var_dump($response);
+        $responseBody = json_decode((string)$response->getBody());
+        //var_dump($responseBody);
+        $status = $responseBody->status;
+        
+        $this->assertEquals('0', $status);
     }
 }

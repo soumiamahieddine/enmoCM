@@ -19,7 +19,6 @@ use Core\Models\TextFormatModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Core\Models\ValidatorModel;
-use Core\Controllers\HistoryController;
 
 if (!defined('_LOG4PHP'))
     define(

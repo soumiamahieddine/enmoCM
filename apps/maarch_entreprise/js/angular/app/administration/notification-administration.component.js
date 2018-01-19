@@ -14,7 +14,7 @@ var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var router_1 = require("@angular/router");
 var notification_service_1 = require("../notification.service");
-var NotificationAdministrationComponent = (function () {
+var NotificationAdministrationComponent = /** @class */ (function () {
     function NotificationAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
@@ -117,14 +117,14 @@ var NotificationAdministrationComponent = (function () {
             });
         }
     };
+    NotificationAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["notification-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+    ], NotificationAdministrationComponent);
     return NotificationAdministrationComponent;
 }());
-NotificationAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["notification-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
-], NotificationAdministrationComponent);
 exports.NotificationAdministrationComponent = NotificationAdministrationComponent;

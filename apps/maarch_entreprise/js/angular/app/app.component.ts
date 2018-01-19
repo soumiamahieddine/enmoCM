@@ -6,7 +6,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     template: `<router-outlet></router-outlet>`,
     encapsulation: ViewEncapsulation.None,
     styleUrls   : [
-        // '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+        '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
         '../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css',
         'css/engine.css',
         'css/jstree-custom.min.css' //treejs module

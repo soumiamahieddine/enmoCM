@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var md2_1 = require("md2");
 var core_1 = require("@angular/core");
-var NotificationService = (function () {
+var NotificationService = /** @class */ (function () {
     function NotificationService(toast) {
         this.toast = toast;
     }
@@ -21,10 +21,10 @@ var NotificationService = (function () {
     NotificationService.prototype.error = function (message) {
         this.toast.show('<i class="fa fa-exclamation-triangle fa-2x"></i><span>' + message + '</span>', 2000);
     };
+    NotificationService = __decorate([
+        core_1.Injectable(),
+        __metadata("design:paramtypes", [md2_1.Md2Toast])
+    ], NotificationService);
     return NotificationService;
 }());
-NotificationService = __decorate([
-    core_1.Injectable(),
-    __metadata("design:paramtypes", [md2_1.Md2Toast])
-], NotificationService);
 exports.NotificationService = NotificationService;

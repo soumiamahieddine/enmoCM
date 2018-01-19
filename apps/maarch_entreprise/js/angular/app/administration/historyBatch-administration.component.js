@@ -13,7 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var HistoryBatchAdministrationComponent = (function () {
+var HistoryBatchAdministrationComponent = /** @class */ (function () {
     function HistoryBatchAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -65,14 +65,14 @@ var HistoryBatchAdministrationComponent = (function () {
             location.href = "index.php";
         });
     };
+    HistoryBatchAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["historyBatch-administrationView"],
+            styleUrls: [],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], HistoryBatchAdministrationComponent);
     return HistoryBatchAdministrationComponent;
 }());
-HistoryBatchAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["historyBatch-administrationView"],
-        styleUrls: [],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], HistoryBatchAdministrationComponent);
 exports.HistoryBatchAdministrationComponent = HistoryBatchAdministrationComponent;

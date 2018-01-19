@@ -13,26 +13,25 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var DataTablePipe = (function () {
+var DataTablePipe = /** @class */ (function () {
     function DataTablePipe() {
     }
     DataTablePipe.prototype.transform = function (array, field, query) {
         if (query) {
             query = query.toLowerCase();
-            console.log(array);
             return array.filter(function (value) {
                 return value[field].toLowerCase().indexOf(query) > -1;
             });
         }
         return array;
     };
+    DataTablePipe = __decorate([
+        core_1.Pipe({ name: 'dataPipe' })
+    ], DataTablePipe);
     return DataTablePipe;
 }());
-DataTablePipe = __decorate([
-    core_1.Pipe({ name: 'dataPipe' })
-], DataTablePipe);
 exports.DataTablePipe = DataTablePipe;
-var UsersAdministrationComponent = (function () {
+var UsersAdministrationComponent = /** @class */ (function () {
     function UsersAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
@@ -190,14 +189,14 @@ var UsersAdministrationComponent = (function () {
             });
         }
     };
+    UsersAdministrationComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["users-administrationView"],
+            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/users-administration.component.css'],
+            providers: [notification_service_1.NotificationService]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+    ], UsersAdministrationComponent);
     return UsersAdministrationComponent;
 }());
-UsersAdministrationComponent = __decorate([
-    core_1.Component({
-        templateUrl: angularGlobals["users-administrationView"],
-        styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/users-administration.component.css'],
-        providers: [notification_service_1.NotificationService]
-    }),
-    __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
-], UsersAdministrationComponent);
 exports.UsersAdministrationComponent = UsersAdministrationComponent;

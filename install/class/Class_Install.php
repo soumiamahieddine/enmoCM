@@ -36,8 +36,17 @@ class Install extends functions
         array('FASTHD_AI', 'ai'),
         array('FASTHD_MAN', 'manual'),
         array('FASTHD_ATTACH', 'manual_attachments'),
+        array('FASTHD_ATTACH_VERSION', 'manual_attachments_version'),
+        array('CONVERT_MLB', 'convert_mlb'),
+        array('CONVERT_ATTACH', 'convert_attachments'),
+        array('CONVERT_ATTACH_VERSION', 'convert_attachments_version'),
+        array('TNL_MLB', 'thumbnails_mlb'),
+        array('TNL_ATTACH', 'thumbnails_attachments'),
+        array('TNL_ATTACH_VERSION', 'thumbnails_attachments_version'),
+        array('FULLTEXT_MLB', 'fulltext_mlb'),
+        array('FULLTEXT_ATTACH', 'fulltext_attachments'),
+        array('FULLTEXT_ATTACH_VERSION', 'fulltext_attachments_version'),
         array('TEMPLATES', 'templates'),
-        array('TNL', 'thumbnails_mlb'),
     );
 
     public function __construct()
@@ -2099,7 +2108,7 @@ class Install extends functions
         $db->query($query, array($sec->getPasswordHash($newPass)));
     }
 
-    public function copy_dir($dir2copy, $dir_paste, $excludeExt=false)
+    public function copy_dir($dir2copy, $dir_paste, $excludeExt=false, $excludeSymlink = false)
     {
         // On vérifie si $dir2copy est un dossier
         if (is_dir($dir2copy)) {
@@ -2114,19 +2123,37 @@ class Install extends functions
                         mkdir($dir_paste, 0777);
                     }
                     // S'il s'agit d'un dossier, on relance la fonction recursive
-                    if (is_dir($dir2copy.$file) && $file != '..' && $file != '.') {
-                        $this->copy_dir($dir2copy.$file.'/', $dir_paste.$file.'/', $excludeExt);
-                    } elseif ($file != '..' && $file != '.') {
-                        if (count($excludeExt>0) && is_array($excludeExt)) {
-                            $copyIt = true;
-                            foreach ($excludeExt as $key => $value) {
-                                if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
-                                    $copyIt = false;
+                    if($excludeSymlink){
+                        if (is_dir($dir2copy.$file) && $file != '..' && $file != '.' && !is_link($dir2copy.$file)) {
+                            $this->copy_dir($dir2copy.$file.'/' , $dir_paste.$file.'/', $excludeExt, $excludeSymlink);  
+                        } elseif ($file != '..' && $file != '.' && !is_link($dir2copy.$file)) {
+                            if (count($excludeExt>0) && is_array($excludeExt)) {
+                                $copyIt = true;
+                                foreach ($excludeExt as $key => $value) {
+                                    if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                                        $copyIt = false;
+                                    } 
                                 }
                             }
+                            if ($copyIt) {
+                                copy($dir2copy.$file, $dir_paste.$file);
+                            }
                         }
-                        if ($copyIt) {
-                            copy($dir2copy.$file, $dir_paste.$file);
+                    } else {
+                        if (is_dir($dir2copy.$file) && $file != '..' && $file != '.') {
+                            $this->copy_dir($dir2copy.$file.'/' , $dir_paste.$file.'/', $excludeExt, $excludeSymlink);  
+                        } elseif ($file != '..' && $file != '.') {
+                            if (count($excludeExt>0) && is_array($excludeExt)) {
+                                $copyIt = true;
+                                foreach ($excludeExt as $key => $value) {
+                                    if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                                        $copyIt = false;
+                                    } 
+                                }
+                            }
+                            if ($copyIt) {
+                                copy($dir2copy.$file, $dir_paste.$file);
+                            }
                         }
                     }
                 }

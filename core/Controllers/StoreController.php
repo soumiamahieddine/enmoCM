@@ -99,7 +99,8 @@ class StoreController
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];
         }
         if (!file_exists($aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName'])) {
-            return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpFileName does not exist'];
+            return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpFileName does not exist '
+            . $aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName']];
         }
 
         $aArgs['docserverTypeId'] = empty($aArgs['docserverTypeId']) ? 'DOC' : $aArgs['docserverTypeId'];

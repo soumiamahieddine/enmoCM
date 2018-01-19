@@ -6,14 +6,10 @@
 * This file is part of Maarch software.
 *
 */
+
 /**
-* @brief Maarch rest root file
-*
-* @file
+* @brief Rest Routes File
 * @author dev@maarch.org
-* @date $date$
-* @version $Revision$
-* @ingroup core
 */
 
 require '../vendor/autoload.php';
@@ -70,26 +66,13 @@ if (empty($_SESSION['user'])) {
 
 //login management
 if (empty($_SESSION['user'])) {
-    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-        $_SESSION['error'] = '';
-        $security = new security();
-        $pass = $security->getPasswordHash($_SERVER['PHP_AUTH_PW']);
-        $res  = $security->login($_SERVER['PHP_AUTH_USER'], $pass);
+    require_once('apps/maarch_entreprise/class/class_login.php');
+    $loginObj = new login();
+    $loginMethods = $loginObj->build_login_method();
+    require_once('core/services/Session.php');
+    $oSessionService = new \Core_Session_Service();
 
-        $_SESSION['user'] = $res['user'];
-        if (!empty($res['error'])) {
-            $_SESSION['error'] = $res['error'];
-        }
-    } else {
-        require_once('apps/maarch_entreprise/class/class_login.php');
-        $loginObj = new login();
-        $loginMethods = $loginObj->build_login_method();
-        require_once('core/services/Session.php');
-        $oSessionService = new \Core_Session_Service();
-
-        $loginObj->execute_login_script($loginMethods, true);
-    }
-
+    $loginObj->execute_login_script($loginMethods, true);
 }
 
 if ($_SESSION['error']) {
@@ -97,22 +80,29 @@ if ($_SESSION['error']) {
     exit();
 }
 
-$cookie = \Core\Models\SecurityModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie)) {
-    if (\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
+if (strpos(getcwd(), '/rest')) {
+    chdir('..');
+}
+
+if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+    if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+        $userId = $_SERVER['PHP_AUTH_USER'];
+    }
+} else {
+    $cookie = \Core\Models\SecurityModel::getCookieAuth();
+    if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
         \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
-//    } else {
-//        echo 'Authentication Failed';
-//        exit();
+        $userId = $cookie['userId'];
     }
 }
 
+if (empty($userId)) {
+    echo 'Authentication Failed';
+    exit();
+}
 
-$app = new \Slim\App([
-    'settings' => [
-        'displayErrorDetails' => true
-    ]
-]);
+
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
@@ -125,6 +115,20 @@ $app->get('/administration/users/new', \Core\Controllers\UserController::class .
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
 $app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
 $app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
+
+//Baskets
+$app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
+$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
+$app->post('/baskets', \Basket\controllers\BasketController::class . ':create');
+$app->put('/baskets/{id}', \Basket\controllers\BasketController::class . ':update');
+$app->delete('/baskets/{id}', \Basket\controllers\BasketController::class . ':delete');
+$app->get('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':getGroups');
+$app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':createGroup');
+$app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
+$app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
+$app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
+$app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
+$app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
 //status
 $app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
@@ -176,11 +180,11 @@ $app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . '
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->get('/users/profile', \Core\Controllers\UserController::class . ':getCurrentUserInfos');
-$app->put('/users/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->post('/users', \Core\Controllers\UserController::class . ':create');
 $app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
+$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
 $app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
 $app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
 $app->put('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
@@ -189,15 +193,15 @@ $app->post('/users/{id}/entities', \Core\Controllers\UserController::class . ':a
 $app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
 $app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
-$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
-$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
 $app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/baskets/absence', \Core\Controllers\UserController::class . ':setRedirectedBaskets'); //TODO penser à une meilleure route
-$app->delete('/users/{id}/baskets/{basketId}/absence', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets'); //TODO penser à une meilleure route
+$app->post('/users/{id}/redirectedBaskets', \Core\Controllers\UserController::class . ':setRedirectedBaskets');
+$app->delete('/users/{id}/redirectedBaskets/{basketId}', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets');
 
 //CurrentUser
+$app->get('/currentUser/profile', \Core\Controllers\UserController::class . ':getProfile');
+$app->put('/currentUser/profile', \Core\Controllers\UserController::class . ':updateProfile');
 $app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
 $app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
 $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
@@ -220,10 +224,11 @@ $app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':up
 $app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getForAdministration');
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
+$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \Core\Controllers\HistoryController::class . ':getBatchForAdministration');
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
 
 //actions
 $app->get('/administration/actions', \Core\Controllers\ActionController::class . ':getForAdministration');
@@ -248,7 +253,7 @@ $app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class
 $app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
 
 //Contacts
-$app->post('/contacts', \Core\Controllers\ContactController::class . ':create');
+$app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 
 //Templates
 $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
@@ -260,15 +265,3 @@ $app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':ge
 $app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
 
 $app->run();
-
-if ($_SESSION['user']['UserId'] == 'restUser') {
-    $name = $_SESSION['sessionName'];
-
-    setcookie ($name, "", 1);
-    setcookie ($name, false);
-    unset($_COOKIE[$name]);
-
-    session_unset();
-    session_destroy();
-    unset($_SESSION['sessionName']);
-}

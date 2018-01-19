@@ -15,6 +15,7 @@
 
 namespace Core\Controllers;
 
+use History\controllers\HistoryController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
@@ -61,7 +62,6 @@ class StatusController
 
             return $response->withJson([
                 'status'       => $obj,
-                'lang'         => StatusModel::getStatusLang(),
                 'statusImages' => StatusImagesModel::getStatusImages(),
             ]);
         } else {

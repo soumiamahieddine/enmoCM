@@ -20,6 +20,7 @@ require_once('core/services/CoreConfig.php');
 //for auth
 $_SERVER['PHP_AUTH_USER'] = 'superadmin';
 $_SERVER['PHP_AUTH_PW'] = 'superadmin';
+$userId = 'superadmin';
 
 //load Maarch session vars
 $portal = new portal();
