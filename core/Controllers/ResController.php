@@ -103,7 +103,7 @@ class ResController
 
         ResModel::createExt($formatedData);
 
-        return $response->withJson(['resId' => $data['resId']]);
+        return $response->withJson(['status' => true]);
     }
 
     public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs)
