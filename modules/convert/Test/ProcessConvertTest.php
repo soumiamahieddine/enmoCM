@@ -9,12 +9,13 @@
 
 namespace MaarchTest;
 use PHPUnit\Framework\TestCase;
+use Resource\Controllers\ResController;
 
 class ProcessConvertTest extends TestCase
 {
     public function testconvert ()
     {
-        $action = new \Core\Controllers\ResController();
+        $action = new ResController();
 
         $environment = \Slim\Http\Environment::mock(
             [
