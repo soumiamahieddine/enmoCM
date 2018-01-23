@@ -1,6 +1,7 @@
 {
     "autoload": {
     	"psr-4": {
+            "SrcCore\\"       : "src/core/",
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
             "History\\"       : "src/app/history/",
