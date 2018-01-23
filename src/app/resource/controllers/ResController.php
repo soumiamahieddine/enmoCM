@@ -10,21 +10,23 @@
 /**
 * @brief Resource Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Controllers;
+namespace Resource\Controllers;
 
+use Basket\models\BasketModel;
+use Core\Controllers\StoreController;
 use Core\Models\ServiceModel;
 use Core\Models\StatusModel;
+use Core\Models\UserModel;
+use Core\Models\ValidatorModel;
 use History\controllers\HistoryController;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Resource\Models\ResModel;
 use Respect\Validation\Validator;
-use Core\Models\ResModel;
 use Notes\Models\NoteModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 
 class ResController
 {
@@ -46,7 +48,7 @@ class ResController
     //*****************************************************************************************
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -71,9 +73,9 @@ class ResController
         return $response->withJson(['resId' => $resId]);
     }
 
-    public function createExt(RequestInterface $request, ResponseInterface $response)
+    public function createExt(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -106,7 +108,7 @@ class ResController
         return $response->withJson(['status' => true]);
     }
 
-    public function updateStatus(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function updateStatus(Request $request, Response $response)
     {
         $data = $request->getParams();
 
@@ -120,137 +122,100 @@ class ResController
             $data['historyMessage'] = _UPDATE_STATUS;
         }
 
-        $check = Validator::stringType()->notEmpty()->validate($data['status']);
+        $check = Validator::stringType()->notEmpty()->validate($data['chrono']) || Validator::intVal()->notEmpty()->validate($data['resId']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['historyMessage']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $document = ResModel::getById(['resId' => $aArgs['resId']]);
+        if (!empty($data['chrono'])) {
+            $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $data['chrono']]);
+        } else {
+            $document = ResModel::getById(['resId' => $data['resId'], 'select' => ['res_id']]);
+        }
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document not found']);
         }
+        if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
-        ResModel::updateStatus(['resId' => $aArgs['resId'], 'status' => $data['status']]);
+        ResModel::updateStatus(['resId' => $document['res_id'], 'status' => $data['status']]);
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
-            'recordId'  => $aArgs['resId'],
+            'recordId'  => $document['res_id'],
             'eventType' => 'UP',
             'info'      => $data['historyMessage'],
             'moduleId'  => 'apps',
             'eventId'   => 'resup',
         ]);
 
-        return $response->withJson(['success' => true]);
+        return $response->withJson(['success' => 'success']);
     }
 
-    public function isLock(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function isLock(Request $request, Response $response, array $aArgs)
     {
-        return $response->withJson(ResModel::isLockForCurrentUser(['resId' => $aArgs['resId']]));
+        return $response->withJson(ResModel::isLock(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
-    public function getNotesCountForCurrentUserById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getNotesCountForCurrentUserById(Request $request, Response $response, array $aArgs)
     {
-        return $response->withJson(NoteModel::countForCurrentUserByResId(['resId' => $aArgs['resId']]));
+        return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public static function hasRightByResId(array $aArgs)
     {
-        if(empty($aArgs)){
-            $aArgs = $request->getQueryParams();
-            $aArgs['data'] = json_decode($aArgs['data']);
-            $aArgs['data'] = $this->object2array($aArgs['data']);
-        }
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
-        $return = $this->updateResource($aArgs);
-        if ($return) {
-            $id = $aArgs['res_id'];
-            $obj = ResModel::getById([
-                'resId' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
-        }
 
-        $datas = [
-            $obj,
-        ];
-
-        return $response->withJson($datas);
-    }
-
-    public function updateResource($aArgs)
-    {
-        $data = $aArgs['data'];
-        $prepareData = [];
-        $countD = count($data);
-        for ($i = 0; $i < $countD; $i++) {
-            //COLUMN
-            $data[$i]['column'] = strtolower($data[$i]['column']);
-            //VALUE
-            $prepareData[$data[$i]['column']] = $data[$i]['value'];
-        }
-
-        //print_r($prepareData);exit;
-        $aArgs['data'] = $prepareData;
-
-        $errors = [];
-
-        $return = ResModel::update($aArgs);
-
-        if ($return) {
-            $id = $aArgs['res_id'];
-            $obj = ResModel::getById([
-                'resId' => $id
-            ]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
-        }
-
-        $datas = [
-            $obj,
-        ];
-
-        return $datas;
-    }
-
-    /**
-    * Convert an object to an array
-    * @param  $object object to convert
-    */
-    private function object2array($object)
-    {
-        $return = null;
-        if (is_array($object)) {
-            foreach ($object as $key => $value) {
-                $return[$key] = $this->object2array($value);
-            }
-        } else {
-            if (is_object($object)) {
-                $var = get_object_vars($object);
-                if ($var) {
-                    foreach ($var as $key => $value) {
-                        $return[$key] = ($key && !$value) ? null : $this->object2array($value);
-                    }
-                } else {
-                    return $object;
+        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groupsClause = '';
+        foreach ($groups as $key => $group) {
+            if (!empty($group['where_clause'])) {
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'userId' => $aArgs['userId']]);
+                if ($key > 0) {
+                    $groupsClause .= ' or ';
                 }
-            } else {
-                return $object;
+                $groupsClause .= "({$groupClause})";
             }
         }
-        return $return;
+
+        if (!empty($groupsClause)) {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$groupsClause})"], 'data' => [$aArgs['resId']]]);
+            if (!empty($res)) {
+                return true;
+            }
+        }
+
+        $baskets = BasketModel::getBasketsByUserId(['userId' => $aArgs['userId'], 'unneededBasketId' => ['IndexingBasket']]);
+        $basketsClause = '';
+        foreach ($baskets as $key => $basket) {
+            if (!empty($basket['basket_clause'])) {
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $aArgs['userId']]);
+                if ($key > 0) {
+                    $basketsClause .= ' or ';
+                }
+                $basketsClause .= "({$basketClause})";
+            }
+        }
+
+        if (!empty($basketsClause)) {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
+            if (!empty($res)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
-    
-
-    public function getListDocs(RequestInterface $request, ResponseInterface $response, $aArgs)
+    //TODO REFACTORING
+    public function getListDocs(Request $request, Response $response, array $aArgs)
     {
         $clause = $aArgs['clause'];
         $clause_elem = explode("&",$clause);

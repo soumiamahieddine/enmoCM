@@ -22,10 +22,10 @@ use Core\Models\CoreConfigModel;
 use Core\Models\DocserverModel;
 use Core\Models\DocserverTypeModel;
 use Core\Models\ResExtModel;
-use Core\Models\ResModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entities\Models\EntityModel;
+use Resource\Models\ResModel;
 
 class StoreController
 {

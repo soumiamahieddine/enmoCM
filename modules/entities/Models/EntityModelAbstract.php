@@ -23,12 +23,14 @@ class EntityModelAbstract
 {
     public static function get(array $aArgs = [])
     {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+
         $aEntities = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
-            'where'     => ['enabled = ?'],
-            'data'      => ['Y'],
-            'order_by'  => ['entity_label']
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aEntities;
@@ -93,7 +95,7 @@ class EntityModelAbstract
         return $aEntities;
     }
 
-    private static function getEntityChilds(array $aArgs = [])
+    public static function getEntityChildren(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['entityId']);
         ValidatorModel::stringType($aArgs, ['entityId']);
@@ -107,7 +109,7 @@ class EntityModelAbstract
 
         $entities = [$aArgs['entityId']];
         foreach ($aReturn as $value) {
-            $entities = array_merge($entities, EntityModel::getEntityChilds(['entityId' => $value['entity_id']]));
+            $entities = array_merge($entities, EntityModel::getEntityChildren(['entityId' => $value['entity_id']]));
         }
 
         return $entities;
@@ -122,7 +124,7 @@ class EntityModelAbstract
 
         $entities = [];
         foreach ($aReturn as $value) {
-            $entities = array_merge($entities, EntityModel::getEntityChilds(['entityId' => $value['entity_id']]));
+            $entities = array_merge($entities, EntityModel::getEntityChildren(['entityId' => $value['entity_id']]));
         }
         
         return array_unique($entities);
@@ -134,7 +136,7 @@ class EntityModelAbstract
         ValidatorModel::stringType($aArgs, ['userId', 'administratorUserId']);
 
         if ($aArgs['administratorUserId'] == 'superadmin') {
-            $rawEntitiesAllowedForAdministrator = EntityModel::get(['select' => ['entity_id']]);
+            $rawEntitiesAllowedForAdministrator = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['entity_label']]);
             $entitiesAllowedForAdministrator = [];
             foreach ($rawEntitiesAllowedForAdministrator as $value) {
                 $entitiesAllowedForAdministrator[] = $value['entity_id'];
@@ -150,7 +152,7 @@ class EntityModelAbstract
             $userEntities[] = $value['entity_id'];
         }
 
-        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label', 'parent_entity_id']]);
+        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['entity_label']]);
 
         foreach ($allEntities as $key => $value) {
             $allEntities[$key]['id'] = $value['entity_id'];

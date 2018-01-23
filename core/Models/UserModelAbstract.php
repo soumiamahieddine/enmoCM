@@ -478,13 +478,13 @@ class UserModelAbstract
         return $aEntity[0];
     }
 
-    public static function getGroupsByUserId(array $aArgs = [])
+    public static function getGroupsByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment'],
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$aArgs['userId']]
