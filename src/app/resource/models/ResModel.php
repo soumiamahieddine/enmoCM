@@ -10,12 +10,10 @@
 /**
 * @brief Res Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Resource\models;
 
 class ResModel extends ResModelAbstract
 {
-    // Do your stuff in this class
 }

@@ -21,9 +21,11 @@ use Core\Models\ValidatorModel;
 class NoteModelAbstract
 {
 
-    public static function countForCurrentUserByResId(array $aArgs = [])
+    public static function countByResId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $nb = 0;
         $countedNotes = [];
@@ -33,7 +35,7 @@ class NoteModelAbstract
             'select'    => ['entity_id'],
             'table'     => ['users_entities'],
             'where'     => ['user_id = ?'],
-            'data'      => [$_SESSION['user']['UserId']]
+            'data'      => [$aArgs['userId']]
         ]);
 
         foreach ($aEntities as $value) {
@@ -53,7 +55,7 @@ class NoteModelAbstract
                 ++$nb;
                 $countedNotes[] = $value['id'];
             } elseif (!empty($value['item_id'])) {
-                if ($value['user_id'] == $_SESSION['user']['UserId'] && !in_array($value['id'], $countedNotes)) {
+                if ($value['user_id'] == $aArgs['userId'] && !in_array($value['id'], $countedNotes)) {
                     ++$nb;
                     $countedNotes[] = $value['id'];
                 } elseif (in_array($value['item_id'], $entities) && !in_array($value['id'], $countedNotes)) {

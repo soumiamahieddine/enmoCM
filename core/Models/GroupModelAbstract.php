@@ -68,7 +68,7 @@ class GroupModelAbstract
         return $aGroups[0];
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'description', 'clause', 'comment']);
         ValidatorModel::stringType($aArgs, ['groupId', 'description', 'clause', 'comment']);
@@ -95,7 +95,7 @@ class GroupModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause', 'comment']);
         ValidatorModel::stringType($aArgs, ['id', 'description', 'clause', 'comment']);
@@ -124,7 +124,7 @@ class GroupModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);

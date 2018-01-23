@@ -23,14 +23,14 @@
 
 namespace Convert\Controllers;
 
+use Attachments\Models\AttachmentsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Convert\Models\ProcessConvertModel;
-use Core\Models\CoreConfigModel;
 use Core\Models\DocserverModel;
 use Core\Models\ResDocserverModel;
-use Core\Models\ResModel;
 use Core\Controllers\LogsController;
 use Core\Controllers\StoreController;
 
@@ -130,7 +130,13 @@ class ProcessConvertController
             $tmpDir = $args['tmpDir'];
         }
 
-        $res = ResModel::getById(['resId' => $resId, 'resTable' => $args['resTable']]);
+        if ($args['resTable'] == 'res_letterbox') {
+            $res = ResModel::getById(['resId' => $resId]);
+        } elseif ($args['resTable'] == 'res_attachments') {
+            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'false']);
+        } else {
+            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'true']);
+        }
 
         if ($res['res_id'] <> '') {
             $resourcePath = ResDocserverModel::getSourceResourcePath(
