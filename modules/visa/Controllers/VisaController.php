@@ -27,7 +27,7 @@ use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\Controllers\ResController;
-use Resource\Models\ResModel;
+use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Visa\Models\VisaModel;

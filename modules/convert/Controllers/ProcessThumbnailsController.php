@@ -26,7 +26,7 @@ namespace Convert\Controllers;
 use Attachments\Models\AttachmentsModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Resource\Models\ResModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Convert\Models\ProcessThumbnailsModel;
 use Core\Models\DocserverModel;

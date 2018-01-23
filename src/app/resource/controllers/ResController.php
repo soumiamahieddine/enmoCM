@@ -12,7 +12,7 @@
 * @author dev@maarch.org
 */
 
-namespace Resource\Controllers;
+namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use Core\Controllers\StoreController;
@@ -21,7 +21,7 @@ use Core\Models\StatusModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use History\controllers\HistoryController;
-use Resource\Models\ResModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Notes\Models\NoteModel;
 use Slim\Http\Request;

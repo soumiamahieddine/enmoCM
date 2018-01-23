@@ -171,11 +171,11 @@ $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . 
 $app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
 //Res
-$app->post('/res', \Resource\Controllers\ResController::class . ':create');
-$app->post('/resExt', \Resource\Controllers\ResController::class . ':createExt');
-$app->put('/res/resource/status', \Resource\Controllers\ResController::class . ':updateStatus');
-$app->get('/res/{resId}/lock', \Resource\Controllers\ResController::class . ':isLock');
-$app->get('/res/{resId}/notes/count', \Resource\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
+$app->post('/res', \Resource\controllers\ResController::class . ':create');
+$app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
+$app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
+$app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
+$app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');

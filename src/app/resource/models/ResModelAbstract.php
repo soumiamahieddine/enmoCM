@@ -12,7 +12,7 @@
 * @author dev@maarch.org
 */
 
-namespace Resource\Models;
+namespace Resource\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;

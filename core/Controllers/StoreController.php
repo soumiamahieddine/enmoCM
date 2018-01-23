@@ -25,7 +25,7 @@ use Core\Models\ResExtModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entities\Models\EntityModel;
-use Resource\Models\ResModel;
+use Resource\models\ResModel;
 
 class StoreController
 {

@@ -12,7 +12,7 @@
 * @author dev@maarch.org
 */
 
-namespace Resource\Models;
+namespace Resource\models;
 
 class ResModel extends ResModelAbstract
 {
