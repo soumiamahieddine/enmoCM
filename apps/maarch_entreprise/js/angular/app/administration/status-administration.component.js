@@ -75,7 +75,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
     };
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/administration/status/' + statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/status/' + statusIdentifier)
             .subscribe(function (data) {
             _this.status = data['status'][0];
             if (_this.status.can_be_searched == 'Y') {

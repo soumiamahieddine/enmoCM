@@ -15,7 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\ActionModel;
-use Core\Models\StatusModel;
+use Status\models\StatusModel;
 use Core\Models\LangModel;
 
 class ActionController

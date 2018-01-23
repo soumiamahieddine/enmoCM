@@ -8,6 +8,7 @@
 */
 
 namespace MaarchTest;
+
 use PHPUnit\Framework\TestCase;
 
 class StatusControllerTest extends TestCase
@@ -16,7 +17,7 @@ class StatusControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
         $aArgs = [
             'id'               => 'TEST',
@@ -85,7 +86,7 @@ class StatusControllerTest extends TestCase
         ########## GET LIST ##########
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
         $response  = $status->getList($request, new \Slim\Http\Response());
 
@@ -192,7 +193,7 @@ class StatusControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
         $response = $status->getNewInformations($request, new \Slim\Http\Response());
 

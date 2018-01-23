@@ -131,9 +131,12 @@ $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getS
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
 //status
-$app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
-$app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
-$app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+$app->get('/status', \Status\controllers\StatusController::class . ':getList');
+$app->get('/administration/status/new', \Status\controllers\StatusController::class . ':getNewInformations');
+$app->get('/status/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
+$app->post('/status', \Status\controllers\StatusController::class . ':create');
+$app->put('/status/{identifier}', \Status\controllers\StatusController::class . ':update');
+$app->delete('/status/{identifier}', \Status\controllers\StatusController::class . ':delete');
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
@@ -144,10 +147,6 @@ $app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':g
 $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
-//status
-$app->post('/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
-$app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
 
 //Docservers
 $app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');

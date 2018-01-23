@@ -16,16 +16,16 @@
 namespace Status\controllers;
 
 use History\controllers\HistoryController;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Status\models\StatusModel;
 use Status\models\StatusImagesModel;
 use Core\Models\ServiceModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class StatusController
 {
-    public function getList(RequestInterface $request, ResponseInterface $response)
+    public function getList(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -36,7 +36,7 @@ class StatusController
         ]);
     }
 
-    public function getNewInformations(RequestInterface $request, ResponseInterface $response)
+    public function getNewInformations(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -47,7 +47,7 @@ class StatusController
         ]);
     }
 
-    public function getByIdentifier(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getByIdentifier(Request $request, Response $response, $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -69,7 +69,7 @@ class StatusController
         }
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response)
+    public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -100,7 +100,7 @@ class StatusController
         }
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(Request $request, Response $response, $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -133,10 +133,9 @@ class StatusController
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
-
     }
 
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function delete(Request $request, Response $response, $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -145,7 +144,6 @@ class StatusController
         $statusDeleted = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']]);
 
         if (Validator::notEmpty()->validate($aArgs['identifier']) && Validator::numeric()->validate($aArgs['identifier']) && !empty($statusDeleted)) {
-            
             StatusModel::delete(['identifier' => $aArgs['identifier']]);
 
             HistoryController::add([
@@ -189,9 +187,9 @@ class StatusController
     {
         $errors = [];
 
-        if(!Validator::notEmpty()->validate($request['id'])){
+        if (!Validator::notEmpty()->validate($request['id'])) {
             array_push($errors, _ID . ' ' . _EMPTY);
-        } else if ($mode == 'create') {
+        } elseif ($mode == 'create') {
             $obj = StatusModel::getById(['id' => $request['id']]);
 
             if (!empty($obj)) {

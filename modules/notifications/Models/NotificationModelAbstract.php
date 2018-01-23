@@ -17,7 +17,7 @@ namespace Notifications\Models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
-use Core\Models\StatusModelAbstract;
+use Status\models\StatusModel;
 use Entities\Models\EntityModelAbstract;
 use Core\Models\GroupModelAbstract;
 
@@ -321,7 +321,7 @@ class NotificationModelAbstract
 
     public static function getDiffusionTypeStatus()
     {
-        $status = StatusModelAbstract::getList();
+        $status = StatusModel::getList();
         return $status;
     }
 

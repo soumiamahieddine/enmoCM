@@ -16,7 +16,7 @@
 namespace Core\Controllers;
 
 use Core\Models\ServiceModel;
-use Core\Models\StatusModel;
+use Status\models\StatusModel;
 use History\controllers\HistoryController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

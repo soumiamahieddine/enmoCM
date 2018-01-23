@@ -34,7 +34,7 @@ export class StatusesAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/administration/status')
+        this.http.get(this.coreUrl + 'rest/status')
             .subscribe((data : any) => {
                 this.statusList = data.statusList;
                 this.data = this.statusList; 

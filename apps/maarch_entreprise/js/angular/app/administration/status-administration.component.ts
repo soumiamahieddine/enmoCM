@@ -80,7 +80,7 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     getStatusInfos(statusIdentifier : string){
-        this.http.get(this.coreUrl + 'rest/administration/status/'+statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/status/'+statusIdentifier)
             .subscribe((data) => {
                 this.status    = data['status'][0];
                 if(this.status.can_be_searched == 'Y'){

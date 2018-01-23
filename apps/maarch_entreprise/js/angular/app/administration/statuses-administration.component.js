@@ -26,7 +26,7 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/administration/status')
+        this.http.get(this.coreUrl + 'rest/status')
             .subscribe(function (data) {
             _this.statusList = data.statusList;
             _this.data = _this.statusList;
