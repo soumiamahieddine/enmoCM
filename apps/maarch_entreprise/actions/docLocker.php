@@ -59,7 +59,7 @@ class docLocker
 
     public function isLock()
     {
-        return \Core\Models\ResModelAbstract::isLock(['resId' => $this->res_id, 'userId' => $_SESSION['user']['UserId']]);
+        return \Resource\models\ResModel::isLock(['resId' => $this->res_id, 'userId' => $_SESSION['user']['UserId']]);
     }
 
     public function lock()
