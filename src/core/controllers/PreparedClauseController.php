@@ -18,6 +18,7 @@ namespace SrcCore\controllers;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entities\Models\EntityModel;
+use Resource\models\ResModel;
 
 class PreparedClauseController
 {
@@ -205,6 +206,27 @@ class PreparedClauseController
         }
 
         return $clause;
+    }
+
+    public static function isClauseValid(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['clause', 'userId']);
+        ValidatorModel::stringType($aArgs, ['clause', 'userId']);
+
+        $clause = PreparedClauseController::getPreparedClause(['clause' => $aArgs['clause'], 'userId' => $aArgs['userId']]);
+
+        $preg = preg_match('#\b(?:abort|alter|copy|create|delete|disgard|drop|execute|grant|insert|load|lock|move|reset|truncate|update)\b#i', $clause);
+        if ($preg === 1) {
+            return false;
+        }
+
+        try {
+            ResModel::getOnView(['select' => [1], 'where' => [$clause]]);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
 }
