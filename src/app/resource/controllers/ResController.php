@@ -171,7 +171,9 @@ class ResController
         ValidatorModel::stringType($aArgs, ['userId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
-
+        if ($aArgs['userId'] == 'superadmin') {
+            return true;
+        }
         $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
