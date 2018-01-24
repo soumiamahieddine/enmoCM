@@ -26,7 +26,7 @@ use Core\Models\ServiceModel;
 use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Resource\Controllers\ResController;
+use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

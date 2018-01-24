@@ -13,7 +13,6 @@ if ($_REQUEST['AJAX_CALL'] && $_REQUEST['res_id']) {
     else if ($_REQUEST['unlock'])
         $docLocker->unlock();
     else if ($_REQUEST['isLock']) {
-        require_once 'core/Models/ResModelAbstract.php';
         echo json_encode($docLocker->isLock());
     }
 }
