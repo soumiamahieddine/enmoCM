@@ -26,6 +26,7 @@ import { PriorityAdministrationComponent }              from './priority-adminis
 import { ReportsAdministrationComponent }               from './reports-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
 import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
+import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 
@@ -59,6 +60,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         ReportsAdministrationComponent,
         HistoryAdministrationComponent,
         HistoryBatchAdministrationComponent,
+        UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
         NotificationAdministrationComponent,
         DataTablePipe

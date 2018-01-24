@@ -88,6 +88,9 @@ exports.LANG_FR = {
     "basketUpdated": "Bannette modifiée",
     "basketDeleted": "Bannette supprimée",
     "entityTooglePrimary": "Passage en entité primaire",
+    "updateStatusInformations": "En saisissant le n° chrono ou le n° GED du document, vous modifierez le statut du courrier. Le courrier sera disponible dans la bannette des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.",
+    "updateStatus": "Changement de statut de courrier",
+    "statuses": "Statut(s)",
     //Lists
     available: "disponible",
     display: "affichage",
@@ -161,7 +164,6 @@ exports.LANG_FR = {
     statusAdded: "Statut ajouté",
     statusCreation: "Création d'un statut",
     statusDeleted: "Statut supprimé",
-    statuses: "Statut(s)",
     statusModification: "Modification du statut",
     statusUpdated: "Statut mis à jour",
     addStatus: "Ajouter un statut",

@@ -22,6 +22,7 @@ import { NotificationsAdministrationComponent } from './notifications-administra
 import { NotificationAdministrationComponent }  from './notification-administration.component';
 import { HistoryAdministrationComponent }       from './history-administration.component';
 import { HistoryBatchAdministrationComponent }  from './historyBatch-administration.component';
+import { UpdateStatusAdministrationComponent }  from './update-status-administration.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
             { path: 'administration/notifications/:identifier', component: NotificationAdministrationComponent },
             { path: 'administration/history', component: HistoryAdministrationComponent },
             { path: 'administration/historyBatch', component: HistoryBatchAdministrationComponent },
+            { path: 'administration/update-status', component: UpdateStatusAdministrationComponent },
         ]),
     ],
     exports: [
