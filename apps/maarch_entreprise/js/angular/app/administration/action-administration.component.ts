@@ -20,7 +20,7 @@ export class ActionAdministrationComponent implements OnInit {
     coreUrl                     : string;
     creationMode                : boolean;
     action                      : any       = {};
-    statusList                  : any[]     = [];
+    statuses                    : any[]     = [];
     actionPagesList             : any[]     = [];
     categoriesList              : any[]     = [];
     keywordsList                : any[]     = [];
@@ -59,13 +59,13 @@ export class ActionAdministrationComponent implements OnInit {
                 
                 this.http.get(this.coreUrl + 'rest/initAction')
                     .subscribe((data : any) => {
-                        this.action = data.action;
+                        this.action         = data.action;
                         this.categoriesList = data.categoriesList;
-                        this.statusList = data.statusList;
+                        this.statuses       = data.statuses;
 
                         this.actionPagesList = data.action_pagesList;
-                        this.keywordsList = data.keywordsList;
-                        this.loading = false;
+                        this.keywordsList    = data.keywordsList;
+                        this.loading         = false;
                     });
             }
             else {
@@ -73,13 +73,13 @@ export class ActionAdministrationComponent implements OnInit {
 
                 this.http.get(this.coreUrl + 'rest/administration/actions/' + params['id'])
                     .subscribe((data : any) => {
-                        this.action = data.action;
+                        this.action         = data.action;
                         this.categoriesList = data.categoriesList;
-                        this.statusList = data.statusList;
+                        this.statuses       = data.statuses;
 
                         this.actionPagesList = data.action_pagesList;
-                        this.keywordsList = data.keywordsList;
-                        this.loading = false;
+                        this.keywordsList    = data.keywordsList;
+                        this.loading         = false;
                     });
             } 
         });

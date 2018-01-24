@@ -25,14 +25,14 @@ use Slim\Http\Response;
 
 class StatusController
 {
-    public function getList(Request $request, Response $response)
+    public function get(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         return $response->withJson([
-            'statusList' => StatusModel::getList()
+            'statuses' => StatusModel::get()
         ]);
     }
 
@@ -161,7 +161,7 @@ class StatusController
 
         return $response->withJson(
             [
-            'statuses' => StatusModel::getList()
+            'statuses' => StatusModel::get()
             ]
         );
     }

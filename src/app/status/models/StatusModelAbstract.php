@@ -20,7 +20,7 @@ use Core\Models\ValidatorModel;
 
 class StatusModelAbstract
 {
-    public static function getList()
+    public static function get()
     {
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],

@@ -18,8 +18,7 @@ export class StatusesAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
 
     nbStatus                    : number;
-    statusList                  : any;
-    data                        : any       = [];
+    statuses                    : any       = [];
 
     loading                     : boolean   = false;
 
@@ -34,10 +33,9 @@ export class StatusesAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/status')
+        this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe((data : any) => {
-                this.statusList = data.statusList;
-                this.data = this.statusList; 
+                this.statuses = data.statuses;
                 setTimeout(() => {
                     $j("[md2sortby='label_status']").click();
                 }, 0);
@@ -60,9 +58,9 @@ export class StatusesAdministrationComponent implements OnInit {
     deleteStatus(status : any){
         var resp = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+status.id+' »');
         if(resp){
-            this.http.delete(this.coreUrl + 'rest/status/'+status.identifier)
+            this.http.delete(this.coreUrl + 'rest/statuses/'+status.identifier)
                 .subscribe((data : any) => {
-                    this.data = data.statuses;
+                    this.statuses = data.statuses;
                     this.notify.success(this.lang.statusDeleted);
                     
                 }, (err) => {

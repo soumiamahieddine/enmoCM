@@ -1,13 +1,13 @@
 
 <div class="page-header">
-    <h1>{{lang.administration}} {{lang.statuses}} <small>{{data.length}} {{lang.statuses}}</small></h1>
+    <h1>{{lang.administration}} {{lang.statuses}} <small>{{statuses.length}} {{lang.statuses}}</small></h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
-        <table id="statusTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'label_status' : search" #md2="md2DataTable" [sortBy]='label_status' [rowsPerPage]="10">
+        <table id="statusTable" class="table table-hover table-condensed" [md2Data]="statuses | dataPipe : 'label_status' : search" #md2="md2DataTable" [sortBy]='label_status' [rowsPerPage]="10">
             <thead>
                 <tr>
                     <td colspan="2">
@@ -18,7 +18,7 @@
                             <input matInput placeholder="{{lang.filterBy}} : {{lang.description}}" class="searchTable" [(ngModel)]="search" />
                         </mat-form-field>
                         &nbsp;
-                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/status/new" title="{{lang.addStatus}}"><i class="fa fa-check-circle fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
+                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/statuses/new" title="{{lang.addStatus}}"><i class="fa fa-check-circle fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
                     </td>
                 </tr>
                 <tr>
@@ -38,7 +38,7 @@
                     <td style="vertical-align:middle;">{{status.label_status}}</td>
                     <td style="text-align:right;vertical-align:middle;">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/status/{{status.identifier}}" type="button" class="btn btn-default" title="{{lang.update}}">
+                            <button routerLink="/administration/statuses/{{status.identifier}}" type="button" class="btn btn-default" title="{{lang.update}}">
                                 <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
                             </button>
                             <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status)">

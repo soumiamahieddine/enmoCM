@@ -130,13 +130,13 @@ $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::cla
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//status
-$app->get('/status', \Status\controllers\StatusController::class . ':getList');
-$app->get('/administration/status/new', \Status\controllers\StatusController::class . ':getNewInformations');
-$app->get('/status/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
-$app->post('/status', \Status\controllers\StatusController::class . ':create');
-$app->put('/status/{identifier}', \Status\controllers\StatusController::class . ':update');
-$app->delete('/status/{identifier}', \Status\controllers\StatusController::class . ':delete');
+//statuses
+$app->get('/statuses', \Status\controllers\StatusController::class . ':get');
+$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
+$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
+$app->post('/statuses', \Status\controllers\StatusController::class . ':create');
+$app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
+$app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');

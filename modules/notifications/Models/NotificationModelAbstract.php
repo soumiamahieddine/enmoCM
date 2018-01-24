@@ -321,7 +321,7 @@ class NotificationModelAbstract
 
     public static function getDiffusionTypeStatus()
     {
-        $status = StatusModel::getList();
+        $status = StatusModel::get();
         return $status;
     }
 

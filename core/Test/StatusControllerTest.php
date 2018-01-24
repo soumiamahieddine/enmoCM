@@ -88,18 +88,18 @@ class StatusControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
         $status      = new \Status\controllers\StatusController();
 
-        $response  = $status->getList($request, new \Slim\Http\Response());
+        $response  = $status->get($request, new \Slim\Http\Response());
 
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertNotNull($responseBody->statusList);
+        $this->assertNotNull($responseBody->statuses);
 
-        foreach ($responseBody->statusList as $value) {
+        foreach ($responseBody->statuses as $value) {
             $this->assertInternalType("int", $value->identifier);
         }
 
         //$this->assertNotNull($responseBody->lang);
 
-        $elem = $responseBody->statusList;
+        $elem = $responseBody->statuses;
         end($elem);
         $key = key($elem);
         $lastIdentifier = $elem[$key]->identifier;
