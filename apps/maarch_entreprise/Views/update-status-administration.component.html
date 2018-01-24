@@ -1,0 +1,42 @@
+<div class="page-header">
+</div>
+<div *ngIf="loading">
+    <mat-spinner style="margin:auto;"></mat-spinner>
+</div>
+<div *ngIf="!loading" class="container-fluid">
+    <div class="row row-eq-height">
+        <div class="col-md-offset-4 col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
+            <h2>{{lang.updateStatus}}</h2>
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #updateStatusForm="ngForm">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {{lang.updateStatusInformations}}
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            CHRONO<input type="text" class="form-control" name="chrono" [(ngModel)]="chrono">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            ID<input type="text" class="form-control" name="resId" [(ngModel)]="resId">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            {{lang.statuses}}
+                            <select id="statuses">
+                                <option *ngFor="let status of statuses" value="{{status.id}}">{{status.label_status}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-default" [disabled]="!resId && !chrono">{{lang.save}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

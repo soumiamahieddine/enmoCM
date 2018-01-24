@@ -32,6 +32,7 @@ var priority_administration_component_1 = require("./priority-administration.com
 var reports_administration_component_1 = require("./reports-administration.component");
 var history_administration_component_1 = require("./history-administration.component");
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
+var update_status_administration_component_1 = require("./update-status-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
 var notification_administration_component_1 = require("./notification-administration.component");
 var AdministrationModule = /** @class */ (function () {
@@ -67,6 +68,7 @@ var AdministrationModule = /** @class */ (function () {
                 reports_administration_component_1.ReportsAdministrationComponent,
                 history_administration_component_1.HistoryAdministrationComponent,
                 historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
+                update_status_administration_component_1.UpdateStatusAdministrationComponent,
                 notifications_administration_component_1.NotificationsAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
                 users_administration_component_1.DataTablePipe

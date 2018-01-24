@@ -29,6 +29,7 @@ var notifications_administration_component_1 = require("./notifications-administ
 var notification_administration_component_1 = require("./notification-administration.component");
 var history_administration_component_1 = require("./history-administration.component");
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
+var update_status_administration_component_1 = require("./update-status-administration.component");
 var AdministrationRoutingModule = /** @class */ (function () {
     function AdministrationRoutingModule() {
     }
@@ -65,6 +66,7 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/notifications/:identifier', component: notification_administration_component_1.NotificationAdministrationComponent },
                     { path: 'administration/history', component: history_administration_component_1.HistoryAdministrationComponent },
                     { path: 'administration/historyBatch', component: historyBatch_administration_component_1.HistoryBatchAdministrationComponent },
+                    { path: 'administration/update-status', component: update_status_administration_component_1.UpdateStatusAdministrationComponent },
                 ]),
             ],
             exports: [

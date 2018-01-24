@@ -22,6 +22,7 @@ use Core\Models\ValidatorModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 
 class BasketController
 {
@@ -69,6 +70,10 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket already exists']);
         }
 
+        if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
+        }
+
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
         $data['isFolderBasket'] = empty($data['isFolderBasket']) ? 'N' : 'Y';
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
@@ -96,6 +101,10 @@ class BasketController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
