@@ -13,7 +13,6 @@ if ($_REQUEST['AJAX_CALL'] && $_REQUEST['res_id']) {
     else if ($_REQUEST['unlock'])
         $docLocker->unlock();
     else if ($_REQUEST['isLock']) {
-        require_once 'core/Models/ResModelAbstract.php';
         echo json_encode($docLocker->isLock());
     }
 }
@@ -59,7 +58,7 @@ class docLocker
 
     public function isLock()
     {
-        return \Core\Models\ResModelAbstract::isLockForCurrentUser(['resId' => $this->res_id]);
+        return \Resource\models\ResModel::isLock(['resId' => $this->res_id, 'userId' => $_SESSION['user']['UserId']]);
     }
 
     public function lock()

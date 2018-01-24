@@ -22,6 +22,7 @@ import { NotificationsAdministrationComponent } from './notifications-administra
 import { NotificationAdministrationComponent }  from './notification-administration.component';
 import { HistoryAdministrationComponent }       from './history-administration.component';
 import { HistoryBatchAdministrationComponent }  from './historyBatch-administration.component';
+import { UpdateStatusAdministrationComponent }  from './update-status-administration.component';
 
 
 @NgModule({
@@ -38,9 +39,9 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
             { path: 'administration/baskets-sorted', component: BasketsOrderAdministrationComponent },
             { path: 'administration/baskets/new', component: BasketAdministrationComponent },
             { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
-            { path: 'administration/status', component: StatusesAdministrationComponent },
-            { path: 'administration/status/new', component: StatusAdministrationComponent },
-            { path: 'administration/status/:identifier', component: StatusAdministrationComponent },
+            { path: 'administration/statuses', component: StatusesAdministrationComponent },
+            { path: 'administration/statuses/new', component: StatusAdministrationComponent },
+            { path: 'administration/statuses/:identifier', component: StatusAdministrationComponent },
             { path: 'administration/parameters', component: ParametersAdministrationComponent },
             { path: 'administration/parameters/new', component: ParameterAdministrationComponent },
             { path: 'administration/parameters/:id', component: ParameterAdministrationComponent },
@@ -56,6 +57,7 @@ import { HistoryBatchAdministrationComponent }  from './historyBatch-administrat
             { path: 'administration/notifications/:identifier', component: NotificationAdministrationComponent },
             { path: 'administration/history', component: HistoryAdministrationComponent },
             { path: 'administration/historyBatch', component: HistoryBatchAdministrationComponent },
+            { path: 'administration/update-status', component: UpdateStatusAdministrationComponent },
         ]),
     ],
     exports: [

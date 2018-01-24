@@ -15,7 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\ActionModel;
-use Core\Models\StatusModel;
+use Status\models\StatusModel;
 use Core\Models\LangModel;
 
 class ActionController
@@ -81,8 +81,8 @@ class ActionController
             $obj['action']['actionCategories'] = $arrCategoriesList;
         }
     
-        $obj['statusList'] = StatusModel::getList();
-        array_unshift($obj['statusList'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+        $obj['statuses'] = StatusModel::get();
+        array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
         $obj['action_pagesList']=ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
         $obj['keywordsList']=ActionModel::getKeywords();
@@ -187,7 +187,7 @@ class ActionController
     {
         $errors = [];
       
-        $objs = StatusModel::getList();
+        $objs = StatusModel::get();
 
         foreach ($objs as $obj) {
             $status[]=$obj['id'];
@@ -249,8 +249,8 @@ class ActionController
             $obj['categoriesList'][$key]['selected'] = true;
         }
 
-        $obj['statusList'] = StatusModel::getList();
-        array_unshift($obj['statusList'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+        $obj['statuses'] = StatusModel::get();
+        array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
         $obj['action_pagesList'] = ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
         $obj['keywordsList'] = ActionModel::getKeywords();

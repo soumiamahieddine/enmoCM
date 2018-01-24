@@ -18,7 +18,7 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this.data = [];
+        this.statuses = [];
         this.loading = false;
     }
     StatusesAdministrationComponent.prototype.ngOnInit = function () {
@@ -26,10 +26,9 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         this.coreUrl = angularGlobals.coreUrl;
         this.prepareStatus();
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/administration/status')
+        this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe(function (data) {
-            _this.statusList = data.statusList;
-            _this.data = _this.statusList;
+            _this.statuses = data.statuses;
             setTimeout(function () {
                 $j("[md2sortby='label_status']").click();
             }, 0);
@@ -50,9 +49,9 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         var _this = this;
         var resp = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + status.id + ' »');
         if (resp) {
-            this.http.delete(this.coreUrl + 'rest/status/' + status.identifier)
+            this.http.delete(this.coreUrl + 'rest/statuses/' + status.identifier)
                 .subscribe(function (data) {
-                _this.data = data.statuses;
+                _this.statuses = data.statuses;
                 _this.notify.success(_this.lang.statusDeleted);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);

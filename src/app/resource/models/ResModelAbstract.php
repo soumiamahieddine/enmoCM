@@ -10,34 +10,48 @@
 /**
 * @brief Res Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Resource\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class ResModelAbstract
 {
-    public static function getById(array $aArgs = [])
+    public static function getOnView(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['res_view_letterbox'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
+        ]);
+
+        return $aResources;
+    }
+
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
         
-        if (empty($aArgs['resTable'])) {
-            $aArgs['resTable'] = 'res_letterbox';
-        }
-
-        $aReturn = DatabaseModel::select([
+        $aResources = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$aArgs['resTable']],
+            'table'     => ['res_letterbox'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);
 
-        if (empty($aReturn[0])) {
+        if (empty($aResources[0])) {
             return [];
         }
 
-        return $aReturn[0];
+        return $aResources[0];
     }
 
     public static function getExtById(array $aArgs)
@@ -45,38 +59,20 @@ class ResModelAbstract
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
-        $aReturn = DatabaseModel::select([
+        $aResources = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['mlb_coll_ext'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);
 
-        if (empty($aReturn[0])) {
+        if (empty($aResources[0])) {
             return [];
         }
 
-        return $aReturn[0];
+        return $aResources[0];
     }
 
-    public static function updateStatus(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['status']);
-
-        DatabaseModel::update([
-            'table'     => 'res_letterbox',
-            'set'       => [
-                'status'    => $aArgs['status']
-            ],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        return true;
-    }
-    
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
@@ -108,37 +104,45 @@ class ResModelAbstract
         return true;
     }
 
-    /**
-     * update a resTable
-     * @param  $aArgs array
-     *
-     * @return boolean
-     */
-    public static function update(array $aArgs = [])
+    public static function updateStatus(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['res_id']);
-        ValidatorModel::intVal($aArgs, ['res_id']);
-        ValidatorModel::stringType($aArgs, ['table']);
-        ValidatorModel::arrayType($aArgs, ['data']);
-
-        if (empty($aArgs['table'])) {
-            $aArgs['table'] = 'res_letterbox';
-        }
+        ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['status']);
 
         DatabaseModel::update([
-            'table' => $aArgs['table'],
-            'set'   => $aArgs['data'],
-            'where' => ['res_id = ?'],
-            'data'  => [$aArgs['res_id']]
+            'table'     => 'res_letterbox',
+            'set'       => [
+                'status'    => $aArgs['status']
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
         ]);
 
         return true;
     }
 
-    public static function isLockForCurrentUser(array $aArgs = [])
+    public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'set']);
         ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::arrayType($aArgs, ['set']);
+
+        DatabaseModel::update([
+            'table' => 'res_letterbox',
+            'set'   => $aArgs['set'],
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['resId']]
+        ]);
+
+        return true;
+    }
+
+    public static function isLock(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $aReturn = DatabaseModel::select([
             'select'    => ['locker_user_id', 'locker_time'],
@@ -152,7 +156,7 @@ class ResModelAbstract
 
         if (empty($aReturn[0]['locker_user_id'] || empty($aReturn[0]['locker_time']))) {
             $lock = false;
-        } elseif ($aReturn[0]['locker_user_id'] == $_SESSION['user']['UserId']) { //TODO SESSION
+        } elseif ($aReturn[0]['locker_user_id'] == $aArgs['userId']) {
             $lock = false;
         } elseif (strtotime($aReturn[0]['locker_time']) < time()) {
             $lock = false;
@@ -180,6 +184,26 @@ class ResModelAbstract
 
         return $aReturn;
     }
+
+    public static function getResIdByAltIdentifier(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['altIdentifier']);
+        ValidatorModel::stringType($aArgs, ['altIdentifier']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => ['res_id'],
+            'table'     => ['mlb_coll_ext'],
+            'where'     => ['alt_identifier = ?'],
+            'data'      => [$aArgs['altIdentifier']]
+        ]);
+
+        if (empty($aResources[0])) {
+            return [];
+        }
+
+        return $aResources[0];
+    }
+
 
     // In Progress
 //    public static function getProcessLimitDate(array $aArgs)

@@ -13,7 +13,10 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Status\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class StatusImagesModelAbstract
 {

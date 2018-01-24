@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Status\models;
 
 class StatusImagesModel extends StatusImagesModelAbstract
 {

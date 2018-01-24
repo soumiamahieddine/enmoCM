@@ -19,7 +19,6 @@ use Core\Models\ActionModel;
 use Core\Models\ContactModel;
 use Core\Models\LinkModel;
 use Core\Models\ListinstanceModel;
-use Core\Models\ResModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
 use Core\Models\DocserverModel;
@@ -27,26 +26,26 @@ use Core\Models\ServiceModel;
 use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Resource\controllers\ResController;
+use Resource\models\ResModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Visa\Models\VisaModel;
 
 //TODO Require once
 require_once 'modules/basket/class/class_modules_tools.php';
 require_once 'core/class/class_core_tools.php';
-require_once 'core/class/class_security.php';
 
 class VisaController
 {
-
-    public function getSignatureBook(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getSignatureBook(Request $request, Response $response, array $aArgs)
     {
         $resId = $aArgs['resId'];
         $_SESSION['doc_id'] = $resId; //TODO Set session for some actions
         $collId = 'letterbox_coll';
 
-        $security = new \security();
-        $allowed = $security->test_right_doc($collId, $resId);
-        if (!$allowed) {
-            return $response->withStatus(403)->withJson(['error' => 'Forbidden document']);
+        if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
         if (!file_exists($docserver['path_template'])) {
@@ -73,7 +72,7 @@ class VisaController
             'actionLabel' => $actionLabel
         ];
 
-        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $datas = [];
         $datas['actions']       = $actionsData;
@@ -81,13 +80,13 @@ class VisaController
         $datas['documents']     = $documents;
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
-        $datas['nbNotes']       = NoteModel::countForCurrentUserByResId(['resId' => $resId]);
+        $datas['nbNotes']       = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
         $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
         $datas['listinstance']  = ListinstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $_SESSION['user']['UserId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
 
         return $response->withJson($datas);
@@ -98,10 +97,10 @@ class VisaController
         AttachmentsModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($aArgs['collId'] == 'res_attachments' ? 'false' : 'true');
-        $user = UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
-            ListinstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $_SESSION['user']['UserId']]);
+            ListinstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $GLOBALS['userId']]);
         }
 
         return $response->withJson(['success' => 'success']);
@@ -341,16 +340,13 @@ class VisaController
         return array_values($attachments);
     }
 
-    public function getDetailledResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledResList(Request $request, Response $response, array $aArgs)
     {
-        $basketId = $aArgs['basketId'];
-
-        $resList = BasketModel::getResListById(
-            [
-                'basketId' => $basketId,
-                'select'  => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
-            ]
-        );
+        $resList = BasketModel::getResListById([
+            'basketId'  => $aArgs['basketId'],
+            'userId'    => $GLOBALS['userId'],
+            'select'    => ['res_id', 'alt_identifier', 'subject', 'creation_date', 'process_limit_date', 'priority', 'contact_id', 'address_id', 'user_lastname', 'user_firstname']
+        ]);
 
         $resListForAttachments = [];
         $resListForRequest = [];
@@ -393,13 +389,12 @@ class VisaController
         return $response->withJson(['resList' => $resList]);
     }
 
-    public function getResList(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getResList(Request $request, Response $response, array $aArgs)
     {
-        $basketId = $aArgs['basketId'];
-
         $resList = BasketModel::getResListById([
-            'basketId' => $basketId,
-            'select'  => ['res_id']
+            'basketId'  => $aArgs['basketId'],
+            'userId'    => $GLOBALS['userId'],
+            'select'    => ['res_id']
         ]);
 
         return $response->withJson(['resList' => $resList]);

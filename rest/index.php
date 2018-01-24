@@ -130,10 +130,13 @@ $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::cla
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//status
-$app->get('/administration/status', \Core\Controllers\StatusController::class . ':getList');
-$app->get('/administration/status/new', \Core\Controllers\StatusController::class . ':getNewInformations');
-$app->get('/administration/status/{identifier}', \Core\Controllers\StatusController::class . ':getByIdentifier');
+//statuses
+$app->get('/statuses', \Status\controllers\StatusController::class . ':get');
+$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
+$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
+$app->post('/statuses', \Status\controllers\StatusController::class . ':create');
+$app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
+$app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
@@ -144,10 +147,6 @@ $app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':g
 $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
-//status
-$app->post('/status', \Core\Controllers\StatusController::class . ':create');
-$app->put('/status/{identifier}', \Core\Controllers\StatusController::class . ':update');
-$app->delete('/status/{identifier}', \Core\Controllers\StatusController::class . ':delete');
 
 //Docservers
 $app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
@@ -171,12 +170,11 @@ $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . 
 $app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
 
 //Res
-$app->post('/res', \Core\Controllers\ResController::class . ':create');
-$app->post('/resExt', \Core\Controllers\ResController::class . ':createExt');
-$app->put('/res', \Core\Controllers\ResController::class . ':update');
-$app->put('/res/{resId}/status', \Core\Controllers\ResController::class . ':updateStatus');
-$app->get('/res/{resId}/lock', \Core\Controllers\ResController::class . ':isLock');
-$app->get('/res/{resId}/notes/count', \Core\Controllers\ResController::class . ':getNotesCountForCurrentUserById');
+$app->post('/res', \Resource\controllers\ResController::class . ':create');
+$app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
+$app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
+$app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
+$app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
 $app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');

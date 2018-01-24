@@ -39,7 +39,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
         this.prepareStatus();
         this.route.params.subscribe(function (params) {
             if (typeof params['identifier'] == "undefined") {
-                _this.http.get(_this.coreUrl + 'rest/administration/status/new')
+                _this.http.get(_this.coreUrl + 'rest/administration/statuses/new')
                     .subscribe(function (data) {
                     _this.status.img_filename = "fm-letter";
                     _this.status.can_be_searched = true;
@@ -64,7 +64,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
     StatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
             "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " +
-            "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>" + this.lang.statuses + "</a> > ";
+            "<a onclick='location.hash = \"/administration/statuses\"' style='cursor: pointer'>" + this.lang.statuses + "</a> > ";
         if (this.creationMode == true) {
             breadCrumb += this.lang.statusCreation;
         }
@@ -75,7 +75,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
     };
     StatusAdministrationComponent.prototype.getStatusInfos = function (statusIdentifier) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/administration/status/' + statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/statuses/' + statusIdentifier)
             .subscribe(function (data) {
             _this.status = data['status'][0];
             if (_this.status.can_be_searched == 'Y') {
@@ -105,19 +105,19 @@ var StatusAdministrationComponent = /** @class */ (function () {
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
         if (this.creationMode == true) {
-            this.http.post(this.coreUrl + 'rest/status', this.status)
+            this.http.post(this.coreUrl + 'rest/statuses', this.status)
                 .subscribe(function (data) {
                 _this.notify.success(_this.lang.statusAdded);
-                _this.router.navigate(['administration/status']);
+                _this.router.navigate(['administration/statuses']);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
         }
         else if (this.creationMode == false) {
-            this.http.put(this.coreUrl + 'rest/status/' + this.statusIdentifier, this.status)
+            this.http.put(this.coreUrl + 'rest/statuses/' + this.statusIdentifier, this.status)
                 .subscribe(function (data) {
                 _this.notify.success(_this.lang.statusUpdated);
-                _this.router.navigate(['administration/status']);
+                _this.router.navigate(['administration/statuses']);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

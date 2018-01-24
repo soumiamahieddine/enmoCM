@@ -23,7 +23,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.lang = translate_component_1.LANG;
         this._search = '';
         this.action = {};
-        this.statusList = [];
+        this.statuses = [];
         this.actionPagesList = [];
         this.categoriesList = [];
         this.keywordsList = [];
@@ -55,7 +55,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.categoriesList = data.categoriesList;
-                    _this.statusList = data.statusList;
+                    _this.statuses = data.statuses;
                     _this.actionPagesList = data.action_pagesList;
                     _this.keywordsList = data.keywordsList;
                     _this.loading = false;
@@ -67,7 +67,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.categoriesList = data.categoriesList;
-                    _this.statusList = data.statusList;
+                    _this.statuses = data.statuses;
                     _this.actionPagesList = data.action_pagesList;
                     _this.keywordsList = data.keywordsList;
                     _this.loading = false;

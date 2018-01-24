@@ -8,6 +8,7 @@
 */
 
 namespace MaarchTest;
+
 use PHPUnit\Framework\TestCase;
 
 class StatusControllerTest extends TestCase
@@ -16,7 +17,7 @@ class StatusControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
         $aArgs = [
             'id'               => 'TEST',
@@ -85,20 +86,20 @@ class StatusControllerTest extends TestCase
         ########## GET LIST ##########
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
-        $response  = $status->getList($request, new \Slim\Http\Response());
+        $response  = $status->get($request, new \Slim\Http\Response());
 
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertNotNull($responseBody->statusList);
+        $this->assertNotNull($responseBody->statuses);
 
-        foreach ($responseBody->statusList as $value) {
+        foreach ($responseBody->statuses as $value) {
             $this->assertInternalType("int", $value->identifier);
         }
 
         //$this->assertNotNull($responseBody->lang);
 
-        $elem = $responseBody->statusList;
+        $elem = $responseBody->statuses;
         end($elem);
         $key = key($elem);
         $lastIdentifier = $elem[$key]->identifier;
@@ -192,7 +193,7 @@ class StatusControllerTest extends TestCase
     {
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
-        $status      = new \Core\Controllers\StatusController();
+        $status      = new \Status\controllers\StatusController();
 
         $response = $status->getNewInformations($request, new \Slim\Http\Response());
 

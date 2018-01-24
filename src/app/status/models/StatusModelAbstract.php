@@ -13,11 +13,14 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Status\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class StatusModelAbstract
 {
-    public static function getList()
+    public static function get()
     {
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -103,5 +106,4 @@ class StatusModelAbstract
 
         return $aReturn;
     }
-
 }

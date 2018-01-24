@@ -100,7 +100,7 @@
    <id>admin_status</id>
    <name>_ADMIN_STATUS</name>
    <comment>_ADMIN_STATUS_DESC</comment>
-   <servicepage>/administration/status</servicepage>
+   <servicepage>/administration/statuses</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-check-circle</style>
    <system_service>false</system_service>

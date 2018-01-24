@@ -1,9 +1,12 @@
 {
     "autoload": {
     	"psr-4": {
+            "SrcCore\\"       : "src/core/",
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
             "History\\"       : "src/app/history/",
+            "Status\\"        : "src/app/status/",
+            "Resource\\"      : "src/app/resource/",
 
             "Core\\"          : "core/",
     	    "Apps\\"          : "apps/maarch_entreprise/",
@@ -20,7 +23,7 @@
         "slim/slim": "^3.8",
         "respect/validation": "^1.1",
         "php-http/curl-client": "^1.7",
-        "m4tthumphrey/php-gitlab-api": "dev-master",
+        "m4tthumphrey/php-gitlab-api": "8",
         "jumbojett/openid-connect-php": "^0.3.0"
     }
 }

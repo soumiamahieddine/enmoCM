@@ -36,7 +36,7 @@
                                     (focusout)="clearSearch()"/>
                                 </mat-form-field>
                             </md2-select-header>
-                            <md2-option *ngFor="let statut of statusList | dataPipe : 'label_status' : _search" [value]="statut.id">{{statut.label_status}}</md2-option>
+                            <md2-option *ngFor="let statut of statuses | dataPipe : 'label_status' : _search" [value]="statut.id">{{statut.label_status}}</md2-option>
                          </md2-select>
                     </div>
                 </div>

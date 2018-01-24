@@ -44,7 +44,7 @@ export class StatusAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params) => {
             if (typeof params['identifier'] == "undefined"){
-                this.http.get(this.coreUrl + 'rest/administration/status/new')
+                this.http.get(this.coreUrl + 'rest/administration/statuses/new')
                 .subscribe((data) => {
                     this.status.img_filename    = "fm-letter";
                     this.status.can_be_searched = true
@@ -70,7 +70,7 @@ export class StatusAdministrationComponent implements OnInit {
     updateBreadcrumb(applicationName: string){
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
                                         "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+
-                                        "<a onclick='location.hash = \"/administration/status\"' style='cursor: pointer'>"+this.lang.statuses+"</a> > ";
+                                        "<a onclick='location.hash = \"/administration/statuses\"' style='cursor: pointer'>"+this.lang.statuses+"</a> > ";
         if(this.creationMode == true){
             breadCrumb += this.lang.statusCreation;
         } else {
@@ -80,7 +80,7 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     getStatusInfos(statusIdentifier : string){
-        this.http.get(this.coreUrl + 'rest/administration/status/'+statusIdentifier)
+        this.http.get(this.coreUrl + 'rest/statuses/'+statusIdentifier)
             .subscribe((data) => {
                 this.status    = data['status'][0];
                 if(this.status.can_be_searched == 'Y'){
@@ -107,19 +107,19 @@ export class StatusAdministrationComponent implements OnInit {
     
     submitStatus() {
         if(this.creationMode == true){
-            this.http.post(this.coreUrl + 'rest/status', this.status)
+            this.http.post(this.coreUrl + 'rest/statuses', this.status)
             .subscribe((data : any) => {
                 this.notify.success(this.lang.statusAdded);
-                this.router.navigate(['administration/status']);
+                this.router.navigate(['administration/statuses']);
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);
             });
         } else if(this.creationMode == false){
 
-            this.http.put(this.coreUrl+'rest/status/'+this.statusIdentifier, this.status)
+            this.http.put(this.coreUrl+'rest/statuses/'+this.statusIdentifier, this.status)
             .subscribe((data : any) => {
                 this.notify.success(this.lang.statusUpdated);
-                this.router.navigate(['administration/status']);                    
+                this.router.navigate(['administration/statuses']);                    
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);
             });

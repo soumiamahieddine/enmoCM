@@ -14,7 +14,7 @@ class ManageProcessConvertTest extends TestCase
 {
     public function testmanageConvert ()
     {
-        $action = new \Core\Controllers\ResController();
+        $action = new \Resource\controllers\ResController();
 
         $environment = \Slim\Http\Environment::mock(
             [
