@@ -40,9 +40,9 @@ export class UpdateStatusAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + "rest/status")
+        this.http.get(this.coreUrl + "rest/statuses")
             .subscribe((data : any) => {
-                this.statuses = data['statusList'];
+                this.statuses = data['statuses'];
 
                 this.loading = false;
             }, () => {

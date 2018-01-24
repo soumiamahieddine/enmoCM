@@ -33,9 +33,9 @@ var UpdateStatusAdministrationComponent = /** @class */ (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + "rest/administration/status")
+        this.http.get(this.coreUrl + "rest/statuses")
             .subscribe(function (data) {
-            _this.statuses = data['statusList'];
+            _this.statuses = data['statuses'];
             _this.loading = false;
         }, function () {
             location.href = "index.php";
