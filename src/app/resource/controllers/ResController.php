@@ -141,7 +141,7 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        ResModel::updateStatus(['resId' => $document['res_id'], 'status' => $data['status']]);
+        ResModel::update(['resId' => $document['res_id'], 'set' => ['status' => $data['status']]]);
 
         HistoryController::add([
             'tableName' => 'res_letterbox',

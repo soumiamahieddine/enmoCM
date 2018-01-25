@@ -104,24 +104,6 @@ class ResModelAbstract
         return true;
     }
 
-    public static function updateStatus(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['status']);
-
-        DatabaseModel::update([
-            'table'     => 'res_letterbox',
-            'set'       => [
-                'status'    => $aArgs['status']
-            ],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        return true;
-    }
-
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'set']);
