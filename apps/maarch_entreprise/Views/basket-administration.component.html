@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" required>
+                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" pattern="^[\w-]*$" maxlength="30" required>
                             <input *ngIf="!creationMode" type="text" class="form-control" name="identifier" title="{{lang.id}}" [(ngModel)]="basket.id" disabled>
                         </div>
                     </div>
