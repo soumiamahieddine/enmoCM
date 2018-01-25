@@ -57,7 +57,7 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['id']);
+        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['name']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
