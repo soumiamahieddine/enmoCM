@@ -60,16 +60,21 @@ while ($state <> 'END') {
 
             $u=1;
             while ($line2 = $stmt2->fetchObject()) {
-                $recipients = array();
-                $recipients = $diffusion_type_controler->getRecipients($notification, '');
-                $aRecipients = [];
-                foreach ($recipients as $itemRecipient) {
-                    array_push($aRecipients, $itemRecipient->user_id);
+                if ($notification->diffusion_type == "groups"){
+                    $recipients = array();
+                    $recipients = $diffusion_type_controler->getRecipients($notification, '');
+                    $aRecipients = [];
+                    foreach ($recipients as $itemRecipient) {
+                        array_push($aRecipients, $itemRecipient->user_id);
+                    }
+                    if(empty($aRecipients)){
+                        $aRecipients = "0=1";
+                    }
+                    $stmt3 = $db->query("SELECT usergroup_content.user_id,users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK') and usergroup_content.user_id=users.user_id and users.user_id in (?)", array($line2->group_id, $aRecipients));
+                } else {
+                    $stmt3 = $db->query("SELECT usergroup_content.user_id,users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK') and usergroup_content.user_id=users.user_id",array($line2->group_id));
                 }
-                if(empty($aRecipients)){
-                    $aRecipients = "0=1";
-                }
-                $stmt3 = $db->query("SELECT usergroup_content.user_id,users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK') and usergroup_content.user_id=users.user_id and users.user_id in (?)", array($line2->group_id, $aRecipients));
+
                 $baskets_notif = array();
                 $rowCount3 = $stmt3->rowCount();
                 $logger->write("GROUP: " . $line2->group_id . " ... " . $rowCount3 . " user(s) to notify", 'INFO');
@@ -225,7 +230,7 @@ while ($state <> 'END') {
                 $attachments = array();
                 if ($tmpNotif['attach']) {
                     $logger->write('Adding attachments', 'INFO');
-                    foreach ($tmpNotif['events'] as $event) {
+                    foreach ($basket_list['events'] as $event) {
                         // Check if event is related to document in collection
                         if ($event->res_id != '') {
                             $query = "SELECT "
