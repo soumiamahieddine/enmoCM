@@ -21,7 +21,6 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
     datatable       : any;
 
-
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
 

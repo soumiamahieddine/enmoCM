@@ -25,7 +25,6 @@ export class PriorityAdministrationComponent implements OnInit {
         working_days    : false
     };
 
-
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
     }
 
