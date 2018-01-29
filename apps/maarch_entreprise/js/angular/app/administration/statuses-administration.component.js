@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var StatusesAdministrationComponent = /** @class */ (function () {
     function StatusesAdministrationComponent(http, notify) {
         this.http = http;
@@ -20,7 +21,14 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         this.lang = translate_component_1.LANG;
         this.statuses = [];
         this.loading = false;
+        this.displayedColumns = ['img_filename', 'id', 'label_status', 'identifier'];
+        this.dataSource = new material_1.MatTableDataSource(this.statuses);
     }
+    StatusesAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     StatusesAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
@@ -29,11 +37,13 @@ var StatusesAdministrationComponent = /** @class */ (function () {
         this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe(function (data) {
             _this.statuses = data.statuses;
-            setTimeout(function () {
-                $j("[md2sortby='label_status']").click();
-            }, 0);
             _this.updateBreadcrumb(angularGlobals.applicationName);
             _this.loading = false;
+            setTimeout(function () {
+                _this.dataSource = new material_1.MatTableDataSource(_this.statuses);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, 0);
         }, function (err) {
             _this.notify.error(JSON.parse(err._body).errors);
         });
@@ -58,6 +68,14 @@ var StatusesAdministrationComponent = /** @class */ (function () {
             });
         }
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], StatusesAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], StatusesAdministrationComponent.prototype, "sort", void 0);
     StatusesAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals['statuses-administrationView'],
