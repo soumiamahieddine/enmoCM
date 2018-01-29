@@ -35,7 +35,7 @@ class BasketController
         return $response->withJson(['baskets' => BasketModel::get()]);
     }
 
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -82,7 +82,7 @@ class BasketController
         return $response->withJson(['basket' => $data['id']]);
     }
 
-    public function update(Request $request, Response $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -116,7 +116,7 @@ class BasketController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(Request $request, Response $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -148,7 +148,7 @@ class BasketController
         return $response->withJson(['baskets' => $baskets]);
     }
 
-    public function updateSort(Request $request, Response $response, $aArgs)
+    public function updateSort(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -220,7 +220,7 @@ class BasketController
         return $response->withJson(['baskets' => $baskets]);
     }
 
-    public function getGroups(Request $request, Response $response, $aArgs)
+    public function getGroups(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -449,7 +449,7 @@ class BasketController
         return $response->withJson(['groups' => $groups, 'pages' => $basketPages, 'actions' => $actions]);
     }
 
-    public function deleteGroup(Request $request, Response $response, $aArgs)
+    public function deleteGroup(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);

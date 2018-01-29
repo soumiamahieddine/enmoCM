@@ -3,20 +3,19 @@
 namespace Core\Controllers;
 
 use Core\Models\ServiceModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Core\Models\PriorityModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class PriorityController
 {
-
-    public function get(RequestInterface $request, ResponseInterface $response)
+    public function get(Request $request, Response $response)
     {
         return $response->withJson(['priorities' => PriorityModel::get()]);
     }
 
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         $priotity = PriorityModel::getById(['id' => $aArgs['id']]);
 
@@ -27,9 +26,9 @@ class PriorityController
         return $response->withJson(['priority'  => $priotity]);
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response)
+    public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -46,15 +45,12 @@ class PriorityController
 
         $id = PriorityModel::create($data);
 
-        return $response->withJson([
-            'success'   => _ADDED_PRIORITY,
-            'priority'  => $id
-        ]);
+        return $response->withJson(['priority'  => $id]);
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -72,20 +68,17 @@ class PriorityController
 
         PriorityModel::update($data);
 
-        return $response->withJson(['success' => _UPDATED_PRIORITY]);
+        return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         PriorityModel::delete(['id' => $aArgs['id']]);
 
-        return $response->withJson([
-            'success' => _DELETED_PRIORITY,
-            'priorities' => PriorityModel::get()
-        ]);
+        return $response->withJson(['priorities' => PriorityModel::get()]);
     }
 }
