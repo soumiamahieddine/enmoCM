@@ -1,7 +1,8 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any) : any;
 declare function successNotification(message: string) : void;
@@ -51,6 +52,16 @@ export class ProfileComponent implements OnInit {
     selectedSignatureLabel      : string    = "";
     loading                     : boolean   = false;
     displayAbsenceButton        : boolean   = false;
+
+    displayedColumns = ['event_date','info'];
+    dataSource = new MatTableDataSource(this.histories);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
 
     constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
@@ -426,6 +437,11 @@ export class ProfileComponent implements OnInit {
             this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
                 .subscribe((data : any) => {
                     this.histories = data.histories;
+                    setTimeout(() => {
+                        this.dataSource = new MatTableDataSource(this.histories);
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }, 0);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

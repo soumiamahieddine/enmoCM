@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("./translate.component");
 var notification_service_1 = require("./notification.service");
+var material_1 = require("@angular/material");
 var ProfileComponent = /** @class */ (function () {
     function ProfileComponent(http, zone, notify) {
         var _this = this;
@@ -49,10 +50,17 @@ var ProfileComponent = /** @class */ (function () {
         this.selectedSignatureLabel = "";
         this.loading = false;
         this.displayAbsenceButton = false;
+        this.displayedColumns = ['event_date', 'info'];
+        this.dataSource = new material_1.MatTableDataSource(this.histories);
         window['angularProfileComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
     }
+    ProfileComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     ProfileComponent.prototype.prepareProfile = function () {
         $j('#inner_content').remove();
         $j('#menunav').hide();
@@ -394,6 +402,11 @@ var ProfileComponent = /** @class */ (function () {
             this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
                 .subscribe(function (data) {
                 _this.histories = data.histories;
+                setTimeout(function () {
+                    _this.dataSource = new material_1.MatTableDataSource(_this.histories);
+                    _this.dataSource.paginator = _this.paginator;
+                    _this.dataSource.sort = _this.sort;
+                }, 0);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -408,6 +421,14 @@ var ProfileComponent = /** @class */ (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], ProfileComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], ProfileComponent.prototype, "sort", void 0);
     ProfileComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals.profileView,
