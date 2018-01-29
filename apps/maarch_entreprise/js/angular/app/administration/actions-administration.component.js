@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var ActionsAdministrationComponent = /** @class */ (function () {
     function ActionsAdministrationComponent(http, notify) {
         this.http = http;
@@ -23,7 +24,14 @@ var ActionsAdministrationComponent = /** @class */ (function () {
         this.titles = [];
         this.loading = false;
         this.data = [];
+        this.displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
+        this.dataSource = new material_1.MatTableDataSource(this.data);
     }
+    ActionsAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     ActionsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.actions;
@@ -41,7 +49,9 @@ var ActionsAdministrationComponent = /** @class */ (function () {
             _this.data = _this.actions;
             _this.loading = false;
             setTimeout(function () {
-                $j("[md2sortby='id']").click();
+                _this.dataSource = new material_1.MatTableDataSource(_this.data);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
             }, 0);
         }, function (err) {
             console.log(err);
@@ -55,12 +65,23 @@ var ActionsAdministrationComponent = /** @class */ (function () {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe(function (data) {
                 _this.data = data.action;
+                _this.dataSource = new material_1.MatTableDataSource(_this.data);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
                 _this.notify.success(_this.lang.actionDeleted + ' « ' + action.label_action + ' »');
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
         }
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], ActionsAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], ActionsAdministrationComponent.prototype, "sort", void 0);
     ActionsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["actions-administrationView"],

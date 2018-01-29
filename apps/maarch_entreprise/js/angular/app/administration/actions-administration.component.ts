@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+
 
 declare function $j(selector: any) : any;
 
@@ -23,7 +25,17 @@ export class ActionsAdministrationComponent implements OnInit {
     titles                  : any[]         = [];
 
     loading                 : boolean       = false;
-    data                    : any           = [];
+    data: Action[] = [];
+
+    displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
+    dataSource = new MatTableDataSource(this.data);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -48,7 +60,9 @@ export class ActionsAdministrationComponent implements OnInit {
                 this.data = this.actions;
                 this.loading = false;
                 setTimeout(() => {
-                    $j("[md2sortby='id']").click();
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {
                 console.log(err);
@@ -63,6 +77,9 @@ export class ActionsAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe((data : any) => {
                     this.data = data.action;
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                     this.notify.success(this.lang.actionDeleted+' « '+action.label_action+' »');
                     
                 }, (err) => {
@@ -70,5 +87,10 @@ export class ActionsAdministrationComponent implements OnInit {
                 });
         }
     }
-
+}
+export interface Action {
+    id: number;
+    label_action: string;
+    history: string;
+    is_folder_action: string;
 }
