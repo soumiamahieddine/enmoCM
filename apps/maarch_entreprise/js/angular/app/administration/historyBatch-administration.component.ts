@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 declare function $j(selector: any) : any;
 
@@ -17,20 +19,23 @@ declare var angularGlobals : any;
 export class HistoryBatchAdministrationComponent implements OnInit {
     coreUrl                 : string;
     lang                    : any           = LANG;
-    search                  : string        = null;
-    _search                 : string    = '';
-
-    filterModules           : any           = [];
-    filterModule            : string        = '';
-    filterByDate            : string        = '';
     
     loading                 : boolean       = false;
-    data                    : any           = [];
-    CurrentYear             : number        = new Date().getFullYear();
-    currentMonth            : number        = new Date().getMonth()+1;
-    minDate                 : Date          = new Date();
+    data: HistoryBatch[] = [];
+    CurrentYear: number = new Date().getFullYear();
+    currentMonth: number = new Date().getMonth() + 1;
+    minDate: Date = new Date();
     
-    
+    displayedColumns = ['batch_id','event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
+    dataSource = new MatTableDataSource(this.data);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
@@ -53,11 +58,11 @@ export class HistoryBatchAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/administration/historyBatch/eventDate/'+this.minDate.toJSON())
             .subscribe((data:any) => {
                 this.data = data.historyList;
-
-                this.filterModules = data.filters.modules;
                 this.loading = false;
                 setTimeout(() => {
-                    $j("[md2sortby='event_date']").click().click();
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {
                 console.log(err);
@@ -69,12 +74,20 @@ export class HistoryBatchAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/administration/historyBatch/eventDate/'+this.minDate.toJSON())
         .subscribe((data:any) => {
             this.data = data.historyList;
-            this.filterModules = data.filters.modules;
-
+            this.dataSource = new MatTableDataSource(this.data);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         }, (err) => {
             console.log(err);
             location.href = "index.php";
         });
     }
-
+}
+export interface HistoryBatch {
+    batch_id: number;
+    event_date: Date;
+    total_processed: string;
+    total_errors: string;
+    info: string;
+    module_name: string;
 }
