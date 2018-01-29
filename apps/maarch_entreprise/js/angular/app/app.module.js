@@ -12,8 +12,8 @@ var animations_1 = require("@angular/platform-browser/animations");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
 var app_material_module_1 = require("./app-material.module");
-var md2_1 = require("md2");
 //import { HeaderComponent }                      from './header.component';
+var notification_service_1 = require("./notification.service");
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
 var administration_module_1 = require("./administration/administration.module");
@@ -31,16 +31,18 @@ var AppModule = /** @class */ (function () {
                 http_1.HttpClientModule,
                 administration_module_1.AdministrationModule,
                 app_routing_module_1.AppRoutingModule,
-                app_material_module_1.AppMaterialModule,
-                md2_1.Md2Module,
-                md2_1.NoConflictStyleCompatibilityMode
+                app_material_module_1.AppMaterialModule
             ],
             declarations: [
                 //HeaderComponent,
                 app_component_1.AppComponent,
                 profile_component_1.ProfileComponent,
                 signature_book_component_1.SignatureBookComponent,
-                signature_book_component_1.SafeUrlPipe
+                signature_book_component_1.SafeUrlPipe,
+                notification_service_1.CustomSnackbarComponent
+            ],
+            entryComponents: [
+                notification_service_1.CustomSnackbarComponent
             ],
             bootstrap: [app_component_1.AppComponent]
         })
