@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -9,37 +10,35 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+/**
+ * @brief Parameter Model Abstract
+ * @author dev@maarch.org
+ */
+
+namespace Parameter\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class ParameterModelAbstract
 {
-    public static function getList()
+    public static function get(array $aArgs = [])
     {
-        $aReturn = DatabaseModel::select(
-            ['select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['parameters']]
-        );
+        ValidatorModel::arrayType($aArgs, ['select']);
 
-        foreach ($aReturn as $key => $parameter) {
-
-            if ($parameter['param_value_date'] != null) {
-                $aReturn[$key]['param_value_date'] =  TextFormatModel::formatDate($aReturn[$key]['param_value_date']);
-            }
-        }
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['parameters'],
+        ]);
 
         return $aReturn;
-    }
-    
-    public static function getParametersLang()
-    {
-        $aLang = LangModel::getParametersLang();
-        return $aLang;
     }
 
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $parameter = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -50,9 +49,6 @@ class ParameterModelAbstract
 
         if (empty($parameter[0])) {
             return [];
-        }
-        if (!empty($parameter[0]['param_value_date'])) {
-            $parameter[0]['param_value_date'] = TextFormatModel::formatDate($parameter[0]['param_value_date']);
         }
 
         return $parameter[0];
@@ -79,34 +75,32 @@ class ParameterModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::update(
-            [
+        DatabaseModel::update([
             'table'     => 'parameters',
             'set'       => $aArgs,
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
-            ]
-        );
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::delete([
+        DatabaseModel::delete([
             'table' => 'parameters',
             'where' => ['id = ?'],
             'data'  => [$aArgs['id']]
         ]);
 
-        return $aReturn;
+        return true;
     }
 }

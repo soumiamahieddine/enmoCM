@@ -309,7 +309,7 @@ class UserController
             'recordId'     => $user['user_id'],
             'eventType'    => 'RET',
             'eventId'      => 'userabs',
-            'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+            'info'         => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
         ]);
 
         return $response->withJson([

@@ -45,6 +45,7 @@ class DatabaseModel
      * @param array $args
      *
      * @return int
+     * @throws \Exception
      */
     public static function getNextSequenceValue(array $args)
     {
@@ -149,6 +150,7 @@ class DatabaseModel
      * @param array $args
      *
      * @return bool
+     * @throws \Exception
      */
     public static function insert(array $args)
     {
@@ -184,6 +186,7 @@ class DatabaseModel
      * @param array $args
      *
      * @return bool
+     * @throws \Exception
      */
     public static function update(array $args)
     {
@@ -219,6 +222,7 @@ class DatabaseModel
      * @param array $args
      *
      * @return bool
+     * @throws \Exception
      */
     public static function delete(array $args)
     {

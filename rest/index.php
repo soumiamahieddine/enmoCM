@@ -147,7 +147,6 @@ $app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':g
 $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
-
 //Docservers
 $app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
 $app->get('/docservers/{id}', \Core\Controllers\DocserverController::class . ':getById');
@@ -206,13 +205,12 @@ $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
 
-//parameters
-$app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
-$app->get('/administration/parameters/new', \Core\Controllers\ParametersController::class . ':getNewParameterForAdministration');
-$app->get('/administration/parameters/{id}', \Core\Controllers\ParametersController::class . ':getParameterForAdministration');
-$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
-$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
-$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+//Parameters
+$app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
+$app->post('/parameters', \Parameter\controllers\ParameterController::class . ':create');
+$app->get('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':getById');
+$app->put('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':update');
+$app->delete('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':delete');
 
 //Priorities
 $app->get('/priorities', \Priority\controllers\PriorityController::class . ':get');
