@@ -4,6 +4,7 @@ function triggerAngular(prodmode, locationToGo) {
         //'header',
         'administration',
         'users-administration',
+        'users-administration-redirect-modal',
         'user-administration',
         'groups-administration',
         'group-administration',

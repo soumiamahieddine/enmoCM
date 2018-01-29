@@ -1,17 +1,17 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* @brief User Model
-* @author dev@maarch.org
-* @ingroup core
-*/
+ * @brief User Model
+ *
+ * @author dev@maarch.org
+ * @ingroup core
+ */
 
 namespace Core\Models;
 
@@ -25,10 +25,10 @@ class UserModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
         $aUsers = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users'],
+            'where' => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data' => empty($aArgs['data']) ? [] : $aArgs['data'],
         ]);
 
         return $aUsers;
@@ -40,10 +40,10 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         $aUser = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users'],
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         if (empty($aUser)) {
@@ -60,21 +60,21 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'changePassword']);
 
         DatabaseModel::insert([
-            'table'         => 'users',
+            'table' => 'users',
             'columnsValues' => [
-                'user_id'           => $aArgs['user']['userId'],
-                'firstname'         => $aArgs['user']['firstname'],
-                'lastname'          => $aArgs['user']['lastname'],
-                'mail'              => $aArgs['user']['mail'],
-                'phone'             => $aArgs['user']['phone'],
-                'initials'          => $aArgs['user']['initials'],
-                'thumbprint'        => $aArgs['user']['thumbprint'],
-                'enabled'           => 'Y',
-                'status'            => 'OK',
-                'change_password'   => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
-                'loginmode'         => 'standard',
-                'password'          => SecurityModel::getPasswordHash('maarch')
-            ]
+                'user_id' => $aArgs['user']['userId'],
+                'firstname' => $aArgs['user']['firstname'],
+                'lastname' => $aArgs['user']['lastname'],
+                'mail' => $aArgs['user']['mail'],
+                'phone' => $aArgs['user']['phone'],
+                'initials' => $aArgs['user']['initials'],
+                'thumbprint' => $aArgs['user']['thumbprint'],
+                'enabled' => 'Y',
+                'status' => 'OK',
+                'change_password' => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
+                'loginmode' => 'standard',
+                'password' => SecurityModel::getPasswordHash('maarch'),
+            ],
         ]);
 
         return true;
@@ -88,18 +88,18 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'firstname'     => $aArgs['user']['firstname'],
-                'lastname'      => $aArgs['user']['lastname'],
-                'mail'          => $aArgs['user']['mail'],
-                'phone'         => $aArgs['user']['phone'],
-                'initials'      => $aArgs['user']['initials'],
-                'enabled'       => $aArgs['user']['enabled'],
-                'thumbprint'    => $aArgs['user']['thumbprint']
+            'table' => 'users',
+            'set' => [
+                'firstname' => $aArgs['user']['firstname'],
+                'lastname' => $aArgs['user']['lastname'],
+                'mail' => $aArgs['user']['mail'],
+                'phone' => $aArgs['user']['phone'],
+                'initials' => $aArgs['user']['initials'],
+                'enabled' => $aArgs['user']['enabled'],
+                'thumbprint' => $aArgs['user']['thumbprint'],
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         return true;
@@ -111,12 +111,12 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'status'    => 'DEL',
+            'table' => 'users',
+            'set' => [
+                'status' => 'DEL',
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         return true;
@@ -128,10 +128,10 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aUser = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users'],
+            'where' => ['user_id = ?'],
+            'data' => [$aArgs['userId']],
         ]);
 
         if (empty($aUser)) {
@@ -147,10 +147,10 @@ class UserModelAbstract
         ValidatorModel::arrayType($aArgs, ['entities']);
 
         $aUsers = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users, users_entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
-            'data'      => [$aArgs['entities']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users, users_entities'],
+            'where' => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
+            'data' => [$aArgs['entities']],
         ]);
 
         return $aUsers;
@@ -162,11 +162,11 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['mail']);
 
         $aUser = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users'],
-            'where'     => ['mail = ? and status = ?'],
-            'data'      => [$aArgs['mail'], 'OK'],
-            'limit'     => 1
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users'],
+            'where' => ['mail = ? and status = ?'],
+            'data' => [$aArgs['mail'], 'OK'],
+            'limit' => 1,
         ]);
 
         return $aUser;
@@ -179,12 +179,12 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['password']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'password'  => SecurityModel::getPasswordHash($aArgs['password'])
+            'table' => 'users',
+            'set' => [
+                'password' => SecurityModel::getPasswordHash($aArgs['password']),
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         return true;
@@ -196,12 +196,12 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'password'  => SecurityModel::getPasswordHash('maarch')
+            'table' => 'users',
+            'set' => [
+                'password' => SecurityModel::getPasswordHash('maarch'),
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         return true;
@@ -214,13 +214,13 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['userSerialId']);
 
         DatabaseModel::insert([
-            'table'         => 'user_signatures',
+            'table' => 'user_signatures',
             'columnsValues' => [
-                'user_serial_id'        => $aArgs['userSerialId'],
-                'signature_label'       => $aArgs['signatureLabel'],
-                'signature_path'        => $aArgs['signaturePath'],
-                'signature_file_name'   => $aArgs['signatureFileName']
-            ]
+                'user_serial_id' => $aArgs['userSerialId'],
+                'signature_label' => $aArgs['signatureLabel'],
+                'signature_path' => $aArgs['signaturePath'],
+                'signature_file_name' => $aArgs['signatureFileName'],
+            ],
         ]);
 
         return true;
@@ -233,12 +233,12 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
 
         DatabaseModel::update([
-            'table'     => 'user_signatures',
-            'set'       => [
-                'signature_label'   => $aArgs['label']
+            'table' => 'user_signatures',
+            'set' => [
+                'signature_label' => $aArgs['label'],
             ],
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']]
+            'where' => ['user_serial_id = ?', 'id = ?'],
+            'data' => [$aArgs['userSerialId'], $aArgs['signatureId']],
         ]);
 
         return true;
@@ -250,9 +250,9 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
 
         DatabaseModel::delete([
-            'table'     => 'user_signatures',
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
+            'table' => 'user_signatures',
+            'where' => ['user_serial_id = ?', 'id = ?'],
+            'data' => [$aArgs['userSerialId'], $aArgs['signatureId']],
         ]);
 
         return true;
@@ -264,12 +264,12 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId', 'title', 'htmlBody']);
 
         DatabaseModel::insert([
-            'table'         => 'users_email_signatures',
+            'table' => 'users_email_signatures',
             'columnsValues' => [
-                'user_id'   => $aArgs['userId'],
-                'title'     => $aArgs['title'],
-                'html_body' => $aArgs['htmlBody']
-            ]
+                'user_id' => $aArgs['userId'],
+                'title' => $aArgs['title'],
+                'html_body' => $aArgs['htmlBody'],
+            ],
         ]);
 
         return true;
@@ -277,18 +277,18 @@ class UserModelAbstract
 
     public static function updateEmailSignature(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['id','userId', 'title', 'htmlBody']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'title', 'htmlBody']);
         ValidatorModel::stringType($aArgs, ['userId', 'title', 'htmlBody']);
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::update([
-            'table'     => 'users_email_signatures',
-            'set'       => [
-                'title'     => $aArgs['title'],
+            'table' => 'users_email_signatures',
+            'set' => [
+                'title' => $aArgs['title'],
                 'html_body' => $aArgs['htmlBody'],
             ],
-            'where'     => ['user_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userId'], $aArgs['id']]
+            'where' => ['user_id = ?', 'id = ?'],
+            'data' => [$aArgs['userId'], $aArgs['id']],
         ]);
 
         return true;
@@ -300,9 +300,9 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         DatabaseModel::delete([
-            'table'     => 'users_email_signatures',
-            'where'     => ['user_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userId'], $aArgs['id']]
+            'table' => 'users_email_signatures',
+            'where' => ['user_id = ?', 'id = ?'],
+            'data' => [$aArgs['userId'], $aArgs['id']],
         ]);
 
         return true;
@@ -314,11 +314,11 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         $aReturn = DatabaseModel::select([
-            'select'    => ['id', 'user_serial_id', 'signature_label', 'signature_path', 'signature_file_name'],
-            'table'     => ['user_signatures'],
-            'where'     => ['user_serial_id = ?'],
-            'data'      => [$aArgs['id']],
-            'order_by'  => ['id']
+            'select' => ['id', 'user_serial_id', 'signature_label', 'signature_path', 'signature_file_name'],
+            'table' => ['user_signatures'],
+            'where' => ['user_serial_id = ?'],
+            'data' => [$aArgs['id']],
+            'order_by' => ['id'],
         ]);
 
         $docserver = [];
@@ -330,16 +330,16 @@ class UserModelAbstract
             return [];
         }
         $tmpPath = CoreConfigModel::getTmpPath();
-        $urlTmpPath = str_replace('rest/', '', \Url::coreurl()) . 'apps/maarch_entreprise/tmp/';
-        foreach($aReturn as $key => $value) {
-            $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
+        $urlTmpPath = str_replace('rest/', '', \Url::coreurl()).'apps/maarch_entreprise/tmp/';
+        foreach ($aReturn as $key => $value) {
+            $pathToSignature = $docserver['path_template'].str_replace('#', '/', $value['signature_path']).$value['signature_file_name'];
 
             $extension = explode('.', $pathToSignature);
             $extension = $extension[count($extension) - 1];
-            $fileNameOnTmp = 'tmp_file_' . $aArgs['id'] . '_' . rand() . '.' . strtolower($extension);
-            $filePathOnTmp = $tmpPath . $fileNameOnTmp;
+            $fileNameOnTmp = 'tmp_file_'.$aArgs['id'].'_'.rand().'.'.strtolower($extension);
+            $filePathOnTmp = $tmpPath.$fileNameOnTmp;
             if (file_exists($pathToSignature) && copy($pathToSignature, $filePathOnTmp)) {
-                $aReturn[$key]['pathToSignatureOnTmp'] = $urlTmpPath . $fileNameOnTmp;
+                $aReturn[$key]['pathToSignatureOnTmp'] = $urlTmpPath.$fileNameOnTmp;
             } else {
                 $aReturn[$key]['pathToSignatureOnTmp'] = '';
             }
@@ -354,13 +354,13 @@ class UserModelAbstract
     public static function getSignatureWithSignatureIdById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'signatureId']);
-        ValidatorModel::intVal($aArgs, ['id','signatureId']);
+        ValidatorModel::intVal($aArgs, ['id', 'signatureId']);
 
         $aReturn = DatabaseModel::select([
-            'select'    => ['id', 'user_serial_id', 'signature_label'],
-            'table'     => ['user_signatures'],
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['id'], $aArgs['signatureId']],
+            'select' => ['id', 'user_serial_id', 'signature_label'],
+            'table' => ['user_signatures'],
+            'where' => ['user_serial_id = ?', 'id = ?'],
+            'data' => [$aArgs['id'], $aArgs['signatureId']],
         ]);
 
         return $aReturn[0];
@@ -372,11 +372,11 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users_email_signatures'],
-            'where'     => ['user_id = ?'],
-            'data'      => [$aArgs['userId']],
-            'order_by'  => ['id']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users_email_signatures'],
+            'where' => ['user_id = ?'],
+            'data' => [$aArgs['userId']],
+            'order_by' => ['id'],
         ]);
 
         return $aReturn;
@@ -389,10 +389,10 @@ class UserModelAbstract
         ValidatorModel::intVal($aArgs, ['signatureId']);
 
         $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users_email_signatures'],
-            'where'     => ['user_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userId'], $aArgs['signatureId']],
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['users_email_signatures'],
+            'where' => ['user_id = ?', 'id = ?'],
+            'data' => [$aArgs['userId'], $aArgs['signatureId']],
         ]);
 
         return $aReturn[0];
@@ -411,7 +411,7 @@ class UserModelAbstract
 
         $labelledUser = '';
         if (!empty($rawUser)) {
-            $labelledUser = $rawUser['firstname']. ' ' .$rawUser['lastname'];
+            $labelledUser = $rawUser['firstname'].' '.$rawUser['lastname'];
         }
 
         return $labelledUser;
@@ -422,14 +422,13 @@ class UserModelAbstract
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
-
         $aReturn = DatabaseModel::select([
-            'select'    => ['process_comment'],
-            'table'     => ['listinstance'],
-            'where'     => ['res_id = ?', 'process_date is null', 'item_mode in (?)'],
-            'data'      => [$aArgs['resId'], ['visa', 'sign']],
-            'order_by'  => ['listinstance_id ASC'],
-            'limit'     => 1
+            'select' => ['process_comment'],
+            'table' => ['listinstance'],
+            'where' => ['res_id = ?', 'process_date is null', 'item_mode in (?)'],
+            'data' => [$aArgs['resId'], ['visa', 'sign']],
+            'order_by' => ['listinstance_id ASC'],
+            'limit' => 1,
         ]);
 
         if (empty($aReturn[0])) {
@@ -444,12 +443,11 @@ class UserModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-
         $aGroup = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc'],
-            'table'     => ['usergroup_content, usergroups'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroup_content.primary_group = ?'],
-            'data'      => [$aArgs['userId'], 'Y']
+            'select' => ['usergroup_content.group_id', 'usergroups.group_desc'],
+            'table' => ['usergroup_content, usergroups'],
+            'where' => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroup_content.primary_group = ?'],
+            'data' => [$aArgs['userId'], 'Y'],
         ]);
 
         if (empty($aGroup[0])) {
@@ -465,10 +463,10 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aEntity = DatabaseModel::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
-            'table'     => ['users_entities, entities'],
-            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?', 'users_entities.primary_entity = ?'],
-            'data'      => [$aArgs['userId'], 'Y']
+            'select' => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'table' => ['users_entities, entities'],
+            'where' => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?', 'users_entities.primary_entity = ?'],
+            'data' => [$aArgs['userId'], 'Y'],
         ]);
 
         if (empty($aEntity[0])) {
@@ -484,10 +482,10 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
-            'table'     => ['usergroup_content, usergroups, security'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
-            'data'      => [$aArgs['userId']]
+            'select' => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'table' => ['usergroup_content, usergroups, security'],
+            'where' => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroups.group_id = security.group_id'],
+            'data' => [$aArgs['userId']],
         ]);
 
         return $aGroups;
@@ -499,11 +497,11 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aEntities = DatabaseModel::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
-            'table'     => ['users_entities, entities'],
-            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
-            'data'      => [$aArgs['userId']],
-            'order_by'  => ['users_entities.primary_entity DESC']
+            'select' => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+            'table' => ['users_entities, entities'],
+            'where' => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
+            'data' => [$aArgs['userId']],
+            'order_by' => ['users_entities.primary_entity DESC'],
         ]);
 
         return $aEntities;
@@ -515,10 +513,10 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aServices = DatabaseModel::select([
-            'select'    => ['usergroups_services.service_id'],
-            'table'     => ['usergroup_content, usergroups_services'],
-            'where'     => ['usergroup_content.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
-            'data'      => [$aArgs['userId']]
+            'select' => ['usergroups_services.service_id'],
+            'table' => ['usergroup_content, usergroups_services'],
+            'where' => ['usergroup_content.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
+            'data' => [$aArgs['userId']],
         ]);
 
         return $aServices;
@@ -531,12 +529,12 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['status']);
 
         DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'status'    => $aArgs['status']
+            'table' => 'users',
+            'set' => [
+                'status' => $aArgs['status'],
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data' => [$aArgs['id']],
         ]);
 
         return true;
@@ -567,23 +565,23 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::insert([
-            'table'         => 'usergroup_content',
+            'table' => 'usergroup_content',
             'columnsValues' => [
-                'user_id'       => $user['user_id'],
-                'group_id'      => $aArgs['groupId'],
-                'role'          => $aArgs['role'],
-                'primary_group' => 'Y'
-            ]
+                'user_id' => $user['user_id'],
+                'group_id' => $aArgs['groupId'],
+                'role' => $aArgs['role'],
+                'primary_group' => 'Y',
+            ],
         ]);
 
-        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        $groupInfos = GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]);
 
         HistoryController::add([
             'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
+            'recordId' => $user['user_id'],
             'eventType' => 'GROUP ADD',
-            'eventId'   => 'groupadded',
-            'info'       =>$_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_GROUP.' '.$groupInfos['group_desc']
+            'eventId' => 'groupadded',
+            'info' => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_GROUP.' '.$groupInfos['group_desc'],
         ]);
 
         return true;
@@ -597,12 +595,12 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::update([
-            'table'     => 'usergroup_content',
-            'set'       => [
-                'role'      => $aArgs['role']
+            'table' => 'usergroup_content',
+            'set' => [
+                'role' => $aArgs['role'],
             ],
-            'where'     => ['user_id = ?', 'group_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['groupId']]
+            'where' => ['user_id = ?', 'group_id = ?'],
+            'data' => [$user['user_id'], $aArgs['groupId']],
         ]);
 
         return true;
@@ -616,19 +614,19 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::delete([
-            'table'     => 'usergroup_content',
-            'where'     => ['group_id = ?', 'user_id = ?'],
-            'data'      => [$aArgs['groupId'], $user['user_id']]
+            'table' => 'usergroup_content',
+            'where' => ['group_id = ?', 'user_id = ?'],
+            'data' => [$aArgs['groupId'], $user['user_id']],
         ]);
 
-        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
+        $groupInfos = GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]);
 
         HistoryController::add([
             'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
+            'recordId' => $user['user_id'],
             'eventType' => 'GROUP DELETED',
-            'eventId'   => 'groupdeleted',
-            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_GROUP.' '.$groupInfos['group_desc']
+            'eventId' => 'groupdeleted',
+            'info' => $_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_GROUP.' '.$groupInfos['group_desc'],
         ]);
 
         return true;
@@ -659,23 +657,23 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::insert([
-            'table'         => 'users_entities',
+            'table' => 'users_entities',
             'columnsValues' => [
-                'user_id'           => $user['user_id'],
-                'entity_id'         => $aArgs['entityId'],
-                'user_role'         => $aArgs['role'],
-                'primary_entity'    => $aArgs['primaryEntity']
-            ]
+                'user_id' => $user['user_id'],
+                'entity_id' => $aArgs['entityId'],
+                'user_role' => $aArgs['role'],
+                'primary_entity' => $aArgs['primaryEntity'],
+            ],
         ]);
 
         $entityInfos = EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
         HistoryController::add([
             'tableName' => 'users',
-            'recordId'  => $user['user_id'],
+            'recordId' => $user['user_id'],
             'eventType' => 'ENTITY ADD',
-            'eventId'   => 'entityadded',
-            'info'       => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label']
+            'eventId' => 'entityadded',
+            'info' => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label'],
         ]);
 
         return true;
@@ -689,12 +687,12 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::update([
-            'table'     => 'users_entities',
-            'set'       => [
-                'user_role'      => $aArgs['role']
+            'table' => 'users_entities',
+            'set' => [
+                'user_role' => $aArgs['role'],
             ],
-            'where'     => ['user_id = ?', 'entity_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['entityId']]
+            'where' => ['user_id = ?', 'entity_id = ?'],
+            'data' => [$user['user_id'], $aArgs['entityId']],
         ]);
 
         return true;
@@ -711,23 +709,23 @@ class UserModelAbstract
         foreach ($entities as $entity) {
             if ($entity['primary_entity'] == 'Y') {
                 DatabaseModel::update([
-                    'table'     => 'users_entities',
-                    'set'       => [
-                        'primary_entity'    => 'N'
+                    'table' => 'users_entities',
+                    'set' => [
+                        'primary_entity' => 'N',
                     ],
-                    'where'     => ['user_id = ?', 'entity_id = ?'],
-                    'data'      => [$user['user_id'], $entity['entity_id']]
+                    'where' => ['user_id = ?', 'entity_id = ?'],
+                    'data' => [$user['user_id'], $entity['entity_id']],
                 ]);
             }
         }
 
         DatabaseModel::update([
-            'table'     => 'users_entities',
-            'set'       => [
-                'primary_entity'    => 'Y'
+            'table' => 'users_entities',
+            'set' => [
+                'primary_entity' => 'Y',
             ],
-            'where'     => ['user_id = ?', 'entity_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['entityId']]
+            'where' => ['user_id = ?', 'entity_id = ?'],
+            'data' => [$user['user_id'], $aArgs['entityId']],
         ]);
 
         return true;
@@ -741,12 +739,12 @@ class UserModelAbstract
         $entities = EntityModel::getByUserId(['userId' => $aArgs['userId']]);
         if (!empty($entities[0])) {
             DatabaseModel::update([
-                'table'     => 'users_entities',
-                'set'       => [
-                    'primary_entity'    => 'Y'
+                'table' => 'users_entities',
+                'set' => [
+                    'primary_entity' => 'Y',
                 ],
-                'where'     => ['user_id = ?', 'entity_id = ?'],
-                'data'      => [$aArgs['userId'], $entities[0]['entity_id']]
+                'where' => ['user_id = ?', 'entity_id = ?'],
+                'data' => [$aArgs['userId'], $entities[0]['entity_id']],
             ]);
         }
 
@@ -761,19 +759,19 @@ class UserModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::delete([
-            'table'     => 'users_entities',
-            'where'     => ['entity_id = ?', 'user_id = ?'],
-            'data'      => [$aArgs['entityId'], $user['user_id']]
+            'table' => 'users_entities',
+            'where' => ['entity_id = ?', 'user_id = ?'],
+            'data' => [$aArgs['entityId'], $user['user_id']],
         ]);
 
-        $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
+        $entityInfos = EntityModel::getByID(['entityId' => $aArgs['entityId']]);
 
         HistoryController::add([
             'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
+            'recordId' => $user['user_id'],
             'eventType' => 'ENTITY DELETE',
-            'eventId'   => 'entitydeleted',
-            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_ENTITY.' '.$entityInfos['entity_label']
+            'eventId' => 'entitydeleted',
+            'info' => $_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_ENTITY.' '.$entityInfos['entity_label'],
         ]);
 
         return true;
@@ -786,32 +784,32 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['groupId', 'basketId', 'color']);
 
         $isPresent = DatabaseModel::select([
-            'select'    => ['1'],
-            'table'     => ['users_baskets'],
-            'where'     => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
-            'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']]
+            'select' => ['1'],
+            'table' => ['users_baskets'],
+            'where' => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
+            'data' => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']],
         ]);
 
         if (empty($isPresent)) {
             DatabaseModel::insert(
                 [
-                    'table'         => 'users_baskets',
+                    'table' => 'users_baskets',
                     'columnsValues' => [
-                        'user_serial_id'    => $aArgs['id'],
-                        'basket_id'         => $aArgs['basketId'],
-                        'group_id'          => $aArgs['groupId'],
-                        'color'             => $aArgs['color']
-                    ]
+                        'user_serial_id' => $aArgs['id'],
+                        'basket_id' => $aArgs['basketId'],
+                        'group_id' => $aArgs['groupId'],
+                        'color' => $aArgs['color'],
+                    ],
                 ]
             );
         } else {
             DatabaseModel::update([
-                'table'     => 'users_baskets',
-                'set'       => [
-                    'color'    => $aArgs['color']
+                'table' => 'users_baskets',
+                'set' => [
+                    'color' => $aArgs['color'],
                 ],
-                'where'     => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
-                'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']]
+                'where' => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
+                'data' => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']],
             ]);
         }
 
@@ -828,12 +826,10 @@ class UserModelAbstract
             [
                 'table' => 'users_baskets',
                 'where' => ['user_serial_id = ?', 'group_id = ?', 'basket_id = ?'],
-                'data'  => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']]
+                'data' => [$aArgs['id'], $aArgs['groupId'], $aArgs['basketId']],
             ]
         );
 
         return true;
     }
-
-
 }

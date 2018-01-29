@@ -1,103 +1,81 @@
-
 <div class="page-header">
-    <h1>{{lang.administration}} {{lang.users}} <small>{{data.length}} {{lang.users}}</small></h1>
+    <h1>{{lang.administration}} {{lang.users}}
+        <small>{{data.length}} {{lang.users}}</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
-        <table id="usersTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'user_id' : search" #md2="md2DataTable" [sortBy]='user_id' [rowsPerPage]="10">
-            <thead>
-                <tr>
-                    <td colspan="5">
-                        <md2-pagination></md2-pagination>
-                    </td>
-                    <td style="text-align:right;">
-                        <mat-form-field>
-                            <input matInput placeholder="{{lang.filterBy}} : {{lang.id}}" class="searchTable" [(ngModel)]="search" />
-                        </mat-form-field>
-                        &nbsp;
-                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/users/new" title="{{lang.addUser}}"><i class="fa fa-user-plus fa-2x"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th md2SortBy="user_id">{{lang.id}}</th>
-                    <th md2SortBy="lastname">{{lang.lastname}}</th>
-                    <th md2SortBy="firstname">{{lang.firstname}}</th>
-                    <th md2SortBy="status">{{lang.status}}</th>
-                    <th md2SortBy="mail">{{lang.email}}</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of md2.data">
-                    <td style="vertical-align:middle;">{{user.user_id}}</td>
-                    <td style="vertical-align:middle;">{{user.lastname}}</td>
-                    <td style="vertical-align:middle;">{{user.firstname}}</td>
-                    <td style="vertical-align:middle;">
-                        <span *ngIf="user.status == 'OK' && user.enabled == 'Y'" class="label label-primary">{{lang.active}}</span>
-                        <span *ngIf="user.enabled == 'N'" class="label label-danger">{{lang.inactive}}</span>
-                        <span *ngIf="user.status == 'ABS'" class="label label-warning">{{lang.abs}}</span>
-                    </td>
-                    <td style="vertical-align:middle;">{{user.mail}}</td>
-                    <td style="text-align:right;">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/users/{{user.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
-                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                            </button>
-                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'Y'" data-toggle="modal" data-target="#changeDiffListDest" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
-                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
-                            </button>
-                            <button *ngIf="user.enabled == 'Y' && user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.suspend}}" (click)="suspendUser(user)">
-                                <a><i style="cursor:pointer;color:#f0ad4e;" class="fa fa-pause"></i></a>
-                            </button>
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                    </mat-form-field>
+                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/users/new">
+                        <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="user_id" matSortDirection="asc">
+                <ng-container matColumnDef="user_id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.user_id}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="lastname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="firstname">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.status}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <span *ngIf="element.status == 'OK' && element.enabled == 'Y'" color="primary" class="label">{{lang.active}}</span>
+                        <span *ngIf="element.enabled == 'N'" color="warn" class="label">{{lang.inactive}}</span>
+                        <span *ngIf="element.status == 'ABS'" color="warn" class="label">{{lang.abs}}</span>
+                    </mat-cell>
 
-                            <button *ngIf="user.enabled == 'N'" type="button" class="btn btn-default" title="{{lang.authorize}}" (click)="activateUser(user)">
-                                <a><i style="cursor:pointer;color:#5cb85c;" class="fa fa-check"></i></a>
-                            </button>
-                            <button *ngIf="user.inDiffListDest == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest" (click)="deleteUser(user)">
-                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                            </button>
-                            <button *ngIf="user.inDiffListDest == 'N'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteUser(user)">
-                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="modal fade" id="changeDiffListDest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Changement de destinataire des modèles de liste de diffusion</h4>
-            </div>
-            <form (ngSubmit)="onSubmit()" #changeDiffListDestForm="ngForm">
-                <div class="modal-body">
-                    <div class="alert alert-warning" role="alert">
-                        <b>{{this.userDestRedirect.firstname}} {{this.userDestRedirect.lastname}}</b> est en <b>destinataire</b> des modèles liste de difffusion suivante, veuillez choisir un utilisateur de <b>remplacement</b> :
-                    </div>
-                    <div *ngFor="let userDestRedirectModel of userDestRedirectModels" id="{{userDestRedirectModel.object_id}}" class="form-group">
-                       <md2-autocomplete name="userList"
-                            [items]="data"
-                            item-text="user_id"
-                            item-value="user_id"
-                            placeholder="nouveau destinataire pour : {{userDestRedirectModel.title}}"
-                            [(ngModel)]="userDestRedirectModel.redirectUserId"
-                            required>
-                        </md2-autocomplete>
-                    </div>    
-                </div>
-                <div class="modal-footer">
-                    <button *ngIf="userDestRedirect.mode == 'del'" type="button" class="btn btn-danger" (click)="deleteUserModal(userDestRedirect)" [disabled]="!changeDiffListDestForm.form.valid">{{lang.delete}} {{lang.user}}</button>
-                    <button *ngIf="userDestRedirect.mode == 'up'" type="button" class="btn btn-warning" (click)="suspendUserModal(userDestRedirect)" [disabled]="!changeDiffListDestForm.form.valid">{{lang.suspend}} {{lang.user}}</button>
-                </div>
-            </form>
+                </ng-container>
+                <ng-container matColumnDef="mail">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.email}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.mail}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align:right">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/users/{{element.id}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary"  *ngIf="element.enabled == 'Y' && element.inDiffListDest == 'Y'" matTooltip="{{lang.suspend}}" (click)="suspendUser(element)">
+                            <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary"  *ngIf="element.enabled == 'Y' && element.inDiffListDest == 'N'" matTooltip="{{lang.suspend}}" (click)="suspendUser(element)">
+                            <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent"  *ngIf="element.enabled == 'N'" matTooltip="{{lang.authorize}}" (click)="activateUser(element)">
+                            <mat-icon class="fa fa-check fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" *ngIf="element.inDiffListDest == 'Y'" matTooltip="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest" (click)="deleteUser(element)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" *ngIf="element.inDiffListDest == 'N'" matTooltip="{{lang.delete}}" (click)="deleteUser(element)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
         </div>
     </div>
 </div>
