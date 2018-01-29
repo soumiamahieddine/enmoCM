@@ -17,7 +17,7 @@ class ActionsControllerTest extends TestCase
 {
     public function testCRUD()
     {
-        $actionController = new \Core\Controllers\ActionController();
+        $actionController = new \Action\controllers\ActionController();
 
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -112,7 +112,7 @@ class ActionsControllerTest extends TestCase
     }
     /*public function testGetList()
     {
-        $action = new \Core\Controllers\ActionsController();
+        $action = new \Action\controllers\ActionController();
 
         $environment = \Slim\Http\Environment::mock(
             [
@@ -135,7 +135,7 @@ class ActionsControllerTest extends TestCase
 
     public function testGetById()
     {
-        $action = new \Core\Controllers\ActionsController();
+        $action = new \Action\controllers\ActionController();
 
         $environment = \Slim\Http\Environment::mock(
             [

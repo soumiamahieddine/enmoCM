@@ -1423,7 +1423,7 @@ abstract class lists_Abstract extends Database
                     $keyValue = $resultTheLine[$i]['value'];
                 }
             }
-            $sAction = \Core\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+            $sAction = \Action\models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
             if ($sAction == 'visa_mail') {
                 if (PROD_MODE) {
                     $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', \'' .$_SESSION['current_basket']['group_id']. '\', true)"';
@@ -3299,7 +3299,7 @@ abstract class lists_Abstract extends Database
                         !empty($this->params['defaultAction']) && 
                         $lineIsDisabled === false
                     ) {
-                        $sAction = \Core\Models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
+                        $sAction = \Action\models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
                         if ($sAction == 'visa_mail') {
                             if (PROD_MODE) {
                                 $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '

@@ -15,7 +15,7 @@ namespace Visa\Controllers;
 
 use Attachments\Models\AttachmentsModel;
 use Basket\models\BasketModel;
-use Core\Models\ActionModel;
+use Action\models\ActionModel;
 use Core\Models\ContactModel;
 use Core\Models\LinkModel;
 use Core\Models\ListinstanceModel;

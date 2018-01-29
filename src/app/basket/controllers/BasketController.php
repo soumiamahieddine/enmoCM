@@ -15,7 +15,7 @@
 namespace Basket\controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\ActionModel;
+use Action\models\ActionModel;
 use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;

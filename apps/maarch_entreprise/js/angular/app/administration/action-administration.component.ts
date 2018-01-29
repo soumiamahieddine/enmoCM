@@ -71,7 +71,7 @@ export class ActionAdministrationComponent implements OnInit {
             else {
                 this.creationMode = false;
 
-                this.http.get(this.coreUrl + 'rest/administration/actions/' + params['id'])
+                this.http.get(this.coreUrl + 'rest/actions/' + params['id'])
                     .subscribe((data : any) => {
                         this.action         = data.action;
                         this.categoriesList = data.categoriesList;

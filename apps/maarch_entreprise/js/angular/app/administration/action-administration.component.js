@@ -63,7 +63,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             }
             else {
                 _this.creationMode = false;
-                _this.http.get(_this.coreUrl + 'rest/administration/actions/' + params['id'])
+                _this.http.get(_this.coreUrl + 'rest/actions/' + params['id'])
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.categoriesList = data.categoriesList;

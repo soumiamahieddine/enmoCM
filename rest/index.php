@@ -227,12 +227,12 @@ $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryControl
 $app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
 
 //actions
-$app->get('/administration/actions', \Core\Controllers\ActionController::class . ':getForAdministration');
-$app->get('/initAction', \Core\Controllers\ActionController::class . ':initAction');
-$app->get('/administration/actions/{id}', \Core\Controllers\ActionController::class . ':getByIdForAdministration');
-$app->post('/actions', \Core\Controllers\ActionController::class . ':create');
-$app->put('/actions/{id}', \Core\Controllers\ActionController::class . ':update');
-$app->delete('/actions/{id}', \Core\Controllers\ActionController::class . ':delete');
+$app->get('/administration/actions', \Action\controllers\ActionController::class . ':getForAdministration');
+$app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
+$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getByIdForAdministration');
+$app->post('/actions', \Action\controllers\ActionController::class . ':create');
+$app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
+$app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Notifications
 $app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
