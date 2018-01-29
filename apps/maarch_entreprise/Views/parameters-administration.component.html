@@ -1,53 +1,64 @@
 <div class="page-header">
-    <h1>{{lang.administration}} {{lang.parameters}} <small>{{data.length}} {{lang.parameters}}</small></h1>
+    <h1>{{lang.administration}} {{lang.parameters}}
+        <small>{{data.length}} {{lang.parameters}}</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
-        <table id ="paramsTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'id' : search" #md2="md2DataTable" [sortBy]='id' [rowsPerPage]="10">
-            <thead>
-                <tr>
-                    <td colspan="5">
-                        <md2-pagination></md2-pagination>
-                    </td>
-                    <td style="text-align:right;">
-                        <mat-form-field>
-                                <input matInput placeholder="{{lang.filterBy}} : {{lang.id}}" class="searchTable" [(ngModel)]="search" />
-                        </mat-form-field>
-                        &nbsp;
-                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/parameters/new" title="{{lang.addUser}}"><i class="fa fa-wrench fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th md2SortBy="id"style="width:10%;"><span>{{lang.id}}</span></th>
-                    <th md2SortBy="description"style="width:30%;"><span>{{lang.desc}}</span></th>
-                    <th md2SortBy="param_value_string"style="width:10%;"><span>{{lang.value}}</span></th>
-                    <th md2SortBy="param_value_int"style="width:10%;"><span>{{lang.value}}</span></th>
-                    <th md2SortBy="param_value_date"style="width:10%;"><span>{{lang.value}}</span></th>
-                    <th style="width:30%;"><span>&nbsp;</span></th>
-                </tr>
-            </thead> 
-            <tbody>
-                <tr *ngFor="let parameter of md2.data">
-                        <td style="width:10%;vertical-align:middle;">{{parameter.id}}</td>
-                        <td style="width:30%;vertical-align:middle;">{{parameter.description}}</td>
-                        <td style="width:10%;vertical-align:middle;">{{parameter.param_value_string}}</td>
-                        <td style="width:10%;vertical-align:middle;">{{parameter.param_value_int}}</td>
-                        <td style="width:10%;vertical-align:middle;">{{parameter.param_value_date}}</td>
-                        <td style="text-align:right;width:30%;">
-                            <div class="btn-group" role="group">
-                                <button routerLink="/administration/parameters/{{parameter.id}}" type="button" class="btn btn-default" title="{{lang.modify}}">
-                                    <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                                </button>
-                                <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteParameter(parameter.id)">
-                                    <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                                </button>
-                            </div>
-                        </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                    </mat-form-field>
+                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/parameters/new">
+                        <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="param_value_string">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.param_value_string}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="param_value_int">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.param_value_int}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="param_value_date">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.param_value_date}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align:right">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/parameters/{{element.id}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deleteParameter(element.id)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
     </div>
 </div>
