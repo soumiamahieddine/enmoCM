@@ -5,8 +5,9 @@
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
             "History\\"       : "src/app/history/",
-            "Status\\"        : "src/app/status/",
+            "Priority\\"      : "src/app/priority/",
             "Resource\\"      : "src/app/resource/",
+            "Status\\"        : "src/app/status/",
 
             "Core\\"          : "core/",
     	    "Apps\\"          : "apps/maarch_entreprise/",

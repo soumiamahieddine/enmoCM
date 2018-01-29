@@ -215,11 +215,11 @@ $app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':
 $app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
 
 //Priorities
-$app->get('/priorities', \Core\Controllers\PriorityController::class . ':get');
-$app->post('/priorities', \Core\Controllers\PriorityController::class . ':create');
-$app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':getById');
-$app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
-$app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
+$app->get('/priorities', \Priority\controllers\PriorityController::class . ':get');
+$app->post('/priorities', \Priority\controllers\PriorityController::class . ':create');
+$app->get('/priorities/{id}', \Priority\controllers\PriorityController::class . ':getById');
+$app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . ':update');
+$app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 
 //History
 $app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');

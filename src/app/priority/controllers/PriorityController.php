@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Controllers;
+namespace Priority\controllers;
 
 use Core\Models\ServiceModel;
+use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
-use Core\Models\PriorityModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

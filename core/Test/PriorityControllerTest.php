@@ -1,6 +1,12 @@
 <?php
 
-namespace MaarchTest;
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
+
 use PHPUnit\Framework\TestCase;
 
 class PriorityControllerTest extends TestCase
@@ -10,7 +16,7 @@ class PriorityControllerTest extends TestCase
 
     public function testCreate()
     {
-        $priorityController = new \Core\Controllers\PriorityController();
+        $priorityController = new \Priority\controllers\PriorityController();
 
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -46,7 +52,7 @@ class PriorityControllerTest extends TestCase
 
     public function testGet()
     {
-        $priorityController = new \Core\Controllers\PriorityController();
+        $priorityController = new \Priority\controllers\PriorityController();
 
         //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -60,7 +66,7 @@ class PriorityControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $priorityController = new \Core\Controllers\PriorityController();
+        $priorityController = new \Priority\controllers\PriorityController();
 
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -77,7 +83,7 @@ class PriorityControllerTest extends TestCase
         $response     = $priorityController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(_UPDATED_PRIORITY, $responseBody->success);
+        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -94,7 +100,7 @@ class PriorityControllerTest extends TestCase
 
     public function testDelete()
     {
-        $priorityController = new \Core\Controllers\PriorityController();
+        $priorityController = new \Priority\controllers\PriorityController();
 
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
@@ -102,7 +108,7 @@ class PriorityControllerTest extends TestCase
         $response       = $priorityController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame(_DELETED_PRIORITY, $responseBody->success);
+        $this->assertInternalType('array', $responseBody->priorities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

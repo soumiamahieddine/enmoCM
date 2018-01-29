@@ -9,10 +9,12 @@
 /**
  * @brief Priority Abstract Model
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Models;
+namespace Priority\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 abstract class PriorityModelAbstract
 {
