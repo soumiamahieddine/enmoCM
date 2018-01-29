@@ -13,11 +13,13 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var PriorityAdministrationComponent = /** @class */ (function () {
-    function PriorityAdministrationComponent(http, route, router) {
+    function PriorityAdministrationComponent(http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.loading = false;
         this.priority = {
@@ -56,29 +58,29 @@ var PriorityAdministrationComponent = /** @class */ (function () {
         var _this = this;
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
-                .subscribe(function (data) {
-                successNotification(data.success);
+                .subscribe(function () {
+                _this.notify.success(_this.lang.priorityAdded);
                 _this.router.navigate(["/administration/priorities"]);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
             this.http.put(this.coreUrl + "rest/priorities/" + this.id, this.priority)
-                .subscribe(function (data) {
-                successNotification(data.success);
+                .subscribe(function () {
+                _this.notify.success(_this.lang.priorityUpdated);
                 _this.router.navigate(["/administration/priorities"]);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
     PriorityAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["priority-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+            providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router])
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], PriorityAdministrationComponent);
     return PriorityAdministrationComponent;
 }());

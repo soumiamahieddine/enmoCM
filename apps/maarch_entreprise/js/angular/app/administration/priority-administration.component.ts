@@ -2,17 +2,16 @@ import { Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
 
 @Component({
     templateUrl : angularGlobals["priority-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    providers   : [NotificationService]
 })
 export class PriorityAdministrationComponent implements OnInit {
 
@@ -27,7 +26,7 @@ export class PriorityAdministrationComponent implements OnInit {
     };
 
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -64,19 +63,19 @@ export class PriorityAdministrationComponent implements OnInit {
     onSubmit(){
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
-                .subscribe((data : any) => {
-                    successNotification(data.success);
+                .subscribe(() => {
+                    this.notify.success(this.lang.priorityAdded);
                     this.router.navigate(["/administration/priorities"]);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + "rest/priorities/" + this.id, this.priority)
-                .subscribe((data : any) => {
-                    successNotification(data.success);
+                .subscribe(() => {
+                    this.notify.success(this.lang.priorityUpdated);
                     this.router.navigate(["/administration/priorities"]);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

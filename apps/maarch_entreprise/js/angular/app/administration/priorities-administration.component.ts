@@ -1,16 +1,15 @@
 import { Component, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
+import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["priorities-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    providers   : [NotificationService]
 })
 export class PrioritiesAdministrationComponent implements OnInit {
 
@@ -23,7 +22,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     datatable       : any;
 
 
-    constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -39,36 +38,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
         this.http.get(this.coreUrl + 'rest/priorities')
             .subscribe((data : any) => {
-                this.priorities = data.priorities;
-                //setTimeout(() => {
-                //    this.datatable = $j('#prioritiesTable').DataTable({
-                //        "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
-                //        "lengthMenu": [ 10, 25, 50, 75, 100 ],
-                //        "oLanguage": {
-                //            "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-                //            "sZeroRecords": this.lang.noResult,
-                //            "sInfo": "_START_ - _END_ / _TOTAL_ "+this.lang.record,
-                //            "sSearch": "",
-                //            "oPaginate": {
-                //                "sFirst":    "<<",
-                //                "sLast":    ">>",
-                //                "sNext":    this.lang.next+" <i class='fa fa-caret-right'></i>",
-                //                "sPrevious": "<i class='fa fa-caret-left'></i> "+this.lang.previous
-                //            },
-                //            "sInfoEmpty": this.lang.noRecord,
-                //            "sInfoFiltered": "(filtré de _MAX_ "+this.lang.record+")"
-                //        },
-                //        "order": [[ 1, "asc" ]],
-                //        "columnDefs": [
-                //            { "orderable": false, "targets": [3,5] }
-                //        ]
-                //    });
-                //    $j('.dataTables_filter input').attr("placeholder", this.lang.search);
-                //    $j('dataTables_filter input').addClass('form-control');
-                //    $j(".datatablesLeft").css({"float":"left"});
-                //    $j(".datatablesCenter").css({"text-align":"center"});
-                //    $j(".datatablesRight").css({"float":"right"});
-                //} ,0);
+                this.priorities = data["priorities"];
 
                 this.loading = false;
             }, () => {
@@ -77,15 +47,15 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     deletePriority(id: string) {
-        let r = confirm("Voulez-vous vraiment supprimer cette priorité ?");
+        let r = confirm(this.lang.deleteMsg);
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/priorities/" + id)
                 .subscribe((data : any) => {
-                    this.priorities = data.priorities;
-                    successNotification(data.success);
+                    this.priorities = data["priorities"];
+                    this.notify.success(this.lang.priorityDeleted);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 })
         }
     }

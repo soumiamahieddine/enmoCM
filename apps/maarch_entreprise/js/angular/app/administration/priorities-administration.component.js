@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var PrioritiesAdministrationComponent = /** @class */ (function () {
-    function PrioritiesAdministrationComponent(http) {
+    function PrioritiesAdministrationComponent(http, notify) {
         this.http = http;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.loading = false;
         this.priorities = [];
@@ -31,36 +33,7 @@ var PrioritiesAdministrationComponent = /** @class */ (function () {
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/priorities')
             .subscribe(function (data) {
-            _this.priorities = data.priorities;
-            //setTimeout(() => {
-            //    this.datatable = $j('#prioritiesTable').DataTable({
-            //        "dom": '<"datatablesLeft"p><"datatablesRight"f><"datatablesCenter"l>rt<"datatablesCenter"i><"clear">',
-            //        "lengthMenu": [ 10, 25, 50, 75, 100 ],
-            //        "oLanguage": {
-            //            "sLengthMenu": "<i class='fa fa-bars'></i> _MENU_",
-            //            "sZeroRecords": this.lang.noResult,
-            //            "sInfo": "_START_ - _END_ / _TOTAL_ "+this.lang.record,
-            //            "sSearch": "",
-            //            "oPaginate": {
-            //                "sFirst":    "<<",
-            //                "sLast":    ">>",
-            //                "sNext":    this.lang.next+" <i class='fa fa-caret-right'></i>",
-            //                "sPrevious": "<i class='fa fa-caret-left'></i> "+this.lang.previous
-            //            },
-            //            "sInfoEmpty": this.lang.noRecord,
-            //            "sInfoFiltered": "(filtré de _MAX_ "+this.lang.record+")"
-            //        },
-            //        "order": [[ 1, "asc" ]],
-            //        "columnDefs": [
-            //            { "orderable": false, "targets": [3,5] }
-            //        ]
-            //    });
-            //    $j('.dataTables_filter input').attr("placeholder", this.lang.search);
-            //    $j('dataTables_filter input').addClass('form-control');
-            //    $j(".datatablesLeft").css({"float":"left"});
-            //    $j(".datatablesCenter").css({"text-align":"center"});
-            //    $j(".datatablesRight").css({"float":"right"});
-            //} ,0);
+            _this.priorities = data["priorities"];
             _this.loading = false;
         }, function () {
             location.href = "index.php";
@@ -68,23 +41,23 @@ var PrioritiesAdministrationComponent = /** @class */ (function () {
     };
     PrioritiesAdministrationComponent.prototype.deletePriority = function (id) {
         var _this = this;
-        var r = confirm("Voulez-vous vraiment supprimer cette priorité ?");
+        var r = confirm(this.lang.deleteMsg);
         if (r) {
             this.http.delete(this.coreUrl + "rest/priorities/" + id)
                 .subscribe(function (data) {
-                _this.priorities = data.priorities;
-                successNotification(data.success);
+                _this.priorities = data["priorities"];
+                _this.notify.success(_this.lang.priorityDeleted);
             }, function (err) {
-                errorNotification(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
     PrioritiesAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["priorities-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+            providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient])
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
     ], PrioritiesAdministrationComponent);
     return PrioritiesAdministrationComponent;
 }());
