@@ -1,14 +1,13 @@
 import { NgModule }         from '@angular/core';
 import { CommonModule }     from '@angular/common';
-import { FormsModule }      from '@angular/forms';
+import { FormsModule, ReactiveFormsModule }      from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Md2Module }        from 'md2';
 
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }                      from './administration.component';
-import { UsersAdministrationComponent, DataTablePipe }  from './users-administration.component';
+import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }  from './users-administration.component';
 import { UserAdministrationComponent }                  from './user-administration.component';
 import { GroupsAdministrationComponent }                from './groups-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
@@ -35,10 +34,10 @@ import { NotificationAdministrationComponent }          from './notification-adm
     imports:      [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         AppMaterialModule,
-        AdministrationRoutingModule,
-        Md2Module
+        AdministrationRoutingModule
     ],
     declarations: [
         AdministrationComponent,
@@ -63,7 +62,10 @@ import { NotificationAdministrationComponent }          from './notification-adm
         UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
         NotificationAdministrationComponent,
-        DataTablePipe
-    ]
+        UsersAdministrationRedirectModalComponent
+    ],
+    entryComponents: [
+        UsersAdministrationRedirectModalComponent
+    ],
 })
 export class AdministrationModule { }

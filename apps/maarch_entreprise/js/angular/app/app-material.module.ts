@@ -13,9 +13,25 @@ import {
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatMenuModule,
-    MatGridListModule
+    MatGridListModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatPaginatorIntl,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatExpansionModule,
+    MatAutocompleteModule,
+    MatSnackBar,
+    MatSnackBarModule,
+    MatIcon,
+    MatIconModule,
+    MatDialogActions,
+    MatDialogModule
 } from '@angular/material';
 
+import { CdkTableModule } from '@angular/cdk/table';
+import { getFrenchPaginatorIntl } from './french-paginator-intl';
 
 @NgModule({
     imports: [
@@ -32,7 +48,17 @@ import {
         MatProgressSpinnerModule,
         MatToolbarModule,
         MatMenuModule,
-        MatGridListModule
+        MatGridListModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatExpansionModule,
+        MatAutocompleteModule,
+        MatSnackBarModule,
+        MatIconModule,
+        MatDialogModule
     ],
     exports: [
         MatCheckboxModule,
@@ -48,7 +74,20 @@ import {
         MatProgressSpinnerModule,
         MatToolbarModule,
         MatMenuModule,
-        MatGridListModule
+        MatGridListModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatExpansionModule,
+        MatAutocompleteModule,
+        MatSnackBarModule,
+        MatIconModule,
+        MatDialogModule
+    ],
+    providers: [
+        { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }
     ]
 })
 export class AppMaterialModule { }
