@@ -19,7 +19,7 @@
                     <mat-form-field>
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
                     </mat-form-field>
-                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/status/new">
+                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/statuses/new">
                         <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
                     </button>
                 </mat-grid-tile>
@@ -43,7 +43,7 @@
                 <ng-container matColumnDef="identifier">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let element" style="text-align:right">
-                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/status/{{element.identifier}}">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/statuses/{{element.identifier}}">
                             <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
                         </button>
                         <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deleteStatus(element)">
