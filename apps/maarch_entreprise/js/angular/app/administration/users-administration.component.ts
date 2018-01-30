@@ -225,7 +225,17 @@ export interface Users {
   })
   export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
+
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any,public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
         super(http, 'users');
+    }
+    sendFunction(){
+        var valid = true;
+        this.data.userDestRedirectModels.each(function(element:any){
+            if (!element.redirectUserId) {
+                valid = false;
+            }
+        });
+        return valid;
     }
   }

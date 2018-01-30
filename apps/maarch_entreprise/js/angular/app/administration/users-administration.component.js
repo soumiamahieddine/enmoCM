@@ -235,6 +235,15 @@ var UsersAdministrationRedirectModalComponent = /** @class */ (function (_super)
         _this.lang = translate_component_1.LANG;
         return _this;
     }
+    UsersAdministrationRedirectModalComponent.prototype.sendFunction = function () {
+        var valid = true;
+        this.data.userDestRedirectModels.each(function (element) {
+            if (!element.redirectUserId) {
+                valid = false;
+            }
+        });
+        return valid;
+    };
     UsersAdministrationRedirectModalComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["users-administration-redirect-modalView"],
