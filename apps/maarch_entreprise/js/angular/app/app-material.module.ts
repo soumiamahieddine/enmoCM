@@ -27,7 +27,8 @@ import {
     MatIcon,
     MatIconModule,
     MatDialogActions,
-    MatDialogModule
+    MatDialogModule,
+    MatListModule
 } from '@angular/material';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -58,7 +59,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatAutocompleteModule,
         MatSnackBarModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        MatListModule
     ],
     exports: [
         MatCheckboxModule,
@@ -84,7 +86,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatAutocompleteModule,
         MatSnackBarModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        MatListModule
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }

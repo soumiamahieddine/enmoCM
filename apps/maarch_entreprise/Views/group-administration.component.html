@@ -1,78 +1,93 @@
 <div class="page-header">
+    <h1 *ngIf="!creationMode">{{lang.groupModification}}
+        <small>{{group.group_desc}} ({{group.group_id}})</small>
+    </h1>
+    <h1 *ngIf="creationMode">{{lang.groupCreation}}
+        <small>{{group.group_desc}} ({{group.group_id}})</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <div class="row row-eq-height">
-        <div class="col-md-offset-4 col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>Informations</h2>
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" required>
-                            <input *ngIf="!creationMode" type="text" class="form-control" name="identifier" title="{{lang.id}}" [(ngModel)]="group.group_id" disabled>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="description" title="{{lang.desc}}" placeholder="{{lang.desc}}" [(ngModel)]="group.group_desc" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="comment" title="comment" placeholder="comment" [(ngModel)]="group.security.maarch_comment" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="clause" placeholder="where clause" [(ngModel)]="group.security.where_clause" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="startDate" [(ngModel)]="group.security.mr_start_date">
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="stopDate" [(ngModel)]="group.security.mr_stop_date">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="text-align:center;">
-                        <button type="submit" class="btn btn-default" [disabled]="!groupForm.form.valid">{{lang.save}}</button>
-                    </div>
-                </div>
-            </form>
-            <div *ngIf="!creationMode" class="form-group">
-                Menu
-                <div class="col-sm-12" *ngFor="let upperService of group.services.menu; let i = index">
-                    <span style="font-weight: bold">{{upperService[0]['location']}}</span>
-                    <div *ngFor="let service of upperService">
-                        {{service.name}}
-                        <input type="checkbox" class="form-control" name="{{service.name}}" [(ngModel)]="service.checked" (click)="updateService(service)">
-                    </div>
-                </div>
-                Administration
-                <div class="col-sm-12" *ngFor="let service of group.services.administration; let i = index">
-                    <span style="font-weight: bold">{{service[0]['location']}}</span>
-                    <div *ngFor="let subService of service">
-                        {{subService.name}}
-                        <input type="checkbox" class="form-control" name="{{subService.name}}" [(ngModel)]="subService.checked">
-                    </div>
-                </div>
-                Use
-                <div class="col-sm-12" *ngFor="let service of group.services.use; let i = index">
-                    <span style="font-weight: bold">{{service[0]['location']}}</span>
-                    <div *ngFor="let subService of service">
-                        {{subService.name}}
-                        <input type="checkbox" class="form-control" name="{{subService.name}}" [(ngModel)]="subService.checked">
-                    </div>
-                </div>
+
+
+    <div class="col-md-6">
+        <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
+            <mat-form-field>
+                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" required>
+                <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id"
+                    disabled>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc"
+                    required>
+            </mat-form-field>
+
+
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput name="comment" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="group.security.maarch_comment"
+                        required>
+                </mat-form-field>
             </div>
-        </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <textarea matInput name="clause" title="{{lang.clause}}" placeholder="{{lang.clause}}"  [(ngModel)]="group.security.where_clause" required matTextareaAutosize
+                        matAutosizeMinRows="1" matAutosizeMaxRows="5"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12 text-center">
+                <button mat-raised-button [disabled]="!groupForm.form.valid" color="primary">{{lang.save}}</button>
+            </div>
+        </form>
+
+    </div>
+    <div class="col-md-6">
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode">
+            <mat-tab label="Menus">
+                <mat-expansion-panel *ngFor="let upperService of group.services.menu; let i = index">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{lang[upperService[0]['location']]}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-list>
+                        <mat-list-item *ngFor="let service of upperService">
+                            <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)" matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-expansion-panel>
+            </mat-tab>
+            <mat-tab label="Services d'administration">
+                <mat-expansion-panel *ngFor="let upperService of group.services.administration; let i = index">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{lang[upperService[0]['location']]}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-list>
+                        <mat-list-item *ngFor="let service of upperService">
+                            <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)" matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-expansion-panel>
+            </mat-tab>
+            <mat-tab label="Fonctionnalités">
+                <mat-expansion-panel *ngFor="let upperService of group.services.use; let i = index">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{lang[upperService[0]['location']]}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-list>
+                        <mat-list-item *ngFor="let service of upperService">
+                            <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)" matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                        </mat-list-item>
+                    </mat-list>
+                </mat-expansion-panel>
+            </mat-tab>
+        </mat-tab-group>
     </div>
 </div>

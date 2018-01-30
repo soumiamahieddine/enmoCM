@@ -38,7 +38,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatAutocompleteModule,
                 material_1.MatSnackBarModule,
                 material_1.MatIconModule,
-                material_1.MatDialogModule
+                material_1.MatDialogModule,
+                material_1.MatListModule
             ],
             exports: [
                 material_1.MatCheckboxModule,
@@ -64,7 +65,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatAutocompleteModule,
                 material_1.MatSnackBarModule,
                 material_1.MatIconModule,
-                material_1.MatDialogModule
+                material_1.MatDialogModule,
+                material_1.MatListModule
             ],
             providers: [
                 { provide: material_1.MatPaginatorIntl, useValue: french_paginator_intl_1.getFrenchPaginatorIntl() }

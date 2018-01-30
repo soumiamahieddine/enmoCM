@@ -27,6 +27,14 @@ var GroupAdministrationComponent = /** @class */ (function () {
         this.loading = false;
     }
     GroupAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.groupCreation;
+        }
+        else {
+            breadCrumb += this.lang.groupModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     GroupAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -36,11 +44,13 @@ var GroupAdministrationComponent = /** @class */ (function () {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
                 _this.loading = false;
+                _this.updateBreadcrumb(angularGlobals.applicationName);
             }
             else {
                 _this.creationMode = false;
                 _this.http.get(_this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe(function (data) {
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.group = data['group'];
                     _this.loading = false;
                 }, function () {
@@ -71,7 +81,6 @@ var GroupAdministrationComponent = /** @class */ (function () {
     };
     GroupAdministrationComponent.prototype.updateService = function (service) {
         var _this = this;
-        service.checked = !service.checked;
         this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
             .subscribe(function (data) {
             _this.notify.success(_this.lang.groupUpdated);

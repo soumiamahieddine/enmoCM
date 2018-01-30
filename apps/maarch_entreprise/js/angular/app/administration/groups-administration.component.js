@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var GroupsAdministrationComponent = /** @class */ (function () {
     function GroupsAdministrationComponent(http, notify) {
         this.http = http;
@@ -21,7 +22,14 @@ var GroupsAdministrationComponent = /** @class */ (function () {
         this.groups = [];
         this.groupsForAssign = [];
         this.loading = false;
+        this.displayedColumns = ['group_id', 'group_desc', 'actions'];
+        this.dataSource = new material_1.MatTableDataSource(this.groups);
     }
+    GroupsAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     GroupsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Groupes";
@@ -36,6 +44,11 @@ var GroupsAdministrationComponent = /** @class */ (function () {
             .subscribe(function (data) {
             _this.groups = data['groups'];
             _this.loading = false;
+            setTimeout(function () {
+                _this.dataSource = new material_1.MatTableDataSource(_this.groups);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, 0);
         }, function () {
             location.href = "index.php";
         });
@@ -76,12 +89,25 @@ var GroupsAdministrationComponent = /** @class */ (function () {
         var _this = this;
         this.http.delete(this.coreUrl + "rest/groups/" + group['id'])
             .subscribe(function (data) {
+            setTimeout(function () {
+                _this.groups = data['groups'];
+                _this.dataSource = new material_1.MatTableDataSource(_this.groups);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, 0);
             _this.notify.success(_this.lang.groupDeleted);
-            _this.groups = data['groups'];
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], GroupsAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], GroupsAdministrationComponent.prototype, "sort", void 0);
     GroupsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["groups-administrationView"],
