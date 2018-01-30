@@ -47,10 +47,6 @@ class ResModelAbstract
             'data'      => [$aArgs['resId']]
         ]);
 
-        if (empty($aResources[0])) {
-            return [];
-        }
-
         return $aResources[0];
     }
 
@@ -113,6 +109,23 @@ class ResModelAbstract
         DatabaseModel::update([
             'table' => 'res_letterbox',
             'set'   => $aArgs['set'],
+            'where' => ['res_id = ?'],
+            'data'  => [$aArgs['resId']]
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        DatabaseModel::update([
+            'table' => 'res_letterbox',
+            'set'   => [
+                'status'    => 'DEL'
+            ],
             'where' => ['res_id = ?'],
             'data'  => [$aArgs['resId']]
         ]);
