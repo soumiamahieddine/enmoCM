@@ -1,17 +1,10 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.reports}}</h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-area-chart fa-2x"></i> {{lang.reports}}</h1>
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
     <div>
         <mat-select placeholder="{{lang.chooseGroup}}" [(ngModel)]="selectedGroup" (change)="loadReports()" name="group">
             <mat-option *ngFor="let group of groups" [value]="group.group_id">
@@ -41,6 +34,7 @@
                 <div class="form-group">
                     <div style="text-align:center;">
                         <button type="submit" class="btn btn-success">{{lang.save}}</button>
+                        <button mat-raised-button routerLink='/administration'>{{lang.cancel}}</button>
                     </div>
                 </div>
             </form>

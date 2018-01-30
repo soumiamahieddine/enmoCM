@@ -11,10 +11,11 @@
 
 namespace Action\controllers;
 
+use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
-use Core\Models\LangModel;
+use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -22,6 +23,10 @@ class ActionController
 {
     public function get(Request $request, Response $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $obj ['actions']= ActionModel::get();
        
         return $response->withJson($obj);
@@ -35,7 +40,7 @@ class ActionController
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+                ->withJson(['errors' => 'id is empty']);
         }
 
         if ($obj['action']['is_folder_action'] == 'Y') {
@@ -91,6 +96,10 @@ class ActionController
 
     public function create(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $errors = [];
         $aArgs  = $request->getParams();
         $aArgs  = $this->manageValue($aArgs);
@@ -106,8 +115,6 @@ class ActionController
         $return = ActionModel::create($aArgs);
 
         if ($return) {
-            $id = $aArgs['id'];
-
             $obj = max(ActionModel::get());
         } else {
             return $response
@@ -115,16 +122,27 @@ class ActionController
                 ->withJson(['errors' => _NOT_CREATE]);
         }
 
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $obj['id'],
+            'eventType' => 'ADD',
+            'eventId'   => 'actionadd',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._ADDED
+        ]);
+
         return $response->withJson(
             [
-            'success'   =>  _ACTION. ' <b>' . $obj['id'] .'</b> ' ._ADDED,
-            'action'      => $obj
+            'action'  => $obj
             ]
         );
     }
 
     public function update(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $errors = [];
 
         $obj       = $request->getParams();
@@ -142,7 +160,7 @@ class ActionController
         $return = ActionModel::update($obj);
 
         if ($return) {
-            $id = $aArgs['id'];
+            $id  = $aArgs['id'];
             $obj = ActionModel::getById(['id' => $id]);
         } else {
             return $response
@@ -150,29 +168,48 @@ class ActionController
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $obj['id'],
+            'eventType' => 'UP',
+            'eventId'   => 'actionup',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._UPDATED
+        ]);
+
         return $response->withJson(
             [
-            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._UPDATED,
-            'action'      => $obj
+            'action'  => $obj
             ]
         );
     }
 
     public function delete(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+            $id  = $aArgs['id'];
+            $obj = ActionModel::getById(['id' => $id]);
             ActionModel::delete(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
         }
-        
+
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $id,
+            'eventType' => 'DEL',
+            'eventId'   => 'actiondel',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._DELETED
+        ]);
+
         return $response->withJson(
             [
-            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
-            'action'      => ActionModel::get()
+            'action' => ActionModel::get()
             ]
         );
     }
@@ -184,43 +221,43 @@ class ActionController
         $objs = StatusModel::get();
 
         foreach ($objs as $obj) {
-            $status[]=$obj['id'];
+            $status[] = $obj['id'];
         }
         array_unshift($status, '_NOSTATUS_');
 
         if (!(in_array($aArgs['id_status'], $status))) {
-            $errors[]=_STATUS. ' ' . _NOT_VALID;
+            $errors[]= 'Invalid Status';
         }
 
         if ($mode == 'update') {
             $obj = ActionModel::getById(['id' => $aArgs['id']]);
            
             if (empty($obj)) {
-                $errors[]=_ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
+                $errors[] = _ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
             }
         }
            
-        if (!Validator::notEmpty()->validate($aArgs['label_action'])) {
-            $errors[]=_NO_RIGHT.' '._DESC;
+        if (!Validator::notEmpty()->validate($aArgs['label_action']) ||
+            !Validator::length(1, 255)->validate($aArgs['label_action'])) {
+            $errors[] = 'Invalid label action';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['id_status'])) {
-            $errors[]=CHOOSE_STATUS;
+            $errors[] = 'id_status is empty';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id']!='Y' && $aArgs['create_id']!='N')) {
-            $errors[]= _CREATE_ID . ' ' . _NOT_VALID;
+        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id'] != 'Y' && $aArgs['create_id'] != 'N')) {
+            $errors[]= 'Invalid create_id value';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history']!='Y' && $aArgs['history']!='N')) {
-            $errors[]= _ACTION_HISTORY . ' ' . _NOT_VALID;
+        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history'] != 'Y' && $aArgs['history'] != 'N')) {
+            $errors[]= 'Invalid history value';
         }
         
 
-        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system']!='Y' && $aArgs['is_system']!='N')) {
-            $errors[]= _IS_SYSTEM . ' ' . _NOT_VALID;
+        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system'] != 'Y' && $aArgs['is_system'] != 'N')) {
+            $errors[]= 'Invalid is_system value';
         }
-
 
         return $errors;
     }

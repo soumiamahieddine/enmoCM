@@ -118,8 +118,8 @@ $app->get('/administration/notifications/{id}', \Notifications\Controllers\Notif
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
-$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
 $app->post('/baskets', \Basket\controllers\BasketController::class . ':create');
+$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
 $app->put('/baskets/{id}', \Basket\controllers\BasketController::class . ':update');
 $app->delete('/baskets/{id}', \Basket\controllers\BasketController::class . ':delete');
 $app->get('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':getGroups');
@@ -132,11 +132,11 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
-$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
-$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
 $app->post('/statuses', \Status\controllers\StatusController::class . ':create');
+$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
 $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
+$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
@@ -220,11 +220,11 @@ $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . 
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration'); //TODO No date
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');//TODO No date
 
 //actions
 $app->get('/actions', \Action\controllers\ActionController::class . ':get');
@@ -242,8 +242,9 @@ $app->put('/notifications/{id}', \Notifications\Controllers\NotificationControll
 $app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
 
 //Reports
-$app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
-$app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+$app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
+$app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
+$app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 
 //Listinstance
 $app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
@@ -258,6 +259,6 @@ $app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateControlle
 $app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
 
 //liste documents
-$app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
+$app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause
 
 $app->run();

@@ -22,8 +22,8 @@ class ActionModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $actions = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['actions']
         ]);
 
         return $actions;
@@ -36,10 +36,10 @@ class ActionModelAbstract
 
         $aReturn = DatabaseModel::select(
             [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['actions'],
+            'where'  => ['id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
 
@@ -48,12 +48,12 @@ class ActionModelAbstract
         }
 
         $aReturn = $aReturn[0];
-        $aReturn['actionCategories']=DatabaseModel::select(
+        $aReturn['actionCategories'] = DatabaseModel::select(
             [
-            'select'    => ['category_id'],
-            'table'     => ['actions_categories'],
-            'where'     => ['action_id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => ['category_id'],
+            'table'  => ['actions_categories'],
+            'where'  => ['action_id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
        
@@ -106,12 +106,12 @@ class ActionModelAbstract
 
         $aDelete = DatabaseModel::delete(
             ['table' => 'actions_categories',
-            'where' => ['action_id = ?'],
-            'data'  => [$aArgs['id']]
+            'where'  => ['action_id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
 
-        $tab['action_id']=$aArgs['id'];
+        $tab['action_id'] = $aArgs['id'];
 
         for ($i=0;$i<count($aArgs['actionCategories']);$i++) {
             $tab['category_id']=$aArgs['actionCategories'][$i];
@@ -138,13 +138,22 @@ class ActionModelAbstract
                 'data'  => [$aArgs['id']]
             ]
         );
-        $aDelete = DatabaseModel::delete(
+        DatabaseModel::delete(
             [
                 'table' => 'actions_categories',
                 'where' => ['action_id = ?'],
                 'data'  => [$aArgs['id']]
             ]
         );
+
+        DatabaseModel::delete(
+            [
+                'table' => 'actions_groupbaskets',
+                'where' => ['id_action = ?'],
+                'data'  => [$aArgs['id']]
+            ]
+        );
+
         return $aReturn;
     }
 
@@ -158,9 +167,9 @@ class ActionModelAbstract
             $path = 'apps/maarch_entreprise/xml/config.xml';
         }
 
-        $xmlfile = simplexml_load_file($path);
-        $categoriesTypes=[];
-        $categories= $xmlfile->COLLECTION->categories;
+        $xmlfile         = simplexml_load_file($path);
+        $categoriesTypes = [];
+        $categories      = $xmlfile->COLLECTION->categories;
         if (count($categories) > 0) {
             foreach ($categories->category as $category) {
                 $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
@@ -170,7 +179,7 @@ class ActionModelAbstract
                 } else {
                     $categoriesTmp['default_category']=false;
                 }
-                $categoriesTypes[]=$categoriesTmp;
+                $categoriesTypes[] = $categoriesTmp;
             }
         }
         return $categoriesTypes;
@@ -186,7 +195,7 @@ class ActionModelAbstract
             $path = 'core/xml/actions_pages.xml';
         }
 
-        $tabActions_pages=[];
+        $tabActions_pages              = [];
         $tabActions_pages['modules'][] = 'Apps';
 
         $xmlfile = simplexml_load_file($path);
@@ -209,57 +218,15 @@ class ActionModelAbstract
                     $desc =  'no description';
                 }
                 $tabActions_pages['actionsPageList'][] = array(
-                    'id'          => (string) $actionPage->ID,
-                    'label'       => $label,
-                    'name'        => (string) $actionPage->NAME,
-                    'desc'        => $desc,
-                    'origin'      => ucfirst($origin),
+                    'id'     => (string) $actionPage->ID,
+                    'label'  => $label,
+                    'name'   => (string) $actionPage->NAME,
+                    'desc'   => $desc,
+                    'origin' => ucfirst($origin),
                 );
             }
         }
-        // TODO Remove session
-//        foreach ($_SESSION['modules'] as $key => $value) {
-//
-//            if (file_exists('custom/'. $_SESSION['custom_override_id'] . 'modules/' . $value['moduleid'] . '/xml/actions_pages.xml')) {
-//                $path = $_SESSION['config']['corepath'] . 'custom/' . $_SESSION['custom_override_id'] . '/modules/' . $value['moduleid'] . '/xml/actions_pages.xml';
-//            } else if (file_exists('modules/' . $value['moduleid'] . '/xml/actions_pages.xml')) {
-//                $path = 'modules/' . $value['moduleid'] . '/xml/actions_pages.xml';
-//            } else {
-//                $path = '';
-//            }
-//
-//            if (!empty($path)) {
-//                $xmlfile = simplexml_load_file($path);
-//                if (count($xmlfile) > 0) {
-//                    foreach ($xmlfile->ACTIONPAGE as $actionPage) {
-//                        if (!defined((string) $actionPage->LABEL)) {
-//                            $label = $actionPage->LABEL;
-//                        } else {
-//                            $label = constant((string) $actionPage->LABEL);
-//                        }
-//                        if (!empty((string) $actionPage->MODULE)) {
-//                            $origin = (string) $actionPage->MODULE;
-//                        } else {
-//                            $origin =  'apps';
-//                        }
-//                        if (!empty((string) $actionPage->DESC)) {
-//                            $desc = constant((string) $actionPage->DESC);
-//                        } else {
-//                            $desc =  'no description';
-//                        }
-//                        $tabActions_pages['modules'][] = ucfirst($origin);
-//
-//                        $tabActions_pages['actionsPageList'][] = array(
-//                            'id'          => (string) $actionPage->ID,
-//                            'label'       => $label,
-//                            'name'        => (string) $actionPage->NAME,
-//                            'desc'        => $desc,
-//                            'origin'      => ucfirst($origin),
-//                        );
-//                    }
-//                }
-//            }
-//        }
+
         array_multisort(
             array_map(
                 function ($element) {
@@ -276,7 +243,7 @@ class ActionModelAbstract
 
     public static function getKeywords()
     {
-        $tabKeyword=[];
+        $tabKeyword   = [];
         $tabKeyword[] = ['value' => '', label => _NO_KEYWORD];
         $tabKeyword[] = ['value' => 'redirect', label => _REDIRECT, desc => _KEYWORD_REDIRECT_DESC];
         //$tabKeyword[] = ['value' => 'to_validate', label => _TO_VALIDATE];
@@ -292,10 +259,10 @@ class ActionModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         $action = DatabaseModel::select([
-            'select'    => ['action_page'],
-            'table'     => ['actions'],
-            'where'     => ['id = ? AND enabled = ?'],
-            'data'      => [$aArgs['id'], 'Y']
+            'select' => ['action_page'],
+            'table'  => ['actions'],
+            'where'  => ['id = ? AND enabled = ?'],
+            'data'   => [$aArgs['id'], 'Y']
         ]);
 
         if (empty($action[0])) {
@@ -311,10 +278,10 @@ class ActionModelAbstract
         ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);
 
         $action = DatabaseModel::select([
-            'select'    => ['id_action'],
-            'table'     => ['actions_groupbaskets'],
-            'where'     => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
-            'data'      => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
+            'select' => ['id_action'],
+            'table'  => ['actions_groupbaskets'],
+            'where'  => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
+            'data'   => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
         ]);
 
         if (empty($action[0])) {

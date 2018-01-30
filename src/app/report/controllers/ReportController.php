@@ -10,23 +10,31 @@
 /**
 * @brief Report Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Controllers;
+namespace Report\controllers;
 
 use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Core\Models\ReportModel;
+use Report\models\ReportModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 
 class ReportController
 {
-    public function getByGroupId(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getGroups(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        return $response->withJson(['groups' => GroupModel::get()]);
+    }
+
+    public function getByGroupId(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -40,9 +48,9 @@ class ReportController
         return $response->withJson(['reports' => $reports]);
     }
 
-     public function updateForGroupId(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function updateForGroupId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -75,7 +83,7 @@ class ReportController
             ReportModel::deleteForGroupId(['groupId' => $aArgs['groupId'], 'reportIds' => $reportIdsToDelete]);
         }
 
-        return $response->withJson(['success' => _SAVED_CHANGE]);
+        return $response->withJson(['success' => 'success']);
     }
 }
 

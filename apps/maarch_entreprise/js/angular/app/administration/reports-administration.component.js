@@ -12,13 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
+var notification_service_1 = require("../notification.service");
 var ReportsAdministrationComponent = /** @class */ (function () {
-    function ReportsAdministrationComponent(http) {
+    function ReportsAdministrationComponent(http, notify) {
         this.http = http;
+        this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.groups = [];
         this.reports = [];
         this.selectedGroup = "";
+        this.loading = false;
     }
     ReportsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -29,9 +32,13 @@ var ReportsAdministrationComponent = /** @class */ (function () {
         var _this = this;
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + 'rest/groups')
+        this.loading = true;
+        this.http.get(this.coreUrl + 'rest/reports/groups')
             .subscribe(function (data) {
             _this.groups = data['groups'];
+            _this.loading = false;
+        }, function () {
+            location.href = "index.php";
         });
     };
     ReportsAdministrationComponent.prototype.loadReports = function () {
@@ -40,23 +47,24 @@ var ReportsAdministrationComponent = /** @class */ (function () {
             .subscribe(function (data) {
             _this.reports = data['reports'];
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     ReportsAdministrationComponent.prototype.onSubmit = function () {
+        var _this = this;
         this.http.put(this.coreUrl + 'rest/reports/groups/' + this.selectedGroup, this.reports)
-            .subscribe(function (data) {
-            successNotification(data['success']);
+            .subscribe(function () {
+            _this.notify.success(_this.lang.modificationSaved);
         }, function (err) {
-            errorNotification(err.error.errors);
+            _this.notify.error(err.error.errors);
         });
     };
     ReportsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["reports-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+            providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient])
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
     ], ReportsAdministrationComponent);
     return ReportsAdministrationComponent;
 }());

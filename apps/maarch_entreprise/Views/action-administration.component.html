@@ -17,14 +17,13 @@
             <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
                 <div class="form-group">
                     <mat-form-field>
-                        <input matInput [(ngModel)]="action.label_action" required name="action_name" id="action_name" title="{{lang.description}}"
-                            type="text" placeholder="{{lang.description}}" required>
+                        <input matInput [(ngModel)]="action.label_action" required name="action_name" id="action_name" title="{{lang.actionName}}"
+                            type="text" placeholder="{{lang.actionName}}" maxlength="255">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status"
-                            required>
+                        <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status" required>
                             <mat-option *ngFor="let status of statuses" [value]="status.id">
                                 {{status.label_status}}
                             </mat-option>
@@ -33,8 +32,7 @@
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page"
-                            required>
+                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page" >
                             <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
                                 {{action.label}}
                             </mat-option>

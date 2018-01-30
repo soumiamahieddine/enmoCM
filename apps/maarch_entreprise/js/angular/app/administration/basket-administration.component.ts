@@ -11,7 +11,6 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["basket-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {

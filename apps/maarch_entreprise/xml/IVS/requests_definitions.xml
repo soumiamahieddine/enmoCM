@@ -50,18 +50,6 @@
       <parameter name="display" value="true"/>
     </requestDefinition>
 
-    <!-- Admin action -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="action"/>
-      <parameter name="page" value="action_list_by_name"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_action" >
-      <parameter name="admin" value="action"/>
-      <parameter name="page" value="action_management_controler"/>
-      <parameter name="id" />
-    </requestDefinition>
-
     <!-- Admin architecture -->
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_architecture" >
       <parameter name="admin" value="architecture"/>
