@@ -242,6 +242,7 @@ $app->put('/notifications/{id}', \Notifications\Controllers\NotificationControll
 $app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
 
 //Reports
+$app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
 $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 

@@ -23,9 +23,18 @@ use Slim\Http\Response;
 
 class ReportController
 {
+    public function getGroups(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        return $response->withJson(['groups' => GroupModel::get()]);
+    }
+
     public function getByGroupId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -41,7 +50,7 @@ class ReportController
 
     public function updateForGroupId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
