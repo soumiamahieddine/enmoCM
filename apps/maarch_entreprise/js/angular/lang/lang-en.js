@@ -20,7 +20,7 @@ exports.LANG_EN = {
     "administration": "Administration",
     "application": "Application",
     "associatedStatus": "Associated status",
-    "attachments": "Pièce(s) jointe(s)",
+    "attachments": "Attachments",
     "authorize": "Authorize",
     "autoLogoutAbsence": "You are going to be automaticaly disconnected after your redirections",
     "avis": "Avis circuit",
