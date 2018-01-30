@@ -78,7 +78,7 @@ class StatusControllerTest extends TestCase
         $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(_DESCRIPTION . ' ' . _INVALID, $responseBody->errors[0]);
+        $this->assertSame('Invalid label_status value', $responseBody->errors[0]);
     }
 
     public function testGetListUpdateDelete()
