@@ -40,7 +40,7 @@ class ActionController
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
+                ->withJson(['errors' => 'id is empty']);
         }
 
         if ($obj['action']['is_folder_action'] == 'Y') {
@@ -221,12 +221,12 @@ class ActionController
         $objs = StatusModel::get();
 
         foreach ($objs as $obj) {
-            $status[]=$obj['id'];
+            $status[] = $obj['id'];
         }
         array_unshift($status, '_NOSTATUS_');
 
         if (!(in_array($aArgs['id_status'], $status))) {
-            $errors[]=_STATUS. ' ' . _NOT_VALID;
+            $errors[]= 'Invalid Status';
         }
 
         if ($mode == 'update') {
@@ -237,25 +237,26 @@ class ActionController
             }
         }
            
-        if (!Validator::notEmpty()->validate($aArgs['label_action'])) {
-            $errors[] = _NO_RIGHT.' '._DESC;
+        if (!Validator::notEmpty()->validate($aArgs['label_action']) ||
+            !Validator::length(1, 255)->validate($aArgs['label_action'])) {
+            $errors[] = 'Invalid label action';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['id_status'])) {
-            $errors[] = CHOOSE_STATUS;
+            $errors[] = 'id_status is empty';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id'] != 'Y' && $aArgs['create_id'] != 'N')) {
-            $errors[]= _CREATE_ID . ' ' . _NOT_VALID;
+            $errors[]= 'Invalid create_id value';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history'] != 'Y' && $aArgs['history'] != 'N')) {
-            $errors[]= _ACTION_HISTORY . ' ' . _NOT_VALID;
+            $errors[]= 'Invalid history value';
         }
         
 
         if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system'] != 'Y' && $aArgs['is_system'] != 'N')) {
-            $errors[]= _IS_SYSTEM . ' ' . _NOT_VALID;
+            $errors[]= 'Invalid is_system value';
         }
 
         return $errors;
