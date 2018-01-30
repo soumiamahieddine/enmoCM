@@ -8,12 +8,15 @@
 */
 
 /**
-* @brief Reports Model
+* @brief Report Model Abstract
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Report\models;
+
+use Core\Models\CoreConfigModel;
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class ReportModelAbstract
 {
@@ -30,21 +33,21 @@ class ReportModelAbstract
         }
 
         $reports = [];
-        $xmlfile = simplexml_load_file($path);
 
+        $xmlfile = simplexml_load_file($path);
         if ($xmlfile) {
             foreach ($xmlfile->REPORT as $value) {
                 if ((string)$value->ENABLED == "true") {
                     $reports[] = [
-                        'id' => (string)$value->ID,
-                        'label' => constant((string)$value->LABEL),
-                        'desc' => constant((string)$value->DESCRIPTION),
-                        'url' => (string)$value->URL,
-                        'in_menu_reports' =>(string)$value->IN_MENU_REPORTS,
-                        'origin' => (string)$value->ORIGIN,
-                        'module' => (string)$value->MODULE,
-                        'module_label' => (string)$value->MODULE_LABEL,
-                        'checked' => false
+                        'id'                => (string)$value->ID,
+                        'label'             => constant((string)$value->LABEL),
+                        'desc'              => constant((string)$value->DESCRIPTION),
+                        'url'               => (string)$value->URL,
+                        'in_menu_reports'   => (string)$value->IN_MENU_REPORTS,
+                        'origin'            => (string)$value->ORIGIN,
+                        'module'            => (string)$value->MODULE,
+                        'module_label'      => (string)$value->MODULE_LABEL,
+                        'checked'           => false
                     ];
                 }
             }

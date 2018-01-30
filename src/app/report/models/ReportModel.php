@@ -8,14 +8,12 @@
 */
 
 /**
-* @brief Attachment Model
+* @brief Report Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Report\models;
 
 class ReportModel extends ReportModelAbstract
 {
-    // Do your stuff in this class
 }

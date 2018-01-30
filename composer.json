@@ -8,6 +8,7 @@
             "History\\"       : "src/app/history/",
             "Parameter\\"     : "src/app/parameter/",
             "Priority\\"      : "src/app/priority/",
+            "Report\\"        : "src/app/report/",
             "Resource\\"      : "src/app/resource/",
             "Status\\"        : "src/app/status/",
 
