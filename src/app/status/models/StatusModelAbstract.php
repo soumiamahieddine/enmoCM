@@ -61,20 +61,20 @@ class StatusModelAbstract
         return $aReturn;
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'label_status']);
         ValidatorModel::stringType($aArgs, ['id', 'label_status']);
 
-        $aReturn = DatabaseModel::insert([
+        DatabaseModel::insert([
             'table'         => 'status',
             'columnsValues' => $aArgs
-            ]);
+        ]);
 
-        return $aReturn;
+        return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['label_status', 'identifier']);
         ValidatorModel::intVal($aArgs, ['identifier']);
@@ -83,27 +83,27 @@ class StatusModelAbstract
         unset($aArgs['id']);
         unset($aArgs['identifier']);
 
-        $aReturn = DatabaseModel::update([
+        DatabaseModel::update([
             'table' => 'status',
             'set'   => $aArgs,
             'where' => ['identifier = ?'],
             'data'  => [$where['identifier']]
         ]);
 
-        return $aReturn;
+        return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['identifier']);
         ValidatorModel::intVal($aArgs, ['identifier']);
 
-        $aReturn = DatabaseModel::delete([
-                'table' => 'status',
-                'where' => ['identifier = ?'],
-                'data'  => [$aArgs['identifier']]
-            ]);
+        DatabaseModel::delete([
+            'table' => 'status',
+            'where' => ['identifier = ?'],
+            'data'  => [$aArgs['identifier']]
+        ]);
 
-        return $aReturn;
+        return true;
     }
 }

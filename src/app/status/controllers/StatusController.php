@@ -27,7 +27,7 @@ class StatusController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -38,7 +38,7 @@ class StatusController
 
     public function getNewInformations(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -49,7 +49,7 @@ class StatusController
 
     public function getByIdentifier(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -71,7 +71,7 @@ class StatusController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -83,26 +83,24 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        if (StatusModel::create($aArgs)) {
-            $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
+        StatusModel::create($aArgs);
 
-            HistoryController::add([
-                'tableName' => 'status',
-                'recordId'  => $return['status']['id'],
-                'eventType' => 'ADD',
-                'eventId'   => 'statusup',
-                'info'       => _STATUS_ADDED . ' : ' . $return['status']['id']
-            ]);
+        $return['status'] = StatusModel::getById(['id' => $aArgs['id']])[0];
 
-            return $response->withJson($return);
-        } else {
-            return $response->withStatus(500)->withJson(['errors' => _NOT_CREATE]);
-        }
+        HistoryController::add([
+            'tableName' => 'status',
+            'recordId'  => $return['status']['id'],
+            'eventType' => 'ADD',
+            'eventId'   => 'statusup',
+            'info'       => _STATUS_ADDED . ' : ' . $return['status']['id']
+        ]);
+
+        return $response->withJson($return);
     }
 
     public function update(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -116,28 +114,24 @@ class StatusController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        if (StatusModel::update($aArgs)) {
-            $return['status'] = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])[0];
+        StatusModel::update($aArgs);
 
-            HistoryController::add([
-                'tableName' => 'status',
-                'recordId'  => $return['status']['id'],
-                'eventType' => 'UP',
-                'eventId'   => 'statusup',
-                'info'       => _MODIFY_STATUS . ' : ' . $return['status']['id']
-            ]);
-            
-            return $response->withJson($return);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
-        }
+        $return['status'] = StatusModel::getByIdentifier(['identifier' => $aArgs['identifier']])[0];
+
+        HistoryController::add([
+            'tableName' => 'status',
+            'recordId'  => $return['status']['id'],
+            'eventType' => 'UP',
+            'eventId'   => 'statusup',
+            'info'       => _MODIFY_STATUS . ' : ' . $return['status']['id']
+        ]);
+
+        return $response->withJson($return);
     }
 
     public function delete(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -159,11 +153,7 @@ class StatusController
                 ->withJson(['errors' => 'identifier not valid']);
         }
 
-        return $response->withJson(
-            [
-            'statuses' => StatusModel::get()
-            ]
-        );
+        return $response->withJson(['statuses' => StatusModel::get()]);
     }
 
     protected function manageValue($request)
