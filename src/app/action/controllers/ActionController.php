@@ -23,6 +23,10 @@ class ActionController
 {
     public function get(Request $request, Response $response)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $obj ['actions']= ActionModel::get();
        
         return $response->withJson($obj);

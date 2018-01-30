@@ -85,9 +85,3 @@ export class ActionsAdministrationComponent implements OnInit {
         }
     }
 }
-export interface Action {
-    id: number;
-    label_action: string;
-    history: string;
-    is_folder_action: string;
-}
