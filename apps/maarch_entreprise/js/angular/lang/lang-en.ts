@@ -16,7 +16,7 @@ export const LANG_EN = {
     "addStatus"                 : "Add a status",
     "administration"            : "Administration",
     "application"               : "Application",
-    "associatedStatus"		: "Associated status",
+    "associatedStatus"		    : "Associated status",
     "authorize"                 : "Authorize",
     "autoLogoutAbsence"         : "You are going to be automaticaly disconnected after your redirections",
     "back"                      : "Back",
