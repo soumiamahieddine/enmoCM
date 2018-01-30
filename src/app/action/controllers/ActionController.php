@@ -11,10 +11,10 @@
 
 namespace Action\controllers;
 
+use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
-use Core\Models\LangModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -111,8 +111,6 @@ class ActionController
         $return = ActionModel::create($aArgs);
 
         if ($return) {
-            $id = $aArgs['id'];
-
             $obj = max(ActionModel::get());
         } else {
             return $response
@@ -120,10 +118,17 @@ class ActionController
                 ->withJson(['errors' => _NOT_CREATE]);
         }
 
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $obj['id'],
+            'eventType' => 'ADD',
+            'eventId'   => 'actionadd',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._ADDED
+        ]);
+
         return $response->withJson(
             [
-            'success'   =>  _ACTION. ' <b>' . $obj['id'] .'</b> ' ._ADDED,
-            'action'      => $obj
+            'action'  => $obj
             ]
         );
     }
@@ -159,9 +164,16 @@ class ActionController
                 ->withJson(['errors' => _NOT_UPDATE]);
         }
 
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $obj['id'],
+            'eventType' => 'UP',
+            'eventId'   => 'actionup',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._UPDATED
+        ]);
+
         return $response->withJson(
             [
-            'success' => _ACTION. ' <b>' . $id .'</b> ' ._UPDATED,
             'action'  => $obj
             ]
         );
@@ -174,18 +186,26 @@ class ActionController
         }
 
         if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
+            $id  = $aArgs['id'];
+            $obj = ActionModel::getById(['id' => $id]);
             ActionModel::delete(['id' => $id]);
         } else {
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => _NOT_DELETE]);
         }
-        
+
+        HistoryController::add([
+            'tableName' => 'actions',
+            'recordId'  => $id,
+            'eventType' => 'DEL',
+            'eventId'   => 'actiondel',
+            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._DELETED
+        ]);
+
         return $response->withJson(
             [
-            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._DELETED,
-            'action'      => ActionModel::get()
+            'action' => ActionModel::get()
             ]
         );
     }

@@ -33,8 +33,7 @@
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page"
-                            required>
+                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page" >
                             <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
                                 {{action.label}}
                             </mat-option>

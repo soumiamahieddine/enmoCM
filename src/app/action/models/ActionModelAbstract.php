@@ -22,8 +22,8 @@ class ActionModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $actions = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['actions']
         ]);
 
         return $actions;
@@ -36,10 +36,10 @@ class ActionModelAbstract
 
         $aReturn = DatabaseModel::select(
             [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['actions'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['actions'],
+            'where'  => ['id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
 
@@ -48,12 +48,12 @@ class ActionModelAbstract
         }
 
         $aReturn = $aReturn[0];
-        $aReturn['actionCategories']=DatabaseModel::select(
+        $aReturn['actionCategories'] = DatabaseModel::select(
             [
-            'select'    => ['category_id'],
-            'table'     => ['actions_categories'],
-            'where'     => ['action_id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => ['category_id'],
+            'table'  => ['actions_categories'],
+            'where'  => ['action_id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
        
@@ -106,12 +106,12 @@ class ActionModelAbstract
 
         $aDelete = DatabaseModel::delete(
             ['table' => 'actions_categories',
-            'where' => ['action_id = ?'],
-            'data'  => [$aArgs['id']]
+            'where'  => ['action_id = ?'],
+            'data'   => [$aArgs['id']]
             ]
         );
 
-        $tab['action_id']=$aArgs['id'];
+        $tab['action_id'] = $aArgs['id'];
 
         for ($i=0;$i<count($aArgs['actionCategories']);$i++) {
             $tab['category_id']=$aArgs['actionCategories'][$i];
@@ -218,11 +218,11 @@ class ActionModelAbstract
                     $desc =  'no description';
                 }
                 $tabActions_pages['actionsPageList'][] = array(
-                    'id'          => (string) $actionPage->ID,
-                    'label'       => $label,
-                    'name'        => (string) $actionPage->NAME,
-                    'desc'        => $desc,
-                    'origin'      => ucfirst($origin),
+                    'id'     => (string) $actionPage->ID,
+                    'label'  => $label,
+                    'name'   => (string) $actionPage->NAME,
+                    'desc'   => $desc,
+                    'origin' => ucfirst($origin),
                 );
             }
         }
@@ -259,10 +259,10 @@ class ActionModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
 
         $action = DatabaseModel::select([
-            'select'    => ['action_page'],
-            'table'     => ['actions'],
-            'where'     => ['id = ? AND enabled = ?'],
-            'data'      => [$aArgs['id'], 'Y']
+            'select' => ['action_page'],
+            'table'  => ['actions'],
+            'where'  => ['id = ? AND enabled = ?'],
+            'data'   => [$aArgs['id'], 'Y']
         ]);
 
         if (empty($action[0])) {
@@ -278,10 +278,10 @@ class ActionModelAbstract
         ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);
 
         $action = DatabaseModel::select([
-            'select'    => ['id_action'],
-            'table'     => ['actions_groupbaskets'],
-            'where'     => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
-            'data'      => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
+            'select' => ['id_action'],
+            'table'  => ['actions_groupbaskets'],
+            'where'  => ['group_id = ?', 'basket_id = ?', 'default_action_list = ?'],
+            'data'   => [$aArgs['groupId'], $aArgs['basketId'], 'Y']
         ]);
 
         if (empty($action[0])) {
