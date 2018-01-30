@@ -107,65 +107,6 @@ class LangModelAbstract
         return $aLang;
     }
 
-
-    public static function getActionsForAdministrationLang()
-    {
-        $aLang = [
-            'id'                                => _ID,
-            'desc'                              => _DESC,
-            'is_folder_action'                  => _IS_FOLDER_ACTION,
-            'is_folder_action_desc'             => _IS_FOLDER_ACTION_DESC,
-            'is_system'                         => _IS_SYSTEM,
-            'new_action'                        => _NEW_ACTION,
-            'recordsPerPage'                    =>  _RECORDS_PER_PAGE,
-            'display'                           =>  _DISPLAY,
-            'noRecords'                         =>  _NO_RECORDS,
-            'page'                              =>  _PAGE,
-            'outOf'                             =>  _OUT_OF,
-            'available'                         =>  _AVAILABLE,
-            'filteredFrom'                      =>  _FILTERED_FROM,
-            'records'                           =>  _RECORDS,
-            'last'                              =>  _LAST,
-            'modify'                            =>  _MODIFY,
-            'delete'                            =>  _DELETE,
-            'do_not_modify_unless_expert'       =>  _DO_NOT_MODIFY_UNLESS_EXPERT,
-            'associated_status'                 =>  _ASSOCIATED_STATUS,
-            'yes'                               => _YES,
-            'no'                                => _NO,
-            'action_page'                       =>  _ACTION_PAGE,
-            'action_history'                    =>  _ACTION_HISTORY,
-            'action_history_desc'               =>  _ACTION_HISTORY_DESC,
-            'choose_category_association'       =>  _CHOOSE_CATEGORY_ASSOCIATION,
-            'choose_category_association_help'  =>  _CHOOSE_CATEGORY_ASSOCIATION_HELP,
-            'add'                               =>  _ADD,
-            'remove'                            =>  _REMOVE,
-            'infos_actions'                     =>  _INFOS_ACTIONS,
-            'keyword'                           =>  _KEYWORD,
-            'system_parameters'                 =>  _SYSTEM_PARAMETERS,
-            'delete_action'                     =>  _DEL_ACTION,
-            'action_modified'                   =>  _ACTION_MODIFIED,
-            'action_added'                      =>  _ACTION_ADDED,
-            'validate'                          =>  _VALIDATE,
-            'cancel'                            =>  _CANCEL,
-            'noResult'                          => _NO_RESULTS,
-            'noRecord'                          => _NO_RECORD,
-            'previous'                          => _PREVIOUS_PAGE,
-            'next'                              => _NEXT_PAGE,
-            'record'                            => _RECORD,
-            'search'                            => _SEARCH,
-            'actions'                           => _ACTIONS,
-            'action'                           => _ACTION,
-            'admin'                             => _ADMIN,
-            'deleteMsg'                         => _REALLY_DELETE,
-            'modify_action'                     => _MODIFY_ACTION,
-            'selectAll'                         => _SELECT_ALL,
-            'unselectAll'                       => _UNSELECT_ALL,
-            
-
-        ];
-        return $aLang;
-    }
-
     public static function getUsersAdministrationLang()
     {
         $aLang = [

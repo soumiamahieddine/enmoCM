@@ -20,15 +20,14 @@ use Slim\Http\Response;
 
 class ActionController
 {
-    public function getForAdministration(Request $request, Response $response)
+    public function get(Request $request, Response $response)
     {
-        
         $obj ['actions']= ActionModel::get();
        
         return $response->withJson($obj);
     }
 
-    public function getByIdForAdministration(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, $aArgs)
     {
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
@@ -83,9 +82,9 @@ class ActionController
     
         $obj['statuses'] = StatusModel::get();
         array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList']=ActionModel::getAction_pages();
+        $obj['action_pagesList'] = ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
-        $obj['keywordsList']=ActionModel::getKeywords();
+        $obj['keywordsList'] = ActionModel::getKeywords();
   
         return $response->withJson($obj);
     }
@@ -93,13 +92,10 @@ class ActionController
     public function create(Request $request, Response $response, $aArgs)
     {
         $errors = [];
-
-        $aArgs = $request->getParams();
-
-        $aArgs = $this->manageValue($aArgs);
+        $aArgs  = $request->getParams();
+        $aArgs  = $this->manageValue($aArgs);
         
         $errors = $this->control($aArgs, 'create');
-        
 
         if (!empty($errors)) {
             return $response
@@ -131,11 +127,10 @@ class ActionController
     {
         $errors = [];
 
-        $obj = $request->getParams();
-        $obj['id']=$aArgs['id'];
+        $obj       = $request->getParams();
+        $obj['id'] = $aArgs['id'];
 
-        $obj = $this->manageValue($obj);
-
+        $obj    = $this->manageValue($obj);
         $errors = $this->control($obj, 'update');
       
         if (!empty($errors)) {
@@ -162,7 +157,6 @@ class ActionController
             ]
         );
     }
-
 
     public function delete(Request $request, Response $response, $aArgs)
     {
@@ -202,12 +196,9 @@ class ActionController
             $obj = ActionModel::getById(['id' => $aArgs['id']]);
            
             if (empty($obj)) {
-        
                 $errors[]=_ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
-
             }
         }
-
            
         if (!Validator::notEmpty()->validate($aArgs['label_action'])) {
             $errors[]=_NO_RIGHT.' '._DESC;
@@ -217,16 +208,16 @@ class ActionController
             $errors[]=CHOOSE_STATUS;
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id']!='Y' && $aArgs['create_id']!='N') ) {
+        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id']!='Y' && $aArgs['create_id']!='N')) {
             $errors[]= _CREATE_ID . ' ' . _NOT_VALID;
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history']!='Y' && $aArgs['history']!='N') ) {
+        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history']!='Y' && $aArgs['history']!='N')) {
             $errors[]= _ACTION_HISTORY . ' ' . _NOT_VALID;
         }
         
 
-        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system']!='Y' && $aArgs['is_system']!='N') ) {
+        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system']!='Y' && $aArgs['is_system']!='N')) {
             $errors[]= _IS_SYSTEM . ' ' . _NOT_VALID;
         }
 
@@ -237,14 +228,15 @@ class ActionController
     public function initAction(Request $request, Response $response)
     {
         //default data
-        $obj['action']['history'] = true;
-        $obj['action']['keyword'] = '';
+        $obj['action']['history']          = true;
+        $obj['action']['keyword']          = '';
         $obj['action']['is_folder_action'] = false;
-        $obj['action']['is_system'] = false;
-        $obj['action']['action_page'] = '';
-        $obj['action']['id_status'] = '_NOSTATUS_';
-        $obj['action']['create_id'] = false;
-        $obj['categoriesList'] = ActionModel::getLettersBoxCategories();
+        $obj['action']['is_system']        = false;
+        $obj['action']['action_page']      = '';
+        $obj['action']['id_status']        = '_NOSTATUS_';
+        $obj['action']['create_id']        = false;
+        $obj['categoriesList']             = ActionModel::getLettersBoxCategories();
+
         foreach ($obj['categoriesList'] as $key => $value) {
             $obj['categoriesList'][$key]['selected'] = true;
         }
@@ -254,10 +246,8 @@ class ActionController
         $obj['action_pagesList'] = ActionModel::getAction_pages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
         $obj['keywordsList'] = ActionModel::getKeywords();
-        $obj['lang'] = LangModel::getActionsForAdministrationLang();
         
         return $response->withJson($obj);
-
     }
 
     protected function manageValue($request)

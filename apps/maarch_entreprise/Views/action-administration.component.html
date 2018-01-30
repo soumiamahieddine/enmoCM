@@ -43,8 +43,7 @@
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="keyword" name="keyword" title="{{lang.keyword}}" placeholder="{{lang.keyword}}" [(ngModel)]="action.keyword"
-                            required>
+                        <mat-select id="keyword" name="keyword" title="{{lang.keyword}}" placeholder="{{lang.keyword}}" [(ngModel)]="action.keyword">
                             <mat-option *ngFor="let keyword of keywordsList" [value]="keyword.value">
                                 {{keyword.label}}
                             </mat-option>

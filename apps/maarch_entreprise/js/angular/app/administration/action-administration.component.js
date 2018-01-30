@@ -84,7 +84,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(_this.lang.actionAdded + ' « ' + _this.action.label_action + ' »');
+                _this.notify.success(_this.lang.actionAdded);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
@@ -93,7 +93,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(_this.lang.actionUpdated + ' « ' + _this.action.label_action + ' »');
+                _this.notify.success(_this.lang.actionUpdated);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

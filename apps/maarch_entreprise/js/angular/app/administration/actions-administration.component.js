@@ -23,9 +23,8 @@ var ActionsAdministrationComponent = /** @class */ (function () {
         this.actions = [];
         this.titles = [];
         this.loading = false;
-        this.data = [];
         this.displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
-        this.dataSource = new material_1.MatTableDataSource(this.data);
+        this.dataSource = new material_1.MatTableDataSource(this.actions);
     }
     ActionsAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -43,13 +42,12 @@ var ActionsAdministrationComponent = /** @class */ (function () {
         this.loading = true;
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
-        this.http.get(this.coreUrl + 'rest/administration/actions')
+        this.http.get(this.coreUrl + 'rest/actions')
             .subscribe(function (data) {
             _this.actions = data['actions'];
-            _this.data = _this.actions;
             _this.loading = false;
             setTimeout(function () {
-                _this.dataSource = new material_1.MatTableDataSource(_this.data);
+                _this.dataSource = new material_1.MatTableDataSource(_this.actions);
                 _this.dataSource.paginator = _this.paginator;
                 _this.dataSource.sort = _this.sort;
             }, 0);
@@ -64,11 +62,11 @@ var ActionsAdministrationComponent = /** @class */ (function () {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe(function (data) {
-                _this.data = data.action;
-                _this.dataSource = new material_1.MatTableDataSource(_this.data);
+                _this.actions = data.action;
+                _this.dataSource = new material_1.MatTableDataSource(_this.actions);
                 _this.dataSource.paginator = _this.paginator;
                 _this.dataSource.sort = _this.sort;
-                _this.notify.success(_this.lang.actionDeleted + ' « ' + action.label_action + ' »');
+                _this.notify.success(_this.lang.actionDeleted);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });

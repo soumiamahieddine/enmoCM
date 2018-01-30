@@ -227,9 +227,9 @@ $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryControl
 $app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
 
 //actions
-$app->get('/administration/actions', \Action\controllers\ActionController::class . ':getForAdministration');
+$app->get('/actions', \Action\controllers\ActionController::class . ':get');
 $app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
-$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getByIdForAdministration');
+$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getById');
 $app->post('/actions', \Action\controllers\ActionController::class . ':create');
 $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');

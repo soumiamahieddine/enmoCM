@@ -25,10 +25,9 @@ export class ActionsAdministrationComponent implements OnInit {
     titles                  : any[]         = [];
 
     loading                 : boolean       = false;
-    data: Action[] = [];
 
     displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
-    dataSource = new MatTableDataSource(this.data);
+    dataSource = new MatTableDataSource(this.actions);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -54,15 +53,14 @@ export class ActionsAdministrationComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
 
-        this.http.get(this.coreUrl + 'rest/administration/actions')
+        this.http.get(this.coreUrl + 'rest/actions')
             .subscribe((data) => {
                 this.actions = data['actions'];
-                this.data = this.actions;
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource           = new MatTableDataSource(this.actions);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.dataSource.sort      = this.sort;
                 }, 0);
             }, (err) => {
                 console.log(err);
@@ -76,11 +74,11 @@ export class ActionsAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe((data : any) => {
-                    this.data = data.action;
-                    this.dataSource = new MatTableDataSource(this.data);
+                    this.actions              = data.action;
+                    this.dataSource           = new MatTableDataSource(this.actions);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.actionDeleted+' « '+action.label_action+' »');
+                    this.dataSource.sort      = this.sort;
+                    this.notify.success(this.lang.actionDeleted);
                     
                 }, (err) => {
                     this.notify.error(JSON.parse(err._body).errors);

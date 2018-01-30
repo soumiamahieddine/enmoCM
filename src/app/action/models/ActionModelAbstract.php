@@ -11,6 +11,10 @@
 
 namespace Action\models;
 
+use Core\Models\CoreConfigModel;
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
+
 class ActionModelAbstract
 {
     public static function get(array $aArgs = [])
@@ -70,14 +74,13 @@ class ActionModelAbstract
         $tab['action_id'] = max(ActionModel::get())['id'];
 
         for ($i=0;$i<count($actioncategories);$i++) {
-
             $tab['category_id'] = $actioncategories[$i];
             $aInsert = DatabaseModel::insert(
                 [
                 'table'         => 'actions_categories',
                 'columnsValues' => $tab
                 ]
-            );    
+            );
         }
         return $aReturn;
     }
@@ -90,7 +93,7 @@ class ActionModelAbstract
         $aReturn = DatabaseModel::update(
             ['table'     => 'actions',
             'set'       => [
-                'keyword'           => $aArgs['keyword'],          
+                'keyword'           => $aArgs['keyword'],
                 'label_action'      => $aArgs['label_action'],
                 'id_status'         => $aArgs['id_status'],
                 'action_page'       => $aArgs['action_page'],
@@ -111,14 +114,13 @@ class ActionModelAbstract
         $tab['action_id']=$aArgs['id'];
 
         for ($i=0;$i<count($aArgs['actionCategories']);$i++) {
-
             $tab['category_id']=$aArgs['actionCategories'][$i];
             $aInsert = DatabaseModel::insert(
                 [
                 'table'         => 'actions_categories',
                 'columnsValues' => $tab
                 ]
-            );    
+            );
         }
 
         return $aReturn;
@@ -165,7 +167,6 @@ class ActionModelAbstract
 
                 if ($category->id == (string)$categories->default_category) {
                     $categoriesTmp['default_category']=true;
-
                 } else {
                     $categoriesTmp['default_category']=false;
                 }
@@ -173,7 +174,6 @@ class ActionModelAbstract
             }
         }
         return $categoriesTypes;
-
     }
 
     public static function getAction_pages()
@@ -265,7 +265,7 @@ class ActionModelAbstract
                 function ($element) {
                     return $element['label'];
                 }, $tabActions_pages['actionsPageList']
-            ), 
+            ),
             SORT_ASC, $tabActions_pages['actionsPageList']
         );
         
@@ -324,4 +324,3 @@ class ActionModelAbstract
         return $action[0]['id_action'];
     }
 }
-

@@ -94,7 +94,7 @@ export class ActionAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(this.lang.actionAdded+' « '+this.action.label_action+' »');
+                this.notify.success(this.lang.actionAdded);
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);
@@ -103,7 +103,7 @@ export class ActionAdministrationComponent implements OnInit {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(this.lang.actionUpdated+' « '+this.action.label_action+' »');
+                this.notify.success(this.lang.actionUpdated);
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);
