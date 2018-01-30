@@ -15,6 +15,7 @@ use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
 use Core\Models\LangModel;
+use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -91,6 +92,10 @@ class ActionController
 
     public function create(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $errors = [];
         $aArgs  = $request->getParams();
         $aArgs  = $this->manageValue($aArgs);
@@ -125,6 +130,10 @@ class ActionController
 
     public function update(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $errors = [];
 
         $obj       = $request->getParams();
@@ -142,7 +151,7 @@ class ActionController
         $return = ActionModel::update($obj);
 
         if ($return) {
-            $id = $aArgs['id'];
+            $id  = $aArgs['id'];
             $obj = ActionModel::getById(['id' => $id]);
         } else {
             return $response
@@ -152,14 +161,18 @@ class ActionController
 
         return $response->withJson(
             [
-            'success'   => _ACTION. ' <b>' . $id .'</b> ' ._UPDATED,
-            'action'      => $obj
+            'success' => _ACTION. ' <b>' . $id .'</b> ' ._UPDATED,
+            'action'  => $obj
             ]
         );
     }
 
     public function delete(Request $request, Response $response, $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (isset($aArgs['id'])) {
             $id = $aArgs['id'];
             ActionModel::delete(['id' => $id]);
@@ -196,31 +209,30 @@ class ActionController
             $obj = ActionModel::getById(['id' => $aArgs['id']]);
            
             if (empty($obj)) {
-                $errors[]=_ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
+                $errors[] = _ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
             }
         }
            
         if (!Validator::notEmpty()->validate($aArgs['label_action'])) {
-            $errors[]=_NO_RIGHT.' '._DESC;
+            $errors[] = _NO_RIGHT.' '._DESC;
         }
 
         if (!Validator::notEmpty()->validate($aArgs['id_status'])) {
-            $errors[]=CHOOSE_STATUS;
+            $errors[] = CHOOSE_STATUS;
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id']!='Y' && $aArgs['create_id']!='N')) {
+        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id'] != 'Y' && $aArgs['create_id'] != 'N')) {
             $errors[]= _CREATE_ID . ' ' . _NOT_VALID;
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history']!='Y' && $aArgs['history']!='N')) {
+        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history'] != 'Y' && $aArgs['history'] != 'N')) {
             $errors[]= _ACTION_HISTORY . ' ' . _NOT_VALID;
         }
         
 
-        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system']!='Y' && $aArgs['is_system']!='N')) {
+        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system'] != 'Y' && $aArgs['is_system'] != 'N')) {
             $errors[]= _IS_SYSTEM . ' ' . _NOT_VALID;
         }
-
 
         return $errors;
     }

@@ -21,7 +21,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.router = router;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this._search = '';
         this.action = {};
         this.statuses = [];
         this.actionPagesList = [];
@@ -75,9 +74,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
             }
         });
     };
-    ActionAdministrationComponent.prototype.clearSearch = function () {
-        this._search = '';
-    };
     ActionAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
         if (this.creationMode) {
@@ -102,7 +98,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
     ActionAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["action-administrationView"],
-            styleUrls: ['css/action-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])

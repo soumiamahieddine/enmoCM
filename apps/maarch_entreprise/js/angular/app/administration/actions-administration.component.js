@@ -83,7 +83,6 @@ var ActionsAdministrationComponent = /** @class */ (function () {
     ActionsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["actions-administrationView"],
-            styleUrls: [],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])

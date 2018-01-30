@@ -11,12 +11,10 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["action-administrationView"],
-    styleUrls   : ['css/action-administration.component.css'],
     providers   : [NotificationService]
 })
 export class ActionAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
-    _search                     : string    = '';
     coreUrl                     : string;
     creationMode                : boolean;
     action                      : any       = {};
@@ -83,10 +81,6 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             } 
         });
-    }
-
-    clearSearch(){
-        this._search = '';
     }
 
     onSubmit() {

@@ -12,7 +12,6 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["actions-administrationView"],
-    styleUrls   : [],
     providers   : [NotificationService]
 })
 
