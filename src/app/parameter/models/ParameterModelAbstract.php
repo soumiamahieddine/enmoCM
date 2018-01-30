@@ -68,7 +68,7 @@ class ParameterModelAbstract
                 'description'           => $aArgs['description'],
                 'param_value_string'    => $aArgs['param_value_string'],
                 'param_value_int'       => $aArgs['param_value_int'],
-                'param_value_date'      => $aArgs['param_value_date'],
+                'param_value_date'      => $aArgs['param_value_date']
             ]
         ]);
 
@@ -78,11 +78,17 @@ class ParameterModelAbstract
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id', 'description', 'param_value_string']);
+        ValidatorModel::intVal($aArgs, ['param_value_int']);
 
         DatabaseModel::update([
             'table'     => 'parameters',
-            'set'       => $aArgs,
+            'set'       => [
+                'description'           => $aArgs['description'],
+                'param_value_string'    => $aArgs['param_value_string'],
+                'param_value_int'       => $aArgs['param_value_int'],
+                'param_value_date'      => $aArgs['param_value_date']
+            ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);

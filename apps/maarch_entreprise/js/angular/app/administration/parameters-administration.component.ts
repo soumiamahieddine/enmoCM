@@ -8,32 +8,24 @@ declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 
+
 @Component({
     templateUrl : angularGlobals["parameters-administrationView"],
-    styleUrls   : ['css/parameters-administration.component.css'],
     providers   : [NotificationService]
 })
-
 export class ParametersAdministrationComponent implements OnInit {
     coreUrl         : string;
-
     lang            : any           = LANG;
 
-    parametersList  : any;    
+    parameters      : any           = {};
 
-    resultInfo      : string        = "";
     loading         : boolean       = false;
-    data            : Parameter[]   = [];
 
-    displayedColumns = ['id','description','param_value_string','param_value_int','param_value_date','actions'];
-    dataSource = new MatTableDataSource(this.data);
+    displayedColumns                = ['id', 'description', 'value', 'actions'];
+    dataSource      : any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    applyFilter(filterValue: string) {
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-      this.dataSource.filter = filterValue;
-    }
+
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -44,48 +36,46 @@ export class ParametersAdministrationComponent implements OnInit {
         }
     }
 
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
     ngOnInit(): void {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        
-        this.http.get(this.coreUrl + 'rest/administration/parameters')
+
+        this.loading = true;
+
+        this.http.get(this.coreUrl + 'rest/parameters')
             .subscribe((data : any) => {
-                this.parametersList = data.parametersList;
-                this.data = this.parametersList;
+                this.parameters = data.parameters;
+
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource = new MatTableDataSource(this.parameters);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-                this.loading = false;
 
+                this.loading = false;
             });
     }
 
-    goUrl(){
-        location.href = 'index.php?admin=parameters&page=control_param_technic';
-    }
+    deleteParameter(paramId : string) {
+        let r = confirm(this.lang.deleteMsg);
 
-    deleteParameter(paramId : string){
-        let resp = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+paramId+' »');
-        if (resp) {
-            this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .subscribe((data : any) => {
-                    this.data = data.parameters;
-                    this.dataSource = new MatTableDataSource(this.data);
+                    this.parameters = data.parameters;
+                    this.dataSource = new MatTableDataSource(this.parameters);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.parameterDeleted+' « '+paramId+' »');           
-                },(err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.success(this.lang.parameterDeleted);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
                 });
         }
     }
-}
-export interface Parameter {
-    id: string;
-    description: string;
-    param_value_string: string;
-    param_value_int: number;
-    param_value_date: Date;
 }

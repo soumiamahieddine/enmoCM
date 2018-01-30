@@ -1,6 +1,7 @@
 <div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.parameterModification}} <small>{{parameter.id}}</small></h1>
-    <h1 *ngIf="creationMode">{{lang.parameterCreation}} <small>{{parameter.id}}</small></h1>
+    <h1>{{lang.administration}} {{lang.parameter}}
+        <small>{{parameter.id}}</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
@@ -8,11 +9,11 @@
 <div *ngIf="!loading" class="container-fluid">
     <div class="container-fluid">
         <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterFormUp="ngForm">
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterForm="ngForm">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="parameter.id" [disabled]="!creationMode" required  name="id" id="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}" required>                                
+                            <input matInput [(ngModel)]="parameter.id" [disabled]="!creationMode" name="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}" pattern="^[\w-]*$" required>
                         </mat-form-field>
                     </div>
                 </div>
@@ -26,7 +27,7 @@
                 <div class="form-group">
                     <div class="col-sm-6">
                         <mat-form-field>
-                            <mat-select id="type" name="type" title="{{lang.type}}" placeholder="{{lang.type}}" [(ngModel)]="type" [disabled]="!creationMode" required>
+                            <mat-select name="type" placeholder="{{lang.type}}" [(ngModel)]="type" [disabled]="!creationMode" required>
                                 <mat-option value="string">
                                     {{lang.string}}
                                 </mat-option>
@@ -40,21 +41,21 @@
                         </mat-form-field>
                     </div>
                     <div class="col-sm-6">                      
-                        <mat-form-field *ngIf = "type == 'string'">
-                            <input matInput [(ngModel)]="parameter.param_value_string" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        <mat-form-field *ngIf="type == 'string'">
+                            <input matInput [(ngModel)]="parameter.param_value_string" name="paramValueString" type="text" placeholder="{{lang.value}}">
                         </mat-form-field>
-                        <mat-form-field *ngIf = "type == 'int'">
-                            <input matInput [(ngModel)]="parameter.param_value_int" name="paramValue" id="paramValue" title="{{lang.value}}" type="text" placeholder="{{lang.value}}">                                
+                        <mat-form-field *ngIf="type == 'int'">
+                            <input matInput [(ngModel)]="parameter.param_value_int" name="paramValueInt" type="number" placeholder="{{lang.value}}">
                         </mat-form-field>
-                        <mat-form-field *ngIf = "type == 'date'">
-                            <input name="paramValue" id="paramValue" matInput [(ngModel)]="parameter.param_value_date" [matDatepicker]="picker" title="{{lang.value}}" placeholder="lang.value">
+                        <mat-form-field *ngIf="type == 'date'">
+                            <input matInput [(ngModel)]="parameter.param_value_date" name="paramValueDate" [matDatepicker]="picker" placeholder="{{lang.date}}">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker startView="month"></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="col-sm-12" style="text-align:center;">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="!parameterFormUp.form.valid" >{{lang.validate}}</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!parameterForm.form.valid">{{lang.save}}</button>
                     <button mat-raised-button routerLink='/administration/parameters'>{{lang.cancel}}</button>
                 </div>
             </form>

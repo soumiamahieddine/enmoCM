@@ -21,46 +21,37 @@ var ParameterAdministrationComponent = /** @class */ (function () {
         this.router = router;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this._search = '';
         this.parameter = {};
         this.loading = false;
     }
-    ParameterAdministrationComponent.prototype.prepareParameter = function () {
-        $j('#inner_content').remove();
-    };
     ParameterAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.parameterCreation;
-        }
-        else {
-            breadCrumb += this.lang.parameterModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
+        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a>";
     };
     ParameterAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
+        this.loading = true;
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
-                _this.http.get(_this.coreUrl + 'rest/administration/parameters/new')
-                    .subscribe(function (data) {
-                    _this.type = 'string';
-                    _this.updateBreadcrumb(angularGlobals.applicationName);
-                    _this.loading = false;
-                }, function () {
-                    location.href = "index.php";
-                });
+                _this.updateBreadcrumb(angularGlobals.applicationName);
+                _this.loading = false;
             }
             else {
                 _this.creationMode = false;
-                _this.http.get(_this.coreUrl + 'rest/administration/parameters/' + params['id'])
+                _this.http.get(_this.coreUrl + "rest/parameters/" + params['id'])
                     .subscribe(function (data) {
                     _this.parameter = data.parameter;
-                    _this.type = data.type;
                     _this.updateBreadcrumb(angularGlobals.applicationName);
+                    if (_this.parameter.param_value_int) {
+                        _this.type = "int";
+                    }
+                    else if (_this.parameter.param_value_date) {
+                        _this.type = "date";
+                    }
+                    else {
+                        _this.type = "string";
+                    }
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -86,7 +77,7 @@ var ParameterAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
-                _this.notify.success(_this.lang.parameterAdded + ' « ' + _this.parameter.id + ' »');
+                _this.notify.success(_this.lang.parameterAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -95,7 +86,7 @@ var ParameterAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
                 .subscribe(function (data) {
                 _this.router.navigate(['administration/parameters']);
-                _this.notify.success(_this.lang.parameterUpdated + ' « ' + _this.parameter.id + ' »');
+                _this.notify.success(_this.lang.parameterUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -104,7 +95,6 @@ var ParameterAdministrationComponent = /** @class */ (function () {
     ParameterAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals['parameter-administrationView'],
-            styleUrls: [],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])

@@ -27,7 +27,19 @@ class ParameterController
 {
     public function get(Request $request, Response $response)
     {
-        return $response->withJson(['parameters' => ParameterModel::get()]);
+        $parameters = ParameterModel::get();
+
+        foreach ($parameters as $key => $parameter) {
+            if (!empty($parameter['param_value_string'])) {
+                $parameters[$key]['value'] = $parameter['param_value_string'];
+            } elseif (!empty($parameter['param_value_int'])) {
+                $parameters[$key]['value'] = $parameter['param_value_int'];
+            } elseif (!empty($parameter['param_value_date'])) {
+                $parameters[$key]['value'] = $parameter['param_value_date'];
+            }
+        }
+
+        return $response->withJson(['parameters' => $parameters]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -66,12 +78,12 @@ class ParameterController
         }
 
         $parameter = ParameterModel::getById(['id' => $aArgs['id']]);
-
         if (empty($parameter)) {
             return $response->withStatus(400)->withJson(['errors' => 'Parameter not found']);
         }
 
         $data = $request->getParams();
+        $data['id'] = $aArgs['id'];
 
         ParameterModel::update($data);
 

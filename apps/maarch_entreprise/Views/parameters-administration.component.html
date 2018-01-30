@@ -1,6 +1,6 @@
 <div class="page-header">
     <h1>{{lang.administration}} {{lang.parameters}}
-        <small>{{data.length}} {{lang.parameters}}</small>
+        <small>{{parameters.length}} {{lang.parameters}}</small>
     </h1>
 </div>
 <div *ngIf="loading">
@@ -33,17 +33,9 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
                     <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="param_value_string">
+                <ng-container matColumnDef="value">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.param_value_string}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="param_value_int">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.param_value_int}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="param_value_date">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.value}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.param_value_date}} </mat-cell>
+                    <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
