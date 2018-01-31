@@ -14,8 +14,6 @@
 
 require '../vendor/autoload.php';
 
-header('Content-Type: text/html; charset=utf-8');
-
 //create session if NO SESSION
 if (empty($_SESSION['user'])) {
     require_once('../core/class/class_functions.php');
@@ -100,6 +98,9 @@ if (empty($userId)) {
     echo 'Authentication Failed';
     exit();
 }
+
+$language = \SrcCore\models\CoreConfigModel::getLanguage();
+require_once("src/core/lang/lang-{$language}.php");
 
 
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);

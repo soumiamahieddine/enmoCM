@@ -71,7 +71,7 @@ class BasketController
         }
 
         if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
@@ -104,7 +104,7 @@ class BasketController
         }
 
         if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
