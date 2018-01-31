@@ -7,6 +7,8 @@ use Core\Models\ServiceModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class GroupController
 {
@@ -18,7 +20,7 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
         }
 
         return $response->withJson(['groups' => $groups]);
@@ -92,15 +94,15 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
         }
 
         return $response->withJson(['groups' => $groups]);
     }
 
-    public function getDetailledById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -109,7 +111,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['user_id']]);
+        $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         $group['security']  = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']  = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
 
