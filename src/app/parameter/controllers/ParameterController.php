@@ -50,7 +50,7 @@ class ParameterController
             return $response->withStatus(400)->withJson(['errors' => 'Parameter not found']);
         }
 
-        return $response->withJson(['parameter'  => $parameter]);
+        return $response->withJson(['parameter' => $parameter]);
     }
 
     public function create(Request $request, Response $response)
@@ -68,7 +68,7 @@ class ParameterController
 
         ParameterModel::create($data);
 
-        return $response->withJson(['success'   => 'success']);
+        return $response->withJson(['success' => 'success']);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
@@ -98,6 +98,17 @@ class ParameterController
 
         ParameterModel::delete(['id' => $aArgs['id']]);
 
-        return $response->withJson(['parameters' => ParameterModel::get()]);
+        $parameters = ParameterModel::get();
+        foreach ($parameters as $key => $parameter) {
+            if (!empty($parameter['param_value_string'])) {
+                $parameters[$key]['value'] = $parameter['param_value_string'];
+            } elseif (!empty($parameter['param_value_int'])) {
+                $parameters[$key]['value'] = $parameter['param_value_int'];
+            } elseif (!empty($parameter['param_value_date'])) {
+                $parameters[$key]['value'] = $parameter['param_value_date'];
+            }
+        }
+
+        return $response->withJson(['parameters' => $parameters]);
     }
 }

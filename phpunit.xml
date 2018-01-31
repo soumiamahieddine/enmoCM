@@ -10,6 +10,7 @@
             <file>core/Test/PriorityControllerTest.php</file>
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/ReportControllerTest.php</file>
+            <file>core/Test/ParameterControllerTest.php</file>
             <file>modules/convert/Test/ProcessConvertTest.php</file>
             <file>modules/convert/Test/ProcessFulltextTest.php</file>
             <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
