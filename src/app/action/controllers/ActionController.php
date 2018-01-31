@@ -44,58 +44,60 @@ class ActionController
                 ->withJson(['errors' => 'id is empty']);
         }
 
-        if ($obj['action']['is_folder_action'] == 'Y') {
-            $obj['action']['is_folder_action'] = true;
-        } else {
-            $obj['action']['is_folder_action'] = false;
-        }
+        if(!empty($obj['action'])){
+            if ($obj['action']['is_folder_action'] == 'Y') {
+                $obj['action']['is_folder_action'] = true;
+            } else {
+                $obj['action']['is_folder_action'] = false;
+            }
 
-        if ($obj['action']['history'] == 'Y') {
-            $obj['action']['history'] = true;
-        } else {
-            $obj['action']['history'] = false;
-        }
+            if ($obj['action']['history'] == 'Y') {
+                $obj['action']['history'] = true;
+            } else {
+                $obj['action']['history'] = false;
+            }
 
-        if ($obj['action']['is_system'] == 'Y') {
-            $obj['action']['is_system'] = true;
-        } else {
-            $obj['action']['is_system'] = false;
-        }
+            if ($obj['action']['is_system'] == 'Y') {
+                $obj['action']['is_system'] = true;
+            } else {
+                $obj['action']['is_system'] = false;
+            }
 
-        if ($obj['action']['create_id'] == 'Y') {
-            $obj['action']['create_id'] = true;
-        } else {
-            $obj['action']['create_id'] = false;
-        }
+            if ($obj['action']['create_id'] == 'Y') {
+                $obj['action']['create_id'] = true;
+            } else {
+                $obj['action']['create_id'] = false;
+            }
 
-        //array of id categoriesList
-        foreach ($obj['action']['actionCategories'] as $key => $category) {
-            $arrActionCategories[] = $category['category_id'];
-        }
-        $obj['action']['actionCategories'] = $arrActionCategories;
+            //array of id categoriesList
+            foreach ($obj['action']['actionCategories'] as $key => $category) {
+                $arrActionCategories[] = $category['category_id'];
+            }
+            $obj['action']['actionCategories'] = $arrActionCategories;
 
-        $obj['categoriesList'] = CoreConfigModel:: getLettersBoxCategories();
+            $obj['categoriesList'] = CoreConfigModel:: getLettersBoxCategories();
 
-        //array of id categoriesList
-        foreach ($obj['categoriesList'] as $key => $category) {
-            $arrCategoriesList[] = $category['id'];
-        }
+            //array of id categoriesList
+            foreach ($obj['categoriesList'] as $key => $category) {
+                $arrCategoriesList[] = $category['id'];
+            }
 
-        //array of id actionCategories
-        if (empty($obj['action']['actionCategories'])) {
-            $obj['action']['actionCategories'] = $arrCategoriesList;
+            //array of id actionCategories
+            if (empty($obj['action']['actionCategories'])) {
+                $obj['action']['actionCategories'] = $arrCategoriesList;
+            }
+        
+            $obj['statuses'] = StatusModel::get();
+            array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+            $obj['action_pagesList'] = ActionModel::getAction_pages();
+            array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
+            $obj['keywordsList'] = ActionModel::getKeywords();
         }
-    
-        $obj['statuses'] = StatusModel::get();
-        array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList'] = ActionModel::getAction_pages();
-        array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
-        $obj['keywordsList'] = ActionModel::getKeywords();
   
         return $response->withJson($obj);
     }
 
-    public function create(Request $request, Response $response, $aArgs)
+    public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -120,7 +122,7 @@ class ActionController
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _NOT_CREATE]);
+                ->withJson(['errors' => 'Problem during action creation']);
         }
 
         HistoryController::add([
@@ -166,7 +168,7 @@ class ActionController
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _NOT_UPDATE]);
+                ->withJson(['errors' => 'Problem during action update']);
         }
 
         HistoryController::add([
@@ -190,6 +192,12 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        if (!Validator::intVal()->validate($aArgs['id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
+
         if (isset($aArgs['id'])) {
             $id  = $aArgs['id'];
             $obj = ActionModel::getById(['id' => $id]);
@@ -197,7 +205,7 @@ class ActionController
         } else {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => _NOT_DELETE]);
+                ->withJson(['errors' => 'id is empty']);
         }
 
         HistoryController::add([
@@ -231,10 +239,14 @@ class ActionController
         }
 
         if ($mode == 'update') {
-            $obj = ActionModel::getById(['id' => $aArgs['id']]);
+            if (!Validator::intVal()->validate($aArgs['id'])) {
+                $errors[] = 'Id is not a numeric';
+            } else {
+                $obj = ActionModel::getById(['id' => $aArgs['id']]);
+            }
            
             if (empty($obj)) {
-                $errors[] = _ID . ' ' .$aArgs['id']. ' ' . _NOT_EXISTS;
+                $errors[] = 'Id ' .$aArgs['id']. ' does not exists';
             }
         }
            
@@ -247,17 +259,8 @@ class ActionController
             $errors[] = 'id_status is empty';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['create_id']) || ($aArgs['create_id'] != 'Y' && $aArgs['create_id'] != 'N')) {
-            $errors[]= 'Invalid create_id value';
-        }
-
         if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history'] != 'Y' && $aArgs['history'] != 'N')) {
             $errors[]= 'Invalid history value';
-        }
-        
-
-        if (!Validator::notEmpty()->validate($aArgs['is_system']) || ($aArgs['is_system'] != 'Y' && $aArgs['is_system'] != 'N')) {
-            $errors[]= 'Invalid is_system value';
         }
 
         return $errors;
@@ -269,10 +272,8 @@ class ActionController
         $obj['action']['history']          = true;
         $obj['action']['keyword']          = '';
         $obj['action']['is_folder_action'] = false;
-        $obj['action']['is_system']        = false;
         $obj['action']['action_page']      = '';
         $obj['action']['id_status']        = '_NOSTATUS_';
-        $obj['action']['create_id']        = false;
         $obj['categoriesList']             = CoreConfigModel::getLettersBoxCategories();
 
         foreach ($obj['categoriesList'] as $key => $value) {
@@ -291,7 +292,7 @@ class ActionController
     protected function manageValue($request)
     {
         foreach ($request  as $key => $value) {
-            if (in_array($key, ['is_system', 'is_folder_action', 'history', 'create_id'])) {
+            if (in_array($key, ['is_folder_action', 'history'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
                 } else {
