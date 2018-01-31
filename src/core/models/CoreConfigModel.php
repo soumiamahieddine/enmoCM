@@ -13,9 +13,11 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
 //This model is not customizable
+use Core\Models\ValidatorModel;
+
 class CoreConfigModel
 {
     public static function getCustomId()
@@ -184,6 +186,7 @@ class CoreConfigModel
                 $categoriesTypes[] = $categoriesTmp;
             }
         }
+
         return $categoriesTypes;
     }
     

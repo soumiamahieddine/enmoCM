@@ -15,6 +15,9 @@
 
 namespace Core\Models;
 
+use Parameter\models\ParameterModel;
+use SrcCore\models\CoreConfigModel;
+
 class ChronoModel
 {
     public static function getChrono(array $aArgs)

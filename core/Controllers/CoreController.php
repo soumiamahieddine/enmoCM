@@ -15,10 +15,10 @@
 
 namespace Core\Controllers;
 
-use Core\Models\CoreConfigModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Core\Models\ServiceModel;
+use SrcCore\models\CoreConfigModel;
 
 class CoreController
 {

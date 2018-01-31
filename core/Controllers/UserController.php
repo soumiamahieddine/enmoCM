@@ -16,7 +16,6 @@
 namespace Core\Controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
@@ -30,6 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 
 
 class UserController

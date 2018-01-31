@@ -17,6 +17,7 @@ namespace Core\Models;
 
 use Entities\Models\EntityModel;
 use History\controllers\HistoryController;
+use SrcCore\models\CoreConfigModel;
 
 class UserModelAbstract
 {
