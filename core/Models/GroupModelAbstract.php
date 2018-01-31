@@ -175,15 +175,16 @@ class GroupModelAbstract
         return true;
     }
 
-    public static function getUsersByGroupId(array $aArgs = [])
+    public static function getUsersByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['usergroup_content'],
-            'where'     => ['group_id = ?'],
+            'table'     => ['usergroup_content, users'],
+            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.user_id'],
             'data'      => [$aArgs['groupId']]
         ]);
 
