@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-$ozwilloConfig = \Core\Models\CoreConfigModel::getOzwilloConfiguration();
+$ozwilloConfig = \SrcCore\models\CoreConfigModel::getOzwilloConfiguration();
 
 if (!empty($_SESSION['ozwillo']['code']) && !empty($_SESSION['ozwillo']['state'])) {
     $_REQUEST['code'] = $_SESSION['ozwillo']['code'];

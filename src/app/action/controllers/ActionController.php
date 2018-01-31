@@ -14,9 +14,9 @@ namespace Action\controllers;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
+use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
 use Core\Models\ServiceModel;
-use Core\Models\CoreConfigModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -28,21 +28,12 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $obj ['actions']= ActionModel::get();
-       
-        return $response->withJson($obj);
+        return $response->withJson(['actions' => ActionModel::get()]);
     }
 
     public function getById(Request $request, Response $response, $aArgs)
     {
-        if (isset($aArgs['id'])) {
-            $id = $aArgs['id'];
-            $obj['action'] = ActionModel::getById(['id' => $id]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'id is empty']);
-        }
+        $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
 
         if ($obj['action']['is_folder_action'] == 'Y') {
             $obj['action']['is_folder_action'] = true;
@@ -74,7 +65,7 @@ class ActionController
         }
         $obj['action']['actionCategories'] = $arrActionCategories;
 
-        $obj['categoriesList'] = CoreConfigModel:: getLettersBoxCategories();
+        $obj['categoriesList'] = CoreConfigModel::getLettersBoxCategories();
 
         //array of id categoriesList
         foreach ($obj['categoriesList'] as $key => $category) {
@@ -95,33 +86,23 @@ class ActionController
         return $response->withJson($obj);
     }
 
-    public function create(Request $request, Response $response, $aArgs)
+    public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $errors = [];
-        $aArgs  = $request->getParams();
-        $aArgs  = $this->manageValue($aArgs);
+        $data = $request->getParams();
+        $data  = $this->manageValue($data);
         
-        $errors = $this->control($aArgs, 'create');
-
+        $errors = $this->control($data, 'create');
         if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
     
-        $return = ActionModel::create($aArgs);
+        ActionModel::create($data);
 
-        if ($return) {
-            $obj = max(ActionModel::get());
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_CREATE]);
-        }
+        $obj = max(ActionModel::get());
 
         HistoryController::add([
             'tableName' => 'actions',
@@ -143,8 +124,6 @@ class ActionController
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-
-        $errors = [];
 
         $obj       = $request->getParams();
         $obj['id'] = $aArgs['id'];
@@ -190,29 +169,18 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (isset($aArgs['id'])) {
-            $id  = $aArgs['id'];
-            $obj = ActionModel::getById(['id' => $id]);
-            ActionModel::delete(['id' => $id]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => _NOT_DELETE]);
-        }
+        $action = ActionModel::getById(['id' => $aArgs['id']]); // TODO select label_action
+        ActionModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $id,
+            'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'actiondel',
-            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._DELETED
+            'info'      => _ACTION. ' "' . $action['label_action'] .'" ' ._DELETED
         ]);
 
-        return $response->withJson(
-            [
-            'action' => ActionModel::get()
-            ]
-        );
+        return $response->withJson(['action' => ActionModel::get()]);
     }
 
     protected function control($aArgs, $mode)

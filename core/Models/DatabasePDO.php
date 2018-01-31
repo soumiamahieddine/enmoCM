@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use SrcCore\models\CoreConfigModel;
+
 class DatabasePDO
 {
     private static $pdo             = null;

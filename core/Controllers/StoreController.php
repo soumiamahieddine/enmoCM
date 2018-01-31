@@ -18,7 +18,6 @@ namespace Core\Controllers;
 use Attachments\Models\AttachmentsModel;
 use Core\Models\ChronoModel;
 use Core\Models\ContactModel;
-use Core\Models\CoreConfigModel;
 use Core\Models\DocserverModel;
 use Core\Models\DocserverTypeModel;
 use Core\Models\ResExtModel;
@@ -26,6 +25,7 @@ use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entities\Models\EntityModel;
 use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
 
 class StoreController
 {

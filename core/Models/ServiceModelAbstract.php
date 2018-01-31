@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use SrcCore\models\CoreConfigModel;
+
 class ServiceModelAbstract
 {
     public static function getServicesByXML()
@@ -315,8 +317,6 @@ class ServiceModelAbstract
             if ($path) {
                 $xmlfile = simplexml_load_file($path);
                 foreach ($xmlfile->MENU as $value) {
-                    $id = (string) $value->id;
-        
                     if (in_array((string) $value->id, $aArgs['userServices'])) {
     
                         $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;

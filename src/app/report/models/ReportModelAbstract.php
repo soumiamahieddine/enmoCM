@@ -14,9 +14,9 @@
 
 namespace Report\models;
 
-use Core\Models\CoreConfigModel;
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\CoreConfigModel;
 
 class ReportModelAbstract
 {

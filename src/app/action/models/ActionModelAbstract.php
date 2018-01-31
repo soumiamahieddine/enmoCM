@@ -11,9 +11,9 @@
 
 namespace Action\models;
 
-use Core\Models\CoreConfigModel;
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\CoreConfigModel;
 
 class ActionModelAbstract
 {
@@ -60,38 +60,37 @@ class ActionModelAbstract
         return $aReturn;
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         $actioncategories = $aArgs['actionCategories'];
         unset($aArgs['actionCategories']);
-        $aReturn = DatabaseModel::insert(
-            [
+        DatabaseModel::insert([
             'table'         => 'actions',
             'columnsValues' => $aArgs
-            ]
-        );
+        ]);
 
         $tab['action_id'] = max(ActionModel::get())['id'];
 
         for ($i=0;$i<count($actioncategories);$i++) {
             $tab['category_id'] = $actioncategories[$i];
-            $aInsert = DatabaseModel::insert(
+            DatabaseModel::insert(
                 [
                 'table'         => 'actions_categories',
                 'columnsValues' => $tab
                 ]
             );
         }
-        return $aReturn;
+
+        return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
         
-        $aReturn = DatabaseModel::update(
-            ['table'     => 'actions',
+        DatabaseModel::update([
+            'table'     => 'actions',
             'set'       => [
                 'keyword'           => $aArgs['keyword'],
                 'label_action'      => $aArgs['label_action'],
@@ -101,60 +100,50 @@ class ActionModelAbstract
                 'is_folder_action'  => $aArgs['is_folder_action']
             ],
             'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]]
-        );
+            'data'      => [$aArgs['id']]
+        ]);
 
-        $aDelete = DatabaseModel::delete(
-            ['table' => 'actions_categories',
+        DatabaseModel::delete([
+            'table' => 'actions_categories',
             'where'  => ['action_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         $tab['action_id'] = $aArgs['id'];
 
-        for ($i=0;$i<count($aArgs['actionCategories']);$i++) {
-            $tab['category_id']=$aArgs['actionCategories'][$i];
-            $aInsert = DatabaseModel::insert(
-                [
+        for ($i=0; $i < count($aArgs['actionCategories']); $i++) {
+            $tab['category_id'] = $aArgs['actionCategories'][$i];
+            DatabaseModel::insert([
                 'table'         => 'actions_categories',
                 'columnsValues' => $tab
-                ]
-            );
+            ]);
         }
 
-        return $aReturn;
+        return true;
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::delete(
-            [
-                'table' => 'actions',
-                'where' => ['id = ?'],
-                'data'  => [$aArgs['id']]
-            ]
-        );
-        DatabaseModel::delete(
-            [
-                'table' => 'actions_categories',
-                'where' => ['action_id = ?'],
-                'data'  => [$aArgs['id']]
-            ]
-        );
+        DatabaseModel::delete([
+            'table' => 'actions',
+            'where' => ['id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+        DatabaseModel::delete([
+            'table' => 'actions_categories',
+            'where' => ['action_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+        DatabaseModel::delete([
+            'table' => 'actions_groupbaskets',
+            'where' => ['id_action = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
 
-        DatabaseModel::delete(
-            [
-                'table' => 'actions_groupbaskets',
-                'where' => ['id_action = ?'],
-                'data'  => [$aArgs['id']]
-            ]
-        );
-
-        return $aReturn;
+        return true;
     }
 
     public static function getAction_pages()
