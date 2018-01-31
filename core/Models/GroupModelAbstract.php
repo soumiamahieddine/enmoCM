@@ -30,7 +30,7 @@ class GroupModelAbstract
         return $aGroups;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
@@ -42,14 +42,10 @@ class GroupModelAbstract
             'data'      => [$aArgs['id']]
         ]);
 
-        if (empty($aGroups[0])) {
-            return [];
-        }
-
         return $aGroups[0];
     }
 
-    public static function getByGroupId(array $aArgs = [])
+    public static function getByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
@@ -60,10 +56,6 @@ class GroupModelAbstract
             'where'     => ['group_id = ?'],
             'data'      => [$aArgs['groupId']]
         ]);
-
-        if (empty($aGroups[0])) {
-            return [];
-        }
 
         return $aGroups[0];
     }

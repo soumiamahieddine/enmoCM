@@ -142,6 +142,7 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
 $app->post('/groups', \Core\Controllers\GroupController::class . ':create');
+$app->get('/groups/{id}', \Core\Controllers\GroupController::class . ':getById');
 $app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
 $app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
 $app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
