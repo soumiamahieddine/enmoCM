@@ -3,7 +3,7 @@
     <testsuites>
         <testsuite name="Maarch Core Test Suite">
             <!--directory>core/Test</directory-->
-            <!--file>core/Test/ActionControllerTest.php</file-->
+            <file>core/Test/ActionControllerTest.php</file>
             <file>core/Test/ResControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
