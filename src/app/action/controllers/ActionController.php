@@ -16,6 +16,7 @@ use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
 use Core\Models\ServiceModel;
+use Core\Models\CoreConfigModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -73,7 +74,7 @@ class ActionController
         }
         $obj['action']['actionCategories'] = $arrActionCategories;
 
-        $obj['categoriesList'] = ActionModel:: getLettersBoxCategories();
+        $obj['categoriesList'] = CoreConfigModel:: getLettersBoxCategories();
 
         //array of id categoriesList
         foreach ($obj['categoriesList'] as $key => $category) {
@@ -272,7 +273,7 @@ class ActionController
         $obj['action']['action_page']      = '';
         $obj['action']['id_status']        = '_NOSTATUS_';
         $obj['action']['create_id']        = false;
-        $obj['categoriesList']             = ActionModel::getLettersBoxCategories();
+        $obj['categoriesList']             = CoreConfigModel::getLettersBoxCategories();
 
         foreach ($obj['categoriesList'] as $key => $value) {
             $obj['categoriesList'][$key]['selected'] = true;

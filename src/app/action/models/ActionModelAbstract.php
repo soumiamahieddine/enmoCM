@@ -157,34 +157,6 @@ class ActionModelAbstract
         return $aReturn;
     }
 
-    public static function getLettersBoxCategories()
-    {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists('custom/' .$customId. '/apps/maarch_entreprise/xml/config.xml')) {
-            $path = 'custom/' .$customId. '/apps/maarch_entreprise/xml/config.xml';
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
-        $xmlfile         = simplexml_load_file($path);
-        $categoriesTypes = [];
-        $categories      = $xmlfile->COLLECTION->categories;
-        if (count($categories) > 0) {
-            foreach ($categories->category as $category) {
-                $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
-
-                if ($category->id == (string)$categories->default_category) {
-                    $categoriesTmp['default_category']=true;
-                } else {
-                    $categoriesTmp['default_category']=false;
-                }
-                $categoriesTypes[] = $categoriesTmp;
-            }
-        }
-        return $categoriesTypes;
-    }
-
     public static function getAction_pages()
     {
         $customId = CoreConfigModel::getCustomId();
