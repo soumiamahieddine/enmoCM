@@ -79,15 +79,19 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     isAvailable() {
-        this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
-            .subscribe(() => {
-                this.basketIdAvailable = false;
-            }, (err) => {
-                this.basketIdAvailable = false;
-                if (err.error.errors == "Basket not found") {
-                    this.basketIdAvailable = true;
-                }
-            });
+        if (this.basket.id) {
+            this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
+                .subscribe(() => {
+                    this.basketIdAvailable = false;
+                }, (err) => {
+                    this.basketIdAvailable = false;
+                    if (err.error.errors == "Basket not found") {
+                        this.basketIdAvailable = true;
+                    }
+                });
+        } else {
+            this.basketIdAvailable = false;
+        }
     }
 
     onSubmit() {

@@ -70,15 +70,20 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.isAvailable = function () {
         var _this = this;
-        this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
-            .subscribe(function () {
-            _this.basketIdAvailable = false;
-        }, function (err) {
-            _this.basketIdAvailable = false;
-            if (err.error.errors == "Basket not found") {
-                _this.basketIdAvailable = true;
-            }
-        });
+        if (this.basket.id) {
+            this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
+                .subscribe(function () {
+                _this.basketIdAvailable = false;
+            }, function (err) {
+                _this.basketIdAvailable = false;
+                if (err.error.errors == "Basket not found") {
+                    _this.basketIdAvailable = true;
+                }
+            });
+        }
+        else {
+            this.basketIdAvailable = false;
+        }
     };
     BasketAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
