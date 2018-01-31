@@ -33,6 +33,11 @@ class ActionController
 
     public function getById(Request $request, Response $response, $aArgs)
     {
+        if (!Validator::intVal()->validate($aArgs['id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
         $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
 
         if(!empty($obj['action'])){

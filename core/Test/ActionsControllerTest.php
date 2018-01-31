@@ -98,9 +98,9 @@ class ActionsControllerTest extends TestCase
 
         // FAIL READ
         $actionController = new \Action\controllers\ActionController();
-        $response         = $actionController->getById($request, new \Slim\Http\Response(), []);
+        $response         = $actionController->getById($request, new \Slim\Http\Response(), ['id' => 'gaz']);
         $responseBody     = json_decode((string)$response->getBody());
-        $this->assertSame('id is empty', $responseBody->errors);
+        $this->assertSame('Id is not a numeric', $responseBody->errors);
 
     }
 
@@ -198,7 +198,7 @@ class ActionsControllerTest extends TestCase
 
     public function testGetInitAction()
     {
-        //  DELETE
+        // InitAction
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
