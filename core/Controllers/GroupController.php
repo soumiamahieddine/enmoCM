@@ -146,16 +146,16 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['id' => $aArgs['id']]);
+        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['group_id']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
-        $newGroup = GroupModel::getByGroupId(['id' => $aArgs['newGroupId']]);
+        $newGroup = GroupModel::getById(['id' => $aArgs['newGroupId'], 'select' => ['group_id']]);
         if (empty($newGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $aArgs['newGroupId']]);
+        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
 
         return $response->withJson(['success' => 'success']);
     }
