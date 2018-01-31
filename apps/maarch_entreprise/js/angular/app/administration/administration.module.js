@@ -70,10 +70,12 @@ var AdministrationModule = /** @class */ (function () {
                 update_status_administration_component_1.UpdateStatusAdministrationComponent,
                 notifications_administration_component_1.NotificationsAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
-                users_administration_component_1.UsersAdministrationRedirectModalComponent
+                users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
             ],
             entryComponents: [
-                users_administration_component_1.UsersAdministrationRedirectModalComponent
+                users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
             ],
         })
     ], AdministrationModule);

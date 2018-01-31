@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
@@ -15,9 +18,11 @@ var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var GroupsAdministrationComponent = /** @class */ (function () {
-    function GroupsAdministrationComponent(http, notify) {
+    function GroupsAdministrationComponent(http, notify, dialog) {
         this.http = http;
         this.notify = notify;
+        this.dialog = dialog;
+        this.config = {};
         this.lang = translate_component_1.LANG;
         this.groups = [];
         this.groupsForAssign = [];
@@ -55,33 +60,37 @@ var GroupsAdministrationComponent = /** @class */ (function () {
     };
     GroupsAdministrationComponent.prototype.preDelete = function (group) {
         var _this = this;
-        var r = confirm("Etes vous sûr de vouloir supprimer ce groupe ?");
-        if (r) {
-            if (group.users.length == 0) {
+        if (group.users.length == 0) {
+            var r = confirm("Etes vous sûr de vouloir supprimer ce groupe ?");
+            if (r) {
                 this.deleteGroup(group);
             }
-            else {
-                this.groupsForAssign.push("Aucun remplacement");
-                this.groups.forEach(function (tmpGroup) {
-                    if (group.group_id != tmpGroup.group_id) {
-                        _this.groupsForAssign.push(tmpGroup.group_id);
-                    }
-                });
-            }
-        }
-    };
-    GroupsAdministrationComponent.prototype.reassignUsers = function (group, groupId) {
-        var _this = this;
-        this.groupsForAssign = [];
-        if (groupId == "Aucun remplacement") {
-            this.deleteGroup(group);
         }
         else {
-            this.http.get(this.coreUrl + "rest/groups/" + group['id'] + "/reassign/" + groupId)
-                .subscribe(function (data) {
-                _this.deleteGroup(group);
-            }, function (err) {
-                _this.notify.error(err.error.errors);
+            this.groupsForAssign = [];
+            this.groups.forEach(function (tmpGroup) {
+                if (group.group_id != tmpGroup.group_id) {
+                    _this.groupsForAssign.push(tmpGroup);
+                }
+            });
+            this.config = { data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
+            this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent, this.config);
+            this.dialogRef.afterClosed().subscribe(function (result) {
+                console.log(result);
+                if (result) {
+                    if (result == "_NO_REPLACEMENT") {
+                        _this.deleteGroup(group);
+                    }
+                    else {
+                        _this.http.put(_this.coreUrl + "rest/groups/" + group.id + "/reassign/" + result, {})
+                            .subscribe(function (data) {
+                            _this.deleteGroup(group);
+                        }, function (err) {
+                            _this.notify.error(err.error.errors);
+                        });
+                    }
+                }
+                _this.dialogRef = null;
             });
         }
     };
@@ -111,11 +120,27 @@ var GroupsAdministrationComponent = /** @class */ (function () {
     GroupsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["groups-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
     ], GroupsAdministrationComponent);
     return GroupsAdministrationComponent;
 }());
 exports.GroupsAdministrationComponent = GroupsAdministrationComponent;
+var GroupsAdministrationRedirectModalComponent = /** @class */ (function () {
+    function GroupsAdministrationRedirectModalComponent(http, data, dialogRef) {
+        this.http = http;
+        this.data = data;
+        this.dialogRef = dialogRef;
+        this.lang = translate_component_1.LANG;
+    }
+    GroupsAdministrationRedirectModalComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["groups-administration-redirect-modalView"],
+        }),
+        __param(1, core_1.Inject(material_1.MAT_DIALOG_DATA)),
+        __metadata("design:paramtypes", [http_1.HttpClient, Object, material_1.MatDialogRef])
+    ], GroupsAdministrationRedirectModalComponent);
+    return GroupsAdministrationRedirectModalComponent;
+}());
+exports.GroupsAdministrationRedirectModalComponent = GroupsAdministrationRedirectModalComponent;

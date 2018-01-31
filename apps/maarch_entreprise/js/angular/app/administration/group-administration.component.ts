@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
 
 declare function $j(selector: any) : any;
 
@@ -24,6 +25,16 @@ export class GroupAdministrationComponent implements OnInit {
         security                : {}
     };
     loading                     : boolean   = false;
+
+    displayedColumns = ['firstname', 'lastname', 'actions'];
+    dataSource      : any;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
     }
@@ -55,6 +66,11 @@ export class GroupAdministrationComponent implements OnInit {
                         this.updateBreadcrumb(angularGlobals.applicationName);
                         this.group = data['group'];
                         this.loading = false;
+                        setTimeout(() => {
+                            this.dataSource = new MatTableDataSource(this.group.users);
+                            this.dataSource.paginator = this.paginator;
+                            this.dataSource.sort = this.sort;
+                        }, 0);
 
                     }, () => {
                         location.href = "index.php";
@@ -68,7 +84,7 @@ export class GroupAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + "rest/groups", this.group)
                 .subscribe((data : any) => {
                     this.notify.success(this.lang.groupAdded);
-                    this.router.navigate(["/administration/groups/" + data.group.id]);
+                    this.router.navigate(["/administration/groups/" + data.group]);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -91,5 +107,9 @@ export class GroupAdministrationComponent implements OnInit {
                 service.checked = !service.checked;
                 this.notify.error(err.error.errors);
             });
+    }
+
+    toggleKeywordHelp() {
+        $j('#keywordHelp').toggle("slow");
     }
 }
