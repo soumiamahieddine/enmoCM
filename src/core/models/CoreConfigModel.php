@@ -96,7 +96,7 @@ class CoreConfigModel
 
     public static function getTmpPath()
     {
-        $tmpPath = str_replace('core/Models', '', dirname(__FILE__));
+        $tmpPath = str_replace('src/core/models', '', dirname(__FILE__));
         $tmpPath .= 'apps/maarch_entreprise/tmp/';
 
         return $tmpPath;
