@@ -282,10 +282,23 @@ class BasketController
         $allActions = ActionModel::get();
         $allActionsPrepared = [];
         foreach ($allActions as $allAction) {
-            if (empty($allActionsPrepared[$allAction['origin']])) {
-                $allActionsPrepared[$allAction['origin']] = [];
+            $found = null;
+            foreach ($allActionsPrepared as $key => $allActionPrepared) {
+                if (!empty($allActionPrepared[$allAction['origin']])) {
+                    $found = $key;
+                }
             }
-            $allActionsPrepared[$allAction['origin']][] = $allAction;
+            if ($found === null) {
+                $allActionsPrepared[] = [
+                    'origin'                => $allAction['origin'],
+                    $allAction['origin']    => []
+                ];
+            }
+            foreach ($allActionsPrepared as $key => $allActionPrepared) {
+                if ($allActionPrepared['origin'] == $allAction['origin']) {
+                    $allActionsPrepared[$key][$allAction['origin']][] = $allAction;
+                }
+            }
         }
 
         return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages, 'actions' => $allActionsPrepared]);
