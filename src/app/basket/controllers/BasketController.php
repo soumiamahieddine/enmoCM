@@ -277,7 +277,11 @@ class BasketController
             $groups[$key]['groupActions'] = $actions;
         }
 
-        return $response->withJson(['groups' => $groups]);
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+        $basketPages = BasketModel::getBasketPages();
+        $allActions = ActionModel::get();
+
+        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages, 'actions' => $allActions]);
     }
 
     public function createGroup(Request $request, Response $response, array $aArgs)
@@ -413,40 +417,6 @@ class BasketController
         }
 
         return $response->withJson(['success' => 'success']);
-    }
-
-    public function getDataForGroupById(Request $request, Response $response, $aArgs)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $basket = BasketModel::getById(['id' => $aArgs['id']]);
-        if (empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
-        }
-
-        $basketGroups = BasketModel::getGroups(['id' => $aArgs['id']]);
-        $groups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
-
-        foreach ($groups as $key => $group) {
-            $found = false;
-            foreach ($basketGroups as $basketGroup) {
-                if ($basketGroup['group_id'] == $group['group_id']) {
-                    $found = true;
-                    break;
-                }
-            }
-            if ($found) {
-                unset($groups[$key]);
-            }
-        }
-        $groups = array_values($groups);
-
-        $basketPages = BasketModel::getBasketPages();
-        $actions = ActionModel::get();
-
-        return $response->withJson(['groups' => $groups, 'pages' => $basketPages, 'actions' => $actions]);
     }
 
     public function deleteGroup(Request $request, Response $response, array $aArgs)

@@ -156,6 +156,13 @@ class BasketControllerTest extends TestCase
         $this->assertSame('', $responseBody->groups[0]->groupActions[0]->redirects[0]->entity_id);
         $this->assertSame('MY_ENTITIES', $responseBody->groups[0]->groupActions[0]->redirects[0]->keyword);
         $this->assertSame('ENTITY', $responseBody->groups[0]->groupActions[0]->redirects[0]->redirect_mode);
+
+        $this->assertInternalType('array', $responseBody->allGroups);
+        $this->assertNotNull($responseBody->allGroups);
+        $this->assertInternalType('array', $responseBody->pages);
+        $this->assertNotNull($responseBody->pages);
+        $this->assertInternalType('array', $responseBody->actions);
+        $this->assertNotNull($responseBody->actions);
     }
 
     public function testUpdateGroup()
@@ -282,24 +289,6 @@ class BasketControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertEmpty($responseBody->groups);
-    }
-
-    public function testGetDataForGroup()
-    {
-        $basketController = new \Basket\controllers\BasketController();
-
-        //  GET
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $basketController->getDataForGroupById($request, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123']);
-        $responseBody   = json_decode((string)$response->getBody());
-
-        $this->assertInternalType('array', $responseBody->groups);
-        $this->assertNotNull($responseBody->groups);
-        $this->assertInternalType('array', $responseBody->pages);
-        $this->assertNotNull($responseBody->pages);
-        $this->assertInternalType('array', $responseBody->actions);
-        $this->assertNotNull($responseBody->actions);
     }
 
     public function testGet()
