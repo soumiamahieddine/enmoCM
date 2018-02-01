@@ -10,12 +10,10 @@
 /**
 * @brief Entity Model
 * @author dev@maarch.org
-* @ingroup entities
 */
 
-namespace Entities\Models;
+namespace Entity\models;
 
 class EntityModel extends EntityModelAbstract
 {
-    // Do your stuff in this class
 }

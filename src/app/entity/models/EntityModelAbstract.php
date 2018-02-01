@@ -8,12 +8,11 @@
 */
 
 /**
-* @brief Entities Model
+* @brief Entity Model Abstract
 * @author dev@maarch.org
-* @ingroup entities
 */
 
-namespace Entities\Models;
+namespace Entity\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\UserModel;

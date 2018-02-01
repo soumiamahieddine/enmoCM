@@ -23,7 +23,7 @@ use Core\Models\DocserverTypeModel;
 use Core\Models\ResExtModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
-use Entities\Models\EntityModel;
+use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 

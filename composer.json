@@ -5,6 +5,7 @@
             "Action\\"        : "src/app/action/",
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
+            "Entity\\"        : "src/app/entity/",
             "History\\"       : "src/app/history/",
             "Parameter\\"     : "src/app/parameter/",
             "Priority\\"      : "src/app/priority/",

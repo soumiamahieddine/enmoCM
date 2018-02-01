@@ -15,7 +15,7 @@
 
 namespace Core\Models;
 
-use Entities\Models\EntityModel;
+use Entity\models\EntityModel;
 use History\controllers\HistoryController;
 use SrcCore\models\CoreConfigModel;
 

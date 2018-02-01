@@ -17,7 +17,7 @@ namespace SrcCore\controllers;
 
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
-use Entities\Models\EntityModel;
+use Entity\models\EntityModel;
 use Resource\models\ResModel;
 
 class PreparedClauseController

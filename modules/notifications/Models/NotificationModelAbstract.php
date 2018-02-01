@@ -17,8 +17,8 @@ namespace Notifications\Models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use Entity\models\EntityModel;
 use Status\models\StatusModel;
-use Entities\Models\EntityModelAbstract;
 use Core\Models\GroupModelAbstract;
 
 class NotificationModelAbstract 
@@ -315,7 +315,7 @@ class NotificationModelAbstract
 
     public static function getDiffusionTypeEntities()
     {
-        $entities = EntityModelAbstract::get();
+        $entities = EntityModel::get();
         return $entities;
     }
 
