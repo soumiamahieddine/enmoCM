@@ -280,8 +280,15 @@ class BasketController
         $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
         $basketPages = BasketModel::getBasketPages();
         $allActions = ActionModel::get();
+        $allActionsPrepared = [];
+        foreach ($allActions as $allAction) {
+            if (empty($allActionsPrepared[$allAction['origin']])) {
+                $allActionsPrepared[$allAction['origin']] = [];
+            }
+            $allActionsPrepared[$allAction['origin']][] = $allAction;
+        }
 
-        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages, 'actions' => $allActions]);
+        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages, 'actions' => $allActionsPrepared]);
     }
 
     public function createGroup(Request $request, Response $response, array $aArgs)
