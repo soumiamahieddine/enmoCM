@@ -35,8 +35,8 @@ before_script:
   - mv composer.phar /usr/local/bin/composer
   - chmod +x /usr/local/bin/composer
 
-job_php-7.0:
-  image: php:7.0-apache
+job_php-7.1:
+  image: php:7.1-apache
   stage: test
   script:
     - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
