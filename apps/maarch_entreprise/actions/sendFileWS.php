@@ -23,7 +23,7 @@ function manage_send($aId)
         $response = \Core\Models\CurlModel::exec(['curlCallId' => 'sendFile', 'bodyData' => $bodyParams]);
 
         if (!empty($response['publikId'])) {
-            \Resource\models\ResModel::update(['resId' => $document['res_id'], 'set' => ['custom_t1' => $response['publikId']]]);
+            \Resource\models\ResModel::update(['set' => ['custom_t1' => $response['publikId']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
         }
         $result .= $resId . '#';
     }

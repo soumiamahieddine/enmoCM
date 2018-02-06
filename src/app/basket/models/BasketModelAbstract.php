@@ -250,6 +250,21 @@ class BasketModelAbstract
         return true;
     }
 
+    public static function updateGroupActionRedirect(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'groupbasket_redirect',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function deleteGroup(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);

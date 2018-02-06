@@ -10,10 +10,12 @@
 /**
  * @brief Listinstance Model Abstract
  * @author dev@maarch.org
- * @ingroup listinstance
  */
 
-namespace Core\Models;
+namespace Listinstance\models;
+
+use Core\Models\DatabaseModel;
+use Core\Models\ValidatorModel;
 
 class ListinstanceModelAbstract
 {
@@ -35,6 +37,21 @@ class ListinstanceModelAbstract
         }
 
         return $aListinstance[0];
+    }
+
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'listinstance',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
     }
 
     public static function setSignatory(array $aArgs)

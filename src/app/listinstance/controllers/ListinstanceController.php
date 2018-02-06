@@ -10,19 +10,18 @@
 /**
  * @brief Listinstance Controller
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Controllers;
+namespace Listinstance\controllers;
 
-use Core\Models\ListinstanceModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Listinstance\models\ListinstanceModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 
 class ListinstanceController
 {
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         $listinstance = ListinstanceModel::getById(['id' => $aArgs['id']]);
 

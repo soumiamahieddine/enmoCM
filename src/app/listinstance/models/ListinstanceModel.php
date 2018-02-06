@@ -10,10 +10,9 @@
 /**
  * @brief Listinstance Model
  * @author dev@maarch.org
- * @ingroup listinstance
  */
 
-namespace Core\Models;
+namespace Listinstance\models;
 
 class ListinstanceModel extends ListinstanceModelAbstract
 {

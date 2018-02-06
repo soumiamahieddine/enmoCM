@@ -102,15 +102,14 @@ class ResModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'set']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::arrayType($aArgs, ['set']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
             'table' => 'res_letterbox',
             'set'   => $aArgs['set'],
-            'where' => ['res_id = ?'],
-            'data'  => [$aArgs['resId']]
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;

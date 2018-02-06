@@ -7,6 +7,7 @@
             "Contact\\"       : "src/app/contact/",
             "Entity\\"        : "src/app/entity/",
             "History\\"       : "src/app/history/",
+            "Listinstance\\"  : "src/app/listinstance/",
             "Parameter\\"     : "src/app/parameter/",
             "Priority\\"      : "src/app/priority/",
             "Report\\"        : "src/app/report/",

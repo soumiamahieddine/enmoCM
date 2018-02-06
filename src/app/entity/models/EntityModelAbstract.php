@@ -38,28 +38,31 @@ class EntityModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['entityId']);
+        ValidatorModel::stringType($aArgs, ['entityId']);
 
-        if (is_array($aArgs['entityId'])) {
-            $where = ['entity_id in (?)'];
-        } else {
-            ValidatorModel::stringType($aArgs, ['entityId']);
-            $where = ['entity_id = ?'];
-        }
-
-        $aEntities = DatabaseModel::select([
+        $aEntity = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['entities'],
-            'where'     => $where,
+            'where'     => ['entity_id = ?'],
             'data'      => [$aArgs['entityId']]
         ]);
 
-        if (empty($aEntities[0])) {
-            return [];
-        } elseif (is_array($aArgs['entityId'])) {
-            return $aEntities;
-        } else {
-            return $aEntities[0];
-        }
+        return $aEntity[0];
+    }
+
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'entities',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -129,7 +132,7 @@ class EntityModelAbstract
         return array_unique($entities);
     }
 
-    public static function getAvailableEntitiesForAdministratorByUserId(array $aArgs = [])
+    public static function getAvailableEntitiesForAdministratorByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'administratorUserId']);
         ValidatorModel::stringType($aArgs, ['userId', 'administratorUserId']);
@@ -172,4 +175,56 @@ class EntityModelAbstract
         return $allEntities;
     }
 
+    public static function getAllowedEntitiesByUserId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        if ($aArgs['userId'] == 'superadmin') {
+            $rawEntitiesAllowed = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['entity_label']]);
+            $entitiesAllowed = [];
+            foreach ($rawEntitiesAllowed as $value) {
+                $entitiesAllowed[] = $value['entity_id'];
+            }
+        } else {
+            $entitiesAllowed = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['userId']]);
+        }
+
+        $allEntities = EntityModel::get(['select' => ['entity_id', 'entity_label', 'parent_entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['entity_label']]);
+
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = $value['entity_id'];
+            if (empty($value['parent_entity_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon'] = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = $value['parent_entity_id'];
+                $allEntities[$key]['icon'] = "fa fa-sitemap";
+            }
+            if (in_array($value['entity_id'], $entitiesAllowed)) {
+                $allEntities[$key]['allowed'] = true;
+            } else {
+                $allEntities[$key]['allowed'] = false;
+            }
+            $allEntities[$key]['text'] = $value['entity_label'];
+        }
+
+        return $allEntities;
+    }
+
+    public static function getUsersById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aUsers = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users_entities, users'],
+            'where'     => ['users_entities.entity_id = ?', 'users_entities.user_id = users.user_id'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return $aUsers;
+    }
 }

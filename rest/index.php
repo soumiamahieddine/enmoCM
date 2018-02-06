@@ -207,6 +207,10 @@ $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
 
+//Entities
+$app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
+
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
 $app->post('/parameters', \Parameter\controllers\ParameterController::class . ':create');
@@ -249,7 +253,7 @@ $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 
 //Listinstance
-$app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
+$app->get('/listinstance/{id}', \Listinstance\controllers\ListinstanceController::class . ':getById');
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
