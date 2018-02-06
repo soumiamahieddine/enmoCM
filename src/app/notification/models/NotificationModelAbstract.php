@@ -13,18 +13,21 @@
 * @ingroup Module
 */
 
-namespace Notifications\Models;
+namespace Notification\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 use Entity\models\EntityModel;
 use Status\models\StatusModel;
 use Core\Models\GroupModelAbstract;
+use SrcCore\models\CoreConfigModel;
 
 class NotificationModelAbstract 
 {
     public static function get(array $aArgs = [])
     {
+        ValidatorModel::arrayType($aArgs, ['select']);
+
         $aNotifications = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['notifications']
@@ -136,13 +139,13 @@ class NotificationModelAbstract
         ]);
 
         //get event system
-        // $customId = CoreConfigModel::getCustomId();
+        $customId = CoreConfigModel::getCustomId();
 
-        // if (file_exists('custom/' .$customId. 'modules/notifications/xml/event_type.xml')) {
-        //     $path = 'custom/' .$customId. 'modules/notifications/xml/event_type.xml';
-        // } else {
+        if (file_exists('custom/' .$customId. 'modules/notifications/xml/event_type.xml')) {
+            $path = 'custom/' .$customId. 'modules/notifications/xml/event_type.xml';
+        } else {
             $path = 'modules/notifications/xml/event_type.xml';
-        // }
+        }
         $xmlfile = simplexml_load_file($path);
         if ($xmlfile) {
             foreach ($xmlfile->event_type as $eventType) {
@@ -323,6 +326,18 @@ class NotificationModelAbstract
     {
         $status = StatusModel::get();
         return $status;
+    }
+
+    public static function getEnableNotifications()
+    {
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['notifications'],
+            'where'     => ['is_enabled = ?'],
+            'data'      => ['Y']
+        ]);
+
+        return $aReturn;
     }
 
 }

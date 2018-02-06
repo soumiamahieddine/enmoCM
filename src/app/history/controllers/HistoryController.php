@@ -19,6 +19,7 @@ use Core\Models\UserModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
 use History\models\HistoryModel;
+use Notification\controllers\NotificationsEventsController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -81,11 +82,8 @@ class HistoryController
             'eventId'   => $aArgs['eventId'],
         ]);
 
-        //TODO V2
-//        $core = new \core_tools();
-//        if ($core->is_module_loaded("notifications")) {
-//            NotificationsEventsController::fill_event_stack($event_id, $table_name, $record_id, $user, $info);
-//        }
+        NotificationsEventsController::fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+
     }
 
     private static function addToLog4php(array $aArgs)

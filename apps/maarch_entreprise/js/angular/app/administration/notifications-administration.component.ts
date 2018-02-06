@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+
+
 
 declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 
+
 @Component({
     templateUrl : angularGlobals["notifications-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
@@ -40,8 +42,9 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     updateBreadcrumb(applicationName: string) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
-                                            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.admin_notifications;
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.notifications;
+        }
     }
 
     deleteNotification(notification : any) {

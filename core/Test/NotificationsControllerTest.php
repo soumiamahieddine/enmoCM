@@ -19,7 +19,7 @@ class NotificationControllerTest extends TestCase
     public function testReadAll()
     {
         //  TEST GET // READ // NEED TO HAVE RED IN BDD 
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $NotificationController->get($request, new \Slim\Http\Response());
@@ -31,7 +31,7 @@ class NotificationControllerTest extends TestCase
     public function testCreate()
     {
         //  CREATE
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -75,7 +75,7 @@ class NotificationControllerTest extends TestCase
     public function testCreateFail1()
     {
         //Fail Create 1
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -102,7 +102,7 @@ class NotificationControllerTest extends TestCase
     public function testCreateFail2()
     {
         //Fail Create 2
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -130,7 +130,7 @@ class NotificationControllerTest extends TestCase
     public function testUpdate()
     {
         //  UPDATE
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
@@ -173,7 +173,7 @@ class NotificationControllerTest extends TestCase
 
     public function testRead(){
         //READ
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $NotificationController->getById($request, new \Slim\Http\Response(), ['id' => 'warning5']);
@@ -191,7 +191,7 @@ class NotificationControllerTest extends TestCase
 
     // public function testReadFail(){
     //     //I CANT READ BECAUSE NO ID
-    //     $NotificationController = new \Notifications\Controllers\NotificationController();
+    //     $NotificationController = new \Notification\controllers\NotificationController();
     //     $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
     //     $request        = \Slim\Http\Request::createFromEnvironment($environment);
     //     $response     = $NotificationController->getById($request, new \Slim\Http\Response(), ['id' => '']);
@@ -201,7 +201,7 @@ class NotificationControllerTest extends TestCase
 
     public function testReadFail2(){
         //I CANT READ BECAUSE NO EXIST
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $NotificationController->getById($request, new \Slim\Http\Response(), ['id' => 'BamBam']);
@@ -211,7 +211,7 @@ class NotificationControllerTest extends TestCase
 
     // public function testDeleteFail()
     // {
-    //     $NotificationController = new \Notifications\Controllers\NotificationController();
+    //     $NotificationController = new \Notification\controllers\NotificationController();
 
     //     //  DELETE
     //     $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
@@ -224,7 +224,7 @@ class NotificationControllerTest extends TestCase
 
     public function testDelete()
     {
-        $NotificationController = new \Notifications\Controllers\NotificationController();
+        $NotificationController = new \Notification\controllers\NotificationController();
 
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

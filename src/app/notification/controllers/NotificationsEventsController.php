@@ -13,10 +13,10 @@
 * @ingroup core
 */
 
-namespace Notifications\Controllers;
+namespace Notification\controllers;
 
-use Notifications\Models\NotificationsEventsModel;
-use Notifications\Models\NotificationsModel;
+use Notification\models\NotificationsEventsModel;
+use Notification\models\NotificationsModel;
 
 class NotificationsEventsController
 {

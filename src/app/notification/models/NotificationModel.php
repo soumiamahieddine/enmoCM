@@ -10,12 +10,12 @@
 /**
 * @brief Notifications Model
 * @author dev@maarch.org
-* @ingroup core
+* @ingroup Module
 */
 
-namespace Notifications\Models;
+namespace Notification\models;
 
-class NotificationsModel extends NotificationsModelAbstract
+class NotificationModel extends NotificationModelAbstract
 {
     // Do your stuff in this class
 }

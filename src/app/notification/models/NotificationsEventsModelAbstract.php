@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace Notifications\Models;
+namespace Notification\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;

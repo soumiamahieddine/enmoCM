@@ -114,8 +114,6 @@ $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdmi
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
-$app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
-$app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -241,11 +239,12 @@ $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':updat
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Notifications
-$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
-$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
-$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
-$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
-$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
+$app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
+$app->post('/notifications', \Notification\controllers\NotificationController::class . ':create');
+$app->put('/notifications/{id}', \Notification\controllers\NotificationController::class . ':update');
+$app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
+$app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
+$app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

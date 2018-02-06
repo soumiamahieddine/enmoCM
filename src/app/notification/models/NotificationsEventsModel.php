@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Notifications Model
+* @brief Notifications Events Model
 * @author dev@maarch.org
-* @ingroup Module
+* @ingroup core
 */
 
-namespace Notifications\Models;
+namespace Notification\models;
 
-class NotificationModel extends NotificationModelAbstract
+class NotificationsEventsModel extends NotificationsEventsModelAbstract
 {
     // Do your stuff in this class
 }

@@ -35,8 +35,9 @@ var NotificationsAdministrationComponent = /** @class */ (function () {
         });
     };
     NotificationsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.admin_notifications;
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.notifications;
+        }
     };
     NotificationsAdministrationComponent.prototype.deleteNotification = function (notification) {
         var _this = this;
@@ -54,7 +55,6 @@ var NotificationsAdministrationComponent = /** @class */ (function () {
     NotificationsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["notifications-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])

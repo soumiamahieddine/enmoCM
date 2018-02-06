@@ -8,6 +8,7 @@
             "Entity\\"        : "src/app/entity/",
             "History\\"       : "src/app/history/",
             "Listinstance\\"  : "src/app/listinstance/",
+            "Notification\\"  : "src/app/notification/",
             "Parameter\\"     : "src/app/parameter/",
             "Priority\\"      : "src/app/priority/",
             "Report\\"        : "src/app/report/",
@@ -20,7 +21,6 @@
             "Convert\\"       : "modules/convert/",
             "Entities\\"      : "modules/entities/",
             "Notes\\"         : "modules/notes/",
-            "Notifications\\" : "modules/notifications/",
             "Templates\\"     : "modules/templates/",
             "Visa\\"          : "modules/visa/"
     	}
