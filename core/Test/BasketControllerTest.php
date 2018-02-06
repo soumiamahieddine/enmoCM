@@ -142,27 +142,29 @@ class BasketControllerTest extends TestCase
         $this->assertSame('redirect_to_action', $responseBody->groups[0]->result_page);
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
-        $this->assertSame(112, $responseBody->groups[0]->groupActions[0]->id_action);
-        $this->assertSame('1=2', $responseBody->groups[0]->groupActions[0]->where_clause);
-        $this->assertSame('N', $responseBody->groups[0]->groupActions[0]->used_in_basketlist);
-        $this->assertSame('N', $responseBody->groups[0]->groupActions[0]->used_in_action_page);
-        $this->assertSame('Y', $responseBody->groups[0]->groupActions[0]->default_action_list);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[0]->statuses);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[0]->statuses);
-        $this->assertSame('NEW', $responseBody->groups[0]->groupActions[0]->statuses[0]);
-        $this->assertSame('END', $responseBody->groups[0]->groupActions[0]->statuses[1]);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[0]->redirects);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[0]->redirects);
-        $this->assertSame('', $responseBody->groups[0]->groupActions[0]->redirects[0]->entity_id);
-        $this->assertSame('MY_ENTITIES', $responseBody->groups[0]->groupActions[0]->redirects[0]->keyword);
-        $this->assertSame('ENTITY', $responseBody->groups[0]->groupActions[0]->redirects[0]->redirect_mode);
+        foreach ($responseBody->groups[0]->groupActions as $groupAction) {
+            if ($groupAction->id == 112) {
+                $this->assertSame(112, $groupAction->id);
+                $this->assertSame('1=2', $groupAction->where_clause);
+                $this->assertSame('N', $groupAction->used_in_basketlist);
+                $this->assertSame('N', $groupAction->used_in_action_page);
+                $this->assertSame('Y', $groupAction->default_action_list);
+                $this->assertInternalType('array', $groupAction->statuses);
+                $this->assertNotNull($groupAction->statuses);
+                $this->assertSame('NEW', $groupAction->statuses[0]);
+                $this->assertSame('END', $groupAction->statuses[1]);
+                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertNotNull($groupAction->redirects);
+                $this->assertSame('', $groupAction->redirects[0]->entity_id);
+                $this->assertSame('MY_ENTITIES', $groupAction->redirects[0]->keyword);
+                $this->assertSame('ENTITY', $groupAction->redirects[0]->redirect_mode);
+            }
+        }
 
         $this->assertInternalType('array', $responseBody->allGroups);
         $this->assertNotNull($responseBody->allGroups);
         $this->assertInternalType('array', $responseBody->pages);
         $this->assertNotNull($responseBody->pages);
-        $this->assertInternalType('array', $responseBody->actions);
-        $this->assertNotNull($responseBody->actions);
     }
 
     public function testUpdateGroup()
@@ -237,37 +239,43 @@ class BasketControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
 
-        $this->assertSame(1, $responseBody->groups[0]->groupActions[0]->id_action);
-        $this->assertSame('1=1', $responseBody->groups[0]->groupActions[0]->where_clause);
-        $this->assertSame('Y', $responseBody->groups[0]->groupActions[0]->used_in_basketlist);
-        $this->assertSame('Y', $responseBody->groups[0]->groupActions[0]->used_in_action_page);
-        $this->assertSame('Y', $responseBody->groups[0]->groupActions[0]->default_action_list);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[0]->statuses);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[0]->statuses);
-        $this->assertSame('END', $responseBody->groups[0]->groupActions[0]->statuses[0]);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[0]->redirects);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[0]->redirects);
-        $this->assertSame('', $responseBody->groups[0]->groupActions[0]->redirects[0]->entity_id);
-        $this->assertSame('ALL_ENTITIES', $responseBody->groups[0]->groupActions[0]->redirects[0]->keyword);
-        $this->assertSame('ENTITY', $responseBody->groups[0]->groupActions[0]->redirects[0]->redirect_mode);
+        foreach ($responseBody->groups[0]->groupActions as $groupAction) {
+            if ($groupAction->id == 1) {
+                $this->assertSame(1, $groupAction->id);
+                $this->assertSame('1=1', $groupAction->where_clause);
+                $this->assertSame('Y', $groupAction->used_in_basketlist);
+                $this->assertSame('Y', $groupAction->used_in_action_page);
+                $this->assertSame('Y', $groupAction->default_action_list);
+                $this->assertInternalType('array', $groupAction->statuses);
+                $this->assertNotNull($groupAction->statuses);
+                $this->assertSame('END', $groupAction->statuses[0]);
+                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertNotNull($groupAction->redirects);
+                $this->assertSame('', $groupAction->redirects[0]->entity_id);
+                $this->assertSame('ALL_ENTITIES', $groupAction->redirects[0]->keyword);
+                $this->assertSame('ENTITY', $groupAction->redirects[0]->redirect_mode);
+            } elseif ($groupAction->id == 4) {
+                $this->assertSame(4, $groupAction->id);
+                $this->assertSame('1=4', $groupAction->where_clause);
+                $this->assertSame('N', $groupAction->used_in_basketlist);
+                $this->assertSame('Y', $groupAction->used_in_action_page);
+                $this->assertSame('N', $groupAction->default_action_list);
+                $this->assertInternalType('array', $groupAction->statuses);
+                $this->assertNotNull($groupAction->statuses);
+                $this->assertSame('NEW', $groupAction->statuses[0]);
+                $this->assertSame('COU', $groupAction->statuses[1]);
+                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertNotNull($groupAction->redirects);
+                $this->assertSame('PSO', $groupAction->redirects[0]->entity_id);
+                $this->assertSame('', $groupAction->redirects[0]->keyword);
+                $this->assertSame('ENTITY', $groupAction->redirects[0]->redirect_mode);
+                $this->assertSame('PSF', $groupAction->redirects[1]->entity_id);
+                $this->assertSame('', $groupAction->redirects[1]->keyword);
+                $this->assertSame('USERS', $groupAction->redirects[1]->redirect_mode);
+            }
+        }
 
-        $this->assertSame(4, $responseBody->groups[0]->groupActions[1]->id_action);
-        $this->assertSame('1=4', $responseBody->groups[0]->groupActions[1]->where_clause);
-        $this->assertSame('N', $responseBody->groups[0]->groupActions[1]->used_in_basketlist);
-        $this->assertSame('Y', $responseBody->groups[0]->groupActions[1]->used_in_action_page);
-        $this->assertSame('N', $responseBody->groups[0]->groupActions[1]->default_action_list);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[1]->statuses);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[1]->statuses);
-        $this->assertSame('NEW', $responseBody->groups[0]->groupActions[1]->statuses[0]);
-        $this->assertSame('COU', $responseBody->groups[0]->groupActions[1]->statuses[1]);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions[1]->redirects);
-        $this->assertNotNull($responseBody->groups[0]->groupActions[1]->redirects);
-        $this->assertSame('PSO', $responseBody->groups[0]->groupActions[1]->redirects[0]->entity_id);
-        $this->assertSame('', $responseBody->groups[0]->groupActions[1]->redirects[0]->keyword);
-        $this->assertSame('ENTITY', $responseBody->groups[0]->groupActions[1]->redirects[0]->redirect_mode);
-        $this->assertSame('PSF', $responseBody->groups[0]->groupActions[1]->redirects[1]->entity_id);
-        $this->assertSame('', $responseBody->groups[0]->groupActions[1]->redirects[1]->keyword);
-        $this->assertSame('USERS', $responseBody->groups[0]->groupActions[1]->redirects[1]->redirect_mode);
+
     }
 
     public function testDeleteGroup()

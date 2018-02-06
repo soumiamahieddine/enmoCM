@@ -232,8 +232,10 @@ class BasketController
         }
 
         $groups = BasketModel::getGroups(['id' => $aArgs['id']]);
+        $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
+            $actionsForGroup = $allActions;
             $actions = BasketModel::getActionsForGroupById([
                 'id'        => $aArgs['id'],
                 'groupId'   => $group['group_id'],
@@ -274,34 +276,31 @@ class BasketController
                 }
             }
 
-            $groups[$key]['groupActions'] = $actions;
+            foreach ($actionsForGroup as $actionKey => $actionForGroup) {
+                foreach ($actions as $action) {
+                    if ($actionForGroup['id'] == $action['id_action']) {
+                        $actionsForGroup[$actionKey] = array_merge($actionForGroup, $action);
+                        $actionsForGroup[$actionKey]['checked'] = true;
+                        unset($actionsForGroup[$actionKey]['id_action']);
+                    }
+                }
+                if (empty($actionsForGroup[$actionKey]['checked'])) {
+                    $actionsForGroup[$actionKey]['where_clause'] = '';
+                    $actionsForGroup[$actionKey]['used_in_basketlist'] = 'N';
+                    $actionsForGroup[$actionKey]['used_in_action_page'] = 'Y';
+                    $actionsForGroup[$actionKey]['default_action_list'] = 'N';
+                    $actionsForGroup[$actionKey]['statuses'] = [];
+                    $actionsForGroup[$actionKey]['redirects'] = [];
+                    $actionsForGroup[$actionKey]['checked'] = false;
+                }
+            }
+            $groups[$key]['groupActions'] = $actionsForGroup;
         }
 
         $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
         $basketPages = BasketModel::getBasketPages();
-        $allActions = ActionModel::get();
-        $allActionsPrepared = [];
-        foreach ($allActions as $allAction) {
-            $found = null;
-            foreach ($allActionsPrepared as $key => $allActionPrepared) {
-                if (!empty($allActionPrepared[$allAction['origin']])) {
-                    $found = $key;
-                }
-            }
-            if ($found === null) {
-                $allActionsPrepared[] = [
-                    'origin'                => $allAction['origin'],
-                    $allAction['origin']    => []
-                ];
-            }
-            foreach ($allActionsPrepared as $key => $allActionPrepared) {
-                if ($allActionPrepared['origin'] == $allAction['origin']) {
-                    $allActionsPrepared[$key][$allAction['origin']][] = $allAction;
-                }
-            }
-        }
 
-        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages, 'actions' => $allActionsPrepared]);
+        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
     }
 
     public function createGroup(Request $request, Response $response, array $aArgs)
