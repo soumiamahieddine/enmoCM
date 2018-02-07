@@ -39,7 +39,16 @@ class NotificationController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $notification = NotificationModel::getById(['notification_sid' => $aArgs['id'], 'select' => ['notification_sid', 'notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type','diffusion_properties', 'attachfor_type','attachfor_properties']]);
+        if (!Validator::intVal()->validate($aArgs['id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
+
+        $notification = NotificationModel::getById(['notification_sid' => $aArgs['id']]);
+        if (empty($notification)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Notification not found']);
+        }
 
         $notification['diffusion_properties'] = explode(",", $notification['diffusion_properties']);
         
@@ -55,9 +64,6 @@ class NotificationController
             unset($notification['attachfor_properties'][$key]);
         }
         
-        if (empty($notification)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Notification not found']);
-        }
         $data = [];
 
         $data['event']         = NotificationModel::getEvent();
@@ -80,25 +86,16 @@ class NotificationController
         }
 
         $data = $request->getParams();
-        if (empty($data['notification_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Notification error : notification_id is empty']);
+
+        $errors = $this->control($data, 'create');
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
+
         $notificationInDb = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
         
         if (Validator::notEmpty()->validate($notificationInDb)) {
             return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_ALREADY_EXIST]);
-
-        } elseif (!Validator::length(0, 254)->validate($data['description'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Description is too long']);
-
-        } elseif (!Validator::length(0, 254)->validate($data['event_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'event_id is too long']);
-
-        } elseif (!Validator::length(0, 30)->validate($data['notification_mode'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'notification_mode is too long']);
-
-        } elseif (Validator::intType()->notEmpty()->validate($data['template_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'wrong format for template_id']);
         }
 
         if ($data['is_enabled'] == true) {
@@ -141,15 +138,26 @@ class NotificationController
         }
 
         $data = $request->getParams();
-
         $data['notification_sid']     = $aArgs['id'];
+
+        $errors = $this->control($data, 'update');
+      
+        if (!empty($errors)) {
+            return $response
+                ->withStatus(500)->withJson(['errors' => $errors]);
+        }
+
         $data['diffusion_properties'] = implode(",", $data['diffusion_properties']);
-        
         $data['attachfor_properties'] = implode(",", $data['attachfor_properties']);
 
         NotificationModel::update($data);
 
-        $notification = NotificationModel::getById(['notificationId' => $data['notification_id']]);
+        $notification = NotificationModel::getById(['notification_sid' => $data['notification_sid']]);
+
+        // if (PHP_OS == "Linux") {
+        //     $ScheduleNotifications = new ScheduleNotifications();
+        //     $ScheduleNotifications->createScriptNotification($control['value'], $notifObj->notification_id);
+        // }
 
         HistoryController::add([
             'tableName' => 'notifications',
@@ -168,6 +176,12 @@ class NotificationController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        if (!Validator::intVal()->validate($aArgs['id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
+
         NotificationModel::delete(['notification_sid' => $aArgs['id']]);
 
         HistoryController::add([
@@ -178,10 +192,82 @@ class NotificationController
                 'info'      => _DELETE_NOTIFICATIONS . ' : ' . $aArgs['id']
             ]);
 
+            // if (PHP_OS == "Linux") {
+            //     // delete scheduled notification
+            //     $filename = "notification";
+            //     if (isset($_SESSION['custom_override_id']) && $_SESSION['custom_override_id']<>"") {
+            //         $filename.="_".str_replace(" ", "", $_SESSION['custom_override_id']);
+            //     }
+            //     $filename.="_".$notification_sid.".sh";
+
+            //     $scheduleNotification = new ScheduleNotifications();
+            //     $cronTab = $scheduleNotification->getCrontab();
+
+            //     $flagCron = false;
+
+            //     if ($_SESSION['custom_override_id'] <> '') {
+            //         $pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+            //     } else {
+            //         $pathToFolow = $_SESSION['config']['corepath'];
+            //     }
+
+            //     foreach ($cronTab as $key => $value) {
+            //         if($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename){
+            //             $cronTab[$key]['state'] = 'deleted';
+            //             $flagCron = true;
+            //             break;
+            //         }
+            //     }
+
+            //     if ($flagCron) {
+            //         $scheduleNotification->saveCrontab($cronTab, true);
+            //     }
+                
+            //     unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);
+            // }
 
         return $response->withJson([
             'notifications' => NotificationModel::get()
         ]);
+    }
+
+    protected function control($aArgs, $mode)
+    {
+        $errors = [];
+
+        if ($mode == 'update') {
+            if (!Validator::intVal()->validate($aArgs['notification_sid'])) {
+                $errors[] = 'notification_sid is not a numeric';
+            } else {
+                $obj = NotificationModel::getById(['notification_sid' => $aArgs['notification_sid']]);
+            }
+           
+            if (empty($obj)) {
+                $errors[] = 'notification does not exists';
+            }
+        }
+
+        if (!Validator::notEmpty()->validate($aArgs['notification_id'])) {
+            $errors[]= 'notification_id is empty';
+        }
+        if (!Validator::length(1, 254)->notEmpty()->validate($aArgs['description'])) {
+            $errors[]= 'wrong format for description';
+        }
+        if (!Validator::length(0, 254)->validate($dataArgsa['event_id'])) {
+            $errors[]= 'event_id is too long';
+        }
+        if (!Validator::length(0, 30)->validate($aArgs['notification_mode'])) {
+            $errors[]= 'notification_mode is too long';
+        }
+        if (!Validator::intType()->notEmpty()->validate($aArgs['template_id'])) {
+            $errors[]= 'wrong format for template_id';
+        }
+        if (!Validator::notEmpty()->validate($aArgs['is_enabled']) || ($aArgs['is_enabled'] != 'Y' && $aArgs['is_enabled'] != 'N')) {
+            $errors[]= 'Invalid is_enabled value';
+        }
+
+        return $errors;
+
     }
 
     public function initNotification(Request $request, Response $response)
