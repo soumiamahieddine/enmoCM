@@ -49,8 +49,6 @@ export class ActionAdministrationComponent implements OnInit {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
         this.route.params.subscribe(params => {
             if(typeof params['id']== "undefined"){
                 this.creationMode = true;
@@ -81,6 +79,9 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             } 
         });
+
+        this.updateBreadcrumb(angularGlobals.applicationName);
+        
     }
 
     onSubmit() {

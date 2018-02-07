@@ -180,7 +180,6 @@ class NotificationController
 
 
         return $response->withJson([
-            'success' => _DELETED_NOTIFICATION,
             'notifications' => NotificationModel::get()
         ]);
     }

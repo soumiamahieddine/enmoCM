@@ -51,7 +51,6 @@ export class StatusAdministrationComponent implements OnInit {
                     this.status.can_be_modified = true
                     this.statusImages           = data['statusImages'];
                     this.creationMode           = true;
-                    this.updateBreadcrumb(angularGlobals.applicationName);
                     this.loading = false;
                 });
             } else {
@@ -60,6 +59,8 @@ export class StatusAdministrationComponent implements OnInit {
                 this.getStatusInfos(this.statusIdentifier);
                 this.loading = false;
             }
+
+            this.updateBreadcrumb(angularGlobals.applicationName);
         });
     }
 
@@ -99,7 +100,6 @@ export class StatusAdministrationComponent implements OnInit {
                     this.status.is_folder_status = false;
                 }
                 this.statusImages = data['statusImages'];
-                this.updateBreadcrumb(angularGlobals.applicationName);
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);
             });                

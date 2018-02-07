@@ -1,243 +1,77 @@
- <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
-</div> 
+<div class="page-header">
+    <h1 *ngIf="!creationMode">{{lang.notificationModification}}
+        <small>{{notification.notification_id}}</small>
+    </h1>
+    <h1 *ngIf="creationMode">{{lang.notificationCreation}}
+        <small>{{notification.notification_id}}</small>
+    </h1>
+</div>
+<div *ngIf="loading">
+    <mat-spinner style="margin:auto;"></mat-spinner>
+</div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 *ngIf="creationMode" style="margin-top: 0">
-        <i class="fa fa-user fa-2x"></i> Création d'une notification
-    </h1>
-    <h1 *ngIf="!creationMode" style="margin-top: 0">
-        <i class="fa fa-user fa-2x"></i> Modification de la notification
-    </h1>
-    <nav class="navbar navbar-default" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a routerLink="/administration/notifications" class="navbar-brand" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="Retour"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
-    <div class="row row-eq-height">
-        <div class="col-md-offset-4 col-md-4" style="border-left:solid 1px white;border-right:solid 1px white;background-color: #CEE9F1;border-top: solid 2px #FDD16C;border-bottom: solid 2px #FDD16C;padding:10px;">
-            <h2>Informations de la notification</h2>
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #notificationForm="ngForm">
+    <div class="container-fluid">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-horizontal" (ngSubmit)="onSubmit()" #notificationsFormUp="ngForm">
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="id" title="{{lang.id}}" placeholder="{{lang.id}}" [(ngModel)]="notification.notification_id" required> 
-                        </div>
-                    </div>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="notification.notification_id" required name="notification_id" id="notification_id" title="{{lang.id}}"
+                            type="text" pattern="^[\w.-]*$" placeholder="{{lang.id}}" maxlength="50">
+                    </mat-form-field>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="description" title="{{lang.desc}}" placeholder="{{lang.desc}}" [(ngModel)]="notification.description" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                        <div class="input-group">
-                            <label class="form-control" for="authorization" title="{{lang.authorization}}">{{lang.authorization}}</label>
-                            <span class="input-group-addon">
-                                <input [(ngModel)]="notification.is_enabled" name="authorization" id="authorization" type="checkbox">
-                            </span>                 
-                        </div>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="notification.description" required name="description" id="description" title="{{lang.description}}"
+                            type="text" placeholder="{{lang.description}}" maxlength="255">
+                    </mat-form-field>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-fighter-jet" title="{{lang.event}}"></i></span>
-                             <select [(ngModel)]="notification.event_id" class="forms-select form-control" name="event" id="event">
-                                 <option title="{{event.label_action}}" *ngFor="let event of notification.data.event" value="{{event.id}}">{{event.label_action}}</option> 
-                            </select>                   
-                        </div>
-                    </div>
-                </div>
-                 <!-- <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-fighter-jet" title="{{lang.event}}"></i></span>
-                             <select [(ngModel)]="notification.event_id" class="forms-select form-control" name="event" id="event">
-                                 <option *ngFor="let data of notification.event" value="{{data.event.id}}" title="{{data.event.label_action}}" >{{data.event.label_action}}</option> 
-                            </select>                   
-                        </div>
-                    </div>
-                </div> -->
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-hand-spock-o" title="{{lang.event}}"></i></span>
-                             <select [(ngModel)]="notification.template_id" class="forms-select form-control" name="template" id="template">
-                                 <option title="{{template.template_label}}" *ngFor="let template of notification.data.template" value="{{template.template_id}}">{{template.template_label}}</option> 
-                            </select>                   
-                        </div>
-                    </div>
+                    <mat-slide-toggle [(ngModel)]="notification.is_enabled" id="is_enabled" name="is_enabled" color="primary" [checked]="notification.is_enabled == 'Y'">
+                            {{lang.NotificationToEnable}}
+                    </mat-slide-toggle>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-frown-o" title="{{lang.event}}"></i></span>
-                             <select [(ngModel)]="notification.diffusion_type" required class="forms-select form-control" name="diffusionType" id="diffusionType">
-                                 <option title="{{diffusionType.label}}" *ngFor="let diffusionType of notification.data.diffusionType" value="{{diffusionType.id}}">{{diffusionType.label}}</option> 
-                            </select>                   
-                        </div>
-                    </div>
+                    <mat-form-field>
+                        <mat-select id="event_id" name="event_id" title="{{lang.NotificationEvent}}" placeholder="{{lang.NotificationEvent}}" [(ngModel)]="notification.event_id" required maxlength="255">
+                            <mat-option *ngFor="let event of notification.data.event" [value]="event.id">
+                                {{event.label_action}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-                <div *ngIf="notification.diffusion_type == 'group'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="groupslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="groupslist" (click)="unselectAll($event)"></i> {{lang.sendToDestFromGroups }}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="groupslist[]" id="groupslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let group of notification.data.groups" [selected]="notification.diffusion_properties[group.group_id]" value="{{group.group_id}}">{{group.group_desc}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div *ngIf="notification.diffusion_type == 'entity'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="entitieslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="entitieslist" (click)="unselectAll($event)"></i> {{lang.sendToDestFromentities}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="entitieslist[]" id="entitieslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let entity of notification.data.entities" [selected]="notification.diffusion_properties[entity.entity_id]" value="{{entity.entity_id}}">{{entity.entity_label}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div *ngIf="notification.diffusion_type == 'dest_entity'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        {{lang.sendToDestFromentities}}
-                    </div>
-                </div> 
-                <div *ngIf="notification.diffusion_type == 'dest_user'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslist" (click)="unselectAll($event)"></i> {{lang.sendToMainDestUserWithStatus}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslist[]" id="statuseslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let status of notification.data.status" [selected]="notification.diffusion_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
-                        </select>
-                    </div>                    
-                </div>
-                <div *ngIf="notification.diffusion_type == 'dest_user_visa'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslist" (click)="unselectAll($event)"></i>{{lang.sendToVisaUserWithStatus}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslist[]" id="statuseslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let status of notification.data.status" [selected]="notification.diffusion_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
-                        </select>
-                    </div> 
-                </div> 
-                <div *ngIf="notification.diffusion_type == 'dest_user_sign'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslist" (click)="unselectAll($event)"></i>{{lang.sendToSignUserWithStatus}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslist[]" id="statuseslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let status of notification.data.status" [selected]="notification.diffusion_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
-                        </select>
-                    </div> 
-                </div> 
-                <div *ngIf="notification.diffusion_type == 'user'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="userslist" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="userslist" (click)="unselectAll($event)"></i>{{lang.sendToUsers}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="userslist[]" id="userslist" size="7" multiple="multiple" required>
-                            <option *ngFor="let user of notification.data.users" [selected]="notification.diffusion_properties[user.id]" value="{{user.id}}">{{user.label}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div *ngIf="notification.diffusion_type == 'note_dest_user'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        {{lang.sendToMainDestUser}}
-                    </div>
-                </div>
-                <div *ngIf="notification.diffusion_type == 'note_copy_list'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        {{lang.sendToCopyUsers}}
-                    </div>
-                </div>
-                <div *ngIf="notification.diffusion_type == 'contact'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        {{lang.sendToContact}}
-                    </div>
-                </div> 
                 <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i aria-hidden="true" class="fa fa-frown-o" title="{{lang.joinDoc}}"></i></span>
-                            <select [(ngModel)]="notification.attachfor_type" class="forms-select form-control" name="joinDocJd" id="joinDocJd">
-                                <option value="">Jamais</option> 
-                                <ng-container *ngFor="let diffusionType of notification.data.diffusionType"> 
-                                <option *ngIf="diffusionType.add_attachment=='true'" [ngValue]="diffusionType.id" >
-                                    {{diffusionType.label}}
-                                </option>
-                                </ng-container>
-                            </select>
-                        </div>
-                    </div>
+                    <mat-form-field>
+                        <mat-select id="template_id" name="template_id" title="{{lang.NotificationModel}}" placeholder="{{lang.NotificationModel}}" [(ngModel)]="notification.template_id" required maxlength="1">
+                            <mat-option *ngFor="let template of notification.data.template" [value]="template.template_id">
+                                {{template.template_label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-                <div *ngIf="notification.attachfor_type == 'group'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="groupslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="groupslistJd" (click)="unselectAll($event)"></i> {{lang.sendToDestFromGroups }}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="groupslistJd[]" id="groupslistJd" size="7" multiple="multiple" required>
-                            <option *ngFor="let group of notification.data.groups" [selected]="notification.attachfor_properties[group.group_id]" value="{{group.group_id}}">{{group.group_desc}}</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-select id="diffusion_type" name="diffusion_type" title="{{lang.NotificationDiffusionType}}" placeholder="{{lang.NotificationDiffusionType}}" [(ngModel)]="notification.diffusion_type" required maxlength="50">
+                            <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
+                                {{diffusionType.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-                <div *ngIf="notification.attachfor_type == 'entity'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="entitieslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="entitieslistJd" (click)="unselectAll($event)"></i> {{lang.sendToDestFromentities}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="entitieslistJd[]" id="entitieslistJd" size="7" multiple="multiple" required>
-                            <option *ngFor="let entity of notification.data.entities" [selected]="notification.attachfor_properties[entity.entity_id]" value="{{entity.entity_id}}">{{entity.entity_label}}</option>
-                        </select>
-                    </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-select id="attachfor_type" name="attachfor_type" title="{{lang.NotificationJoinDocument}}" placeholder="{{lang.NotificationJoinDocument}}" [(ngModel)]="notification.attachfor_type">
+                            <mat-option value="">Jamais</mat-option> 
+                            <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
+                                {{diffusionType.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-                <div *ngIf="notification.attachfor_type == 'dest_user_visa'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslistJd" (click)="unselectAll($event)"></i>{{lang.sendToVisaUserWithStatus}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslistJd[]" id="statuseslistJd" size="7" multiple="multiple" required>
-                            <option *ngFor="let status of notification.data.status" [selected]="notification.attachfor_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
-                        </select>
-                    </div> 
-                </div> 
-                <div *ngIf="notification.attachfor_type == 'dest_user_sign'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="statuseslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="statuseslistJd" (click)="unselectAll($event)"></i>{{lang.sendToSignUserWithStatus}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="statuseslistJd[]" id="statuseslistJd" size="7" multiple="multiple" required>
-                            <option *ngFor="let status of notification.data.status" [selected]="notification.attachfor_properties[status.id]" value="{{status.id}}">{{status.label_status}}</option>
-                        </select>
-                    </div> 
-                </div> 
-                <div *ngIf="notification.attachfor_type == 'user'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        <i title="{{lang.selectAll}}" class="fa fa-check-square-o selectAll" data-target="userslistJd" (click)="selectAll($event)"></i>&nbsp;<i title="{{lang.unselectAll}}" class="fa fa-square-o unselectAll" data-target="userslistJd" (click)="unselectAll($event)"></i>{{lang.sendToUsers}}
-                    </div>
-                    <div class="col-sm-12 panel-body">
-                        <select class="forms-select form-control" name="userslistJd[]" id="userslistJd" size="7" multiple="multiple" required>
-                            <option *ngFor="let user of notification.data.users" [selected]="notification.attachfor_properties[user.id]" value="{{user.id}}">{{user.label}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div *ngIf="notification.attachfor_type == 'contact'" class="form-group">
-                    <div class="col-sm-12 panel-heading" style="font-size: 14px;text-align:center;">    
-                        {{lang.sendToContact}}
-                    </div>
-                </div>
+
                 <div class="col-sm-12 panel-body" style="text-align:center;">
-                    <button class="btn btn-default" type="submit" [disabled]="!notificationForm.form.valid" >{{lang.validate}}</button>
-                    <button class="btn btn-default" routerLink='/administration/notifications'>{{lang.cancel}}</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!notificationsFormUp.form.valid">{{lang.validate}}</button>
+                    <button mat-raised-button routerLink='/administration/notifications'>{{lang.cancel}}</button>
                 </div>
             </form>
         </div>

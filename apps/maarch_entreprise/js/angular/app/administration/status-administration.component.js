@@ -46,7 +46,6 @@ var StatusAdministrationComponent = /** @class */ (function () {
                     _this.status.can_be_modified = true;
                     _this.statusImages = data['statusImages'];
                     _this.creationMode = true;
-                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.loading = false;
                 });
             }
@@ -56,6 +55,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.getStatusInfos(_this.statusIdentifier);
                 _this.loading = false;
             }
+            _this.updateBreadcrumb(angularGlobals.applicationName);
         });
     };
     StatusAdministrationComponent.prototype.prepareStatus = function () {
@@ -97,7 +97,6 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.status.is_folder_status = false;
             }
             _this.statusImages = data['statusImages'];
-            _this.updateBreadcrumb(angularGlobals.applicationName);
         }, function (err) {
             _this.notify.error(JSON.parse(err._body).errors);
         });

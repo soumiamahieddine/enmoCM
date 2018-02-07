@@ -38,7 +38,6 @@ var NotificationAdministrationComponent = /** @class */ (function () {
     };
     NotificationAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.route.params.subscribe(function (params) {
@@ -63,6 +62,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
                 });
             }
         });
+        this.updateBreadcrumb(angularGlobals.applicationName);
     };
     NotificationAdministrationComponent.prototype.selectAll = function (event) {
         var target = event.target.getAttribute("data-target");
@@ -107,7 +107,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/notifications']);
-                _this.notify.success(_this.lang.newNotificationAdded);
+                _this.notify.success(_this.lang.NotificationAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });

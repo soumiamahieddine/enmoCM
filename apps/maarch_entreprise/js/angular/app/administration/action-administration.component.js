@@ -46,7 +46,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.prepareActions();
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
@@ -73,6 +72,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                 });
             }
         });
+        this.updateBreadcrumb(angularGlobals.applicationName);
     };
     ActionAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;

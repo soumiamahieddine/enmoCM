@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var NotificationsAdministrationComponent = /** @class */ (function () {
     function NotificationsAdministrationComponent(http, notify) {
         this.http = http;
@@ -20,7 +21,14 @@ var NotificationsAdministrationComponent = /** @class */ (function () {
         this.notifications = [];
         this.loading = false;
         this.lang = translate_component_1.LANG;
+        this.displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
+        this.dataSource = new material_1.MatTableDataSource(this.notifications);
     }
+    NotificationsAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     NotificationsAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.updateBreadcrumb(angularGlobals.applicationName);
@@ -30,6 +38,11 @@ var NotificationsAdministrationComponent = /** @class */ (function () {
             .subscribe(function (data) {
             _this.notifications = data.notifications;
             _this.loading = false;
+            setTimeout(function () {
+                _this.dataSource = new material_1.MatTableDataSource(_this.notifications);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, 0);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -46,12 +59,25 @@ var NotificationsAdministrationComponent = /** @class */ (function () {
             this.http.delete(this.coreUrl + 'rest/notifications/' + notification.notification_sid)
                 .subscribe(function (data) {
                 _this.notifications = data.notifications;
-                _this.notify.success(data.success);
+                setTimeout(function () {
+                    _this.dataSource = new material_1.MatTableDataSource(_this.notifications);
+                    _this.dataSource.paginator = _this.paginator;
+                    _this.dataSource.sort = _this.sort;
+                }, 0);
+                _this.notify.success(_this.lang.notificationDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
         }
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], NotificationsAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], NotificationsAdministrationComponent.prototype, "sort", void 0);
     NotificationsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["notifications-administrationView"],

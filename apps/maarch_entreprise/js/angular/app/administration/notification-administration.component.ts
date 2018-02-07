@@ -8,6 +8,7 @@ declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 
+
 @Component({
     templateUrl : angularGlobals["notification-administrationView"],
     providers   : [NotificationService]
@@ -39,7 +40,6 @@ export class NotificationAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 
@@ -66,6 +66,9 @@ export class NotificationAdministrationComponent implements OnInit {
                     });
             } 
         });
+
+        this.updateBreadcrumb(angularGlobals.applicationName);
+        
     }
 
     selectAll(event: any) {
@@ -106,7 +109,7 @@ export class NotificationAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
                 .subscribe((data : any) => {
                     this.router.navigate(['/administration/notifications']);
-                    this.notify.success(this.lang.newNotificationAdded);
+                    this.notify.success(this.lang.NotificationAdded);
                 },(err) => {
                     this.notify.error(err.error.errors);
                 });
