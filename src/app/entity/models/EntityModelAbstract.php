@@ -50,6 +50,43 @@ class EntityModelAbstract
         return $aEntity[0];
     }
 
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'entity_label', 'short_label', 'entity_type']);
+        ValidatorModel::stringType($aArgs, [
+            'id', 'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
+            'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
+            'entity_path', 'ldap_id', 'transferring_agency', 'archival_agreement', 'archival_agency', 'entity_full_name'
+        ]);
+
+        DatabaseModel::insert([
+            'table'         => 'entities',
+            'columnsValues' => [
+                'entity_id'             => $aArgs['id'],
+                'entity_label'          => $aArgs['entity_label'],
+                'short_label'           => $aArgs['short_label'],
+                'adrs_1'                => $aArgs['adrs_1'],
+                'adrs_2'                => $aArgs['adrs_2'],
+                'adrs_3'                => $aArgs['adrs_3'],
+                'zipcode'               => $aArgs['zipcode'],
+                'city'                  => $aArgs['city'],
+                'country'               => $aArgs['country'],
+                'email'                 => $aArgs['email'],
+                'business_id'           => $aArgs['business_id'],
+                'parent_entity_id'      => $aArgs['parent_entity_id'],
+                'entity_type'           => $aArgs['entity_type'],
+                'entity_path'           => $aArgs['entity_path'],
+                'ldap_id'               => $aArgs['ldap_id'],
+                'transferring_agency'   => $aArgs['transferring_agency'],
+                'archival_agreement'    => $aArgs['archival_agreement'],
+                'archival_agency'       => $aArgs['archival_agency'],
+                'entity_full_name'      => $aArgs['entity_full_name'],
+            ]
+        ]);
+
+        return true;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
@@ -58,6 +95,20 @@ class EntityModelAbstract
         DatabaseModel::delete([
             'table' => 'entities',
             'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'entities',
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
         ]);

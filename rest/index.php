@@ -207,6 +207,8 @@ $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
+$app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 
 //Parameters
@@ -252,13 +254,13 @@ $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 
 //Listinstance
-$app->get('/listinstance/{id}', \Listinstance\controllers\ListinstanceController::class . ':getById');
+$app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 
 //Templates
-$app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
+$app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Links
 $app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');

@@ -8,17 +8,32 @@
  */
 
 /**
- * @brief Listinstance Model Abstract
+ * @brief List Instance Model Abstract
  * @author dev@maarch.org
  */
 
-namespace Listinstance\models;
+namespace Entity\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 
-class ListinstanceModelAbstract
+class ListInstanceModelAbstract
 {
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aListInstances = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['listinstance'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aListInstances;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);

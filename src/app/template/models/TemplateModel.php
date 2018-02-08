@@ -8,12 +8,12 @@
  */
 
 /**
- * @brief Listinstance Model
+ * @brief Template Model
  * @author dev@maarch.org
  */
 
-namespace Listinstance\models;
+namespace Template\models;
 
-class ListinstanceModel extends ListinstanceModelAbstract
+class TemplateModel extends TemplateModelAbstract
 {
 }

@@ -8,22 +8,22 @@
  */
 
 /**
- * @brief Listinstance Controller
+ * @brief List Instance Controller
  * @author dev@maarch.org
  */
 
-namespace Listinstance\controllers;
+namespace Entity\controllers;
 
-use Listinstance\models\ListinstanceModel;
+use Entity\models\ListInstanceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 
-class ListinstanceController
+class ListInstanceController
 {
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        $listinstance = ListinstanceModel::getById(['id' => $aArgs['id']]);
+        $listinstance = ListInstanceModel::getById(['id' => $aArgs['id']]);
 
         return $response->withJson($listinstance);
     }

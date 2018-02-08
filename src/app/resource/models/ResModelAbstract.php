@@ -25,7 +25,7 @@ class ResModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aResources = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
@@ -35,11 +35,26 @@ class ResModelAbstract
         return $aResources;
     }
 
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['res_letterbox'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aResources;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        
+
         $aResources = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_letterbox'],

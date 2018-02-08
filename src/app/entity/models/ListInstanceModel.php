@@ -8,13 +8,12 @@
  */
 
 /**
- * @brief Template Model
+ * @brief List Instance Model
  * @author dev@maarch.org
- * @ingroup templates
  */
 
-namespace Templates\Models;
+namespace Entity\models;
 
-class TemplateModel extends TemplateModelAbstract
+class ListInstanceModel extends ListInstanceModelAbstract
 {
 }

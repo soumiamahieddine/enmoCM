@@ -10,10 +10,9 @@
 /**
  * @brief Template Model Abstract
  * @author dev@maarch.org
- * @ingroup templates
  */
 
-namespace Templates\Models;
+namespace Template\models;
 
 use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
@@ -66,5 +65,34 @@ class TemplateModelAbstract
         );
 
         return $nextSequenceId;
+    }
+
+    public static function getAssociation(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aTemplatesAssociation = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates_association'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aTemplatesAssociation;
+    }
+
+    public static function updateAssociation(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'templates_association',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
     }
 }
