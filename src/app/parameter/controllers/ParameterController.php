@@ -18,6 +18,7 @@
 namespace Parameter\controllers;
 
 use Core\Models\ServiceModel;
+use History\controllers\HistoryController;
 use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -67,6 +68,14 @@ class ParameterController
         }
 
         ParameterModel::create($data);
+        HistoryController::add([
+            'tableName' => 'parameters',
+            'recordId'  => $data['id'],
+            'eventType' => 'ADD',
+            'info'      => _PARAMETER_CREATION . " : {$data['id']}",
+            'moduleId'  => 'parameter',
+            'eventId'   => 'parameterCreation',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -83,9 +92,17 @@ class ParameterController
         }
 
         $data = $request->getParams();
-        $data['id'] = $aArgs['id'];
 
+        $data['id'] = $aArgs['id'];
         ParameterModel::update($data);
+        HistoryController::add([
+            'tableName' => 'parameters',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _PARAMETER_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'parameter',
+            'eventId'   => 'parameterModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -97,6 +114,14 @@ class ParameterController
         }
 
         ParameterModel::delete(['id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'parameters',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _PARAMETER_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'parameter',
+            'eventId'   => 'parameterSuppression',
+        ]);
 
         $parameters = ParameterModel::get();
         foreach ($parameters as $key => $parameter) {
