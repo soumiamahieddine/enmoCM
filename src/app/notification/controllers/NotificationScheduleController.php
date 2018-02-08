@@ -37,14 +37,14 @@ class NotificationScheduleController
         ]);
     }
     
-    public function saveCrontab(Request $request, Response $response)
+    public function saveCrontabRest(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $GLOBALS['userId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $data = $request->getParams();
-        if (!$this->checkCrontab($data)) {
+        if (!self::checkCrontab($data)) {
             return $response->withStatus(500)->withJson(['errors' => 'Problem with crontab']);
         }
 
@@ -62,6 +62,13 @@ class NotificationScheduleController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
+        self::saveCrontab($data);
+
+        return $response->withJson(true);
+    }
+
+    public static function saveCrontab($data)
+    {
         $aCrontab = self::getCrontab(false);
 
         $file = [];
@@ -95,10 +102,10 @@ class NotificationScheduleController
             'info'      => _NOTIFICATION_SCHEDULE_UPDATED
         ]);
 
-        return $response->withJson(true);
+	return true;
     }
 
-    protected static function getCrontab($getHiddenValue = true)
+    public static function getCrontab($getHiddenValue = true)
     {
         $crontab  = shell_exec('crontab -l');
         $lines    = explode("\n", $crontab);
@@ -207,7 +214,7 @@ class NotificationScheduleController
         return $returnValue;
     }
 
-    public function createScriptNotification(Request $request, Response $response)
+    public function createScriptNotificationRest(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $GLOBALS['userId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -231,6 +238,13 @@ class NotificationScheduleController
 
         $notification_sid = $data['notification_sid'];
         $notification_id  = $data['notification_id'];
+
+        self::createScriptNotification($notification_sid, $notification_id);
+
+        return $response->withJson(true);
+    }
+
+    public static function createScriptNotification($notification_sid, $notification_id){
 
         //Creer le script sh pour les notifications
         $filename = "notification";
@@ -294,6 +308,7 @@ class NotificationScheduleController
             'info'      => _NOTIFICATION_SCRIPT_ADDED
         ]);
 
-        return $response->withJson(true);
+        return true;
     }
+
 }

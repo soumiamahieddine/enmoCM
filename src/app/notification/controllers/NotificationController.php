@@ -21,6 +21,7 @@ use Notification\models\NotificationModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 
 class NotificationController
 {
@@ -117,6 +118,12 @@ class NotificationController
         }
 
         if (NotificationModel::create($data)) {
+
+            if (PHP_OS == "Linux") {
+                $notificationAdded = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
+                NotificationScheduleController::createScriptNotification($notificationAdded['notification_sid'], $data['notification_id']);
+            }
+
             HistoryController::add([
                 'tableName' => 'notifications',
                 'recordId'  => $data['notification_id'],
@@ -137,8 +144,8 @@ class NotificationController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
-        $data['notification_sid']     = $aArgs['id'];
+        $data                     = $request->getParams();
+        $data['notification_sid'] = $aArgs['id'];
 
         $errors = $this->control($data, 'update');
       
@@ -154,10 +161,9 @@ class NotificationController
 
         $notification = NotificationModel::getById(['notification_sid' => $data['notification_sid']]);
 
-        // if (PHP_OS == "Linux") {
-        //     $ScheduleNotifications = new ScheduleNotifications();
-        //     $ScheduleNotifications->createScriptNotification($control['value'], $notifObj->notification_id);
-        // }
+        if (PHP_OS == "Linux") {
+            NotificationScheduleController::createScriptNotification($data['notification_sid'], $notification['notification_id']);
+        }
 
         HistoryController::add([
             'tableName' => 'notifications',
@@ -192,39 +198,41 @@ class NotificationController
                 'info'      => _DELETE_NOTIFICATIONS . ' : ' . $aArgs['id']
             ]);
 
-            // if (PHP_OS == "Linux") {
-            //     // delete scheduled notification
-            //     $filename = "notification";
-            //     if (isset($_SESSION['custom_override_id']) && $_SESSION['custom_override_id']<>"") {
-            //         $filename.="_".str_replace(" ", "", $_SESSION['custom_override_id']);
-            //     }
-            //     $filename.="_".$notification_sid.".sh";
+        if (PHP_OS == "Linux") {
+            // delete scheduled notification
+            $filename = "notification";
 
-            //     $scheduleNotification = new ScheduleNotifications();
-            //     $cronTab = $scheduleNotification->getCrontab();
+            $customId = CoreConfigModel::getCustomId();
+            if ($customId<>"") {
+                $filename.="_".str_replace(" ", "", $customId);
+            }
+            $filename.="_".$aArgs['id'].".sh";
 
-            //     $flagCron = false;
+            $cronTab = NotificationScheduleController::getCrontab();
 
-            //     if ($_SESSION['custom_override_id'] <> '') {
-            //         $pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
-            //     } else {
-            //         $pathToFolow = $_SESSION['config']['corepath'];
-            //     }
+            $flagCron = false;
 
-            //     foreach ($cronTab as $key => $value) {
-            //         if($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename){
-            //             $cronTab[$key]['state'] = 'deleted';
-            //             $flagCron = true;
-            //             break;
-            //         }
-            //     }
+            $corePath = dirname(__FILE__, 5) . '/';
+            if ($customId <> '') {
+                $pathToFolow = $corePath . 'custom/'.$customId. '/';
+            } else {
+                $pathToFolow = $corePath;
+            }
 
-            //     if ($flagCron) {
-            //         $scheduleNotification->saveCrontab($cronTab, true);
-            //     }
-                
-            //     unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);
-            // }
+            foreach ($cronTab as $key => $value) {
+                if($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename){
+                    $cronTab[$key]['state'] = 'deleted';
+                    $flagCron = true;
+                    break;
+                }
+            }
+
+            if ($flagCron) {
+                NotificationScheduleController::saveCrontab($cronTab);
+            }
+            
+            unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);
+        }
 
         return $response->withJson([
             'notifications' => NotificationModel::get()

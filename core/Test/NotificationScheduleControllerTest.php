@@ -29,7 +29,7 @@ class NotificationScheduleControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $NotificationScheduleController->createScriptNotification($fullRequest, new \Slim\Http\Response());
+        $response     = $NotificationScheduleController->createScriptNotificationRest($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame("notification_sid is not a numeric", $responseBody->errors[0]);
@@ -46,7 +46,7 @@ class NotificationScheduleControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $NotificationScheduleController->createScriptNotification($fullRequest, new \Slim\Http\Response());
+        $response     = $NotificationScheduleController->createScriptNotificationRest($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBody);
@@ -79,7 +79,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         array_push($aArgs, $newCrontab);
         $fullRequest      = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response         = $NotificationScheduleController->saveCrontab($fullRequest, new \Slim\Http\Response());
+        $response         = $NotificationScheduleController->saveCrontabRest($fullRequest, new \Slim\Http\Response());
         $responseBodyFail = json_decode((string)$response->getBody());
 
         $this->assertSame("dom is empty", $responseBodyFail->errors[0]);
@@ -104,7 +104,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         array_push($aArgs, $newCrontab);
         $fullRequest        = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response           = $NotificationScheduleController->saveCrontab($fullRequest, new \Slim\Http\Response());
+        $response           = $NotificationScheduleController->saveCrontabRest($fullRequest, new \Slim\Http\Response());
         $responseBodyCreate = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBodyCreate);
@@ -155,7 +155,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $NotificationScheduleController->saveCrontab($fullRequest, new \Slim\Http\Response());
+        $response     = $NotificationScheduleController->saveCrontabRest($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBody);
@@ -194,7 +194,7 @@ class NotificationScheduleControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response         = $NotificationScheduleController->saveCrontab($fullRequest, new \Slim\Http\Response());
+        $response         = $NotificationScheduleController->saveCrontabRest($fullRequest, new \Slim\Http\Response());
         $responseBodyFail = json_decode((string)$response->getBody());
 
         $this->assertSame("Problem with crontab", $responseBodyFail->errors);
@@ -211,7 +211,7 @@ class NotificationScheduleControllerTest extends TestCase
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $NotificationScheduleController->saveCrontab($fullRequest, new \Slim\Http\Response());
+        $response     = $NotificationScheduleController->saveCrontabRest($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBody);
