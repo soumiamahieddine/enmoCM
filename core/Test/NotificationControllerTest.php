@@ -107,7 +107,7 @@ class NotificationControllerTest extends TestCase
         $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $NotificationController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Erreur sur la Notification:  identifiant déjà existant', $responseBody->errors);
+        $this->assertSame('identifiant déjà existant', $responseBody->errors);
     }
 
     public function testRead()

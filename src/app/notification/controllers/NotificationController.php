@@ -95,7 +95,7 @@ class NotificationController
         $notificationInDb = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
         
         if (Validator::notEmpty()->validate($notificationInDb)) {
-            return $response->withStatus(400)->withJson(['errors' => _NOTIFICATIONS_ERROR.' '._NOTIF_ALREADY_EXIST]);
+            return $response->withStatus(400)->withJson(['errors' => _NOTIF_ALREADY_EXIST]);
         }
 
         if ($data['is_enabled'] == true) {

@@ -116,7 +116,7 @@ class ActionController
             'recordId'  => $obj['id'],
             'eventType' => 'ADD',
             'eventId'   => 'actionadd',
-            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._ADDED
+            'info'      => _ACTION_ADDED . ' : ' . $obj['label_action']
         ]);
 
         return $response->withJson(
@@ -160,7 +160,7 @@ class ActionController
             'recordId'  => $obj['id'],
             'eventType' => 'UP',
             'eventId'   => 'actionup',
-            'info'      => _ACTION. ' "' . $obj['label_action'] .'" ' ._UPDATED
+            'info'      => _ACTION_UPDATED. ' : ' . $obj['label_action']
         ]);
 
         return $response->withJson(
@@ -190,7 +190,7 @@ class ActionController
             'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'actiondel',
-            'info'      => _ACTION. ' "' . $action['label_action'] .'" ' ._DELETED
+            'info'      => _ACTION_DELETED. ' : ' . $action['label_action']
         ]);
 
         return $response->withJson(['action' => ActionModel::get()]);

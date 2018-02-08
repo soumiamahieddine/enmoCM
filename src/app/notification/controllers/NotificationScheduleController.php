@@ -87,6 +87,14 @@ class NotificationScheduleController
 
         exec('crontab /tmp/crontab.txt');
 
+        HistoryController::add([
+            'tableName' => 'notifications',
+            'recordId'  => $GLOBALS['userId'],
+            'eventType' => 'UP',
+            'eventId'   => 'notificationadd',
+            'info'      => _NOTIFICATION_SCHEDULE_UPDATED
+        ]);
+
         return $response->withJson(true);
     }
 
@@ -277,6 +285,14 @@ class NotificationScheduleController
         fwrite($file_open, "\n");
         fclose($file_open);
         shell_exec("chmod +x " . escapeshellarg($pathToFolow . "modules/notifications/batch/scripts/" . $filename));
+
+        HistoryController::add([
+            'tableName' => 'notifications',
+            'recordId'  => $notification_id,
+            'eventType' => 'ADD',
+            'eventId'   => 'notificationadd',
+            'info'      => _NOTIFICATION_SCRIPT_ADDED
+        ]);
 
         return $response->withJson(true);
     }
