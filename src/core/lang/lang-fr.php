@@ -12,4 +12,7 @@
  * @author dev@maarch.org
  */
 
+define('_ENTITY_CREATION', 'Création entité');
+define('_ENTITY_MODIFICATION', 'Modification entité');
+define('_ENTITY_SUPPRESSION', 'Suppression entité');
 define('_INVALID_CLAUSE', 'Clause non valide');

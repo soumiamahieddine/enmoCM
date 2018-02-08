@@ -21,6 +21,7 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
 use Entity\models\UserEntityModel;
+use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -129,10 +130,51 @@ class EntityController
         }
 
         EntityModel::create($data);
+        HistoryController::add([
+            'tableName' => 'entities',
+            'recordId'  => $data['id'],
+            'eventType' => 'ADD',
+            'info'      => _ENTITY_CREATION . " : {$data['id']}",
+            'moduleId'  => 'entity',
+            'eventId'   => 'entityCreation',
+        ]);
 
         return $response->withJson(['entityId' => $data['id']]);
     }
 
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $entity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => [1]]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['entity_label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        unset($data['entity_id']);
+        EntityModel::update(['set' => $data, 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
+        HistoryController::add([
+            'tableName' => 'entities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _ENTITY_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'entity',
+            'eventId'   => 'entityModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
@@ -166,6 +208,14 @@ class EntityController
         }
 
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
+        HistoryController::add([
+            'tableName' => 'entities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _ENTITY_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'entity',
+            'eventId'   => 'entitySuppression',
+        ]);
 
         $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
         foreach ($entities as $key => $entity) {
@@ -238,6 +288,14 @@ class EntityController
 
 
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
+        HistoryController::add([
+            'tableName' => 'entities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _ENTITY_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'entity',
+            'eventId'   => 'entitySuppression',
+        ]);
 
         $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
         foreach ($entities as $key => $entity) {
