@@ -3,6 +3,7 @@
 namespace Priority\controllers;
 
 use Core\Models\ServiceModel;
+use History\controllers\HistoryController;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -44,6 +45,14 @@ class PriorityController
         $data['working_days'] = $data['working_days'] ? 'true' : 'false';
 
         $id = PriorityModel::create($data);
+        HistoryController::add([
+            'tableName' => 'priorities',
+            'recordId'  => $id,
+            'eventType' => 'ADD',
+            'info'      => _PRIORITY_CREATION . " : {$data['label']}",
+            'moduleId'  => 'priority',
+            'eventId'   => 'priorityCreation',
+        ]);
 
         return $response->withJson(['priority'  => $id]);
     }
@@ -67,6 +76,14 @@ class PriorityController
         $data['working_days'] = empty($data['working_days']) ? 'false' : 'true';
 
         PriorityModel::update($data);
+        HistoryController::add([
+            'tableName' => 'priorities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _PRIORITY_MODIFICATION . " : {$data['label']}",
+            'moduleId'  => 'priority',
+            'eventId'   => 'priorityModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -78,6 +95,14 @@ class PriorityController
         }
 
         PriorityModel::delete(['id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'priorities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _PRIORITY_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'priority',
+            'eventId'   => 'prioritySuppression',
+        ]);
 
         return $response->withJson(['priorities' => PriorityModel::get()]);
     }

@@ -20,3 +20,6 @@ define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');
 define('_INVALID_CLAUSE', 'Clause is not valid');
+define('_PRIORITY_CREATION', 'Priority creation');
+define('_PRIORITY_MODIFICATION', 'Priority modification');
+define('_PRIORITY_SUPPRESSION', 'Priority suppression');
