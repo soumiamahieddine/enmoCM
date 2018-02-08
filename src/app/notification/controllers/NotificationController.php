@@ -118,7 +118,6 @@ class NotificationController
         }
 
         if (NotificationModel::create($data)) {
-
             if (PHP_OS == "Linux") {
                 $notificationAdded = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
                 NotificationScheduleController::createScriptNotification($notificationAdded['notification_sid'], $data['notification_id']);
@@ -135,7 +134,6 @@ class NotificationController
         } else {
             return $response->withStatus(400)->withJson(['errors' => 'Notification Create Error']);
         }
-
     }
 
     public function update(Request $request, Response $response, $aArgs)
@@ -220,7 +218,7 @@ class NotificationController
             }
 
             foreach ($cronTab as $key => $value) {
-                if($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename){
+                if ($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename) {
                     $cronTab[$key]['state'] = 'deleted';
                     $flagCron = true;
                     break;
@@ -275,7 +273,6 @@ class NotificationController
         }
 
         return $errors;
-
     }
 
     public function initNotification(Request $request, Response $response)
@@ -301,5 +298,4 @@ class NotificationController
 
         return $response->withJson(['notification'=>$notification]);
     }
-
 }

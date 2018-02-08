@@ -102,7 +102,7 @@ class NotificationScheduleController
             'info'      => _NOTIFICATION_SCHEDULE_UPDATED
         ]);
 
-	return true;
+        return true;
     }
 
     public static function getCrontab($getHiddenValue = true)
@@ -244,7 +244,8 @@ class NotificationScheduleController
         return $response->withJson(true);
     }
 
-    public static function createScriptNotification($notification_sid, $notification_id){
+    public static function createScriptNotification($notification_sid, $notification_id)
+    {
 
         //Creer le script sh pour les notifications
         $filename = "notification";
@@ -310,5 +311,4 @@ class NotificationScheduleController
 
         return true;
     }
-
 }

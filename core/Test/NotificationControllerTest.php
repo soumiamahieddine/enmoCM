@@ -292,6 +292,5 @@ class NotificationControllerTest extends TestCase
         $this->assertNotNull($responseBody->notification->data->users);
         $this->assertNotNull($responseBody->notification->data->entities);
         $this->assertNotNull($responseBody->notification->data->status);
-
     }
 }
