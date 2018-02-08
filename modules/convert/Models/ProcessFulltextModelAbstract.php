@@ -15,9 +15,9 @@
 
 namespace Convert\Models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 use History\controllers\HistoryController;
+use SrcCore\models\DatabaseModel;
 
 class ProcessFulltextModelAbstract
 {

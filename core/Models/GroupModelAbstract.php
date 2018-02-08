@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use SrcCore\models\DatabaseModel;
+
 class GroupModelAbstract
 {
     public static function get(array $aArgs = [])

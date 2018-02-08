@@ -132,7 +132,7 @@ class ResControllerTest extends TestCase
         $this->assertSame('DEL', $res['status']);
 
         //  REAL DELETE
-        \Core\Models\DatabaseModel::delete([
+        \SrcCore\models\DatabaseModel::delete([
             'table' => 'res_letterbox',
             'where' => ['res_id = ?'],
             'data'  => [self::$id]

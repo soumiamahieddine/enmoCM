@@ -13,8 +13,8 @@
 
 namespace Priority\models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 abstract class PriorityModelAbstract
 {

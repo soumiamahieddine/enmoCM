@@ -42,8 +42,7 @@ require_once 'modules/sendmail/sendmail_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 require_once 'modules/sendmail/class/class_email_signatures.php';
-require_once 'core/Models/DatabaseModel.php'; 
-require_once 'core/Models/UserModel.php'; 
+require_once 'core/Models/UserModel.php';
 
 $core_tools     = new core_tools();
 $request        = new request();
@@ -114,7 +113,7 @@ if(empty($userEntities)){
     $userEntities = [''];
 }
 
-$userTemplates = \Core\Models\DatabaseModel::select(['select'   => ['t.template_id', 't.template_label', 't.template_content'],
+$userTemplates = \SrcCore\models\DatabaseModel::select(['select'   => ['t.template_id', 't.template_label', 't.template_content'],
                                                     'table'     => ['templates t', 'templates_association ta'],
                                                     'left_join' => ['t.template_id = ta.template_id'],
                                                     'where'     => ['t.template_target = \'sendmail\'', '(ta.value_field is null or value_field in (?))'],

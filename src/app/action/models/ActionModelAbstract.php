@@ -11,9 +11,9 @@
 
 namespace Action\models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 
 class ActionModelAbstract
 {

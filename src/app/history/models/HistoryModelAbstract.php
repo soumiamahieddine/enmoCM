@@ -15,9 +15,9 @@
 namespace History\models;
 
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 
 require_once('apps/maarch_entreprise/tools/log4php/Logger.php'); //TODO composer
 

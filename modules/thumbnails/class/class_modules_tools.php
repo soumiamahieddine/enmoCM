@@ -255,7 +255,7 @@ class thumbnails
 			return false;
 		}
 
-		$oRowSet = \Core\Models\DatabaseModel::select([
+		$oRowSet = \SrcCore\models\DatabaseModel::select([
 			'select'    => ['path_template'],
 			'table'     => ['docservers'],
 			'where'     => ['docserver_type_id = ?'],
@@ -268,7 +268,7 @@ class thumbnails
 
 		$docserverPath = $oRowSet[0]['path_template'];
 
-		$oRowSet = \Core\Models\DatabaseModel::select([
+		$oRowSet = \SrcCore\models\DatabaseModel::select([
 			'select'    => ['tnl_path', 'tnl_filename'],
 			'table'     => [$resTable],
 			'where'     => ['res_id = ?'],

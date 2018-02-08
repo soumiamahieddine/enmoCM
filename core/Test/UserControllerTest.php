@@ -9,7 +9,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-use Core\Models\DatabaseModel;
 
 class UserControllerTest extends TestCase
 {
@@ -127,7 +126,7 @@ class UserControllerTest extends TestCase
         $this->assertSame(null, $responseBody->thumbprint);
 
         //  REAL DELETE
-        DatabaseModel::delete([
+        \SrcCore\models\DatabaseModel::delete([
             'table' => 'users',
             'where' => ['id = ?'],
             'data'  => [self::$id]

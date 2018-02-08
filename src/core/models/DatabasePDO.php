@@ -10,12 +10,12 @@
 /**
  * @brief DatabasePDO
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
-use SrcCore\models\CoreConfigModel;
+
+use Core\Models\ValidatorModel;
 
 class DatabasePDO
 {

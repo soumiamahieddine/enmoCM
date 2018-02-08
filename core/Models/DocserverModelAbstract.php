@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use SrcCore\models\DatabaseModel;
+
 class DocserverModelAbstract
 {
     public static function get(array $aArgs = [])

@@ -14,9 +14,8 @@
 
 namespace Entity\models;
 
-use Core\Models\DatabaseModel;
-use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 class UserEntityModelAbstract
 {

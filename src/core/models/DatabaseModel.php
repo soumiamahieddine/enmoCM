@@ -10,14 +10,14 @@
 /**
 * @brief Database Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace SrcCore\models;
+
+use Core\Models\ValidatorModel;
 
 class DatabaseModel
 {
-
     /**
      * Database Unique Id Function
      *

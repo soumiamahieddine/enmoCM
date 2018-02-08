@@ -15,9 +15,9 @@
 
 namespace Notification\models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
 use Entity\models\EntityModel;
+use SrcCore\models\DatabaseModel;
 use Status\models\StatusModel;
 use Core\Models\GroupModelAbstract;
 use SrcCore\models\CoreConfigModel;

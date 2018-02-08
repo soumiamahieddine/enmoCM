@@ -9,8 +9,8 @@
 
 namespace Visa\Models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 class VisaModelAbstract
 {
