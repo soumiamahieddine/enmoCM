@@ -6,6 +6,7 @@
             <file>core/Test/ActionControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
             <file>core/Test/NotificationControllerTest.php</file>
+            <file>core/Test/NotificationScheduleControllerTest.php</file>
             <file>core/Test/ParameterControllerTest.php</file>
             <file>core/Test/PriorityControllerTest.php</file>
             <file>core/Test/ReportControllerTest.php</file>

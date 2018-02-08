@@ -7,8 +7,6 @@
 *
 */
 
-namespace MaarchTest;
-
 use PHPUnit\Framework\TestCase;
 
 class StatusControllerTest extends TestCase
