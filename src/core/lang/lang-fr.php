@@ -12,6 +12,10 @@
  * @author dev@maarch.org
  */
 
+define('_BASKETS_SORT_MODIFICATION', 'Modification ordre bannettes');
+define('_BASKET_CREATION', 'Création bannette');
+define('_BASKET_MODIFICATION', 'Modification bannette');
+define('_BASKET_SUPPRESSION', 'Suppression bannette');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');

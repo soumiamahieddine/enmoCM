@@ -19,6 +19,7 @@ use Action\models\ActionModel;
 use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
+use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -78,6 +79,14 @@ class BasketController
         $data['isFolderBasket'] = empty($data['isFolderBasket']) ? 'N' : 'Y';
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         BasketModel::create($data);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $data['id'],
+            'eventType' => 'ADD',
+            'info'      => _BASKET_CREATION . " : {$data['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketCreation',
+        ]);
 
         return $response->withJson(['basket' => $data['id']]);
     }
@@ -112,6 +121,14 @@ class BasketController
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         $data['id'] = $aArgs['id'];
         BasketModel::update($data);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -128,6 +145,14 @@ class BasketController
         }
 
         BasketModel::delete(['id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _BASKET_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketSuppression',
+        ]);
 
         return $response->withJson(['baskets' => BasketModel::get()]);
     }
@@ -209,6 +234,15 @@ class BasketController
         foreach ($basketsToUpdate as $key => $basketToUpdate) {
             BasketModel::updateOrder(['id' => $basketToUpdate, 'order' => $key + 1]);
         }
+
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKETS_SORT_MODIFICATION,
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         $baskets = BasketModel::get([
             'select'    => ['basket_id', 'basket_name', 'basket_desc', 'basket_order'],
@@ -364,6 +398,14 @@ class BasketController
                 }
             }
         }
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -434,6 +476,14 @@ class BasketController
                 }
             }
         }
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -450,11 +500,20 @@ class BasketController
         }
 
         BasketModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
 
-    private static function checkGroupActions(array $aArgs) {
+    private static function checkGroupActions(array $aArgs)
+    {
         ValidatorModel::notEmpty($aArgs, ['groupActions']);
         ValidatorModel::arrayType($aArgs, ['groupActions']);
 

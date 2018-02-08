@@ -12,6 +12,10 @@
  * @author dev@maarch.org
  */
 
+define('_BASKETS_SORT_MODIFICATION', 'Baskets order modification');
+define('_BASKET_CREATION', 'Basket creation');
+define('_BASKET_MODIFICATION', 'Basket modification');
+define('_BASKET_SUPPRESSION', 'Basket suppression');
 define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');
