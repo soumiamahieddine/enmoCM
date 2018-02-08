@@ -23,3 +23,4 @@ define('_INVALID_CLAUSE', 'Clause non valide');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
+define('_REPORT_MODIFICATION', 'Modification états et édition');

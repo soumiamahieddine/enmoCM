@@ -16,6 +16,7 @@ namespace Report\controllers;
 
 use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
+use History\controllers\HistoryController;
 use Report\models\ReportModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -83,6 +84,15 @@ class ReportController
             ReportModel::deleteForGroupId(['groupId' => $aArgs['groupId'], 'reportIds' => $reportIdsToDelete]);
         }
 
+        HistoryController::add([
+            'tableName' => 'usergroups_reports',
+            'recordId'  => $aArgs['groupId'],
+            'eventType' => 'UP',
+            'info'      => _REPORT_MODIFICATION,
+            'moduleId'  => 'report',
+            'eventId'   => 'reportModification',
+        ]);
+        
         return $response->withJson(['success' => 'success']);
     }
 }
