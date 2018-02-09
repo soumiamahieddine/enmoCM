@@ -162,13 +162,14 @@ class BasketModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
 
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['groupbasket'],
             'where'     => ['basket_id = ?'],
-            'data'      => [$aArgs['id']]
+            'data'      => [$aArgs['id']],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aGroups;

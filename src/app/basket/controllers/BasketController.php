@@ -265,7 +265,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        $groups = BasketModel::getGroups(['id' => $aArgs['id']]);
+        $groups = BasketModel::getGroups(['id' => $aArgs['id'], 'orderBy' => ['group_id']]);
         $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
