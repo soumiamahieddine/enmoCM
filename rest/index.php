@@ -107,10 +107,10 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
-$app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
+$app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
 //Administration
-$app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
+$app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
@@ -148,12 +148,12 @@ $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
 //Docservers
-$app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
-$app->get('/docservers/{id}', \Core\Controllers\DocserverController::class . ':getById');
+$app->get('/docservers', \SrcCore\controllers\DocserverController::class . ':get');
+$app->get('/docservers/{id}', \SrcCore\controllers\DocserverController::class . ':getById');
 
 //DocserverTypes
-$app->get('/docserverTypes', \core\Controllers\DocserverTypeController::class . ':get');
-$app->get('/docserverTypes/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverTypes', \SrcCore\controllers\DocserverTypeController::class . ':get');
+$app->get('/docserverTypes/{id}', \SrcCore\controllers\DocserverTypeController::class . ':getById');
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
@@ -267,7 +267,7 @@ $app->post('/contacts', \Contact\controllers\ContactController::class . ':create
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Links
-$app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
+$app->get('/links/resId/{resId}', \SrcCore\controllers\LinkController::class . ':getByResId');
 
 //liste documents
 $app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause

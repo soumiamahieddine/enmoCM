@@ -14,7 +14,6 @@
 
 namespace SrcCore\controllers;
 
-
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entity\models\EntityModel;

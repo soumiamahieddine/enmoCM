@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace Core\Controllers;
+namespace SrcCore\controllers;
 
 use Core\Models\TextFormatModel;
 use Psr\Http\Message\RequestInterface;

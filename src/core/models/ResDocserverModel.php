@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
 class ResDocserverModel extends ResDocserverModelAbstract
 {

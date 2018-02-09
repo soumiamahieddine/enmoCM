@@ -10,10 +10,10 @@
 /**
  * @brief Core Controller
  * @author dev@maarch.org
- * @ingroup core
+ * @ingroup Core
  */
 
-namespace Core\Controllers;
+namespace SrcCore\controllers;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -29,7 +29,7 @@ use Respect\Validation\Validator;
 use Convert\Controllers\ProcessConvertController;
 use Convert\Controllers\ProcessFulltextController;
 use Convert\Controllers\ProcessThumbnailsController;
-use Core\Controllers\LogsController;
+use SrcCore\controllers\LogsController;
 
 class ProcessManageConvertController
 {
