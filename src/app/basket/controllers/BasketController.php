@@ -445,7 +445,7 @@ class BasketController
                 BasketModel::createGroupAction([
                     'id'                => $aArgs['id'],
                     'groupId'           => $aArgs['groupId'],
-                    'actionId'          => $groupAction['id_action'],
+                    'actionId'          => $groupAction['id'],
                     'whereClause'       => $groupAction['where_clause'],
                     'usedInBasketlist'  => $groupAction['used_in_basketlist'],
                     'usedInActionPage'  => $groupAction['used_in_action_page'],
@@ -457,7 +457,7 @@ class BasketController
                         BasketModel::createGroupActionStatus([
                             'id'        => $aArgs['id'],
                             'groupId'   => $aArgs['groupId'],
-                            'actionId'  => $groupAction['id_action'],
+                            'actionId'  => $groupAction['id'],
                             'statusId'  => $status
                         ]);
                     }
@@ -467,7 +467,7 @@ class BasketController
                         BasketModel::createGroupActionRedirect([
                             'id'            => $aArgs['id'],
                             'groupId'       => $aArgs['groupId'],
-                            'actionId'      => $groupAction['id_action'],
+                            'actionId'      => $groupAction['id'],
                             'entityId'      => $redirect['entity_id'],
                             'keyword'       => $redirect['keyword'],
                             'redirectMode'  => $redirect['redirect_mode']
