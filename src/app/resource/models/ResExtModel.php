@@ -10,10 +10,10 @@
 /**
 * @brief ResExt Model
 * @author dev@maarch.org
-* @ingroup core
+* @ingroup Resource
 */
 
-namespace Core\Models;
+namespace Resource\models;
 
 class ResExtModel extends ResExtModelAbstract
 {
