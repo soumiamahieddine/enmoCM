@@ -29,8 +29,8 @@ use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Convert\Models\ProcessConvertModel;
-use Core\Models\DocserverModel;
-use Core\Models\ResDocserverModel;
+use SrcCore\models\DocserverModel;
+use SrcCore\models\ResDocserverModel;
 use SrcCore\controllers\LogsController;
 use SrcCore\controllers\StoreController;
 

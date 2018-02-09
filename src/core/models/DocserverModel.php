@@ -8,15 +8,13 @@
 */
 
 /**
-* @brief DocserverType Model
+* @brief Docserver Model
 * @author dev@maarch.org
 * @ingroup core
 */
-namespace Core\Models;
+namespace SrcCore\models;
 
-require_once 'core/Models/DocserverTypeModelAbstract.php';
-
-class DocserverTypeModel extends DocserverTypeModelAbstract
+class DocserverModel extends DocserverModelAbstract
 {
     // Do your stuff in this class
 }

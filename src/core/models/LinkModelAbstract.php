@@ -13,8 +13,7 @@
  * @ingroup core
  */
 
-namespace Core\Models;
-
+namespace SrcCore\models;
 
 use SrcCore\models\DatabaseModel;
 

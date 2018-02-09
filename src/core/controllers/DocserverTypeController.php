@@ -19,7 +19,7 @@ use Core\Models\ServiceModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Core\Models\DocserverTypeModel;
+use SrcCore\models\DocserverTypeModel;
 
 class DocserverTypeController
 {

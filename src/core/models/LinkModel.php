@@ -13,8 +13,9 @@
  * @ingroup core
  */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
 class LinkModel extends LinkModelAbstract
 {
+
 }
