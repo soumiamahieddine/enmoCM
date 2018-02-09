@@ -1,44 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["history-administrationView"],
-    styleUrls   : [],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["history-administrationView"],
+    styleUrls: [],
+    providers: [NotificationService]
 })
 
 export class HistoryAdministrationComponent implements OnInit {
-    coreUrl                 : string;
-    lang                    : any           = LANG;
-    search                  : string        = null;
-    _search                 : string    = '';
+    coreUrl: string;
+    lang: any = LANG;
 
-    filterEventTypes        : any           = [];
-    filterEventType         : string        = '';
-    filterUsers             : any           = [];
-    filterUser              : string        = '';
-    filterByDate            : string        = '';
+    loading: boolean = false;
+    data: History[] = [];
+    CurrentYear: number = new Date().getFullYear();
+    currentMonth: number = new Date().getMonth() + 1;
+    minDate: Date = new Date();
     
-    loading                 : boolean       = false;
-    data                    : any           = [];
-    CurrentYear             : number        = new Date().getFullYear();
-    currentMonth            : number        = new Date().getMonth()+1;
-    minDate                 : Date          = new Date();
-    
-    
+    displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+    dataSource = new MatTableDataSource(this.data);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.history;
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.history;
         }
     }
 
@@ -50,18 +53,15 @@ export class HistoryAdministrationComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
 
-        this.minDate = new Date(this.CurrentYear+'-'+this.currentMonth+'-01');
-        console.log(this.minDate.toJSON());
-        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/'+this.minDate.toJSON())
-            .subscribe((data:any) => {
+        this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
+        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
+            .subscribe((data: any) => {
                 this.data = data.historyList;
-
-                this.filterEventTypes = data.filters.eventType;
-                this.filterUsers = data.filters.users;
                 this.loading = false;
                 setTimeout(() => {
-
-                    $j("[md2sortby='event_date']").click().click();
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {
                 console.log(err);
@@ -69,17 +69,24 @@ export class HistoryAdministrationComponent implements OnInit {
             });
     }
 
-    refreshHistory() {
+    refreshHistory(event: MatDatepickerInputEvent<Date>) {
         this.http.get(this.coreUrl + 'rest/administration/history/eventDate/'+this.minDate.toJSON())
         .subscribe((data:any) => {
             this.data = data.historyList;
-            this.filterEventTypes = data.filters.eventType;
-            this.filterUsers = data.filters.users;
-
+            this.dataSource = new MatTableDataSource(this.data);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         }, (err) => {
             console.log(err);
             location.href = "index.php";
         });
     }
-
+}
+export interface History {
+    event_date: Date;
+    event_type: string;
+    user_id: string;
+    table_name: number;
+    info: string;
+    remote_ip: string;
 }

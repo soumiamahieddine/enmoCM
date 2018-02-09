@@ -18,7 +18,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <mat-form-field>
-                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.description}}" placeholder="{{lang.description}}" type="text" required>
+                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.statusName}}" placeholder="{{lang.statusName}}" type="text" required>
                     </mat-form-field>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                                     {{lang.canBeSearched}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipSearchStatus}}"></i>
+                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipSearchStatus}}"></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
@@ -38,7 +38,7 @@
                                 {{lang.canBeModified}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipIndexStatus}}"></i>
+                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipIndexStatus}}"></i>
                             </sup>
                         </div>
                         <div class="col-sm-4" style="white-space:nowrap;">
@@ -46,7 +46,7 @@
                                 {{lang.isFolderStatus}}
                             </mat-slide-toggle>
                             <sup>
-                                <i class="fa fa-question-circle" tooltip="{{lang.tooltipFolderStatus}}"></i>
+                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipFolderStatus}}"></i>
                             </sup>
                         </div>
                     </div>
@@ -54,33 +54,19 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-1">
-                    <i class="fm {{status.img_filename}} fm-2x text-primary"></i>
+                    <mat-icon class="fm {{status.img_filename}} fm-2x" aria-hidden="true" color="primary"></mat-icon>
                 </div>
                 <div class="col-sm-11">
-                    <md2-select 
-                        id="status"
-                        name="status"
-                        placeholder="{{lang.imgRelated}}"
-                        [(ngModel)]="status.img_filename"
-                        required
-                        #searchStatusIcon="ngModel">
-                        <md2-select-header>
-                            <mat-form-field>
-                            <input matInput name="search"
-                                type="text"
-                                placeholder="Filtre"
-                                [(ngModel)]="_search" 
-                                autocomplete="off"
-                                (focusout)="clearSearch()"/>
-                            </mat-form-field>
-                        </md2-select-header>
-                        <md2-option *ngFor="let image of statusImages | dataPipe : 'image_name' : _search" [value]="image.image_name"><i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x"></i> {{image.image_name}}</md2-option>
-                    </md2-select>
+                    <mat-select [(ngModel)]="status.img_filename" placeholder="{{lang.imgRelated}}" id="status" name="status" required>
+                        <mat-option *ngFor="let image of statusImages" [value]="image.image_name">
+                                <i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x" color="primary"></i> {{image.image_name}}
+                        </mat-option>
+                    </mat-select>
                 </div>
             </div>
             <div class="col-sm-12 panel-body" style="text-align:center;">
-                <button class="btn btn-success" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
-                <button class="btn btn-warning" routerLink='/administration/statuses'>{{lang.cancel}}</button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
+                <button mat-raised-button routerLink='/administration/statuses'>{{lang.cancel}}</button>
             </div>
         </form>
     </div>

@@ -21,7 +21,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.router = router;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this._search = '';
         this.action = {};
         this.statuses = [];
         this.actionPagesList = [];
@@ -47,7 +46,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.prepareActions();
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
@@ -63,7 +61,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             }
             else {
                 _this.creationMode = false;
-                _this.http.get(_this.coreUrl + 'rest/administration/actions/' + params['id'])
+                _this.http.get(_this.coreUrl + 'rest/actions/' + params['id'])
                     .subscribe(function (data) {
                     _this.action = data.action;
                     _this.categoriesList = data.categoriesList;
@@ -74,9 +72,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                 });
             }
         });
-    };
-    ActionAdministrationComponent.prototype.clearSearch = function () {
-        this._search = '';
+        this.updateBreadcrumb(angularGlobals.applicationName);
     };
     ActionAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
@@ -84,7 +80,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(_this.lang.actionAdded + ' « ' + _this.action.label_action + ' »');
+                _this.notify.success(_this.lang.actionAdded);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
@@ -93,7 +89,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/actions']);
-                _this.notify.success(_this.lang.actionUpdated + ' « ' + _this.action.label_action + ' »');
+                _this.notify.success(_this.lang.actionUpdated);
             }, function (err) {
                 _this.notify.error(JSON.parse(err._body).errors);
             });
@@ -102,7 +98,6 @@ var ActionAdministrationComponent = /** @class */ (function () {
     ActionAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["action-administrationView"],
-            styleUrls: ['css/action-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])

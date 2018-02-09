@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Changement de destinataire des modèles de liste de diffusion</h2>
+<mat-dialog-content>
+    <form #changeDiffListDestForm="ngForm">
+        <div class="modal-body">
+            <div class="alert alert-warning" role="alert">
+                <b>{{this.data.userDestRedirect.firstname}} {{this.data.userDestRedirect.lastname}}</b> est en
+                <b>destinataire</b> des modèles liste de difffusion suivante, veuillez choisir un utilisateur de
+                <b>remplacement</b> :
+            </div>
+            <div *ngFor="let userDestRedirectModel of data.userDestRedirectModels;let i of index" id="{{userDestRedirectModel.object_id}}" class="form-group">
+                
+                <mat-form-field class="example-full-width">
+                    <input name="userDestRedirectModel_{{i}}" id="userDestRedirectModel_{{i}}" [(ngModel)]="userDestRedirectModel.redirectUserId" type="text" placeholder="Nouveau destinataire pour : {{userDestRedirectModel.title}}"
+                        matInput [matAutocomplete]="auto" [formControl]="userCtrl" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
+                            <div class="container-fluid">
+                                <div class="col-md-1">
+                                    <mat-icon class="fa fa-user fa-2x"></mat-icon>
+                                </div>
+                                <div class="col-md-11">
+                                    {{ user.firstname }} {{ user.lastname }}
+                                    <small>{{ user.user_id }}</small>
+                                </div>
+                            </div>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-dialog-actions>
+            <button mat-raised-button color="warn" *ngIf="data.userDestRedirect.mode == 'del'" type="submit" class="btn btn-danger" (click)="dialogRef.close(this.data.userDestRedirectModels)"
+                [disabled]="!changeDiffListDestForm.form.valid">{{lang.delete}} {{lang.user}}</button>
+            <button mat-raised-button color="primary" *ngIf="data.userDestRedirect.mode == 'up'" type="submit" (click)="dialogRef.close(this.data.userDestRedirectModels)"
+                [disabled]="!sendFunction()">{{lang.suspend}} {{lang.user}}</button>
+        </mat-dialog-actions>
+    </form>
+</mat-dialog-content>

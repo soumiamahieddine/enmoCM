@@ -14,8 +14,8 @@
 
 namespace Resource\models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 class ResModelAbstract
 {
@@ -25,7 +25,7 @@ class ResModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aResources = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => $aArgs['select'],
             'table'     => ['res_view_letterbox'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
@@ -35,21 +35,32 @@ class ResModelAbstract
         return $aResources;
     }
 
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aResources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['res_letterbox'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aResources;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        
+
         $aResources = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_letterbox'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);
-
-        if (empty($aResources[0])) {
-            return [];
-        }
 
         return $aResources[0];
     }
@@ -104,33 +115,31 @@ class ResModelAbstract
         return true;
     }
 
-    public static function updateStatus(array $aArgs)
+    public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'status']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['status']);
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'res_letterbox',
-            'set'       => [
-                'status'    => $aArgs['status']
-            ],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
+            'table' => 'res_letterbox',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function delete(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'set']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::arrayType($aArgs, ['set']);
 
         DatabaseModel::update([
             'table' => 'res_letterbox',
-            'set'   => $aArgs['set'],
+            'set'   => [
+                'status'    => 'DEL'
+            ],
             'where' => ['res_id = ?'],
             'data'  => [$aArgs['resId']]
         ]);

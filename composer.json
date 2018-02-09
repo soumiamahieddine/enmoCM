@@ -2,11 +2,18 @@
     "autoload": {
     	"psr-4": {
             "SrcCore\\"       : "src/core/",
+            "Action\\"        : "src/app/action/",
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
+            "Entity\\"        : "src/app/entity/",
             "History\\"       : "src/app/history/",
-            "Status\\"        : "src/app/status/",
+            "Notification\\"  : "src/app/notification/",
+            "Parameter\\"     : "src/app/parameter/",
+            "Priority\\"      : "src/app/priority/",
+            "Report\\"        : "src/app/report/",
             "Resource\\"      : "src/app/resource/",
+            "Status\\"        : "src/app/status/",
+            "Template\\"      : "src/app/template/",
 
             "Core\\"          : "core/",
     	    "Apps\\"          : "apps/maarch_entreprise/",
@@ -14,8 +21,6 @@
             "Convert\\"       : "modules/convert/",
             "Entities\\"      : "modules/entities/",
             "Notes\\"         : "modules/notes/",
-            "Notifications\\" : "modules/notifications/",
-            "Templates\\"     : "modules/templates/",
             "Visa\\"          : "modules/visa/"
     	}
     },

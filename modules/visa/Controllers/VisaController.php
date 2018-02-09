@@ -15,14 +15,14 @@ namespace Visa\Controllers;
 
 use Attachments\Models\AttachmentsModel;
 use Basket\models\BasketModel;
-use Core\Models\ActionModel;
+use Action\models\ActionModel;
 use Core\Models\ContactModel;
 use Core\Models\LinkModel;
-use Core\Models\ListinstanceModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
 use Core\Models\DocserverModel;
 use Core\Models\ServiceModel;
+use Entity\models\ListInstanceModel;
 use Notes\Models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -85,7 +85,7 @@ class VisaController
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
-        $datas['listinstance']  = ListinstanceModel::getCurrentStepByResId(['resId' => $resId]);
+        $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
 
@@ -100,7 +100,7 @@ class VisaController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
-            ListinstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $GLOBALS['userId']]);
+            ListInstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $GLOBALS['userId']]);
         }
 
         return $response->withJson(['success' => 'success']);

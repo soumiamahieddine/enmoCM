@@ -11,12 +11,10 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["action-administrationView"],
-    styleUrls   : ['css/action-administration.component.css'],
     providers   : [NotificationService]
 })
 export class ActionAdministrationComponent implements OnInit {
     lang                        : any       = LANG;
-    _search                     : string    = '';
     coreUrl                     : string;
     creationMode                : boolean;
     action                      : any       = {};
@@ -51,8 +49,6 @@ export class ActionAdministrationComponent implements OnInit {
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
 
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
         this.route.params.subscribe(params => {
             if(typeof params['id']== "undefined"){
                 this.creationMode = true;
@@ -71,7 +67,7 @@ export class ActionAdministrationComponent implements OnInit {
             else {
                 this.creationMode = false;
 
-                this.http.get(this.coreUrl + 'rest/administration/actions/' + params['id'])
+                this.http.get(this.coreUrl + 'rest/actions/' + params['id'])
                     .subscribe((data : any) => {
                         this.action         = data.action;
                         this.categoriesList = data.categoriesList;
@@ -83,10 +79,9 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             } 
         });
-    }
 
-    clearSearch(){
-        this._search = '';
+        this.updateBreadcrumb(angularGlobals.applicationName);
+        
     }
 
     onSubmit() {
@@ -94,7 +89,7 @@ export class ActionAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(this.lang.actionAdded+' « '+this.action.label_action+' »');
+                this.notify.success(this.lang.actionAdded);
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);
@@ -103,7 +98,7 @@ export class ActionAdministrationComponent implements OnInit {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
             .subscribe((data : any) => {
                 this.router.navigate(['/administration/actions']);
-                this.notify.success(this.lang.actionUpdated+' « '+this.action.label_action+' »');
+                this.notify.success(this.lang.actionUpdated);
 
             },(err) => {
                 this.notify.error(JSON.parse(err._body).errors);

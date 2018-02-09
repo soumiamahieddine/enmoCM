@@ -15,10 +15,11 @@
 namespace Basket\controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\ActionModel;
+use Action\models\ActionModel;
 use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
+use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -35,7 +36,7 @@ class BasketController
         return $response->withJson(['baskets' => BasketModel::get()]);
     }
 
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -57,7 +58,7 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['id']);
+        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['name']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
@@ -71,18 +72,26 @@ class BasketController
         }
 
         if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
         $data['isFolderBasket'] = empty($data['isFolderBasket']) ? 'N' : 'Y';
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         BasketModel::create($data);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $data['id'],
+            'eventType' => 'ADD',
+            'info'      => _BASKET_CREATION . " : {$data['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketCreation',
+        ]);
 
         return $response->withJson(['basket' => $data['id']]);
     }
 
-    public function update(Request $request, Response $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -104,7 +113,7 @@ class BasketController
         }
 
         if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Clause is not valid']);
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
@@ -112,11 +121,19 @@ class BasketController
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         $data['id'] = $aArgs['id'];
         BasketModel::update($data);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(Request $request, Response $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -128,6 +145,14 @@ class BasketController
         }
 
         BasketModel::delete(['id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _BASKET_SUPPRESSION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketSuppression',
+        ]);
 
         return $response->withJson(['baskets' => BasketModel::get()]);
     }
@@ -148,7 +173,7 @@ class BasketController
         return $response->withJson(['baskets' => $baskets]);
     }
 
-    public function updateSort(Request $request, Response $response, $aArgs)
+    public function updateSort(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -210,6 +235,15 @@ class BasketController
             BasketModel::updateOrder(['id' => $basketToUpdate, 'order' => $key + 1]);
         }
 
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKETS_SORT_MODIFICATION,
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
+
         $baskets = BasketModel::get([
             'select'    => ['basket_id', 'basket_name', 'basket_desc', 'basket_order'],
             'where'     => ['is_visible = ?'],
@@ -220,7 +254,7 @@ class BasketController
         return $response->withJson(['baskets' => $baskets]);
     }
 
-    public function getGroups(Request $request, Response $response, $aArgs)
+    public function getGroups(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -232,8 +266,10 @@ class BasketController
         }
 
         $groups = BasketModel::getGroups(['id' => $aArgs['id']]);
+        $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
+            $actionsForGroup = $allActions;
             $actions = BasketModel::getActionsForGroupById([
                 'id'        => $aArgs['id'],
                 'groupId'   => $group['group_id'],
@@ -246,17 +282,15 @@ class BasketController
             $statuses = [];
             $redirects = [];
             if (!empty($actionIds)) {
-                $statuses = BasketModel::getGroupBasketStatusesIn([
-                    'id'            => $aArgs['id'],
-                    'groupId'       => $group['group_id'],
-                    'actionIds'     => $actionIds,
-                    'select'        => ['status_id', 'action_id']
+                $statuses = BasketModel::getGroupActionStatus([
+                    'select'    => ['status_id', 'action_id'],
+                    'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
+                    'data'      => [$aArgs['id'], $group['group_id'], $actionIds]
                 ]);
-                $redirects = BasketModel::getGroupBasketRedirectIn([
-                    'id'            => $aArgs['id'],
-                    'groupId'       => $group['group_id'],
-                    'actionIds'     => $actionIds,
-                    'select'        => ['entity_id', 'action_id', 'keyword', 'redirect_mode']
+                $redirects = BasketModel::getGroupActionRedirect([
+                    'select'    => ['entity_id', 'action_id', 'keyword', 'redirect_mode'],
+                    'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
+                    'data'      => [$aArgs['id'], $group['group_id'], $actionIds]
                 ]);
             }
             foreach ($actions as $actionKey => $action) {
@@ -274,10 +308,31 @@ class BasketController
                 }
             }
 
-            $groups[$key]['groupActions'] = $actions;
+            foreach ($actionsForGroup as $actionKey => $actionForGroup) {
+                foreach ($actions as $action) {
+                    if ($actionForGroup['id'] == $action['id_action']) {
+                        $actionsForGroup[$actionKey] = array_merge($actionForGroup, $action);
+                        $actionsForGroup[$actionKey]['checked'] = true;
+                        unset($actionsForGroup[$actionKey]['id_action']);
+                    }
+                }
+                if (empty($actionsForGroup[$actionKey]['checked'])) {
+                    $actionsForGroup[$actionKey]['where_clause'] = '';
+                    $actionsForGroup[$actionKey]['used_in_basketlist'] = 'N';
+                    $actionsForGroup[$actionKey]['used_in_action_page'] = 'Y';
+                    $actionsForGroup[$actionKey]['default_action_list'] = 'N';
+                    $actionsForGroup[$actionKey]['statuses'] = [];
+                    $actionsForGroup[$actionKey]['redirects'] = [];
+                    $actionsForGroup[$actionKey]['checked'] = false;
+                }
+            }
+            $groups[$key]['groupActions'] = $actionsForGroup;
         }
 
-        return $response->withJson(['groups' => $groups]);
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+        $basketPages = BasketModel::getBasketPages();
+
+        return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
     }
 
     public function createGroup(Request $request, Response $response, array $aArgs)
@@ -343,6 +398,14 @@ class BasketController
                 }
             }
         }
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -378,78 +441,54 @@ class BasketController
 
         BasketModel::createGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'resultPage' => $data['result_page']]);
         foreach ($data['groupActions'] as $groupAction) {
-            BasketModel::createGroupAction([
-                'id'                => $aArgs['id'],
-                'groupId'           => $aArgs['groupId'],
-                'actionId'          => $groupAction['id_action'],
-                'whereClause'       => $groupAction['where_clause'],
-                'usedInBasketlist'  => $groupAction['used_in_basketlist'],
-                'usedInActionPage'  => $groupAction['used_in_action_page'],
-                'defaultActionList' => $groupAction['default_action_list']
-            ]);
+            if ($groupAction['checked']) {
+                BasketModel::createGroupAction([
+                    'id'                => $aArgs['id'],
+                    'groupId'           => $aArgs['groupId'],
+                    'actionId'          => $groupAction['id_action'],
+                    'whereClause'       => $groupAction['where_clause'],
+                    'usedInBasketlist'  => $groupAction['used_in_basketlist'],
+                    'usedInActionPage'  => $groupAction['used_in_action_page'],
+                    'defaultActionList' => $groupAction['default_action_list']
+                ]);
 
-            if (!empty($groupAction['statuses'])) {
-                foreach ($groupAction['statuses'] as $status) {
-                    BasketModel::createGroupActionStatus([
-                        'id'        => $aArgs['id'],
-                        'groupId'   => $aArgs['groupId'],
-                        'actionId'  => $groupAction['id_action'],
-                        'statusId'  => $status
-                    ]);
+                if (!empty($groupAction['statuses'])) {
+                    foreach ($groupAction['statuses'] as $status) {
+                        BasketModel::createGroupActionStatus([
+                            'id'        => $aArgs['id'],
+                            'groupId'   => $aArgs['groupId'],
+                            'actionId'  => $groupAction['id_action'],
+                            'statusId'  => $status
+                        ]);
+                    }
                 }
-            }
-            if (!empty($groupAction['redirects'])) {
-                foreach ($groupAction['redirects'] as $redirect) {
-                    BasketModel::createGroupActionRedirect([
-                        'id'            => $aArgs['id'],
-                        'groupId'       => $aArgs['groupId'],
-                        'actionId'      => $groupAction['id_action'],
-                        'entityId'      => $redirect['entity_id'],
-                        'keyword'       => $redirect['keyword'],
-                        'redirectMode'  => $redirect['redirect_mode']
-                    ]);
+                if (!empty($groupAction['redirects'])) {
+                    foreach ($groupAction['redirects'] as $redirect) {
+                        BasketModel::createGroupActionRedirect([
+                            'id'            => $aArgs['id'],
+                            'groupId'       => $aArgs['groupId'],
+                            'actionId'      => $groupAction['id_action'],
+                            'entityId'      => $redirect['entity_id'],
+                            'keyword'       => $redirect['keyword'],
+                            'redirectMode'  => $redirect['redirect_mode']
+                        ]);
+                    }
                 }
             }
         }
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getDataForGroupById(Request $request, Response $response, $aArgs)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $basket = BasketModel::getById(['id' => $aArgs['id']]);
-        if (empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
-        }
-
-        $basketGroups = BasketModel::getGroups(['id' => $aArgs['id']]);
-        $groups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
-
-        foreach ($groups as $key => $group) {
-            $found = false;
-            foreach ($basketGroups as $basketGroup) {
-                if ($basketGroup['group_id'] == $group['group_id']) {
-                    $found = true;
-                    break;
-                }
-            }
-            if ($found) {
-                unset($groups[$key]);
-            }
-        }
-        $groups = array_values($groups);
-
-        $basketPages = BasketModel::getBasketPages();
-        $actions = ActionModel::get();
-
-        return $response->withJson(['groups' => $groups, 'pages' => $basketPages, 'actions' => $actions]);
-    }
-
-    public function deleteGroup(Request $request, Response $response, $aArgs)
+    public function deleteGroup(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -461,11 +500,20 @@ class BasketController
         }
 
         BasketModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        HistoryController::add([
+            'tableName' => 'baskets',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'basket',
+            'eventId'   => 'basketModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
 
-    private static function checkGroupActions(array $aArgs) {
+    private static function checkGroupActions(array $aArgs)
+    {
         ValidatorModel::notEmpty($aArgs, ['groupActions']);
         ValidatorModel::arrayType($aArgs, ['groupActions']);
 
@@ -473,22 +521,24 @@ class BasketController
         $actions = ActionModel::get(['select' => ['id']]);
 
         foreach ($aArgs['groupActions'] as $key => $groupAction) {
-            $actionExists = false;
-            foreach ($actions as $action) {
-                if ($action['id'] == $groupAction['id_action']) {
-                    $actionExists = true;
+            if ($groupAction['checked']) {
+                $actionExists = false;
+                foreach ($actions as $action) {
+                    if ($action['id'] == $groupAction['id_action']) {
+                        $actionExists = true;
+                    }
                 }
+                if (!$actionExists) {
+                    return ['errors' => 'Action does not exist'];
+                }
+                if ($groupAction['default_action_list'] === true) {
+                    $defaultAction = true;
+                }
+                $aArgs['groupActions'][$key]['where_clause'] = empty($groupAction['where_clause']) ? '' : $groupAction['where_clause'];
+                $aArgs['groupActions'][$key]['used_in_basketlist'] = empty($groupAction['used_in_basketlist']) ? 'N' : 'Y';
+                $aArgs['groupActions'][$key]['used_in_action_page'] = empty($groupAction['used_in_action_page']) ? 'N' : 'Y';
+                $aArgs['groupActions'][$key]['default_action_list'] = empty($groupAction['default_action_list']) ? 'N' : 'Y';
             }
-            if (!$actionExists) {
-                return ['errors' => 'Action does not exist'];
-            }
-            if ($groupAction['default_action_list'] === true) {
-                $defaultAction = true;
-            }
-            $aArgs['groupActions'][$key]['where_clause'] = empty($groupAction['where_clause']) ? '' : $groupAction['where_clause'];
-            $aArgs['groupActions'][$key]['used_in_basketlist'] = empty($groupAction['used_in_basketlist']) ? 'N' : 'Y';
-            $aArgs['groupActions'][$key]['used_in_action_page'] = empty($groupAction['used_in_action_page']) ? 'N' : 'Y';
-            $aArgs['groupActions'][$key]['default_action_list'] = empty($groupAction['default_action_list']) ? 'N' : 'Y';
         }
         if (!$defaultAction) {
             return ['errors' => 'Default action needed'];

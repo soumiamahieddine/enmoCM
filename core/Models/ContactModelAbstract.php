@@ -16,6 +16,8 @@
 namespace Core\Models;
 
 
+use SrcCore\models\DatabaseModel;
+
 class ContactModelAbstract
 {
     public static function getById(array $aArgs = [])

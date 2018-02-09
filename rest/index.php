@@ -14,8 +14,6 @@
 
 require '../vendor/autoload.php';
 
-header('Content-Type: text/html; charset=utf-8');
-
 //create session if NO SESSION
 if (empty($_SESSION['user'])) {
     require_once('../core/class/class_functions.php');
@@ -101,6 +99,9 @@ if (empty($userId)) {
     exit();
 }
 
+$language = \SrcCore\models\CoreConfigModel::getLanguage();
+require_once("src/core/lang/lang-{$language}.php");
+
 
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
@@ -113,13 +114,11 @@ $app->get('/administration', \Core\Controllers\CoreController::class . ':getAdmi
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
-$app->get('/administration/notifications/new', \Notifications\Controllers\NotificationController::class . ':getNewNotificationForAdministration');
-$app->get('/administration/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getNotificationForAdministration');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
-$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
 $app->post('/baskets', \Basket\controllers\BasketController::class . ':create');
+$app->get('/baskets/{id}', \Basket\controllers\BasketController::class . ':getById');
 $app->put('/baskets/{id}', \Basket\controllers\BasketController::class . ':update');
 $app->delete('/baskets/{id}', \Basket\controllers\BasketController::class . ':delete');
 $app->get('/baskets/{id}/groups', \Basket\controllers\BasketController::class . ':getGroups');
@@ -132,21 +131,21 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
-$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
-$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
 $app->post('/statuses', \Status\controllers\StatusController::class . ':create');
+$app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
 $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
+$app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //groups
 $app->get('/groups', \Core\Controllers\GroupController::class . ':get');
 $app->post('/groups', \Core\Controllers\GroupController::class . ':create');
+$app->get('/groups/{id}', \Core\Controllers\GroupController::class . ':getById');
 $app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
 $app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
 $app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
 $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
-
 
 //Docservers
 $app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
@@ -206,60 +205,67 @@ $app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
 
-//parameters
-$app->get('/administration/parameters', \Core\Controllers\ParametersController::class . ':getParametersForAdministration');
-$app->get('/administration/parameters/new', \Core\Controllers\ParametersController::class . ':getNewParameterForAdministration');
-$app->get('/administration/parameters/{id}', \Core\Controllers\ParametersController::class . ':getParameterForAdministration');
-$app->post('/parameters', \Core\Controllers\ParametersController::class . ':create');
-$app->put('/parameters/{id}', \Core\Controllers\ParametersController::class . ':update');
-$app->delete('/parameters/{id}', \Core\Controllers\ParametersController::class . ':delete');
+//Entities
+$app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
+$app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
+$app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
+
+//Parameters
+$app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
+$app->post('/parameters', \Parameter\controllers\ParameterController::class . ':create');
+$app->get('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':getById');
+$app->put('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':update');
+$app->delete('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':delete');
 
 //Priorities
-$app->get('/priorities', \Core\Controllers\PriorityController::class . ':get');
-$app->post('/priorities', \Core\Controllers\PriorityController::class . ':create');
-$app->get('/priorities/{id}', \Core\Controllers\PriorityController::class . ':getById');
-$app->put('/priorities/{id}', \Core\Controllers\PriorityController::class . ':update');
-$app->delete('/priorities/{id}', \Core\Controllers\PriorityController::class . ':delete');
+$app->get('/priorities', \Priority\controllers\PriorityController::class . ':get');
+$app->post('/priorities', \Priority\controllers\PriorityController::class . ':create');
+$app->get('/priorities/{id}', \Priority\controllers\PriorityController::class . ':getById');
+$app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . ':update');
+$app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration');
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration'); //TODO No date
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');//TODO No date
 
 //actions
-$app->get('/administration/actions', \Core\Controllers\ActionController::class . ':getForAdministration');
-$app->get('/initAction', \Core\Controllers\ActionController::class . ':initAction');
-$app->get('/administration/actions/{id}', \Core\Controllers\ActionController::class . ':getByIdForAdministration');
-$app->post('/actions', \Core\Controllers\ActionController::class . ':create');
-$app->put('/actions/{id}', \Core\Controllers\ActionController::class . ':update');
-$app->delete('/actions/{id}', \Core\Controllers\ActionController::class . ':delete');
+$app->get('/actions', \Action\controllers\ActionController::class . ':get');
+$app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
+$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getById');
+$app->post('/actions', \Action\controllers\ActionController::class . ':create');
+$app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
+$app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Notifications
-$app->get('/notifications', \Notifications\Controllers\NotificationController::class . ':get');
-$app->post('/notifications', \Notifications\Controllers\NotificationController::class . ':create');
-$app->get('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':getById');
-$app->put('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':update');
-$app->delete('/notifications/{id}', \Notifications\Controllers\NotificationController::class . ':delete');
+$app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
+$app->post('/notifications', \Notification\controllers\NotificationController::class . ':create');
+$app->put('/notifications/{id}', \Notification\controllers\NotificationController::class . ':update');
+$app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
+$app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
+$app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 
 //Reports
-$app->get('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':getByGroupId');
-$app->put('/reports/groups/{groupId}', \Core\Controllers\ReportController::class . ':updateForGroupId');
+$app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
+$app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
+$app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
 
 //Listinstance
-$app->get('/listinstance/{id}', \Core\Controllers\ListinstanceController::class . ':getById');
+$app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 
 //Templates
-$app->post('/templates/{id}/duplicate', \Templates\Controllers\TemplateController::class . ':duplicate');
+$app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Links
 $app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
 
 //liste documents
-$app->get('/res/listDocs/{clause}/{select}', \Core\Controllers\ResController::class . ':getListDocs');
+$app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause
 
 $app->run();

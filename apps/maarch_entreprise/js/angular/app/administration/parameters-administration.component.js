@@ -13,55 +13,69 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var ParametersAdministrationComponent = /** @class */ (function () {
     function ParametersAdministrationComponent(http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this.search = null;
-        this.resultInfo = "";
+        this.parameters = {};
         this.loading = false;
-        this.data = [];
+        this.displayedColumns = ['id', 'description', 'value', 'actions'];
     }
     ParametersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.parameters;
         }
     };
+    ParametersAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     ParametersAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        this.http.get(this.coreUrl + 'rest/administration/parameters')
+        this.loading = true;
+        this.http.get(this.coreUrl + 'rest/parameters')
             .subscribe(function (data) {
-            _this.parametersList = data.parametersList;
-            _this.data = _this.parametersList;
+            _this.parameters = data.parameters;
             setTimeout(function () {
-                $j("[md2sortby='id']").click();
+                _this.dataSource = new material_1.MatTableDataSource(_this.parameters);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
             }, 0);
             _this.loading = false;
         });
     };
-    ParametersAdministrationComponent.prototype.goUrl = function () {
-        location.href = 'index.php?admin=parameters&page=control_param_technic';
-    };
     ParametersAdministrationComponent.prototype.deleteParameter = function (paramId) {
         var _this = this;
-        var resp = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + paramId + ' »');
-        if (resp) {
+        var r = confirm(this.lang.deleteMsg);
+        if (r) {
             this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .subscribe(function (data) {
-                _this.data = data.parameters;
-                _this.notify.success(_this.lang.parameterDeleted + ' « ' + paramId + ' »');
+                _this.parameters = data.parameters;
+                _this.dataSource = new material_1.MatTableDataSource(_this.parameters);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+                _this.notify.success(_this.lang.parameterDeleted);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], ParametersAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], ParametersAdministrationComponent.prototype, "sort", void 0);
     ParametersAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["parameters-administrationView"],
-            styleUrls: ['css/parameters-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])

@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var material_1 = require("@angular/material");
+var french_paginator_intl_1 = require("./french-paginator-intl");
 var AppMaterialModule = /** @class */ (function () {
     function AppMaterialModule() {
     }
@@ -27,7 +28,18 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatProgressSpinnerModule,
                 material_1.MatToolbarModule,
                 material_1.MatMenuModule,
-                material_1.MatGridListModule
+                material_1.MatGridListModule,
+                material_1.MatTableModule,
+                material_1.MatPaginatorModule,
+                material_1.MatSortModule,
+                material_1.MatDatepickerModule,
+                material_1.MatNativeDateModule,
+                material_1.MatExpansionModule,
+                material_1.MatAutocompleteModule,
+                material_1.MatSnackBarModule,
+                material_1.MatIconModule,
+                material_1.MatDialogModule,
+                material_1.MatListModule
             ],
             exports: [
                 material_1.MatCheckboxModule,
@@ -43,7 +55,21 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatProgressSpinnerModule,
                 material_1.MatToolbarModule,
                 material_1.MatMenuModule,
-                material_1.MatGridListModule
+                material_1.MatGridListModule,
+                material_1.MatTableModule,
+                material_1.MatPaginatorModule,
+                material_1.MatSortModule,
+                material_1.MatDatepickerModule,
+                material_1.MatNativeDateModule,
+                material_1.MatExpansionModule,
+                material_1.MatAutocompleteModule,
+                material_1.MatSnackBarModule,
+                material_1.MatIconModule,
+                material_1.MatDialogModule,
+                material_1.MatListModule
+            ],
+            providers: [
+                { provide: material_1.MatPaginatorIntl, useValue: french_paginator_intl_1.getFrenchPaginatorIntl() }
             ]
         })
     ], AppMaterialModule);

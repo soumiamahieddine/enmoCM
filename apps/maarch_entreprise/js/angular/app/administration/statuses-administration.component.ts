@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator,MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any) : any;
 
@@ -17,11 +18,20 @@ export class StatusesAdministrationComponent implements OnInit {
     coreUrl                     : string;
     lang                        : any       = LANG;
 
-    nbStatus                    : number;
-    statuses                    : any       = [];
+    nbStatus: number;
+    statuses: Status[] = [];
 
     loading                     : boolean   = false;
 
+    displayedColumns = ['img_filename','id','label_status','identifier'];
+    dataSource = new MatTableDataSource(this.statuses);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+      this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -36,11 +46,14 @@ export class StatusesAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe((data : any) => {
                 this.statuses = data.statuses;
-                setTimeout(() => {
-                    $j("[md2sortby='label_status']").click();
-                }, 0);
                 this.updateBreadcrumb(angularGlobals.applicationName);
                 this.loading = false;
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.statuses);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
+                
             }, (err) => {
                 this.notify.error(JSON.parse(err._body).errors);
             });
@@ -69,4 +82,16 @@ export class StatusesAdministrationComponent implements OnInit {
         }
     }
  
+}
+
+export interface Status {
+    id: string;
+    can_be_modified: string;
+    can_be_searchead: string;
+    identifier: number;
+    img_filename: string;
+    is_folder_status: string;
+    is_system: string;
+    label_status: string;
+    maarch_module: string;
 }

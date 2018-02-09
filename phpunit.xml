@@ -3,17 +3,20 @@
     <testsuites>
         <testsuite name="Maarch Core Test Suite">
             <!--directory>core/Test</directory-->
-            <!--file>core/Test/ActionControllerTest.php</file-->
+            <file>core/Test/ActionControllerTest.php</file>
+            <!--<file>core/Test/BasketControllerTest.php</file>-->
+            <file>core/Test/NotificationControllerTest.php</file>
+            <file>core/Test/NotificationScheduleControllerTest.php</file>
+            <file>core/Test/ParameterControllerTest.php</file>
             <file>core/Test/PriorityControllerTest.php</file>
-            <!--file>core/Test/ResControllerTest.php</file>
-            <file>core/Test/ResExtControllerTest.php</file-->
+            <file>core/Test/ReportControllerTest.php</file>
+            <file>core/Test/ResControllerTest.php</file>
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
-            <file>core/Test/BasketControllerTest.php</file>
             <file>modules/convert/Test/ProcessConvertTest.php</file>
             <file>modules/convert/Test/ProcessFulltextTest.php</file>
-            <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
             <file>modules/convert/Test/ProcessManageConvertTest.php</file>
+            <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
@@ -22,9 +25,7 @@
           <directory suffix=".php">src</directory>
           <directory suffix=".php">core/Controllers</directory>
           <directory suffix=".php">core/Models</directory>
-          <directory suffix=".php">apps/maarch_entreprise/Models</directory>
-          <directory suffix=".php">modules/notifications/Controllers</directory>
-          <directory suffix=".php">modules/notifications/Models</directory>          
+          <directory suffix=".php">apps/maarch_entreprise/Models</directory>         
           <directory suffix=".php">modules/visa/Controllers</directory>
           <directory suffix=".php">modules/visa/Models</directory>          
           <directory suffix=".php">modules/attachments/Controllers</directory>

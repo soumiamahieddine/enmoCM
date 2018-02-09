@@ -17,7 +17,7 @@ namespace SrcCore\controllers;
 
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
-use Entities\Models\EntityModel;
+use Entity\models\EntityModel;
 use Resource\models\ResModel;
 
 class PreparedClauseController
@@ -151,7 +151,9 @@ class PreparedClauseController
         if ($total > 0) {
             for ($i = 0; $i < $total; $i++) {
                 $tmpParentEntity = trim(str_replace("'", '', $parentEntity[1][$i]));
-                $entity = EntityModel::getById(['entityId' => $tmpParentEntity, 'select' => ['entity_id', 'parent_entity_id']]);
+                if (!empty($tmpParentEntity)) {
+                    $entity = EntityModel::getById(['entityId' => $tmpParentEntity, 'select' => ['entity_id', 'parent_entity_id']]);
+                }
                 if (empty($entity['parent_entity_id'])) {
                     $parentEntityClause = "''";
                 } else {

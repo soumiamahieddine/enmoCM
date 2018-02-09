@@ -14,12 +14,12 @@
 
 namespace Basket\models;
 
-use Core\Models\CoreConfigModel;
-use Core\Models\DatabaseModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 
 class BasketModelAbstract
 {
@@ -212,6 +212,21 @@ class BasketModelAbstract
         return true;
     }
 
+    public static function getGroupActionRedirect(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aRedirects = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['groupbasket_redirect'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aRedirects;
+    }
+
     public static function createGroupActionRedirect(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'redirectMode']);
@@ -230,6 +245,36 @@ class BasketModelAbstract
         ]);
 
         return true;
+    }
+
+    public static function updateGroupActionRedirect(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'groupbasket_redirect',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function getGroupActionStatus(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aStatuses = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['groupbasket_status'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aStatuses;
     }
 
     public static function createGroupActionStatus(array $aArgs)
@@ -293,38 +338,6 @@ class BasketModelAbstract
         ]);
 
         return $aGroups;
-    }
-
-    public static function getGroupBasketStatusesIn(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionIds']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId']);
-        ValidatorModel::arrayType($aArgs, ['select', 'actionIds']);
-
-        $aStatuses = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['groupbasket_status'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
-            'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['actionIds']]
-        ]);
-
-        return $aStatuses;
-    }
-
-    public static function getGroupBasketRedirectIn(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionIds']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId']);
-        ValidatorModel::arrayType($aArgs, ['select', 'actionIds']);
-
-        $aRedirects = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['groupbasket_redirect'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
-            'data'      => [$aArgs['id'], $aArgs['groupId'], $aArgs['actionIds']]
-        ]);
-
-        return $aRedirects;
     }
 
     public static function hasGroup(array $aArgs)

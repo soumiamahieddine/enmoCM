@@ -10,13 +10,11 @@
 /**
 * @brief Status Images Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Status\models;
 
-use Core\Models\DatabaseModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 class StatusImagesModelAbstract
 {

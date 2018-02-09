@@ -124,8 +124,9 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
             $view = $sec->retrieve_view_from_coll_id($collId);
             $table = $sec->retrieve_table_from_coll($collId);
             //retrieve the process entity of document
+            $aResId = explode(", ", $values_str);
             $stmt = $db->query(
-                "SELECT destination FROM " . $table . " WHERE res_id in (?)", array($values_str)
+                "SELECT destination FROM " . $table . " WHERE res_id in (?)", array($aResId)
             );
             $resultDest = $stmt->fetchObject();
             $destination = $resultDest->destination;

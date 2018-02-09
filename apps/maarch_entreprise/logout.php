@@ -92,7 +92,7 @@ if (isset($webSSOurl) && $webSSOurl <> '') {
     header("location: " . $webSSOurl);
     exit();
 } elseif (!empty($accessToken)) {
-    $ozwilloConfig = \Core\Models\CoreConfigModel::getOzwilloConfiguration();
+    $ozwilloConfig = \SrcCore\models\CoreConfigModel::getOzwilloConfiguration();
     $oidc = new OpenIDConnectClient($ozwilloConfig['uri'], $ozwilloConfig['clientId'], $ozwilloConfig['clientSecret']);
     $oidc->signOut($accessToken, null);
 } else {

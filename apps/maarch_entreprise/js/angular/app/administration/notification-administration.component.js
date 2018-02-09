@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
-var translate_component_1 = require("../translate.component");
 var router_1 = require("@angular/router");
+var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var NotificationAdministrationComponent = /** @class */ (function () {
     function NotificationAdministrationComponent(http, route, router, notify) {
@@ -27,13 +27,17 @@ var NotificationAdministrationComponent = /** @class */ (function () {
         this.lang = translate_component_1.LANG;
     }
     NotificationAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>notifications</a>";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>" + this.lang.notifications + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.notificationCreation;
         }
+        else {
+            breadCrumb += this.lang.notificationModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     NotificationAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
         this.route.params.subscribe(function (params) {
@@ -49,7 +53,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
             }
             else {
                 _this.creationMode = false;
-                _this.http.get(_this.coreUrl + 'rest/administration/notifications/' + params['identifier'])
+                _this.http.get(_this.coreUrl + 'rest/notifications/' + params['identifier'])
                     .subscribe(function (data) {
                     _this.notification = data.notification;
                     _this.loading = false;
@@ -58,6 +62,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
                 });
             }
         });
+        this.updateBreadcrumb(angularGlobals.applicationName);
     };
     NotificationAdministrationComponent.prototype.selectAll = function (event) {
         var target = event.target.getAttribute("data-target");
@@ -102,7 +107,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/notifications']);
-                _this.notify.success(_this.lang.newNotificationAdded + ' « ' + _this.notification.notification_id + ' »');
+                _this.notify.success(_this.lang.NotificationAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -111,7 +116,7 @@ var NotificationAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + 'rest/notifications/' + this.notification.notification_sid, this.notification)
                 .subscribe(function (data) {
                 _this.router.navigate(['/administration/notifications']);
-                _this.notify.success(_this.lang.notificationUpdated + ' « ' + _this.notification.notification_id + ' »');
+                _this.notify.success(_this.lang.notificationUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -120,7 +125,6 @@ var NotificationAdministrationComponent = /** @class */ (function () {
     NotificationAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["notification-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])

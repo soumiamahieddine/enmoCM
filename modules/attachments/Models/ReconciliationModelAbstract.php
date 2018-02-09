@@ -9,7 +9,7 @@
 
 namespace Attachments\Models;
 use Core\Models\ValidatorModel;
-use Core\Models\DatabaseModel;
+use SrcCore\models\DatabaseModel;
 
 class ReconciliationModelAbstract{
     public static function selectReconciliation (array $aArgs = [])

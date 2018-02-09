@@ -7,48 +7,73 @@ use Core\Models\ServiceModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 
 class GroupController
 {
-    public function get(RequestInterface $request, ResponseInterface $response)
+    public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
         }
 
         return $response->withJson(['groups' => $groups]);
     }
 
-    public function create(RequestInterface $request, ResponseInterface $response)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $group = GroupModel::getById(['id' => $aArgs['id']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        return $response->withJson(['group' => $group]);
+    }
+
+    public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['group_desc']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['group_id']);
+        $check = Validator::stringType()->notEmpty()->validate($data['group_id']) && preg_match("/^[\w-]*$/", $data['group_id']) && (strlen($data['group_id']) < 32);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['group_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['where_clause']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['maarch_comment']);
-
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $existingGroup = GroupModel::getByGroupId(['groupId' => $data['group_id'], 'select' => ['1']]);
+        if (!empty($existingGroup)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group already exists']);
+        }
+
+        if (!PreparedClauseController::isClauseValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
+        }
+
         GroupModel::create(['groupId' => $data['group_id'], 'description' => $data['group_desc'], 'clause' => $data['security']['where_clause'], 'comment' => $data['security']['maarch_comment']]);
 
-        $group = GroupModel::getByGroupId(['groupId' => $data['group_id']]);
-        if (!Validator::intType()->notEmpty()->validate($group['id'])) {
+        $group = GroupModel::getByGroupId(['groupId' => $data['group_id'], 'select' => ['id']]);
+        if (empty($group)) {
             return $response->withStatus(500)->withJson(['errors' => 'Group Creation Error']);
         }
 
-        return $response->withJson(['group' => $group]);
+        return $response->withJson(['group' => $group['id']]);
     }
 
     public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -92,15 +117,15 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
         }
 
         return $response->withJson(['groups' => $groups]);
     }
 
-    public function getDetailledById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -109,7 +134,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['user_id']]);
+        $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
         $group['security']  = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']  = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
 
@@ -144,16 +169,16 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['id' => $aArgs['id']]);
+        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['group_id']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
-        $newGroup = GroupModel::getByGroupId(['id' => $aArgs['newGroupId']]);
+        $newGroup = GroupModel::getById(['id' => $aArgs['newGroupId'], 'select' => ['group_id']]);
         if (empty($newGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $aArgs['newGroupId']]);
+        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
 
         return $response->withJson(['success' => 'success']);
     }

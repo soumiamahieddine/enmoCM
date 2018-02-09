@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -14,18 +24,21 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var UserAdministrationComponent = /** @class */ (function () {
+var material_1 = require("@angular/material");
+var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
+var UserAdministrationComponent = /** @class */ (function (_super) {
+    __extends(UserAdministrationComponent, _super);
     function UserAdministrationComponent(http, route, router, zone, notify) {
-        var _this = this;
-        this.http = http;
-        this.route = route;
-        this.router = router;
-        this.zone = zone;
-        this.notify = notify;
-        this.lang = translate_component_1.LANG;
-        this._search = '';
-        this.user = {};
-        this.signatureModel = {
+        var _this = _super.call(this, http, 'users') || this;
+        _this.http = http;
+        _this.route = route;
+        _this.router = router;
+        _this.zone = zone;
+        _this.notify = notify;
+        _this.lang = translate_component_1.LANG;
+        _this._search = '';
+        _this.user = {};
+        _this.signatureModel = {
             base64: "",
             base64ForJs: "",
             name: "",
@@ -33,16 +46,27 @@ var UserAdministrationComponent = /** @class */ (function () {
             size: 0,
             label: "",
         };
-        this.userAbsenceModel = [];
-        this.userList = [];
-        this.selectedSignature = -1;
-        this.selectedSignatureLabel = "";
-        this.data = [];
-        this.loading = false;
+        _this.userAbsenceModel = [];
+        _this.userList = [];
+        _this.selectedSignature = -1;
+        _this.selectedSignatureLabel = "";
+        _this.data = [];
+        _this.CurrentYear = new Date().getFullYear();
+        _this.currentMonth = new Date().getMonth() + 1;
+        _this.minDate = new Date();
+        _this.loading = false;
+        _this.displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+        _this.dataSource = new material_1.MatTableDataSource(_this.data);
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
+        return _this;
     }
+    UserAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>" + this.lang.users + "</a> > ";
         if (this.creationMode == true) {
@@ -73,7 +97,13 @@ var UserAdministrationComponent = /** @class */ (function () {
                     _this.data = data.history;
                     _this.userId = data.user_id;
                     _this.updateBreadcrumb(angularGlobals.applicationName);
+                    _this.minDate = new Date(_this.CurrentYear + '-' + _this.currentMonth + '-01');
                     _this.loading = false;
+                    setTimeout(function () {
+                        _this.dataSource = new material_1.MatTableDataSource(_this.data);
+                        _this.dataSource.paginator = _this.paginator;
+                        _this.dataSource.sort = _this.sort;
+                    }, 0);
                 }, function () {
                     location.href = "index.php";
                 });
@@ -81,11 +111,10 @@ var UserAdministrationComponent = /** @class */ (function () {
         });
     };
     UserAdministrationComponent.prototype.toogleRedirect = function (basket) {
-        var _this = this;
         $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
         this.http.get(this.coreUrl + 'rest/administration/users')
             .subscribe(function (data) {
-            _this.userList = data['users'];
+            //this.userList = data['users'];
         }, function () {
             location.href = "index.php";
         });
@@ -110,7 +139,7 @@ var UserAdministrationComponent = /** @class */ (function () {
                 .on('select_node.jstree', function (e, data) {
                 _this.addEntity(data.node.id);
             }).on('deselect_node.jstree', function (e, data) {
-                console.log(data.node.id);
+                //console.log(data.node.id);
                 _this.deleteEntity(data.node.id);
             })
                 .jstree();
@@ -124,9 +153,6 @@ var UserAdministrationComponent = /** @class */ (function () {
                     $j('#jstree').jstree(true).search(v);
                 }, 250);
             });
-        }
-        if ($j("[md2sortby='event_date']").length != 0) {
-            $j("[md2sortby='event_date']").click();
         }
     };
     UserAdministrationComponent.prototype.processAfterUpload = function (b64Content) {
@@ -329,7 +355,7 @@ var UserAdministrationComponent = /** @class */ (function () {
     };
     UserAdministrationComponent.prototype.activateAbsence = function () {
         var _this = this;
-        this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/baskets/absence", this.userAbsenceModel)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "ABS" })
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
@@ -371,6 +397,14 @@ var UserAdministrationComponent = /** @class */ (function () {
             });
         }
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], UserAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], UserAdministrationComponent.prototype, "sort", void 0);
     UserAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["user-administrationView"],
@@ -380,5 +414,5 @@ var UserAdministrationComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, notification_service_1.NotificationService])
     ], UserAdministrationComponent);
     return UserAdministrationComponent;
-}());
+}(autocomplete_plugin_1.AutoCompletePlugin));
 exports.UserAdministrationComponent = UserAdministrationComponent;

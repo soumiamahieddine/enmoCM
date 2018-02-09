@@ -1,53 +1,59 @@
-
 <div class="page-header">
-    <h1>{{lang.administration}} {{lang.statuses}} <small>{{statuses.length}} {{lang.statuses}}</small></h1>
+    <h1>{{lang.administration}} {{lang.statuses}}
+        <small>{{statuses.length}} {{lang.statuses}}</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
-        <table id="statusTable" class="table table-hover table-condensed" [md2Data]="statuses | dataPipe : 'label_status' : search" #md2="md2DataTable" [sortBy]='label_status' [rowsPerPage]="10">
-            <thead>
-                <tr>
-                    <td colspan="2">
-                        <md2-pagination></md2-pagination>
-                    </td>
-                    <td style="text-align:right" colspan="2">
-                        <mat-form-field>
-                            <input matInput placeholder="{{lang.filterBy}} : {{lang.description}}" class="searchTable" [(ngModel)]="search" />
-                        </mat-form-field>
-                        &nbsp;
-                        <a class="text-primary" style="cursor: pointer" routerLink="/administration/statuses/new" title="{{lang.addStatus}}"><i class="fa fa-check-circle fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th md2SortBy="id" style="width:15%"><span>{{lang.imgRelated}}</span></th>
-                    <th md2SortBy="img_filename" style="width:20%"><span>{{lang.id}}</span></th>
-                    <th md2SortBy="label_status" style="width:60%"><span>{{lang.description}}</span></th>
-                    <th style="width:5%">&nbsp;</th>
-                </tr>
-            </thead> 
-            <tbody>
-                <tr *ngFor="let status of md2.data">
-                    <td style="text-align:center;vertical-align:middle;">
-                        <i class="fm {{status.img_filename}} fm-2x text-primary" *ngIf="status.img_filename.indexOf('fm') == 0"></i>
-                        <i class="fa {{status.img_filename}} fa-2x text-primary" *ngIf="status.img_filename.indexOf('fa') == 0"></i>
-                    </td>
-                    <td style="vertical-align:middle;">{{status.id}}</td>
-                    <td style="vertical-align:middle;">{{status.label_status}}</td>
-                    <td style="text-align:right;vertical-align:middle;">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/statuses/{{status.identifier}}" type="button" class="btn btn-default" title="{{lang.update}}">
-                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                            </button>
-                            <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteStatus(status)">
-                                <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                    </mat-form-field>
+                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/statuses/new">
+                        <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_status" matSortDirection="asc">
+                <ng-container matColumnDef="img_filename">
+                    <mat-header-cell *matHeaderCellDef>{{lang.imgRelated}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element" color="primary">
+                            <mat-icon class="fm {{element.img_filename}} fm-2x" *ngIf="element.img_filename.indexOf('fm') == 0" aria-hidden="true"></mat-icon>
+                            <mat-icon class="fa {{element.img_filename}} fa-2x" *ngIf="element.img_filename.indexOf('fa') == 0" aria-hidden="true"></mat-icon>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="label_status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.statusName}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.label_status}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="identifier">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align:right">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/statuses/{{element.identifier}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deleteStatus(element)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
     </div>
 </div>

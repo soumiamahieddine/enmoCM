@@ -11,7 +11,8 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" required>
+                            <input *ngIf="creationMode" type="text" class="form-control" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()" pattern="^[\w-]*$" maxlength="30" required>
+                            <i *ngIf="creationMode" class="fa fa-bullseye" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i>
                             <input *ngIf="!creationMode" type="text" class="form-control" name="identifier" title="{{lang.id}}" [(ngModel)]="basket.id" disabled>
                         </div>
                     </div>
@@ -53,7 +54,7 @@
                 </div>
                 <div class="form-group">
                     <div style="text-align:center;">
-                        <button type="submit" class="btn btn-default" [disabled]="!basketForm.form.valid">{{lang.save}}</button>
+                        <button type="submit" class="btn btn-default" [disabled]="!basketForm.form.valid || !basketIdAvailable">{{lang.save}}</button>
                     </div>
                 </div>
             </form>

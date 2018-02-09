@@ -4,9 +4,10 @@ import { BrowserAnimationsModule }              from '@angular/platform-browser/
 import { FormsModule }                          from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { AppMaterialModule }                    from './app-material.module';
-import { Md2Module,NoConflictStyleCompatibilityMode }                            from 'md2';
 
 //import { HeaderComponent }                      from './header.component';
+import { CustomSnackbarComponent }              from './notification.service';
+
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
 import { AdministrationModule }                 from './administration/administration.module';
@@ -22,16 +23,18 @@ import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component
         HttpClientModule,
         AdministrationModule,
         AppRoutingModule,
-        AppMaterialModule,
-        Md2Module,
-        NoConflictStyleCompatibilityMode
+        AppMaterialModule
     ],
     declarations: [
         //HeaderComponent,
         AppComponent,
         ProfileComponent,
         SignatureBookComponent,
-        SafeUrlPipe
+        SafeUrlPipe,
+        CustomSnackbarComponent
+    ],
+    entryComponents: [
+        CustomSnackbarComponent
     ],
     bootstrap: [AppComponent]
 })

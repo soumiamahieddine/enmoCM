@@ -10,7 +10,6 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
-var md2_1 = require("md2");
 var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
@@ -43,10 +42,10 @@ var AdministrationModule = /** @class */ (function () {
             imports: [
                 common_1.CommonModule,
                 forms_1.FormsModule,
+                forms_1.ReactiveFormsModule,
                 http_1.HttpClientModule,
                 app_material_module_1.AppMaterialModule,
-                administration_routing_module_1.AdministrationRoutingModule,
-                md2_1.Md2Module
+                administration_routing_module_1.AdministrationRoutingModule
             ],
             declarations: [
                 administration_component_1.AdministrationComponent,
@@ -71,8 +70,13 @@ var AdministrationModule = /** @class */ (function () {
                 update_status_administration_component_1.UpdateStatusAdministrationComponent,
                 notifications_administration_component_1.NotificationsAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
-                users_administration_component_1.DataTablePipe
-            ]
+                users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
+            ],
+            entryComponents: [
+                users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
+            ],
         })
     ], AdministrationModule);
     return AdministrationModule;

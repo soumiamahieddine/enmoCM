@@ -21,9 +21,9 @@ var BasketAdministrationComponent = /** @class */ (function () {
         this.router = router;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
-        this.loading = false;
         this.basket = {};
         this.basketGroups = [];
+        this.loading = false;
     }
     BasketAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -38,10 +38,12 @@ var BasketAdministrationComponent = /** @class */ (function () {
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
+                _this.basketIdAvailable = false;
                 _this.loading = false;
             }
             else {
                 _this.creationMode = false;
+                _this.basketIdAvailable = true;
                 _this.id = params['id'];
                 _this.http.get(_this.coreUrl + "rest/baskets/" + _this.id)
                     .subscribe(function (data) {
@@ -65,6 +67,23 @@ var BasketAdministrationComponent = /** @class */ (function () {
                 });
             }
         });
+    };
+    BasketAdministrationComponent.prototype.isAvailable = function () {
+        var _this = this;
+        if (this.basket.id) {
+            this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
+                .subscribe(function () {
+                _this.basketIdAvailable = false;
+            }, function (err) {
+                _this.basketIdAvailable = false;
+                if (err.error.errors == "Basket not found") {
+                    _this.basketIdAvailable = true;
+                }
+            });
+        }
+        else {
+            this.basketIdAvailable = false;
+        }
     };
     BasketAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
@@ -90,7 +109,6 @@ var BasketAdministrationComponent = /** @class */ (function () {
     BasketAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["basket-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])

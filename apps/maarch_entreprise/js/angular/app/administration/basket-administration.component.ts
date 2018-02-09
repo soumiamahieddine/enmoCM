@@ -11,20 +11,21 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["basket-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
 
-    coreUrl         : string;
-    id              : string;
-    creationMode    : boolean;
-    lang            : any       = LANG;
-    loading         : boolean   = false;
+    coreUrl             : string;
+    lang                : any       = LANG;
 
-    basket          : any       = {
-    };
-    basketGroups    : any[]     = [];
+    id                  : string;
+    creationMode        : boolean;
+
+    basket              : any       = {};
+    basketGroups        : any[]     = [];
+    basketIdAvailable   : boolean;
+
+    loading             : boolean   = false;
 
 
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
@@ -45,9 +46,11 @@ export class BasketAdministrationComponent implements OnInit {
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
+                this.basketIdAvailable = false;
                 this.loading = false;
             } else {
                 this.creationMode = false;
+                this.basketIdAvailable = true;
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/baskets/" + this.id)
                     .subscribe((data : any) => {
@@ -73,6 +76,22 @@ export class BasketAdministrationComponent implements OnInit {
                     });
             }
         });
+    }
+
+    isAvailable() {
+        if (this.basket.id) {
+            this.http.get(this.coreUrl + "rest/baskets/" + this.basket.id)
+                .subscribe(() => {
+                    this.basketIdAvailable = false;
+                }, (err) => {
+                    this.basketIdAvailable = false;
+                    if (err.error.errors == "Basket not found") {
+                        this.basketIdAvailable = true;
+                    }
+                });
+        } else {
+            this.basketIdAvailable = false;
+        }
     }
 
     onSubmit() {

@@ -1,53 +1,66 @@
 <div class="page-header">
-    <h1>{{lang.administration}} {{lang.actions}} <small>{{data.length}} {{lang.actions}}</small></h1>
+    <h1>{{lang.administration}} {{lang.actions}}
+        <small>{{actions.length}} {{lang.actions}}</small>
+    </h1>
 </div>
 <div *ngIf="loading">
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
-        <table id ="actionsTable" class="table table-hover table-condensed" [md2Data]="data | dataPipe : 'label_action' : search" #md2="md2DataTable" [sortBy]='id' [rowsPerPage]="10">
-            <thead>
-            <tr>
-                <td colspan="4">
-                    <md2-pagination></md2-pagination>
-                </td>
-                <td style="text-align:right;">
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
                     <mat-form-field>
-                            <input matInput placeholder="{{lang.filterBy}} : {{lang.desc}}" class="md2-input" [(ngModel)]="search" />
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
                     </mat-form-field>
-                    &nbsp;
-                    <a class="text-primary" style="cursor: pointer" routerLink="/administration/actions/new" title="{{lang.new_action}}"><i class="fa fa-exchange fa-2x"></i><sup><i class="fa fa-plus"></i></sup></a>
-                </td>
-            </tr>
-            <tr>
-                <th style="width:5%;"  md2SortBy="id"><span>{{lang.id}}</span></th>
-                <th style="width:45%;" md2SortBy="label_action"><span>{{lang.desc}}</span></th>
-                <th style="width:15%;" md2SortBy="history"><span>{{lang.actionHistory}}</span></th>
-                <th style="width:15%;" md2SortBy="is_folder_action"><span>{{lang.isFolderAction}}</span></th>
-                <th style="width:30%;"><span>&nbsp;</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let action of md2.data">
-                <td style="width:5%;vertical-align:middle;"> {{action.id}} </td>
-                <td style="width:45%;vertical-align:middle;"> {{action.label_action}} </td>
-                <td style="width:15%;vertical-align:middle;" *ngIf="action.history == 'N'"> {{lang.no}} </td>
-                <td style="width:15%;vertical-align:middle;" *ngIf="action.history == 'Y'"> {{lang.yes}}  </td>
-                <td style="width:15%;vertical-align:middle;" *ngIf="action.is_folder_action == 'Y'"> {{lang.yes}}  </td>
-                <td style="width:15%;vertical-align:middle;" *ngIf="action.is_folder_action == 'N'"> {{lang.no}}  </td>
-                <td style="width:30%;vertical-align:middle;" style="text-align:right;">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <button routerLink="/administration/actions/{{action.id}}" type="button" class="btn btn-default" title="{{lang.update}}">
-                            <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
+                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/actions/new">
+                        <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="label_action">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="history">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionHistory}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
+                        <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="is_folder_action">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.isFolderAction}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
+                        <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align:right">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/actions/{{element.id}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
                         </button>
-                        <button [disabled]="action.is_system == 'Y'" type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deleteAction(action)">
-                            <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
+                        <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="deleteAction(element)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                         </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
     </div>
 </div>

@@ -1,29 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator,MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 
+
 @Component({
     templateUrl : angularGlobals["parameters-administrationView"],
-    styleUrls   : ['css/parameters-administration.component.css'],
     providers   : [NotificationService]
 })
-
 export class ParametersAdministrationComponent implements OnInit {
     coreUrl         : string;
-
     lang            : any           = LANG;
-    search          : string        = null;
 
-    parametersList  : any;    
+    parameters      : any           = {};
 
-    resultInfo      : string        = "";
     loading         : boolean       = false;
-    data            : any           = [];
+
+    displayedColumns                = ['id', 'description', 'value', 'actions'];
+    dataSource      : any;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
 
     constructor(public http: HttpClient, private notify: NotificationService) {
@@ -35,37 +36,46 @@ export class ParametersAdministrationComponent implements OnInit {
         }
     }
 
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
     ngOnInit(): void {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        
-        this.http.get(this.coreUrl + 'rest/administration/parameters')
-            .subscribe((data : any) => {
-                this.parametersList = data.parametersList;
-                this.data = this.parametersList;
-                setTimeout(() => {
-                    $j("[md2sortby='id']").click();
-                }, 0);
-                this.loading = false;
 
+        this.loading = true;
+
+        this.http.get(this.coreUrl + 'rest/parameters')
+            .subscribe((data : any) => {
+                this.parameters = data.parameters;
+
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.parameters);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
+
+                this.loading = false;
             });
     }
 
-    goUrl(){
-        location.href = 'index.php?admin=parameters&page=control_param_technic';
-    }
+    deleteParameter(paramId : string) {
+        let r = confirm(this.lang.deleteMsg);
 
-    deleteParameter(paramId : string){
-        let resp = confirm(this.lang.confirmAction+' '+this.lang.delete+' « '+paramId+' »');
-        if (resp) {
-            this.http.delete(this.coreUrl + 'rest/parameters/'+paramId)
+        if (r) {
+            this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
                 .subscribe((data : any) => {
-                    this.data = data.parameters;
-                    this.notify.success(this.lang.parameterDeleted+' « '+paramId+' »');           
-                },(err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.parameters = data.parameters;
+                    this.dataSource = new MatTableDataSource(this.parameters);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.notify.success(this.lang.parameterDeleted);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
                 });
         }
     }
- 
 }

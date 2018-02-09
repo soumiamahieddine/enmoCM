@@ -141,7 +141,7 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        ResModel::updateStatus(['resId' => $document['res_id'], 'status' => $data['status']]);
+        ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
@@ -270,6 +270,13 @@ class ResController
                     $clause .= " AND res_letterbox.destination=entities.entity_id ";
             }
         }
+
+        $securityClause = $_SESSION['user']['security']['letterbox_coll']['DOC']['where'];
+        if(empty($securityClause)){
+            $securityClause = '1=2';
+        }
+
+        $clause .= ' AND ' . $securityClause;
 
         $result = array();        
         $resList = ResModel::getDocsByClause(

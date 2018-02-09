@@ -15,6 +15,9 @@
 
 namespace Core\Models;
 
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
+
 class SecurityModelAbstract
 {
 

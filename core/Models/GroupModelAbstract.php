@@ -15,6 +15,8 @@
 
 namespace Core\Models;
 
+use SrcCore\models\DatabaseModel;
+
 class GroupModelAbstract
 {
     public static function get(array $aArgs = [])
@@ -30,7 +32,7 @@ class GroupModelAbstract
         return $aGroups;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
@@ -42,14 +44,10 @@ class GroupModelAbstract
             'data'      => [$aArgs['id']]
         ]);
 
-        if (empty($aGroups[0])) {
-            return [];
-        }
-
         return $aGroups[0];
     }
 
-    public static function getByGroupId(array $aArgs = [])
+    public static function getByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
@@ -60,10 +58,6 @@ class GroupModelAbstract
             'where'     => ['group_id = ?'],
             'data'      => [$aArgs['groupId']]
         ]);
-
-        if (empty($aGroups[0])) {
-            return [];
-        }
 
         return $aGroups[0];
     }
@@ -175,15 +169,16 @@ class GroupModelAbstract
         return true;
     }
 
-    public static function getUsersByGroupId(array $aArgs = [])
+    public static function getUsersByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['usergroup_content'],
-            'where'     => ['group_id = ?'],
+            'table'     => ['usergroup_content, users'],
+            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.user_id'],
             'data'      => [$aArgs['groupId']]
         ]);
 

@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+
 
 declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
 
+
 @Component({
     templateUrl : angularGlobals["notifications-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
@@ -20,6 +22,15 @@ export class NotificationsAdministrationComponent implements OnInit {
     loading                     : boolean   = false;
     lang                        : any       = LANG;
 
+    displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
+    dataSource = new MatTableDataSource(this.notifications);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -34,14 +45,20 @@ export class NotificationsAdministrationComponent implements OnInit {
             .subscribe((data : any) => {
                 this.notifications = data.notifications;
                 this.loading = false;
+                setTimeout(() => {
+                    this.dataSource           = new MatTableDataSource(this.notifications);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort      = this.sort;
+                }, 0);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
 
     updateBreadcrumb(applicationName: string) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > "+
-                                            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.admin_notifications;
+        if ($j('#ariane')[0]) {
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > "+this.lang.notifications;
+        }
     }
 
     deleteNotification(notification : any) {
@@ -51,7 +68,12 @@ export class NotificationsAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/notifications/' + notification.notification_sid)
                 .subscribe((data : any) => {
                     this.notifications = data.notifications;
-                    this.notify.success(data.success);
+                    setTimeout(() => {
+                        this.dataSource           = new MatTableDataSource(this.notifications);
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort      = this.sort;
+                    }, 0);
+                    this.notify.success(this.lang.notificationDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

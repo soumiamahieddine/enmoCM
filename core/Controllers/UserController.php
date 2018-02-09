@@ -16,13 +16,12 @@
 namespace Core\Controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\CoreConfigModel;
 use Core\Models\GroupModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
-use Entities\Models\EntityModel;
 use Entities\Models\ListModelsModel;
+use Entity\models\EntityModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use Psr\Http\Message\RequestInterface;
@@ -30,6 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 
 
 class UserController
@@ -309,7 +309,7 @@ class UserController
             'recordId'     => $user['user_id'],
             'eventType'    => 'RET',
             'eventId'      => 'userabs',
-            'info'          => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+            'info'         => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
         ]);
 
         return $response->withJson([

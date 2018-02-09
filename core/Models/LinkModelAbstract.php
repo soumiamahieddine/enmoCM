@@ -16,6 +16,8 @@
 namespace Core\Models;
 
 
+use SrcCore\models\DatabaseModel;
+
 class LinkModelAbstract
 {
     public static function getByResId(array $aArgs)

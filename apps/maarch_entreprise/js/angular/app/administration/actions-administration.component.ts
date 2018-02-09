@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+
 
 declare function $j(selector: any) : any;
 
@@ -10,7 +12,6 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["actions-administrationView"],
-    styleUrls   : [],
     providers   : [NotificationService]
 })
 
@@ -23,7 +24,16 @@ export class ActionsAdministrationComponent implements OnInit {
     titles                  : any[]         = [];
 
     loading                 : boolean       = false;
-    data                    : any           = [];
+
+    displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
+    dataSource = new MatTableDataSource(this.actions);
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -42,13 +52,14 @@ export class ActionsAdministrationComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
 
-        this.http.get(this.coreUrl + 'rest/administration/actions')
+        this.http.get(this.coreUrl + 'rest/actions')
             .subscribe((data) => {
                 this.actions = data['actions'];
-                this.data = this.actions;
                 this.loading = false;
                 setTimeout(() => {
-                    $j("[md2sortby='id']").click();
+                    this.dataSource           = new MatTableDataSource(this.actions);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort      = this.sort;
                 }, 0);
             }, (err) => {
                 console.log(err);
@@ -62,13 +73,15 @@ export class ActionsAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe((data : any) => {
-                    this.data = data.action;
-                    this.notify.success(this.lang.actionDeleted+' « '+action.label_action+' »');
+                    this.actions              = data.action;
+                    this.dataSource           = new MatTableDataSource(this.actions);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort      = this.sort;
+                    this.notify.success(this.lang.actionDeleted);
                     
                 }, (err) => {
                     this.notify.error(JSON.parse(err._body).errors);
                 });
         }
     }
-
 }

@@ -14,6 +14,7 @@ var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var GroupAdministrationComponent = /** @class */ (function () {
     function GroupAdministrationComponent(http, route, router, notify) {
         this.http = http;
@@ -25,8 +26,22 @@ var GroupAdministrationComponent = /** @class */ (function () {
             security: {}
         };
         this.loading = false;
+        this.displayedColumns = ['firstname', 'lastname', 'actions'];
     }
+    GroupAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     GroupAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.groupCreation;
+        }
+        else {
+            breadCrumb += this.lang.groupModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     GroupAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -36,13 +51,20 @@ var GroupAdministrationComponent = /** @class */ (function () {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
                 _this.loading = false;
+                _this.updateBreadcrumb(angularGlobals.applicationName);
             }
             else {
                 _this.creationMode = false;
                 _this.http.get(_this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe(function (data) {
+                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.group = data['group'];
                     _this.loading = false;
+                    setTimeout(function () {
+                        _this.dataSource = new material_1.MatTableDataSource(_this.group.users);
+                        _this.dataSource.paginator = _this.paginator;
+                        _this.dataSource.sort = _this.sort;
+                    }, 0);
                 }, function () {
                     location.href = "index.php";
                 });
@@ -55,7 +77,7 @@ var GroupAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + "rest/groups", this.group)
                 .subscribe(function (data) {
                 _this.notify.success(_this.lang.groupAdded);
-                _this.router.navigate(["/administration/groups/" + data.group.id]);
+                _this.router.navigate(["/administration/groups/" + data.group]);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -71,7 +93,6 @@ var GroupAdministrationComponent = /** @class */ (function () {
     };
     GroupAdministrationComponent.prototype.updateService = function (service) {
         var _this = this;
-        service.checked = !service.checked;
         this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
             .subscribe(function (data) {
             _this.notify.success(_this.lang.groupUpdated);
@@ -80,6 +101,17 @@ var GroupAdministrationComponent = /** @class */ (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    GroupAdministrationComponent.prototype.toggleKeywordHelp = function () {
+        $j('#keywordHelp').toggle("slow");
+    };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], GroupAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], GroupAdministrationComponent.prototype, "sort", void 0);
     GroupAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["group-administrationView"],

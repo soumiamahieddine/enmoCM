@@ -15,8 +15,8 @@
 
 namespace Notes\Models;
 
-use Core\Models\DatabaseModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\DatabaseModel;
 
 class NoteModelAbstract
 {

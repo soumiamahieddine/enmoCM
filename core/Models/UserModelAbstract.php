@@ -1,22 +1,24 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /**
-* @brief User Model
-* @author dev@maarch.org
-* @ingroup core
-*/
+ * @brief User Model
+ * @author dev@maarch.org
+ * @ingroup core
+ */
 
 namespace Core\Models;
 
-use Entities\Models\EntityModel;
+use Entity\models\EntityModel;
 use History\controllers\HistoryController;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 
 class UserModelAbstract
 {
@@ -834,6 +836,4 @@ class UserModelAbstract
 
         return true;
     }
-
-
 }

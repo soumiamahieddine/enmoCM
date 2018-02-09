@@ -128,6 +128,9 @@ WITH (OIDS=FALSE);
 ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
 ALTER TABLE entities ADD entity_full_name text;
 
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT 'org_123456789_Archives';
+
 /*PERFS ON VIEW*/
 DROP VIEW IF EXISTS res_view_letterbox;
 CREATE OR REPLACE VIEW res_view_letterbox AS 
