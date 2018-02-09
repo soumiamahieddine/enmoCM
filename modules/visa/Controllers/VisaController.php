@@ -20,7 +20,7 @@ use Core\Models\ContactModel;
 use SrcCore\models\LinkModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
-use SrcCore\models\DocserverModel;
+use Docserver\models\DocserverModel;
 use Core\Models\ServiceModel;
 use Entity\models\ListInstanceModel;
 use Notes\Models\NoteModel;

@@ -148,12 +148,12 @@ $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
 //Docservers
-$app->get('/docservers', \SrcCore\controllers\DocserverController::class . ':get');
-$app->get('/docservers/{id}', \SrcCore\controllers\DocserverController::class . ':getById');
+$app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
+$app->get('/docservers/{id}', \Docserver\controllers\DocserverController::class . ':getById');
 
 //DocserverTypes
-$app->get('/docserverTypes', \SrcCore\controllers\DocserverTypeController::class . ':get');
-$app->get('/docserverTypes/{id}', \SrcCore\controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
+$app->get('/docserverTypes/{id}', \Docserver\controllers\DocserverTypeController::class . ':getById');
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');

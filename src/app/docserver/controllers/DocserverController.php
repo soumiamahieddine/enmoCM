@@ -13,13 +13,14 @@
 * @ingroup core
 */
 
-namespace SrcCore\controllers;
+namespace Docserver\controllers;
 
 use Core\Models\ServiceModel;
 use Core\Models\ValidatorModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use SrcCore\models\DocserverModel;
+use Docserver\models\DocserverModel;
+use SrcCore\controllers\StoreController;
 
 class DocserverController
 {

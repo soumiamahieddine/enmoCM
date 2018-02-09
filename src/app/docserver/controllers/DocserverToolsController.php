@@ -13,12 +13,12 @@
 * @ingroup core
 */
 
-namespace SrcCore\controllers;
+namespace Docserver\controllers;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use SrcCore\models\DocserverModel;
+use Docserver\models\DocserverModel;
 
 class DocserverToolsController
 {

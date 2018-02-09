@@ -15,7 +15,7 @@ class DocserverControllerTest extends TestCase
 {
     public function testGetList()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $environment = \Slim\Http\Environment::mock(
             [
@@ -34,7 +34,7 @@ class DocserverControllerTest extends TestCase
 
     /*public function testGetById()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $environment = \Slim\Http\Environment::mock(
             [
@@ -59,7 +59,7 @@ class DocserverControllerTest extends TestCase
 
     // public function testCreate()
     // {
-    //     $action = new \SrcCore\controllers\DocserverController();
+    //     $action = new \Docserver\controllers\DocserverController();
 
     //     $query  = 'id=TEST&';
     //     $query .= 'label_status=TEST';
@@ -89,7 +89,7 @@ class DocserverControllerTest extends TestCase
 
     // public function testUpdate()
     // {
-    //     $action = new \SrcCore\controllers\DocserverController();
+    //     $action = new \Docserver\controllers\DocserverController();
 
     //     $query  = 'id=TEST&';
     //     $query .= 'label_status=TEST AFTER UP';
@@ -119,7 +119,7 @@ class DocserverControllerTest extends TestCase
 
     // public function testDelete()
     // {
-    //     $action = new \SrcCore\controllers\DocserverController();
+    //     $action = new \Docserver\controllers\DocserverController();
 
     //     $environment = \Slim\Http\Environment::mock(
     //         [
@@ -140,7 +140,7 @@ class DocserverControllerTest extends TestCase
 
     public function testGetDocserverToInsert()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $aArgs = [
             'collId' => 'letterbox_coll'
@@ -156,7 +156,7 @@ class DocserverControllerTest extends TestCase
 
     public function testCheckSize()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $aArgs = [
             'collId' => 'letterbox_coll'
@@ -176,7 +176,7 @@ class DocserverControllerTest extends TestCase
 
     public function testSetSize()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $aArgs = [
             'collId' => 'letterbox_coll'
@@ -196,7 +196,7 @@ class DocserverControllerTest extends TestCase
 
     public function testGetNextFileNameInDocserver()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $aArgs = [
             'pathOnDocserver' => '/opt/maarch/new_docservers/MaarchCourrierGit/manual/2017/02/'
@@ -209,7 +209,7 @@ class DocserverControllerTest extends TestCase
 
     public function testStoreResourceOnDocserver()
     {
-        $action = new \SrcCore\controllers\DocserverController();
+        $action = new \Docserver\controllers\DocserverController();
 
         $path = $_SESSION['config']['tmppath'] . '/test/';
 

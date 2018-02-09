@@ -10,10 +10,10 @@
 /**
  * @brief Link Model
  * @author dev@maarch.org
- * @ingroup core
+ * @ingroup link
  */
 
-namespace SrcCore\models;
+namespace Link\models;
 
 class LinkModel extends LinkModelAbstract
 {

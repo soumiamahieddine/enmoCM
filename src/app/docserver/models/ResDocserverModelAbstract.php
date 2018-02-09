@@ -13,9 +13,10 @@
 * @ingroup core
 */
 
-namespace SrcCore\models;
+namespace Docserver\models;
 
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class ResDocserverModelAbstract
 {
@@ -24,7 +25,7 @@ class ResDocserverModelAbstract
      * Retrieve the path of source file to process
      * @param string $resTable resource table
      * @param string $adrTable adr table
-     * @param bigint $resId Id of the resource to process 
+     * @param bigint $resId Id of the resource to process
      * @param string $adrType type of the address
      * $resTable, $adrTable, $resId, $adrType = 'DOC'
      * @return string
@@ -43,7 +44,7 @@ class ResDocserverModelAbstract
             $table = $aArgs['resTable'];
             $where = ['res_id=?'];
             $data  = [$aArgs['resId']];
-        } else {   
+        } else {
             $table = $aArgs['adrTable'];
             $where = ['res_id = ?', 'adr_type = ?'];
             $data  = [$aArgs['resId'], $aArgs['adrType']];
@@ -69,12 +70,12 @@ class ResDocserverModelAbstract
         if (isset($aReturn[0]['filename'])) {
             $resFilename = $aReturn[0]['filename'];
         }
-        if (isset($aReturn[0]['offset_doc']) 
+        if (isset($aReturn[0]['offset_doc'])
             && $aReturn[0]['offset_doc'] <> ''
             && $aReturn[0]['offset_doc'] <> ' '
         ) {
-            $sourceFilePath = $aReturn[0]['path'] 
-                . $aReturn[0]['filename'] 
+            $sourceFilePath = $aReturn[0]['path']
+                . $aReturn[0]['filename']
                 . DIRECTORY_SEPARATOR . $aReturn[0]['offset_doc'];
         } else {
             $sourceFilePath = $resPath . $resFilename;

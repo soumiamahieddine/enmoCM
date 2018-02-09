@@ -12,7 +12,7 @@
 * @author dev@maarch.org
 * @ingroup core
 */
-namespace SrcCore\models;
+namespace Docserver\models;
 
 class DocserverModel extends DocserverModelAbstract
 {

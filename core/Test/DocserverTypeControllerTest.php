@@ -14,7 +14,7 @@ class DocserverTypeControllerTest extends TestCase
 {
     public function testGetList()
     {
-        $action = new \SrcCore\controllers\DocserverTypeController();
+        $action = new \Docserver\controllers\DocserverTypeController();
 
         $environment = \Slim\Http\Environment::mock(
             [
@@ -33,7 +33,7 @@ class DocserverTypeControllerTest extends TestCase
 
     public function testGetById()
     {
-        $action = new \SrcCore\controllers\DocserverTypeController();
+        $action = new \Docserver\controllers\DocserverTypeController();
 
         $environment = \Slim\Http\Environment::mock(
             [
@@ -61,7 +61,7 @@ class DocserverTypeControllerTest extends TestCase
 
     public function testCreate()
     {
-        $action = new \SrcCore\controllers\DocserverTypeController();
+        $action = new \Docserver\controllers\DocserverTypeController();
 
         $query  = 'docserver_type_id=TEST&';
         $query .= 'docserver_type_label=TEST&';
@@ -101,7 +101,7 @@ class DocserverTypeControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $action = new \SrcCore\controllers\DocserverTypeController();
+        $action = new \Docserver\controllers\DocserverTypeController();
 
         $query  = 'docserver_type_id=TEST&';
         $query .= 'docserver_type_label=TEST&';
@@ -141,7 +141,7 @@ class DocserverTypeControllerTest extends TestCase
 
     public function testDelete()
     {
-        $action = new \SrcCore\controllers\DocserverTypeController();
+        $action = new \Docserver\controllers\DocserverTypeController();
 
         $environment = \Slim\Http\Environment::mock(
             [

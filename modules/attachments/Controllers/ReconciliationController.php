@@ -7,10 +7,10 @@ use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Attachments\Models\AttachmentsModel;
 use Resource\controllers\ResController;
-use SrcCore\models\DocserverModel;
-use SrcCore\models\DocserverTypeModel;
-use SrcCore\controllers\DocserverController;
-use SrcCore\controllers\DocserverToolsController;
+use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
+use Docserver\controllers\DocserverController;
+use Docserver\controllers\DocserverToolsController;
 use Core\Models\ResModel;
 
 
