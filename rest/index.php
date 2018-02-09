@@ -244,13 +244,13 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
 $app->post('/notifications', \Notification\controllers\NotificationController::class . ':create');
+$app->get('/notifications/schedule', \Notification\controllers\NotificationScheduleController::class . ':get');
+$app->post('/notifications/schedule', \Notification\controllers\NotificationScheduleController::class . ':create');
 $app->put('/notifications/{id}', \Notification\controllers\NotificationController::class . ':update');
 $app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
 $app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 
-$app->get('/notificationsSchedule', \Notification\controllers\NotificationScheduleController::class . ':get');
-$app->post('/notificationsSchedule', \Notification\controllers\NotificationScheduleController::class . ':create');
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
 
 //Reports

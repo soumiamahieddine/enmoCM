@@ -64,6 +64,16 @@ var NotificationAdministrationComponent = /** @class */ (function () {
         });
         this.updateBreadcrumb(angularGlobals.applicationName);
     };
+    NotificationAdministrationComponent.prototype.createScript = function () {
+        var _this = this;
+        this.http.post(this.coreUrl + 'rest/scriptNotification', this.notification)
+            .subscribe(function (data) {
+            _this.notification.scriptcreated = data;
+            _this.notify.success(_this.lang.ScriptCreated);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+    };
     NotificationAdministrationComponent.prototype.selectAll = function (event) {
         var target = event.target.getAttribute("data-target");
         $j('#' + target + ' option').prop('selected', true);

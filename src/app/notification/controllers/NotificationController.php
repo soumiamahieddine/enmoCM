@@ -78,7 +78,28 @@ class NotificationController
 
         $notification['data'] = $data;
 
-        return $response->withJson(['notification'=>$notification]);
+        $filename = "notification";
+        $customId = CoreConfigModel::getCustomId();
+        if ($customId <> "") {
+            $filename.="_".str_replace(" ", "", $customId);
+        }
+        $filename .= "_".$notification['notification_sid'].".sh";
+
+        $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+        $corePath = str_replace("src/app/notification/controllers", "", $corePath);
+        if ($customId <> '') {
+            $pathToFolow = $corePath . 'custom/'.$customId. '/';
+        } else {
+            $pathToFolow = $corePath;
+        }
+
+        $notification["scriptcreated"] = false;
+
+        if (file_exists($pathToFolow.'modules/notifications/batch/scripts/'.$filename)) {
+            $notification["scriptcreated"] = true;
+        }
+
+        return $response->withJson(['notification' => $notification]);
     }
 
     public function create(Request $request, Response $response)
@@ -145,6 +166,7 @@ class NotificationController
 
         $data                     = $request->getParams();
         $data['notification_sid'] = $aArgs['id'];
+        unset($data['scriptcreated']);
 
         $errors = $this->control($data, 'update');
       
@@ -211,7 +233,8 @@ class NotificationController
 
             $flagCron = false;
 
-            $corePath = dirname(__FILE__, 5) . '/';
+            $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+            $corePath = str_replace("src/app/notification/controllers", "", $corePath);
             if ($customId <> '') {
                 $pathToFolow = $corePath . 'custom/'.$customId. '/';
             } else {

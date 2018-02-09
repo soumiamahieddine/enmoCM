@@ -73,7 +73,8 @@ class NotificationScheduleController
         $aNotification      = NotificationModel::getEnableNotifications(['select' => ['notification_sid', 'description']]);
         $notificationsArray = array();
         $customId           = CoreConfigModel::getCustomId();
-        $corePath           = dirname(__FILE__, 5) . '/';
+        $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+        $corePath = str_replace("src/app/notification/controllers", "", $corePath);
 
         foreach ($aNotification as $result) {
             $filename = "notification";
@@ -102,7 +103,8 @@ class NotificationScheduleController
     {
         $customId          = CoreConfigModel::getCustomId();
         $crontabBeforeSave = NotificationScheduleModel::getCrontab();
-        $corePath          = dirname(__FILE__, 5) . '/';
+        $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+        $corePath = str_replace("src/app/notification/controllers", "", $corePath);
         foreach ($crontabToSave as $id => $cronValue) {
             if ($cronValue['state'] != "hidden" && $crontabBeforeSave[$id]['state'] == "hidden") {
                 $returnValue = false;
@@ -158,5 +160,4 @@ class NotificationScheduleController
 
         return $response->withJson(true);
     }
-
 }

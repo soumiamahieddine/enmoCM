@@ -72,6 +72,7 @@
                 <div class="col-sm-12 panel-body" style="text-align:center;">
                     <button mat-raised-button color="primary" type="submit" [disabled]="!notificationsFormUp.form.valid">{{lang.validate}}</button>
                     <button mat-raised-button routerLink='/administration/notifications'>{{lang.cancel}}</button>
+                    <button mat-raised-button type="button" *ngIf="!notification.scriptcreated" (click)="createScript()">{{lang.createScriptNotification}}</button>
                 </div>
             </form>
         </div>

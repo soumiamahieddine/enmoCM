@@ -69,7 +69,8 @@ class NotificationScheduleModelAbstract
         $lines    = explode("\n", $crontab);
         $data     = array();
         $customId = CoreConfigModel::getCustomId();
-        $corePath = dirname(__FILE__, 5) . '/';
+        $corePath = str_replace("custom/".$customId."/src/app/notification/models", "", __DIR__);
+        $corePath = str_replace("src/app/notification/models", "", $corePath);
 
         foreach ($lines as $cronLine) {
             $cronLine = trim($cronLine);
@@ -127,7 +128,8 @@ class NotificationScheduleModelAbstract
         }
         $filename.="_".$notification_sid.".sh";
 
-        $corePath = dirname(__FILE__, 5) . '/';
+        $corePath = str_replace("custom/".$customId."/src/app/notification/models", "", __DIR__);
+        $corePath = str_replace("src/app/notification/models", "", $corePath);
 
         if (file_exists($corePath. 'custom/'.$customId .'/modules/notifications/batch/config/config.xml')) {
             $ConfigNotif = $corePath. 'custom/'. $customId .'/modules/notifications/batch/config/config.xml';

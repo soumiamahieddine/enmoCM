@@ -27,12 +27,13 @@ import { HistoryAdministrationComponent }               from './history-administ
 import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
+import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 
 
 @NgModule({
     imports:      [
-        CommonModule,
+        CommonModule, 
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
@@ -61,6 +62,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         HistoryBatchAdministrationComponent,
         UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
+        NotificationsScheduleAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent

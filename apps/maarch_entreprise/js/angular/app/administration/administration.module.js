@@ -33,6 +33,7 @@ var history_administration_component_1 = require("./history-administration.compo
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var update_status_administration_component_1 = require("./update-status-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
+var notifications_schedule_administration_component_1 = require("./notifications-schedule-administration.component");
 var notification_administration_component_1 = require("./notification-administration.component");
 var AdministrationModule = /** @class */ (function () {
     function AdministrationModule() {
@@ -69,6 +70,7 @@ var AdministrationModule = /** @class */ (function () {
                 historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
                 update_status_administration_component_1.UpdateStatusAdministrationComponent,
                 notifications_administration_component_1.NotificationsAdministrationComponent,
+                notifications_schedule_administration_component_1.NotificationsScheduleAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent

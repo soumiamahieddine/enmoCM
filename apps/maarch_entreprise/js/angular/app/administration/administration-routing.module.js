@@ -27,6 +27,7 @@ var priority_administration_component_1 = require("./priority-administration.com
 var reports_administration_component_1 = require("./reports-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
 var notification_administration_component_1 = require("./notification-administration.component");
+var notifications_schedule_administration_component_1 = require("./notifications-schedule-administration.component");
 var history_administration_component_1 = require("./history-administration.component");
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var update_status_administration_component_1 = require("./update-status-administration.component");
@@ -63,6 +64,7 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/actions/:id', component: action_administration_component_1.ActionAdministrationComponent },
                     { path: 'administration/notifications', component: notifications_administration_component_1.NotificationsAdministrationComponent },
                     { path: 'administration/notifications/new', component: notification_administration_component_1.NotificationAdministrationComponent },
+                    { path: 'administration/notifications/schedule', component: notifications_schedule_administration_component_1.NotificationsScheduleAdministrationComponent },
                     { path: 'administration/notifications/:identifier', component: notification_administration_component_1.NotificationAdministrationComponent },
                     { path: 'administration/history', component: history_administration_component_1.HistoryAdministrationComponent },
                     { path: 'administration/historyBatch', component: historyBatch_administration_component_1.HistoryBatchAdministrationComponent },

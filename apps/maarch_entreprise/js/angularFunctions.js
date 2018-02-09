@@ -27,6 +27,7 @@ function triggerAngular(prodmode, locationToGo) {
         'priority-administration',
         'reports-administration',
         'notifications-administration',
+        'notifications-schedule-administration',
         'notification-administration'
     ];
 

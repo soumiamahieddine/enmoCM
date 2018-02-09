@@ -10,6 +10,9 @@
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-12">
         <div class="example-container">
+            <button mat-icon-button color="primary" matTooltip="{{lang.toSchedule}}" routerLink="/administration/notifications/schedule">
+                {{lang.toSchedule}}
+            </button>
             <mat-grid-list cols="3" rowHeight="100px">
                 <mat-grid-tile>
                     <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
