@@ -194,7 +194,8 @@ class BasketModelAbstract
     public static function createGroupAction(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'actionId', 'whereClause', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
+        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'whereClause', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
+        ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
             'table'         => 'actions_groupbaskets',
@@ -230,7 +231,8 @@ class BasketModelAbstract
     public static function createGroupActionRedirect(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'redirectMode']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'actionId', 'entityId', 'keyword', 'redirectMode']);
+        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'entityId', 'keyword', 'redirectMode']);
+        ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket_redirect',
@@ -280,7 +282,8 @@ class BasketModelAbstract
     public static function createGroupActionStatus(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'statusId']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'actionId', 'statusId']);
+        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'statusId']);
+        ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket_status',
