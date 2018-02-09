@@ -248,6 +248,10 @@ $app->delete('/notifications/{id}', \Notification\controllers\NotificationContro
 $app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 
+$app->get('/notificationsSchedule', \Notification\controllers\NotificationScheduleController::class . ':get');
+$app->post('/notificationsSchedule', \Notification\controllers\NotificationScheduleController::class . ':create');
+$app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
+
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');

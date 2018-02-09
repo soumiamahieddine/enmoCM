@@ -18,6 +18,7 @@ namespace Notification\controllers;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Notification\models\NotificationModel;
+use Notification\models\NotificationScheduleModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -120,7 +121,7 @@ class NotificationController
         if (NotificationModel::create($data)) {
             if (PHP_OS == "Linux") {
                 $notificationAdded = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
-                NotificationScheduleController::createScriptNotification($notificationAdded['notification_sid'], $data['notification_id']);
+                NotificationScheduleModel::createScriptNotification(['notification_sid' => $notificationAdded['notification_sid'], 'notification_id' => $data['notification_id']]);
             }
 
             HistoryController::add([
@@ -160,7 +161,7 @@ class NotificationController
         $notification = NotificationModel::getById(['notification_sid' => $data['notification_sid']]);
 
         if (PHP_OS == "Linux") {
-            NotificationScheduleController::createScriptNotification($data['notification_sid'], $notification['notification_id']);
+            NotificationScheduleModel::createScriptNotification(['notification_sid' => $data['notification_sid'], 'notification_id' => $notification['notification_id']]);
         }
 
         HistoryController::add([
@@ -206,7 +207,7 @@ class NotificationController
             }
             $filename.="_".$aArgs['id'].".sh";
 
-            $cronTab = NotificationScheduleController::getCrontab();
+            $cronTab = NotificationScheduleModel::getCrontab();
 
             $flagCron = false;
 
@@ -226,7 +227,7 @@ class NotificationController
             }
 
             if ($flagCron) {
-                NotificationScheduleController::saveCrontab($cronTab);
+                NotificationScheduleModel::saveCrontab($cronTab);
             }
             
             unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);

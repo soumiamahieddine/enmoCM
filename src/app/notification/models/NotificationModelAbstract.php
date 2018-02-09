@@ -328,7 +328,7 @@ class NotificationModelAbstract
         return $status;
     }
 
-    public static function getEnableNotifications()
+    public static function getEnableNotifications(array $aArgs = [])
     {
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
