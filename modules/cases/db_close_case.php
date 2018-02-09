@@ -47,7 +47,9 @@ if ($_GET['case_id'])
 			$_SESSION['info'] =  _THIS_CASE_IS_CLOSED;
 			?>
 			<script type="text/javascript">
-			window.parent.top.location.reload();self.close();
+			
+			window.parent.top.location.href = 'index.php?page=details_cases&module=cases&id='+<?php echo $case_id; ?>;
+			self.close();
 			</script>
 			<?php
 		}
