@@ -210,6 +210,7 @@ $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
+$app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');

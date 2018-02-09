@@ -153,6 +153,13 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
+        $aEntities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        foreach ($aEntities as $aEntity) {
+            if ($aEntity['entity_id'] == $aArgs['id'] && $aEntity['allowed'] == false) {
+                return $response->withStatus(403)->withJson(['errors' => 'Entity out of perimeter']);
+            }
+        }
+
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['entity_label']);
@@ -303,5 +310,49 @@ class EntityController
         }
 
         return $response->withJson(['entities' => $entities]);
+    }
+
+    public function updateStatus(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $entity = EntityModel::getById(['entityId' => $aArgs['id'], 'select' => [1]]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $aEntities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        foreach ($aEntities as $aEntity) {
+            if ($aEntity['entity_id'] == $aArgs['id'] && $aEntity['allowed'] == false) {
+                return $response->withStatus(403)->withJson(['errors' => 'Entity out of perimeter']);
+            }
+        }
+
+        $data = $request->getParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['method']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if ($data['method'] == 'disable') {
+            $status = 'N';
+        } else {
+            $status = 'Y';
+        }
+        $fatherAndSons = EntityModel::getEntityChildren(['entityId' => $aArgs['id']]);
+
+        EntityModel::update(['set' => ['enabled' => $status], 'where' => ['entity_id in (?)'], 'data' => [$fatherAndSons]]);
+        HistoryController::add([
+            'tableName' => 'entities',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _ENTITY_MODIFICATION . " : {$aArgs['id']}",
+            'moduleId'  => 'entity',
+            'eventId'   => 'entityModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 }
