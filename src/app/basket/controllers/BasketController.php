@@ -524,7 +524,7 @@ class BasketController
             if ($groupAction['checked']) {
                 $actionExists = false;
                 foreach ($actions as $action) {
-                    if ($action['id'] == $groupAction['id_action']) {
+                    if ($action['id'] == $groupAction['id']) {
                         $actionExists = true;
                     }
                 }
