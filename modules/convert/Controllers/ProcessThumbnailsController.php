@@ -31,8 +31,8 @@ use Respect\Validation\Validator;
 use Convert\Models\ProcessThumbnailsModel;
 use Core\Models\DocserverModel;
 use Core\Models\ResDocserverModel;
-use Core\Controllers\LogsController;
-use Core\Controllers\StoreController;
+use SrcCore\controllers\LogsController;
+use SrcCore\controllers\StoreController;
 
 class ProcessThumbnailsController
 {

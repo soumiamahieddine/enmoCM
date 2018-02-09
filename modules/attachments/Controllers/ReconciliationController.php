@@ -9,8 +9,8 @@ use Attachments\Models\AttachmentsModel;
 use Core\Controllers\ResController;
 use Core\Models\DocserverModel;
 use Core\Models\DocserverTypeModel;
-use Core\Controllers\DocserverController;
-use Core\Controllers\DocserverToolsController;
+use SrcCore\controllers\DocserverController;
+use SrcCore\controllers\DocserverToolsController;
 use Core\Models\ResModel;
 
 

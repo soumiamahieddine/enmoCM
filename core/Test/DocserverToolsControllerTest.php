@@ -15,7 +15,7 @@ class DocserverToolsControllerTest extends TestCase
 {
     public function testSetRights()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $aArgs = [
             'path' => '/opt/maarch/docservers/'
@@ -28,7 +28,7 @@ class DocserverToolsControllerTest extends TestCase
 
     public function testDoFingerprint()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
@@ -55,7 +55,7 @@ class DocserverToolsControllerTest extends TestCase
 
     public function testControlFingerprint()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
@@ -82,7 +82,7 @@ class DocserverToolsControllerTest extends TestCase
 
     public function testCopyOnDocserver()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $path = $_SESSION['config']['tmppath'] . '/test/';
 
@@ -111,7 +111,7 @@ class DocserverToolsControllerTest extends TestCase
 
     public function testWashTmp()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $path = $_SESSION['config']['tmppath'] . '/test/';
         
@@ -131,7 +131,7 @@ class DocserverToolsControllerTest extends TestCase
 
     public function testCreatePathOnDocServer()
     {
-        $action = new \Core\Controllers\DocserverToolsController();
+        $action = new \SrcCore\controllers\DocserverToolsController();
 
         $aArgs = [
             'path' => '/opt/maarch/new_docservers/MaarchCourrierGit/manual/'

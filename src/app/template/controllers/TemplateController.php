@@ -14,7 +14,7 @@
 
 namespace Template\controllers;
 
-use Core\Controllers\DocserverController;
+use SrcCore\controllers\DocserverController;
 use Core\Models\DocserverModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

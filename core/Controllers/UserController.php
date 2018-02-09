@@ -30,7 +30,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-
+use SrcCore\controllers\StoreController;
 
 class UserController
 {

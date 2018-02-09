@@ -13,7 +13,7 @@
  * @ingroup core
  */
 
-namespace Core\Controllers;
+namespace SrcCore\controllers;
 
 use Attachments\Models\AttachmentsModel;
 use Core\Models\ChronoModel;

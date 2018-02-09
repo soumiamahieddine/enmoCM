@@ -15,7 +15,7 @@
 
 namespace Attachments\Controllers;
 
-use Core\Controllers\StoreController;
+use SrcCore\controllers\StoreController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
