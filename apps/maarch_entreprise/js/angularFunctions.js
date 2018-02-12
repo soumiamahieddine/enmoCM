@@ -12,6 +12,8 @@ function triggerAngular(prodmode, locationToGo) {
         'baskets-administration',
         'baskets-order-administration',
         'basket-administration',
+        'entities-administration',
+        'entity-administration',
         'status-administration',
         'statuses-administration',
         'actions-administration',

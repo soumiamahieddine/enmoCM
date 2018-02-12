@@ -1,29 +1,31 @@
-import { NgModule }              from '@angular/core';
-import { RouterModule }  from '@angular/router';
+import { NgModule }     from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import { AdministrationComponent }              from './administration.component';
-import { UsersAdministrationComponent }         from './users-administration.component';
-import { UserAdministrationComponent }          from './user-administration.component';
-import { GroupsAdministrationComponent }        from './groups-administration.component';
-import { GroupAdministrationComponent }         from './group-administration.component';
-import { BasketsAdministrationComponent }       from './baskets-administration.component';
-import { BasketsOrderAdministrationComponent }  from './baskets-order-administration.component';
-import { BasketAdministrationComponent }        from './basket-administration.component';
-import { StatusesAdministrationComponent }      from './statuses-administration.component';
-import { StatusAdministrationComponent }        from './status-administration.component';
-import { ActionsAdministrationComponent }       from './actions-administration.component';
-import { ActionAdministrationComponent }        from './action-administration.component';
-import { ParameterAdministrationComponent }     from './parameter-administration.component';
-import { ParametersAdministrationComponent }    from './parameters-administration.component';
-import { PrioritiesAdministrationComponent }    from './priorities-administration.component';
-import { PriorityAdministrationComponent }      from './priority-administration.component';
-import { ReportsAdministrationComponent }       from './reports-administration.component';
-import { NotificationsAdministrationComponent } from './notifications-administration.component';
-import { NotificationAdministrationComponent }  from './notification-administration.component';
-import { NotificationsScheduleAdministrationComponent }  from './notifications-schedule-administration.component';
-import { HistoryAdministrationComponent }       from './history-administration.component';
-import { HistoryBatchAdministrationComponent }  from './historyBatch-administration.component';
-import { UpdateStatusAdministrationComponent }  from './update-status-administration.component';
+import { AdministrationComponent }                      from './administration.component';
+import { UsersAdministrationComponent }                 from './users-administration.component';
+import { UserAdministrationComponent }                  from './user-administration.component';
+import { GroupsAdministrationComponent }                from './groups-administration.component';
+import { GroupAdministrationComponent }                 from './group-administration.component';
+import { BasketsAdministrationComponent }               from './baskets-administration.component';
+import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
+import { BasketAdministrationComponent }                from './basket-administration.component';
+import { EntitiesAdministrationComponent }              from './entities-administration.component';
+import { EntityAdministrationComponent }                from './entity-administration.component';
+import { StatusesAdministrationComponent }              from './statuses-administration.component';
+import { StatusAdministrationComponent }                from './status-administration.component';
+import { ActionsAdministrationComponent }               from './actions-administration.component';
+import { ActionAdministrationComponent }                from './action-administration.component';
+import { ParameterAdministrationComponent }             from './parameter-administration.component';
+import { ParametersAdministrationComponent }            from './parameters-administration.component';
+import { PrioritiesAdministrationComponent }            from './priorities-administration.component';
+import { PriorityAdministrationComponent }              from './priority-administration.component';
+import { ReportsAdministrationComponent }               from './reports-administration.component';
+import { NotificationsAdministrationComponent }         from './notifications-administration.component';
+import { NotificationAdministrationComponent }          from './notification-administration.component';
+import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
+import { HistoryAdministrationComponent }               from './history-administration.component';
+import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
+import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 
  
 @NgModule({
@@ -40,6 +42,9 @@ import { UpdateStatusAdministrationComponent }  from './update-status-administra
             { path: 'administration/baskets-sorted', component: BasketsOrderAdministrationComponent },
             { path: 'administration/baskets/new', component: BasketAdministrationComponent },
             { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
+            { path: 'administration/entities', component: EntitiesAdministrationComponent },
+            { path: 'administration/entities/new', component: EntityAdministrationComponent },
+            { path: 'administration/entities/:id', component: EntityAdministrationComponent },
             { path: 'administration/statuses', component: StatusesAdministrationComponent },
             { path: 'administration/statuses/new', component: StatusAdministrationComponent },
             { path: 'administration/statuses/:identifier', component: StatusAdministrationComponent },

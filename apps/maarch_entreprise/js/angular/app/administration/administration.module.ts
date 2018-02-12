@@ -1,19 +1,21 @@
-import { NgModule }         from '@angular/core';
-import { CommonModule }     from '@angular/common';
-import { FormsModule, ReactiveFormsModule }      from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule }                             from '@angular/core';
+import { CommonModule }                         from '@angular/common';
+import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
+import { HttpClientModule }                     from '@angular/common/http';
 
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }                      from './administration.component';
-import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }  from './users-administration.component';
+import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }      from './users-administration.component';
+import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalComponent }    from './groups-administration.component';
 import { UserAdministrationComponent }                  from './user-administration.component';
-import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalComponent }                from './groups-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
 import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
 import { BasketAdministrationComponent }                from './basket-administration.component';
+import { EntitiesAdministrationComponent }              from './entities-administration.component';
+import { EntityAdministrationComponent }                from './entity-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
 import { ActionsAdministrationComponent }               from './actions-administration.component';
@@ -49,6 +51,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketsAdministrationComponent,
         BasketsOrderAdministrationComponent,
         BasketAdministrationComponent,
+        EntitiesAdministrationComponent,
+        EntityAdministrationComponent,
         StatusesAdministrationComponent,
         StatusAdministrationComponent,
         ActionsAdministrationComponent,

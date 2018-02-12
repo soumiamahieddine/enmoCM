@@ -40,6 +40,16 @@ class EntityController
         return $response->withJson(['entities' => $entities]);
     }
 
+    public function getById(Request $request, Response $response, array $aArgs)
+    {
+        $entity = EntityModel::getById(['entityId' => $aArgs['id']]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        return $response->withJson(['entity' => $entity]);
+    }
+
     public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {

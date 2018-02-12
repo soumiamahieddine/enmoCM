@@ -14,12 +14,14 @@ var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
-var user_administration_component_1 = require("./user-administration.component");
 var groups_administration_component_1 = require("./groups-administration.component");
+var user_administration_component_1 = require("./user-administration.component");
 var group_administration_component_1 = require("./group-administration.component");
 var baskets_administration_component_1 = require("./baskets-administration.component");
 var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
+var entities_administration_component_1 = require("./entities-administration.component");
+var entity_administration_component_1 = require("./entity-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -57,6 +59,8 @@ var AdministrationModule = /** @class */ (function () {
                 baskets_administration_component_1.BasketsAdministrationComponent,
                 baskets_order_administration_component_1.BasketsOrderAdministrationComponent,
                 basket_administration_component_1.BasketAdministrationComponent,
+                entities_administration_component_1.EntitiesAdministrationComponent,
+                entity_administration_component_1.EntityAdministrationComponent,
                 statuses_administration_component_1.StatusesAdministrationComponent,
                 status_administration_component_1.StatusAdministrationComponent,
                 actions_administration_component_1.ActionsAdministrationComponent,

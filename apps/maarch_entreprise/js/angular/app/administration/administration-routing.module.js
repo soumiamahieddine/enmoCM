@@ -16,6 +16,8 @@ var group_administration_component_1 = require("./group-administration.component
 var baskets_administration_component_1 = require("./baskets-administration.component");
 var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
+var entities_administration_component_1 = require("./entities-administration.component");
+var entity_administration_component_1 = require("./entity-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -49,6 +51,9 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/baskets-sorted', component: baskets_order_administration_component_1.BasketsOrderAdministrationComponent },
                     { path: 'administration/baskets/new', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/baskets/:id', component: basket_administration_component_1.BasketAdministrationComponent },
+                    { path: 'administration/entities', component: entities_administration_component_1.EntitiesAdministrationComponent },
+                    { path: 'administration/entities/new', component: entity_administration_component_1.EntityAdministrationComponent },
+                    { path: 'administration/entities/:id', component: entity_administration_component_1.EntityAdministrationComponent },
                     { path: 'administration/statuses', component: statuses_administration_component_1.StatusesAdministrationComponent },
                     { path: 'administration/statuses/new', component: status_administration_component_1.StatusAdministrationComponent },
                     { path: 'administration/statuses/:identifier', component: status_administration_component_1.StatusAdministrationComponent },

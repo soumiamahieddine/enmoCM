@@ -207,6 +207,7 @@ $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getById');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
