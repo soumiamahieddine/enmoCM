@@ -13,6 +13,7 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var BasketsAdministrationComponent = /** @class */ (function () {
     function BasketsAdministrationComponent(http, notify) {
         this.http = http;
@@ -20,7 +21,13 @@ var BasketsAdministrationComponent = /** @class */ (function () {
         this.lang = translate_component_1.LANG;
         this.baskets = [];
         this.loading = false;
+        this.displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
     }
+    BasketsAdministrationComponent.prototype.applyFilter = function (filterValue) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    };
     BasketsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Bannettes";
@@ -35,6 +42,11 @@ var BasketsAdministrationComponent = /** @class */ (function () {
             .subscribe(function (data) {
             _this.baskets = data['baskets'];
             _this.loading = false;
+            setTimeout(function () {
+                _this.dataSource = new material_1.MatTableDataSource(_this.baskets);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, 0);
         }, function () {
             location.href = "index.php";
         });
@@ -49,10 +61,17 @@ var BasketsAdministrationComponent = /** @class */ (function () {
             _this.notify.error(err.error.errors);
         });
     };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], BasketsAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], BasketsAdministrationComponent.prototype, "sort", void 0);
     BasketsAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["baskets-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])

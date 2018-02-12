@@ -13,7 +13,7 @@ import { UserAdministrationComponent }                  from './user-administrat
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
 import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
-import { BasketAdministrationComponent }                from './basket-administration.component';
+import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
 import { EntitiesAdministrationComponent }              from './entities-administration.component';
 import { EntityAdministrationComponent }                from './entity-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
@@ -69,11 +69,15 @@ import { NotificationAdministrationComponent }          from './notification-adm
         NotificationsScheduleAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
-        GroupsAdministrationRedirectModalComponent
+        GroupsAdministrationRedirectModalComponent,
+        BasketAdministrationSettingsModalComponent,
+        BasketAdministrationGroupListModalComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
-        GroupsAdministrationRedirectModalComponent
+        GroupsAdministrationRedirectModalComponent,
+        BasketAdministrationSettingsModalComponent,
+        BasketAdministrationGroupListModalComponent
     ],
 })
 export class AdministrationModule { }

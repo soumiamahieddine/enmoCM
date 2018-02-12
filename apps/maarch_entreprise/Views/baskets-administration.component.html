@@ -1,51 +1,60 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.baskets}}
+        <small>{{baskets.length}} {{lang.baskets}}</small>
+    </h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-inbox fa-2x"></i> {{lang.administration}}</h1>
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/baskets/new">
-                        <a title="{{lang.newElement}}"><i class="fa fa-user-plus"></i></a>
-                    </li>
-                </ul>
-            </div>
+    <div class="col-md-12">
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                    </mat-form-field>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="basket_id" matSortDirection="asc">
+                <ng-container matColumnDef="basket_id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.basket_id}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="basket_name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="basket_desc">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.basket_desc}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef style="text-align: right;padding: 10px">
+                        <button mat-mini-fab color="default" matTooltip="{{lang.basketsOrder}}">
+                            <mat-icon class="fa fa-list-ol" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/baskets/new">
+                            <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align: right;">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/baskets/{{element.basket_id}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="delete(element)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
         </div>
-    </nav>
-    <div class="col-md-12" style="margin-top: 1%">
-        <table id="usersTable" class="display" style="width: 100%" cellspacing="0" border="0">
-            <thead>
-                <tr>
-                    <th style="width:15%;" valign="bottom" align="left"><span>{{lang.id}}</span></th>
-                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.basket}}</span></th>
-                    <th style="width:20%;" valign="bottom" align="left"><span>{{lang.description}}</span></th>
-                    <th style="width:20%;"><span>&nbsp;</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let basket of baskets">
-                    <td>{{basket.basket_id}}</td>
-                    <td>{{basket.basket_name}}</td>
-                    <td>{{basket.basket_desc}}</td>
-                    <td style="text-align:right;">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button routerLink="/administration/baskets/{{basket.basket_id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
-                                <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                            </button>
-                            <button (click)="delete(basket)" type="button" class="btn btn-danger" title="{{lang.delete}}">
-                                <a><i style="cursor:pointer" class="fa fa-times"></i></a>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>

@@ -28,7 +28,10 @@ import {
     MatIconModule,
     MatDialogActions,
     MatDialogModule,
-    MatListModule
+    MatListModule,
+    MatChipsModule,
+    MatStepperModule,
+    MatRadioModule
 } from '@angular/material';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -60,7 +63,10 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatSnackBarModule,
         MatIconModule,
         MatDialogModule,
-        MatListModule
+        MatListModule,
+        MatChipsModule,
+        MatStepperModule,
+        MatRadioModule
     ],
     exports: [
         MatCheckboxModule,
@@ -87,7 +93,10 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatSnackBarModule,
         MatIconModule,
         MatDialogModule,
-        MatListModule
+        MatListModule,
+        MatChipsModule,
+        MatStepperModule,
+        MatRadioModule
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }

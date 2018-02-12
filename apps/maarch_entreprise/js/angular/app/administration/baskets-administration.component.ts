@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+
 
 declare function $j(selector: any) : any;
 
@@ -10,7 +12,6 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["baskets-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
 export class BasketsAdministrationComponent implements OnInit {
@@ -22,6 +23,15 @@ export class BasketsAdministrationComponent implements OnInit {
 
     loading                     : boolean   = false;
 
+    displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
+    dataSource      : any;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
 
     constructor(public http: HttpClient, private notify: NotificationService) {
     }
@@ -41,8 +51,12 @@ export class BasketsAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + "rest/baskets")
             .subscribe((data : any) => {
                 this.baskets = data['baskets'];
-
                 this.loading = false;
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.baskets);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
             }, () => {
                 location.href = "index.php";
             });
