@@ -404,7 +404,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_CREATION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
@@ -482,7 +482,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_MODIFICATION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
@@ -506,7 +506,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_SUPPRESSION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
