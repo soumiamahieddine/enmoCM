@@ -15,14 +15,14 @@
 
 namespace SrcCore\controllers;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Core\Models\ServiceModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 
 class CoreController
 {
-    public function initialize(RequestInterface $request, ResponseInterface $response)
+    public function initialize(Request $request, Response $response)
     {
         $customId = CoreConfigModel::getCustomId();
 
@@ -45,15 +45,15 @@ class CoreController
         return $response->withJson($aInit);
     }
 
-    public static function getAdministration(RequestInterface $request, ResponseInterface $response)
+    public static function getAdministration(Request $request, Response $response)
     {
-        if ($_SESSION['user']['UserId'] == 'superadmin') { //TODO session
+        if ($GLOBALS['userId'] == 'superadmin') {
             $administration = [];
             $administration['menu'] = ServiceModel::getApplicationAdministrationMenuByXML();
             $administration['application'] = ServiceModel::getApplicationAdministrationServicesByXML();
             $administration['modules'] = ServiceModel::getModulesAdministrationServicesByXML();
         } else {
-            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $_SESSION['user']['UserId']]); //TODO session
+            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
         }
 
         return $response->withJson($administration);

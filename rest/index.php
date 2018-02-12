@@ -268,7 +268,7 @@ $app->post('/contacts', \Contact\controllers\ContactController::class . ':create
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Links
-$app->get('/links/resId/{resId}', \SrcCore\controllers\LinkController::class . ':getByResId');
+$app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
 
 //liste documents
 $app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause
