@@ -125,17 +125,9 @@ table tr:not(.filters) .mat-input-container{
 .jstree-clicked {
     background: #135f7f;
 }
-mat-header-row{
-    box-shadow: 0 4px 2px -2px gray;
-}
 mat-row:nth-child(even){
     background: rgba(19, 95, 127, 0.1);
-    }
-
-/*mat-row:nth-child(odd){
-    background-color:black;
-    }*/
-
+}
 /*** FIX BUG EXPANSION PANEL MATERIAL WITH TABS (DELETE AFTER CORRECTION) ***/
 div.mat-expansion-panel-content:not(.mat-expanded) {
     height: 0px;
