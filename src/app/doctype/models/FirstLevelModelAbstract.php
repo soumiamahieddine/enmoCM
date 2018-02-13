@@ -55,24 +55,13 @@ class FirstLevelModelAbstract
 
     public static function create(array $aArgs)
     {
-        $actioncategories = $aArgs['actionCategories'];
-        unset($aArgs['actionCategories']);
+        ValidatorModel::notEmpty($aArgs, ['label']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'doctypes_first_level_id_seq']);
         DatabaseModel::insert([
-            'table'         => 'actions',
+            'table'         => 'doctypes_first_level',
             'columnsValues' => $aArgs
         ]);
-
-        $tab['action_id'] = max(ActionModel::get())['id'];
-
-        for ($i=0;$i<count($actioncategories);$i++) {
-            $tab['category_id'] = $actioncategories[$i];
-            DatabaseModel::insert(
-                [
-                'table'         => 'actions_categories',
-                'columnsValues' => $tab
-                ]
-            );
-        }
 
         return true;
     }
