@@ -100,7 +100,11 @@ class VisaController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
-            ListInstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $GLOBALS['userId']]);
+            ListInstanceModel::update([
+                'set'   => ['signatory' => 'false'],
+                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+                'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            ]);
         }
 
         return $response->withJson(['success' => 'success']);

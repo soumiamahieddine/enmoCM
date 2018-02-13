@@ -56,15 +56,15 @@ class BasketModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'name', 'description', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'name', 'color', 'description', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
 
         DatabaseModel::insert([
             'table'         => 'baskets',
             'columnsValues' => [
                 'basket_id'         => $aArgs['id'],
-                'basket_name'       => $aArgs['name'],
-                'basket_desc'       => $aArgs['description'],
+                'basket_name'       => $aArgs['basket_name'],
+                'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
                 'is_visible'        => $aArgs['isVisible'],
                 'is_folder_basket'  => $aArgs['isFolderBasket'],
@@ -79,14 +79,14 @@ class BasketModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'name', 'description', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'name', 'color', 'description', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
 
         DatabaseModel::update([
             'table'     => 'baskets',
             'set'       => [
-                'basket_name'       => $aArgs['name'],
-                'basket_desc'       => $aArgs['description'],
+                'basket_name'       => $aArgs['basket_name'],
+                'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
                 'is_visible'        => $aArgs['isVisible'],
                 'is_folder_basket'  => $aArgs['isFolderBasket'],
