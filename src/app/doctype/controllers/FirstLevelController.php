@@ -4,7 +4,7 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
-* @brief   DoctypeController
+* @brief   FirstLevelController
 * @author  dev <dev@maarch.org>
 * @ingroup core
 */
@@ -13,17 +13,17 @@ namespace Doctype\controllers;
 
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
-use SrcCore\models\CoreConfigModel;
 use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
+use Folder\models\FolderTypeModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class DoctypeController
+class FirstLevelController
 {
-    public function get(Request $request, Response $response)
+    public function getTree(Request $request, Response $response)
     {
 
         $firstLevels  = FirstLevelModel::get();
@@ -50,7 +50,7 @@ class DoctypeController
         ]);
     }
 
-    public function getFirstLevelById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, $aArgs)
     {
 
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
@@ -59,38 +59,17 @@ class DoctypeController
                 ->withJson(['errors' => 'wrong format for id'.$aArgs['id']]);
         }
 
-        $obj = FirstLevelModel::getById(['id' => $aArgs['id']]);
+        $obj['FirstLevelInfo'] = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
         if(!empty($obj)){
-            if ($obj['enabled'] == 'Y') {
-                $obj['enabled'] = true;
+            if ($obj['FirstLevelInfo']['enabled'] == 'Y') {
+                $obj['FirstLevelInfo']['enabled'] = true;
             } else {
-                $obj['enabled'] = false;
+                $obj['FirstLevelInfo']['enabled'] = false;
             }
         }
   
-        return $response->withJson($obj);
-    }
-
-    public function getSecondLevelById(Request $request, Response $response, $aArgs)
-    {
-
-        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id']);
-        }
-
-        $obj = SecondLevelModel::getById(['id' => $aArgs['id']]);
-
-        if(!empty($obj)){
-            if ($obj['enabled'] == 'Y') {
-                $obj['enabled'] = true;
-            } else {
-                $obj['enabled'] = false;
-            }
-        }
-  
+        $obj['FolderTypeDocType'] = FolderTypeModel::getFolderTypeDocTypeFirstLevel();
         return $response->withJson($obj);
     }
 
@@ -116,52 +95,60 @@ class DoctypeController
         return $response->withJson($obj);
     }
 
-
-
-
-
+    public function initFirstLevel(Request $request, Response $response, $aArgs)
+    {
+        $obj['folderType'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
+        return $response->withJson($obj);
+    }
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $data = $request->getParams();
-        $data  = $this->manageValue($data);
+        $data = $this->manageValue($data);
         
         $errors = $this->control($data, 'create');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
     
-        ActionModel::create($data);
+        $folderTypeId = $data['foldertype_id'];
+        unset($data['foldertype_id']);
+        $obj = FirstLevelModel::create($data);
 
-        $obj = max(ActionModel::get());
+        foreach ($folderTypeId as $value) {
+            FolderTypeModel::createFolderTypeDocTypeFirstLevel([
+                "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
+                "foldertype_id" => $value
+            ]);
+        }
 
         HistoryController::add([
-            'tableName' => 'actions',
-            'recordId'  => $obj['id'],
+            'tableName' => 'doctypes_first_level',
+            'recordId'  => $obj['doctypes_first_level_id'],
             'eventType' => 'ADD',
-            'eventId'   => 'actionadd',
-            'info'      => _ACTION_ADDED . ' : ' . $obj['label_action']
+            'eventId'   => 'structureadd',
+            'info'      => _DOCTYPE_FIRSTLEVEL_ADDED . ' : ' . $obj['doctypes_first_level_label']
         ]);
 
         return $response->withJson(
             [
-            'action'  => $obj
+            'firstLevel'  => $obj
             ]
         );
     }
 
     public function update(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $obj       = $request->getParams();
-        $obj['id'] = $aArgs['id'];
+        $obj                            = $request->getParams();
+        $obj['doctypes_first_level_id'] = $aArgs['id'];
 
         $obj    = $this->manageValue($obj);
         $errors = $this->control($obj, 'update');
@@ -172,35 +159,36 @@ class DoctypeController
                 ->withJson(['errors' => $errors]);
         }
 
-        $return = ActionModel::update($obj);
+        $folderTypeId = $data['foldertype_id'];
+        unset($data['foldertype_id']);
+        $obj = FirstLevelModel::update($data);
 
-        if ($return) {
-            $id  = $aArgs['id'];
-            $obj = ActionModel::getById(['id' => $id]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Problem during action update']);
+        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel();
+        foreach ($folderTypeId as $value) {
+            FolderTypeModel::createFolderTypeDocTypeFirstLevel([
+                "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
+                "foldertype_id" => $value
+            ]);
         }
 
         HistoryController::add([
-            'tableName' => 'actions',
-            'recordId'  => $obj['id'],
+            'tableName' => 'doctypes_first_level',
+            'recordId'  => $obj['doctypes_first_level_id'],
             'eventType' => 'UP',
-            'eventId'   => 'actionup',
-            'info'      => _ACTION_UPDATED. ' : ' . $obj['label_action']
+            'eventId'   => 'structureup',
+            'info'      => _DOCTYPE_FIRSTLEVEL_UPDATED. ' : ' . $obj['doctypes_first_level_label']
         ]);
 
         return $response->withJson(
             [
-            'action'  => $obj
+            'firstLevel'  => $obj
             ]
         );
     }
 
     public function delete(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -210,90 +198,59 @@ class DoctypeController
                 ->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['id']]); // TODO select label_action
-        ActionModel::delete(['id' => $aArgs['id']]);
+        $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
+        FirstLevelModel::update(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
+        SecondLevelModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
+        DoctypeModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
+        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel();
 
         HistoryController::add([
-            'tableName' => 'actions',
-            'recordId'  => $aArgs['id'],
+            'tableName' => 'doctypes_first_level',
+            'recordId'  => $aArgs['doctypes_first_level_id'],
             'eventType' => 'DEL',
-            'eventId'   => 'actiondel',
-            'info'      => _ACTION_DELETED. ' : ' . $action['label_action']
+            'eventId'   => 'structuredel',
+            'info'      => _DOCTYPE_FIRSTLEVEL_DELETED. ' : ' . $firstLevel['doctypes_first_level_label']
         ]);
 
-        return $response->withJson(['action' => ActionModel::get()]);
+        return $response->withJson(['firstLevel' => $firstLevel]);
     }
 
     protected function control($aArgs, $mode)
     {
         $errors = [];
-      
-        $objs = StatusModel::get();
-
-        foreach ($objs as $obj) {
-            $status[] = $obj['id'];
-        }
-        array_unshift($status, '_NOSTATUS_');
-
-        if (!(in_array($aArgs['id_status'], $status))) {
-            $errors[]= 'Invalid Status';
-        }
 
         if ($mode == 'update') {
-            if (!Validator::intVal()->validate($aArgs['id'])) {
+            if (!Validator::intVal()->validate($aArgs['doctypes_first_level_id'])) {
                 $errors[] = 'Id is not a numeric';
             } else {
-                $obj = ActionModel::getById(['id' => $aArgs['id']]);
+                $obj = FirstLevelModel::getById(['id' => $aArgs['doctypes_first_level_id']]);
             }
            
             if (empty($obj)) {
-                $errors[] = 'Id ' .$aArgs['id']. ' does not exists';
+                $errors[] = 'Id ' .$aArgs['doctypes_first_level_id']. ' does not exists';
             }
         }
            
-        if (!Validator::notEmpty()->validate($aArgs['label_action']) ||
-            !Validator::length(1, 255)->validate($aArgs['label_action'])) {
-            $errors[] = 'Invalid label action';
+        if (!Validator::notEmpty()->validate($aArgs['doctypes_first_level_label']) ||
+            !Validator::length(1, 255)->validate($aArgs['doctypes_first_level_label'])) {
+            $errors[] = 'Invalid doctypes_first_level_label';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['id_status'])) {
-            $errors[] = 'id_status is empty';
+        if (!Validator::notEmpty()->validate($aArgs['foldertype_id'])) {
+            $errors[] = 'Invalid foldertype_id';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['history']) || ($aArgs['history'] != 'Y' && $aArgs['history'] != 'N')) {
+        if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
             $errors[]= 'Invalid history value';
         }
 
         return $errors;
     }
 
-    public function initAction(Request $request, Response $response)
-    {
-        //default data
-        $obj['action']['history']          = true;
-        $obj['action']['keyword']          = '';
-        $obj['action']['is_folder_action'] = false;
-        $obj['action']['action_page']      = '';
-        $obj['action']['id_status']        = '_NOSTATUS_';
-        $obj['categoriesList']             = CoreConfigModel::getLettersBoxCategories();
-
-        foreach ($obj['categoriesList'] as $key => $value) {
-            $obj['categoriesList'][$key]['selected'] = true;
-        }
-
-        $obj['statuses'] = StatusModel::get();
-        array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList'] = ActionModel::getAction_pages();
-        array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
-        $obj['keywordsList'] = ActionModel::getKeywords();
-        
-        return $response->withJson($obj);
-    }
-
     protected function manageValue($request)
     {
         foreach ($request  as $key => $value) {
-            if (in_array($key, ['is_folder_action', 'history'])) {
+            if (in_array($key, ['enabled'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
                 } else {
