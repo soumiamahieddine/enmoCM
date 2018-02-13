@@ -8,6 +8,7 @@
             "Docserver\\"     : "src/app/docserver/",
             "Doctype\\"       : "src/app/doctype/",
             "Entity\\"        : "src/app/entity/",
+            "Folder\\"        : "src/app/folder/",
             "History\\"       : "src/app/history/",
             "Link\\"          : "src/app/link/",
             "Notification\\"  : "src/app/notification/",

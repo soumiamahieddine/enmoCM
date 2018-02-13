@@ -22,7 +22,7 @@ class DoctypesControllerTest extends TestCase
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $doctypeController = new \Doctype\controllers\DoctypeController();
+        $doctypeController = new \Doctype\controllers\FirstLevelController();
         $response          = $doctypeController->get($request, new \Slim\Http\Response());
         $responseBody      = json_decode((string)$response->getBody());
 
@@ -42,7 +42,7 @@ class DoctypesControllerTest extends TestCase
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $doctypeController = new \Doctype\controllers\DoctypeController();
+        $doctypeController = new \Doctype\controllers\FirstLevelController();
         $response          = $doctypeController->getFirstLevelById($request, new \Slim\Http\Response(), ["id" => self::$firstLevelId]);
         $responseBody      = json_decode((string)$response->getBody());  
 
