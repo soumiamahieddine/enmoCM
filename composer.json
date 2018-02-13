@@ -6,6 +6,7 @@
             "Basket\\"        : "src/app/basket/",
             "Contact\\"       : "src/app/contact/",
             "Docserver\\"     : "src/app/docserver/",
+            "Doctype\\"       : "src/app/doctype/",
             "Entity\\"        : "src/app/entity/",
             "History\\"       : "src/app/history/",
             "Link\\"          : "src/app/link/",
