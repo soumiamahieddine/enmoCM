@@ -5,39 +5,51 @@
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <div>
-        <mat-select placeholder="{{lang.chooseGroup}}" [(ngModel)]="selectedGroup" (change)="loadReports()" name="group">
-            <mat-option *ngFor="let group of groups" [value]="group.group_id">
-                {{group.group_desc}}
-            </mat-option>
-        </mat-select>
-        <div *ngIf="reports.size() > 0">
-            <form class="form-horizontal" (ngSubmit)="onSubmit()">
-                {{lang.folders}}
-                <div class="form-group">
-                    <div *ngFor="let report of reports;let i = index">
-                        <mat-checkbox *ngIf="report.module == 'folder'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</mat-checkbox>
-                    </div>
-                </div>
-                {{lang.entities}}
-                <div class="form-group">
-                    <div *ngFor="let report of reports;let i = index">
-                        <mat-checkbox *ngIf="report.module == 'entities'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</mat-checkbox>
-                    </div>
-                </div>
-                {{lang.maarchApplication}}
-                <div class="form-group">
-                    <div *ngFor="let report of reports;let i = index">
-                        <mat-checkbox *ngIf="report.module == 'application'" [(ngModel)]="reports[i].checked" name="checked{{i}}">{{report.label}}</mat-checkbox>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div style="text-align:center;">
-                        <button type="submit" class="btn btn-success">{{lang.save}}</button>
-                        <button mat-raised-button routerLink='/administration'>{{lang.cancel}}</button>
-                    </div>
-                </div>
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
+        <mat-tab *ngFor="let group of groups" label="{{group.group_id}}">
+            <ng-template mat-tab-label>
+                {{group.group_id}}
+            </ng-template>
+            <div *ngIf="loadingOptions">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <form>
+                <mat-list *ngIf="reports.size() > 0 && !loadingOptions">
+                    {{lang.folders}}
+                    <mat-divider></mat-divider>
+                    <span *ngFor="let report of reports;let i = index">
+                        <mat-list-item *ngIf="report.module == 'folder'">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                                {{report.label}}
+                            </mat-checkbox>
+                        </mat-list-item>
+                    </span>
+
+                    {{lang.entities}}
+                    <mat-divider></mat-divider>
+                    <span *ngFor="let report of reports;let i = index">
+                        <mat-list-item *ngIf="report.module == 'entities'">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                                {{report.label}}
+                            </mat-checkbox>
+                        </mat-list-item>
+                    </span>
+
+
+                    {{lang.maarchApplication}}
+                    <mat-divider></mat-divider>
+                    <span *ngFor="let report of reports;let i = index">
+                        <mat-list-item *ngIf="report.module == 'application'">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                                {{report.label}}
+                            </mat-checkbox>
+                        </mat-list-item>
+                    </span>
+                </mat-list>
             </form>
-        </div>
+        </mat-tab>
+    </mat-tab-group>
+    <div style="text-align:center;">
+        <button mat-raised-button routerLink='/administration'>{{lang.cancel}}</button>
     </div>
 </div>

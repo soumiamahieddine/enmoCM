@@ -22,6 +22,7 @@ var ReportsAdministrationComponent = /** @class */ (function () {
         this.reports = [];
         this.selectedGroup = "";
         this.loading = false;
+        this.loadingOptions = false;
     }
     ReportsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -36,21 +37,25 @@ var ReportsAdministrationComponent = /** @class */ (function () {
         this.http.get(this.coreUrl + 'rest/reports/groups')
             .subscribe(function (data) {
             _this.groups = data['groups'];
+            _this.loadReports(0);
             _this.loading = false;
         }, function () {
             location.href = "index.php";
         });
     };
-    ReportsAdministrationComponent.prototype.loadReports = function () {
+    ReportsAdministrationComponent.prototype.loadReports = function (index) {
         var _this = this;
-        this.http.get(this.coreUrl + 'rest/reports/groups/' + this.selectedGroup)
+        this.selectedGroup = this.groups[index].group_id;
+        this.loadingOptions = true;
+        this.http.get(this.coreUrl + 'rest/reports/groups/' + this.groups[index].group_id)
             .subscribe(function (data) {
             _this.reports = data['reports'];
+            _this.loadingOptions = false;
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
     };
-    ReportsAdministrationComponent.prototype.onSubmit = function () {
+    ReportsAdministrationComponent.prototype.saveReport = function () {
         var _this = this;
         this.http.put(this.coreUrl + 'rest/reports/groups/' + this.selectedGroup, this.reports)
             .subscribe(function () {
