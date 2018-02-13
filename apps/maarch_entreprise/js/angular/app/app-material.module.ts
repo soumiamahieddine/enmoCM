@@ -31,7 +31,8 @@ import {
     MatListModule,
     MatChipsModule,
     MatStepperModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSliderModule
 } from '@angular/material';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -66,7 +67,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatListModule,
         MatChipsModule,
         MatStepperModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSliderModule
     ],
     exports: [
         MatCheckboxModule,
@@ -96,7 +98,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatListModule,
         MatChipsModule,
         MatStepperModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSliderModule
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }

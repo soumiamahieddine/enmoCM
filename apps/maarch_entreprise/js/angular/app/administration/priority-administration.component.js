@@ -23,30 +23,51 @@ var PriorityAdministrationComponent = /** @class */ (function () {
         this.lang = translate_component_1.LANG;
         this.loading = false;
         this.priority = {
-            working_days: false
+            useDoctypeDelay: false,
+            color: "#135f7f",
+            delays: "1",
+            working_days: "false"
         };
     }
     PriorityAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > <a onclick='location.hash = \"/administration/priorities\"' style='cursor: pointer'>Priorités</a>";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/priorities\"' style='cursor: pointer'>" + this.lang.priorities + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.priorityCreation;
         }
+        else {
+            breadCrumb += this.lang.priorityModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     PriorityAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
+                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.loading = false;
             }
             else {
                 _this.creationMode = false;
+                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.id = params['id'];
                 _this.http.get(_this.coreUrl + "rest/priorities/" + _this.id)
                     .subscribe(function (data) {
                     _this.priority = data.priority;
+                    if (_this.priority.delays == 0) {
+                        _this.priority.useDoctypeDelay = false;
+                    }
+                    else {
+                        _this.priority.useDoctypeDelay = true;
+                    }
+                    if (_this.priority.working_days === true) {
+                        _this.priority.working_days = "true";
+                    }
+                    else {
+                        _this.priority.working_days = "false";
+                    }
                     _this.loading = false;
                 }, function () {
                     location.href = "index.php";
@@ -56,6 +77,15 @@ var PriorityAdministrationComponent = /** @class */ (function () {
     };
     PriorityAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
+        if (this.priority.useDoctypeDelay == false) {
+            this.priority.delays = 0;
+        }
+        if (this.priority.working_days == "true") {
+            this.priority.working_days = true;
+        }
+        else {
+            this.priority.working_days = false;
+        }
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
                 .subscribe(function () {

@@ -42,7 +42,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatListModule,
                 material_1.MatChipsModule,
                 material_1.MatStepperModule,
-                material_1.MatRadioModule
+                material_1.MatRadioModule,
+                material_1.MatSliderModule
             ],
             exports: [
                 material_1.MatCheckboxModule,
@@ -72,7 +73,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatListModule,
                 material_1.MatChipsModule,
                 material_1.MatStepperModule,
-                material_1.MatRadioModule
+                material_1.MatRadioModule,
+                material_1.MatSliderModule
             ],
             providers: [
                 { provide: material_1.MatPaginatorIntl, useValue: french_paginator_intl_1.getFrenchPaginatorIntl() }

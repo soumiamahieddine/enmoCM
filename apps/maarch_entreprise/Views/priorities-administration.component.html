@@ -1,54 +1,75 @@
+<div class="page-header">
+    <h1>{{lang.administration}} {{lang.priorities}}
+        <small>{{priorities.length}} {{lang.priorities}}</small>
+    </h1>
+</div>
 <div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
+    <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-user fa-2x"></i> Administration des priorités</h1>
-    <nav class="navbar navbar-default" style="font-size:17px !important;" id="toolBox">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" routerLink="/administration" style="cursor: pointer">
-                    <i class="fa fa-arrow-circle-left" title="{{lang.back}}"></i>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li style="cursor: pointer" routerLink="/administration/priorities/new">
-                        <a title="Créer une priorité"><i class="fa fa-user-plus"></i></a>
-                    </li>
-                </ul>
-            </div>
+    <div class="col-md-12">
+        <div class="example-container">
+            <mat-grid-list cols="3" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                    </mat-paginator>
+                </mat-grid-tile>
+                <mat-grid-tile></mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                    </mat-form-field>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
+                <ng-container matColumnDef="label">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <input type="color" value="{{element.color}}" style="background:none;border:none;width:45px;" disabled> {{element.label}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="delays">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processDelay}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <span *ngIf="element.delays == 0">
+                            <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
+                        </span>
+                        <span *ngIf="element.delays != 0">
+                            {{element.delays}} 
+                        </span>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="working_days">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processType}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <span *ngIf="element.delays == 0">
+                            <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
+                        </span>
+                        <span *ngIf="element.working_days && element.delays != 0">
+                            {{lang.workingDays}}
+                        </span>
+                        <span *ngIf="!element.working_days && element.delays != 0">
+                            {{lang.calDays}}
+                        </span>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef style="text-align: right;padding: 10px">
+                        <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/priorities/new">
+                            <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="text-align: right;">
+                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/priorities/{{element.id}}">
+                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deletePriority(element.id)">
+                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
         </div>
-    </nav>
-    <div class="col-md-12" style="margin-top: 1%">
-        <table id="prioritiesTable" class="display" style="width: 100%" cellspacing="0" border="0">
-            <thead>
-            <tr>
-                <th style="width:20%;" valign="bottom" align="left"><span>Label</span></th>
-                <th style="width:20%;" valign="bottom" align="left"><span>Couleur</span></th>
-                <th style="width:20%;" valign="bottom" align="left"><span>Délai de traitement</span></th>
-                <th style="width:20%;" valign="bottom" align="left"><span>Méthode de calcul</span></th>
-                <th style="width:20%;"><span>&nbsp;</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let priority of priorities" id="{{priority.id}}">
-                <td>{{priority.label}}</td>
-                <td><input type="color" value="{{priority.color}}" style="background:none;border:none;width:45px;" disabled></td>
-                <td>{{priority.delays}}</td>
-                <td *ngIf="priority.working_days">Jours ouvrés</td>
-                <td *ngIf="!priority.working_days">Jours calendaires</td>
-                <td style="text-align:right;">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <button routerLink="/administration/priorities/{{priority.id}}" type="button" class="btn btn-default" title="{{lang.edit}}">
-                            <a><i style="cursor:pointer" class="fa fa-edit"></i></a>
-                        </button>
-                        <button type="button" class="btn btn-default" title="{{lang.delete}}" (click)="deletePriority(priority.id)">
-                            <a><i style="cursor:pointer;color: #D9534F" class="fa fa-trash"></i></a>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 </div>
