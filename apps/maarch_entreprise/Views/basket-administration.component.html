@@ -15,13 +15,12 @@
             <mat-tab label="{{lang.informations}}">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #basketForm="ngForm">
                     <mat-form-field>
-                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.basket_id" required>
-                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.basket_id"
-                            required disabled>
+                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.basket_id" maxlength="32" pattern="^[\w.-]*$" required>
+                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.basket_id" required disabled>
                     </mat-form-field>
                     <div class="col-md-11">
                         <mat-form-field>
-                            <input matInput name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="basket.basket_name" [ngStyle]="{'color': basket.color}"
+                            <input matInput name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="basket.basket_name" maxlength="255" [ngStyle]="{'color': basket.color}"
                                 required>
                         </mat-form-field>
                     </div>
@@ -31,8 +30,7 @@
                         </mat-form-field>
                     </div>
                     <mat-form-field>
-                        <input matInput name="description" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="basket.basket_desc"
-                            required>
+                        <input matInput name="description" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="basket.basket_desc" maxlength="255" required>
                     </mat-form-field>
                     <mat-form-field>
                         <textarea matInput name="clause" title="{{lang.clause}}" placeholder="{{lang.clause}}" [(ngModel)]="basket.clause" matTextareaAutosize
