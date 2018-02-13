@@ -38,8 +38,9 @@
                         </mat-form-field>
 
                     </div>
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-12 text-center" style="padding:10px;">
                         <button mat-raised-button [disabled]="!groupForm.form.valid" color="primary">{{lang.save}}</button>
+                        <button mat-raised-button routerLink='/administration/groups'>{{lang.cancel}}</button>
                     </div>
                 </form>
             </mat-tab>
