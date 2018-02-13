@@ -17,13 +17,12 @@
             <mat-tab label="{{lang.informations}}">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
                     <mat-form-field>
-                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" required>
-                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id"
-                            disabled>
+                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" pattern="^[\w.-]*$" maxlength="32" required>
+                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id" disabled>
                     </mat-form-field>
 
                     <mat-form-field>
-                        <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" required>
+                        <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" maxlength="255" required>
                     </mat-form-field>
 
                     <div class="col-md-12">
