@@ -272,11 +272,13 @@ class StoreController
                 'value'     => $destUser,
                 'type'      => 'string'
             ];
-            $aArgs['data'][] = [
-                'column'    => 'typist',
-                'value'     => $destUser,
-                'type'      => 'string'
-            ];
+            if (!$typistFound) {
+                $aArgs['data'][] = [
+                    'column'    => 'typist',
+                    'value'     => $destUser,
+                    'type'      => 'string'
+                ];
+            }
         }
         if ($userPrimaryEntity) {
             $destinationFound = false;
