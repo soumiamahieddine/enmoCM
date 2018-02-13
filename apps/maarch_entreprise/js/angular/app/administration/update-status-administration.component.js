@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,15 +23,20 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var UpdateStatusAdministrationComponent = /** @class */ (function () {
+var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
+var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
+    __extends(UpdateStatusAdministrationComponent, _super);
     function UpdateStatusAdministrationComponent(http, notify) {
-        this.http = http;
-        this.notify = notify;
-        this.lang = translate_component_1.LANG;
-        this.statuses = [];
-        this.resId = "";
-        this.chrono = "";
-        this.loading = false;
+        var _this = _super.call(this, http, 'statuses') || this;
+        _this.http = http;
+        _this.notify = notify;
+        _this.lang = translate_component_1.LANG;
+        _this.statuses = [];
+        _this.statusId = "";
+        _this.resId = "";
+        _this.chrono = "";
+        _this.loading = false;
+        return _this;
     }
     UpdateStatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -29,22 +44,15 @@ var UpdateStatusAdministrationComponent = /** @class */ (function () {
         }
     };
     UpdateStatusAdministrationComponent.prototype.ngOnInit = function () {
-        var _this = this;
+        this.loading = true;
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-        this.loading = true;
-        this.http.get(this.coreUrl + "rest/statuses")
-            .subscribe(function (data) {
-            _this.statuses = data['statuses'];
-            _this.loading = false;
-        }, function () {
-            location.href = "index.php";
-        });
+        this.loading = false;
     };
     UpdateStatusAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
         var body = {
-            "status": $j("#statuses option:selected")[0].value
+            "status": this.statusId
         };
         if (this.resId != "") {
             body["resId"] = this.resId;
@@ -52,24 +60,32 @@ var UpdateStatusAdministrationComponent = /** @class */ (function () {
         else if (this.chrono != "") {
             body["chrono"] = this.chrono;
         }
+        console.log(body);
         this.http.put(this.coreUrl + "rest/res/resource/status", body)
             .subscribe(function () {
             _this.resId = "";
             _this.chrono = "";
-            $j('#statuses').prop('selectedIndex', 0);
+            _this.statusId = "";
             _this.notify.success(_this.lang.modificationSaved);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
     };
+    UpdateStatusAdministrationComponent.prototype.resetInput = function (e) {
+        if (e.index == 0) {
+            this.resId = "";
+        }
+        else {
+            this.chrono = "";
+        }
+    };
     UpdateStatusAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["update-status-administrationView"],
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
     ], UpdateStatusAdministrationComponent);
     return UpdateStatusAdministrationComponent;
-}());
+}(autocomplete_plugin_1.AutoCompletePlugin));
 exports.UpdateStatusAdministrationComponent = UpdateStatusAdministrationComponent;
