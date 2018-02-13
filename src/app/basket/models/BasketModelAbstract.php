@@ -255,7 +255,7 @@ class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        DatabaseModel::delete([
+        DatabaseModel::update([
             'table' => 'groupbasket_redirect',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],

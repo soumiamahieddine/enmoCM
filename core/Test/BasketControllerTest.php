@@ -105,11 +105,12 @@ class BasketControllerTest extends TestCase
             'result_page'   => 'redirect_to_action',
             'groupActions'  => [
                 [
-                    'id_action'             => '112',
+                    'id'                    => '112',
                     'where_clause'          => '1=2',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => false,
                     'default_action_list'   => true,
+                    'checked'               => true,
                     'statuses'              => [
                         'NEW',
                         'END'
@@ -179,11 +180,12 @@ class BasketControllerTest extends TestCase
             'result_page'   => 'list_with_attachments',
             'groupActions'  => [
                 [
-                    'id_action'             => '1',
+                    'id'             => '1',
                     'where_clause'          => '1=1',
                     'used_in_basketlist'    => true,
                     'used_in_action_page'   => true,
                     'default_action_list'   => true,
+                    'checked'               => true,
                     'statuses'              => [
                         'END',
                     ],
@@ -196,11 +198,12 @@ class BasketControllerTest extends TestCase
                     ]
                 ],
                 [
-                    'id_action'             => '4',
+                    'id'             => '4',
                     'where_clause'          => '1=4',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => true,
                     'default_action_list'   => false,
+                    'checked'               => true,
                     'statuses'              => [
                         'NEW',
                         'COU'
