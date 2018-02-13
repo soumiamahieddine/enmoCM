@@ -59,8 +59,8 @@ class BasketController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -105,8 +105,8 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = Validator::stringType()->notEmpty()->validate($data['basket_name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);

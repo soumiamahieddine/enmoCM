@@ -23,8 +23,8 @@ class BasketControllerTest extends TestCase
 
         $aArgs = [
             'id'                => 'TEST-BASKET123',
-            'name'              => 'TEST-BASKET123-NAME',
-            'description'       => 'TEST BASKET123 DESCRIPTION',
+            'basket_name'       => 'TEST-BASKET123-NAME',
+            'basket_desc'       => 'TEST BASKET123 DESCRIPTION',
             'clause'            => '1=2',
             'isSearchBasket'    => true,
             'isFolderBasket'    => true,
@@ -61,8 +61,8 @@ class BasketControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'name'              => 'TEST-BASKET123-UPDATED',
-            'description'       => 'TEST BASKET123 DESCRIPTION UPDATED',
+            'basket_name'       => 'TEST-BASKET123-UPDATED',
+            'basket_desc'       => 'TEST BASKET123 DESCRIPTION UPDATED',
             'clause'            => '1=3',
             'isSearchBasket'    => false,
             'isFolderBasket'    => false,
