@@ -17,12 +17,15 @@
             <mat-tab label="{{lang.informations}}">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
                     <mat-form-field>
-                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" pattern="^[\w.-]*$" maxlength="32" required>
-                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id" disabled>
+                        <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" pattern="^[\w.-]*$"
+                            maxlength="32" required>
+                        <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id"
+                            disabled>
                     </mat-form-field>
 
                     <mat-form-field>
-                        <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" maxlength="255" required>
+                        <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" maxlength="255"
+                            required>
                     </mat-form-field>
 
                     <div class="col-md-12">
@@ -102,19 +105,14 @@
                         </mat-expansion-panel>
                     </mat-tab>
                     <mat-tab label="{{lang.administrationServices}}">
-                        <mat-expansion-panel *ngFor="let upperService of group.services.administration; let i = index">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    {{lang[upperService[0]['location']]}}
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <mat-list>
+                        <mat-list>
+                            <span *ngFor="let upperService of group.services.administration; let i = index">
                                 <mat-list-item *ngFor="let service of upperService">
                                     <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
                                         matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
                                 </mat-list-item>
-                            </mat-list>
-                        </mat-expansion-panel>
+                            </span>
+                        </mat-list>
                     </mat-tab>
                     <mat-tab label="{{lang.functionnalities}}">
                         <mat-expansion-panel *ngFor="let upperService of group.services.use; let i = index">
