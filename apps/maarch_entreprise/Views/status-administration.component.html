@@ -73,8 +73,10 @@
                 </div>
             </div>
             <div class="col-sm-12 panel-body" style="text-align:center;">
-                <button mat-raised-button color="primary" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
-                <button mat-raised-button routerLink='/administration/statuses'>{{lang.cancel}}</button>
+                <button color="default" mat-mini-fab routerLink='/administration/statuses' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                    <mat-icon class="fa fa-chevron-left"></mat-icon>
+                </button>
+                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
             </div>
         </form>
     </div>

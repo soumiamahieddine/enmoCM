@@ -27,8 +27,9 @@
                 </mat-tab>
             </mat-tab-group>
             <mat-form-field>
-                <input matInput [formControl]="statusCtrl" name="statusesList" placeholder="{{lang.availableStatuses}}" [(ngModel)]="this.statusId" [matAutocomplete]="auto" required>
-                <mat-autocomplete  #auto="matAutocomplete">
+                <input matInput [formControl]="statusCtrl" name="statusesList" placeholder="{{lang.availableStatuses}}" [(ngModel)]="this.statusId"
+                    [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let status of filteredStatuses | async" [value]="status.id">
                         {{status.label_status}}
                         <small style="opacity:0.3;">{{status.id}}</small>
@@ -37,8 +38,11 @@
 
             </mat-form-field>
             <div class="col-md-12 text-center" style="padding:10px;">
-                <button mat-raised-button [disabled]="(!resId && !chrono) || (resId && chrono) || !statusId" color="primary">{{lang.save}}</button>
-                <button mat-raised-button routerLink="/administration">{{lang.cancel}}</button>
+                <button color="default" mat-mini-fab routerLink='/administration' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                    <mat-icon class="fa fa-chevron-left"></mat-icon>
+                </button>
+                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="(!resId && !chrono) || (resId && chrono) || !statusId"
+                    color="primary">{{lang.save}}</button>
             </div>
         </form>
     </div>

@@ -10,8 +10,6 @@
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-
-
     <div class="col-md-6 col-md-offset-3">
         <mat-tab-group [(selectedIndex)]="selectedTabIndex_1">
             <mat-tab label="{{lang.informations}}">
@@ -22,12 +20,10 @@
                         <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id"
                             disabled>
                     </mat-form-field>
-
                     <mat-form-field>
                         <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" maxlength="255"
                             required>
                     </mat-form-field>
-
                     <div class="col-md-12">
                         <mat-form-field>
                             <input matInput name="comment" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="group.security.maarch_comment">
@@ -38,11 +34,12 @@
                             <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
                                 (click)="toggleKeywordHelp()"></mat-icon>
                         </mat-form-field>
-
                     </div>
                     <div class="col-md-12 text-center" style="padding:10px;">
-                        <button mat-raised-button [disabled]="!groupForm.form.valid" color="primary">{{lang.save}}</button>
-                        <button mat-raised-button routerLink='/administration/groups'>{{lang.cancel}}</button>
+                        <button color="default" mat-mini-fab routerLink='/administration/groups' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                            <mat-icon class="fa fa-chevron-left"></mat-icon>
+                        </button>
+                        <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!groupForm.form.valid" color="primary">{{lang.save}}</button>
                     </div>
                 </form>
             </mat-tab>
@@ -84,6 +81,11 @@
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                     </mat-table>
+                    <div class="col-md-12 text-left" style="padding:10px;">
+                        <button color="default" mat-mini-fab routerLink='/administration/groups' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                            <mat-icon class="fa fa-chevron-left"></mat-icon>
+                        </button>
+                    </div>
                 </div>
             </mat-tab>
             <mat-tab label="{{lang.privileges}}" *ngIf="!creationMode">
@@ -129,11 +131,16 @@
                         </mat-expansion-panel>
                     </mat-tab>
                 </mat-tab-group>
+                <div class="col-md-12 text-left" style="padding:10px;">
+                    <button color="default" mat-mini-fab routerLink='/administration/groups' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                        <mat-icon class="fa fa-chevron-left"></mat-icon>
+                    </button>
+                </div>
             </mat-tab>
         </mat-tab-group>
     </div>
-    <div class="col-md-6">
-        <mat-card class="example-card" id="keywordHelp" [ngStyle]="{'display': creationMode ? '' : 'none'}" style="margin-top:10px;position:absolute;z-index:2;">
+    <div class="col-md-6 col-md-offset-3">
+        <mat-card class="example-card" id="keywordHelp" [ngStyle]="{'display': creationMode ? '' : 'none'}">
             <mat-card-header>
                 <mat-card-title color="primary" style="font-size: 20px;font-weight: bold;">
                     {{lang.keywordHelp}}

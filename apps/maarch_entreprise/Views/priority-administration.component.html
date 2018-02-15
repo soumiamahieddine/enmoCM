@@ -12,25 +12,28 @@
 <div *ngIf="!loading" class="container-fluid">
     <div class="col-md-6 col-md-offset-3">
         <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
-            <div class="col-md-11">
+            <div class="col-md-11 col-xs-11">
                 <mat-form-field>
                     <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
                         maxlength="128" required>
                 </mat-form-field>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-1 col-xs-1">
                 <mat-form-field>
                     <input matInput type="color" name="color" [(ngModel)]="priority.color" required>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <span matPrefix><mat-checkbox color="primary" name="useDoctypeDelay"  [(ngModel)]="priority.useDoctypeDelay" matTooltip="Utiliser ce délai de traitement au lieu de celui définit dans le type document"></mat-checkbox>&nbsp;</span>
-                    <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays" required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
+                    <span matPrefix>
+                        <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="Utiliser ce délai de traitement au lieu de celui définit dans le type document"></mat-checkbox>&nbsp;</span>
+                    <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
+                        required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
                 </mat-form-field>
             </div>
             <div class="col-md-6">
-                <mat-slider [disabled]="!priority.useDoctypeDelay" style="width:100%" name="delays" color="primary" max="60" min="0" thumb-label="true" [(ngModel)]="priority.delays"></mat-slider>
+                <mat-slider [disabled]="!priority.useDoctypeDelay" style="width:100%" name="delays" color="primary" max="60" min="0" thumb-label="true"
+                    [(ngModel)]="priority.delays"></mat-slider>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
@@ -45,8 +48,10 @@
                 </mat-form-field>
             </div>
             <div class="col-md-12 text-center" style="padding:10px;">
-                <button mat-raised-button [disabled]="!priorityForm.form.valid" color="primary">{{lang.save}}</button>
-                <button mat-raised-button routerLink="/administration/priorities">{{lang.cancel}}</button>
+                <button color="default" mat-mini-fab routerLink='/administration/priorities' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                    <mat-icon class="fa fa-chevron-left"></mat-icon>
+                </button>
+                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!priorityForm.form.valid" color="primary">{{lang.save}}</button>
             </div>
         </form>
     </div>

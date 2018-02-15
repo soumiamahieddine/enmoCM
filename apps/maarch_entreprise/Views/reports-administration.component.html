@@ -19,7 +19,8 @@
                     <mat-divider></mat-divider>
                     <span *ngFor="let report of reports;let i = index">
                         <mat-list-item *ngIf="report.module == 'folder'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                matTooltip="{{report.desc}}">
                                 {{report.label}}
                             </mat-checkbox>
                         </mat-list-item>
@@ -29,7 +30,8 @@
                     <mat-divider></mat-divider>
                     <span *ngFor="let report of reports;let i = index">
                         <mat-list-item *ngIf="report.module == 'entities'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                matTooltip="{{report.desc}}">
                                 {{report.label}}
                             </mat-checkbox>
                         </mat-list-item>
@@ -40,7 +42,8 @@
                     <mat-divider></mat-divider>
                     <span *ngFor="let report of reports;let i = index">
                         <mat-list-item *ngIf="report.module == 'application'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                matTooltip="{{report.desc}}">
                                 {{report.label}}
                             </mat-checkbox>
                         </mat-list-item>
@@ -50,6 +53,8 @@
         </mat-tab>
     </mat-tab-group>
     <div style="text-align:center;">
-        <button mat-raised-button routerLink='/administration'>{{lang.cancel}}</button>
+        <button color="default" mat-mini-fab routerLink='/administration' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+            <mat-icon class="fa fa-chevron-left"></mat-icon>
+        </button>
     </div>
 </div>

@@ -109,7 +109,6 @@ table tr:not(.filters) .mat-input-container{
 }
 
 [color=primary] {
-    /*color: #3f51b5;*/
     color:#135f7f;
 }
 
@@ -118,7 +117,6 @@ table tr:not(.filters) .mat-input-container{
 }
 
 [color=accent] {
-    /*color: #4CAF50;*/
     color:#006841;
 }
 
@@ -182,4 +180,57 @@ button .mat-icon{
 
 .mat-checkbox-layout .mat-checkbox-label {
     font-weight: normal;
+}
+.mat-paginator-page-size {
+    display:none !important;
+}
+
+/* small display mode */
+@media all and (max-width: 1024px) {
+    body{
+        height:auto;
+    }
+    #header {
+       display:none;
+    }
+    #footer {
+        display:none;
+    }
+    #content h1{
+        position: inherit;
+        margin-left: 10%;
+        margin-top: 3% !important;
+    }
+
+    #container,#content {
+        min-width:100% !important;
+    }
+
+    .enableAtionBottomLeftSmarpthone {
+        z-index: 1;
+        position: fixed !important;
+        bottom: 3%;
+        left: 3%;
+    }
+
+    .enableAtionBottomCenterSmarpthone {
+        z-index: 1;
+        position: fixed !important;
+        bottom: 3%;
+        left: 47%;
+    }
+
+    .enableAtionTopLeftSmarpthone {
+        z-index: 1;
+        position: fixed !important;
+        left: 3%;
+        top: 3%;
+    }
+
+    .enableAtionTopRightSmarpthone {
+        z-index: 1;
+        position: fixed !important;
+        right: 3%;
+        top: 3%;
+    }
 }
