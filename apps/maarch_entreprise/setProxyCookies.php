@@ -28,7 +28,16 @@ if(!empty($_COOKIE)) {
     }
     $_SESSION['clientSideCookies'] = $cookie;
     echo '{"status" : 0}';
-} else {
+}
+
+if (!empty($_REQUEST['cookies'])) {
+    if(!empty($_SESSION['clientSideCookies'])){
+        $_SESSION['clientSideCookies'] .= '; ';
+    }
+    $_SESSION['clientSideCookies'] .= $_REQUEST['cookies'];
+}
+
+if(empty($_SESSION['clientSideCookies'])){
     $_SESSION['clientSideCookies'] = false;
     echo '{"status" : 1}';
 }
