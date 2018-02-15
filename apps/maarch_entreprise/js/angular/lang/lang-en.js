@@ -171,6 +171,7 @@ exports.LANG_EN = {
     "priorityDeleted": "Priority deleted",
     "priorityModification": "Priority modification",
     "priorityUpdated": "Priority updated",
+    "privileges": "Privileges",
     "processAction": "Process action(s)",
     "processDelay": "Process delay",
     "processDelayDoctype": "doctype delay is used",

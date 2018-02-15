@@ -191,6 +191,7 @@ exports.LANG_FR = {
     "priorityDeleted": "Priorité supprimée",
     "priorityModification": "Modification d'une priorité",
     "priorityUpdated": "Priorité modifiée",
+    "privileges": "Privilèges",
     "processAction": "Action(s) de traitement",
     "processDelay": "Délai de traitement",
     "processDelayDoctype": "utilise le délai selon le type de document",
