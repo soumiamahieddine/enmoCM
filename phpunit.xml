@@ -5,6 +5,7 @@
             <!--directory>core/Test</directory-->
             <file>core/Test/ActionControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
+            <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/NotificationControllerTest.php</file>
             <file>core/Test/NotificationScheduleControllerTest.php</file>
             <file>core/Test/ParameterControllerTest.php</file>
@@ -21,11 +22,10 @@
     </testsuites>
     <filter>
       <whitelist>
-          <directory suffix="Test.php">core/Test</directory>
+          <!-- <directory suffix="Test.php">core/Test</directory> -->
           <directory suffix=".php">src</directory>
           <directory suffix=".php">core/Controllers</directory>
-          <directory suffix=".php">core/Models</directory>
-          <directory suffix=".php">apps/maarch_entreprise/Models</directory>         
+          <directory suffix=".php">core/Models</directory>        
           <directory suffix=".php">modules/visa/Controllers</directory>
           <directory suffix=".php">modules/visa/Models</directory>          
           <directory suffix=".php">modules/attachments/Controllers</directory>

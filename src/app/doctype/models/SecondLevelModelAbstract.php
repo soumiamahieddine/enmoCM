@@ -55,7 +55,7 @@ class SecondLevelModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['label', 'doctypes_first_level_id']);
+        ValidatorModel::notEmpty($aArgs, ['doctypes_second_level_label', 'doctypes_first_level_id']);
         ValidatorModel::intVal($aArgs, ['doctypes_first_level_id']);
 
         $aArgs['doctypes_second_level_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'doctypes_second_level_id_seq']);
@@ -79,7 +79,7 @@ class SecondLevelModelAbstract
             'data'      => [$aArgs['doctypes_second_level_id']]
         ]);
 
-        return true;
+        return $aArgs;
     }
 
     public static function disabledFirstLevel(array $aArgs)
