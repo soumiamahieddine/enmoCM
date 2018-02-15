@@ -202,7 +202,7 @@ export const LANG_FR = {
     "reinitPassword"               : "Réinitialiser le mot de passe",
     "relatedUsers"                 : "Utilisateurs associés",
     "renewPsw"                     : "Retaper le mot de passe",
-    "reports"                      : "Etats et éditions",
+    "reports"                      : "Statistiques",
     "resetPsw"                     : "Réinitialiser le mot de passe",
     "resId"                        : "Identifiant GED",
     "resultPages"                  : "Pages de résultat",

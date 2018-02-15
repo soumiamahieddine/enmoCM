@@ -30,7 +30,7 @@ export class ReportsAdministrationComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Etats et edition";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > "+ this.lang.reports;
         }
     }
 
