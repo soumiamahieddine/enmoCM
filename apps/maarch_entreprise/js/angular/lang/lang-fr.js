@@ -23,7 +23,7 @@ exports.LANG_FR = {
     "add": "Ajouter",
     "addStatus": "Ajouter un statut",
     "administration": "Administration",
-    "administrationServices": "Services d'administration",
+    "administrationServices": "Droits d'administration",
     "allActions": "Toutes les actions",
     "application": "Application",
     "associatedStatus": "Statut associé",
