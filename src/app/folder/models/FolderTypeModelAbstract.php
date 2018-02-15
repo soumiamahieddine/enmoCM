@@ -35,7 +35,9 @@ class FolderTypeModelAbstract
 
         $folderType = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['foldertypes_doctypes_level1']
+            'table'  => ['foldertypes_doctypes_level1'],
+            'where'  => ['doctypes_first_level_id = ?'],
+            'data'   => [$aArgs['doctypes_first_level_id']]
         ]);
 
         return $folderType;
@@ -43,6 +45,8 @@ class FolderTypeModelAbstract
 
     public static function createFolderTypeDocTypeFirstLevel(array $aArgs = [])
     {
+        ValidatorModel::notEmpty($aArgs, ['foldertype_id', 'doctypes_first_level_id']);
+        ValidatorModel::intVal($aArgs, ['foldertype_id', 'doctypes_first_level_id']);
 
         DatabaseModel::insert([
             'table'         => 'foldertypes_doctypes_level1',

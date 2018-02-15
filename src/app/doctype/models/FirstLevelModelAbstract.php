@@ -55,7 +55,7 @@ class FirstLevelModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['label']);
+        ValidatorModel::notEmpty($aArgs, ['doctypes_first_level_label']);
 
         $aArgs['doctypes_first_level_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'doctypes_first_level_id_seq']);
         DatabaseModel::insert([
@@ -78,7 +78,7 @@ class FirstLevelModelAbstract
             'data'      => [$aArgs['doctypes_first_level_id']]
         ]);
 
-        return true;
+        return $aArgs;
     }
 
 }

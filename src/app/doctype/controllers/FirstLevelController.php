@@ -56,20 +56,21 @@ class FirstLevelController
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
             return $response
                 ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id'.$aArgs['id']]);
+                ->withJson(['errors' => 'wrong format for id']);
         }
 
-        $obj['FirstLevelInfo'] = FirstLevelModel::getById(['id' => $aArgs['id']]);
+        $obj['firstLevel'] = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
         if(!empty($obj)){
-            if ($obj['FirstLevelInfo']['enabled'] == 'Y') {
-                $obj['FirstLevelInfo']['enabled'] = true;
+            if ($obj['firstLevel']['enabled'] == 'Y') {
+                $obj['firstLevel']['enabled'] = true;
             } else {
-                $obj['FirstLevelInfo']['enabled'] = false;
+                $obj['firstLevel']['enabled'] = false;
             }
         }
   
-        $obj['FolderTypeDocType'] = FolderTypeModel::getFolderTypeDocTypeFirstLevel();
+        $obj['folderTypeSelected'] = FolderTypeModel::getFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
+        $obj['folderTypes']        = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
         return $response->withJson($obj);
     }
 
@@ -95,7 +96,7 @@ class FirstLevelController
         return $response->withJson($obj);
     }
 
-    public function initFirstLevel(Request $request, Response $response, $aArgs)
+    public function initFirstLevel(Request $request, Response $response)
     {
         $obj['folderType'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
         return $response->withJson($obj);
@@ -122,7 +123,7 @@ class FirstLevelController
         foreach ($folderTypeId as $value) {
             FolderTypeModel::createFolderTypeDocTypeFirstLevel([
                 "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
-                "foldertype_id" => $value
+                "foldertype_id"           => $value
             ]);
         }
 
@@ -159,11 +160,11 @@ class FirstLevelController
                 ->withJson(['errors' => $errors]);
         }
 
-        $folderTypeId = $data['foldertype_id'];
-        unset($data['foldertype_id']);
-        $obj = FirstLevelModel::update($data);
+        $folderTypeId = $obj['foldertype_id'];
+        unset($obj['foldertype_id']);
+        $obj = FirstLevelModel::update($obj);
 
-        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel();
+        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $obj['doctypes_first_level_id']]);
         foreach ($folderTypeId as $value) {
             FolderTypeModel::createFolderTypeDocTypeFirstLevel([
                 "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
@@ -198,15 +199,15 @@ class FirstLevelController
                 ->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
         FirstLevelModel::update(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
         SecondLevelModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
         DoctypeModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
-        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel();
+        FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
+        $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
             'tableName' => 'doctypes_first_level',
-            'recordId'  => $aArgs['doctypes_first_level_id'],
+            'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'structuredel',
             'info'      => _DOCTYPE_FIRSTLEVEL_DELETED. ' : ' . $firstLevel['doctypes_first_level_label']
@@ -241,7 +242,7 @@ class FirstLevelController
         }
 
         if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
-            $errors[]= 'Invalid history value';
+            $errors[]= 'Invalid enabled value';
         }
 
         return $errors;

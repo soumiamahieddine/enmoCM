@@ -32,22 +32,23 @@ class SecondLevelController
                 ->withJson(['errors' => 'wrong format for id']);
         }
 
-        $obj = SecondLevelModel::getById(['id' => $aArgs['id']]);
+        $obj['secondLevel'] = SecondLevelModel::getById(['id' => $aArgs['id']]);
 
-        if(!empty($obj)){
-            if ($obj['enabled'] == 'Y') {
-                $obj['enabled'] = true;
+        if(!empty($obj['secondLevel'])){
+            if ($obj['secondLevel']['enabled'] == 'Y') {
+                $obj['secondLevel']['enabled'] = true;
             } else {
-                $obj['enabled'] = false;
+                $obj['secondLevel']['enabled'] = false;
             }
         }
   
+        $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
         return $response->withJson($obj);
     }
 
-    public function initSecondLevel(Request $request, Response $response, $aArgs)
+    public function initSecondLevel(Request $request, Response $response)
     {
-        $obj['secondLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
+        $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
         return $response->withJson($obj);
     }
 
@@ -129,13 +130,13 @@ class SecondLevelController
                 ->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        $secondLevel = SecondLevelModel::getById(['id' => $aArgs['id']]);
         SecondLevelModel::update(['doctypes_second_level_id' => $aArgs['id'], 'enabled' => 'N']);
         DoctypeModel::disabledSecondLevel(['doctypes_second_level_id' => $aArgs['id'], 'enabled' => 'N']);
+        $secondLevel = SecondLevelModel::getById(['id' => $aArgs['id']]);
 
         HistoryController::add([
             'tableName' => 'doctypes_second_level',
-            'recordId'  => $aArgs['doctypes_second_level_id'],
+            'recordId'  => $aArgs['id'],
             'eventType' => 'DEL',
             'eventId'   => 'subfolderdel',
             'info'      => _DOCTYPE_SECONDLEVEL_DELETED. ' : ' . $secondLevel['doctypes_second_level_label']
@@ -171,7 +172,7 @@ class SecondLevelController
         }
 
         if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
-            $errors[]= 'Invalid history value';
+            $errors[]= 'Invalid enabled value';
         }
 
         return $errors;

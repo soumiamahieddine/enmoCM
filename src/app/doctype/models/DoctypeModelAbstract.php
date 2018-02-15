@@ -97,34 +97,19 @@ class DoctypeModelAbstract
         return true;
     }
 
-    // public static function updateFirstLevel(array $aArgs)
-    // {
-    //     ValidatorModel::notEmpty($aArgs, ['doctypes_first_level_id']);
-    //     ValidatorModel::intVal($aArgs, ['doctypes_first_level_id']);
+    public static function disabledSecondLevel(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['doctypes_second_level_id']);
+        ValidatorModel::intVal($aArgs, ['doctypes_second_level_id']);
         
-    //     DatabaseModel::update([
-    //         'table'     => 'doctypes',
-    //         'set'       => $aArgs,
-    //         'where'     => ['doctypes_first_level_id = ?'],
-    //         'data'      => [$aArgs['doctypes_first_level_id']]
-    //     ]);
+        DatabaseModel::update([
+            'table'     => 'doctypes',
+            'set'       => $aArgs,
+            'where'     => ['doctypes_second_level_id = ?'],
+            'data'      => [$aArgs['doctypes_second_level_id']]
+        ]);
 
-    //     return true;
-    // }
-
-    // public static function updateSecondLevel(array $aArgs)
-    // {
-    //     ValidatorModel::notEmpty($aArgs, ['doctypes_second_level_id']);
-    //     ValidatorModel::intVal($aArgs, ['doctypes_second_level_id']);
-        
-    //     DatabaseModel::update([
-    //         'table'     => 'doctypes',
-    //         'set'       => $aArgs,
-    //         'where'     => ['doctypes_second_level_id = ?'],
-    //         'data'      => [$aArgs['doctypes_second_level_id']]
-    //     ]);
-
-    //     return true;
-    // }
+        return true;
+    }
 
 }
