@@ -131,7 +131,7 @@ export const LANG_FR = {
     "keywordHelpDesc_8"            : "Toutes les entités du même type mis en argument",
     "keywordHelpDesc_9"            : "Toutes les entités (actives)",
     "keywordHelper"                : "Afficher / Cacher l'aide sur les mots-clés",
-    "label"                        : "Label",
+    "label"                        : "Libellé",
     "last"                         : "dernier",
     "lastname"                     : "Nom",
     "life_cycle"                   : "Cycle de vie",
