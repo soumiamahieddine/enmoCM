@@ -25,7 +25,7 @@ var PriorityAdministrationComponent = /** @class */ (function () {
         this.priority = {
             useDoctypeDelay: false,
             color: "#135f7f",
-            delays: "1",
+            delays: "0",
             working_days: "false"
         };
     }
@@ -56,7 +56,7 @@ var PriorityAdministrationComponent = /** @class */ (function () {
                 _this.http.get(_this.coreUrl + "rest/priorities/" + _this.id)
                     .subscribe(function (data) {
                     _this.priority = data.priority;
-                    if (_this.priority.delays == 0) {
+                    if (_this.priority.delays == '*') {
                         _this.priority.useDoctypeDelay = false;
                     }
                     else {
@@ -78,7 +78,7 @@ var PriorityAdministrationComponent = /** @class */ (function () {
     PriorityAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
         if (this.priority.useDoctypeDelay == false) {
-            this.priority.delays = 0;
+            this.priority.delays = '*';
         }
         if (this.priority.working_days == "true") {
             this.priority.working_days = true;

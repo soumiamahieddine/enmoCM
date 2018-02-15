@@ -24,7 +24,7 @@ export class PriorityAdministrationComponent implements OnInit {
     priority        : any       = {
         useDoctypeDelay : false,
         color           : "#135f7f",
-        delays          : "1",
+        delays          : "0",
         working_days    : "false"
     };
     selectedWorkingDays: any;
@@ -59,7 +59,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)
                     .subscribe((data : any) => {
                         this.priority = data.priority;
-                        if (this.priority.delays == 0) {
+                        if (this.priority.delays == '*') {
                             this.priority.useDoctypeDelay = false;
                         } else {
                             this.priority.useDoctypeDelay = true;
@@ -79,7 +79,7 @@ export class PriorityAdministrationComponent implements OnInit {
 
     onSubmit(){
         if (this.priority.useDoctypeDelay == false) {
-            this.priority.delays = 0;
+            this.priority.delays = '*';
         }
         if (this.priority.working_days == "true") {
             this.priority.working_days = true
