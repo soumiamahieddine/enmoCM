@@ -211,15 +211,13 @@ abstract class diffusion_list_Abstract extends functions
             //print_r($description); exit;
                 $stmt = $db->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible, process_comment ) "
+                        . " (object_id, object_type, sequence, item_id, item_type, item_mode, description, title, visible, process_comment ) "
                     . " values ("
-                        . "'any', "
-                        . "? , " 
+                        . "? , "
                         . "?, ?, "
                         . "?, "
                         . "'user_id', "
                         . "?, "
-                        . "null, "
                         . "?,"
                         . "?,"
                         . "?,"
@@ -234,15 +232,13 @@ abstract class diffusion_list_Abstract extends functions
                 //print_r($description); exit;
                 $stmt = $db->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible ) "
+                        . " (object_id, object_type, sequence, item_id, item_type, item_mode, description, title, visible ) "
                     . " values ("
-                        . "'any', "
-                        . "? , " 
+                        . "? , "
                         . "?, ?, "
                         . "?, "
                         . "'entity_id', "
                         . "?, "
-                        . "null, "
                         . "?, "
                         . "?,"
                         . "?"

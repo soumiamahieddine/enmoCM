@@ -371,6 +371,11 @@ ALTER TABLE groupbasket DROP COLUMN IF EXISTS sublist_lock_clause;
 DROP TABLE IF EXISTS groupbasket_difflist_types;
 DROP TABLE IF EXISTS groupbasket_difflist_roles;
 
+/*LISTMODELS*/
+ALTER TABLE listmodels DROP COLUMN IF EXISTS listmodel_type;
+ALTER TABLE listmodels DROP COLUMN IF EXISTS coll_id;
+ALTER TABLE listmodels ADD COLUMN id serial NOT NULL;
+
 -- ************************************************************************* --
 --                               CONVERT                             --
 -- ************************************************************************* --

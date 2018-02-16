@@ -213,6 +213,13 @@ $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class 
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
 
+//ListTemplates
+$app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');
+$app->post('/listTemplates', \Entity\controllers\ListTemplateController::class . ':create');
+$app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
+$app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
+$app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
+
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
 $app->post('/parameters', \Parameter\controllers\ParameterController::class . ':create');

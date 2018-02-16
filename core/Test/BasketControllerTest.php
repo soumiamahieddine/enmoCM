@@ -277,8 +277,6 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('USERS', $groupAction->redirects[1]->redirect_mode);
             }
         }
-
-
     }
 
     public function testDeleteGroup()
