@@ -23,7 +23,7 @@ if(!empty($_COOKIE)) {
     $cookie = "";
     $sep = "";
     foreach($_COOKIE as $name => $val) {
-      $cookie = $cookie . $sep . $name . "=" . $val;
+      $cookie = $cookie . $sep . $name . "=" . str_replace(" ", "+", $val);
       $sep = "; ";
     }
     $_SESSION['clientSideCookies'] = $cookie;
