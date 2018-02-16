@@ -64,7 +64,7 @@ class SecondLevelModelAbstract
             'columnsValues' => $aArgs
         ]);
 
-        return $aArgs;
+        return $aArgs['doctypes_second_level_id'];
     }
 
     public static function update(array $aArgs)
@@ -79,7 +79,7 @@ class SecondLevelModelAbstract
             'data'      => [$aArgs['doctypes_second_level_id']]
         ]);
 
-        return $aArgs;
+        return true;
     }
 
     public static function disabledFirstLevel(array $aArgs)
@@ -96,6 +96,4 @@ class SecondLevelModelAbstract
 
         return true;
     }
-
-
 }

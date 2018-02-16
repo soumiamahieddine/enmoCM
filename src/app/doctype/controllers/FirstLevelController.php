@@ -25,17 +25,16 @@ class FirstLevelController
 {
     public function getTree(Request $request, Response $response)
     {
-
         $firstLevels  = FirstLevelModel::get();
         $secondLevels = SecondLevelModel::get();
         $docTypes     = DoctypeModel::get();
 
         $structure = [];
-        foreach($firstLevels as $firstLevelValue){
+        foreach ($firstLevels as $firstLevelValue) {
             foreach ($secondLevels as $secondLevelValue) {
-                if($firstLevelValue['doctypes_first_level_id'] == $secondLevelValue['doctypes_first_level_id']){
+                if ($firstLevelValue['doctypes_first_level_id'] == $secondLevelValue['doctypes_first_level_id']) {
                     foreach ($docTypes as $doctypeValue) {
-                        if($secondLevelValue['doctypes_second_level_id'] == $doctypeValue['doctypes_second_level_id']){
+                        if ($secondLevelValue['doctypes_second_level_id'] == $doctypeValue['doctypes_second_level_id']) {
                             $secondLevelValue['doctypes'][] = $doctypeValue;
                         }
                     }
@@ -52,7 +51,6 @@ class FirstLevelController
 
     public function getById(Request $request, Response $response, $aArgs)
     {
-
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
             return $response
                 ->withStatus(500)
@@ -61,7 +59,7 @@ class FirstLevelController
 
         $obj['firstLevel'] = FirstLevelModel::getById(['id' => $aArgs['id']]);
 
-        if(!empty($obj)){
+        if (!empty($obj)) {
             if ($obj['firstLevel']['enabled'] == 'Y') {
                 $obj['firstLevel']['enabled'] = true;
             } else {
@@ -76,7 +74,6 @@ class FirstLevelController
 
     public function getDoctypeById(Request $request, Response $response, $aArgs)
     {
-
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
             return $response
                 ->withStatus(500)
@@ -85,7 +82,7 @@ class FirstLevelController
 
         $obj = DoctypeModel::getById(['id' => $aArgs['id']]);
 
-        if(!empty($obj)){
+        if (!empty($obj)) {
             if ($obj['enabled'] == 'Y') {
                 $obj['enabled'] = true;
             } else {
@@ -118,26 +115,26 @@ class FirstLevelController
     
         $folderTypeId = $data['foldertype_id'];
         unset($data['foldertype_id']);
-        $obj = FirstLevelModel::create($data);
+        $firstLevelId = FirstLevelModel::create($data);
 
         foreach ($folderTypeId as $value) {
             FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-                "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
+                "doctypes_first_level_id" => $firstLevelId,
                 "foldertype_id"           => $value
             ]);
         }
 
         HistoryController::add([
             'tableName' => 'doctypes_first_level',
-            'recordId'  => $obj['doctypes_first_level_id'],
+            'recordId'  => $firstLevelId,
             'eventType' => 'ADD',
             'eventId'   => 'structureadd',
-            'info'      => _DOCTYPE_FIRSTLEVEL_ADDED . ' : ' . $obj['doctypes_first_level_label']
+            'info'      => _DOCTYPE_FIRSTLEVEL_ADDED . ' : ' . $data['doctypes_first_level_label']
         ]);
 
         return $response->withJson(
             [
-            'firstLevel'  => $obj
+            'firstLevel'  => $firstLevelId
             ]
         );
     }
@@ -162,12 +159,12 @@ class FirstLevelController
 
         $folderTypeId = $obj['foldertype_id'];
         unset($obj['foldertype_id']);
-        $obj = FirstLevelModel::update($obj);
+        FirstLevelModel::update($obj);
 
         FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $obj['doctypes_first_level_id']]);
         foreach ($folderTypeId as $value) {
             FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-                "doctypes_first_level_id" => $obj['doctypes_first_level_id'], 
+                "doctypes_first_level_id" => $obj['doctypes_first_level_id'],
                 "foldertype_id" => $value
             ]);
         }
