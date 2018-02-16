@@ -13,18 +13,19 @@
  * @ingroup core
  */
 
-namespace Core\Controllers;
+namespace SrcCore\controllers;
 
 use Attachments\Models\AttachmentsModel;
 use Core\Models\ChronoModel;
 use Core\Models\ContactModel;
-use Core\Models\DocserverModel;
-use Core\Models\DocserverTypeModel;
-use Core\Models\ResExtModel;
+use Docserver\controllers\DocserverController;
+use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
+use Resource\models\ResExtModel;
 use SrcCore\models\CoreConfigModel;
 
 class StoreController
@@ -271,11 +272,13 @@ class StoreController
                 'value'     => $destUser,
                 'type'      => 'string'
             ];
-            $aArgs['data'][] = [
-                'column'    => 'typist',
-                'value'     => $destUser,
-                'type'      => 'string'
-            ];
+            if (!$typistFound) {
+                $aArgs['data'][] = [
+                    'column'    => 'typist',
+                    'value'     => $destUser,
+                    'type'      => 'string'
+                ];
+            }
         }
         if ($userPrimaryEntity) {
             $destinationFound = false;

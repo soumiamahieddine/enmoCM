@@ -6,11 +6,11 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
 use Attachments\Models\AttachmentsModel;
-use Core\Controllers\ResController;
-use Core\Models\DocserverModel;
-use Core\Models\DocserverTypeModel;
-use Core\Controllers\DocserverController;
-use Core\Controllers\DocserverToolsController;
+use Resource\controllers\ResController;
+use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
+use Docserver\controllers\DocserverController;
+use Docserver\controllers\DocserverToolsController;
 use Core\Models\ResModel;
 
 

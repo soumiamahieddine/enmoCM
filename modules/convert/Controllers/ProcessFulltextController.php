@@ -29,10 +29,10 @@ use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Convert\Models\ProcessFulltextModel;
-use Core\Models\DocserverModel;
-use Core\Models\ResDocserverModel;
-use Core\Controllers\LogsController;
-use Core\Controllers\StoreController;
+use Docserver\models\DocserverModel;
+use Docserver\models\ResDocserverModel;
+use SrcCore\controllers\LogsController;
+use SrcCore\controllers\StoreController;
 
 
 //include_once('html2text/html2text.php');

@@ -699,14 +699,13 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE listmodels
 (
-  coll_id character varying(50) NOT NULL,
+  id serial NOT NULL,
   object_id character varying(50) NOT NULL,
   object_type character varying(255) NOT NULL,
   "sequence" bigint NOT NULL,
   item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
-  listmodel_type character varying(50) DEFAULT 'DOC'::character varying,
   title character varying(255),
   description character varying(255),
   process_comment character varying(255),

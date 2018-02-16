@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Res and docserver association Model
+* @brief FolderType Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Folder\models;
 
-class ResDocserverModel extends ResDocserverModelAbstract
+class FolderTypeModel extends FolderTypeModelAbstract
 {
     // Do your stuff in this class
 }

@@ -23,7 +23,8 @@
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status" required>
+                        <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status"
+                            required>
                             <mat-option *ngFor="let status of statuses" [value]="status.id">
                                 {{status.label_status}}
                             </mat-option>
@@ -32,7 +33,7 @@
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page" >
+                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page">
                             <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
                                 {{action.label}}
                             </mat-option>
@@ -73,8 +74,10 @@
                     </mat-form-field>
                 </div>
                 <div class="col-sm-12 panel-body" style="text-align:center;">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="!actionsFormUp.form.valid">{{lang.validate}}</button>
-                    <button mat-raised-button routerLink='/administration/actions'>{{lang.cancel}}</button>
+                    <button color="default" mat-mini-fab routerLink='/administration/actions' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                        <mat-icon class="fa fa-chevron-left"></mat-icon>
+                    </button>
+                    <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!actionsFormUp.form.valid">{{lang.validate}}</button>
                 </div>
             </form>
         </div>

@@ -1,0 +1,85 @@
+<h2 mat-dialog-title color="primary">{{lang.actionParameters}}
+    <small>{{data.action.label_action}}</small>
+</h2>
+<mat-dialog-content>
+    <form #settingGroupsBasket="ngForm">
+        <div class="container-fluid">
+            <div class="col-md-6">
+                <mat-checkbox [disabled]="data.action.default_action_list == true" id="usedInActionPage" name="usedInActionPage" color="primary"
+                    [(ngModel)]="data.action.used_in_action_page">{{lang.usedInActionPage}}</mat-checkbox>
+            </div>
+            <div class="col-md-6">
+                <mat-checkbox [disabled]="data.action.default_action_list == true" id="usedInBasketlist" name="usedInBasketlist" color="primary"
+                    [(ngModel)]="data.action.used_in_basketlist">{{lang.usedInBasketlist}}</mat-checkbox>
+            </div>
+        </div>
+        <mat-form-field style="margin-top:5px;">
+            <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPages}}" [(ngModel)]="data.group.result_page">
+                <mat-option *ngFor="let page of data.pages" [value]="page.id">
+                    {{page.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex_1">
+            <mat-tab *ngIf="data.action.keyword == 'redirect'||data.action.keyword == 'indexing'">
+                <ng-template mat-tab-label *ngIf="data.action.keyword == 'redirect'">
+                    {{lang.redirects}}
+                </ng-template>
+                <ng-template mat-tab-label *ngIf="data.action.keyword == 'indexing'">
+                    {{lang.indexing}}
+                </ng-template>
+                <mat-accordion>
+                    <mat-expansion-panel (opened)="initService()">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{lang.toEntities}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field>
+                            <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                        </mat-form-field>
+                        <div id="jstree"></div>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel *ngIf="data.action.keyword == 'indexing'" [disabled]="data.action.id_status != '_NOSTATUS_'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{lang.toStatuses}} &nbsp;<mat-icon *ngIf="data.action.id_status != '_NOSTATUS_'" color="warn" class="fa fa-exclamation-circle" matTooltip="{{lang.toStatusesDesc}}"
+                                    style="cursor:help"></mat-icon>
+                                </mat-panel-title>
+    
+                            </mat-expansion-panel-header>
+                            <mat-form-field>
+                                    <mat-select id="statuses" [(ngModel)]="data.action.statuses" name="statuses" placeholder="{{lang.availableStatuses}}" multiple>
+                                        <mat-option *ngFor="let status of this.statuses" [value]="status.id">
+                                            {{status.label_status}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                        </mat-expansion-panel>
+                    <mat-expansion-panel (opened)="initService2()" *ngIf="data.action.keyword == 'redirect'">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{lang.toUsersEntities}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field>
+                            <input matInput id="jstree_search2" name="jstree_search2" type="text" placeholder="{{lang.searchEntities}}">
+                        </mat-form-field>
+                        <div id="jstree2"></div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab label="{{lang.otherParameters}}">
+                <mat-form-field>
+                    <textarea matInput name="clause" title="{{lang.whereClauseAction}}" placeholder="{{lang.whereClauseAction}}"
+                        [(ngModel)]="data.action.where_clause" matTextareaAutosize matAutosizeMinRows="1"></textarea>
+                </mat-form-field>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-raised-button type="submit" [disabled]="!settingGroupsBasket.form.valid" color="primary" style="margin:auto;"
+        (click)="dialogRef.close(data)">{{lang.validate}}</button>
+</mat-dialog-actions>

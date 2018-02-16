@@ -8,15 +8,14 @@
 */
 
 /**
-* @brief Docserver Model
+* @brief ResExt Model
 * @author dev@maarch.org
-* @ingroup core
+* @ingroup Resource
 */
-namespace Core\Models;
 
-require_once 'core/Models/DocserverModelAbstract.php';
+namespace Resource\models;
 
-class DocserverModel extends DocserverModelAbstract
+class ResExtModel extends ResExtModelAbstract
 {
     // Do your stuff in this class
 }

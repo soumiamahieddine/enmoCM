@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
+import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+import {startWith} from 'rxjs/operators/startWith';
+import {map} from 'rxjs/operators/map';
+
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+
 declare function $j(selector: any) : any;
 
 declare var angularGlobals : any;
@@ -10,23 +17,23 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : angularGlobals["update-status-administrationView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css'],
     providers   : [NotificationService]
 })
-export class UpdateStatusAdministrationComponent implements OnInit {
+export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
 
     coreUrl                     : string;
     lang                        : any       = LANG;
-
     statuses                    : any[]     = [];
+    statusId                    : string    = "";
     resId                       : string    = "";
     chrono                      : string    = "";
 
     loading                     : boolean   = false;
 
-
     constructor(public http: HttpClient, private notify: NotificationService) {
+        super(http,'statuses');
     }
+
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
@@ -35,38 +42,39 @@ export class UpdateStatusAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-
-        this.loading = true;
-
-        this.http.get(this.coreUrl + "rest/statuses")
-            .subscribe((data : any) => {
-                this.statuses = data['statuses'];
-
-                this.loading = false;
-            }, () => {
-                location.href = "index.php";
-            });
+        this.loading = false;
     }
 
     onSubmit() {
+
         var body = {
-            "status" : $j("#statuses option:selected")[0].value
+            "status" :  this.statusId
         };
         if (this.resId != "") {
             body["resId"] = this.resId;
         } else if (this.chrono != "") {
             body["chrono"] = this.chrono;
         }
+        console.log(body);
         this.http.put(this.coreUrl + "rest/res/resource/status", body)
             .subscribe(() => {
                 this.resId = "";
                 this.chrono = "";
-                $j('#statuses').prop('selectedIndex', 0);
+                this.statusId = "";
                 this.notify.success(this.lang.modificationSaved);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    resetInput (e:any) {
+        if (e.index == 0) {
+            this.resId = ""; 
+        } else {
+            this.chrono = "";
+        }
     }
 }

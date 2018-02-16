@@ -58,7 +58,6 @@ export class NotificationAdministrationComponent implements OnInit {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
                     .subscribe((data : any) => {
-            
                         this.notification = data.notification;
                         this.loading = false;
                     }, (err) => {
@@ -69,6 +68,16 @@ export class NotificationAdministrationComponent implements OnInit {
 
         this.updateBreadcrumb(angularGlobals.applicationName);
         
+    }
+
+    createScript() {
+        this.http.post(this.coreUrl + 'rest/scriptNotification', this.notification)
+            .subscribe((data : any) => {
+                this.notification.scriptcreated = data;
+                this.notify.success(this.lang.ScriptCreated);
+            },(err) => {
+                this.notify.error(err.error.errors);
+            });        
     }
 
     selectAll(event: any) {

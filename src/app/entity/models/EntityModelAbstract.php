@@ -92,7 +92,7 @@ class EntityModelAbstract
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        DatabaseModel::delete([
+        DatabaseModel::update([
             'table' => 'entities',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],

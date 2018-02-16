@@ -10,11 +10,10 @@
 /**
  * @brief Link Model
  * @author dev@maarch.org
- * @ingroup core
+ * @ingroup link
  */
 
-namespace Core\Models;
-
+namespace Link\models;
 
 use SrcCore\models\DatabaseModel;
 

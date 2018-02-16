@@ -13,11 +13,9 @@
 * @ingroup core
 */
 
-namespace Core\Controllers;
+namespace SrcCore\controllers;
 
 use Core\Models\TextFormatModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Core\Models\ValidatorModel;
 
 if (!defined('_LOG4PHP'))

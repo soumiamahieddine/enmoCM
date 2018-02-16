@@ -18,6 +18,7 @@ namespace Notification\controllers;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Notification\models\NotificationModel;
+use Notification\models\NotificationScheduleModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -77,7 +78,28 @@ class NotificationController
 
         $notification['data'] = $data;
 
-        return $response->withJson(['notification'=>$notification]);
+        $filename = "notification";
+        $customId = CoreConfigModel::getCustomId();
+        if ($customId <> "") {
+            $filename.="_".str_replace(" ", "", $customId);
+        }
+        $filename .= "_".$notification['notification_sid'].".sh";
+
+        $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+        $corePath = str_replace("src/app/notification/controllers", "", $corePath);
+        if ($customId <> '') {
+            $pathToFolow = $corePath . 'custom/'.$customId. '/';
+        } else {
+            $pathToFolow = $corePath;
+        }
+
+        $notification["scriptcreated"] = false;
+
+        if (file_exists($pathToFolow.'modules/notifications/batch/scripts/'.$filename)) {
+            $notification["scriptcreated"] = true;
+        }
+
+        return $response->withJson(['notification' => $notification]);
     }
 
     public function create(Request $request, Response $response)
@@ -120,7 +142,7 @@ class NotificationController
         if (NotificationModel::create($data)) {
             if (PHP_OS == "Linux") {
                 $notificationAdded = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
-                NotificationScheduleController::createScriptNotification($notificationAdded['notification_sid'], $data['notification_id']);
+                NotificationScheduleModel::createScriptNotification(['notification_sid' => $notificationAdded['notification_sid'], 'notification_id' => $data['notification_id']]);
             }
 
             HistoryController::add([
@@ -144,6 +166,7 @@ class NotificationController
 
         $data                     = $request->getParams();
         $data['notification_sid'] = $aArgs['id'];
+        unset($data['scriptcreated']);
 
         $errors = $this->control($data, 'update');
       
@@ -160,7 +183,7 @@ class NotificationController
         $notification = NotificationModel::getById(['notification_sid' => $data['notification_sid']]);
 
         if (PHP_OS == "Linux") {
-            NotificationScheduleController::createScriptNotification($data['notification_sid'], $notification['notification_id']);
+            NotificationScheduleModel::createScriptNotification(['notification_sid' => $data['notification_sid'], 'notification_id' => $notification['notification_id']]);
         }
 
         HistoryController::add([
@@ -206,11 +229,12 @@ class NotificationController
             }
             $filename.="_".$aArgs['id'].".sh";
 
-            $cronTab = NotificationScheduleController::getCrontab();
+            $cronTab = NotificationScheduleModel::getCrontab();
 
             $flagCron = false;
 
-            $corePath = dirname(__FILE__, 5) . '/';
+            $corePath = str_replace("custom/".$customId."/src/app/notification/controllers", "", __DIR__);
+            $corePath = str_replace("src/app/notification/controllers", "", $corePath);
             if ($customId <> '') {
                 $pathToFolow = $corePath . 'custom/'.$customId. '/';
             } else {
@@ -226,7 +250,7 @@ class NotificationController
             }
 
             if ($flagCron) {
-                NotificationScheduleController::saveCrontab($cronTab);
+                NotificationScheduleModel::saveCrontab($cronTab);
             }
             
             unlink($pathToFolow . 'modules/notifications/batch/scripts/' . $filename);

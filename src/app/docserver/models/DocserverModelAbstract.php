@@ -13,9 +13,10 @@
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Docserver\models;
 
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class DocserverModelAbstract
 {

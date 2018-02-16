@@ -107,10 +107,10 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
-$app->post('/initialize', \Core\Controllers\CoreController::class . ':initialize');
+$app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
 //Administration
-$app->get('/administration', \Core\Controllers\CoreController::class . ':getAdministration');
+$app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
 $app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
 $app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
@@ -148,12 +148,12 @@ $app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController
 $app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
 
 //Docservers
-$app->get('/docservers', \Core\Controllers\DocserverController::class . ':get');
-$app->get('/docservers/{id}', \Core\Controllers\DocserverController::class . ':getById');
+$app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
+$app->get('/docservers/{id}', \Docserver\controllers\DocserverController::class . ':getById');
 
 //DocserverTypes
-$app->get('/docserverTypes', \core\Controllers\DocserverTypeController::class . ':get');
-$app->get('/docserverTypes/{id}', \core\Controllers\DocserverTypeController::class . ':getById');
+$app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
+$app->get('/docserverTypes/{id}', \Docserver\controllers\DocserverTypeController::class . ':getById');
 
 //ListModels
 $app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
@@ -207,9 +207,18 @@ $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getById');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
+$app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
+
+//ListTemplates
+$app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');
+$app->post('/listTemplates', \Entity\controllers\ListTemplateController::class . ':create');
+$app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
+$app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
+$app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -243,10 +252,14 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
 $app->post('/notifications', \Notification\controllers\NotificationController::class . ':create');
+$app->get('/notifications/schedule', \Notification\controllers\NotificationScheduleController::class . ':get');
+$app->post('/notifications/schedule', \Notification\controllers\NotificationScheduleController::class . ':create');
 $app->put('/notifications/{id}', \Notification\controllers\NotificationController::class . ':update');
 $app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
 $app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
+
+$app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
@@ -263,7 +276,7 @@ $app->post('/contacts', \Contact\controllers\ContactController::class . ':create
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Links
-$app->get('/links/resId/{resId}', \Core\Controllers\LinkController::class . ':getByResId');
+$app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
 
 //liste documents
 $app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause

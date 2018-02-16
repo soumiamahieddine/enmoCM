@@ -17,10 +17,10 @@ use Attachments\Models\AttachmentsModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Core\Models\ContactModel;
-use Core\Models\LinkModel;
+use SrcCore\models\LinkModel;
 use Core\Models\UserModel;
 use Core\Models\LangModel;
-use Core\Models\DocserverModel;
+use Docserver\models\DocserverModel;
 use Core\Models\ServiceModel;
 use Entity\models\ListInstanceModel;
 use Notes\Models\NoteModel;
@@ -100,7 +100,11 @@ class VisaController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
-            ListInstanceModel::setSignatory(['resId' => $attachment['res_id_master'], 'signatory' => 'false', 'userId' => $GLOBALS['userId']]);
+            ListInstanceModel::update([
+                'set'   => ['signatory' => 'false'],
+                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+                'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            ]);
         }
 
         return $response->withJson(['success' => 'success']);

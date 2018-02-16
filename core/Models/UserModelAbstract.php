@@ -15,6 +15,7 @@
 
 namespace Core\Models;
 
+use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use History\controllers\HistoryController;
 use SrcCore\models\CoreConfigModel;

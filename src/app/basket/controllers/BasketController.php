@@ -59,8 +59,8 @@ class BasketController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -105,8 +105,8 @@ class BasketController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['name']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+        $check = Validator::stringType()->notEmpty()->validate($data['basket_name']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -265,7 +265,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        $groups = BasketModel::getGroups(['id' => $aArgs['id']]);
+        $groups = BasketModel::getGroups(['id' => $aArgs['id'], 'orderBy' => ['group_id']]);
         $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
@@ -365,36 +365,38 @@ class BasketController
 
         BasketModel::createGroup(['id' => $aArgs['id'], 'groupId' => $data['group_id'], 'resultPage' => $data['result_page']]);
         foreach ($data['groupActions'] as $groupAction) {
-            BasketModel::createGroupAction([
-                'id'                => $aArgs['id'],
-                'groupId'           => $data['group_id'],
-                'actionId'          => $groupAction['id_action'],
-                'whereClause'       => $groupAction['where_clause'],
-                'usedInBasketlist'  => $groupAction['used_in_basketlist'],
-                'usedInActionPage'  => $groupAction['used_in_action_page'],
-                'defaultActionList' => $groupAction['default_action_list']
-            ]);
+            if ($groupAction['checked']) {
+                BasketModel::createGroupAction([
+                    'id'                => $aArgs['id'],
+                    'groupId'           => $data['group_id'],
+                    'actionId'          => $groupAction['id'],
+                    'whereClause'       => $groupAction['where_clause'],
+                    'usedInBasketlist'  => $groupAction['used_in_basketlist'],
+                    'usedInActionPage'  => $groupAction['used_in_action_page'],
+                    'defaultActionList' => $groupAction['default_action_list']
+                ]);
 
-            if (!empty($groupAction['statuses'])) {
-                foreach ($groupAction['statuses'] as $status) {
-                    BasketModel::createGroupActionStatus([
-                        'id'        => $aArgs['id'],
-                        'groupId'   => $data['group_id'],
-                        'actionId'  => $groupAction['id_action'],
-                        'statusId'  => $status
-                    ]);
+                if (!empty($groupAction['statuses'])) {
+                    foreach ($groupAction['statuses'] as $status) {
+                        BasketModel::createGroupActionStatus([
+                            'id'        => $aArgs['id'],
+                            'groupId'   => $data['group_id'],
+                            'actionId'  => $groupAction['id'],
+                            'statusId'  => $status
+                        ]);
+                    }
                 }
-            }
-            if (!empty($groupAction['redirects'])) {
-                foreach ($groupAction['redirects'] as $redirect) {
-                    BasketModel::createGroupActionRedirect([
-                        'id'            => $aArgs['id'],
-                        'groupId'       => $data['group_id'],
-                        'actionId'      => $groupAction['id_action'],
-                        'entityId'      => $redirect['entity_id'],
-                        'keyword'       => $redirect['keyword'],
-                        'redirectMode'  => $redirect['redirect_mode']
-                    ]);
+                if (!empty($groupAction['redirects'])) {
+                    foreach ($groupAction['redirects'] as $redirect) {
+                        BasketModel::createGroupActionRedirect([
+                            'id'            => $aArgs['id'],
+                            'groupId'       => $data['group_id'],
+                            'actionId'      => $groupAction['id'],
+                            'entityId'      => $redirect['entity_id'],
+                            'keyword'       => $redirect['keyword'],
+                            'redirectMode'  => $redirect['redirect_mode']
+                        ]);
+                    }
                 }
             }
         }
@@ -402,7 +404,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_CREATION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
@@ -445,7 +447,7 @@ class BasketController
                 BasketModel::createGroupAction([
                     'id'                => $aArgs['id'],
                     'groupId'           => $aArgs['groupId'],
-                    'actionId'          => $groupAction['id_action'],
+                    'actionId'          => $groupAction['id'],
                     'whereClause'       => $groupAction['where_clause'],
                     'usedInBasketlist'  => $groupAction['used_in_basketlist'],
                     'usedInActionPage'  => $groupAction['used_in_action_page'],
@@ -457,7 +459,7 @@ class BasketController
                         BasketModel::createGroupActionStatus([
                             'id'        => $aArgs['id'],
                             'groupId'   => $aArgs['groupId'],
-                            'actionId'  => $groupAction['id_action'],
+                            'actionId'  => $groupAction['id'],
                             'statusId'  => $status
                         ]);
                     }
@@ -467,7 +469,7 @@ class BasketController
                         BasketModel::createGroupActionRedirect([
                             'id'            => $aArgs['id'],
                             'groupId'       => $aArgs['groupId'],
-                            'actionId'      => $groupAction['id_action'],
+                            'actionId'      => $groupAction['id'],
                             'entityId'      => $redirect['entity_id'],
                             'keyword'       => $redirect['keyword'],
                             'redirectMode'  => $redirect['redirect_mode']
@@ -480,7 +482,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_MODIFICATION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
@@ -504,7 +506,7 @@ class BasketController
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _BASKET_MODIFICATION . " : {$aArgs['id']}",
+            'info'      => _BASKET_GROUP_SUPPRESSION . " : {$aArgs['id']}",
             'moduleId'  => 'basket',
             'eventId'   => 'basketModification',
         ]);
@@ -524,7 +526,7 @@ class BasketController
             if ($groupAction['checked']) {
                 $actionExists = false;
                 foreach ($actions as $action) {
-                    if ($action['id'] == $groupAction['id_action']) {
+                    if ($action['id'] == $groupAction['id']) {
                         $actionExists = true;
                     }
                 }

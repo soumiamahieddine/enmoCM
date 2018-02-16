@@ -13,13 +13,12 @@
  * @ingroup core
  */
 
-namespace Core\Controllers;
+namespace Link\controllers;
 
-use Core\Models\LinkModel;
+use Link\models\LinkModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-
 
 class LinkController
 {

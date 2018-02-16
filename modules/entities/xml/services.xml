@@ -33,7 +33,7 @@
         <name>_ADMIN_LISTMODELS</name>
         <comment>_ADMIN_LISTMODELS_DESC</comment>
         <servicepage>index.php?page=admin_listmodels&amp;module=entities</servicepage>
-        <servicetype>use</servicetype>
+        <servicetype>admin</servicetype>
         <system_service>false</system_service>
         <style>fa fa-sitemap</style>
         <enabled>true</enabled>

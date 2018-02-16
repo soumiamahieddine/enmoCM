@@ -12,6 +12,10 @@ function triggerAngular(prodmode, locationToGo) {
         'baskets-administration',
         'baskets-order-administration',
         'basket-administration',
+        'basket-administration-settings-modal',
+        'basket-administration-groupList-modal',
+        'entities-administration',
+        'entity-administration',
         'status-administration',
         'statuses-administration',
         'actions-administration',
@@ -27,6 +31,7 @@ function triggerAngular(prodmode, locationToGo) {
         'priority-administration',
         'reports-administration',
         'notifications-administration',
+        'notifications-schedule-administration',
         'notification-administration'
     ];
 
@@ -41,6 +46,7 @@ function triggerAngular(prodmode, locationToGo) {
 
             angularGlobals = answer;
             $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+            
             if (prodmode) {
 
                 var alreadyLoaded = false;

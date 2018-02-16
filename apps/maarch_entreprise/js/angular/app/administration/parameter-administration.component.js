@@ -25,7 +25,14 @@ var ParameterAdministrationComponent = /** @class */ (function () {
         this.loading = false;
     }
     ParameterAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a>";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a> > ";
+        if (this.creationMode == true) {
+            breadCrumb += this.lang.parameterCreation;
+        }
+        else {
+            breadCrumb += this.lang.parameterModification;
+        }
+        $j('#ariane')[0].innerHTML = breadCrumb;
     };
     ParameterAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;

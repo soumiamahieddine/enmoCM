@@ -154,6 +154,9 @@ if (! empty($_SESSION['error'])) {
             $docserver = $lineDoc->path_template;
             $file      = $docserver . $path . $filename;
             $file      = str_replace("#", DIRECTORY_SEPARATOR, $file);
+            if(!file_exists($file)){
+                echo _FILE_NOT_EXISTS_ON_THE_SERVER; exit;
+            }
 
             if (!copy($file, $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR  . $filename)) {
                 echo 'error';

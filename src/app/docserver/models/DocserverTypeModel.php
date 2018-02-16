@@ -8,14 +8,13 @@
 */
 
 /**
-* @brief ResExt Model
+* @brief DocserverType Model
 * @author dev@maarch.org
 * @ingroup core
 */
+namespace Docserver\models;
 
-namespace Core\Models;
-
-class ResExtModel extends ResExtModelAbstract
+class DocserverTypeModel extends DocserverTypeModelAbstract
 {
     // Do your stuff in this class
 }

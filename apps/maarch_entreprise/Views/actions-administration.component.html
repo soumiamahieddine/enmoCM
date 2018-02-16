@@ -7,60 +7,61 @@
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <div *ngIf="!loading" class="container-fluid">
-    <div class="col-md-12">
-        <div class="example-container">
-            <mat-grid-list cols="3" rowHeight="100px">
-                <mat-grid-tile>
-                    <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
-                    </mat-paginator>
-                </mat-grid-tile>
-                <mat-grid-tile></mat-grid-tile>
-                <mat-grid-tile>
-                    <mat-form-field>
-                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                    </mat-form-field>
-                    <button mat-mini-fab color="accent" matTooltip="{{lang.add}}" routerLink="/administration/actions/new">
-                        <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
-                    </button>
-                </mat-grid-tile>
-            </mat-grid-list>
-            <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
-                <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="label_action">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="history">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionHistory}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
-                        <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
-                    </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="is_folder_action">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.isFolderAction}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
-                        <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
-                    </mat-cell>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
-                    <mat-cell *matCellDef="let element" style="text-align:right">
-                        <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/actions/{{element.id}}">
-                            <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="deleteAction(element)">
-                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
-                        </button>
-                    </mat-cell>
-                </ng-container>
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
+    <div class="row">
+        <div class="col-md-2 col-xs-2">
+            <button color="default" mat-mini-fab routerLink='/administration' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
+                <mat-icon class="fa fa-chevron-left"></mat-icon>
+            </button>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+            </mat-form-field>
+        </div>
+        <div class="col-md-4 col-xs-4">
+            <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+            </mat-paginator>
         </div>
     </div>
+    <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="label_action">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="history">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionHistory}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
+                <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="is_folder_action">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.isFolderAction}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
+                <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef style="text-align: right;padding: 10px">
+                <button mat-mini-fab color="accent" class="enableAtionTopRightSmarpthone" matTooltip="{{lang.add}}" routerLink="/administration/actions/new">
+                    <mat-icon class="fa fa-plus" aria-hidden="true"></mat-icon>
+                </button>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" style="text-align:right">
+                <button mat-icon-button color="primary" matTooltip="{{lang.update}}" routerLink="/administration/actions/{{element.id}}">
+                    <mat-icon class="fa fa-edit fa-2x" aria-hidden="true"></mat-icon>
+                </button>
+                <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="deleteAction(element)">
+                    <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
 </div>

@@ -875,7 +875,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                     if(origin != 'init'){
                         document.getElementById("diff_list_tr").style.display='table-row';
                         document.getElementById("destination").onchange();
-                        Event.fire($("destination"), "chosen:updated");
+                        $j("#destination").trigger("chosen:updated");
                     }
 
                     var path_scripts = '';
@@ -898,7 +898,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
                                 scripts : path_scripts
                             },
                              onSuccess: function(answer){
-                                 //console.log(answer.responseText+call_func);
+                                //console.log(answer.responseText+call_func);
                                 eval(answer.responseText+call_func);
                             }
                         });
@@ -947,7 +947,7 @@ function process_category(category, display_value_tr, params_cat)
         {
             var item = $(category[i]['id']);
             if(item != null)
-            {
+            {                
                 if(category[i]['state'] == 'hide' )
                 {
                     Element.setStyle(item, {display : 'none'});

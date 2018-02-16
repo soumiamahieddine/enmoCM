@@ -15,7 +15,7 @@
 namespace Resource\controllers;
 
 use Basket\models\BasketModel;
-use Core\Controllers\StoreController;
+use SrcCore\controllers\StoreController;
 use Core\Models\ServiceModel;
 use Status\models\StatusModel;
 use Core\Models\UserModel;

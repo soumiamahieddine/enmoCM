@@ -14,12 +14,14 @@ var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
 var users_administration_component_1 = require("./users-administration.component");
-var user_administration_component_1 = require("./user-administration.component");
 var groups_administration_component_1 = require("./groups-administration.component");
+var user_administration_component_1 = require("./user-administration.component");
 var group_administration_component_1 = require("./group-administration.component");
 var baskets_administration_component_1 = require("./baskets-administration.component");
 var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
+var entities_administration_component_1 = require("./entities-administration.component");
+var entity_administration_component_1 = require("./entity-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -33,6 +35,7 @@ var history_administration_component_1 = require("./history-administration.compo
 var historyBatch_administration_component_1 = require("./historyBatch-administration.component");
 var update_status_administration_component_1 = require("./update-status-administration.component");
 var notifications_administration_component_1 = require("./notifications-administration.component");
+var notifications_schedule_administration_component_1 = require("./notifications-schedule-administration.component");
 var notification_administration_component_1 = require("./notification-administration.component");
 var AdministrationModule = /** @class */ (function () {
     function AdministrationModule() {
@@ -56,6 +59,8 @@ var AdministrationModule = /** @class */ (function () {
                 baskets_administration_component_1.BasketsAdministrationComponent,
                 baskets_order_administration_component_1.BasketsOrderAdministrationComponent,
                 basket_administration_component_1.BasketAdministrationComponent,
+                entities_administration_component_1.EntitiesAdministrationComponent,
+                entity_administration_component_1.EntityAdministrationComponent,
                 statuses_administration_component_1.StatusesAdministrationComponent,
                 status_administration_component_1.StatusAdministrationComponent,
                 actions_administration_component_1.ActionsAdministrationComponent,
@@ -69,13 +74,18 @@ var AdministrationModule = /** @class */ (function () {
                 historyBatch_administration_component_1.HistoryBatchAdministrationComponent,
                 update_status_administration_component_1.UpdateStatusAdministrationComponent,
                 notifications_administration_component_1.NotificationsAdministrationComponent,
+                notifications_schedule_administration_component_1.NotificationsScheduleAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
-                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
+                basket_administration_component_1.BasketAdministrationSettingsModalComponent,
+                basket_administration_component_1.BasketAdministrationGroupListModalComponent
             ],
             entryComponents: [
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
-                groups_administration_component_1.GroupsAdministrationRedirectModalComponent
+                groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
+                basket_administration_component_1.BasketAdministrationSettingsModalComponent,
+                basket_administration_component_1.BasketAdministrationGroupListModalComponent
             ],
         })
     ], AdministrationModule);

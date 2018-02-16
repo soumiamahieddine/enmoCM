@@ -4,11 +4,12 @@
    <id>admin_baskets</id>
    <name>_ADMIN_BASKETS</name>
    <comment>_ADMIN_BASKETS_DESC</comment>
-   <servicepage>index.php?page=basket&amp;module=basket</servicepage>
+   <servicepage>/administration/baskets</servicepage>
    <servicetype>admin</servicetype>
     <system_service>false</system_service>
    <style>fa fa-inbox</style>
    <enabled>true</enabled>
+   <angular>true</angular>
    <WHEREAMIUSED>
      <page>admin.php</page>
      <nature>listelement</nature>

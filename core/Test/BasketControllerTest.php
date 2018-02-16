@@ -23,8 +23,8 @@ class BasketControllerTest extends TestCase
 
         $aArgs = [
             'id'                => 'TEST-BASKET123',
-            'name'              => 'TEST-BASKET123-NAME',
-            'description'       => 'TEST BASKET123 DESCRIPTION',
+            'basket_name'       => 'TEST-BASKET123-NAME',
+            'basket_desc'       => 'TEST BASKET123 DESCRIPTION',
             'clause'            => '1=2',
             'isSearchBasket'    => true,
             'isFolderBasket'    => true,
@@ -61,8 +61,8 @@ class BasketControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'name'              => 'TEST-BASKET123-UPDATED',
-            'description'       => 'TEST BASKET123 DESCRIPTION UPDATED',
+            'basket_name'       => 'TEST-BASKET123-UPDATED',
+            'basket_desc'       => 'TEST BASKET123 DESCRIPTION UPDATED',
             'clause'            => '1=3',
             'isSearchBasket'    => false,
             'isFolderBasket'    => false,
@@ -105,11 +105,12 @@ class BasketControllerTest extends TestCase
             'result_page'   => 'redirect_to_action',
             'groupActions'  => [
                 [
-                    'id_action'             => '112',
+                    'id'                    => '112',
                     'where_clause'          => '1=2',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => false,
                     'default_action_list'   => true,
+                    'checked'               => true,
                     'statuses'              => [
                         'NEW',
                         'END'
@@ -179,11 +180,12 @@ class BasketControllerTest extends TestCase
             'result_page'   => 'list_with_attachments',
             'groupActions'  => [
                 [
-                    'id_action'             => '1',
+                    'id'             => '1',
                     'where_clause'          => '1=1',
                     'used_in_basketlist'    => true,
                     'used_in_action_page'   => true,
                     'default_action_list'   => true,
+                    'checked'               => true,
                     'statuses'              => [
                         'END',
                     ],
@@ -196,11 +198,12 @@ class BasketControllerTest extends TestCase
                     ]
                 ],
                 [
-                    'id_action'             => '4',
+                    'id'             => '4',
                     'where_clause'          => '1=4',
                     'used_in_basketlist'    => false,
                     'used_in_action_page'   => true,
                     'default_action_list'   => false,
+                    'checked'               => true,
                     'statuses'              => [
                         'NEW',
                         'COU'
@@ -274,8 +277,6 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('USERS', $groupAction->redirects[1]->redirect_mode);
             }
         }
-
-
     }
 
     public function testDeleteGroup()
