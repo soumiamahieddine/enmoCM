@@ -1,58 +1,99 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.priorityModification}}
-        <small>{{priority.label}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.priorityCreation}}
-        <small>{{priority.label}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="col-md-6 col-md-offset-3">
-        <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
-            <div class="col-md-11 col-xs-11">
-                <mat-form-field>
-                    <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
-                        maxlength="128" required>
-                </mat-form-field>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.priorityModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{priority.label}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.priorityCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{priority.label}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/priorities">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <div class="col-md-1 col-xs-1">
-                <mat-form-field>
-                    <input matInput type="color" name="color" [(ngModel)]="priority.color" required>
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <span matPrefix>
-                        <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="Utiliser ce délai de traitement au lieu de celui définit dans le type document"></mat-checkbox>&nbsp;</span>
-                    <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
-                        required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
-                </mat-form-field>
-            </div>
-            <div class="col-md-6">
-                <mat-slider [disabled]="!priority.useDoctypeDelay" style="width:100%" name="delays" color="primary" max="60" min="0" thumb-label="true"
-                    [(ngModel)]="priority.delays"></mat-slider>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <mat-select [disabled]="!priority.useDoctypeDelay" name="processType" placeholder="Type de traitement" [(ngModel)]="priority.working_days">
-                        <mat-option value="true">
-                            {{lang.workingDays}}
-                        </mat-option>
-                        <mat-option value="false">
-                            {{lang.calDays}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="col-md-12 text-center" style="padding:10px;">
-                <button color="default" mat-mini-fab routerLink='/administration/priorities' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-                    <mat-icon class="fa fa-chevron-left"></mat-icon>
-                </button>
-                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!priorityForm.form.valid" color="primary">{{lang.save}}</button>
-            </div>
-        </form>
-    </div>
+            <mat-card *ngIf="!loading">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
+                    <div class="form-group">
+                        <div class="col-md-11 col-xs-11">
+                            <mat-form-field>
+                                <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
+                                    maxlength="128" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-1 col-xs-1">
+                            <mat-form-field>
+                                <input matInput type="color" name="color" [(ngModel)]="priority.color" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <span matPrefix>
+                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="Utiliser ce délai de traitement au lieu de celui définit dans le type document"></mat-checkbox>&nbsp;</span>
+                                <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
+                                    required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-slider [disabled]="!priority.useDoctypeDelay" style="width:100%" name="delays" color="primary" max="60" min="0" thumb-label="true"
+                                [(ngModel)]="priority.delays"></mat-slider>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select [disabled]="!priority.useDoctypeDelay" name="processType" placeholder="Type de traitement" [(ngModel)]="priority.working_days">
+                                    <mat-option value="true">
+                                        {{lang.workingDays}}
+                                    </mat-option>
+                                    <mat-option value="false">
+                                        {{lang.calDays}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 text-center" style="padding:10px;">
+                            <button class="enableAtionBottomCenterSmarpthone" mat-raised-button [disabled]="!priorityForm.form.valid" color="primary">{{lang.save}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

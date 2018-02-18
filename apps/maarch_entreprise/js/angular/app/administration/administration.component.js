@@ -10,17 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var AdministrationComponent = /** @class */ (function () {
-    function AdministrationComponent(http, router) {
+    function AdministrationComponent(changeDetectorRef, media, http, router) {
         this.http = http;
         this.router = router;
         this.lang = translate_component_1.LANG;
         this.applicationServices = [];
         this.modulesServices = [];
         this.loading = false;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     AdministrationComponent.prototype.prepareAdministration = function () {
         $j('#inner_content').remove();
@@ -63,9 +68,8 @@ var AdministrationComponent = /** @class */ (function () {
     AdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals.administrationView,
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.Router])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.Router])
     ], AdministrationComponent);
     return AdministrationComponent;
 }());

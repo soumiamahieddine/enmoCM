@@ -1,35 +1,45 @@
-import { Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["priority-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["priority-administrationView"],
+    providers: [NotificationService]
 })
 export class PriorityAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    id: string;
+    creationMode: boolean;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    coreUrl         : string;
-    id              : string;
-    creationMode    : boolean;
-    lang            : any       = LANG;
-    loading         : boolean   = false;
-
-    priority        : any       = {
-        useDoctypeDelay : false,
-        color           : "#135f7f",
-        delays          : "0",
-        working_days    : "false"
+    priority: any = {
+        useDoctypeDelay: false,
+        color: "#135f7f",
+        delays: "0",
+        working_days: "false"
     };
     selectedWorkingDays: any;
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -57,7 +67,7 @@ export class PriorityAdministrationComponent implements OnInit {
                 this.updateBreadcrumb(angularGlobals.applicationName);
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/priorities/" + this.id)
-                    .subscribe((data : any) => {
+                    .subscribe((data: any) => {
                         this.priority = data.priority;
                         if (this.priority.delays == '*') {
                             this.priority.useDoctypeDelay = false;
@@ -77,7 +87,7 @@ export class PriorityAdministrationComponent implements OnInit {
         });
     }
 
-    onSubmit(){
+    onSubmit() {
         if (this.priority.useDoctypeDelay == false) {
             this.priority.delays = '*';
         }

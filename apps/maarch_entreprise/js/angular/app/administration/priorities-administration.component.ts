@@ -1,29 +1,31 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 @Component({
-    templateUrl : angularGlobals["priorities-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["priorities-administrationView"],
+    providers: [NotificationService]
 })
 export class PrioritiesAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    coreUrl         : string;
-    lang            : any       = LANG;
-    loading         : boolean   = false;
+    priorities: any[] = [];
 
-    priorities      : any[]     = [];
-
-    datatable       : any;
+    datatable: any;
 
     displayedColumns = ['label', 'delays', 'working_days', 'actions'];
-    dataSource      : any;
+    dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -32,7 +34,15 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -47,7 +57,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/priorities')
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.priorities = data["priorities"];
                 this.loading = false;
                 setTimeout(() => {
@@ -65,7 +75,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/priorities/" + id)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.priorities = data["priorities"];
                     this.dataSource = new MatTableDataSource(this.priorities);
                     this.dataSource.paginator = this.paginator;

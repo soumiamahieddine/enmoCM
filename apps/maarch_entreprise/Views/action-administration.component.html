@@ -1,85 +1,126 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.actionModification}}
-        <small>{{action.label_action}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.actionCreation}}
-        <small>{{action.label_action}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="container-fluid">
-        <div class="col-md-6 col-md-offset-3">
-            <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert">
-                <b>{{lang.isSytemAction}} !</b> {{lang.doNotModifyUnlessExpert}}</div>
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
-                <div class="form-group">
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="action.label_action" required name="action_name" id="action_name" title="{{lang.label}}"
-                            type="text" placeholder="{{lang.label}}" maxlength="255">
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status"
-                            required>
-                            <mat-option *ngFor="let status of statuses" [value]="status.id">
-                                {{status.label_status}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page">
-                            <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
-                                {{action.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="keyword" name="keyword" title="{{lang.keyword}}" placeholder="{{lang.keyword}}" [(ngModel)]="action.keyword">
-                            <mat-option *ngFor="let keyword of keywordsList" [value]="keyword.value">
-                                {{keyword.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="col-sm-6">
-                                <mat-slide-toggle name="history" title="{{lang.actionHistoryDesc}}" id="history" color="primary" [(ngModel)]="action.history"
-                                    [checked]="action.history == 'Y'">{{lang.actionHistory}}</mat-slide-toggle>
-                            </div>
-                            <div class="col-sm-6">
-                                <mat-slide-toggle name="is_folder_action" title="{{lang.isFolderActionDesc}}" id="is_folder_action" color="primary" [(ngModel)]="action.is_folder_action"
-                                    [checked]="action.is_folder_action == 'Y'">{{lang.isFolderAction}}</mat-slide-toggle>
-                            </div>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.actionModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{action.label_action}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.actionCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{action.label_action}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/actions">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading">
+                <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert">
+                    <b>{{lang.isSytemAction}} !</b> {{lang.doNotModifyUnlessExpert}}</div>
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="action.label_action" required name="action_name" id="action_name" title="{{lang.label}}"
+                                    type="text" placeholder="{{lang.label}}" maxlength="255">
+                            </mat-form-field>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="categorieslist" name="categorieslist" title="{{lang.chooseCategoryAssociation}}" placeholder="{{lang.chooseCategoryAssociation}}"
-                            [(ngModel)]="action.actionCategories" multiple required>
-                            <mat-option *ngFor="let category of categoriesList" [value]="category.id">
-                                {{category.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 panel-body" style="text-align:center;">
-                    <button color="default" mat-mini-fab routerLink='/administration/actions' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-                        <mat-icon class="fa fa-chevron-left"></mat-icon>
-                    </button>
-                    <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!actionsFormUp.form.valid">{{lang.validate}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="status" name="status" title="{{lang.associatedStatus}}" placeholder="{{lang.associatedStatus}}" [(ngModel)]="action.id_status"
+                                    required>
+                                    <mat-option *ngFor="let status of statuses" [value]="status.id">
+                                        {{status.label_status}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="action_page" name="action_page" title="{{lang.actionPage}}" placeholder="{{lang.actionPage}}" [(ngModel)]="action.action_page">
+                                    <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
+                                        {{action.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="keyword" name="keyword" title="{{lang.keyword}}" placeholder="{{lang.keyword}}" [(ngModel)]="action.keyword">
+                                    <mat-option *ngFor="let keyword of keywordsList" [value]="keyword.value">
+                                        {{keyword.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6" style="text-align:center;">
+                            <mat-slide-toggle name="history" title="{{lang.actionHistoryDesc}}" id="history" color="primary" [(ngModel)]="action.history"
+                                [checked]="action.history == 'Y'">{{lang.actionHistory}}</mat-slide-toggle>
+                        </div>
+                        <div class="col-sm-6" style="text-align:center;">
+                            <mat-slide-toggle name="is_folder_action" title="{{lang.isFolderActionDesc}}" id="is_folder_action" color="primary" [(ngModel)]="action.is_folder_action"
+                                [checked]="action.is_folder_action == 'Y'">{{lang.isFolderAction}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="categorieslist" name="categorieslist" title="{{lang.chooseCategoryAssociation}}" placeholder="{{lang.chooseCategoryAssociation}}"
+                                    [(ngModel)]="action.actionCategories" multiple required>
+                                    <mat-option *ngFor="let category of categoriesList" [value]="category.id">
+                                        {{category.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!actionsFormUp.form.valid">{{lang.validate}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

@@ -1,71 +1,106 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.parameterModification}}
-        <small>{{parameter.id}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.parameterCreation}}
-        <small>{{parameter.id}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="container-fluid">
-        <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterForm="ngForm">
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="parameter.id" [disabled]="!creationMode" name="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}"
-                                pattern="^[\w-]*$" required>
-                        </mat-form-field>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.parameterModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{parameter.id}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.parameterCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{parameter.id}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/parameters">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #parameterForm="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="parameter.id" [disabled]="!creationMode" name="id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}"
+                                    pattern="^[\w-]*$" required>
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="parameter.description" name="description" id="description" title="{{lang.description}}" type="text"
-                                placeholder="{{lang.description}}">
-                        </mat-form-field>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="parameter.description" name="description" id="description" title="{{lang.description}}" type="text"
+                                    placeholder="{{lang.description}}">
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <mat-form-field>
-                            <mat-select name="type" placeholder="{{lang.type}}" [(ngModel)]="type" [disabled]="!creationMode" required>
-                                <mat-option value="string">
-                                    {{lang.string}}
-                                </mat-option>
-                                <mat-option value="int">
-                                    {{lang.integer}}
-                                </mat-option>
-                                <mat-option value="date">
-                                    {{lang.date}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <mat-select name="type" placeholder="{{lang.type}}" [(ngModel)]="type" [disabled]="!creationMode" required>
+                                    <mat-option value="string">
+                                        {{lang.string}}
+                                    </mat-option>
+                                    <mat-option value="int">
+                                        {{lang.integer}}
+                                    </mat-option>
+                                    <mat-option value="date">
+                                        {{lang.date}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field *ngIf="type == 'string'">
+                                <input matInput [(ngModel)]="parameter.param_value_string" name="paramValueString" type="text" placeholder="{{lang.value}}">
+                            </mat-form-field>
+                            <mat-form-field *ngIf="type == 'int'">
+                                <input matInput [(ngModel)]="parameter.param_value_int" name="paramValueInt" type="number" placeholder="{{lang.value}}">
+                            </mat-form-field>
+                            <mat-form-field *ngIf="type == 'date'">
+                                <input matInput [(ngModel)]="parameter.param_value_date" name="paramValueDate" [matDatepicker]="picker" placeholder="{{lang.date}}">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker startView="month"></mat-datepicker>
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <mat-form-field *ngIf="type == 'string'">
-                            <input matInput [(ngModel)]="parameter.param_value_string" name="paramValueString" type="text" placeholder="{{lang.value}}">
-                        </mat-form-field>
-                        <mat-form-field *ngIf="type == 'int'">
-                            <input matInput [(ngModel)]="parameter.param_value_int" name="paramValueInt" type="number" placeholder="{{lang.value}}">
-                        </mat-form-field>
-                        <mat-form-field *ngIf="type == 'date'">
-                            <input matInput [(ngModel)]="parameter.param_value_date" name="paramValueDate" [matDatepicker]="picker" placeholder="{{lang.date}}">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker startView="month"></mat-datepicker>
-                        </mat-form-field>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!parameterForm.form.valid">{{lang.save}}</button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-12" style="text-align:center;">
-                    <button color="default" mat-mini-fab routerLink='/administration/parameters' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-                        <mat-icon class="fa fa-chevron-left"></mat-icon>
-                    </button>
-                    <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!parameterForm.form.valid">{{lang.save}}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

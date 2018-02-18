@@ -1,88 +1,145 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.notificationModification}}
-        <small>{{notification.notification_id}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.notificationCreation}}
-        <small>{{notification.notification_id}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="container-fluid">
-        <div class="col-md-6 col-md-offset-3">
-            <form class="form-horizontal" (ngSubmit)="onSubmit()" #notificationsFormUp="ngForm">
-                <div class="form-group">
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="notification.notification_id" required name="notification_id" id="notification_id" title="{{lang.id}}"
-                            type="text" pattern="^[\w.-]*$" placeholder="{{lang.id}}" maxlength="50">
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="notification.description" required name="description" id="description" title="{{lang.description}}"
-                            type="text" placeholder="{{lang.description}}" maxlength="255">
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-slide-toggle [(ngModel)]="notification.is_enabled" id="is_enabled" name="is_enabled" color="primary" [checked]="notification.is_enabled == 'Y'">
-                        {{lang.NotificationToEnable}}
-                    </mat-slide-toggle>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="event_id" name="event_id" title="{{lang.NotificationEvent}}" placeholder="{{lang.NotificationEvent}}" [(ngModel)]="notification.event_id"
-                            required maxlength="255">
-                            <mat-option *ngFor="let event of notification.data.event" [value]="event.id">
-                                {{event.label_action}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="template_id" name="template_id" title="{{lang.NotificationModel}}" placeholder="{{lang.NotificationModel}}"
-                            [(ngModel)]="notification.template_id" required maxlength="1">
-                            <mat-option *ngFor="let template of notification.data.template" [value]="template.template_id">
-                                {{template.template_label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="diffusion_type" name="diffusion_type" title="{{lang.NotificationDiffusionType}}" placeholder="{{lang.NotificationDiffusionType}}"
-                            [(ngModel)]="notification.diffusion_type" required maxlength="50">
-                            <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
-                                {{diffusionType.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.notificationModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{notification.notification_id}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.notificationCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{notification.notification_id}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/notifications">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+                <a mat-list-item *ngIf="!creationMode && !loading && !notification.scriptcreated" (click)="createScript()">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-terminal"></mat-icon>
+                    <p mat-line>
+                        {{lang.createScriptNotification}}
+                    </p>
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #notificationsFormUp="ngForm">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="notification.notification_id" required name="notification_id" id="notification_id" title="{{lang.id}}"
+                                    type="text" pattern="^[\w.-]*$" placeholder="{{lang.id}}" maxlength="50">
+                            </mat-form-field>
+                        </div>
 
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-select id="attachfor_type" name="attachfor_type" title="{{lang.NotificationJoinDocument}}" placeholder="{{lang.NotificationJoinDocument}}"
-                            [(ngModel)]="notification.attachfor_type">
-                            <mat-option value="">Jamais</mat-option>
-                            <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
-                                {{diffusionType.label}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="notification.description" required name="description" id="description" title="{{lang.description}}"
+                                    type="text" placeholder="{{lang.description}}" maxlength="255">
+                            </mat-form-field>
+                        </div>
 
-                <div class="col-sm-12 panel-body" style="text-align:center;">
-                    <button color="default" mat-mini-fab routerLink='/administration/notifications' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-                        <mat-icon class="fa fa-chevron-left"></mat-icon>
-                    </button>
-                    <span class="enableAtionBottomCenterSmarpthone">
-                        <button mat-raised-button color="primary" type="submit" [disabled]="!notificationsFormUp.form.valid">{{lang.validate}}</button>
-                        <button mat-raised-button type="button" *ngIf="!notification.scriptcreated" (click)="createScript()">{{lang.createScriptNotification}}</button>
-                    </span>
-                </div>
-            </form>
-        </div>
-    </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-slide-toggle [(ngModel)]="notification.is_enabled" id="is_enabled" name="is_enabled" color="primary" [checked]="notification.is_enabled == 'Y'">
+                                {{lang.NotificationToEnable}}
+                            </mat-slide-toggle>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <mat-select id="event_id" name="event_id" title="{{lang.NotificationEvent}}" placeholder="{{lang.NotificationEvent}}" [(ngModel)]="notification.event_id"
+                                    required maxlength="255">
+                                    <mat-option *ngFor="let event of notification.data.event" [value]="event.id">
+                                        {{event.label_action}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <mat-select id="template_id" name="template_id" title="{{lang.NotificationModel}}" placeholder="{{lang.NotificationModel}}"
+                                    [(ngModel)]="notification.template_id" required maxlength="1">
+                                    <mat-option *ngFor="let template of notification.data.template" [value]="template.template_id">
+                                        {{template.template_label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <mat-select id="diffusion_type" name="diffusion_type" title="{{lang.NotificationDiffusionType}}" placeholder="{{lang.NotificationDiffusionType}}"
+                                    [(ngModel)]="notification.diffusion_type" required maxlength="50">
+                                    <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
+                                        {{diffusionType.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <mat-form-field>
+                                <mat-select id="attachfor_type" name="attachfor_type" title="{{lang.NotificationJoinDocument}}" placeholder="{{lang.NotificationJoinDocument}}"
+                                    [(ngModel)]="notification.attachfor_type">
+                                    <mat-option value="">Jamais</mat-option>
+                                    <mat-option *ngFor="let diffusionType of notification.data.diffusionType" [value]="diffusionType.id">
+                                        {{diffusionType.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!notificationsFormUp.form.valid">{{lang.validate}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

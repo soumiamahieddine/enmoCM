@@ -1,60 +1,96 @@
-<div class="page-header">
-    <h1>{{lang.administration}} {{lang.reports}}</h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
-        <mat-tab *ngFor="let group of groups" label="{{group.group_id}}">
-            <ng-template mat-tab-label>
-                {{group.group_id}}
-            </ng-template>
-            <div *ngIf="loadingOptions">
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.reports}}</h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <form>
-                <mat-list *ngIf="reports.size() > 0 && !loadingOptions">
-                    {{lang.folders}}
-                    <mat-divider></mat-divider>
-                    <span *ngFor="let report of reports;let i = index">
-                        <mat-list-item *ngIf="report.module == 'folder'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
-                                matTooltip="{{report.desc}}">
-                                {{report.label}}
-                            </mat-checkbox>
-                        </mat-list-item>
-                    </span>
+            <mat-card *ngIf="!loading">
+                <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
+                    <mat-tab *ngFor="let group of groups" label="{{group.group_id}}">
+                        <ng-template mat-tab-label>
+                            {{group.group_id}}
+                        </ng-template>
+                        <div *ngIf="loadingOptions">
+                            <mat-spinner style="margin:auto;"></mat-spinner>
+                        </div>
+                        <form>
+                            <mat-list *ngIf="reports.size() > 0 && !loadingOptions">
+                                {{lang.folders}}
+                                <mat-divider></mat-divider>
+                                <span *ngFor="let report of reports;let i = index">
+                                    <mat-list-item *ngIf="report.module == 'folder'">
+                                        <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                            matTooltip="{{report.desc}}">
+                                            {{report.label}}
+                                        </mat-checkbox>
+                                    </mat-list-item>
+                                </span>
 
-                    {{lang.entities}}
-                    <mat-divider></mat-divider>
-                    <span *ngFor="let report of reports;let i = index">
-                        <mat-list-item *ngIf="report.module == 'entities'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
-                                matTooltip="{{report.desc}}">
-                                {{report.label}}
-                            </mat-checkbox>
-                        </mat-list-item>
-                    </span>
+                                {{lang.entities}}
+                                <mat-divider></mat-divider>
+                                <span *ngFor="let report of reports;let i = index">
+                                    <mat-list-item *ngIf="report.module == 'entities'">
+                                        <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                            matTooltip="{{report.desc}}">
+                                            {{report.label}}
+                                        </mat-checkbox>
+                                    </mat-list-item>
+                                </span>
 
 
-                    {{lang.maarchApplication}}
-                    <mat-divider></mat-divider>
-                    <span *ngFor="let report of reports;let i = index">
-                        <mat-list-item *ngIf="report.module == 'application'">
-                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
-                                matTooltip="{{report.desc}}">
-                                {{report.label}}
-                            </mat-checkbox>
-                        </mat-list-item>
-                    </span>
-                </mat-list>
-            </form>
-        </mat-tab>
-    </mat-tab-group>
-    <div style="text-align:center;">
-        <button color="default" mat-mini-fab routerLink='/administration' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-            <mat-icon class="fa fa-chevron-left"></mat-icon>
-        </button>
-    </div>
+                                {{lang.maarchApplication}}
+                                <mat-divider></mat-divider>
+                                <span *ngFor="let report of reports;let i = index">
+                                    <mat-list-item *ngIf="report.module == 'application'">
+                                        <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
+                                            matTooltip="{{report.desc}}">
+                                            {{report.label}}
+                                        </mat-checkbox>
+                                    </mat-list-item>
+                                </span>
+                            </mat-list>
+                        </form>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false">
+
+            <mat-nav-list>
+                <h3 mat-subheader>Actions</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

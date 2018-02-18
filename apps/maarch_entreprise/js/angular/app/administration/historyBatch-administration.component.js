@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var HistoryBatchAdministrationComponent = /** @class */ (function () {
-    function HistoryBatchAdministrationComponent(http, notify) {
+    function HistoryBatchAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
@@ -26,6 +27,10 @@ var HistoryBatchAdministrationComponent = /** @class */ (function () {
         this.minDate = new Date();
         this.displayedColumns = ['batch_id', 'event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
         this.dataSource = new material_1.MatTableDataSource(this.data);
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     HistoryBatchAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -36,6 +41,9 @@ var HistoryBatchAdministrationComponent = /** @class */ (function () {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.historyBatch;
         }
+    };
+    HistoryBatchAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     HistoryBatchAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -85,7 +93,7 @@ var HistoryBatchAdministrationComponent = /** @class */ (function () {
             styleUrls: [],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], HistoryBatchAdministrationComponent);
     return HistoryBatchAdministrationComponent;
 }());

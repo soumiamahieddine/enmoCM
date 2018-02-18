@@ -1,42 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["notification-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["notification-administrationView"],
+    providers: [NotificationService]
 })
 export class NotificationAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
 
-    coreUrl             : string;
-
-    creationMode        : boolean;
-    notification        : any       = {
-        diffusionType_label  : null
+    creationMode: boolean;
+    notification: any = {
+        diffusionType_label: null
     };
-    loading              : boolean   = false;
-    lang                 : any       = LANG;
+    loading: boolean = false;
+    lang: any = LANG;
 
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>"+this.lang.administration+"</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>"+this.lang.notifications+"</a> > ";
+        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/notifications\"' style='cursor: pointer'>" + this.lang.notifications + "</a> > ";
 
-        if(this.creationMode == true){
+        if (this.creationMode == true) {
             breadCrumb += this.lang.notificationCreation;
         } else {
             breadCrumb += this.lang.notificationModification;
         }
         $j('#ariane')[0].innerHTML = breadCrumb;
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
@@ -47,9 +57,9 @@ export class NotificationAdministrationComponent implements OnInit {
             if (typeof params['identifier'] == "undefined") {
                 this.creationMode = true;
                 this.http.get(this.coreUrl + 'rest/administration/notifications/new')
-                    .subscribe((data : any) => {
+                    .subscribe((data: any) => {
                         this.notification = data.notification;
-                                    
+
                         this.loading = false;
                     }, (err) => {
                         this.notify.error(err.error.errors);
@@ -57,27 +67,27 @@ export class NotificationAdministrationComponent implements OnInit {
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/notifications/' + params['identifier'])
-                    .subscribe((data : any) => {
+                    .subscribe((data: any) => {
                         this.notification = data.notification;
                         this.loading = false;
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
-            } 
+            }
         });
 
         this.updateBreadcrumb(angularGlobals.applicationName);
-        
+
     }
 
     createScript() {
         this.http.post(this.coreUrl + 'rest/scriptNotification', this.notification)
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.notification.scriptcreated = data;
                 this.notify.success(this.lang.ScriptCreated);
-            },(err) => {
+            }, (err) => {
                 this.notify.error(err.error.errors);
-            });        
+            });
     }
 
     selectAll(event: any) {
@@ -95,39 +105,39 @@ export class NotificationAdministrationComponent implements OnInit {
     onSubmit() {
         if ($j("#groupslist").val()) {
             this.notification.diffusion_properties = $j("#groupslist").val();
-        } else if($j("#entitieslist").val()) {
+        } else if ($j("#entitieslist").val()) {
             this.notification.diffusion_properties = $j("#entitieslist").val();
-        } else if($j("#statuseslist").val()) {
+        } else if ($j("#statuseslist").val()) {
             this.notification.diffusion_properties = $j("#statuseslist").val();
-        } else if($j("#userslist").val()) {
+        } else if ($j("#userslist").val()) {
             this.notification.diffusion_properties = $j("#userslist").val();
         }
         if ($j("#joinDocJd").val() == null) {
             this.notification.attachfor_properties = '';
         } else if ($j("#groupslistJd").val()) {
             this.notification.attachfor_properties = $j("#groupslistJd").val();
-        } else if($j("#entitieslistJd").val()) {
+        } else if ($j("#entitieslistJd").val()) {
             this.notification.attachfor_properties = $j("#entitieslistJd").val();
-        } else if($j("#statuseslistJd").val()) {
+        } else if ($j("#statuseslistJd").val()) {
             this.notification.attachfor_properties = $j("#statuseslistJd").val();
-        } else if($j("#userslistJd").val()) {
+        } else if ($j("#userslistJd").val()) {
             this.notification.attachfor_properties = $j("#userslistJd").val();
         }
 
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/notifications', this.notification)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.router.navigate(['/administration/notifications']);
                     this.notify.success(this.lang.NotificationAdded);
-                },(err) => {
+                }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + 'rest/notifications/' + this.notification.notification_sid, this.notification)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.router.navigate(['/administration/notifications']);
                     this.notify.success(this.lang.notificationUpdated);
-                },(err) => {
+                }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }

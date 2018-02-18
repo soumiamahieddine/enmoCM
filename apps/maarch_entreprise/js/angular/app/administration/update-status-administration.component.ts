@@ -1,39 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { startWith } from 'rxjs/operators/startWith';
+import { map } from 'rxjs/operators/map';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["update-status-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["update-status-administrationView"],
+    providers: [NotificationService]
 })
 export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
+    statuses: any[] = [];
+    statusId: string = "";
+    resId: string = "";
+    chrono: string = "";
 
-    coreUrl                     : string;
-    lang                        : any       = LANG;
-    statuses                    : any[]     = [];
-    statusId                    : string    = "";
-    resId                       : string    = "";
-    chrono                      : string    = "";
+    loading: boolean = false;
 
-    loading                     : boolean   = false;
-
-    constructor(public http: HttpClient, private notify: NotificationService) {
-        super(http,'statuses');
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+        super(http, 'statuses');
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
@@ -51,7 +60,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     onSubmit() {
 
         var body = {
-            "status" :  this.statusId
+            "status": this.statusId
         };
         if (this.resId != "") {
             body["resId"] = this.resId;
@@ -70,9 +79,9 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
             });
     }
 
-    resetInput (e:any) {
+    resetInput(e: any) {
         if (e.index == 0) {
-            this.resId = ""; 
+            this.resId = "";
         } else {
             this.chrono = "";
         }

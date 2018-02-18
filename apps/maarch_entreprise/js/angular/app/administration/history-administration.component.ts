@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 declare function $j(selector: any): any;
 
@@ -17,6 +18,8 @@ declare var angularGlobals: any;
 })
 
 export class HistoryAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
     coreUrl: string;
     lang: any = LANG;
 
@@ -25,7 +28,7 @@ export class HistoryAdministrationComponent implements OnInit {
     CurrentYear: number = new Date().getFullYear();
     currentMonth: number = new Date().getMonth() + 1;
     minDate: Date = new Date();
-    
+
     displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
     dataSource = new MatTableDataSource(this.data);
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -36,7 +39,15 @@ export class HistoryAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -47,7 +58,7 @@ export class HistoryAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-        
+
         this.loading = true;
 
         this.updateBreadcrumb(angularGlobals.applicationName);
@@ -70,16 +81,16 @@ export class HistoryAdministrationComponent implements OnInit {
     }
 
     refreshHistory(event: MatDatepickerInputEvent<Date>) {
-        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/'+this.minDate.toJSON())
-        .subscribe((data:any) => {
-            this.data = data.historyList;
-            this.dataSource = new MatTableDataSource(this.data);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-        }, (err) => {
-            console.log(err);
-            location.href = "index.php";
-        });
+        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
+            .subscribe((data: any) => {
+                this.data = data.historyList;
+                this.dataSource = new MatTableDataSource(this.data);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            }, (err) => {
+                console.log(err);
+                location.href = "index.php";
+            });
     }
 }
 export interface History {

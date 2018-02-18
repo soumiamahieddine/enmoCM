@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var StatusAdministrationComponent = /** @class */ (function () {
-    function StatusAdministrationComponent(http, route, router, notify) {
+    function StatusAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -31,7 +32,14 @@ var StatusAdministrationComponent = /** @class */ (function () {
         };
         this.statusImages = "";
         this.loading = false;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
+    StatusAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     StatusAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.loading = true;
@@ -128,7 +136,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
             styleUrls: ['css/status-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], StatusAdministrationComponent);
     return StatusAdministrationComponent;
 }());

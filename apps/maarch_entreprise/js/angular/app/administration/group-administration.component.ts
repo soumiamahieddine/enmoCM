@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
@@ -15,7 +16,8 @@ declare const angularGlobals : any;
     providers   : [NotificationService]
 })
 export class GroupAdministrationComponent implements OnInit {
-
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
     coreUrl                     : string;
     lang                        : any       = LANG;
 
@@ -26,7 +28,7 @@ export class GroupAdministrationComponent implements OnInit {
     };
     loading                     : boolean   = false;
 
-    displayedColumns = ['firstname', 'lastname', 'actions'];
+    displayedColumns = ['firstname', 'lastname'];
     dataSource      : any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -36,9 +38,16 @@ export class GroupAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
-
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
+    
     updateBreadcrumb(applicationName: string) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
         if (this.creationMode == true) {
@@ -107,9 +116,5 @@ export class GroupAdministrationComponent implements OnInit {
                 service.checked = !service.checked;
                 this.notify.error(err.error.errors);
             });
-    }
-
-    toggleKeywordHelp() {
-        $j('#keywordHelp').toggle("slow");
     }
 }
