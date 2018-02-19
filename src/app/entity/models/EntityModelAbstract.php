@@ -77,7 +77,6 @@ class EntityModelAbstract
                 'entity_type'           => $aArgs['entity_type'],
                 'entity_path'           => $aArgs['entity_path'],
                 'ldap_id'               => $aArgs['ldap_id'],
-                'transferring_agency'   => $aArgs['transferring_agency'],
                 'archival_agreement'    => $aArgs['archival_agreement'],
                 'archival_agency'       => $aArgs['archival_agency'],
                 'entity_full_name'      => $aArgs['entity_full_name'],
