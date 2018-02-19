@@ -51,3 +51,6 @@ define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
 define('_REPORT_MODIFICATION', 'Modification états et édition');
 define('_STATUS_ADDED', 'Statut ajouté');
 define('_STATUS_DELETED', 'Statut supprimé');
+define('_USER_GROUP_CREATION', 'Groupe ajouté pour utilisateur');
+define('_USER_GROUP_MODIFICATION', 'Groupe modifié pour utilisateur');
+define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');
