@@ -42,7 +42,6 @@ export class AutoCompletePlugin {
             startWith(''),
             map(status => status ? this.autocompleteFilterStatuses(status) : this.statusesList.slice())
           );
-          console.log(this.statusesList);
         }, () => {
           location.href = "index.php";
         });

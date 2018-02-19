@@ -67,7 +67,6 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
         } else if (this.chrono != "") {
             body["chrono"] = this.chrono;
         }
-        console.log(body);
         this.http.put(this.coreUrl + "rest/res/resource/status", body)
             .subscribe(() => {
                 this.resId = "";
