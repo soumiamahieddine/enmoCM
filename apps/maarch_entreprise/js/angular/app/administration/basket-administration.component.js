@@ -214,7 +214,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.linkGroup = function () {
         var _this = this;
-        this.config = { data: { basketId: this.basket.basket_id, groups: this.allGroups, linkedGroups: this.basketGroups } };
+        this.config = { data: { basketId: this.basket.id, groups: this.allGroups, linkedGroups: this.basketGroups } };
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe(function (result) {
             if (result) {

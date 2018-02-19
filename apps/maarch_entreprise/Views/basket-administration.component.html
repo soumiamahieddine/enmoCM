@@ -48,9 +48,10 @@
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #basketForm="ngForm">
                             <mat-form-field>
-                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.basket_id" maxlength="32"
+                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()" maxlength="32"
                                     pattern="^[\w.-]*$" required>
-                                <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.basket_id"
+                                <i *ngIf="creationMode" class="fa fa-circle-o" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i>
+                                <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
                             </mat-form-field>
                             <div class="col-md-11 col-xs-11">
