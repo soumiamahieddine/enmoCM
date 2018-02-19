@@ -5,6 +5,8 @@
             <!--directory>core/Test</directory-->
             <file>core/Test/ActionControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
+            <file>core/Test/EntityControllerTest.php</file>
+            <file>core/Test/ListTemplateControllerTest.php</file>
             <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/NotificationControllerTest.php</file>
             <file>core/Test/NotificationScheduleControllerTest.php</file>

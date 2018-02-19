@@ -61,7 +61,7 @@ class ListTemplateModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['object_id', 'object_type', 'sequence', 'item_id', 'item_type', 'item_mode']);
+        ValidatorModel::notEmpty($aArgs, ['object_id', 'object_type', 'item_id', 'item_type', 'item_mode']);
         ValidatorModel::stringType($aArgs, ['object_id', 'object_type', 'item_id', 'item_type', 'title', 'description']);
         ValidatorModel::intVal($aArgs, ['sequence']);
 

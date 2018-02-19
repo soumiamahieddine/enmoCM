@@ -88,13 +88,15 @@ class GroupController
         }
 
         $data = $request->getParams();
-
         $check = Validator::stringType()->notEmpty()->validate($data['description']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['where_clause']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['maarch_comment']);
-
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (!PreparedClauseController::isClauseValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         GroupModel::update(['id' => $aArgs['id'], 'description' => $data['description'], 'clause' => $data['security']['where_clause'], 'comment' => $data['security']['maarch_comment']]);

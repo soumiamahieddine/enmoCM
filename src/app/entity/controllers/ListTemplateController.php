@@ -84,7 +84,7 @@ class ListTemplateController
             $data['object_id'] = $data['object_type'] . '_' . DatabaseModel::uniqueId();
         }
 
-        $checkItems = ListTemplateController::checkItems(['item' => $data['items']]);
+        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
@@ -141,7 +141,7 @@ class ListTemplateController
             }
         }
 
-        $checkItems = ListTemplateController::checkItems(['item' => $data['items']]);
+        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
@@ -225,9 +225,6 @@ class ListTemplateController
             }
             if (empty($item['item_mode'])) {
                 return ['errors' => 'Item_mode is empty'];
-            }
-            if (is_numeric($item['sequence'])) {
-                return ['errors' => 'Sequence is not numeric'];
             }
         }
 
