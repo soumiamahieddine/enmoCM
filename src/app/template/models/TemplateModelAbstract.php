@@ -14,7 +14,7 @@
 
 namespace Template\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class TemplateModelAbstract
@@ -36,6 +36,20 @@ class TemplateModelAbstract
         }
 
         return $aTemplate[0];
+    }
+
+    public static function getByTarget(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['template_target']);
+
+        $aTemplate = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates'],
+            'where'     => ['template_target = ?'],
+            'data'      => [$aArgs['template_target']],
+        ]);
+
+        return $aTemplate;
     }
 
     public static function create(array $aArgs)

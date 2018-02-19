@@ -63,6 +63,25 @@ class FirstLevelControllerTest extends TestCase
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
     }
 
+    public function testinitDoctype()
+    {
+        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request      = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $doctypeController = new \Doctype\controllers\DoctypeController();
+        $response          = $doctypeController->initDoctype($request, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->secondLevel);
+        $this->assertNotNull($responseBody->processModes);
+        $this->assertNotNull($responseBody->processModes->processing_modes);
+        $this->assertNotNull($responseBody->processModes->process_mode_priority);
+        $this->assertNotNull($responseBody->models);
+        $this->assertNotNull($responseBody->models[0]->template_id);
+        $this->assertNotNull($responseBody->models[0]->template_label);
+        $this->assertNotNull($responseBody->models[0]->template_comment);
+    }
+
     public function testCreateFirstLevel()
     {
         $firstLevelController = new \Doctype\controllers\FirstLevelController();

@@ -562,3 +562,5 @@ DELETE FROM docservers where docserver_id = 'FULLTEXT_ATTACH_VERSION';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS primary_retention;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS secondary_retention;
