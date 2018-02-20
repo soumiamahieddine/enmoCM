@@ -560,11 +560,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 $pathScriptTab = 'index.php?display=true&page=show_technicalInfo_tab';
                                 $uniqueString .= '<div class="fa fa-cogs DetailsTabFunc" id="DetailsCogdTab" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._TECHNICAL_INFORMATIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCogdTab\',true);"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></div>';
                                 }
-                                $uniqueString .= '<div class="DetailsTabFunc" id="DetailsGearTab" " style="font-size:2em;padding-left: 15px;';
+                                $uniqueString .= '<div class="fa fa-share-alt DetailsTabFunc" id="DetailsGearTab" " style="display:block !important;font-size:2em;padding-left: 15px;';
                                 if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                         $uniqueString .=  'padding-right: 0px;height:29px;';
                                 }else {
-                                        $uniqueString .=  'padding-right: 15px;height:30px;';
+                                        $uniqueString .=  'padding-right: 15px;height:auto;';
                                 }
                                 require_once('modules/entities/class/class_manage_listdiff.php');
                                     $diff_list = new diffusion_list();
@@ -574,7 +574,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     $roles_str = json_encode($roles);
                                     $category = $data['category_id']['value'];
                                     $pathScriptTab = 'index.php?display=true&page=show_diffList_tab&module=entities&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true&category='.$category.'&roles='.urlencode($roles_str).$onlyCC;    
-                                    $uniqueString .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"><i class="fa fa-share-alt" onclick="this.closest(\'div\').click()"></i> <sup><span style="font-size: 10px;';
+                                    $uniqueString .= '" title="'._DIFF_LIST.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsGearTab\',true);"><sup><span style="font-size: 10px;';
                                         if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
                                             $style = 'visibility:hidden;"';
                                         }else {
