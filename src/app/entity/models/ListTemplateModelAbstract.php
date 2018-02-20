@@ -96,4 +96,18 @@ class ListTemplateModelAbstract
 
         return true;
     }
+
+    public static function getTypes(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aListTemplatesTypes = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['difflist_types'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aListTemplatesTypes;
+    }
 }
