@@ -63,3 +63,10 @@ define('_USER_GROUP_CREATION', 'Group added for user');
 define('_USER_GROUP_MODIFICATION', 'Group updated for user');
 define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
 define('_VISA_USER', 'For visa');
+
+define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
+define('_DOCUMENTS_LIST_WITH_AVIS', 'List of documents with recommendation');
+define('_DOCUMENTS_LIST_COPIES', 'List of copies');
+define('_CASES_LIST', 'Cases list');
+define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Documents list with signatory');
+define('_FOLDERS_LIST', 'folders list');
