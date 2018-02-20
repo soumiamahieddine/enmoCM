@@ -17,7 +17,7 @@
 
 namespace Parameter\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class ParameterModelAbstract

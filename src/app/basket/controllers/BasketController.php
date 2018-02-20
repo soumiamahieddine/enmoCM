@@ -17,7 +17,7 @@ namespace Basket\controllers;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;

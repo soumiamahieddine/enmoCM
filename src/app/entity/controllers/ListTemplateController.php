@@ -15,7 +15,7 @@
 namespace Entity\controllers;
 
 use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use History\controllers\HistoryController;

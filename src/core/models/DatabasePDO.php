@@ -15,7 +15,7 @@
 namespace SrcCore\models;
 
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 
 class DatabasePDO
 {

@@ -15,7 +15,7 @@
 namespace Basket\models;
 
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;

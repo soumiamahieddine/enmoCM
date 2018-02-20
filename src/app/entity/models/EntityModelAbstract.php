@@ -15,7 +15,7 @@
 namespace Entity\models;
 
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 

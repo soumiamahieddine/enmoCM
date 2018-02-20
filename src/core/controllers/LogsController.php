@@ -16,7 +16,7 @@
 namespace SrcCore\controllers;
 
 use Core\Models\TextFormatModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 
 if (!defined('_LOG4PHP'))
     define(
