@@ -10,12 +10,10 @@
 /**
 * @brief Group Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Group\models;
 
 class GroupModel extends GroupModelAbstract
 {
-    // Do your stuff in this class
 }

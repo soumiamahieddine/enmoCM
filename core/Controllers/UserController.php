@@ -16,12 +16,12 @@
 namespace Core\Controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\GroupModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
 use Entities\Models\ListModelsModel;
 use Entity\models\EntityModel;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use Psr\Http\Message\RequestInterface;

@@ -9,6 +9,7 @@
             "Doctype\\"       : "src/app/doctype/",
             "Entity\\"        : "src/app/entity/",
             "Folder\\"        : "src/app/folder/",
+            "Group\\"         : "src/app/group/",
             "History\\"       : "src/app/history/",
             "Link\\"          : "src/app/link/",
             "Notification\\"  : "src/app/notification/",
