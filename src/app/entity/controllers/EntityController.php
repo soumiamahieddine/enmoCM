@@ -68,6 +68,8 @@ class EntityController
             }
         }
 
+        $entity['types'] = EntityModel::getTypes();
+
         $listTemplates = ListTemplateModel::get([
             'select'    => ['object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description'],
             'where'     => ['object_id = ?'],
@@ -190,7 +192,12 @@ class EntityController
             'eventId'   => 'entityModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
+        }
+
+        return $response->withJson(['entities' => $entities]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)

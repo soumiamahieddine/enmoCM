@@ -16,6 +16,7 @@ namespace Entity\models;
 
 use Core\Models\UserModel;
 use Core\Models\ValidatorModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 class EntityModelAbstract
@@ -255,7 +256,9 @@ class EntityModelAbstract
                 $allEntities[$key]['allowed'] = true;
             } else {
                 $allEntities[$key]['allowed'] = false;
+                $allEntities[$key]['state']['disabled'] = true;
             }
+            $allEntities[$key]['state']['opened'] = true;
             $allEntities[$key]['text'] = $value['entity_label'];
         }
 
@@ -276,5 +279,32 @@ class EntityModelAbstract
         ]);
 
         return $aUsers;
+    }
+
+    public static function getTypes()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/modules/entities/xml/typentity.xml")) {
+            $path = "custom/{$customId}/modules/entities/xml/typentity.xml";
+        } else {
+            $path = 'modules/entities/xml/typentity.xml';
+        }
+
+        $types = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                foreach ($loadedXml->TYPE as $value) {
+                    $types[] = [
+                        'id'        => (string)$value->id,
+                        'label'     => (string)$value->label,
+                        'typelevel' => (string)$value->typelevel
+                    ];
+                }
+            }
+        }
+
+        return $types;
     }
 }
