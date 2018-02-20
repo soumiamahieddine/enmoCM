@@ -273,6 +273,28 @@
     </WHEREAMIUSED>
   </SERVICE>
   <SERVICE>
+    <id>delete_document_in_detail</id>
+    <name>_DELETE_DOCUMENT_IN_DETAIL</name>
+    <comment>_DELETE_DOCUMENT_IN_DETAIL</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+    <WHEREAMIUSED>
+      <page>details.php</page>
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
+    <id>edit_document_in_detail</id>
+    <name>_EDIT_DOCUMENT_IN_DETAIL</name>
+    <comment>_EDIT_DOCUMENT_IN_DETAIL_DESC</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+    <WHEREAMIUSED>
+      <page>details.php</page>
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
     <id>put_in_validation</id>
     <name>_PUT_DOC_ON_VALIDATION_FROM_DETAILS</name>
     <comment>_PUT_DOC_ON_VALIDATION_FROM_DETAILS</comment>

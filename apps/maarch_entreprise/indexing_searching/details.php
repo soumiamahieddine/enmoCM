@@ -202,14 +202,7 @@ if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') 
     );
 }
 
-$modify_doc = check_right(
-    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
-    DATA_MODIFICATION
-);
-$delete_doc = check_right(
-    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
-    DELETE_RECORD
-);
+$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false);
 
 //update index with the doctype
 if (isset($_POST['submit_index_doc'])) {
@@ -481,11 +474,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 require_once('core/class/class_manage_status.php');
                 $status_obj = new manage_status();
                 $res_status = $status_obj->get_status_data($status);
-                if ($modify_doc) {
-                    $can_be_modified = $status_obj->can_be_modified($status);
-                    if (!$can_be_modified) {
-                        $modify_doc = false;
-                    }
+                if ($modify_doc && !$status_obj->can_be_modified($status)) {
+                    $modify_doc = false;
+                }
+                if($_SESSION['user']['UserId'] == 'superadmin'){
+                    $modify_doc = true;
                 }
             }
             $mode_data = 'full';
@@ -773,8 +766,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         if ($putInValid) {
                             $toolBar .= '<input type="submit" class="button"  value="'._PUT_DOC_ON_VALIDATION.'" name="put_doc_on_validation" onclick="return(confirm(\''._REALLY_PUT_DOC_ON_VALIDATION.'\n\r\n\r\'));" /> ';
                         }
-                        
-                        if ($delete_doc) {
+                        if ($core->test_service('delete_document_in_detail', 'apps', false)) {
                             $toolBar .= '<input type="submit" class="button"  value="'._DELETE_DOC.'" name="delete_doc" onclick="return(confirm(\''. _REALLY_DELETE.' '._THIS_DOC.' ?\n\r\n\r\'));" /> ';
                         }
                         

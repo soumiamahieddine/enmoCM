@@ -2058,3 +2058,10 @@ if (!defined("_SAVE_POSITION"))
 /***** History *****/
 if (!defined('_UPDATE_STATUS'))
     define('_UPDATE_STATUS', 'Status update');
+
+if (!defined('_DELETE_DOCUMENT_IN_DETAIL'))
+    define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL'))
+    define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC'))
+    define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
