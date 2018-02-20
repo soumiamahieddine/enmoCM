@@ -69,6 +69,7 @@ class EntityController
         }
 
         $entity['types'] = EntityModel::getTypes();
+        $entity['roles'] = EntityModel::getRoles();
 
         $listTemplates = ListTemplateModel::get([
             'select'    => ['object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description'],

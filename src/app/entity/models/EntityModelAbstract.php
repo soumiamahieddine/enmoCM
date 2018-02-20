@@ -307,4 +307,30 @@ class EntityModelAbstract
 
         return $types;
     }
+
+    public static function getRoles()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/modules/entities/xml/roles.xml")) {
+            $path = "custom/{$customId}/modules/entities/xml/roles.xml";
+        } else {
+            $path = 'modules/entities/xml/roles.xml';
+        }
+
+        $roles = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                foreach ($loadedXml->ROLES->ROLE as $value) {
+                    $roles[] = [
+                        'id'        => (string)$value->id,
+                        'label'     => constant((string)$value->label),
+                    ];
+                }
+            }
+        }
+
+        return $roles;
+    }
 }
