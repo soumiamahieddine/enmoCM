@@ -17,7 +17,6 @@ use SrcCore\models\DatabaseModel;
 
 class DoctypeExtModelAbstract
 {
-
     public static function getById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -41,33 +40,45 @@ class DoctypeExtModelAbstract
         return $aReturn;
     }
 
-    // public static function create(array $aArgs)
-    // {
-    //     ValidatorModel::notEmpty($aArgs, ['description', 'doctypes_first_level_id', 'doctypes_second_level_id', 'coll_id']);
-    //     ValidatorModel::intVal($aArgs, ['doctypes_first_level_id', 'doctypes_second_level_id']);
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2', 'process_mode']);
+        ValidatorModel::intVal($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2']);
 
-    //     $aArgs['type_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'doctypes_type_id_seq']);
-    //     DatabaseModel::insert([
-    //         'table'         => 'doctypes',
-    //         'columnsValues' => $aArgs
-    //     ]);
+        DatabaseModel::insert([
+            'table'         => 'mlb_doctype_ext',
+            'columnsValues' => $aArgs
+        ]);
 
-    //     return $aArgs;
-    // }
+        return true;
+    }
 
-    // public static function update(array $aArgs)
-    // {
-    //     ValidatorModel::notEmpty($aArgs, ['type_id']);
-    //     ValidatorModel::intVal($aArgs, ['type_id']);
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2', 'process_mode']);
+        ValidatorModel::intVal($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2']);
         
-    //     DatabaseModel::update([
-    //         'table'     => 'mlb_doctype_ext',
-    //         'set'       => $aArgs,
-    //         'where'     => ['type_id = ?'],
-    //         'data'      => [$aArgs['type_id']]
-    //     ]);
+        DatabaseModel::update([
+            'table'     => 'mlb_doctype_ext',
+            'set'       => $aArgs,
+            'where'     => ['type_id = ?'],
+            'data'      => [$aArgs['type_id']]
+        ]);
 
-    //     return true;
-    // }
+        return true;
+    }
 
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['type_id']);
+        ValidatorModel::intVal($aArgs, ['type_id']);
+
+        DatabaseModel::delete([
+            'table' => 'mlb_doctype_ext',
+            'where' => ['type_id = ?'],
+            'data'  => [$aArgs['type_id']]
+        ]);
+
+        return true;
+    }
 }

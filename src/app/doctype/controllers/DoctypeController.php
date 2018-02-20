@@ -17,16 +17,17 @@ use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
 use Doctype\models\DoctypeExtModel;
+use Doctype\models\DoctypeIndexesModel;
 use Doctype\models\TemplateDoctypeModel;
 use Folder\models\FolderTypeModel;
 use Core\Models\ServiceModel;
 use Template\models\TemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Resource\models\ResModel;
 
 class DoctypeController
 {
-
     public function getById(Request $request, Response $response, $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
@@ -45,12 +46,14 @@ class DoctypeController
             }
         }
   
-        $obj['doctypeExt']    = DoctypeExtModel::getById(['id' => $aArgs['id']]);
-        $obj['secondLevel']   = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
-        $obj['processModes']  = DoctypeModel::getProcessMode();
-        $obj['models']        = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
-        $obj['modelSelected'] = TemplateDoctypeModel::getById(["id" => $aArgs['id']]);
-        // get custom
+        $obj['doctypeExt']      = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
+        $obj['secondLevel']     = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['processModes']    = DoctypeModel::getProcessMode();
+        $obj['models']          = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
+        $obj['modelSelected']   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
+        $obj['indexes']         = DoctypeIndexesModel::getAllIndexes();
+        $obj['indexesSelected'] = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
+
         return $response->withJson($obj);
     }
 
@@ -62,163 +65,268 @@ class DoctypeController
         return $response->withJson($obj);
     }
 
-    // public function create(Request $request, Response $response)
-    // {
-    //     if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-    //         return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-    //     }
+    public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
-    //     $data = $request->getParams();
-    //     $data = $this->manageValue($data);
+        $data = $request->getParams();
         
-    //     $errors = $this->control($data, 'create');
-    //     if (!empty($errors)) {
-    //         return $response->withStatus(500)->withJson(['errors' => $errors]);
-    //     }
+        $errors = $this->control($data, 'create');
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
     
-    //     $folderTypeId = $data['foldertype_id'];
-    //     unset($data['foldertype_id']);
-    //     $firstLevelId = FirstLevelModel::create($data);
+        $doctypeId = DoctypeModel::create([
+            'coll_id'                     => 'letterbox_coll',
+            'description'                 => $data['description'],
+            'doctypes_first_level_id'     => $data['doctypes_first_level_id'],
+            'doctypes_second_level_id'    => $data['doctypes_second_level_id'],
+            'retention_final_disposition' => $data['retention_final_disposition'],
+            'retention_rule'              => $data['retention_rule'],
+            'duration_current_use'        => $data['duration_current_use']
+        ]);
 
-    //     foreach ($folderTypeId as $value) {
-    //         FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-    //             "doctypes_first_level_id" => $firstLevelId,
-    //             "foldertype_id"           => $value
-    //         ]);
-    //     }
+        DoctypeExtModel::create([
+            "type_id"       => $doctypeId,
+            "process_delay" => $data['process_delay'],
+            "delay1"        => $data['delay1'],
+            "delay2"        => $data['delay2'],
+            "process_mode"  => $data['process_mode'],
+        ]);
 
-    //     HistoryController::add([
-    //         'tableName' => 'doctypes_first_level',
-    //         'recordId'  => $firstLevelId,
-    //         'eventType' => 'ADD',
-    //         'eventId'   => 'structureadd',
-    //         'info'      => _DOCTYPE_FIRSTLEVEL_ADDED . ' : ' . $data['doctypes_first_level_label']
-    //     ]);
+        TemplateDoctypeModel::create([
+            "template_id"  => $data["template_id"],
+            "type_id"      => $doctypeId,
+            "is_generated" => $data["is_generated"]
+        ]);
 
-    //     return $response->withJson(
-    //         [
-    //         'firstLevel'  => $firstLevelId
-    //         ]
-    //     );
-    // }
+        if (!empty($data['indexes'])) {
+            foreach ($data['indexes'] as $fieldName => $mandatory) {
+                DoctypeIndexesModel::create([
+                    "type_id"    => $doctypeId,
+                    "coll_id"    => 'letterbox_coll',
+                    "field_name" => $fieldName,
+                    "mandatory"  => $mandatory
+                ]);
+            }
+        }
 
-    // public function update(Request $request, Response $response, $aArgs)
-    // {
-    //     if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-    //         return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-    //     }
+        HistoryController::add([
+            'tableName' => 'doctypes',
+            'recordId'  => $doctypeId,
+            'eventType' => 'ADD',
+            'eventId'   => 'typesadd',
+            'info'      => _DOCTYPE_ADDED . ' : ' . $data['description']
+        ]);
 
-    //     $obj                            = $request->getParams();
-    //     $obj['doctypes_first_level_id'] = $aArgs['id'];
+        return $response->withJson(
+            [
+            'doctype'  => $doctypeId
+            ]
+        );
+    }
 
-    //     $obj    = $this->manageValue($obj);
-    //     $errors = $this->control($obj, 'update');
-      
-    //     if (!empty($errors)) {
-    //         return $response
-    //             ->withStatus(500)
-    //             ->withJson(['errors' => $errors]);
-    //     }
+    public function update(Request $request, Response $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
-    //     $folderTypeId = $obj['foldertype_id'];
-    //     unset($obj['foldertype_id']);
-    //     FirstLevelModel::update($obj);
+        $data            = $request->getParams();
+        $data['type_id'] = $aArgs['id'];
+        
+        $errors = $this->control($data, 'update');
+        if (!empty($errors)) {
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
+    
+        DoctypeModel::update([
+            'type_id'                     => $data['type_id'],
+            'coll_id'                     => 'letterbox_coll',
+            'description'                 => $data['description'],
+            'doctypes_first_level_id'     => $data['doctypes_first_level_id'],
+            'doctypes_second_level_id'    => $data['doctypes_second_level_id'],
+            'retention_final_disposition' => $data['retention_final_disposition'],
+            'retention_rule'              => $data['retention_rule'],
+            'duration_current_use'        => $data['duration_current_use']
+        ]);
 
-    //     FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $obj['doctypes_first_level_id']]);
-    //     foreach ($folderTypeId as $value) {
-    //         FolderTypeModel::createFolderTypeDocTypeFirstLevel([
-    //             "doctypes_first_level_id" => $obj['doctypes_first_level_id'],
-    //             "foldertype_id" => $value
-    //         ]);
-    //     }
+        DoctypeExtModel::update([
+            "type_id"       => $data['type_id'],
+            "process_delay" => $data['process_delay'],
+            "delay1"        => $data['delay1'],
+            "delay2"        => $data['delay2'],
+            "process_mode"  => $data['process_mode'],
+        ]);
 
-    //     HistoryController::add([
-    //         'tableName' => 'doctypes_first_level',
-    //         'recordId'  => $obj['doctypes_first_level_id'],
-    //         'eventType' => 'UP',
-    //         'eventId'   => 'structureup',
-    //         'info'      => _DOCTYPE_FIRSTLEVEL_UPDATED. ' : ' . $obj['doctypes_first_level_label']
-    //     ]);
+        TemplateDoctypeModel::update([
+            "template_id"  => $data["template_id"],
+            "type_id"      => $data['type_id'],
+            "is_generated" => $data["is_generated"]
+        ]);
 
-    //     return $response->withJson(
-    //         [
-    //         'firstLevel'  => $obj
-    //         ]
-    //     );
-    // }
+        DoctypeIndexesModel::delete(["type_id" => $data['type_id']]);
 
-    // public function delete(Request $request, Response $response, $aArgs)
-    // {
-    //     if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-    //         return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-    //     }
+        if (!empty($data['indexes'])) {
+            foreach ($data['indexes'] as $fieldName => $mandatory) {
+                DoctypeIndexesModel::create([
+                    "type_id"    => $data['type_id'],
+                    "coll_id"    => 'letterbox_coll',
+                    "field_name" => $fieldName,
+                    "mandatory"  => $mandatory
+                ]);
+            }
+        }
 
-    //     if (!Validator::intVal()->validate($aArgs['id'])) {
-    //         return $response
-    //             ->withStatus(500)
-    //             ->withJson(['errors' => 'Id is not a numeric']);
-    //     }
+        HistoryController::add([
+            'tableName' => 'doctypes',
+            'recordId'  => $data['type_id'],
+            'eventType' => 'UP',
+            'eventId'   => 'typesadd',
+            'info'      => _DOCTYPE_EDITED . ' : ' . $data['description']
+        ]);
 
-    //     FirstLevelModel::update(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
-    //     SecondLevelModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
-    //     DoctypeModel::disabledFirstLevel(['doctypes_first_level_id' => $aArgs['id'], 'enabled' => 'N']);
-    //     FolderTypeModel::deleteFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
-    //     $firstLevel = FirstLevelModel::getById(['id' => $aArgs['id']]);
+        return $response->withJson(
+            [
+            'doctype'  => $data['type_id']
+            ]
+        );
+    }
 
-    //     HistoryController::add([
-    //         'tableName' => 'doctypes_first_level',
-    //         'recordId'  => $aArgs['id'],
-    //         'eventType' => 'DEL',
-    //         'eventId'   => 'structuredel',
-    //         'info'      => _DOCTYPE_FIRSTLEVEL_DELETED. ' : ' . $firstLevel['doctypes_first_level_label']
-    //     ]);
+    public function delete(Request $request, Response $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
-    //     return $response->withJson(['firstLevel' => $firstLevel]);
-    // }
+        if (!Validator::intVal()->validate($aArgs['id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
 
-    // protected function control($aArgs, $mode)
-    // {
-    //     $errors = [];
+        if (empty(ResModel::get([
+            'select' => ['res_id'],
+            'where'  => ['type_id = ?'],
+            'data'   => [$aArgs['id']]]))
+        ) {
+            DoctypeController::deleteAllDoctypeData(['type_id' => $aArgs['id']]);
+            $docTypes = '';
+            $deleted  = true;
+        } else {
+            $docTypes = DoctypeModel::get();
+            $deleted  = false;
+        }
 
-    //     if ($mode == 'update') {
-    //         if (!Validator::intVal()->validate($aArgs['doctypes_first_level_id'])) {
-    //             $errors[] = 'Id is not a numeric';
-    //         } else {
-    //             $obj = FirstLevelModel::getById(['id' => $aArgs['doctypes_first_level_id']]);
-    //         }
+        return $response->withJson([
+            'deleted'  => $deleted,
+            'doctypes' => $docTypes,
+        ]);
+    }
+
+    public function deleteRedirect(Request $request, Response $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data            = $request->getParams();
+        $data['type_id'] = $aArgs['id'];
+
+        if (!Validator::intVal()->validate($data['type_id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'Id is not a numeric']);
+        }
+
+        if (!Validator::intVal()->validate($data['new_type_id']) || !Validator::notEmpty()->validate($data['new_type_id'])) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'wrong format for new_type_id']);
+        }
+
+        if (empty(DoctypeModel::getById(['id' => $data['new_type_id']]))) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'new_type_id does not exists']);
+        }
+
+        ResModel::update([
+            'set'   => ['type_id' => $data['new_type_id']],
+            'where' => ['type_id = ?'],
+            'data'  => [$data['type_id']]
+        ]);
+        DoctypeController::deleteAllDoctypeData(['type_id' => $data['type_id']]);
+
+        return $response->withJson(
+            [
+            'doctype'  => true
+            ]
+        );
+    }
+
+    protected function deleteAllDoctypeData(array $aArgs = [])
+    {
+        $doctypeInfo = DoctypeModel::getById(['id' => $aArgs['type_id']]);
+        DoctypeModel::delete(['type_id' => $aArgs['type_id']]);
+        DoctypeExtModel::delete(["type_id" => $aArgs['type_id']]);
+        TemplateDoctypeModel::delete(["type_id" => $aArgs['type_id']]);
+        DoctypeIndexesModel::delete(["type_id" => $aArgs['type_id']]);
+
+        HistoryController::add([
+            'tableName' => 'doctypes',
+            'recordId'  => $doctypeInfo['type_id'],
+            'eventType' => 'DEL',
+            'eventId'   => 'typesdel',
+            'info'      => _DOCTYPE_DELETED. ' : ' . $doctypeInfo['description']
+        ]);
+    }
+
+    protected function control($aArgs, $mode)
+    {
+        $errors = [];
+
+        if ($mode == 'update') {
+            if (!Validator::intVal()->validate($aArgs['type_id'])) {
+                $errors[] = 'type_id is not a numeric';
+            } else {
+                $obj = DoctypeModel::getById(['id' => $aArgs['type_id']]);
+            }
            
-    //         if (empty($obj)) {
-    //             $errors[] = 'Id ' .$aArgs['doctypes_first_level_id']. ' does not exists';
-    //         }
-    //     }
+            if (empty($obj)) {
+                $errors[] = 'Id ' .$aArgs['type_id']. ' does not exists';
+            }
+        }
            
-    //     if (!Validator::notEmpty()->validate($aArgs['doctypes_first_level_label']) ||
-    //         !Validator::length(1, 255)->validate($aArgs['doctypes_first_level_label'])) {
-    //         $errors[] = 'Invalid doctypes_first_level_label';
-    //     }
+        if (!Validator::notEmpty()->validate($aArgs['description']) ||
+            !Validator::length(1, 255)->validate($aArgs['description'])) {
+            $errors[] = 'Invalid description';
+        }
 
-    //     if (!Validator::notEmpty()->validate($aArgs['foldertype_id'])) {
-    //         $errors[] = 'Invalid foldertype_id';
-    //     }
+        if (!Validator::notEmpty()->validate($aArgs['doctypes_first_level_id']) ||
+            !Validator::intVal()->validate($aArgs['doctypes_first_level_id'])) {
+            $errors[] = 'Invalid doctypes_first_level_id';
+        }
 
-    //     if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
-    //         $errors[]= 'Invalid enabled value';
-    //     }
+        if (!Validator::notEmpty()->validate($aArgs['doctypes_second_level_id']) ||
+            !Validator::intVal()->validate($aArgs['doctypes_second_level_id'])) {
+            $errors[]= 'Invalid doctypes_second_level_id value';
+        }
+        if (!Validator::notEmpty()->validate($aArgs['process_delay']) ||
+            !Validator::intVal()->validate($aArgs['process_delay'])) {
+            $errors[]= 'Invalid process_delay value';
+        }
+        if (!Validator::notEmpty()->validate($aArgs['delay1']) ||
+            !Validator::intVal()->validate($aArgs['delay1'])) {
+            $errors[]= 'Invalid delay1 value';
+        }
+        if (!Validator::notEmpty()->validate($aArgs['delay2']) ||
+            !Validator::intVal()->validate($aArgs['delay2'])) {
+            $errors[]= 'Invalid delay2 value';
+        }
 
-    //     return $errors;
-    // }
-
-    // protected function manageValue($request)
-    // {
-    //     foreach ($request  as $key => $value) {
-    //         if (in_array($key, ['enabled'])) {
-    //             if (empty($value)) {
-    //                 $request[$key] = 'N';
-    //             } else {
-    //                 $request[$key] = 'Y';
-    //             }
-    //         }
-    //     }
-    //     return $request;
-    // }
+        return $errors;
+    }
 }

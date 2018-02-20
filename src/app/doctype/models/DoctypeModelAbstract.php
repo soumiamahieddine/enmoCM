@@ -64,7 +64,7 @@ class DoctypeModelAbstract
             'columnsValues' => $aArgs
         ]);
 
-        return $aArgs;
+        return $aArgs['type_id'];
     }
 
     public static function update(array $aArgs)
@@ -128,17 +128,28 @@ class DoctypeModelAbstract
         $return['process_mode_priority'] = array();
         $processingModes = $xmlfile->process_modes;
 
-        if(count($processingModes) > 0) {
-            foreach ($processingModes->process_mode as $process ) {
+        if (count($processingModes) > 0) {
+            foreach ($processingModes->process_mode as $process) {
                 $label                                   = (string) $process->label;
                 $return['processing_modes'][$label]      = $label;
                 $return['process_mode_priority'][$label] = (string) $process->process_mode_priority;
             }
-
         }
 
         return $return;
-
     }
 
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['type_id']);
+        ValidatorModel::intVal($aArgs, ['type_id']);
+
+        DatabaseModel::delete([
+            'table' => 'doctypes',
+            'where' => ['type_id = ?'],
+            'data'  => [$aArgs['type_id']]
+        ]);
+
+        return true;
+    }
 }
