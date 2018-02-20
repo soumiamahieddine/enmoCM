@@ -19,7 +19,7 @@ use SrcCore\controllers\StoreController;
 use Core\Models\ServiceModel;
 use Status\models\StatusModel;
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
