@@ -71,12 +71,15 @@ class EntityController
         $entity['types'] = EntityModel::getTypes();
         $entity['roles'] = EntityModel::getRoles();
         $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
-        $typesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
+        $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($entity['roles'] as $key => $role) {
-            if (in_array($role['id'], $typesForService)) {
+            if (in_array($role['id'], $rolesForService)) {
                 $entity['roles'][$key]['available'] = true;
             } else {
                 $entity['roles'][$key]['available'] = false;
+            }
+            if ($role['id'] == 'copy') {
+                $entity['roles'][$key]['id'] = 'cc';
             }
         }
 
@@ -86,7 +89,10 @@ class EntityController
             'data'      => [$aArgs['id']]
         ]);
 
-        $entity['listTemplate'] = ['dest' => [], 'cc' => []];
+        $entity['listTemplate'] = [];
+        foreach ($rolesForService as $role) {
+            $role == 'copy' ? $entity['listTemplate']['cc'] = [] : $entity['listTemplate'][$role] = [];
+        }
         $entity['visaTemplate'] = [];
         foreach ($listTemplates as $listTemplate) {
             if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
