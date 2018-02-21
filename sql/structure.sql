@@ -2057,7 +2057,7 @@ CREATE TABLE priorities
   label character varying(128) NOT NULL,
   color character varying(128) NOT NULL,
   working_days boolean NOT NULL,
-  delays integer NOT NULL,
+  delays integer,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

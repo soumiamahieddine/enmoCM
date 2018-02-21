@@ -36,7 +36,7 @@ class PriorityController
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['delays']);
+        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null);
         $check = $check && Validator::boolType()->validate($data['working_days']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
@@ -66,7 +66,7 @@ class PriorityController
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['delays']);
+        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null);
         $check = $check && Validator::boolType()->validate($data['working_days']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);

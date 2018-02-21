@@ -52,7 +52,7 @@ abstract class PriorityModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['label', 'color', 'delays', 'working_days']);
+        ValidatorModel::notEmpty($aArgs, ['label', 'color', 'working_days']);
         ValidatorModel::stringType($aArgs, ['label', 'color', 'working_days']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
@@ -74,7 +74,7 @@ abstract class PriorityModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'delays', 'working_days']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'working_days']);
         ValidatorModel::stringType($aArgs, ['id', 'label', 'color', 'working_days']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
