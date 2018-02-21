@@ -499,18 +499,9 @@ if (!defined("_NEW")) define("_NEW","Nouveaux");
 if (!defined("_NEW_ITEM")) define("_NEW_ITEM","Nouveau");
 if (!defined("_LATE")) define("_LATE", "En retard");
 
-if (!defined("_STATUS_DELETED")) define("_STATUS_DELETED", "Suppression du statut");
-if (!defined("_DEL_STATUS")) define("_DEL_STATUS", "Statut supprimé");
-if (!defined("_MODIFY_STATUS")) define("_MODIFY_STATUS", "Modification du statut");
-if (!defined("_STATUS_ADDED")) define("_STATUS_ADDED","Ajout d'un nouveau statut");
 if (!defined("_STATUS_MODIFIED")) define("_STATUS_MODIFIED","Modification d'un statut");
-if (!defined("_NEW_STATUS")) define("_NEW_STATUS", "Nouveau statut");
 if (!defined("_IS_SYSTEM")) define("_IS_SYSTEM", "Système");
-if (!defined("_CAN_BE_SEARCHED")) define("_CAN_BE_SEARCHED", "Recherche");
-if (!defined("_CAN_BE_MODIFIED")) define("_CAN_BE_MODIFIED", "Modification des index");
-if (!defined("_THE_STATUS")) define("_THE_STATUS", "Le statut ");
 if (!defined("_ADMIN_STATUS")) define("_ADMIN_STATUS", "Statuts");
-if (!defined("_IMG_RELATED")) define("_IMG_RELATED", "Image associée");
 
 
 /************* Actions **************/
@@ -521,10 +512,8 @@ if (!defined("_ALL_ACTIONS")) define("_ALL_ACTIONS", "Toutes les actions");
 if (!defined("_ACTION_HISTORY")) define("_ACTION_HISTORY", "Tracer l'action");
 if (!defined("_ACTION_HISTORY_DESC")) define("_ACTION_HISTORY_DESC", "Permet tracer cette action dans l'historique du document. Il est fortement recommandé de cocher cette option.");
 
-if (!defined("_ACTION_DELETED")) define("_ACTION_DELETED", "Suppression de l'action");
 if (!defined("_DEL_ACTION")) define("_DEL_ACTION", "Action supprimée");
 if (!defined("_MODIFY_ACTION")) define("_MODIFY_ACTION", "Modification de l'action");
-if (!defined("_ACTION_ADDED")) define("_ACTION_ADDED", "Ajout d'une nouvelle action");
 if (!defined("_ACTION_MODIFIED")) define("_ACTION_MODIFIED", "Modification d'une action");
 if (!defined("_NEW_ACTION")) define("_NEW_ACTION", "Nouvelle action");
 if (!defined("_THE_ACTION")) define("_THE_ACTION", "L'action ");
@@ -556,7 +545,7 @@ if (!defined("_ARCHITECTURE")) define("_ARCHITECTURE", "Plan de classement");
 
 /************************* Messages d'erreurs ***********************************/
 if (!defined("_MORE_INFOS")) define("_MORE_INFOS", "Pour plus d'informations, contactez votre administrateur ");
-if (!defined("_ALREADY_EXISTS")) define("_ALREADY_EXISTS", "existe déjà !");
+if (!defined("_ALREADY_EXISTS")) define("_ALREADY_EXISTS", "existe déjà");
 if (!defined("_DOCSERVER_ERROR")) define("_DOCSERVER_ERROR", "Erreur avec le docserver");
 if (!defined("_NO_AVAILABLE_DOCSERVER")) define("_NO_AVAILABLE_DOCSERVER", "Pas de docserver disponible");
 if (!defined("_NOT_ENOUGH_DISK_SPACE")) define("_NOT_ENOUGH_DISK_SPACE", "Pas assez de place disponible sur le serveur");
@@ -2098,8 +2087,6 @@ if(!defined('_INVALID_ID'))
     define('_INVALID_ID','Identifiant invalide');
 if (!defined('_INVALID'))
     define('_INVALID', 'n\'est pas valide');
-if (!defined('_NEW_STATUS_ADDED'))
-    define('_NEW_STATUS_ADDED', 'Nouveau statut créé');
 if (!defined('_STATUS_UPDATED'))
     define('_STATUS_UPDATED', 'Statut mis à jour');
 
