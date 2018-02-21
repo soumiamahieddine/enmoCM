@@ -96,6 +96,20 @@ abstract class PriorityModelAbstract
         return true;
     }
 
+    public static function resetDefaultPriority()
+    {
+        DatabaseModel::update([
+            'table'     => 'priorities',
+            'set'       => [
+                'default_priority'  => 'false'
+            ],
+            'where'     => ['default_priority = ?'],
+            'data'      => ['true']
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
