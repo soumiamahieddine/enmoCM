@@ -199,7 +199,16 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        unset($data['entity_id']);
+        $neededData = [
+            'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
+            'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
+            'entity_path', 'ldap_id', 'archival_agreement', 'archival_agency', 'entity_full_name'
+        ];
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $neededData)) {
+                unset($data[$key]);
+            }
+        }
         EntityModel::update(['set' => $data, 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         HistoryController::add([
             'tableName' => 'entities',
