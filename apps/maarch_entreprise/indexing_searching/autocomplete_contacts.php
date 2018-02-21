@@ -53,8 +53,9 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     // Order of select elements (# is for parallel check)
     $columnTarget = array(
         'firstname#lastname', 
+        'lastname#firstname',
         'contact_firstname#contact_lastname', 
-        'society', 
+        'society',
         'address_num#address_street#address_postal_code#address_town'
     );
 
