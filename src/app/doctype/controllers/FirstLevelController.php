@@ -31,17 +31,23 @@ class FirstLevelController
 
         $structure = [];
         foreach ($firstLevels as $firstLevelValue) {
-            foreach ($secondLevels as $secondLevelValue) {
-                if ($firstLevelValue['doctypes_first_level_id'] == $secondLevelValue['doctypes_first_level_id']) {
-                    foreach ($docTypes as $doctypeValue) {
-                        if ($secondLevelValue['doctypes_second_level_id'] == $doctypeValue['doctypes_second_level_id']) {
-                            $secondLevelValue['doctypes'][] = $doctypeValue;
-                        }
-                    }
-                    $firstLevelValue['secondeLevels'][] = $secondLevelValue;
-                }
-            }
+            $firstLevelValue['id']     = 'firstlevel_'.$firstLevelValue['doctypes_first_level_id'];
+            $firstLevelValue['text']   = $firstLevelValue['doctypes_first_level_label'];
+            $firstLevelValue['parent'] = '#';
             array_push($structure, $firstLevelValue);
+        }
+        foreach ($secondLevels as $secondLevelValue) {
+            $secondLevelValue['id']     = 'secondlevel_'.$secondLevelValue['doctypes_second_level_id'];
+            $secondLevelValue['text']   = $secondLevelValue['doctypes_second_level_label'];
+            $secondLevelValue['parent'] = 'firstlevel_'.$secondLevelValue['doctypes_first_level_id'];
+            array_push($structure, $secondLevelValue);
+        }
+        foreach ($docTypes as $doctypeValue) {
+            $doctypeValue['id']     = $doctypeValue['type_id'];
+            $doctypeValue['text']   = $doctypeValue['description'];
+            $doctypeValue['parent'] = 'secondlevel_'.$doctypeValue['doctypes_second_level_id'];
+            $doctypeValue['icon'] = 'fa fa-files-o';
+            array_push($structure, $doctypeValue);
         }
 
         return $response->withJson([

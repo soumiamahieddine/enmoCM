@@ -29,8 +29,12 @@ class DoctypeControllerTest extends TestCase
         $responseBody      = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->structure);
-        $this->assertNotNull($responseBody->structure[0]->doctypes_first_level_id);
+        $this->assertNotNull($responseBody->structure[0]->id);
+        $this->assertNotNull($responseBody->structure[0]->text);
+        $this->assertNotNull($responseBody->structure[0]->parent);
+        
         $this->assertInternalType('int', $responseBody->structure[0]->doctypes_first_level_id);
+        $this->assertNotNull($responseBody->structure[0]->doctypes_first_level_id);
         $this->assertNotNull($responseBody->structure[0]->doctypes_first_level_label);
         $this->assertNotNull($responseBody->structure[0]->enabled);
     }

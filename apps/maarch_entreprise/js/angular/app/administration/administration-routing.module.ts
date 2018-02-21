@@ -9,6 +9,7 @@ import { GroupAdministrationComponent }                 from './group-administra
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
 import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
 import { BasketAdministrationComponent }                from './basket-administration.component';
+import { DoctypesAdministrationComponent }              from './doctypes-administration.component';
 import { EntitiesAdministrationComponent }              from './entities-administration.component';
 import { EntityAdministrationComponent }                from './entity-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
@@ -42,6 +43,7 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
             { path: 'administration/baskets-sorted', component: BasketsOrderAdministrationComponent },
             { path: 'administration/baskets/new', component: BasketAdministrationComponent },
             { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
+            { path: 'administration/doctypes', component: DoctypesAdministrationComponent },
             { path: 'administration/entities', component: EntitiesAdministrationComponent },
             { path: 'administration/entities/new', component: EntityAdministrationComponent },
             { path: 'administration/entities/:id', component: EntityAdministrationComponent },

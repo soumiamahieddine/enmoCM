@@ -22,6 +22,7 @@ var baskets_order_administration_component_1 = require("./baskets-order-administ
 var basket_administration_component_1 = require("./basket-administration.component");
 var entities_administration_component_1 = require("./entities-administration.component");
 var entity_administration_component_1 = require("./entity-administration.component");
+var doctypes_administration_component_1 = require("./doctypes-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
 var actions_administration_component_1 = require("./actions-administration.component");
@@ -59,6 +60,7 @@ var AdministrationModule = /** @class */ (function () {
                 baskets_administration_component_1.BasketsAdministrationComponent,
                 baskets_order_administration_component_1.BasketsOrderAdministrationComponent,
                 basket_administration_component_1.BasketAdministrationComponent,
+                doctypes_administration_component_1.DoctypesAdministrationComponent,
                 entities_administration_component_1.EntitiesAdministrationComponent,
                 entity_administration_component_1.EntityAdministrationComponent,
                 statuses_administration_component_1.StatusesAdministrationComponent,

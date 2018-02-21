@@ -256,5 +256,9 @@ export const LANG_EN = {
     "whereClauseAction"         : "Where clause condition of action display",
     "workingDays"               : "Working days",
     "yes"                       : "Yes",
-    "zipcode"                   : "Zip code"
+    "zipcode"                   : "Zip code",
+    "doctypesAdmin"                       : "Document types",
+    "firstLevelDoctype"                       : "Folder",
+    "secondLevelDoctype"                       : "Sub-folder",
+    "doctype"                       : "Document types",
 };

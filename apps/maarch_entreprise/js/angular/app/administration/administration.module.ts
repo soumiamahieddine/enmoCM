@@ -16,6 +16,7 @@ import { BasketsOrderAdministrationComponent }          from './baskets-order-ad
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
 import { EntitiesAdministrationComponent }              from './entities-administration.component';
 import { EntityAdministrationComponent }                from './entity-administration.component';
+import { DoctypesAdministrationComponent }              from './doctypes-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
 import { ActionsAdministrationComponent }               from './actions-administration.component';
@@ -31,7 +32,6 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
 import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
-
 
 @NgModule({
     imports:      [
@@ -51,6 +51,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketsAdministrationComponent,
         BasketsOrderAdministrationComponent,
         BasketAdministrationComponent,
+        DoctypesAdministrationComponent,
         EntitiesAdministrationComponent,
         EntityAdministrationComponent,
         StatusesAdministrationComponent,

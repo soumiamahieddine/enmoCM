@@ -284,5 +284,9 @@ exports.LANG_FR = {
     "whereClauseAction": "Condition d'apparition de l'action (where clause)",
     "workingDays": "jour(s) ouvré(s)",
     "yes": "Oui",
-    "zipcode": "Code postal"
+    "zipcode": "Code postal",
+    "doctypesAdmin": "Typologie documentaire",
+    "firstLevelDoctype": "Chemise",
+    "secondLevelDoctype": "Sous-Chemise",
+    "doctype": "Type de document",
 };
