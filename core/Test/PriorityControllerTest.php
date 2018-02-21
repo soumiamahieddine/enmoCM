@@ -23,10 +23,11 @@ class PriorityControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'label'         => 'TEST-OVER-URGENT',
-            'color'         => '#ffffff',
-            'working_days'  => true,
-            'delays'        => '2'
+            'label'             => 'TEST-OVER-URGENT',
+            'color'             => '#ffffff',
+            'working_days'      => true,
+            'delays'            => '2',
+            'default_priority'  => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -73,10 +74,11 @@ class PriorityControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'label'         => 'TEST-OVER-URGENT-UPDATED',
-            'color'         => '#f2f2f2',
-            'working_days'  => false,
-            'delays'        => '4'
+            'label'             => 'TEST-OVER-URGENT-UPDATED',
+            'color'             => '#f2f2f2',
+            'working_days'      => false,
+            'delays'            => '4',
+            'default_priority'  => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
