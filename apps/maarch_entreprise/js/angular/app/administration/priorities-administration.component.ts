@@ -14,18 +14,18 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class PrioritiesAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
-    loading: boolean = false;
 
-    priorities: any[] = [];
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    datatable: any;
+    coreUrl         : string;
+    lang            : any       = LANG;
+    loading         : boolean   = false;
 
-    displayedColumns = ['label', 'delays', 'working_days', 'actions'];
-    dataSource: any;
+    priorities      : any[]     = [];
+    dataSource      : any;
+    displayedColumns            = ['label', 'delays', 'working_days', 'actions'];
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -45,15 +45,8 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.priorities;
-        }
-    }
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/priorities')

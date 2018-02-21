@@ -36,15 +36,9 @@ var PrioritiesAdministrationComponent = /** @class */ (function () {
     PrioritiesAdministrationComponent.prototype.ngOnDestroy = function () {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     };
-    PrioritiesAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.priorities;
-        }
-    };
     PrioritiesAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/priorities')
             .subscribe(function (data) {

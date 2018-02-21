@@ -64,10 +64,10 @@
                     <ng-container matColumnDef="delays">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processDelay}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
-                            <span *ngIf="element.delays == '*'">
+                            <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
-                            <span *ngIf="element.delays != '*'">
+                            <span *ngIf="element.delays">
                                 {{element.delays}}
                             </span>
                         </mat-cell>
@@ -75,13 +75,13 @@
                     <ng-container matColumnDef="working_days">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processType}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
-                            <span *ngIf="element.delays == '*'">
+                            <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
-                            <span *ngIf="element.working_days && element.delays != '*'">
+                            <span *ngIf="element.working_days && element.delays">
                                 {{lang.workingDays}}
                             </span>
-                            <span *ngIf="!element.working_days && element.delays != '*'">
+                            <span *ngIf="!element.working_days && element.delays">
                                 {{lang.calDays}}
                             </span>
                         </mat-cell>
