@@ -21,6 +21,7 @@ export class StatusAdministrationComponent implements OnInit {
     lang: any = LANG;
 
     creationMode: boolean;
+    statusIdAvailable: boolean;
 
     statusIdentifier: string;
     status: any = {
@@ -64,10 +65,12 @@ export class StatusAdministrationComponent implements OnInit {
                         this.creationMode = true;
                         this.loading = false;
                     });
+                this.statusIdAvailable = false;
             } else {
                 this.creationMode = false;
                 this.statusIdentifier = params['identifier'];
                 this.getStatusInfos(this.statusIdentifier);
+                this.statusIdAvailable = true;
                 this.loading = false;
             }
 
@@ -114,6 +117,22 @@ export class StatusAdministrationComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    isAvailable() {
+        if (this.status.id) {
+            this.http.get(this.coreUrl + "rest/status/" + this.status.id)
+                .subscribe(() => {
+                    this.statusIdAvailable = false;
+                }, (err) => {
+                    this.statusIdAvailable = false;
+                    if (err.error.errors == "id not found") {
+                        this.statusIdAvailable = true;
+                    }
+                });
+        } else {
+            this.statusIdAvailable = false;
+        }
     }
 
     submitStatus() {

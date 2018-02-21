@@ -56,11 +56,13 @@ var StatusAdministrationComponent = /** @class */ (function () {
                     _this.creationMode = true;
                     _this.loading = false;
                 });
+                _this.statusIdAvailable = false;
             }
             else {
                 _this.creationMode = false;
                 _this.statusIdentifier = params['identifier'];
                 _this.getStatusInfos(_this.statusIdentifier);
+                _this.statusIdAvailable = true;
                 _this.loading = false;
             }
             _this.updateBreadcrumb(angularGlobals.applicationName);
@@ -108,6 +110,23 @@ var StatusAdministrationComponent = /** @class */ (function () {
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
+    };
+    StatusAdministrationComponent.prototype.isAvailable = function () {
+        var _this = this;
+        if (this.status.id) {
+            this.http.get(this.coreUrl + "rest/status/" + this.status.id)
+                .subscribe(function () {
+                _this.statusIdAvailable = false;
+            }, function (err) {
+                _this.statusIdAvailable = false;
+                if (err.error.errors == "id not found") {
+                    _this.statusIdAvailable = true;
+                }
+            });
+        }
+        else {
+            this.statusIdAvailable = false;
+        }
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;

@@ -133,6 +133,7 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
 $app->post('/statuses', \Status\controllers\StatusController::class . ':create');
 $app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
+$app->get('/status/{id}', \Status\controllers\StatusController::class . ':getById');
 $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
