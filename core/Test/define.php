@@ -77,6 +77,8 @@ if ($_SESSION['error']) {
     exit();
 }
 
+$language = \SrcCore\models\CoreConfigModel::getLanguage();
+require_once("src/core/lang/lang-{$language}.php");
 
 class httpRequestCustom
 {

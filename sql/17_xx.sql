@@ -565,6 +565,18 @@ VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version d
 
 ALTER TABLE doctypes DROP COLUMN IF EXISTS primary_retention;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS secondary_retention;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
+ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'compta_3_03';
+ALTER TABLE doctypes DROP COLUMN IF EXISTS duration_current_use;
+ALTER TABLE doctypes ADD COLUMN duration_current_use integer DEFAULT '12';
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT 'org_123456789_Archives';
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
+ALTER TABLE entities ADD COLUMN archival_agreement character varying(255) DEFAULT 'MAARCH_LES_BAINS_ACTES';
+
+
 
 UPDATE doctypes_first_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
 UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';
