@@ -82,7 +82,13 @@ class HistoryController
             'eventId'   => $aArgs['eventId'],
         ]);
 
-//        NotificationsEventsController::fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+       NotificationsEventsController::fill_event_stack([
+        "eventId"   => $aArgs['eventId'],
+        "tableName" => $aArgs['tableName'],
+        "recordId"  => $aArgs['recordId'],
+        "userId"    => $GLOBALS['userId'],
+        "info"      => $aArgs['info'],
+       ]);
 
     }
 

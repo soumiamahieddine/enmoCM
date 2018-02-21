@@ -16,39 +16,42 @@
 namespace Notification\controllers;
 
 use Notification\models\NotificationsEventsModel;
-use Notification\models\NotificationsModel;
+use Notification\models\NotificationModel;
 
 class NotificationsEventsController
 {
-    public static function fill_event_stack($event_id, $table_name, $record_id, $user, $info)
+    public static function fill_event_stack(array $aArgs)
     {
-        if ($record_id == '') {
+        if ($aArgs['recordId'] == '') {
             return;
         }
         
-        $aNotifications = NotificationsModel::getEnableNotifications();
+        $aNotifications = NotificationModel::getEnableNotifications();
         if (empty($aNotifications)) {
             return;
         }
 
         foreach ($aNotifications as $notification) {
             $event_ids = explode(',', $notification['event_id']);
-            if ($event_id == $notification['event_id'] || self::wildcard_match($notification['event_id'], $event_id) || in_array($event_id, $event_ids)) {
+
+            if ($aArgs['eventId'] == $notification['event_id'] 
+                || self::wildcard_match(["pattern" => $notification['event_id'], "str" => $aArgs['eventId']]) 
+                || in_array($aArgs['eventId'], $event_ids)) {
                 NotificationsEventsModel::create([
                     'notification_sid' => $notification['notification_sid'],
-                    'table_name'       => $table_name,
-                    'record_id'        => $record_id,
-                    'user_id'          => $user,
-                    'event_info'       => $info
+                    'table_name'       => $aArgs['tableName'],
+                    'record_id'        => $aArgs['recordId'],
+                    'user_id'          => $aArgs['userId'],
+                    'event_info'       => $aArgs['info']
                 ]);
             }
         }
     }
 
-    public function wildcard_match($pattern, $str)
+    public function wildcard_match(array $aArgs)
     {
-        $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($pattern)) . '$/is';
-        $result = preg_match($pattern, $str);
+        $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($aArgs['pattern'])) . '$/is';
+        $result = preg_match($pattern, $aArgs['str']);
         return $result;
     }
 }

@@ -182,7 +182,7 @@ class ActionController
                 ->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['id']]); // TODO select label_action
+        $action = ActionModel::getById(['id' => $aArgs['id']]);
         ActionModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
