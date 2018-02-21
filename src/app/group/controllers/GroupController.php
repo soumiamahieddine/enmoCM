@@ -3,6 +3,7 @@
 namespace Group\controllers;
 
 use Core\Models\ServiceModel;
+use Core\Models\ValidatorModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -135,6 +136,7 @@ class GroupController
         $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
         $group['security']  = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']  = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
+        $group['services']['administration'] = GroupController::arraySort(['data' => $group['services']['administration'], 'on' => 'name']);
 
         return $response->withJson(['group' => $group]);
     }
@@ -179,5 +181,43 @@ class GroupController
         GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    private static function arraySort($aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data', 'on']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+        ValidatorModel::stringType($aArgs, ['on']);
+
+        $order = SORT_ASC;
+        $sortableArray = [];
+
+        foreach ($aArgs['data'] as $k => $v) {
+            if (is_array($v)) {
+                foreach ($v as $k2 => $v2) {
+                    if ($k2 == $aArgs['on']) {
+                        $sortableArray[$k] = $v2;
+                    }
+                }
+            } else {
+                $sortableArray[$k] = $v;
+            }
+        }
+
+        switch ($order) {
+            case SORT_ASC:
+                asort($sortableArray);
+                break;
+            case SORT_DESC:
+                arsort($sortableArray);
+                break;
+        }
+
+        $newArray = [];
+        foreach ($sortableArray as $k => $v) {
+            $newArray[] = $aArgs['data'][$k];
+        }
+
+        return $newArray;
     }
 }

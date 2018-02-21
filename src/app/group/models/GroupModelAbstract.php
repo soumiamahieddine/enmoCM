@@ -286,7 +286,7 @@ class GroupModelAbstract
                     if ($value2['servicetype'] == 'menu') {
                         $menu[] = $value2;
                     } elseif ($value2['servicetype'] == 'admin') {
-                        $administration[] = $value2;
+                        $services['administration'][] = $value2;
                     } elseif ($value2['servicetype'] == 'use') {
                         $use[] = $value2;
                     }
@@ -295,9 +295,9 @@ class GroupModelAbstract
             if (!empty($menu)) {
                 $services['menu'][] = $menu;
             }
-            if (!empty($administration)) {
-                $services['administration'][] = $administration;
-            }
+//            if (!empty($administration)) {
+//                $services['administration'][] = $administration;
+//            }
             if (!empty($use)) {
                 $services['use'][] = $use;
             }
