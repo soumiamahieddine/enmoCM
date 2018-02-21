@@ -45,6 +45,7 @@
       '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.min.js',
       '@angular/platform-browser/animations': 'npm:@angular/platform-browser/bundles/platform-browser-animations.umd.min.js',
       '@angular/router': 'npm:@angular/router/bundles/router.umd.min.js',
+      'ng2-dnd': 'npm:ng2-dnd/bundles/ng2-dnd.umd.min.js',
 
       // other libraries
       'rxjs':     'npm:rxjs',

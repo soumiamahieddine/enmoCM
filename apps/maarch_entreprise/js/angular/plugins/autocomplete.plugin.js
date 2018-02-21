@@ -8,6 +8,7 @@ var AutoCompletePlugin = /** @class */ (function () {
         var _this = this;
         this.http = http;
         this.userList = [];
+        this.elemList = [];
         this.statusesList = [];
         this.coreUrl = angularGlobals.coreUrl;
         if (target == 'users') {
@@ -32,6 +33,23 @@ var AutoCompletePlugin = /** @class */ (function () {
                 location.href = "index.php";
             });
         }
+        else if (target == 'usersAndEntities') {
+            this.elementCtrl = new forms_1.FormControl();
+            this.elemList = [{
+                    "type": "user",
+                    "id": "bbain",
+                    "idToDisplay": "Barbara BAIN",
+                    "otherInfo": "Pôle jeunesse et sport"
+                },
+                {
+                    "type": "entity",
+                    "id": "DGS",
+                    "idToDisplay": "Direction générale des services",
+                    "otherInfo": ""
+                }];
+            this.filteredElements = this.elementCtrl.valueChanges
+                .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
+        }
         else {
         }
     }
@@ -41,11 +59,13 @@ var AutoCompletePlugin = /** @class */ (function () {
         });
     };
     AutoCompletePlugin.prototype.autocompleteFilterStatuses = function (name) {
-        console.log(this.statusesList.filter(function (status) {
-            return status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0;
-        }));
         return this.statusesList.filter(function (status) {
             return status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0;
+        });
+    };
+    AutoCompletePlugin.prototype.autocompleteFilterElements = function (name) {
+        return this.statusesList.filter(function (elem) {
+            return elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) === 0;
         });
     };
     return AutoCompletePlugin;

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DndModule }                            from 'ng2-dnd';
 import {
     MatSelectModule,
     MatCheckboxModule,
@@ -68,7 +69,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatChipsModule,
         MatStepperModule,
         MatRadioModule,
-        MatSliderModule
+        MatSliderModule,
+        DndModule.forRoot()
     ],
     exports: [
         MatCheckboxModule,
@@ -99,7 +101,8 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatChipsModule,
         MatStepperModule,
         MatRadioModule,
-        MatSliderModule
+        MatSliderModule,
+        DndModule
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }

@@ -4,15 +4,16 @@
         <id>manage_entities</id>
         <name>_ENTITIES</name>
         <comment>_MANAGE_ENTITIES_DESC</comment>
-        <servicepage>index.php?page=admin_entities&amp;module=entities</servicepage>
+        <servicepage>/administration/entities</servicepage>
         <servicetype>admin</servicetype>
         <system_service>false</system_service>
         <style>fa fa-sitemap</style>
         <enabled>true</enabled>
-         <WHEREAMIUSED>
-         <page>admin.php</page>
-         <nature>listelement</nature>
-       </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>admin.php</page>
+            <nature>listelement</nature>
+        </WHEREAMIUSED>
+        <angular>true</angular>
     </SERVICE>
     <SERVICE>
         <id>choose_entity</id>
@@ -105,53 +106,53 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-     <id>param_index_difflist_types</id>
-     <name>_PARAM_AVAILABLE_DIFFLIST_TYPES_ON_GROUP_BASKETS</name>
-     <servicepage>param_index_difflist_types.php</servicepage>
-     <servicetype>use</servicetype>
-     <system_service>true</system_service>
-     <enabled>true</enabled>
-     <WHEREAMIUSED>
-          <page>groupbasket_popup.php</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>manage_group_basket.php</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>load_groupbasket</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>load_groupbasket_db</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-   </SERVICE>
-   <SERVICE>
-     <id>param_workflow</id>
-     <name>_PARAM_WORKFLOW</name>
-     <servicepage>param_workflow.php</servicepage>
-     <servicetype>use</servicetype>
-     <system_service>true</system_service>
-     <enabled>true</enabled>
-     <WHEREAMIUSED>
-          <page>groupbasket_popup.php</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>manage_group_basket.php</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>load_groupbasket</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-      <WHEREAMIUSED>
-          <page>load_groupbasket_db</page>
-          <nature>include</nature>
-      </WHEREAMIUSED>
-   </SERVICE>
+        <id>param_index_difflist_types</id>
+        <name>_PARAM_AVAILABLE_DIFFLIST_TYPES_ON_GROUP_BASKETS</name>
+        <servicepage>param_index_difflist_types.php</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>true</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>groupbasket_popup.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>manage_group_basket.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>load_groupbasket</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>load_groupbasket_db</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+    </SERVICE>
+    <SERVICE>
+        <id>param_workflow</id>
+        <name>_PARAM_WORKFLOW</name>
+        <servicepage>param_workflow.php</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>true</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>groupbasket_popup.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>manage_group_basket.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>load_groupbasket</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+        <WHEREAMIUSED>
+            <page>load_groupbasket_db</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+    </SERVICE>
     <SERVICE>
         <id>param_templates_entities</id>
         <name>_PARAM_TEMPLATE_ENTITIES</name>
@@ -293,11 +294,11 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-       <id>entities_print_sep_mlb</id>
-       <name>_ENTITIES_PRINT_SEP_MLB</name>
-       <comment>_ENTITIES_PRINT_SEP_MLB</comment>
-       <servicetype>menu</servicetype>
-       <system_service>false</system_service>
-       <enabled>true</enabled>
+        <id>entities_print_sep_mlb</id>
+        <name>_ENTITIES_PRINT_SEP_MLB</name>
+        <comment>_ENTITIES_PRINT_SEP_MLB</comment>
+        <servicetype>menu</servicetype>
+        <system_service>false</system_service>
+        <enabled>true</enabled>
     </SERVICE>
 </root>

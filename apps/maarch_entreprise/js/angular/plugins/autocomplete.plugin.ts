@@ -11,14 +11,17 @@ export class AutoCompletePlugin {
   coreUrl: string;
   userCtrl: FormControl;
   statusCtrl: FormControl;
+  elementCtrl: FormControl;
   filteredUsers: Observable<any[]>;
+  filteredElements: Observable<any[]>;
   filteredStatuses: Observable<any[]>;
   userList: any[] = [];
+  elemList: any[] = [];
   statusesList: any[] = [];
 
   constructor(public http: HttpClient, target: any) {
     this.coreUrl = angularGlobals.coreUrl;
-  
+
     if (target == 'users') {
       this.userCtrl = new FormControl();
       this.http.get(this.coreUrl + 'rest/users/autocompleter')
@@ -38,13 +41,32 @@ export class AutoCompletePlugin {
         .subscribe((data: any) => {
           this.statusesList = data['statuses'];
           this.filteredStatuses = this.statusCtrl.valueChanges
-          .pipe(
-            startWith(''),
-            map(status => status ? this.autocompleteFilterStatuses(status) : this.statusesList.slice())
-          );
+            .pipe(
+              startWith(''),
+              map(status => status ? this.autocompleteFilterStatuses(status) : this.statusesList.slice())
+            );
         }, () => {
           location.href = "index.php";
         });
+    } else if (target == 'usersAndEntities') {
+      this.elementCtrl = new FormControl();
+      this.elemList = [{
+        "type": "user",
+        "id": "bbain",
+        "idToDisplay": "Barbara BAIN",
+        "otherInfo": "Pôle jeunesse et sport"
+      },
+      {
+        "type": "entity",
+        "id": "DGS",
+        "idToDisplay": "Direction générale des services",
+        "otherInfo": ""
+      }];
+      this.filteredElements = this.elementCtrl.valueChanges
+        .pipe(
+          startWith(''),
+          map(elem => elem ? this.autocompleteFilterElements(elem) : this.elemList.slice())
+        );
     } else {
 
     }
@@ -56,10 +78,13 @@ export class AutoCompletePlugin {
   }
 
   autocompleteFilterStatuses(name: string) {
-    console.log(this.statusesList.filter(status =>
-      status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0));
     return this.statusesList.filter(status =>
       status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  }
+
+  autocompleteFilterElements(name: string) {
+    return this.statusesList.filter(elem =>
+      elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
 }

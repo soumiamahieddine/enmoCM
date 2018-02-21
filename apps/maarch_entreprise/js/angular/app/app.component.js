@@ -34,7 +34,8 @@ var AppComponent = /** @class */ (function () {
                 //'../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css',
                 'css/maarch-material.css',
                 'css/engine.css',
-                'css/jstree-custom.min.css' //treejs module
+                'css/jstree-custom.min.css',
+                '../../node_modules/ng2-dnd/bundles/style.css'
             ],
             viewProviders: [material_1.MatIconRegistry],
             providers: [
