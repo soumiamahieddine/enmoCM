@@ -215,6 +215,7 @@ $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':d
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
+$app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');
 
 //ListTemplates
 $app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');

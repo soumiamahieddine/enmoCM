@@ -32,12 +32,7 @@ class EntityController
 {
     public function get(Request $request, Response $response)
     {
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -122,12 +117,11 @@ class EntityController
             }
         }
 
+        $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
-        $entity['users'] = count($users);
         $templates = TemplateModel::getAssociation(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
         $entity['templates'] = count($templates);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
@@ -219,12 +213,7 @@ class EntityController
             'eventId'   => 'entityModification',
         ]);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -268,12 +257,7 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function reassignEntity(Request $request, Response $response, array $aArgs)
@@ -348,12 +332,7 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
@@ -398,5 +377,10 @@ class EntityController
         ]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public function getTypes(Request $request, Response $response)
+    {
+        return $response->withJson(['types' => EntityModel::getTypes()]);
     }
 }
