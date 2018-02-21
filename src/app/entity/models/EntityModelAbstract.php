@@ -263,6 +263,7 @@ class EntityModelAbstract
                 $allEntities[$key]['allowed'] = false;
                 $allEntities[$key]['state']['disabled'] = true;
             }
+            $allEntities[$key]['state']['dragable'] = false;
             $allEntities[$key]['state']['opened'] = true;
             $allEntities[$key]['text'] = $value['entity_label'];
         }
