@@ -533,27 +533,23 @@ abstract class business_app_tools_Abstract extends Database
             }
         }
 
-        $_SESSION['mail_priorities']           = array();
-        $_SESSION['mail_priorities_attribute'] = array();
-        $_SESSION['mail_priorities_wdays']     = array();
-        $mailPriorities = $xmlfile->priorities;
-        if (count($mailPriorities) > 0) {
-            $i = 0;
-            foreach ($mailPriorities->priority as $priority ) {
-                $label = (string) $priority;
-                $attribute = (string) $priority['with_delay'];
-                $workingDays = (string) $priority['working_days'];
-                if (!empty($label) && defined($label)
-                    && constant($label) <> NULL
-                ) {
-                    $label = constant($label);
-                }
-                $_SESSION['mail_priorities'][$i] = $label;
-                $_SESSION['mail_priorities_attribute'][$i] = $attribute;
-                $_SESSION['mail_priorities_wdays'][$i] = ($workingDays != 'false' ? 'true' : 'false');
-                $i++;
+        $_SESSION['mail_priorities']            = [];
+        $_SESSION['mail_priorities_attribute']  = [];
+        $_SESSION['mail_priorities_wdays']      = [];
+        $_SESSION['mail_priorities_color']      = [];
+        $_SESSION['default_mail_priority']      = 0;
+
+        $priorities = \Priority\models\PriorityModel::get();
+        $i = 0;
+        foreach ($priorities as $priority) {
+            $_SESSION['mail_priorities'][$i] = $priority['label'];
+            $_SESSION['mail_priorities_attribute'][$i] = ($priority['delays'] == null ? 'false' : $priority['delays']);
+            $_SESSION['mail_priorities_wdays'][$i] = ($priority['delays'] ? 'true' : 'false');
+            $_SESSION['mail_priorities_color'][$i] = $priority['color'];
+            if ($priority['default_priority']) {
+                $_SESSION['default_mail_priority'] = $i;
             }
-            $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
+            $i++;
         }
 
         $_SESSION['type_calendar'] = array();

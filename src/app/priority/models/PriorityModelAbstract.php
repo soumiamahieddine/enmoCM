@@ -52,8 +52,8 @@ abstract class PriorityModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['label', 'color', 'working_days']);
-        ValidatorModel::stringType($aArgs, ['label', 'color', 'working_days']);
+        ValidatorModel::notEmpty($aArgs, ['label', 'color', 'working_days', 'default_priority']);
+        ValidatorModel::stringType($aArgs, ['label', 'color', 'working_days', 'default_priority']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
         //working_days => true (monday to friday) => false (monday to sunday)
@@ -61,11 +61,12 @@ abstract class PriorityModelAbstract
         DatabaseModel::insert([
             'table'         => 'priorities',
             'columnsValues' => [
-                'id'            => $id,
-                'label'         => $aArgs['label'],
-                'color'         => $aArgs['color'],
-                'working_days'  => $aArgs['working_days'],
-                'delays'        => $aArgs['delays']
+                'id'                => $id,
+                'label'             => $aArgs['label'],
+                'color'             => $aArgs['color'],
+                'working_days'      => $aArgs['working_days'],
+                'delays'            => $aArgs['delays'],
+                'default_priority'  => $aArgs['default_priority'],
             ]
         ]);
 
@@ -74,18 +75,19 @@ abstract class PriorityModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'working_days']);
-        ValidatorModel::stringType($aArgs, ['id', 'label', 'color', 'working_days']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'working_days', 'default_priority']);
+        ValidatorModel::stringType($aArgs, ['id', 'label', 'color', 'working_days', 'default_priority']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
         //working_days => true (monday to friday) => false (monday to sunday)
         DatabaseModel::update([
             'table'     => 'priorities',
             'set'       => [
-                'label'         => $aArgs['label'],
-                'color'         => $aArgs['color'],
-                'working_days'  => $aArgs['working_days'],
-                'delays'        => $aArgs['delays']
+                'label'             => $aArgs['label'],
+                'color'             => $aArgs['color'],
+                'working_days'      => $aArgs['working_days'],
+                'delays'            => $aArgs['delays'],
+                'default_priority'  => $aArgs['default_priority']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

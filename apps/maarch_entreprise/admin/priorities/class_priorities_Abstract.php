@@ -76,29 +76,23 @@ abstract class PrioritiesAbstract extends Database
     }
 
     protected function  updateSession() {
-        $path = $this->getXMLPath();
+        $_SESSION['mail_priorities']            = [];
+        $_SESSION['mail_priorities_attribute']  = [];
+        $_SESSION['mail_priorities_wdays']      = [];
+        $_SESSION['mail_priorities_color']      = [];
+        $_SESSION['default_mail_priority']      = 0;
 
-        $xmlfile = simplexml_load_file($path);
-        $mailPriorities = $xmlfile->priorities;
-
-        unset($_SESSION['mail_priorities'], $_SESSION['mail_priorities_attribute'], $_SESSION['mail_priorities_wdays']);
-        $_SESSION['mail_priorities'] = [];
-        $_SESSION['mail_priorities_attribute'] = [];
-        $_SESSION['mail_priorities_wdays'] = [];
-        $_SESSION['mail_priorities_color'] = [];
-
-        for ($i = 0; $mailPriorities->priority[$i]; $i++) {
-            $label = (string) $mailPriorities->priority[$i];
-            $attribute = (string) $mailPriorities->priority[$i]['with_delay'];
-            $workingDays = (string) $mailPriorities->priority[$i]['working_days'];
-            $color = (string) $mailPriorities->priority[$i]['color'];
-            if (!empty($label) && defined($label) && constant($label) != NULL) {
-                $label = constant($label);
+        $priorities = \Priority\models\PriorityModel::get();
+        $i = 0;
+        foreach ($priorities as $priority) {
+            $_SESSION['mail_priorities'][$i] = $priority['label'];
+            $_SESSION['mail_priorities_attribute'][$i] = ($priority['delays'] == null ? 'false' : $priority['delays']);
+            $_SESSION['mail_priorities_wdays'][$i] = ($priority['delays'] ? 'true' : 'false');
+            $_SESSION['mail_priorities_color'][$i] = $priority['color'];
+            if ($priority['default_priority']) {
+                $_SESSION['default_mail_priority'] = $i;
             }
-            $_SESSION['mail_priorities'][$i] = $label;
-            $_SESSION['mail_priorities_attribute'][$i] = $attribute;
-            $_SESSION['mail_priorities_wdays'][$i] = ($workingDays != 'false' ? 'true' : 'false');
-            $_SESSION['mail_priorities_color'][$i] = $color;
+            $i++;
         }
     }
 

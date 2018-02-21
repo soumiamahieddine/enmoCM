@@ -43,6 +43,7 @@ class PriorityController
         }
 
         $data['working_days'] = $data['working_days'] ? 'true' : 'false';
+        $data['default_priority'] = $data['default_priority'] ? 'true' : 'false';
 
         $id = PriorityModel::create($data);
         HistoryController::add([
@@ -68,12 +69,14 @@ class PriorityController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
         $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null);
         $check = $check && Validator::boolType()->validate($data['working_days']);
+        $check = $check && Validator::boolType()->validate($data['default_priority']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $data['id'] = $aArgs['id'];
         $data['working_days'] = empty($data['working_days']) ? 'false' : 'true';
+        $data['default_priority'] = empty($data['default_priority']) ? 'false' : 'true';
 
         PriorityModel::update($data);
         HistoryController::add([

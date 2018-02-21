@@ -21,6 +21,7 @@ CREATE TABLE priorities
   color character varying(128) NOT NULL,
   working_days boolean NOT NULL,
   delays integer,
+  default_priority boolean NOT NULL DEFAULT FALSE,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
