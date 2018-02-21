@@ -212,7 +212,6 @@ div.mat-expansion-panel-content:not(.mat-expanded) {
 }
 
 .admin-container {
-    background: White url(test.svg) center center repeat;
     display: flex;
     flex-direction: column;
     position: absolute;
