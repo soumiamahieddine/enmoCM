@@ -16,6 +16,7 @@ namespace Group\models;
 
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
+use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
@@ -273,7 +274,6 @@ class GroupModelAbstract
         $services = [];
         foreach ($allServices as $key => $value) {
             $menu = [];
-            $administration = [];
             $use = [];
             foreach ($value as $value2) {
                 if (!$value2['system_service']) {
@@ -295,13 +295,18 @@ class GroupModelAbstract
             if (!empty($menu)) {
                 $services['menu'][] = $menu;
             }
-//            if (!empty($administration)) {
-//                $services['administration'][] = $administration;
-//            }
             if (!empty($use)) {
                 $services['use'][] = $use;
             }
         }
+
+        foreach ($services['menu'] as $key => $menu) {
+            $services['menu'][$key] = GroupController::arraySort(['data' => $menu, 'on' => 'name']);
+        }
+        foreach ($services['use'] as $key => $use) {
+            $services['use'][$key] = GroupController::arraySort(['data' => $use, 'on' => 'name']);
+        }
+        $services['administration'] = GroupController::arraySort(['data' => $services['administration'], 'on' => 'name']);
 
         return $services;
     }

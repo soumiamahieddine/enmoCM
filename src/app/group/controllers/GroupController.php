@@ -136,7 +136,6 @@ class GroupController
         $group['users']     = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
         $group['security']  = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']  = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
-        $group['services']['administration'] = GroupController::arraySort(['data' => $group['services']['administration'], 'on' => 'name']);
 
         return $response->withJson(['group' => $group]);
     }
@@ -183,7 +182,7 @@ class GroupController
         return $response->withJson(['success' => 'success']);
     }
 
-    private static function arraySort($aArgs)
+    public static function arraySort($aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data', 'on']);
         ValidatorModel::arrayType($aArgs, ['data']);
