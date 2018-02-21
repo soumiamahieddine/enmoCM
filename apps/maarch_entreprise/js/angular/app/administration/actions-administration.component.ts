@@ -91,7 +91,7 @@ export class ActionsAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.actionDeleted);
 
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

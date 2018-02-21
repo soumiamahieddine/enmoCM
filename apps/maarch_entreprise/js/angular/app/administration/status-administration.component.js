@@ -106,7 +106,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
             }
             _this.statusImages = data['statusImages'];
         }, function (err) {
-            _this.notify.error(JSON.parse(err._body).errors);
+            _this.notify.error(err.error.errors);
         });
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
@@ -117,7 +117,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.notify.success(_this.lang.statusAdded);
                 _this.router.navigate(['administration/statuses']);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else if (this.creationMode == false) {
@@ -126,7 +126,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.notify.success(_this.lang.statusUpdated);
                 _this.router.navigate(['administration/statuses']);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };

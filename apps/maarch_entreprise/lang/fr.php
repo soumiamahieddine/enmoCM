@@ -43,7 +43,7 @@ if (!defined("_ADMIN_USERS_DESC"))    define("_ADMIN_USERS_DESC", "Ajouter, susp
 if (!defined("_ADMIN_DOCSERVERS_DESC"))    define("_ADMIN_DOCSERVERS_DESC", "Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d'appartenance et définir leur groupe primaire.");
 if (!defined("_ADMIN_GROUPS"))    define("_ADMIN_GROUPS", "Groupes d'utilisateurs");
 if (!defined("_ADMIN_GROUPS_DESC"))    define("_ADMIN_GROUPS_DESC", "Ajouter, suspendre, ou modifier des groupes d'utilisateurs. Attribuer des privilèges ou des autorisations d'accès aux ressources.");
-if (!defined("_ADMIN_ARCHITECTURE"))    define("_ADMIN_ARCHITECTURE", "Plan de classement");
+if (!defined("_ADMIN_ARCHITECTURE"))    define("_ADMIN_ARCHITECTURE", "Typologie documentaire");
 if (!defined("_ADMIN_ARCHITECTURE_DESC"))    define("_ADMIN_ARCHITECTURE_DESC", "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
 if (!defined("_VIEW_HISTORY"))    define("_VIEW_HISTORY", "Historique");
 if (!defined("_VIEW_HISTORY_BATCH"))    define("_VIEW_HISTORY_BATCH", "Historique des batchs");

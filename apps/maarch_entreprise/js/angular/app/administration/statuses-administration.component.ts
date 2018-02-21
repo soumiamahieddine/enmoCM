@@ -66,7 +66,7 @@ export class StatusesAdministrationComponent implements OnInit {
                 }, 0);
 
             }, (err) => {
-                this.notify.error(JSON.parse(err._body).errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -88,7 +88,7 @@ export class StatusesAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.statusDeleted);
 
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

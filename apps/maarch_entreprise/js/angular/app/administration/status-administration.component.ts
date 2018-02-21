@@ -112,7 +112,7 @@ export class StatusAdministrationComponent implements OnInit {
                 }
                 this.statusImages = data['statusImages'];
             }, (err) => {
-                this.notify.error(JSON.parse(err._body).errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -123,7 +123,7 @@ export class StatusAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.statusAdded);
                     this.router.navigate(['administration/statuses']);
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         } else if (this.creationMode == false) {
 
@@ -132,7 +132,7 @@ export class StatusAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.statusUpdated);
                     this.router.navigate(['administration/statuses']);
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

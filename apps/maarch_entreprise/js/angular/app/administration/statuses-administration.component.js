@@ -53,7 +53,7 @@ var StatusesAdministrationComponent = /** @class */ (function () {
                 _this.dataSource.sort = _this.sort;
             }, 0);
         }, function (err) {
-            _this.notify.error(JSON.parse(err._body).errors);
+            _this.notify.error(err.error.errors);
         });
     };
     StatusesAdministrationComponent.prototype.prepareStatus = function () {
@@ -72,7 +72,7 @@ var StatusesAdministrationComponent = /** @class */ (function () {
                 _this.statuses = data.statuses;
                 _this.notify.success(_this.lang.statusDeleted);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };

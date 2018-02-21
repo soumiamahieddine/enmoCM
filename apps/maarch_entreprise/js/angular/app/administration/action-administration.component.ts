@@ -103,7 +103,7 @@ export class ActionAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.actionAdded);
 
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
@@ -112,7 +112,7 @@ export class ActionAdministrationComponent implements OnInit {
                     this.notify.success(this.lang.actionUpdated);
 
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
