@@ -2116,3 +2116,11 @@ if (!defined("_SAVE_POSITION"))
 /***** History *****/
 if (!defined('_UPDATE_STATUS'))
     define('_UPDATE_STATUS', 'Modification du statut');
+
+if (!defined('_DELETE_DOCUMENT_IN_DETAIL'))
+    define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL'))
+    define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC'))
+    define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Modifier un document dans la fiche détaillée. Cela dépendra aussi du paramétrage du statut (Modification des index)');
+
