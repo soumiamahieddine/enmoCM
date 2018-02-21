@@ -10,11 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var ReportsAdministrationComponent = /** @class */ (function () {
-    function ReportsAdministrationComponent(http, notify) {
+    function ReportsAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
@@ -23,7 +24,14 @@ var ReportsAdministrationComponent = /** @class */ (function () {
         this.selectedGroup = "";
         this.loading = false;
         this.loadingOptions = false;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
+    ReportsAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     ReportsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > " + this.lang.reports;
@@ -69,7 +77,7 @@ var ReportsAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["reports-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], ReportsAdministrationComponent);
     return ReportsAdministrationComponent;
 }());

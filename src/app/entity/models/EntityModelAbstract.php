@@ -15,7 +15,8 @@
 namespace Entity\models;
 
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 class EntityModelAbstract
@@ -77,7 +78,6 @@ class EntityModelAbstract
                 'entity_type'           => $aArgs['entity_type'],
                 'entity_path'           => $aArgs['entity_path'],
                 'ldap_id'               => $aArgs['ldap_id'],
-                'transferring_agency'   => $aArgs['transferring_agency'],
                 'archival_agreement'    => $aArgs['archival_agreement'],
                 'archival_agency'       => $aArgs['archival_agency'],
                 'entity_full_name'      => $aArgs['entity_full_name'],
@@ -256,7 +256,9 @@ class EntityModelAbstract
                 $allEntities[$key]['allowed'] = true;
             } else {
                 $allEntities[$key]['allowed'] = false;
+                $allEntities[$key]['state']['disabled'] = true;
             }
+            $allEntities[$key]['state']['opened'] = true;
             $allEntities[$key]['text'] = $value['entity_label'];
         }
 
@@ -277,5 +279,58 @@ class EntityModelAbstract
         ]);
 
         return $aUsers;
+    }
+
+    public static function getTypes()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/modules/entities/xml/typentity.xml")) {
+            $path = "custom/{$customId}/modules/entities/xml/typentity.xml";
+        } else {
+            $path = 'modules/entities/xml/typentity.xml';
+        }
+
+        $types = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                foreach ($loadedXml->TYPE as $value) {
+                    $types[] = [
+                        'id'        => (string)$value->id,
+                        'label'     => (string)$value->label,
+                        'typelevel' => (string)$value->typelevel
+                    ];
+                }
+            }
+        }
+
+        return $types;
+    }
+
+    public static function getRoles()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/modules/entities/xml/roles.xml")) {
+            $path = "custom/{$customId}/modules/entities/xml/roles.xml";
+        } else {
+            $path = 'modules/entities/xml/roles.xml';
+        }
+
+        $roles = [];
+        if (file_exists($path)) {
+            $loadedXml = simplexml_load_file($path);
+            if ($loadedXml) {
+                foreach ($loadedXml->ROLES->ROLE as $value) {
+                    $roles[] = [
+                        'id'        => (string)$value->id,
+                        'label'     => constant((string)$value->label),
+                    ];
+                }
+            }
+        }
+
+        return $roles;
     }
 }

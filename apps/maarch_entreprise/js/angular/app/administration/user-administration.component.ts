@@ -1,4 +1,5 @@
-import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
@@ -17,6 +18,8 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
     coreUrl: string;
     lang: any = LANG;
     _search: string = '';
@@ -44,7 +47,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     minDate: Date = new Date();
     loading: boolean = false;
 
-    displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+    displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
     dataSource = new MatTableDataSource(this.data);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -54,11 +57,19 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
-        super(http,'users');
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
+        super(http, 'users');
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -369,7 +380,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     activateAbsence() {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", {"status":"ABS"})
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "ABS" })
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel = [];

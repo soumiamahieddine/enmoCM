@@ -23,6 +23,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
@@ -30,7 +31,7 @@ var material_1 = require("@angular/material");
 var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UsersAdministrationComponent = /** @class */ (function (_super) {
     __extends(UsersAdministrationComponent, _super);
-    function UsersAdministrationComponent(http, notify, dialog) {
+    function UsersAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
         var _this = _super.call(this, http, 'users') || this;
         _this.http = http;
         _this.notify = notify;
@@ -45,12 +46,19 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         _this.config = {};
         _this.displayedColumns = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
         _this.dataSource = new material_1.MatTableDataSource(_this.data);
+        $j("link[href='merged_css.php']").remove();
+        _this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        _this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        _this.mobileQuery.addListener(_this._mobileQueryListener);
         return _this;
     }
     UsersAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    UsersAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     UsersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -220,7 +228,7 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
             styleUrls: ['css/users-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
     ], UsersAdministrationComponent);
     return UsersAdministrationComponent;
 }(autocomplete_plugin_1.AutoCompletePlugin));

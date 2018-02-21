@@ -10,12 +10,14 @@
 /**
 * @brief Group Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Group\models;
 
+use Core\Models\ServiceModel;
+use Core\Models\UserModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class GroupModelAbstract
 {
@@ -64,7 +66,7 @@ class GroupModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['groupId', 'description', 'clause', 'comment']);
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'description', 'clause']);
         ValidatorModel::stringType($aArgs, ['groupId', 'description', 'clause', 'comment']);
 
         DatabaseModel::insert([
@@ -91,7 +93,7 @@ class GroupModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause', 'comment']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause']);
         ValidatorModel::stringType($aArgs, ['id', 'description', 'clause', 'comment']);
 
         DatabaseModel::update([
@@ -225,7 +227,7 @@ class GroupModelAbstract
         return $aData[0];
     }
 
-    public static function getServiceById(array $aArgs = [])
+    public static function getServiceById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'serviceId']);
         ValidatorModel::stringType($aArgs, ['groupId', 'serviceId']);
@@ -240,7 +242,7 @@ class GroupModelAbstract
         return $service;
     }
 
-    public static function getServicesById(array $aArgs = [])
+    public static function getServicesById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
@@ -255,11 +257,10 @@ class GroupModelAbstract
         return $aServices;
     }
 
-    public static function getAllServicesByGroupId(array $aArgs = [])
+    public static function getAllServicesByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
-
 
         $rawCheckedServices = GroupModel::getServicesById(['groupId' => $aArgs['groupId']]);
         $checkedServices = [];

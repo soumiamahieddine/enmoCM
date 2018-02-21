@@ -68,31 +68,51 @@ class EntityController
             }
         }
 
+        $entity['types'] = EntityModel::getTypes();
+        $entity['roles'] = EntityModel::getRoles();
+        $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
+        $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
+        foreach ($entity['roles'] as $key => $role) {
+            if (in_array($role['id'], $rolesForService)) {
+                $entity['roles'][$key]['available'] = true;
+            } else {
+                $entity['roles'][$key]['available'] = false;
+            }
+            if ($role['id'] == 'copy') {
+                $entity['roles'][$key]['id'] = 'cc';
+            }
+        }
+
         $listTemplates = ListTemplateModel::get([
             'select'    => ['object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description'],
             'where'     => ['object_id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
-        $entity['listTemplate'] = ['dest' => [], 'cc' => []];
+        $entity['listTemplate'] = [];
+        foreach ($rolesForService as $role) {
+            $role == 'copy' ? $entity['listTemplate']['cc'] = [] : $entity['listTemplate'][$role] = [];
+        }
         $entity['visaTemplate'] = [];
         foreach ($listTemplates as $listTemplate) {
-            if ($listTemplate['object_type'] == 'entity_id') {
+            if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
                 if ($listTemplate['item_type'] == 'user_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
                         'type'                  => 'user',
-                        'idToDisplay'           => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
+                        'id'                    => $listTemplate['item_id'],
+                        'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
                         'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                     ];
                 } elseif ($listTemplate['item_type'] == 'entity_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
                         'type'                  => 'entity',
-                        'idToDisplay'           => $listTemplate['item_id'],
-                        'descriptionToDisplay'  => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label']
+                        'id'                    => $listTemplate['item_id'],
+                        'labelToDisplay'        => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
+                        'descriptionToDisplay'  => ''
                     ];
                 }
             }
-            if ($listTemplate['object_type'] == 'VISA_CIRCUIT') {
+            if ($listTemplate['object_type'] == 'VISA_CIRCUIT' && !empty($listTemplate['item_id'])) {
                 $entity['visaTemplate'][] = [
                     'type'                  => 'user',
                     'mode'                  => $listTemplate['item_mode'],
@@ -190,7 +210,12 @@ class EntityController
             'eventId'   => 'entityModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
+        }
+
+        return $response->withJson(['entities' => $entities]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)

@@ -80,4 +80,4 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketAdministrationGroupListModalComponent
     ],
 })
-export class AdministrationModule { }
+export class AdministrationModule {}

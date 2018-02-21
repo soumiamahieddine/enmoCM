@@ -19,7 +19,7 @@ use SrcCore\controllers\StoreController;
 use Core\Models\ServiceModel;
 use Status\models\StatusModel;
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -116,7 +116,7 @@ class ResController
             $data['status'] = 'COU';
         }
         if (empty(StatusModel::getById(['id' => $data['status']]))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Status not found']);
+            return $response->withStatus(400)->withJson(['errors' => _STATUS_NOT_FOUND]);
         }
         if (empty($data['historyMessage'])) {
             $data['historyMessage'] = _UPDATE_STATUS;
@@ -135,7 +135,7 @@ class ResController
             $document = ResModel::getById(['resId' => $data['resId'], 'select' => ['res_id']]);
         }
         if (empty($document)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Document not found']);
+            return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
         }
         if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);

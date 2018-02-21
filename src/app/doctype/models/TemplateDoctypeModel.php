@@ -8,14 +8,14 @@
 */
 
 /**
-* @brief Group Model
+* @brief TemplateDoctype Model
 * @author dev@maarch.org
 * @ingroup core
 */
 
-namespace Core\Models;
+namespace Doctype\models;
 
-class GroupModel extends GroupModelAbstract
+class TemplateDoctypeModel extends TemplateDoctypeModelAbstract
 {
     // Do your stuff in this class
 }

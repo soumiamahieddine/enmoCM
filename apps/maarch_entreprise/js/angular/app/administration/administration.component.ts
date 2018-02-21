@@ -1,29 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../translate.component';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare const angularGlobals : any;
+declare const angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals.administrationView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css']
+    templateUrl: angularGlobals.administrationView,
 })
 export class AdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
 
-    coreUrl                     : string;
-    lang                        : any       = LANG;
+    applicationServices: any[] = [];
+    modulesServices: any[] = [];
 
-    applicationServices         : any[]     = [];
-    modulesServices             : any[]     = [];
-
-    loading                     : boolean   = false;
+    loading: boolean = false;
 
 
-    constructor(public http: HttpClient, private router: Router) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
     prepareAdministration() {
@@ -53,7 +58,7 @@ export class AdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/administration')
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.applicationServices = data.application;
                 this.modulesServices = data.modules;
 

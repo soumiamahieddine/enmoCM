@@ -22,7 +22,7 @@ use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use Resource\models\ResExtModel;

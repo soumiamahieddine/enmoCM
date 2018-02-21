@@ -72,27 +72,6 @@ class FirstLevelController
         return $response->withJson($obj);
     }
 
-    public function getDoctypeById(Request $request, Response $response, $aArgs)
-    {
-        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id']);
-        }
-
-        $obj = DoctypeModel::getById(['id' => $aArgs['id']]);
-
-        if (!empty($obj)) {
-            if ($obj['enabled'] == 'Y') {
-                $obj['enabled'] = true;
-            } else {
-                $obj['enabled'] = false;
-            }
-        }
-  
-        return $response->withJson($obj);
-    }
-
     public function initFirstLevel(Request $request, Response $response)
     {
         $obj['folderType'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);

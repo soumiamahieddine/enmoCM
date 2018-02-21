@@ -13,12 +13,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var GroupsAdministrationComponent = /** @class */ (function () {
-    function GroupsAdministrationComponent(http, notify, dialog) {
+    function GroupsAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
         this.http = http;
         this.notify = notify;
         this.dialog = dialog;
@@ -29,11 +30,18 @@ var GroupsAdministrationComponent = /** @class */ (function () {
         this.loading = false;
         this.displayedColumns = ['group_id', 'group_desc', 'actions'];
         this.dataSource = new material_1.MatTableDataSource(this.groups);
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     GroupsAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    GroupsAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     GroupsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -122,7 +130,7 @@ var GroupsAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["groups-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
     ], GroupsAdministrationComponent);
     return GroupsAdministrationComponent;
 }());

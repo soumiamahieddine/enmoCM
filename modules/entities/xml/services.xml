@@ -15,34 +15,6 @@
        </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-        <id>admin_difflist_types</id>
-        <name>_ADMIN_DIFFLIST_TYPES</name>
-        <comment>_ADMIN_DIFFLIST_TYPES_DESC</comment>
-        <servicepage>index.php?page=admin_difflist_types&amp;module=entities</servicepage>
-        <servicetype>use</servicetype>
-        <system_service>false</system_service>
-        <style>fa fa-sitemap</style>
-        <enabled>true</enabled>
-         <WHEREAMIUSED>
-         <page>admin.php</page>
-         <nature>listelement</nature>
-       </WHEREAMIUSED>
-    </SERVICE>
-    <SERVICE>
-        <id>admin_listmodels</id>
-        <name>_ADMIN_LISTMODELS</name>
-        <comment>_ADMIN_LISTMODELS_DESC</comment>
-        <servicepage>index.php?page=admin_listmodels&amp;module=entities</servicepage>
-        <servicetype>admin</servicetype>
-        <system_service>false</system_service>
-        <style>fa fa-sitemap</style>
-        <enabled>true</enabled>
-         <WHEREAMIUSED>
-         <page>admin.php</page>
-         <nature>listelement</nature>
-       </WHEREAMIUSED>
-    </SERVICE>
-    <SERVICE>
         <id>choose_entity</id>
         <name>_CHOOSE_ENTITY</name>
         <servicepage>choose_entity</servicepage>

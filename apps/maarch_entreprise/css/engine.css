@@ -20,96 +20,113 @@
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
   }*/
-  
+
 /******* CORECTION BUG CSS WITH V1 (A SUPPRIMER A LA FIN) *********/
-.page-header h1{
+
+.page-header h1 {
     margin-top: 10px !important;
 }
 
-#menu{
+#menu {
     margin-top: 35px !important;
 }
-#menunav{
+
+#menunav {
     font-size: 90% !important;
 }
-#menu span{
+
+#menu span {
     background-size: 45% !important;
 }
 
-#gauchemenu{
+#gauchemenu {
     top: 28px !important;
     height: 38px !important;
 }
-#logo{
+
+#logo {
     height: 66px !important;
 }
-#menunav{
+
+#menunav {
     width: 264px !important;
 }
-#ariane{
+
+#ariane {
     top: -5px !important;
     font-size: 0.8em !important;
 }
-.footer_menu{
+
+.footer_menu {
     font-size: 0.7em !important;
     height: 18px !important;
 }
+
 /************************************************************/
 
-.page-header{
+.page-header {
     margin-top: 0px;
     border-bottom: none !important;
 }
 
-.page-header h1{
+.page-header h1 {
     font-size: 30px;
 }
 
-#container{
+#container {
     padding: 0px !important;
 }
-.mat-input-container{
-    width:100% !important;
+
+.mat-input-container {
+    width: 100% !important;
 }
 
-.mat-tab-body-wrapper{
+.mat-tab-body-wrapper {
     padding: 10px;
 }
 
-table tr:not(.filters) .mat-input-container{
-    width:200px !important;
+table tr:not(.filters) .mat-input-container {
+    width: 200px !important;
 }
 
 /*HeaderV2*/
-#headerV2 .nav .open > a, .nav .open > a:focus, .nav .open > a:hover{
+
+#headerV2 .nav .open>a,
+.nav .open>a:focus,
+.nav .open>a:hover {
     background-color: inherit !important;
 }
 
 /* modal part */
-.modal-content{
+
+.modal-content {
     background-color: #009DC5 !important;
 }
-.modal-header h4{
+
+.modal-header h4 {
     color: white !important;
 }
-.modal-body{
+
+.modal-body {
     background-color: white;
-    padding:10px;
+    padding: 10px;
     min-height: 200px;
     max-height: 70vh;
     overflow: hidden;
     overflow-y: auto;
 }
-.modal-body .list-group li{
+
+.modal-body .list-group li {
     /*border-color: #009DC5 !important;*/
     font-weight: bold;
 }
-.modal-footer{
-    background:white;
+
+.modal-footer {
+    background: white;
 }
 
 [color=primary] {
-    color:#135f7f;
+    color: #135f7f;
 }
 
 [color=warn] {
@@ -117,120 +134,202 @@ table tr:not(.filters) .mat-input-container{
 }
 
 [color=accent] {
-    color:#006841;
+    color: #006841;
 }
 
 .jstree-clicked {
     background: #135f7f;
 }
-mat-row:nth-child(even){
-    background: rgba(19, 95, 127, 0.1);
-}
+
 /*** FIX BUG EXPANSION PANEL MATERIAL WITH TABS (DELETE AFTER CORRECTION) ***/
+
 div.mat-expansion-panel-content:not(.mat-expanded) {
     height: 0px;
     visibility: hidden;
 }
 
-.mat-expansion-panel-header:not(.mat-expanded)  {
+.mat-expansion-panel-header:not(.mat-expanded) {
     height: 48px;
 }
 
-.mat-expansion-panel-header  {
+.mat-expansion-panel-header {
     height: 64px;
     .mat-content {
         font-weight: 100;
         font-size: 18px;
     }
-    &.mat-expanded {        
+    &.mat-expanded {
         .mat-expansion-indicator {
             transform: rotate(180deg);
         }
     }
 }
-/*********************************/
 
+/*********************************/
 
 /*** FIX FA ICON INSIDE MAT BUTTON ***/
 
-button .mat-icon{
+/*button .mat-icon {
     height: auto;
-}
+}*/
 
 /*********************************/
 
-
-.example-headers-align .mat-expansion-panel-header-title, 
-.example-headers-align .mat-expansion-panel-header-description {
-  /*flex-basis: 0;*/
-  width:50%;
+.admin-headers-align .mat-expansion-panel-header-title,
+.admin-headers-align .mat-expansion-panel-header-description {
+    /*flex-basis: 0;*/
+    width: 50%;
 }
 
-.example-headers-align .mat-expansion-panel-header-description {
-  justify-content: space-between;
-  align-items: center;
+.admin-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
 }
 
-.mat-autocomplete-panel .mat-option{
-    font-size:80%;
+.mat-autocomplete-panel .mat-option {
+    font-size: 80%;
 }
-.mat-autocomplete-panel .mat-option small{
+
+.mat-autocomplete-panel .mat-option small {
     opacity: 0.7;
 }
 
 .mat-checkbox-layout .mat-checkbox-label {
     font-weight: normal;
 }
+
 .mat-paginator-page-size {
-    display:none !important;
+    display: none !important;
+}
+
+.admin-toolbar .maarchLogo {
+    transform: scale(5);
+}
+
+.mat-toolbar.mat-primary {
+    z-index: 9;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.24);
+}
+
+.admin-container {
+    background: White url(test.svg) center center repeat;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.admin-is-mobile .admin-toolbar {
+    position: fixed;
+    /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+    z-index: 2;
+}
+
+h1.admin-app-name {
+    margin-left: 8px;
+}
+
+.admin-toolbar-title {
+    margin-left: 30px !important;
+}
+
+.admin-toolbar-title small {
+    color: white !important;
+    opacity: 0.5;
+}
+
+.admin-sidenav-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+    causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+}
+
+.admin-is-mobile .admin-sidenav-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+    `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+}
+
+.hide-for-mobile {
+    display: none;
+}
+
+.mat-sidenav {
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+.mat-row:hover {
+    background: #673ab71a;
+    -webkit-transition: background 0.5s ease-out;
+    -moz-transition: background 0.5s ease-out;
+    -o-transition: background 0.5s ease-out;
+    transition: background 0.5s ease-out;
+}
+
+.mat-row {
+    background: white;
+    -webkit-transition: background 0.5s ease-out;
+    -moz-transition: background 0.5s ease-out;
+    -o-transition: background 0.5s ease-out;
+    transition: background 0.5s ease-out;
+}
+
+.mat-cell {
+    word-wrap: normal !important;
+    text-overflow: ellipsis;
 }
 
 /* small display mode */
-@media all and (max-width: 1024px) {
-    body{
-        height:auto;
+
+@media all and (max-width: 768px) {
+    #container,
+    #content {
+        min-width: initial !important;
     }
     #header {
-       display:none;
+        display: none;
     }
     #footer {
-        display:none;
+        display: none;
     }
-    #content h1{
-        position: inherit;
-        margin-left: 10%;
-        margin-top: 3% !important;
-    }
-
-    #container,#content {
-        min-width:100% !important;
-    }
-
     .enableAtionBottomLeftSmarpthone {
         z-index: 1;
         position: fixed !important;
         bottom: 3%;
         left: 3%;
     }
-
     .enableAtionBottomCenterSmarpthone {
         z-index: 1;
         position: fixed !important;
-        bottom: 3%;
-        left: 47%;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        bottom: 10px;
     }
-
     .enableAtionTopLeftSmarpthone {
         z-index: 1;
         position: fixed !important;
         left: 3%;
         top: 3%;
     }
-
     .enableAtionTopRightSmarpthone {
         z-index: 1;
         position: fixed !important;
         right: 3%;
         top: 3%;
+    }
+    .admin-toolbar .mat-button {
+        min-width: initial;
+    }
+    .admin-toolbar .maarchLogo {
+        transform: scale(1.5);
+    }
+    .admin-toolbar-title {
+        margin-left: 0px !important;
     }
 }

@@ -28,7 +28,6 @@ var AutoCompletePlugin = /** @class */ (function () {
                 _this.statusesList = data['statuses'];
                 _this.filteredStatuses = _this.statusCtrl.valueChanges
                     .pipe(startWith_1.startWith(''), map_1.map(function (status) { return status ? _this.autocompleteFilterStatuses(status) : _this.statusesList.slice(); }));
-                console.log(_this.statusesList);
             }, function () {
                 location.href = "index.php";
             });

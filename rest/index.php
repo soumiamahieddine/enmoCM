@@ -138,14 +138,14 @@ $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::cla
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //groups
-$app->get('/groups', \Core\Controllers\GroupController::class . ':get');
-$app->post('/groups', \Core\Controllers\GroupController::class . ':create');
-$app->get('/groups/{id}', \Core\Controllers\GroupController::class . ':getById');
-$app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
-$app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
-$app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
-$app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
-$app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
+$app->get('/groups', \Group\controllers\GroupController::class . ':get');
+$app->post('/groups', \Group\controllers\GroupController::class . ':create');
+$app->get('/groups/{id}', \Group\controllers\GroupController::class . ':getById');
+$app->put('/groups/{id}', \Group\controllers\GroupController::class . ':update');
+$app->delete('/groups/{id}', \Group\controllers\GroupController::class . ':delete');
+$app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':getDetailledById');
+$app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
+$app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
@@ -207,7 +207,9 @@ $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->post('/entities', \Entity\controllers\EntityController::class . ':create');
 $app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getById');
+$app->put('/entities/{id}', \Entity\controllers\EntityController::class . ':update');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
@@ -258,8 +260,29 @@ $app->put('/notifications/{id}', \Notification\controllers\NotificationControlle
 $app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
 $app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
-
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
+
+//Doctypes
+$app->get('/doctypes', \Doctype\controllers\FirstLevelController::class . ':getTree');
+
+$app->post('/doctypes/firstLevel', \Doctype\controllers\FirstLevelController::class . ':create');
+$app->get('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':getById');
+$app->put('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':update');
+$app->delete('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':delete');
+$app->get('/administration/doctypes/firstLevel/new', \Doctype\controllers\FirstLevelController::class . ':initFirstLevel');
+
+$app->post('/doctypes/secondLevel', \Doctype\controllers\SecondLevelController::class . ':create');
+$app->get('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':getById');
+$app->put('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':update');
+$app->delete('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':delete');
+$app->get('/administration/doctypes/secondLevel/new', \Doctype\controllers\SecondLevelController::class . ':initSecondLevel');
+
+$app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':create');
+$app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
+$app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
+$app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':delete');
+$app->delete('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
+$app->get('/administration/doctypes/types/new', \Doctype\controllers\DoctypeController::class . ':initDoctype');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

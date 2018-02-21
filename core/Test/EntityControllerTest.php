@@ -77,7 +77,7 @@ class EntityControllerTest extends TestCase
         $response     = $entityController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertInternalType('array', $responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

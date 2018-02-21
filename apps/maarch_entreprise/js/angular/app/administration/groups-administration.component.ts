@@ -1,30 +1,33 @@
-import { Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["groups-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["groups-administrationView"],
+    providers: [NotificationService]
 })
 export class GroupsAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
     dialogRef: MatDialogRef<any>;
+    private _mobileQueryListener: () => void;
     config: any = {};
-    coreUrl                     : string;
-    lang                        : any       = LANG;
+    coreUrl: string;
+    lang: any = LANG;
 
-    groups                      : any[]     = [];
-    groupsForAssign             : any[]     = [];
+    groups: any[] = [];
+    groupsForAssign: any[] = [];
 
-    loading                     : boolean   = false;
+    loading: boolean = false;
 
-    displayedColumns = ['group_id','group_desc','actions'];
+    displayedColumns = ['group_id', 'group_desc', 'actions'];
     dataSource = new MatTableDataSource(this.groups);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -34,7 +37,15 @@ export class GroupsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -50,7 +61,7 @@ export class GroupsAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + "rest/groups")
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.groups = data['groups'];
                 this.loading = false;
                 setTimeout(() => {
@@ -65,44 +76,44 @@ export class GroupsAdministrationComponent implements OnInit {
 
     preDelete(group: any) {
 
-            if (group.users.length == 0) {
-                let r = confirm("Etes vous sûr de vouloir supprimer ce groupe ?");
+        if (group.users.length == 0) {
+            let r = confirm("Etes vous sûr de vouloir supprimer ce groupe ?");
 
-                if (r) {
-                    this.deleteGroup(group);
-                } 
-            } else {
-                this.groupsForAssign = [];
-                this.groups.forEach((tmpGroup) => {
-                    if (group.group_id != tmpGroup.group_id) {
-                        this.groupsForAssign.push(tmpGroup);
-                    }
-                });
-                this.config = {data : {id: group.id,group_desc: group.group_desc, groupsForAssign : this.groupsForAssign, users : group.users}};
-                    this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent,this.config);
-                    this.dialogRef.afterClosed().subscribe((result: string) => {
-                        console.log(result);
-                        if (result) {
-                            if (result == "_NO_REPLACEMENT") {
-                                this.deleteGroup(group);
-                            } else {
-                                this.http.put(this.coreUrl + "rest/groups/" + group.id + "/reassign/" + result,{})
-                                    .subscribe((data : any) => {
-                                        this.deleteGroup(group);
-                                    }, (err) => {
-                                        this.notify.error(err.error.errors);
-                                    });
-                            }
-                        }
-                        this.dialogRef = null;
-                  });
+            if (r) {
+                this.deleteGroup(group);
             }
- 
+        } else {
+            this.groupsForAssign = [];
+            this.groups.forEach((tmpGroup) => {
+                if (group.group_id != tmpGroup.group_id) {
+                    this.groupsForAssign.push(tmpGroup);
+                }
+            });
+            this.config = { data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
+            this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent, this.config);
+            this.dialogRef.afterClosed().subscribe((result: string) => {
+                console.log(result);
+                if (result) {
+                    if (result == "_NO_REPLACEMENT") {
+                        this.deleteGroup(group);
+                    } else {
+                        this.http.put(this.coreUrl + "rest/groups/" + group.id + "/reassign/" + result, {})
+                            .subscribe((data: any) => {
+                                this.deleteGroup(group);
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }
+                }
+                this.dialogRef = null;
+            });
+        }
+
     }
 
     deleteGroup(group: any) {
         this.http.delete(this.coreUrl + "rest/groups/" + group['id'])
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 setTimeout(() => {
                     this.groups = data['groups'];
                     this.dataSource = new MatTableDataSource(this.groups);
@@ -110,7 +121,7 @@ export class GroupsAdministrationComponent implements OnInit {
                     this.dataSource.sort = this.sort;
                 }, 0);
                 this.notify.success(this.lang.groupDeleted);
-                
+
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -118,10 +129,10 @@ export class GroupsAdministrationComponent implements OnInit {
 }
 @Component({
     templateUrl: angularGlobals["groups-administration-redirect-modalView"],
-  })
-  export class GroupsAdministrationRedirectModalComponent {
+})
+export class GroupsAdministrationRedirectModalComponent {
     lang: any = LANG;
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any,public dialogRef: MatDialogRef<GroupsAdministrationRedirectModalComponent>) {
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<GroupsAdministrationRedirectModalComponent>) {
     }
-  }
+}

@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -17,7 +18,8 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
-
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
     coreUrl: string;
     lang: any = LANG;
     dialogRef: MatDialogRef<any>;
@@ -45,7 +47,15 @@ export class BasketAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService, public dialog: MatDialog) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -172,10 +182,6 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    toggleKeywordHelp() {
-        $j('#keywordHelp').toggle("slow");
-    }
-
     initAction(groupIndex: number) {
         this.dataSource = new MatTableDataSource(this.basketGroups[groupIndex].groupActions);
         this.dataSource.sort = this.sort;
@@ -192,7 +198,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     unlinkGroup(groupIndex: any) {
-        let r = confirm(this.lang.unlinkGroup+' ?');
+        let r = confirm(this.lang.unlinkGroup + ' ?');
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
@@ -211,7 +217,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     linkGroup() {
-        this.config = { data: { basketId: this.basket.basket_id, groups: this.allGroups, linkedGroups: this.basketGroups } };
+        this.config = { data: { basketId: this.basket.id, groups: this.allGroups, linkedGroups: this.basketGroups } };
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {

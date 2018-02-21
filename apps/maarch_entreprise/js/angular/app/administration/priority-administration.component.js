@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var PriorityAdministrationComponent = /** @class */ (function () {
-    function PriorityAdministrationComponent(http, route, router, notify) {
+    function PriorityAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -28,7 +29,14 @@ var PriorityAdministrationComponent = /** @class */ (function () {
             delays: "0",
             working_days: "false"
         };
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
+    PriorityAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     PriorityAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/priorities\"' style='cursor: pointer'>" + this.lang.priorities + "</a> > ";
         if (this.creationMode == true) {
@@ -110,7 +118,7 @@ var PriorityAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["priority-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], PriorityAdministrationComponent);
     return PriorityAdministrationComponent;
 }());

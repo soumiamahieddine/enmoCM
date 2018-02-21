@@ -16,12 +16,12 @@
 namespace Core\Controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\GroupModel;
 use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
 use Core\Models\UserModel;
 use Entities\Models\ListModelsModel;
 use Entity\models\EntityModel;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use Psr\Http\Message\RequestInterface;
@@ -583,7 +583,7 @@ class UserController
         return $response->withJson($user);
     }
 
-    public function addGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function addGroup(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -603,18 +603,26 @@ class UserController
             $data['role'] = '';
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         UserModel::addGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId'], 'role' => $data['role']]);
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'UP',
+            'info'      => _USER_GROUP_CREATION . " : {$user['user_id']} {$data['groupId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
+
         return $response->withJson([
-            'success'   => _ADDED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
             'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
             'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 
-    public function updateGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function updateGroup(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);
         if (!empty($error['error'])) {
@@ -631,7 +639,17 @@ class UserController
 
         UserModel::updateGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'role' => $data['role']]);
 
-        return $response->withJson(['success' => _GROUP_UPDATED]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'UP',
+            'info'      => _USER_GROUP_MODIFICATION . " : {$user['user_id']} {$aArgs['groupId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public function deleteGroup(RequestInterface $request, ResponseInterface $response, $aArgs)
@@ -644,11 +662,19 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         UserModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'UP',
+            'info'      => _USER_GROUP_SUPPRESSION . " : {$user['user_id']} {$aArgs['groupId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
+
         return $response->withJson([
-            'success'   => _DELETED_GROUP,
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
             'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
         ]);

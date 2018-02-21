@@ -14,7 +14,7 @@
 
 namespace Entity\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class ListTemplateModelAbstract
@@ -61,7 +61,7 @@ class ListTemplateModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['object_id', 'object_type', 'sequence', 'item_id', 'item_type', 'item_mode']);
+        ValidatorModel::notEmpty($aArgs, ['object_id', 'object_type', 'item_id', 'item_type', 'item_mode']);
         ValidatorModel::stringType($aArgs, ['object_id', 'object_type', 'item_id', 'item_type', 'title', 'description']);
         ValidatorModel::intVal($aArgs, ['sequence']);
 
@@ -95,5 +95,19 @@ class ListTemplateModelAbstract
         ]);
 
         return true;
+    }
+
+    public static function getTypes(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+
+        $aListTemplatesTypes = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['difflist_types'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
+        ]);
+
+        return $aListTemplatesTypes;
     }
 }

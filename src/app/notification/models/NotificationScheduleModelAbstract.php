@@ -15,7 +15,7 @@
 
 namespace Notification\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use History\controllers\HistoryController;
 

@@ -16,7 +16,7 @@
 namespace SrcCore\models;
 
 //This model is not customizable
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 
 class CoreConfigModel
 {

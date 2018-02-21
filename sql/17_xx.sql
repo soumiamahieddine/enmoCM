@@ -562,3 +562,37 @@ DELETE FROM docservers where docserver_id = 'FULLTEXT_ATTACH_VERSION';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS primary_retention;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS secondary_retention;
+
+UPDATE doctypes_first_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
+UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';
+UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style_big';
+UPDATE doctypes_first_level SET css_style = '#808080' WHERE css_style = 'grey_style';
+UPDATE doctypes_first_level SET css_style = '#FFFF00' WHERE css_style = 'yellow_style';
+UPDATE doctypes_first_level SET css_style = '#800000' WHERE css_style = 'brown_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'black_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'black_style_big';
+UPDATE doctypes_first_level SET css_style = '#FF4500' WHERE css_style = 'orange_style';
+UPDATE doctypes_first_level SET css_style = '#FF4500' WHERE css_style = 'orange_style_big';
+UPDATE doctypes_first_level SET css_style = '#FF00FF' WHERE css_style = 'pink_style';
+UPDATE doctypes_first_level SET css_style = '#FF0000' WHERE css_style = 'red_style';
+UPDATE doctypes_first_level SET css_style = '#008000' WHERE css_style = 'green_style';
+UPDATE doctypes_first_level SET css_style = '#800080' WHERE css_style = 'violet_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'default_style';
+
+UPDATE doctypes_second_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
+UPDATE doctypes_second_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';
+UPDATE doctypes_second_level SET css_style = '#0000FF' WHERE css_style = 'blue_style_big';
+UPDATE doctypes_second_level SET css_style = '#808080' WHERE css_style = 'grey_style';
+UPDATE doctypes_second_level SET css_style = '#FFFF00' WHERE css_style = 'yellow_style';
+UPDATE doctypes_second_level SET css_style = '#800000' WHERE css_style = 'brown_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'black_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'black_style_big';
+UPDATE doctypes_second_level SET css_style = '#FF4500' WHERE css_style = 'orange_style';
+UPDATE doctypes_second_level SET css_style = '#FF4500' WHERE css_style = 'orange_style_big';
+UPDATE doctypes_second_level SET css_style = '#FF00FF' WHERE css_style = 'pink_style';
+UPDATE doctypes_second_level SET css_style = '#FF0000' WHERE css_style = 'red_style';
+UPDATE doctypes_second_level SET css_style = '#008000' WHERE css_style = 'green_style';
+UPDATE doctypes_second_level SET css_style = '#800080' WHERE css_style = 'violet_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'default_style';
