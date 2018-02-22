@@ -46,7 +46,8 @@ class DoctypeController
             }
         }
   
-        $obj['doctypeExt']      = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
+        $doctypeExt             = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
+        $obj['doctype']         = array_merge($obj['doctype'], $doctypeExt);
         $obj['secondLevel']     = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
         $obj['processModes']    = DoctypeModel::getProcessMode();
         $obj['models']          = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);

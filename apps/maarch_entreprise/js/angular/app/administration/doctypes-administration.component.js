@@ -34,8 +34,14 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
         _this.lang = translate_component_1.LANG;
         _this.doctypes = [];
         _this.currentType = false;
-        _this.currentFirstLevel = false;
         _this.currentSecondLevel = false;
+        _this.currentFirstLevel = false;
+        _this.firstLevels = false;
+        _this.FolderTypes = false;
+        _this.secondLevels = false;
+        _this.processModes = false;
+        _this.models = false;
+        _this.indexes = false;
         _this.loading = false;
         _this.creationMode = false;
         $j("link[href='merged_css.php']").remove();
@@ -115,6 +121,10 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
                 _this.currentFirstLevel = false;
                 _this.currentSecondLevel = false;
                 _this.currentType = data['doctype'];
+                _this.secondLevels = data['secondLevel'];
+                _this.processModes = data['processModes'];
+                _this.models = data['models'];
+                _this.indexes = data['indexes'];
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -125,6 +135,7 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
                 .subscribe(function (data) {
                 _this.currentFirstLevel = false;
                 _this.currentSecondLevel = data['secondLevel'];
+                _this.firstLevels = data['firstLevel'];
                 _this.currentType = false;
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -135,15 +146,13 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
             this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.original.doctypes_first_level_id)
                 .subscribe(function (data) {
                 _this.currentFirstLevel = data['firstLevel'];
+                _this.FolderTypes = data['folderTypes'];
                 _this.currentSecondLevel = false;
                 _this.currentType = false;
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
         }
-        console.log(this.currentFirstLevel);
-        console.log(this.currentSecondLevel);
-        console.log(this.currentType);
     };
     // addElemListModel(element: any) {
     //     var inListModel = false;

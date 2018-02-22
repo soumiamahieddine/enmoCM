@@ -387,7 +387,7 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevel->doctypes_first_level_label);
         $this->assertSame('#7777', $responseBody->firstLevel->css_style);
         $this->assertSame(true, $responseBody->firstLevel->enabled);
-        $this->assertNotNull($responseBody->folderTypeSelected);
+        $this->assertNotNull($responseBody->firstLevel->folderTypeSelected);
         $this->assertNotNull($responseBody->folderTypes);
 
         // READ FIRST LEVEL FAIL
@@ -424,10 +424,10 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('destruction', $responseBody->doctype->retention_final_disposition);
         $this->assertSame('compta_3_03', $responseBody->doctype->retention_rule);
         $this->assertSame(12, $responseBody->doctype->duration_current_use);
-        $this->assertSame(17, $responseBody->doctypeExt->process_delay);
-        $this->assertSame(11, $responseBody->doctypeExt->delay1);
-        $this->assertSame(6, $responseBody->doctypeExt->delay2);
-        $this->assertSame('SVR', $responseBody->doctypeExt->process_mode);
+        $this->assertSame(17, $responseBody->doctype->process_delay);
+        $this->assertSame(11, $responseBody->doctype->delay1);
+        $this->assertSame(6, $responseBody->doctype->delay2);
+        $this->assertSame('SVR', $responseBody->doctype->process_mode);
         $this->assertNotNull($responseBody->secondLevel);
         $this->assertNotNull($responseBody->processModes);
         $this->assertSame(null, $responseBody->modelSelected->template_id);

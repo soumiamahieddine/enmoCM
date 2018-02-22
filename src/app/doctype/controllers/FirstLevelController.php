@@ -71,10 +71,16 @@ class FirstLevelController
             } else {
                 $obj['firstLevel']['enabled'] = false;
             }
+
+            $folderTypesSelected = FolderTypeModel::getFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
+            $arrFolderTypesSelected = [];
+            foreach ($folderTypesSelected as $folderType) {
+                $arrFolderTypesSelected[] = $folderType['foldertype_id'];
+            }
+            $obj['firstLevel']['folderTypeSelected'] = $arrFolderTypesSelected;
         }
   
-        $obj['folderTypeSelected'] = FolderTypeModel::getFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
-        $obj['folderTypes']        = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
+        $obj['folderTypes'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
         return $response->withJson($obj);
     }
 

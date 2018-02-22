@@ -24,8 +24,14 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
 
     doctypes: any[] = [];
     currentType: any = false;
-    currentFirstLevel: any = false;
     currentSecondLevel: any = false;
+    currentFirstLevel: any = false;
+    firstLevels: any = false;
+    FolderTypes: any = false;
+    secondLevels: any = false;
+    processModes: any = false;
+    models: any = false;
+    indexes: any = false;
 
     loading: boolean = false;
     creationMode: boolean = false;
@@ -113,6 +119,10 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
                     this.currentFirstLevel  = false;
                     this.currentSecondLevel = false;
                     this.currentType        = data['doctype'];
+                    this.secondLevels       = data['secondLevel'];
+                    this.processModes       = data['processModes'];
+                    this.models             = data['models'];
+                    this.indexes            = data['indexes'];
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -123,6 +133,7 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
                 .subscribe((data: any) => {
                     this.currentFirstLevel  = false;
                     this.currentSecondLevel = data['secondLevel'];
+                    this.firstLevels        = data['firstLevel'];
                     this.currentType        = false;
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -133,15 +144,13 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.original.doctypes_first_level_id )
                 .subscribe((data: any) => {
                     this.currentFirstLevel  = data['firstLevel'];
+                    this.FolderTypes        = data['folderTypes'];
                     this.currentSecondLevel = false;
                     this.currentType        = false;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
-        console.log(this.currentFirstLevel);
-        console.log(this.currentSecondLevel);
-        console.log(this.currentType);
     }
 
     // addElemListModel(element: any) {

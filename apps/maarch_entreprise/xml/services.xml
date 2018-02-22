@@ -62,11 +62,12 @@
     <id>admin_architecture</id>
     <name>_ADMIN_ARCHITECTURE</name>
     <comment>_ADMIN_ARCHITECTURE_DESC</comment>
-    <servicepage>index.php?page=admin_archi&amp;admin=architecture</servicepage>
+    <servicepage>/administration/doctypes</servicepage>
     <servicetype>admin</servicetype>
     <system_service>false</system_service>
     <style>fa fa-suitcase</style>
     <enabled>true</enabled>
+    <angular>true</angular>
   </SERVICE>
   <SERVICE>
     <id>view_history</id>

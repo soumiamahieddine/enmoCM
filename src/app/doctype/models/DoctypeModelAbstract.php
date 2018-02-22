@@ -131,8 +131,8 @@ class DoctypeModelAbstract
         if (count($processingModes) > 0) {
             foreach ($processingModes->process_mode as $process) {
                 $label                                   = (string) $process->label;
-                $return['processing_modes'][$label]      = $label;
-                $return['process_mode_priority'][$label] = (string) $process->process_mode_priority;
+                $return['processing_modes'][]      = $label;
+                $return['process_mode_priority'][] = (string) $process->process_mode_priority;
             }
         }
 
