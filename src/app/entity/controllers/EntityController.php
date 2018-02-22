@@ -140,7 +140,7 @@ class EntityController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
@@ -148,7 +148,7 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingEntity = EntityModel::getById(['entityId' => $data['id'], 'select' => [1]]);
+        $existingEntity = EntityModel::getById(['entityId' => $data['entity_id'], 'select' => [1]]);
         if (!empty($existingEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity already exists']);
         }
@@ -158,12 +158,12 @@ class EntityController
             'tableName' => 'entities',
             'recordId'  => $data['id'],
             'eventType' => 'ADD',
-            'info'      => _ENTITY_CREATION . " : {$data['id']}",
+            'info'      => _ENTITY_CREATION . " : {$data['entity_id']}",
             'moduleId'  => 'entity',
             'eventId'   => 'entityCreation',
         ]);
 
-        return $response->withJson(['entityId' => $data['id']]);
+        return $response->withJson(['entityId' => $data['entity_id']]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
