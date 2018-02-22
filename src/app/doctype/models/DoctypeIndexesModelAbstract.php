@@ -101,7 +101,6 @@ class DoctypeIndexesModelAbstract
                 $whereClause  = (string) $tableXml->where_clause;
                 $order        = (string) $tableXml->order;
                 
-                $stmt = $db->query($query);
 
                 $res = DatabaseModel::select([
                     'select'   => [$foreignKey, $foreignLabel],
@@ -110,6 +109,7 @@ class DoctypeIndexesModelAbstract
                     'order_by' => [str_ireplace("order by", "", $order)]
                 ]);
 
+                // TODO REVOIR
                 while ($res = $stmt->fetch()) {
                     array_push(
                          $values,
