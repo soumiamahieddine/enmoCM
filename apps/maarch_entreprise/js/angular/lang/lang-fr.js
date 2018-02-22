@@ -84,6 +84,7 @@ exports.LANG_FR = {
     "entities": "Entités",
     "entityAdded": "Entité ajoutée",
     "entityDeleted": "Entité supprimée",
+    "entityFullName": "Bloc arborescence",
     "entityTooglePrimary": "Passage en entité primaire",
     "entityType": "Type d'entité",
     "entityUpdated": "Entité modifiée",

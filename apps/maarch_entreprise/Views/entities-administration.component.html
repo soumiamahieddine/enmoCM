@@ -7,9 +7,6 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{entities.length}} {{lang.entities}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
-        </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
@@ -53,7 +50,7 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : true" class="col-md-4 col-sm-12">
+            position='end' [opened]="false" class="col-md-4 col-sm-12">
 
             <mat-nav-list>
                 <mat-tab-group>
@@ -62,8 +59,9 @@
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <mat-form-field>
-                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type">
-                                            <mat-option *ngFor="let entity_type of currentEntity.types" [value]="entity_type.id">
+                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
+                                            required>
+                                            <mat-option *ngFor="let entity_type of entityTypeList" [value]="entity_type.id">
                                                 {{entity_type.label}}
                                             </mat-option>
                                         </mat-select>
@@ -95,41 +93,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-4">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.adrs_1" name="adrs_1" id="adrs_1" title="{{lang.address}}1" type="text" placeholder="{{lang.address}}1"
-                                            maxlength="255">
-                                    </mat-form-field>
-
-                                </div>
-                                <div class="col-sm-4">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.adrs_2" name="adrs_2" id="adrs_2" title="{{lang.address}}2" type="text" placeholder="{{lang.address}}2"
-                                            maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-4">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.adrs_3" name="adrs_3" id="adrs_3" title="{{lang.address}}3" type="text" placeholder="{{lang.address}}3"
-                                            maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
-                                            maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-6">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
-                                            maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentEntity.email" name="email" id="email" title="{{lang.email}}" type="text" placeholder="{{lang.email}}"
@@ -137,33 +100,87 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.business_id" name="business_id" id="business_id" title="{{lang.siretCode}}" type="text"
-                                            placeholder="{{lang.siretCode}}" maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.archival_agency" name="archival_agency" id="archival_agency" title="{{lang.archivalAgency}}"
-                                            type="text" placeholder="{{lang.archivalAgency}}" maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm-6">
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.archival_agreement" name="archival_agreement" id="archival_agreement" title="{{lang.archivalAgreement}}"
-                                            type="text" placeholder="{{lang.archivalAgreement}}" maxlength="255">
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Informations complémentaires
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="form-group">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_1" name="adrs_1" id="adrs_1" title="{{lang.address}}1" type="text" placeholder="{{lang.address}}1"
+                                                    maxlength="255">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_2" name="adrs_2" id="adrs_2" title="{{lang.address}}2" type="text" placeholder="{{lang.address}}2"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_3" name="adrs_3" id="adrs_3" title="{{lang.address}}3" type="text" placeholder="{{lang.address}}3"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                                <textarea matInput [(ngModel)]="currentEntity.entity_full_name" name="entity_full_name" id="entity_full_name" placeholder="{{lang.entityFullName}}" title="{{lang.entityFullName}}"
+                                                    matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5"></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.business_id" name="business_id" id="business_id" title="{{lang.siretCode}}" type="text"
+                                                    placeholder="{{lang.siretCode}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.archival_agency" name="archival_agency" id="archival_agency" title="{{lang.archivalAgency}}"
+                                                    type="text" placeholder="{{lang.archivalAgency}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.archival_agreement" name="archival_agreement" id="archival_agreement" title="{{lang.archivalAgreement}}"
+                                                    type="text" placeholder="{{lang.archivalAgreement}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+
+
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
                                     <button mat-raised-button [disabled]="!entityForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
-                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!entityForm.form.valid && this.currentEntity.entity_id != ''"
-                                        color="warn" (click)="removeEntity()">{{lang.delete}}</button>
+                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!entityForm.form.valid || this.currentEntity.hasChildren" color="warn"
+                                        (click)="removeEntity()">{{lang.delete}}</button>
                                     <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>
                             </div>
@@ -216,8 +233,7 @@
                                 </mat-form-field>
                                 <mat-list>
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
-                                        <mat-list-item *ngFor="let template of currentEntity.visaTemplate; let i = index" title="deplacer" dnd-sortable
-                                            [sortableIndex]="i">
+                                        <mat-list-item *ngFor="let template of currentEntity.visaTemplate; let i = index" title="deplacer" dnd-sortable [sortableIndex]="i">
                                             <mat-icon color="primary" mat-list-icon>{{i+1}}</mat-icon>
                                             <p mat-line>{{template.idToDisplay}}
                                                 <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
@@ -227,6 +243,32 @@
                                 </mat-list>
                             </div>
                         </div>
+                    </mat-tab>
+                    <mat-tab label="Utilisateur(s) associé(s)" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-6 col-xs-6">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                            <ng-container matColumnDef="firstname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="lastname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                                style="cursor:pointer;"></mat-row>
+                        </mat-table>
                     </mat-tab>
                 </mat-tab-group>
             </mat-nav-list>

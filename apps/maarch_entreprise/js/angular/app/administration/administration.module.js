@@ -79,12 +79,14 @@ var AdministrationModule = /** @class */ (function () {
                 notifications_schedule_administration_component_1.NotificationsScheduleAdministrationComponent,
                 notification_administration_component_1.NotificationAdministrationComponent,
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                entities_administration_component_1.EntitiesAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
                 basket_administration_component_1.BasketAdministrationGroupListModalComponent
             ],
             entryComponents: [
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
+                entities_administration_component_1.EntitiesAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
                 basket_administration_component_1.BasketAdministrationGroupListModalComponent

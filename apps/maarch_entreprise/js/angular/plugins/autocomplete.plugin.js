@@ -35,20 +35,60 @@ var AutoCompletePlugin = /** @class */ (function () {
         }
         else if (target == 'usersAndEntities') {
             this.elementCtrl = new forms_1.FormControl();
-            this.elemList = [{
-                    "type": "user",
-                    "id": "bbain",
-                    "idToDisplay": "Barbara BAIN",
-                    "otherInfo": "Pôle jeunesse et sport"
-                },
-                {
-                    "type": "entity",
-                    "id": "DGS",
-                    "idToDisplay": "Direction générale des services",
-                    "otherInfo": ""
-                }];
-            this.filteredElements = this.elementCtrl.valueChanges
-                .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
+            this.elemList = [];
+            this.http.get(this.coreUrl + 'rest/administration/users')
+                .subscribe(function (data) {
+                data.users.forEach(function (user) {
+                    if (user.enabled == "Y") {
+                        _this.elemList.push({
+                            "type": "user",
+                            "id": user.user_id,
+                            "idToDisplay": user.firstname + ' ' + user.lastname,
+                            "otherInfo": user.user_id
+                        });
+                    }
+                });
+                _this.http.get(_this.coreUrl + 'rest/entities')
+                    .subscribe(function (data) {
+                    data.entities.forEach(function (entity) {
+                        if (entity.allowed == true) {
+                            _this.elemList.push({
+                                "type": "entity",
+                                "id": entity.entity_id,
+                                "idToDisplay": entity.entity_label,
+                                "otherInfo": entity.entity_id
+                            });
+                        }
+                    });
+                    _this.filteredElements = _this.elementCtrl.valueChanges
+                        .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
+                }, function () {
+                    location.href = "index.php";
+                });
+            }, function () {
+                location.href = "index.php";
+            });
+        }
+        else if (target == 'entities') {
+            this.elementCtrl = new forms_1.FormControl();
+            this.elemList = [];
+            this.http.get(this.coreUrl + 'rest/entities')
+                .subscribe(function (data) {
+                data.entities.forEach(function (entity) {
+                    if (entity.allowed == true) {
+                        _this.elemList.push({
+                            "type": "entity",
+                            "id": entity.entity_id,
+                            "idToDisplay": entity.entity_label,
+                            "otherInfo": entity.entity_id
+                        });
+                    }
+                });
+                _this.filteredElements = _this.elementCtrl.valueChanges
+                    .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
+            }, function () {
+                location.href = "index.php";
+            });
         }
         else {
         }
@@ -64,7 +104,7 @@ var AutoCompletePlugin = /** @class */ (function () {
         });
     };
     AutoCompletePlugin.prototype.autocompleteFilterElements = function (name) {
-        return this.statusesList.filter(function (elem) {
+        return this.elemList.filter(function (elem) {
             return elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) === 0;
         });
     };

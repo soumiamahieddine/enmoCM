@@ -74,6 +74,7 @@ export const LANG_EN = {
     "entities"                  : "Entities",
     "entityAdded"               : "Entité added",
     "entityDeleted"             : "Entité deleted",
+    "entityFullName"            : "Full name",
     "entityTooglePrimary"       : "Pass to primary entity",
     "entityType"                : "Entity type",
     "entityUpdated"             : "Entité updated",
