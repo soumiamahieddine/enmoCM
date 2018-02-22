@@ -26,7 +26,7 @@ class UserEntityModelAbstract
 
         $users = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => 'users_entities',
+            'table'     => ['users_entities'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data']
         ]);
