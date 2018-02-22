@@ -82,6 +82,7 @@ if (strpos(getcwd(), '/rest')) {
     chdir('..');
 }
 
+$userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
     if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
         $userId = $_SERVER['PHP_AUTH_USER'];
@@ -111,9 +112,8 @@ $app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initial
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-$app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
-$app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
+$app->get('/administration/users', \User\controllers\UserController::class . ':getUsersForAdministration');
+$app->get('/administration/users/{id}', \User\controllers\UserController::class . ':getUserForAdministration');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -177,34 +177,35 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
-$app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->post('/users', \Core\Controllers\UserController::class . ':create');
-$app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
-$app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
-$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
-$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
-$app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
-$app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
-$app->put('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
-$app->delete('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
-$app->post('/users/{id}/entities', \Core\Controllers\UserController::class . ':addEntity');
-$app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
-$app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
-$app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
-$app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
-$app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
-$app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/redirectedBaskets', \Core\Controllers\UserController::class . ':setRedirectedBaskets');
-$app->delete('/users/{id}/redirectedBaskets/{basketId}', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets');
+$app->get('/users/autocompleter', \User\controllers\UserController::class . ':getUsersForAutocompletion');
+$app->post('/users', \User\controllers\UserController::class . ':create');
+$app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
+$app->put('/users/{id}', \User\controllers\UserController::class . ':update');
+$app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
+$app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
+$app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
+$app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
+$app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');
+$app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
+$app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
+$app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');
+$app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
+$app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
+$app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
+$app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
+$app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
+$app->delete('/users/{id}/redirectedBaskets/{basketId}', \User\controllers\UserController::class . ':deleteRedirectedBaskets');
+$app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 
 //CurrentUser
-$app->get('/currentUser/profile', \Core\Controllers\UserController::class . ':getProfile');
-$app->put('/currentUser/profile', \Core\Controllers\UserController::class . ':updateProfile');
-$app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
-$app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
-$app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
-$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
+$app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');
+$app->put('/currentUser/profile', \User\controllers\UserController::class . ':updateProfile');
+$app->put('/currentUser/password', \User\controllers\UserController::class . ':updateCurrentUserPassword');
+$app->post('/currentUser/emailSignature', \User\controllers\UserController::class . ':createCurrentUserEmailSignature');
+$app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
+$app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateBasketPreference');
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');

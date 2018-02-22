@@ -19,6 +19,7 @@
             "Resource\\"      : "src/app/resource/",
             "Status\\"        : "src/app/status/",
             "Template\\"      : "src/app/template/",
+            "User\\"          : "src/app/user/",
 
             "Core\\"          : "core/",
             "Attachments\\"   : "modules/attachments/",

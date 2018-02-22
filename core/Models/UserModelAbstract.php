@@ -487,7 +487,7 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'select'    => ['usergroups.id', 'usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$aArgs['userId']]

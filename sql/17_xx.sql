@@ -609,3 +609,17 @@ UPDATE doctypes_second_level SET css_style = '#FF0000' WHERE css_style = 'red_st
 UPDATE doctypes_second_level SET css_style = '#008000' WHERE css_style = 'green_style';
 UPDATE doctypes_second_level SET css_style = '#800080' WHERE css_style = 'violet_style';
 UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'default_style';
+
+DROP TABLE IF EXISTS users_baskets_preferences;
+CREATE TABLE users_baskets_preferences
+(
+  id serial NOT NULL,
+  user_serial_id integer NOT NULL,
+  group_serial_id integer NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  display boolean NOT NULL,
+  color character varying(16),
+  CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
+  CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
+)
+WITH (OIDS=FALSE);

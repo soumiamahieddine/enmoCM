@@ -2769,6 +2769,20 @@ CREATE TABLE users_baskets
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS users_baskets_preferences;
+CREATE TABLE users_baskets_preferences
+(
+  id serial NOT NULL,
+  user_serial_id integer NOT NULL,
+  group_serial_id integer NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  display boolean NOT NULL,
+  color character varying(16),
+  CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
+  CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
+)
+WITH (OIDS=FALSE);
+
 
 -- convert working table
 DROP TABLE IF EXISTS convert_stack;
