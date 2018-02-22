@@ -163,7 +163,7 @@ class EntityController
             'eventId'   => 'entityCreation',
         ]);
 
-        return $response->withJson(['entityId' => $data['entity_id']]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
