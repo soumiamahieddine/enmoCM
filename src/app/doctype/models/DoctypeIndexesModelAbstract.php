@@ -109,13 +109,12 @@ class DoctypeIndexesModelAbstract
                     'order_by' => [str_ireplace("order by", "", $order)]
                 ]);
 
-                // TODO REVOIR
-                while ($res = $stmt->fetch()) {
+                foreach($res as $value){
                     array_push(
                          $values,
                          array(
-                             'id'    => (string) $res[0],
-                             'label' => (string) $res[1],
+                             'id'    => (string) $value[0],
+                             'label' => (string) $value[1],
                          )
                      );
                 }
