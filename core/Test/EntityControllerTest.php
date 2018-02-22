@@ -22,7 +22,7 @@ class EntityControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'id'                => 'TEST-ENTITY123',
+            'entity_id'         => 'TEST-ENTITY123',
             'entity_label'      => 'TEST-ENTITY123-LABEL',
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL',
             'entity_type'       => 'Service',
