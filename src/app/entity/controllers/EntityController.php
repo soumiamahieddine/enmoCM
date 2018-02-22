@@ -156,7 +156,7 @@ class EntityController
         EntityModel::create($data);
         HistoryController::add([
             'tableName' => 'entities',
-            'recordId'  => $data['id'],
+            'recordId'  => $data['entity_id'],
             'eventType' => 'ADD',
             'info'      => _ENTITY_CREATION . " : {$data['entity_id']}",
             'moduleId'  => 'entity',
