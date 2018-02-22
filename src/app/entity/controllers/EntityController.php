@@ -300,7 +300,7 @@ class EntityController
                 }
             }
         }
-        UserEntityModel::update(['set' => ['entity_id = ?'], 'where' => ['entity_id = ?'], 'data' => [$aArgs['newEntityId'], $aArgs['id']]]);
+        UserEntityModel::update(['set' => ['entity_id' => $aArgs['newEntityId']], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
         //Entities
         $entities = EntityModel::get(['select' => ['entity_id', 'parent_entity_id'], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
