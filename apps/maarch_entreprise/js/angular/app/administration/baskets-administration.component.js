@@ -10,23 +10,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var BasketsAdministrationComponent = /** @class */ (function () {
-    function BasketsAdministrationComponent(http, notify) {
+    function BasketsAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.baskets = [];
         this.loading = false;
         this.displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     BasketsAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    BasketsAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     BasketsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -74,7 +82,7 @@ var BasketsAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["baskets-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], BasketsAdministrationComponent);
     return BasketsAdministrationComponent;
 }());

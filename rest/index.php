@@ -82,6 +82,7 @@ if (strpos(getcwd(), '/rest')) {
     chdir('..');
 }
 
+$userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
     if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
         $userId = $_SERVER['PHP_AUTH_USER'];
@@ -111,9 +112,8 @@ $app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initial
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-$app->get('/administration/users', \Core\Controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/new', \Core\Controllers\UserController::class . ':getNewUserForAdministration');
-$app->get('/administration/users/{id}', \Core\Controllers\UserController::class . ':getUserForAdministration');
+$app->get('/administration/users', \User\controllers\UserController::class . ':getUsersForAdministration');
+$app->get('/administration/users/{id}', \User\controllers\UserController::class . ':getUserForAdministration');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -133,19 +133,20 @@ $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . '
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
 $app->post('/statuses', \Status\controllers\StatusController::class . ':create');
 $app->get('/statuses/{identifier}', \Status\controllers\StatusController::class . ':getByIdentifier');
+$app->get('/status/{id}', \Status\controllers\StatusController::class . ':getById');
 $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class . ':update');
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //groups
-$app->get('/groups', \Core\Controllers\GroupController::class . ':get');
-$app->post('/groups', \Core\Controllers\GroupController::class . ':create');
-$app->get('/groups/{id}', \Core\Controllers\GroupController::class . ':getById');
-$app->put('/groups/{id}', \Core\Controllers\GroupController::class . ':update');
-$app->delete('/groups/{id}', \Core\Controllers\GroupController::class . ':delete');
-$app->get('/groups/{id}/details', \Core\Controllers\GroupController::class . ':getDetailledById');
-$app->put('/groups/{id}/services/{serviceId}', \Core\Controllers\GroupController::class . ':updateService');
-$app->put('/groups/{id}/reassign/{newGroupId}', \Core\Controllers\GroupController::class . ':reassignUsers');
+$app->get('/groups', \Group\controllers\GroupController::class . ':get');
+$app->post('/groups', \Group\controllers\GroupController::class . ':create');
+$app->get('/groups/{id}', \Group\controllers\GroupController::class . ':getById');
+$app->put('/groups/{id}', \Group\controllers\GroupController::class . ':update');
+$app->delete('/groups/{id}', \Group\controllers\GroupController::class . ':delete');
+$app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':getDetailledById');
+$app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
+$app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
@@ -176,42 +177,46 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
-$app->get('/users/autocompleter', \Core\Controllers\UserController::class . ':getUsersForAutocompletion');
-$app->post('/users', \Core\Controllers\UserController::class . ':create');
-$app->get('/users/{id}/details', \Core\Controllers\UserController::class . ':getDetailledById');
-$app->put('/users/{id}', \Core\Controllers\UserController::class . ':update');
-$app->put('/users/{id}/password', \Core\Controllers\UserController::class . ':resetPassword');
-$app->put('/users/{id}/status', \Core\Controllers\UserController::class . ':updateStatus');
-$app->delete('/users/{id}', \Core\Controllers\UserController::class . ':delete');
-$app->post('/users/{id}/groups', \Core\Controllers\UserController::class . ':addGroup');
-$app->put('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':updateGroup');
-$app->delete('/users/{id}/groups/{groupId}', \Core\Controllers\UserController::class . ':deleteGroup');
-$app->post('/users/{id}/entities', \Core\Controllers\UserController::class . ':addEntity');
-$app->put('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':updateEntity');
-$app->put('/users/{id}/entities/{entityId}/primaryEntity', \Core\Controllers\UserController::class . ':updatePrimaryEntity');
-$app->delete('/users/{id}/entities/{entityId}', \Core\Controllers\UserController::class . ':deleteEntity');
-$app->post('/users/{id}/signatures', \Core\Controllers\UserController::class . ':addSignature');
-$app->put('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':updateSignature');
-$app->delete('/users/{id}/signatures/{signatureId}', \Core\Controllers\UserController::class . ':deleteSignature');
-$app->post('/users/{id}/redirectedBaskets', \Core\Controllers\UserController::class . ':setRedirectedBaskets');
-$app->delete('/users/{id}/redirectedBaskets/{basketId}', \Core\Controllers\UserController::class . ':deleteRedirectedBaskets');
+$app->get('/users/autocompleter', \User\controllers\UserController::class . ':getUsersForAutocompletion');
+$app->post('/users', \User\controllers\UserController::class . ':create');
+$app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
+$app->put('/users/{id}', \User\controllers\UserController::class . ':update');
+$app->put('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
+$app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
+$app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
+$app->post('/users/{id}/groups', \User\controllers\UserController::class . ':addGroup');
+$app->put('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':updateGroup');
+$app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::class . ':deleteGroup');
+$app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
+$app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
+$app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');
+$app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
+$app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
+$app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
+$app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
+$app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
+$app->delete('/users/{id}/redirectedBaskets/{basketId}', \User\controllers\UserController::class . ':deleteRedirectedBaskets');
+$app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 
 //CurrentUser
-$app->get('/currentUser/profile', \Core\Controllers\UserController::class . ':getProfile');
-$app->put('/currentUser/profile', \Core\Controllers\UserController::class . ':updateProfile');
-$app->put('/currentUser/password', \Core\Controllers\UserController::class . ':updateCurrentUserPassword');
-$app->post('/currentUser/emailSignature', \Core\Controllers\UserController::class . ':createCurrentUserEmailSignature');
-$app->put('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':updateCurrentUserEmailSignature');
-$app->delete('/currentUser/emailSignature/{id}', \Core\Controllers\UserController::class . ':deleteCurrentUserEmailSignature');
-$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \Core\Controllers\UserController::class . ':updateBasketPreference');
+$app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');
+$app->put('/currentUser/profile', \User\controllers\UserController::class . ':updateProfile');
+$app->put('/currentUser/password', \User\controllers\UserController::class . ':updateCurrentUserPassword');
+$app->post('/currentUser/emailSignature', \User\controllers\UserController::class . ':createCurrentUserEmailSignature');
+$app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
+$app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
+$app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateBasketPreference');
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->post('/entities', \Entity\controllers\EntityController::class . ':create');
 $app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getById');
+$app->put('/entities/{id}', \Entity\controllers\EntityController::class . ':update');
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
+$app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');
 
 //ListTemplates
 $app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');
@@ -258,8 +263,29 @@ $app->put('/notifications/{id}', \Notification\controllers\NotificationControlle
 $app->delete('/notifications/{id}', \Notification\controllers\NotificationController::class . ':delete');
 $app->get('/administration/notifications/new', \Notification\controllers\NotificationController::class . ':initNotification');
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
-
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
+
+//Doctypes
+$app->get('/doctypes', \Doctype\controllers\FirstLevelController::class . ':getTree');
+
+$app->post('/doctypes/firstLevel', \Doctype\controllers\FirstLevelController::class . ':create');
+$app->get('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':getById');
+$app->put('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':update');
+$app->delete('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':delete');
+$app->get('/administration/doctypes/firstLevel/new', \Doctype\controllers\FirstLevelController::class . ':initFirstLevel');
+
+$app->post('/doctypes/secondLevel', \Doctype\controllers\SecondLevelController::class . ':create');
+$app->get('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':getById');
+$app->put('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':update');
+$app->delete('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':delete');
+$app->get('/administration/doctypes/secondLevel/new', \Doctype\controllers\SecondLevelController::class . ':initSecondLevel');
+
+$app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':create');
+$app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
+$app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
+$app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':delete');
+$app->delete('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
+$app->get('/administration/doctypes/types/new', \Doctype\controllers\DoctypeController::class . ':initDoctype');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

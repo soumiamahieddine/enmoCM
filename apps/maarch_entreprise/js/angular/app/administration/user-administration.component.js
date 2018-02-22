@@ -20,6 +20,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
@@ -28,7 +29,7 @@ var material_1 = require("@angular/material");
 var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UserAdministrationComponent = /** @class */ (function (_super) {
     __extends(UserAdministrationComponent, _super);
-    function UserAdministrationComponent(http, route, router, zone, notify) {
+    function UserAdministrationComponent(changeDetectorRef, media, http, route, router, zone, notify) {
         var _this = _super.call(this, http, 'users') || this;
         _this.http = http;
         _this.route = route;
@@ -55,8 +56,12 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         _this.currentMonth = new Date().getMonth() + 1;
         _this.minDate = new Date();
         _this.loading = false;
-        _this.displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+        _this.displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
         _this.dataSource = new material_1.MatTableDataSource(_this.data);
+        $j("link[href='merged_css.php']").remove();
+        _this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        _this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        _this.mobileQuery.addListener(_this._mobileQueryListener);
         window['angularUserAdministrationComponent'] = {
             componentAfterUpload: function (base64Content) { return _this.processAfterUpload(base64Content); },
         };
@@ -66,6 +71,9 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    UserAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>" + this.lang.users + "</a> > ";
@@ -411,7 +419,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             styleUrls: ['css/user-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, core_1.NgZone, notification_service_1.NotificationService])
     ], UserAdministrationComponent);
     return UserAdministrationComponent;
 }(autocomplete_plugin_1.AutoCompletePlugin));

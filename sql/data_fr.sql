@@ -78,6 +78,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admi
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'put_doc_in_fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'fileplan');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'notes_restriction');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_contacts');
@@ -120,6 +122,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'filepla
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_thesaurus_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'index_mlb');
@@ -158,6 +161,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_thesaurus_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_contacts');
@@ -205,6 +209,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'f
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_thesaurus_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'index_mlb');
@@ -293,6 +298,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR',
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_thesaurus');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'thesaurus_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_thesaurus_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'delete_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('DIRECTEUR', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'search_contacts');

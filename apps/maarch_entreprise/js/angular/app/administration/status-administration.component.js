@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var StatusAdministrationComponent = /** @class */ (function () {
-    function StatusAdministrationComponent(http, route, router, notify) {
+    function StatusAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -31,7 +32,14 @@ var StatusAdministrationComponent = /** @class */ (function () {
         };
         this.statusImages = "";
         this.loading = false;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
+    StatusAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     StatusAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.loading = true;
@@ -48,11 +56,13 @@ var StatusAdministrationComponent = /** @class */ (function () {
                     _this.creationMode = true;
                     _this.loading = false;
                 });
+                _this.statusIdAvailable = false;
             }
             else {
                 _this.creationMode = false;
                 _this.statusIdentifier = params['identifier'];
                 _this.getStatusInfos(_this.statusIdentifier);
+                _this.statusIdAvailable = true;
                 _this.loading = false;
             }
             _this.updateBreadcrumb(angularGlobals.applicationName);
@@ -98,8 +108,25 @@ var StatusAdministrationComponent = /** @class */ (function () {
             }
             _this.statusImages = data['statusImages'];
         }, function (err) {
-            _this.notify.error(JSON.parse(err._body).errors);
+            _this.notify.error(err.error.errors);
         });
+    };
+    StatusAdministrationComponent.prototype.isAvailable = function () {
+        var _this = this;
+        if (this.status.id) {
+            this.http.get(this.coreUrl + "rest/status/" + this.status.id)
+                .subscribe(function () {
+                _this.statusIdAvailable = false;
+            }, function (err) {
+                _this.statusIdAvailable = false;
+                if (err.error.errors == "id not found") {
+                    _this.statusIdAvailable = true;
+                }
+            });
+        }
+        else {
+            this.statusIdAvailable = false;
+        }
     };
     StatusAdministrationComponent.prototype.submitStatus = function () {
         var _this = this;
@@ -109,7 +136,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.notify.success(_this.lang.statusAdded);
                 _this.router.navigate(['administration/statuses']);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else if (this.creationMode == false) {
@@ -118,7 +145,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
                 _this.notify.success(_this.lang.statusUpdated);
                 _this.router.navigate(['administration/statuses']);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -128,7 +155,7 @@ var StatusAdministrationComponent = /** @class */ (function () {
             styleUrls: ['css/status-administration.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], StatusAdministrationComponent);
     return StatusAdministrationComponent;
 }());

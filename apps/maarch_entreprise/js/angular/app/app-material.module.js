@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var ng2_dnd_1 = require("ng2-dnd");
 var material_1 = require("@angular/material");
 var french_paginator_intl_1 = require("./french-paginator-intl");
 var AppMaterialModule = /** @class */ (function () {
@@ -43,7 +44,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatChipsModule,
                 material_1.MatStepperModule,
                 material_1.MatRadioModule,
-                material_1.MatSliderModule
+                material_1.MatSliderModule,
+                ng2_dnd_1.DndModule.forRoot()
             ],
             exports: [
                 material_1.MatCheckboxModule,
@@ -74,7 +76,8 @@ var AppMaterialModule = /** @class */ (function () {
                 material_1.MatChipsModule,
                 material_1.MatStepperModule,
                 material_1.MatRadioModule,
-                material_1.MatSliderModule
+                material_1.MatSliderModule,
+                ng2_dnd_1.DndModule
             ],
             providers: [
                 { provide: material_1.MatPaginatorIntl, useValue: french_paginator_intl_1.getFrenchPaginatorIntl() }

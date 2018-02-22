@@ -1,83 +1,113 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.statusModification}}
-        <small>{{status.id}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.statusCreation}}
-        <small>{{status.id}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="col-md-6 col-md-offset-3">
-        <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <mat-form-field>
-                        <input matInput [(ngModel)]="status.id" [disabled]="!creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}"
-                            type="text" pattern="^[\w.-]*$" required>
-                    </mat-form-field>
-                </div>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.statusModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{status.id}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.statusCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{status.id}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/statuses">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list style="width:250px;">
+                <h3 mat-subheader>{{lang.tools}}</h3>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <mat-form-field>
-                        <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.statusName}}"
-                            placeholder="{{lang.statusName}}" type="text" required>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="col-sm-4" style="white-space:nowrap;">
-                            <mat-slide-toggle [(ngModel)]="status.can_be_searched" id="can_be_search" name="can_be_search" color="primary" [checked]="status.can_be_searched == true">
-                                {{lang.canBeSearched}}
-                            </mat-slide-toggle>
-                            <sup>
-                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipSearchStatus}}"></i>
-                            </sup>
-                        </div>
-                        <div class="col-sm-4" style="white-space:nowrap;">
-                            <mat-slide-toggle [(ngModel)]="status.can_be_modified" id="can_be_modified" name="can_be_modified" color="primary" [checked]="status.can_be_modified == true">
-                                {{lang.canBeModified}}
-                            </mat-slide-toggle>
-                            <sup>
-                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipIndexStatus}}"></i>
-                            </sup>
-                        </div>
-                        <div class="col-sm-4" style="white-space:nowrap;">
-                            <mat-slide-toggle [(ngModel)]="status.is_folder_status" id="is_folder_status" name="is_folder_status" color="primary" [checked]="status.is_folder_status == true">
-                                {{lang.isFolderStatus}}
-                            </mat-slide-toggle>
-                            <sup>
-                                <i class="fa fa-question-circle" matTooltip="{{lang.tooltipFolderStatus}}"></i>
-                            </sup>
+            <mat-card *ngIf="!loading">
+                <form class="form-horizontal" (ngSubmit)="submitStatus()" #statusFormUp="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="status.id" *ngIf="creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" (blur)="isAvailable()" 
+                                    type="text" pattern="^[\w.-]*$" required>
+                                <i *ngIf="creationMode" class="fa fa-circle-o" aria-hidden="true" [ngStyle]="{'color': statusIdAvailable ? 'green' : 'red'}"></i>
+                                <input matInput [(ngModel)]="status.id" *ngIf="!creationMode" maxlength="10" name="id" id="id" title="{{lang.id}}" placeholder="{{lang.id}}" 
+                                    required disabled>
+                            </mat-form-field>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-1">
-                    <mat-icon class="fm {{status.img_filename}} fm-2x" aria-hidden="true" color="primary"></mat-icon>
-                </div>
-                <div class="col-sm-11">
-                    <mat-form-field>
-                        <mat-select [(ngModel)]="status.img_filename" placeholder="{{lang.imgRelated}}" id="status" name="status" required>
-                            <mat-option *ngFor="let image of statusImages" [value]="image.image_name">
-                                <i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x" color="primary"></i> {{image.image_name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-sm-12 panel-body" style="text-align:center;">
-                <button color="default" mat-mini-fab routerLink='/administration/statuses' matTooltip="{{lang.back}}" class="enableAtionTopLeftSmarpthone">
-                    <mat-icon class="fa fa-chevron-left"></mat-icon>
-                </button>
-                <button class="enableAtionBottomCenterSmarpthone" mat-raised-button color="primary" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.validate}}</button>
-            </div>
-        </form>
-    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput name="label_status" id="label_status" maxlength="50" [(ngModel)]="status.label_status" title="{{lang.label}}"
+                                    placeholder="{{lang.label}}" type="text" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4" style="white-space:nowrap;text-align:center;">
+                            <mat-slide-toggle matTooltip="{{lang.tooltipSearchStatus}}" [(ngModel)]="status.can_be_searched" id="can_be_search" name="can_be_search"
+                                color="primary" [checked]="status.can_be_searched == true">
+                                {{lang.canBeSearched}}
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-sm-4" style="white-space:nowrap;text-align:center;">
+                            <mat-slide-toggle matTooltip="{{lang.tooltipIndexStatus}}" [(ngModel)]="status.can_be_modified" id="can_be_modified" name="can_be_modified"
+                                color="primary" [checked]="status.can_be_modified == true">
+                                {{lang.canBeModified}}
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="col-sm-4" style="white-space:nowrap;text-align:center;">
+                            <mat-slide-toggle matTooltip="{{lang.tooltipFolderStatus}}" [(ngModel)]="status.is_folder_status" id="is_folder_status" name="is_folder_status"
+                                color="primary" [checked]="status.is_folder_status == true">
+                                {{lang.isFolderStatus}}
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-1" style="text-align:right;">
+                            <mat-icon class="fm {{status.img_filename}} fm-2x" aria-hidden="true" color="primary"></mat-icon>
+                        </div>
+                        <div class="col-sm-11">
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="status.img_filename" placeholder="{{lang.imgRelated}}" id="status" name="status" required>
+                                    <mat-option *ngFor="let image of statusImages" [value]="image.image_name">
+                                        <i [ngClass]="[image.image_name.indexOf('fm') == 0 ? 'fm' : 'fa']" class="{{image.image_name}} fa-2x" color="primary"></i> {{image.image_name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!statusFormUp.form.valid">{{lang.save}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Action(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

@@ -22,10 +22,8 @@ use Slim\Http\Response;
 
 class SecondLevelController
 {
-
     public function getById(Request $request, Response $response, $aArgs)
     {
-
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
             return $response
                 ->withStatus(500)
@@ -34,7 +32,7 @@ class SecondLevelController
 
         $obj['secondLevel'] = SecondLevelModel::getById(['id' => $aArgs['id']]);
 
-        if(!empty($obj['secondLevel'])){
+        if (!empty($obj['secondLevel'])) {
             if ($obj['secondLevel']['enabled'] == 'Y') {
                 $obj['secondLevel']['enabled'] = true;
             } else {
@@ -66,19 +64,19 @@ class SecondLevelController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
     
-        $obj = SecondLevelModel::create($data);
+        $secondLevelId = SecondLevelModel::create($data);
 
         HistoryController::add([
             'tableName' => 'doctypes_second_level',
-            'recordId'  => $obj['doctypes_second_level_id'],
+            'recordId'  => $secondLevelId,
             'eventType' => 'ADD',
             'eventId'   => 'subfolderadd',
-            'info'      => _DOCTYPE_SECONDLEVEL_ADDED . ' : ' . $obj['doctypes_second_level_label']
+            'info'      => _DOCTYPE_SECONDLEVEL_ADDED . ' : ' . $data['doctypes_second_level_label']
         ]);
 
         return $response->withJson(
             [
-            'secondLevel'  => $obj
+            'secondLevel'  => $secondLevelId
             ]
         );
     }
@@ -101,19 +99,19 @@ class SecondLevelController
                 ->withJson(['errors' => $errors]);
         }
 
-        $obj = SecondLevelModel::update($data);
+        SecondLevelModel::update($data);
 
         HistoryController::add([
             'tableName' => 'doctypes_second_level',
-            'recordId'  => $obj['doctypes_second_level_id'],
+            'recordId'  => $data['doctypes_second_level_id'],
             'eventType' => 'UP',
             'eventId'   => 'subfolderup',
-            'info'      => _DOCTYPE_SECONDLEVEL_UPDATED. ' : ' . $obj['doctypes_second_level_label']
+            'info'      => _DOCTYPE_SECONDLEVEL_UPDATED. ' : ' . $data['doctypes_second_level_label']
         ]);
 
         return $response->withJson(
             [
-            'secondLevel'  => $obj
+            'secondLevel'  => $data
             ]
         );
     }

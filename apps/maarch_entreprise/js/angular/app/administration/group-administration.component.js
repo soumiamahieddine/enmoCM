@@ -10,13 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var GroupAdministrationComponent = /** @class */ (function () {
-    function GroupAdministrationComponent(http, route, router, notify) {
+    function GroupAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -26,12 +27,19 @@ var GroupAdministrationComponent = /** @class */ (function () {
             security: {}
         };
         this.loading = false;
-        this.displayedColumns = ['firstname', 'lastname', 'actions'];
+        this.displayedColumns = ['firstname', 'lastname'];
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     GroupAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    GroupAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     GroupAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
@@ -101,9 +109,6 @@ var GroupAdministrationComponent = /** @class */ (function () {
             _this.notify.error(err.error.errors);
         });
     };
-    GroupAdministrationComponent.prototype.toggleKeywordHelp = function () {
-        $j('#keywordHelp').toggle("slow");
-    };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),
         __metadata("design:type", material_1.MatPaginator)
@@ -117,7 +122,7 @@ var GroupAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["group-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], GroupAdministrationComponent);
     return GroupAdministrationComponent;
 }());

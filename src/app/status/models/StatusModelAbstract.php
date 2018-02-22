@@ -15,7 +15,7 @@
 
 namespace Status\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class StatusModelAbstract
@@ -25,7 +25,7 @@ class StatusModelAbstract
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
-            'order_by'  => ['identifier']
+            'order_by'  => ['label_status']
         ]);
 
         return $aReturn;

@@ -22,7 +22,7 @@ class EntityControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'id'                => 'TEST-ENTITY123',
+            'entity_id'         => 'TEST-ENTITY123',
             'entity_label'      => 'TEST-ENTITY123-LABEL',
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL',
             'entity_type'       => 'Service',
@@ -36,7 +36,7 @@ class EntityControllerTest extends TestCase
         $response     = $entityController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('TEST-ENTITY123', $responseBody->entityId);
+        $this->assertInternalType('array', $responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -77,7 +77,7 @@ class EntityControllerTest extends TestCase
         $response     = $entityController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertInternalType('array', $responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -188,7 +188,7 @@ class EntityControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->entity->visaTemplate);
         $this->assertSame(false, $responseBody->entity->hasChildren);
         $this->assertSame(0, $responseBody->entity->documents);
-        $this->assertSame(0, $responseBody->entity->users);
+        $this->assertInternalType('array', $responseBody->entity->users);
         $this->assertSame(0, $responseBody->entity->templates);
         $this->assertSame(0, $responseBody->entity->instances);
         $this->assertSame(0, $responseBody->entity->redirects);

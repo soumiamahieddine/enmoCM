@@ -62,11 +62,12 @@
     <id>admin_architecture</id>
     <name>_ADMIN_ARCHITECTURE</name>
     <comment>_ADMIN_ARCHITECTURE_DESC</comment>
-    <servicepage>index.php?page=admin_archi&amp;admin=architecture</servicepage>
+    <servicepage>/administration/doctypes</servicepage>
     <servicetype>admin</servicetype>
     <system_service>false</system_service>
     <style>fa fa-suitcase</style>
     <enabled>true</enabled>
+    <angular>true</angular>
   </SERVICE>
   <SERVICE>
     <id>view_history</id>
@@ -270,6 +271,28 @@
     <WHEREAMIUSED>
       <page>details.php</page>
       <!-- <nature>include</nature> -->
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
+    <id>delete_document_in_detail</id>
+    <name>_DELETE_DOCUMENT_IN_DETAIL</name>
+    <comment>_DELETE_DOCUMENT_IN_DETAIL</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+    <WHEREAMIUSED>
+      <page>details.php</page>
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
+    <id>edit_document_in_detail</id>
+    <name>_EDIT_DOCUMENT_IN_DETAIL</name>
+    <comment>_EDIT_DOCUMENT_IN_DETAIL_DESC</comment>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+    <WHEREAMIUSED>
+      <page>details.php</page>
     </WHEREAMIUSED>
   </SERVICE>
   <SERVICE>

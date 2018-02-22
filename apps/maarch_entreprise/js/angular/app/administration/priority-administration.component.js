@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var PriorityAdministrationComponent = /** @class */ (function () {
-    function PriorityAdministrationComponent(http, route, router, notify) {
+    function PriorityAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -28,16 +29,13 @@ var PriorityAdministrationComponent = /** @class */ (function () {
             delays: "0",
             working_days: "false"
         };
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
-    PriorityAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/priorities\"' style='cursor: pointer'>" + this.lang.priorities + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.priorityCreation;
-        }
-        else {
-            breadCrumb += this.lang.priorityModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
+    PriorityAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     PriorityAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -46,22 +44,15 @@ var PriorityAdministrationComponent = /** @class */ (function () {
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
-                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.loading = false;
             }
             else {
                 _this.creationMode = false;
-                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.id = params['id'];
                 _this.http.get(_this.coreUrl + "rest/priorities/" + _this.id)
                     .subscribe(function (data) {
                     _this.priority = data.priority;
-                    if (_this.priority.delays == '*') {
-                        _this.priority.useDoctypeDelay = false;
-                    }
-                    else {
-                        _this.priority.useDoctypeDelay = true;
-                    }
+                    _this.priority.useDoctypeDelay = _this.priority.delays != null;
                     if (_this.priority.working_days === true) {
                         _this.priority.working_days = "true";
                     }
@@ -78,14 +69,9 @@ var PriorityAdministrationComponent = /** @class */ (function () {
     PriorityAdministrationComponent.prototype.onSubmit = function () {
         var _this = this;
         if (this.priority.useDoctypeDelay == false) {
-            this.priority.delays = '*';
+            this.priority.delays = null;
         }
-        if (this.priority.working_days == "true") {
-            this.priority.working_days = true;
-        }
-        else {
-            this.priority.working_days = false;
-        }
+        this.priority.working_days = this.priority.working_days == "true";
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/priorities", this.priority)
                 .subscribe(function () {
@@ -110,7 +96,7 @@ var PriorityAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["priority-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], PriorityAdministrationComponent);
     return PriorityAdministrationComponent;
 }());

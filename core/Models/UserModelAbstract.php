@@ -487,7 +487,7 @@ class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'select'    => ['usergroups.id', 'usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$aArgs['userId']]
@@ -562,7 +562,7 @@ class UserModelAbstract
         return false;
     }
 
-    public static function addGroup(array $aArgs = [])
+    public static function addGroup(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -577,16 +577,6 @@ class UserModelAbstract
                 'role'          => $aArgs['role'],
                 'primary_group' => 'Y'
             ]
-        ]);
-
-        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
-
-        HistoryController::add([
-            'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
-            'eventType' => 'GROUP ADD',
-            'eventId'   => 'groupadded',
-            'info'       =>$_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_GROUP.' '.$groupInfos['group_desc']
         ]);
 
         return true;
@@ -622,16 +612,6 @@ class UserModelAbstract
             'table'     => 'usergroup_content',
             'where'     => ['group_id = ?', 'user_id = ?'],
             'data'      => [$aArgs['groupId'], $user['user_id']]
-        ]);
-
-        $groupInfos = GroupModel::getById(['groupId' => $aArgs['groupId']]);
-
-        HistoryController::add([
-            'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
-            'eventType' => 'GROUP DELETED',
-            'eventId'   => 'groupdeleted',
-            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_GROUP.' '.$groupInfos['group_desc']
         ]);
 
         return true;

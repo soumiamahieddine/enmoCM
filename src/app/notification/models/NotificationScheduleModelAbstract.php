@@ -15,7 +15,7 @@
 
 namespace Notification\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use History\controllers\HistoryController;
 
@@ -66,6 +66,7 @@ class NotificationScheduleModelAbstract
         }
 
         $crontab  = shell_exec('crontab -l');
+        // TODO check crontab is installed
         $lines    = explode("\n", $crontab);
         $data     = array();
         $customId = CoreConfigModel::getCustomId();
@@ -82,6 +83,7 @@ class NotificationScheduleModelAbstract
             }
             $cronLine = preg_replace('![ \t]+!', ' ', $cronLine);
             if ($cronLine[0] == '@') {
+                // TODO $time not used
                 list($time, $cmd) = explode(' ', $cronLine, 2);
             } else {
                 list($m, $h, $dom, $mon, $dow, $cmd) = explode(' ', $cronLine, 6);

@@ -1,11 +1,10 @@
 <?php
 
-namespace Core\Controllers;
+namespace Group\controllers;
 
-use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Core\Models\ValidatorModel;
+use Group\models\GroupModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -52,7 +51,6 @@ class GroupController
         $check = Validator::stringType()->notEmpty()->validate($data['group_id']) && preg_match("/^[\w-]*$/", $data['group_id']) && (strlen($data['group_id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['group_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['where_clause']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['maarch_comment']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -76,9 +74,9 @@ class GroupController
         return $response->withJson(['group' => $group['id']]);
     }
 
-    public function update(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -88,13 +86,14 @@ class GroupController
         }
 
         $data = $request->getParams();
-
         $check = Validator::stringType()->notEmpty()->validate($data['description']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['where_clause']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['maarch_comment']);
-
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if (!PreparedClauseController::isClauseValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
         GroupModel::update(['id' => $aArgs['id'], 'description' => $data['description'], 'clause' => $data['security']['where_clause'], 'comment' => $data['security']['maarch_comment']]);
@@ -102,9 +101,9 @@ class GroupController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -141,9 +140,9 @@ class GroupController
         return $response->withJson(['group' => $group]);
     }
 
-    public function updateService(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function updateService(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -163,9 +162,9 @@ class GroupController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function reassignUsers(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function reassignUsers(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -181,5 +180,43 @@ class GroupController
         GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function arraySort($aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data', 'on']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+        ValidatorModel::stringType($aArgs, ['on']);
+
+        $order = SORT_ASC;
+        $sortableArray = [];
+
+        foreach ($aArgs['data'] as $k => $v) {
+            if (is_array($v)) {
+                foreach ($v as $k2 => $v2) {
+                    if ($k2 == $aArgs['on']) {
+                        $sortableArray[$k] = $v2;
+                    }
+                }
+            } else {
+                $sortableArray[$k] = $v;
+            }
+        }
+
+        switch ($order) {
+            case SORT_ASC:
+                asort($sortableArray);
+                break;
+            case SORT_DESC:
+                arsort($sortableArray);
+                break;
+        }
+
+        $newArray = [];
+        foreach ($sortableArray as $k => $v) {
+            $newArray[] = $aArgs['data'][$k];
+        }
+
+        return $newArray;
     }
 }

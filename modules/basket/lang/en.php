@@ -285,8 +285,6 @@ if (!defined("_ASSOCIATED_STATUS"))
     define("_ASSOCIATED_STATUS", "Associated status");
 if (!defined("_SYSTEM_ACTION"))
     define("_SYSTEM_ACTION", "System action");
-if (!defined("_CANNOT_MODIFY_STATUS"))
-    define("_CANNOT_MODIFY_STATUS", "You cannot modify the status");
 if (!defined("_ASSOCIATED_ACTIONS"))
     define("_ASSOCIATED_ACTIONS", "Possible actions on the result page");
 if (!defined("_NO_ACTIONS_DEFINED"))

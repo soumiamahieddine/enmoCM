@@ -14,8 +14,8 @@
 
 namespace Report\controllers;
 
-use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Report\models\ReportModel;
 use Slim\Http\Request;

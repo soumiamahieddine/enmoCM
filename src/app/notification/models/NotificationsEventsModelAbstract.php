@@ -15,7 +15,7 @@
 
 namespace Notification\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class NotificationsEventsModelAbstract
@@ -23,7 +23,7 @@ class NotificationsEventsModelAbstract
     public static function create(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid', 'table_name', 'record_id', 'user_id', 'event_info']);
-        ValidatorModel::stringType($aArgs, ['table_name', 'record_id', 'user_id', 'event_info']);
+        ValidatorModel::stringType($aArgs, ['table_name', 'user_id', 'event_info']);
         ValidatorModel::intval($aArgs, ['notification_sid']);
 
         $db = new \Database();

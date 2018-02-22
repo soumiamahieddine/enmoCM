@@ -1,30 +1,40 @@
-import { Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals['parameter-administrationView'],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals['parameter-administrationView'],
+    providers: [NotificationService]
 })
 export class ParameterAdministrationComponent implements OnInit {
-    coreUrl                 : string;
-    lang                    : any       = LANG;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
 
-    type                    : string;
-    parameter               : any       = {};
+    type: string;
+    parameter: any = {};
 
-    creationMode            : boolean;
-    loading                 : boolean   = false;
+    creationMode: boolean;
+    loading: boolean = false;
 
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -43,14 +53,14 @@ export class ParameterAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params) => {
-            if (typeof params['id'] == "undefined"){
+            if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
                 this.updateBreadcrumb(angularGlobals.applicationName);
                 this.loading = false;
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/parameters/" + params['id'])
-                    .subscribe((data : any) => {
+                    .subscribe((data: any) => {
                         this.parameter = data.parameter;
                         this.updateBreadcrumb(angularGlobals.applicationName);
 
@@ -65,39 +75,39 @@ export class ParameterAdministrationComponent implements OnInit {
                         this.loading = false;
                     }, () => {
                         location.href = "index.php";
-                    }); 
+                    });
             }
         });
     }
 
     onSubmit() {
-        if(this.type == 'date'){
-            this.parameter.param_value_int=null;
-            this.parameter.param_value_string=null;
+        if (this.type == 'date') {
+            this.parameter.param_value_int = null;
+            this.parameter.param_value_string = null;
         }
-        else if(this.type == 'int'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_string=null;
+        else if (this.type == 'int') {
+            this.parameter.param_value_date = null;
+            this.parameter.param_value_string = null;
         }
-        else if (this.type == 'string'){
-            this.parameter.param_value_date=null;
-            this.parameter.param_value_int=null;
+        else if (this.type == 'string') {
+            this.parameter.param_value_date = null;
+            this.parameter.param_value_int = null;
         }
 
-        if(this.creationMode == true){
+        if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.router.navigate(['administration/parameters']);
                     this.notify.success(this.lang.parameterAdded);
-                },(err) => {
+                }, (err) => {
                     this.notify.error(err.error.errors);
                 });
-        } else if(this.creationMode == false){
+        } else if (this.creationMode == false) {
             this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.router.navigate(['administration/parameters']);
                     this.notify.success(this.lang.parameterUpdated);
-                },(err) => {
+                }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }

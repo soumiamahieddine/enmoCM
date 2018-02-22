@@ -10,33 +10,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var PrioritiesAdministrationComponent = /** @class */ (function () {
-    function PrioritiesAdministrationComponent(http, notify) {
+    function PrioritiesAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.loading = false;
         this.priorities = [];
         this.displayedColumns = ['label', 'delays', 'working_days', 'actions'];
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     PrioritiesAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
     };
-    PrioritiesAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.priorities;
-        }
+    PrioritiesAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     PrioritiesAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/priorities')
             .subscribe(function (data) {
@@ -80,7 +82,7 @@ var PrioritiesAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["priorities-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], PrioritiesAdministrationComponent);
     return PrioritiesAdministrationComponent;
 }());

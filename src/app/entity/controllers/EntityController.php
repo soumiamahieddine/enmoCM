@@ -32,12 +32,7 @@ class EntityController
 {
     public function get(Request $request, Response $response)
     {
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -68,31 +63,51 @@ class EntityController
             }
         }
 
+        $entity['types'] = EntityModel::getTypes();
+        $entity['roles'] = EntityModel::getRoles();
+        $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
+        $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
+        foreach ($entity['roles'] as $key => $role) {
+            if (in_array($role['id'], $rolesForService)) {
+                $entity['roles'][$key]['available'] = true;
+            } else {
+                $entity['roles'][$key]['available'] = false;
+            }
+            if ($role['id'] == 'copy') {
+                $entity['roles'][$key]['id'] = 'cc';
+            }
+        }
+
         $listTemplates = ListTemplateModel::get([
             'select'    => ['object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description'],
             'where'     => ['object_id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
-        $entity['listTemplate'] = ['dest' => [], 'cc' => []];
+        $entity['listTemplate'] = [];
+        foreach ($rolesForService as $role) {
+            $role == 'copy' ? $entity['listTemplate']['cc'] = [] : $entity['listTemplate'][$role] = [];
+        }
         $entity['visaTemplate'] = [];
         foreach ($listTemplates as $listTemplate) {
-            if ($listTemplate['object_type'] == 'entity_id') {
+            if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
                 if ($listTemplate['item_type'] == 'user_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
                         'type'                  => 'user',
-                        'idToDisplay'           => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
+                        'id'                    => $listTemplate['item_id'],
+                        'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
                         'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                     ];
                 } elseif ($listTemplate['item_type'] == 'entity_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
                         'type'                  => 'entity',
-                        'idToDisplay'           => $listTemplate['item_id'],
-                        'descriptionToDisplay'  => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label']
+                        'id'                    => $listTemplate['item_id'],
+                        'labelToDisplay'        => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
+                        'descriptionToDisplay'  => ''
                     ];
                 }
             }
-            if ($listTemplate['object_type'] == 'VISA_CIRCUIT') {
+            if ($listTemplate['object_type'] == 'VISA_CIRCUIT' && !empty($listTemplate['item_id'])) {
                 $entity['visaTemplate'][] = [
                     'type'                  => 'user',
                     'mode'                  => $listTemplate['item_mode'],
@@ -102,12 +117,11 @@ class EntityController
             }
         }
 
+        $entity['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.id','users.user_id', 'users.firstname', 'users.lastname']]);
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
-        $entity['users'] = count($users);
         $templates = TemplateModel::getAssociation(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
         $entity['templates'] = count($templates);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
@@ -126,7 +140,7 @@ class EntityController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
@@ -134,7 +148,7 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingEntity = EntityModel::getById(['entityId' => $data['id'], 'select' => [1]]);
+        $existingEntity = EntityModel::getById(['entityId' => $data['entity_id'], 'select' => [1]]);
         if (!empty($existingEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity already exists']);
         }
@@ -142,14 +156,14 @@ class EntityController
         EntityModel::create($data);
         HistoryController::add([
             'tableName' => 'entities',
-            'recordId'  => $data['id'],
+            'recordId'  => $data['entity_id'],
             'eventType' => 'ADD',
-            'info'      => _ENTITY_CREATION . " : {$data['id']}",
+            'info'      => _ENTITY_CREATION . " : {$data['entity_id']}",
             'moduleId'  => 'entity',
             'eventId'   => 'entityCreation',
         ]);
 
-        return $response->withJson(['entityId' => $data['id']]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
@@ -179,7 +193,16 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        unset($data['entity_id']);
+        $neededData = [
+            'entity_label', 'short_label', 'entity_type', 'adrs_1', 'adrs_2', 'adrs_3',
+            'zipcode', 'city', 'country', 'email', 'business_id', 'parent_entity_id',
+            'entity_path', 'ldap_id', 'archival_agreement', 'archival_agency', 'entity_full_name'
+        ];
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $neededData)) {
+                unset($data[$key]);
+            }
+        }
         EntityModel::update(['set' => $data, 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         HistoryController::add([
             'tableName' => 'entities',
@@ -190,7 +213,7 @@ class EntityController
             'eventId'   => 'entityModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -234,12 +257,7 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function reassignEntity(Request $request, Response $response, array $aArgs)
@@ -282,7 +300,7 @@ class EntityController
                 }
             }
         }
-        UserEntityModel::update(['set' => ['entity_id = ?'], 'where' => ['entity_id = ?'], 'data' => [$aArgs['newEntityId'], $aArgs['id']]]);
+        UserEntityModel::update(['set' => ['entity_id' => $aArgs['newEntityId']], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
         //Entities
         $entities = EntityModel::get(['select' => ['entity_id', 'parent_entity_id'], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
@@ -314,12 +332,7 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-        foreach ($entities as $key => $entity) {
-            $entities[$key]['users'] = EntityModel::getUsersById(['id' => $entity['entity_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
-        }
-
-        return $response->withJson(['entities' => $entities]);
+        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
@@ -364,5 +377,10 @@ class EntityController
         ]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public function getTypes(Request $request, Response $response)
+    {
+        return $response->withJson(['types' => EntityModel::getTypes()]);
     }
 }

@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var ActionsAdministrationComponent = /** @class */ (function () {
-    function ActionsAdministrationComponent(http, notify) {
+    function ActionsAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
         this.notify = notify;
         this.lang = translate_component_1.LANG;
@@ -25,11 +26,18 @@ var ActionsAdministrationComponent = /** @class */ (function () {
         this.loading = false;
         this.displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
         this.dataSource = new material_1.MatTableDataSource(this.actions);
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     ActionsAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    ActionsAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     ActionsAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -68,7 +76,7 @@ var ActionsAdministrationComponent = /** @class */ (function () {
                 _this.dataSource.sort = _this.sort;
                 _this.notify.success(_this.lang.actionDeleted);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -85,7 +93,7 @@ var ActionsAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["actions-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], ActionsAdministrationComponent);
     return ActionsAdministrationComponent;
 }());

@@ -14,7 +14,7 @@
 
 namespace Entity\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 class UserEntityModelAbstract
@@ -26,7 +26,7 @@ class UserEntityModelAbstract
 
         $users = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => 'users_entities',
+            'table'     => ['users_entities'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data']
         ]);
@@ -39,7 +39,7 @@ class UserEntityModelAbstract
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        DatabaseModel::delete([
+        DatabaseModel::update([
             'table' => 'users_entities',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],

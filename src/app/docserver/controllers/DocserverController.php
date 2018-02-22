@@ -16,7 +16,7 @@
 namespace Docserver\controllers;
 
 use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Docserver\models\DocserverModel;

@@ -20,13 +20,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
     __extends(UpdateStatusAdministrationComponent, _super);
-    function UpdateStatusAdministrationComponent(http, notify) {
+    function UpdateStatusAdministrationComponent(changeDetectorRef, media, http, notify) {
         var _this = _super.call(this, http, 'statuses') || this;
         _this.http = http;
         _this.notify = notify;
@@ -36,8 +37,15 @@ var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
         _this.resId = "";
         _this.chrono = "";
         _this.loading = false;
+        $j("link[href='merged_css.php']").remove();
+        _this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        _this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        _this.mobileQuery.addListener(_this._mobileQueryListener);
         return _this;
     }
+    UpdateStatusAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     UpdateStatusAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
             $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Changement du statut";
@@ -60,7 +68,6 @@ var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
         else if (this.chrono != "") {
             body["chrono"] = this.chrono;
         }
-        console.log(body);
         this.http.put(this.coreUrl + "rest/res/resource/status", body)
             .subscribe(function () {
             _this.resId = "";
@@ -84,7 +91,7 @@ var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
             templateUrl: angularGlobals["update-status-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], UpdateStatusAdministrationComponent);
     return UpdateStatusAdministrationComponent;
 }(autocomplete_plugin_1.AutoCompletePlugin));

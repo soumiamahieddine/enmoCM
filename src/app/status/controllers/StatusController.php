@@ -69,6 +69,27 @@ class StatusController
         }
     }
 
+    public function getById(Request $request, Response $response, $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!empty($aArgs['id'])) {
+            $obj = StatusModel::getById(['id' => $aArgs['id']]);
+
+            if (empty($obj)) {
+                return $response->withStatus(404)->withJson(['errors' => 'id not found']);
+            }
+
+            return $response->withJson([
+                'status' => $obj,
+            ]);
+        } else {
+            return $response->withStatus(500)->withJson(['errors' => 'id not valid']);
+        }
+    }
+
     public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {

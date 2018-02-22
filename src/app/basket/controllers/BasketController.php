@@ -16,9 +16,9 @@ namespace Basket\controllers;
 
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
-use Core\Models\GroupModel;
 use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -330,7 +330,7 @@ class BasketController
         }
 
         $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
-        $basketPages = BasketModel::getBasketPages();
+        $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
 
         return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
     }

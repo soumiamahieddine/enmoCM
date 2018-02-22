@@ -15,7 +15,7 @@
 namespace Entity\controllers;
 
 use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use History\controllers\HistoryController;
@@ -54,7 +54,7 @@ class ListTemplateController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -84,7 +84,7 @@ class ListTemplateController
             $data['object_id'] = $data['object_type'] . '_' . DatabaseModel::uniqueId();
         }
 
-        $checkItems = ListTemplateController::checkItems(['item' => $data['items']]);
+        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
@@ -116,7 +116,7 @@ class ListTemplateController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -141,7 +141,7 @@ class ListTemplateController
             }
         }
 
-        $checkItems = ListTemplateController::checkItems(['item' => $data['items']]);
+        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
@@ -177,7 +177,7 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -225,9 +225,6 @@ class ListTemplateController
             }
             if (empty($item['item_mode'])) {
                 return ['errors' => 'Item_mode is empty'];
-            }
-            if (is_numeric($item['sequence'])) {
-                return ['errors' => 'Sequence is not numeric'];
             }
         }
 

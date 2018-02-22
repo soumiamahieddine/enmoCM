@@ -495,18 +495,9 @@ if (!defined("_CLOSED")) define("_CLOSED","Closed");
 if (!defined("_NEW")) define("_NEW","New");
 if (!defined("_LATE")) define("_LATE", "Late");
 
-if (!defined("_STATUS_DELETED")) define("_STATUS_DELETED", "Status deletion");
-if (!defined("_DEL_STATUS")) define("_DEL_STATUS", "Deleted status");
-if (!defined("_MODIFY_STATUS")) define("_MODIFY_STATUS", "Status modification");
-if (!defined("_STATUS_ADDED")) define("_STATUS_ADDED","New status addition");
 if (!defined("_STATUS_MODIFIED")) define("_STATUS_MODIFIED","Status modification");
-if (!defined("_NEW_STATUS")) define("_NEW_STATUS", "New status");
 if (!defined("_IS_SYSTEM")) define("_IS_SYSTEM", "System");
-if (!defined("_CAN_BE_SEARCHED")) define("_CAN_BE_SEARCHED", "Search");
-if (!defined("_CAN_BE_MODIFIED")) define("_CAN_BE_MODIFIED", "Index modification");
-if (!defined("_THE_STATUS")) define("_THE_STATUS", "The status ");
 if (!defined("_ADMIN_STATUS")) define("_ADMIN_STATUS", "Status");
-if (!defined("_IMG_RELATED")) define("_IMG_RELATED", "Associated picture");
 
 
 /************* Actions **************/
@@ -516,10 +507,8 @@ if (!defined("_ADD_ACTION")) define("_ADD_ACTION", "Add a new action");
 if (!defined("_ALL_ACTIONS")) define("_ALL_ACTIONS", "All the actions");
 if (!defined("_ACTION_HISTORY")) define("_ACTION_HISTORY", "Track the action");
 
-if (!defined("_ACTION_DELETED")) define("_ACTION_DELETED", "Action deletion");
 if (!defined("_DEL_ACTION")) define("_DEL_ACTION", "Deleted action");
 if (!defined("_MODIFY_ACTION")) define("_MODIFY_ACTION", "Action modification");
-if (!defined("_ACTION_ADDED")) define("_ACTION_ADDED","New action addition");
 if (!defined("_ACTION_MODIFIED")) define("_ACTION_MODIFIED","Action modification");
 if (!defined("_NEW_ACTION")) define("_NEW_ACTION", "New action");
 if (!defined("_THE_ACTION")) define("_THE_ACTION", "The action ");
@@ -2039,8 +2028,6 @@ if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
 if (!defined("_ADDRESS_NB")) define("_ADDRESS_NB","Address number");
 if (!defined('_INVALID'))
     define('_INVALID', 'n\'est pas valide');
-if (!defined('_NEW_STATUS_ADDED'))
-    define('_NEW_STATUS_ADDED', 'New status added');
 if (!defined('_STATUS_UPDATED'))
     define('_STATUS_UPDATED', 'Status updated');
 if (!defined("_NEW_ITEM")) define("_NEW_ITEM", "New");
@@ -2058,3 +2045,10 @@ if (!defined("_SAVE_POSITION"))
 /***** History *****/
 if (!defined('_UPDATE_STATUS'))
     define('_UPDATE_STATUS', 'Status update');
+
+if (!defined('_DELETE_DOCUMENT_IN_DETAIL'))
+    define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL'))
+    define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
+if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC'))
+    define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');

@@ -20,7 +20,8 @@ CREATE TABLE priorities
   label character varying(128) NOT NULL,
   color character varying(128) NOT NULL,
   working_days boolean NOT NULL,
-  delays integer NOT NULL,
+  delays integer,
+  default_priority boolean NOT NULL DEFAULT FALSE,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -562,3 +563,63 @@ DELETE FROM docservers where docserver_id = 'FULLTEXT_ATTACH_VERSION';
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
 
+ALTER TABLE doctypes DROP COLUMN IF EXISTS primary_retention;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS secondary_retention;
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_final_disposition;
+ALTER TABLE doctypes ADD COLUMN retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction';
+ALTER TABLE doctypes DROP COLUMN IF EXISTS retention_rule;
+ALTER TABLE doctypes ADD COLUMN retention_rule character varying(15) NOT NULL DEFAULT 'compta_3_03';
+ALTER TABLE doctypes DROP COLUMN IF EXISTS duration_current_use;
+ALTER TABLE doctypes ADD COLUMN duration_current_use integer DEFAULT '12';
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agency;
+ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT 'org_123456789_Archives';
+ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
+ALTER TABLE entities ADD COLUMN archival_agreement character varying(255) DEFAULT 'MAARCH_LES_BAINS_ACTES';
+
+
+
+UPDATE doctypes_first_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
+UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';
+UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style_big';
+UPDATE doctypes_first_level SET css_style = '#808080' WHERE css_style = 'grey_style';
+UPDATE doctypes_first_level SET css_style = '#FFFF00' WHERE css_style = 'yellow_style';
+UPDATE doctypes_first_level SET css_style = '#800000' WHERE css_style = 'brown_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'black_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'black_style_big';
+UPDATE doctypes_first_level SET css_style = '#FF4500' WHERE css_style = 'orange_style';
+UPDATE doctypes_first_level SET css_style = '#FF4500' WHERE css_style = 'orange_style_big';
+UPDATE doctypes_first_level SET css_style = '#FF00FF' WHERE css_style = 'pink_style';
+UPDATE doctypes_first_level SET css_style = '#FF0000' WHERE css_style = 'red_style';
+UPDATE doctypes_first_level SET css_style = '#008000' WHERE css_style = 'green_style';
+UPDATE doctypes_first_level SET css_style = '#800080' WHERE css_style = 'violet_style';
+UPDATE doctypes_first_level SET css_style = '#000000' WHERE css_style = 'default_style';
+
+UPDATE doctypes_second_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
+UPDATE doctypes_second_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';
+UPDATE doctypes_second_level SET css_style = '#0000FF' WHERE css_style = 'blue_style_big';
+UPDATE doctypes_second_level SET css_style = '#808080' WHERE css_style = 'grey_style';
+UPDATE doctypes_second_level SET css_style = '#FFFF00' WHERE css_style = 'yellow_style';
+UPDATE doctypes_second_level SET css_style = '#800000' WHERE css_style = 'brown_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'black_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'black_style_big';
+UPDATE doctypes_second_level SET css_style = '#FF4500' WHERE css_style = 'orange_style';
+UPDATE doctypes_second_level SET css_style = '#FF4500' WHERE css_style = 'orange_style_big';
+UPDATE doctypes_second_level SET css_style = '#FF00FF' WHERE css_style = 'pink_style';
+UPDATE doctypes_second_level SET css_style = '#FF0000' WHERE css_style = 'red_style';
+UPDATE doctypes_second_level SET css_style = '#008000' WHERE css_style = 'green_style';
+UPDATE doctypes_second_level SET css_style = '#800080' WHERE css_style = 'violet_style';
+UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'default_style';
+
+DROP TABLE IF EXISTS users_baskets_preferences;
+CREATE TABLE users_baskets_preferences
+(
+  id serial NOT NULL,
+  user_serial_id integer NOT NULL,
+  group_serial_id integer NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  display boolean NOT NULL,
+  color character varying(16),
+  CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
+  CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
+)
+WITH (OIDS=FALSE);

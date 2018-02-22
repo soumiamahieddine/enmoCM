@@ -17,7 +17,7 @@ class UserControllerTest extends TestCase
 
     public function testCreate()
     {
-        $userController = new \Core\Controllers\UserController();
+        $userController = new \User\controllers\UserController();
 
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -57,7 +57,7 @@ class UserControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $userController = new \Core\Controllers\UserController();
+        $userController = new \User\controllers\UserController();
 
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -98,7 +98,7 @@ class UserControllerTest extends TestCase
 
     public function testDelete()
     {
-        $userController = new \Core\Controllers\UserController();
+        $userController = new \User\controllers\UserController();
 
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

@@ -64,7 +64,7 @@ class SecurityModelAbstract
         ValidatorModel::stringType($args, ['userId', 'cookieKey']);
 
         $aReturn = DatabaseModel::select([
-            'select'    => ['password'],
+            'select'    => [1],
             'table'     => ['users'],
             'where'     => ['user_id = ?', 'cookie_key = ?', 'cookie_date > CURRENT_TIMESTAMP'],
             'data'      => [$args['userId'], $args['cookieKey']]

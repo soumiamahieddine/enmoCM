@@ -1,6 +1,277 @@
-<div *ngIf="loading">
-    <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <h1 style="margin-top: 0"><i class="fa fa-inbox fa-2x"></i> {{lang.administration}}</h1>
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.entities}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{entities.length}} {{lang.entities}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.tools}}</h3>
+                <a mat-list-item (click)="prepareEntityAdd()">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
+                    <p mat-line>
+                        {{lang.add}}
+                    </p>
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading">
+
+                <mat-form-field>
+                    <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                </mat-form-field>
+                <div id="jstree"></div>
+
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="false" class="col-md-4 col-sm-12">
+
+            <mat-nav-list>
+                <mat-tab-group>
+                    <mat-tab label="Informations">
+                        <form class="form-horizontal" #entityForm="ngForm" style="overflow:hidden;">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
+                                            required>
+                                            <mat-option *ngFor="let entity_type of entityTypeList" [value]="entity_type.id">
+                                                {{entity_type.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="currentEntity.entity_id" required name="entity_id" id="entity_id" title="{{lang.id}}" type="text"
+                                            placeholder="{{lang.id}}" maxlength="255" [disabled]="!creationMode">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="currentEntity.entity_label" required name="entity_label" id="entity_label" title="{{lang.label}}"
+                                            type="text" placeholder="{{lang.label}}" maxlength="255">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="currentEntity.short_label" required name="short_label" id="short_label" title="{{lang.shortLabel}}"
+                                            type="text" placeholder="{{lang.shortLabel}}" maxlength="255">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="currentEntity.email" name="email" id="email" title="{{lang.email}}" type="text" placeholder="{{lang.email}}"
+                                            maxlength="255">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Informations complémentaires
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="form-group">
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_1" name="adrs_1" id="adrs_1" title="{{lang.address}}1" type="text" placeholder="{{lang.address}}1"
+                                                    maxlength="255">
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_2" name="adrs_2" id="adrs_2" title="{{lang.address}}2" type="text" placeholder="{{lang.address}}2"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.adrs_3" name="adrs_3" id="adrs_3" title="{{lang.address}}3" type="text" placeholder="{{lang.address}}3"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
+                                                    maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                                <textarea matInput [(ngModel)]="currentEntity.entity_full_name" name="entity_full_name" id="entity_full_name" placeholder="{{lang.entityFullName}}" title="{{lang.entityFullName}}"
+                                                    matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5"></textarea>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.business_id" name="business_id" id="business_id" title="{{lang.siretCode}}" type="text"
+                                                    placeholder="{{lang.siretCode}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.archival_agency" name="archival_agency" id="archival_agency" title="{{lang.archivalAgency}}"
+                                                    type="text" placeholder="{{lang.archivalAgency}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.archival_agreement" name="archival_agreement" id="archival_agreement" title="{{lang.archivalAgreement}}"
+                                                    type="text" placeholder="{{lang.archivalAgreement}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+
+
+                            <div class="form-group">
+                                <div class="col-md-12 text-center" style="padding:10px;">
+                                    <button mat-raised-button [disabled]="!entityForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
+                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!entityForm.form.valid || this.currentEntity.hasChildren" color="warn"
+                                        (click)="removeEntity()">{{lang.delete}}</button>
+                                    <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="Liste de diffusion" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-12">
+                                <mat-form-field>
+                                    <input type="text" placeholder="Ajouter une personne / un service" matInput [matAutocomplete]="auto" [formControl]="elementCtrl">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElemListModel(elem)">
+                                            <p mat-line>
+                                                <i [class]="elem.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'"></i> {{ elem.idToDisplay }}
+                                                <small>{{ elem.otherInfo }}</small>
+                                            </p>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-list>
+                                    <span *ngFor="let role of currentEntity.roles; let i = index" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
+                                        <span *ngIf="role.available">
+                                            <h3 mat-subheader>{{role.label}}</h3>
+                                            <mat-list-item *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="deplacer" dnd-sortable
+                                                [sortableIndex]="i">
+                                                <mat-icon color="primary" mat-list-icon [class]="template.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'"></mat-icon>
+                                                <p mat-line>{{template.labelToDisplay}}
+                                                    <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
+                                                </p>
+                                            </mat-list-item>
+                                        </span>
+                                    </span>
+                                </mat-list>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Circuit de visa" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-12">
+                                <mat-form-field>
+                                    <input type="text" placeholder="Ajouter une personne" matInput [matAutocomplete]="auto" [formControl]="elementCtrl">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElemListModel(elem)">
+                                            <p mat-line>
+                                                <i [class]="elem.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'"></i> {{ elem.idToDisplay }}
+                                                <small>{{ elem.otherInfo }}</small>
+                                            </p>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-list>
+                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
+                                        <mat-list-item *ngFor="let template of currentEntity.visaTemplate; let i = index" title="deplacer" dnd-sortable [sortableIndex]="i">
+                                            <mat-icon color="primary" mat-list-icon>{{i+1}}</mat-icon>
+                                            <p mat-line>{{template.idToDisplay}}
+                                                <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
+                                            </p>
+                                        </mat-list-item>
+                                    </span>
+                                </mat-list>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Utilisateur(s) associé(s)" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-6 col-xs-6">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                            <ng-container matColumnDef="firstname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="lastname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                                style="cursor:pointer;"></mat-row>
+                        </mat-table>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-nav-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
 </div>

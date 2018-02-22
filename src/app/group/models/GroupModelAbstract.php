@@ -10,12 +10,15 @@
 /**
 * @brief Group Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Group\models;
 
+use Core\Models\ServiceModel;
+use Core\Models\UserModel;
+use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class GroupModelAbstract
 {
@@ -35,7 +38,7 @@ class GroupModelAbstract
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
@@ -64,7 +67,7 @@ class GroupModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['groupId', 'description', 'clause', 'comment']);
+        ValidatorModel::notEmpty($aArgs, ['groupId', 'description', 'clause']);
         ValidatorModel::stringType($aArgs, ['groupId', 'description', 'clause', 'comment']);
 
         DatabaseModel::insert([
@@ -91,7 +94,7 @@ class GroupModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause', 'comment']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'description', 'clause']);
         ValidatorModel::stringType($aArgs, ['id', 'description', 'clause', 'comment']);
 
         DatabaseModel::update([
@@ -225,7 +228,7 @@ class GroupModelAbstract
         return $aData[0];
     }
 
-    public static function getServiceById(array $aArgs = [])
+    public static function getServiceById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'serviceId']);
         ValidatorModel::stringType($aArgs, ['groupId', 'serviceId']);
@@ -240,7 +243,7 @@ class GroupModelAbstract
         return $service;
     }
 
-    public static function getServicesById(array $aArgs = [])
+    public static function getServicesById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
@@ -255,11 +258,10 @@ class GroupModelAbstract
         return $aServices;
     }
 
-    public static function getAllServicesByGroupId(array $aArgs = [])
+    public static function getAllServicesByGroupId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
-
 
         $rawCheckedServices = GroupModel::getServicesById(['groupId' => $aArgs['groupId']]);
         $checkedServices = [];
@@ -272,7 +274,6 @@ class GroupModelAbstract
         $services = [];
         foreach ($allServices as $key => $value) {
             $menu = [];
-            $administration = [];
             $use = [];
             foreach ($value as $value2) {
                 if (!$value2['system_service']) {
@@ -285,7 +286,7 @@ class GroupModelAbstract
                     if ($value2['servicetype'] == 'menu') {
                         $menu[] = $value2;
                     } elseif ($value2['servicetype'] == 'admin') {
-                        $administration[] = $value2;
+                        $services['administration'][] = $value2;
                     } elseif ($value2['servicetype'] == 'use') {
                         $use[] = $value2;
                     }
@@ -294,13 +295,18 @@ class GroupModelAbstract
             if (!empty($menu)) {
                 $services['menu'][] = $menu;
             }
-            if (!empty($administration)) {
-                $services['administration'][] = $administration;
-            }
             if (!empty($use)) {
                 $services['use'][] = $use;
             }
         }
+
+        foreach ($services['menu'] as $key => $menu) {
+            $services['menu'][$key] = GroupController::arraySort(['data' => $menu, 'on' => 'name']);
+        }
+        foreach ($services['use'] as $key => $use) {
+            $services['use'][$key] = GroupController::arraySort(['data' => $use, 'on' => 'name']);
+        }
+        $services['administration'] = GroupController::arraySort(['data' => $services['administration'], 'on' => 'name']);
 
         return $services;
     }

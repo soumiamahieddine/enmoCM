@@ -15,11 +15,11 @@
 
 namespace Notification\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
+use Group\models\GroupModel;
 use SrcCore\models\DatabaseModel;
 use Status\models\StatusModel;
-use Core\Models\GroupModelAbstract;
 use SrcCore\models\CoreConfigModel;
 
 class NotificationModelAbstract 
@@ -303,7 +303,7 @@ class NotificationModelAbstract
 
     public static function getDiffusionTypeGroups()
     {
-        $groups = GroupModelAbstract::get();
+        $groups = GroupModel::get();
         return $groups;
     }
 

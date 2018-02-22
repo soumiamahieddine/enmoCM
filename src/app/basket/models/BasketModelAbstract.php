@@ -15,7 +15,7 @@
 namespace Basket\models;
 
 use Core\Models\UserModel;
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
@@ -590,8 +590,10 @@ class BasketModelAbstract
         return $coloredBaskets;
     }
 
-    public static function getBasketPages()
+    public static function getBasketPages(array $aArgs)
     {
+        ValidatorModel::arrayType($aArgs, ['unneeded']);
+
         $customId = CoreConfigModel::getCustomId();
         if (file_exists("custom/{$customId}/modules/basket/xml/basketpage.xml")) {
             $path = "custom/{$customId}/modules/basket/xml/basketpage.xml";
@@ -604,11 +606,13 @@ class BasketModelAbstract
             $loadedXml = simplexml_load_file($path);
             if ($loadedXml) {
                 foreach ($loadedXml->BASKETPAGE as $value) {
-                    $basketPages[] = [
-                        'id'    => (string)$value->ID,
-                        'label' => (string)$value->LABEL,
-                        'name'  => (string)$value->NAME
-                    ];
+                    if (empty($aArgs['unneeded']) || !in_array((string)$value->ID, $aArgs['unneeded'])) {
+                        $basketPages[] = [
+                            'id'    => (string)$value->ID,
+                            'label' => constant((string)$value->LABEL),
+                            'name'  => (string)$value->NAME
+                        ];
+                    }
                 }
             }
         }

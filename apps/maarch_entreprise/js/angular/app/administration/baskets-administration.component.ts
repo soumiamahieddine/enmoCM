@@ -1,30 +1,32 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 
-declare function $j(selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["baskets-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["baskets-administrationView"],
+    providers: [NotificationService]
 })
 export class BasketsAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
 
-    coreUrl                     : string;
-    lang                        : any       = LANG;
+    baskets: any[] = [];
 
-    baskets                     : any[]     = [];
-
-    loading                     : boolean   = false;
+    loading: boolean = false;
 
     displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
-    dataSource      : any;
+    dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -33,7 +35,15 @@ export class BasketsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -49,7 +59,7 @@ export class BasketsAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.http.get(this.coreUrl + "rest/baskets")
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.baskets = data['baskets'];
                 this.loading = false;
                 setTimeout(() => {
@@ -64,7 +74,7 @@ export class BasketsAdministrationComponent implements OnInit {
 
     delete(basket: any) {
         this.http.delete(this.coreUrl + "rest/baskets/" + basket['basket_id'])
-            .subscribe((data : any) => {
+            .subscribe((data: any) => {
                 this.notify.success(this.lang.basketDeleted);
                 this.baskets = data['baskets'];
             }, (err) => {

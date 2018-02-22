@@ -14,7 +14,9 @@ function triggerAngular(prodmode, locationToGo) {
         'basket-administration',
         'basket-administration-settings-modal',
         'basket-administration-groupList-modal',
+        'doctypes-administration',
         'entities-administration',
+        'entities-administration-redirect-modal',
         'entity-administration',
         'status-administration',
         'statuses-administration',
@@ -46,7 +48,6 @@ function triggerAngular(prodmode, locationToGo) {
 
             angularGlobals = answer;
             $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-            
             if (prodmode) {
 
                 var alreadyLoaded = false;
@@ -66,11 +67,20 @@ function triggerAngular(prodmode, locationToGo) {
 
                     // Fire the loading
                     head.appendChild(script);
+                    var meta = document.createElement('meta');
+                    meta.name = 'viewport';
+                    meta.content = "width=device-width, initial-scale=1.0";
+                    head.appendChild(meta);
                 } else {
                     location.href = locationToGo;
                 }
             } else {
                 System.import('js/angular/main.js').catch(function(err){ console.error(err); });
+                var head = document.getElementsByTagName('head')[0];
+                var meta = document.createElement('meta');
+                meta.name = 'viewport';
+                meta.content = "width=device-width, initial-scale=1.0";
+                head.appendChild(meta);
                 location.href = locationToGo;
             }
         }

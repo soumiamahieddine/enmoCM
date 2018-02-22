@@ -11,7 +11,7 @@
 
 namespace Doctype\models;
 
-use Core\Models\ValidatorModel;
+use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
@@ -63,7 +63,7 @@ class FirstLevelModelAbstract
             'columnsValues' => $aArgs
         ]);
 
-        return $aArgs;
+        return $aArgs['doctypes_first_level_id'];
     }
 
     public static function update(array $aArgs)
@@ -78,7 +78,6 @@ class FirstLevelModelAbstract
             'data'      => [$aArgs['doctypes_first_level_id']]
         ]);
 
-        return $aArgs;
+        return true;
     }
-
 }

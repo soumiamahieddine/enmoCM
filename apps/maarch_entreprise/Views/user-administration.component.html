@@ -1,29 +1,77 @@
-<div class="page-header">
-    <h1 *ngIf="!creationMode">{{lang.userModification}}
-        <small>{{user.lastname}} {{user.firstname}}</small>
-    </h1>
-    <h1 *ngIf="creationMode">{{lang.userCreation}}
-        <small>{{user.lastname}} {{user.firstname}}</small>
-    </h1>
-</div>
-<div *ngIf="loading">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<div *ngIf="!loading" class="container-fluid">
-    <div class="container-fluid">
-        <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectChange)="initService()">
-            <mat-tab label="Informations">
-                <div *ngIf="user.status == 'ABS'" class="text-warning" style="position: absolute;opacity: 0.1;font-size: 120px;transform: rotate(324deg);-webkit-transform: rotate(324deg);margin-left: 35%;margin-top: 90px;">{{user.status}}</div>
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="example-sidenav-content">
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.userModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{user.lastname}} {{user.firstname}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.userCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{user.lastname}} {{user.firstname}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-icon-button (click)="snav2.toggle()">
+            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+        </button>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <mat-nav-list>
+                <a mat-list-item href="index.php">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                    <p mat-line>
+                        {{lang.home}}
+                    </p>
+                </a>
+                <a mat-list-item routerLink="/administration/users">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                    <p mat-line>
+                        {{lang.back}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list style="width:250px;">
+                <h3 mat-subheader>{{lang.tools}}</h3>
+                <a mat-list-item *ngIf="user.status != 'ABS' && !creationMode && !loading" (click)="activateAbsence()">
+                    <mat-icon color="warn" mat-list-icon class="fa fa-plane"></mat-icon>
+                    <p mat-line>
+                        {{lang.activateAbsence}}
+                    </p>
+                </a>
+                <a mat-list-item *ngIf="user.status == 'ABS' && !creationMode && !loading" (click)="desactivateAbsence()">
+                    <mat-icon color="accent" mat-list-icon class="fa fa-check"></mat-icon>
+                    <p mat-line>
+                        {{lang.desactivateAbsence}}
+                    </p>
+                </a>
+                <a mat-list-item *ngIf="!creationMode && !loading" (click)="resetPassword(user)">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-key"></mat-icon>
+                    <p mat-line>
+                        {{lang.reinitPassword}}
+                    </p>
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading">
+                <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectChange)="initService()">
+                    <mat-tab label="Informations">
+                        <div *ngIf="user.status == 'ABS'" class="text-warning" style="position: absolute;opacity: 0.1;font-size: 120px;transform: rotate(324deg);-webkit-transform: rotate(324deg);margin-left: 35%;margin-top: 90px;">{{user.status}}</div>
+
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <div class="pull-left image">
-                                        <img src="img/maarch_box.png" class="img-circle avatar" alt="user profile image">
+                                    <div class="pull-left">
+                                        <div class="avatar" style="font-size:90px;text-align:center;">
+                                            <i class="fa fa-user" style="font-size:90px;padding-top:5px;"></i>
+                                        </div>
                                     </div>
                                     <div class="input-group">
-                                        <!--<span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>-->
                                         <mat-form-field>
                                             <input matInput *ngIf="creationMode" type="text" title="{{lang.id}}" name="user_id" [(ngModel)]="user.userId" placeholder="{{lang.id}}"
                                                 pattern="^[\w.@-]*$" required>
@@ -79,243 +127,177 @@
                             </div>
                             <div class="form-group">
                                 <div style="text-align:center;">
-                                    <button mat-raised-button color="primary" *ngIf="creationMode" type="submit" [disabled]="!profileForm.form.valid">
-                                        <mat-icon class="fa fa-save" aria-hidden="true"></mat-icon> {{lang.save}}</button>
-                                    <button mat-raised-button color="primary" *ngIf="!creationMode" type="submit" [disabled]="!profileForm.form.valid">
-                                        <mat-icon class="fa fa-save" aria-hidden="true"></mat-icon> {{lang.update}}</button>
-                                    <button mat-raised-button color="warn" *ngIf="user.status != 'ABS' && !creationMode" type="button" (click)="activateAbsence()">
-                                        <mat-icon class="fa fa-plane" aria-hidden="true"></mat-icon> {{lang.activateAbsence}}</button>
-                                    <button mat-raised-button color="accent" *ngIf="user.status == 'ABS' && !creationMode" type="button" (click)="desactivateAbsence()">
-                                        <mat-icon class="fa fa-check" aria-hidden="true"></mat-icon> {{lang.desactivateAbsence}}</button>
-                                    <button mat-raised-button type="button" *ngIf="!creationMode" (click)="resetPassword(user)">
-                                        <mat-icon class="fa fa-key" aria-hidden="true"></mat-icon> {{lang.reinitPassword}}</button>
+                                    <button mat-raised-button color="primary" *ngIf="creationMode" type="submit" [disabled]="!profileForm.form.valid">{{lang.save}}</button>
+                                    <button mat-raised-button color="primary" *ngIf="!creationMode" type="submit" [disabled]="!profileForm.form.valid">{{lang.update}}</button>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </mat-tab>
-            <mat-tab *ngIf="!creationMode" label="Groupe(s)">
-                <div class="col-md-6">
-                    <div class="groupList">
-                        <ul class="list-group col-md-12">
-                            <li class="list-group-item" *ngFor="let group of user.allGroups">
+
+                    </mat-tab>
+                    <mat-tab *ngIf="!creationMode" label="Groupe(s)">
+                        <mat-nav-list>
+                            <mat-list-item *ngFor="let group of user.allGroups">
                                 <mat-slide-toggle id="{{group.group_id}}" color="primary" [checked]="group.disabled == true" (change)="toggleGroup(group)">{{group.group_desc}}</mat-slide-toggle>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-4 col-md-offset-1">
-                    <mat-accordion class="example-headers-align">
-                        <mat-expansion-panel *ngFor="let userGroup of user.groups" hideToggle="true">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    {{userGroup.group_desc}}
-                                </mat-panel-title>
-                                <mat-panel-description>
-                                    Groupe
-                                    <mat-icon class="fa fa-users"></mat-icon>
-                                </mat-panel-description>
-                            </mat-expansion-panel-header>
-                            <div class="col-md-12">
-                                <input matInput type="text" id="role" name="role" title="{{lang.role}}" placeholder="{{lang.role}}" [(ngModel)]="userGroup.role"
-                                    (focusout)="updateGroup(userGroup)">
-                                <ul class="list-unstyled">
-                                    <li *ngFor="let basket of user.baskets; let i = index">
-                                        <span *ngIf="basket.group_id == userGroup.group_id">
-                                            <mat-slide-toggle [(ngModel)]="basket.enabled" color="primary">{{basket.basket_name}}
-                                                <small class="text-danger" style="font-style:italic;" *ngIf="basket.userToDisplay != '' && basket.enabled">(Redirigé à {{basket.userToDisplay}})</small>
-                                            </mat-slide-toggle>
-                                            <button mat-icon-button color="primary" (click)="toogleRedirect(basket)" *ngIf="basket.userToDisplay == '' && basket.enabled"
-                                                matTooltip="Rediriger la banette à une personne lors de l'activation de l'absence"
-                                                matTooltipPosition="above">
-                                                <mat-icon class="fa fa-share-square"></mat-icon>
-                                            </button>
-                                            <sup>
-                                                <i style="cursor:pointer;" *ngIf="basket.userToDisplay != '' && basket.enabled" matTooltip="Supprimer la redirection" class="fa fa-times text-danger"
-                                                    aria-hidden="true" (click)="delBasketRedirection(i)"></i>
-                                            </sup>
-                                            <div *ngIf="basket.userToDisplay == '' && basket.enabled" id="redirectUser_{{basket.group_id}}_{{basket.basket_id}}" style="display:none;">
-                                                <mat-form-field class="example-full-width">
-                                                    <input type="text" placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl" (change)="addBasketRedirection(i,basket)">
-                                                    <mat-autocomplete #auto="matAutocomplete">
-                                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
-                                                            <div class="container-fluid">
-                                                                <div class="col-md-1">
-                                                                    <mat-icon class="fa fa-user fa-2x"></mat-icon>
-                                                                </div>
-                                                                <div class="col-md-11">
-                                                                    {{ user.firstname }} {{ user.lastname }}
-                                                                    <small>{{ user.user_id }}</small>
-                                                                </div>
-                                                            </div>
-                                                        </mat-option>
-                                                    </mat-autocomplete>
-                                                </mat-form-field>
-                                            </div>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <mat-action-row>
-                                <input value="{{userGroup.maarch_comment}}" matInput type="text" matTooltip="{{lang.perimeter}}" disabled>
-                            </mat-action-row>
-
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div>
-            </mat-tab>
-            <mat-tab *ngIf="!creationMode" label="Entité(s)">
-                <div class="col-md-6">
-                    <mat-form-field>
-                        <input matInput id="jstree_search" type="text" placeholder="Rechercher une entité">
-                    </mat-form-field>
-                    <div id="jstree"></div>
-                </div>
-                <div class="col-md-4 col-md-offset-1">
-                    <mat-accordion class="example-headers-align">
-                        <mat-expansion-panel *ngFor="let userEntity of user.entities" hideToggle="true">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    {{userEntity.entity_label}}
-                                </mat-panel-title>
-                                <mat-panel-description>
-                                    Entité
-                                    <i *ngIf="userEntity.primary_entity == 'Y'" color="primary"> primaire</i>
-
-                                    <button *ngIf="userEntity.primary_entity == 'Y'" mat-icon-button disabled>
-                                        <mat-icon class="fa fa-sitemap" color="primary"></mat-icon>
-                                    </button>
-                                    <button *ngIf="userEntity.primary_entity != 'Y'" mat-icon-button (click)="updatePrimaryEntity(userEntity)" matTooltip="{{lang.entityTooglePrimary}}">
-                                        <mat-icon class="fa fa-sitemap"></mat-icon>
-                                    </button>
-
-                                </mat-panel-description>
-                            </mat-expansion-panel-header>
-                            <mat-form-field>
-                                <input matInput type="text" id="role" name="role" title="{{lang.role}}" placeholder="{{lang.role}}" [(ngModel)]="userEntity.user_role"
-                                    (focusout)="updateEntity(userEntity)">
-                            </mat-form-field>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div>
-            </mat-tab>
-            <mat-tab *ngIf="!creationMode" label="Signature(s)">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="form-group">
-                        <button (click)="clickOnUploader('uploadSignFile')" matTooltip="taille de 2 mo maximum" mat-raised-button color="accent">
-                            <mat-icon class="fa fa-plus"></mat-icon> Ajouter une signature</button>
-
-                    </div>
-                    <div class="form-group">
-                        <div class="row" style="margin-top:5px;display:none;">
-                            <form (ngSubmit)="submitSignature()" #signatureForm="ngForm">
-                                <div class="col-md-11">
-                                    <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="{{lang.label}}" class="form-control"
-                                        required>
-                                    <div class="form-inline hide">
-                                        <div class="form-group">
-                                            <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)" accept="image/*">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1" style="margin-bottom:5px;">
-                                    <button class="form-control btn btn-sm btn-success" type="submit" [disabled]="!signatureForm.form.valid || !signatureModel.size">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                                <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
-                                    <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
-                                        {{lang.clickOn}}
-                                        <i class="fa fa-upload fa-2x"></i> (
-                                        < 2MB) </div>
-                                    </div>
-                                    <div class="col-md-2" *ngIf="signatureModel.size">
-                                        <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
-                                    </div>
-                            </form>
-                            </div>
-                            <div id="signList">
-                                <div *ngFor="let signature of user.signatures; let i = index" class="col-md-4" style="margin-bottom:10px;">
-                                    <mat-card>
-                                        <mat-card-header>
-                                            <mat-card-title>
-                                                <mat-form-field>
-                                                    <input matInput type="text" [(ngModel)]="signature.signature_label" name="selectedSignatureLabel" placeholder="{{lang.label}}"
-                                                        (focusout)="updateSignature(i)">
-                                                </mat-form-field>
-                                            </mat-card-title>
-                                            <button mat-icon-button (click)="deleteSignature(signature)" color="warn" matTooltip="{{lang.delete}}">
+                            </mat-list-item>
+                        </mat-nav-list>
+                    </mat-tab>
+                    <mat-tab *ngIf="!creationMode" label="Entité(s)">
+                        <mat-form-field>
+                            <input matInput id="jstree_search" type="text" placeholder="Rechercher une entité">
+                        </mat-form-field>
+                        <div id="jstree"></div>
+                    </mat-tab>
+                    <mat-tab *ngIf="!creationMode" label="Signature(s)">
+                        <button style="position: absolute;right: 20px;bottom: 20px;z-index:1;" (click)="clickOnUploader('uploadSignFile')" matTooltip="taille de 2 mo maximum"
+                            mat-fab color="accent">
+                            <mat-icon style="height:auto;" class="fa fa-plus"></mat-icon>
+                        </button>
+                        <div class="col-md-3 col-sm-6" *ngFor="let signature of user.signatures; let i = index">
+                            <mat-card style="padding-left:5px;">
+                                <mat-card-header>
+                                    <mat-card-title>
+                                        <mat-form-field>
+                                            <input matInput type="text" [(ngModel)]="signature.signature_label" name="selectedSignatureLabel" placeholder="{{lang.label}}"
+                                                (focusout)="updateSignature(i)">
+                                            <button mat-button matSuffix mat-icon-button (click)="deleteSignature(signature)" color="warn" matTooltip="{{lang.delete}}">
                                                 <mat-icon class="fa fa-times"></mat-icon>
                                             </button>
-                                        </mat-card-header>
-                                        <mat-card-content>
-                                            <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:100%;height:60px;">
-                                        </mat-card-content>
-                                    </mat-card>
+                                        </mat-form-field>
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content style="text-align:center;">
+                                    <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <form (ngSubmit)="submitSignature()" #signatureForm="ngForm" style="display:none;">
+                            <div class="col-md-11">
+                                <input type="text" [(ngModel)]="signatureModel.label" id="signLabel" name="label" placeholder="{{lang.label}}" class="form-control"
+                                    required>
+                                <div class="form-inline hide">
+                                    <div class="form-group">
+                                        <input type="file" name="files[]" id="uploadSignFile" (change)="uploadSignatureTrigger($event)" accept="image/*">
+                                    </div>
                                 </div>
-                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-md-1" style="margin-bottom:5px;">
+                                <button class="form-control btn btn-sm btn-success" type="submit" [disabled]="!signatureForm.form.valid || !signatureModel.size">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
+                                <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
+                                    {{lang.clickOn}}
+                                    <i class="fa fa-upload fa-2x"></i> (
+                                    < 2MB) </div>
+                                </div>
+                                <div class="col-md-2" *ngIf="signatureModel.size">
+                                    <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
+                                </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab *ngIf="!creationMode" label="Historique">
+                        <div class="col-md-12">
+                            <div class="example-container">
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6">
+                                        <mat-form-field>
+                                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6">
+                                        <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
+                                        </mat-paginator>
+                                    </div>
+                                </div>
+                                <mat-table #table [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
+                                    <ng-container matColumnDef="event_date">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.date}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let element" style="flex:1;">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="event_type">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.event}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.event_type}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="info">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let element" style="flex:2;"> {{element.info}} </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="remote_ip">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.ip}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.remote_ip}} </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                </mat-table>
+                                <div class="row">
+                                    <div class="col-md-3 pull-right" style="padding-top:10px;">
+                                        <mat-form-field>
+                                            <input matInput [(ngModel)]="minDate" [matDatepicker]="picker" placeholder="Depuis" disabled>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker startView="month" [startAt]="minDate"></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-            </mat-tab>
-            <mat-tab *ngIf="!creationMode" label="Historique">
-                <div class="col-md-12">
-                    <div class="example-container">
-                        <mat-grid-list cols="3" rowHeight="100px">
-                            <mat-grid-tile>
-                                <mat-paginator #paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]">
-                                </mat-paginator>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                                </mat-form-field>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
-                            <ng-container matColumnDef="event_date">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.date}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="event_type">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.event}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.event_type}} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="user_id">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.user}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.user_id}} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="info">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.desc}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.info}} </mat-cell>
-                            </ng-container>
-                            <ng-container matColumnDef="remote_ip">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.ip}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.remote_ip}} </mat-cell>
-                            </ng-container>
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                        </mat-table>
-
-                        <mat-grid-list cols="3" rowHeight="100px">
-                            <mat-grid-tile>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                            </mat-grid-tile>
-                            <mat-grid-tile>
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="minDate" [matDatepicker]="picker" placeholder="Depuis" disabled>
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker startView="month" [startAt]="minDate"></mat-datepicker>
-                                </mat-form-field>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                    </div>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
-        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;">
+            <mat-list style="width:300px;">
+                <h3 mat-subheader>Groupe(s)</h3>
+                <mat-list-item *ngFor="let userGroup of user.groups">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-users"></mat-icon>
+                    <h4 mat-line>{{userGroup.group_desc}}</h4>
+                    <p mat-line>
+                        <mat-form-field style="font-size:10px;">
+                            <input matInput type="text" id="role" name="role" title="{{lang.role}}" placeholder="{{lang.role}}" [(ngModel)]="userGroup.role"
+                                (focusout)="updateGroup(userGroup)">
+                            <mat-hint matTooltip="{{lang.perimeter}}">{{userGroup.maarch_comment}}</mat-hint>
+                        </mat-form-field>
+                    </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>Service(s)</h3>
+                <mat-list-item *ngFor="let userEntity of user.entities" matTooltip="{{userEntity.entity_label}}">
+                    <mat-icon color="primary" *ngIf="userEntity.primary_entity == 'Y'" mat-list-icon class="fa fa-sitemap"></mat-icon>
+                    <mat-icon color="primary" *ngIf="userEntity.primary_entity != 'Y'" mat-list-icon class="fa fa-sitemap" (click)="updatePrimaryEntity(userEntity)"
+                        style="cursor:pointer;" matTooltip="{{lang.entityTooglePrimary}}"></mat-icon>
+                    <h4 mat-line [ngStyle]="{'font-weight': userEntity.primary_entity == 'Y' ? 'bold' : 'normal'}">{{userEntity.entity_label}}</h4>
+                    <p mat-line>
+                        <mat-form-field style="font-size:10px;">
+                            <input matInput type="text" id="role" name="role" title="{{lang.role}}" placeholder="{{lang.role}}" [(ngModel)]="userEntity.user_role"
+                                (focusout)="updateEntity(userEntity)">
+                        </mat-form-field>
+                    </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>Bannette(s)</h3>
+                <mat-list-item *ngFor="let basket of user.baskets;let i = index">
+                    <mat-icon mat-list-icon color="primary" class="fa fa-inbox" (click)="toogleRedirect(basket)" *ngIf="basket.userToDisplay == '' && basket.enabled"></mat-icon>
+                    <h4 mat-line>{{basket.basket_name}}</h4>
+                    <p mat-line>
+                        <i style="cursor:pointer;" *ngIf="basket.userToDisplay != '' && basket.enabled" matTooltip="Supprimer la redirection" class="fa fa-times text-danger"
+                            aria-hidden="true" (click)="delBasketRedirection(i)"></i>
+                        <mat-form-field style="font-size:10px;">
+                            <input matTooltip="Rediriger la banette à une personne lors de l'activation de l'absence" matTooltipPosition="above" type="text"
+                                placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl"
+                                (change)="addBasketRedirection(i,basket)">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
+                                    <p mat-line>
+                                        <i class="fa fa-user fa-2x"></i> {{ user.firstname }} {{ user.lastname }}
+                                        <small>{{ user.user_id }}</small>
+                                    </p>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </p>
+                </mat-list-item>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
     </div>

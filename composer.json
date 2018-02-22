@@ -9,6 +9,7 @@
             "Doctype\\"       : "src/app/doctype/",
             "Entity\\"        : "src/app/entity/",
             "Folder\\"        : "src/app/folder/",
+            "Group\\"         : "src/app/group/",
             "History\\"       : "src/app/history/",
             "Link\\"          : "src/app/link/",
             "Notification\\"  : "src/app/notification/",
@@ -18,9 +19,9 @@
             "Resource\\"      : "src/app/resource/",
             "Status\\"        : "src/app/status/",
             "Template\\"      : "src/app/template/",
+            "User\\"          : "src/app/user/",
 
             "Core\\"          : "core/",
-    	    "Apps\\"          : "apps/maarch_entreprise/",
             "Attachments\\"   : "modules/attachments/",
             "Convert\\"       : "modules/convert/",
             "Entities\\"      : "modules/entities/",

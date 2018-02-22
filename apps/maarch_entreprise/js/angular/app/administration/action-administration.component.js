@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var ActionAdministrationComponent = /** @class */ (function () {
-    function ActionAdministrationComponent(http, route, router, notify) {
+    function ActionAdministrationComponent(changeDetectorRef, media, http, route, router, notify) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -27,7 +28,14 @@ var ActionAdministrationComponent = /** @class */ (function () {
         this.categoriesList = [];
         this.keywordsList = [];
         this.loading = false;
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
+    ActionAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    };
     ActionAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>" + this.lang.actions + "</a> > ";
         if (this.creationMode == true) {
@@ -82,7 +90,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                 _this.router.navigate(['/administration/actions']);
                 _this.notify.success(_this.lang.actionAdded);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
@@ -91,7 +99,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
                 _this.router.navigate(['/administration/actions']);
                 _this.notify.success(_this.lang.actionUpdated);
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
@@ -100,7 +108,7 @@ var ActionAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["action-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService])
     ], ActionAdministrationComponent);
     return ActionAdministrationComponent;
 }());

@@ -23,6 +23,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var router_1 = require("@angular/router");
 var translate_component_1 = require("../translate.component");
@@ -30,7 +31,7 @@ var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var BasketAdministrationComponent = /** @class */ (function () {
-    function BasketAdministrationComponent(http, route, router, notify, dialog) {
+    function BasketAdministrationComponent(changeDetectorRef, media, http, route, router, notify, dialog) {
         this.http = http;
         this.route = route;
         this.router = router;
@@ -45,11 +46,18 @@ var BasketAdministrationComponent = /** @class */ (function () {
         this.resultPages = [];
         this.loading = false;
         this.displayedColumns = ['label_action', 'actions'];
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     BasketAdministrationComponent.prototype.applyFilter = function (filterValue) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+    };
+    BasketAdministrationComponent.prototype.ngOnDestroy = function () {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     };
     BasketAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/baskets\"' style='cursor: pointer'>" + this.lang.baskets + "</a> > ";
@@ -172,9 +180,6 @@ var BasketAdministrationComponent = /** @class */ (function () {
             });
         }
     };
-    BasketAdministrationComponent.prototype.toggleKeywordHelp = function () {
-        $j('#keywordHelp').toggle("slow");
-    };
     BasketAdministrationComponent.prototype.initAction = function (groupIndex) {
         this.dataSource = new material_1.MatTableDataSource(this.basketGroups[groupIndex].groupActions);
         this.dataSource.sort = this.sort;
@@ -209,7 +214,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.linkGroup = function () {
         var _this = this;
-        this.config = { data: { basketId: this.basket.basket_id, groups: this.allGroups, linkedGroups: this.basketGroups } };
+        this.config = { data: { basketId: this.basket.id, groups: this.allGroups, linkedGroups: this.basketGroups } };
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe(function (result) {
             if (result) {
@@ -252,7 +257,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["basket-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService, material_1.MatDialog])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, router_1.ActivatedRoute, router_1.Router, notification_service_1.NotificationService, material_1.MatDialog])
     ], BasketAdministrationComponent);
     return BasketAdministrationComponent;
 }());

@@ -1,36 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-declare function $j (selector: any) : any;
+declare function $j(selector: any): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl : angularGlobals["reports-administrationView"],
-    providers   : [NotificationService]
+    templateUrl: angularGlobals["reports-administrationView"],
+    providers: [NotificationService]
 })
 export class ReportsAdministrationComponent implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
+    coreUrl: string;
+    lang: any = LANG;
 
-    coreUrl         : string;
-    lang            : any       = LANG;
+    groups: any[] = [];
+    reports: any[] = [];
+    selectedGroup: string = "";
 
-    groups          : any[]     = [];
-    reports         : any[]     = [];
-    selectedGroup   : string    = "";
-
-    loading         : boolean   = false;
-    loadingOptions  : boolean   = false;
+    loading: boolean = false;
+    loadingOptions: boolean = false;
 
 
-    constructor(public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > "+ this.lang.reports;
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > " + this.lang.reports;
         }
     }
 
@@ -50,7 +60,7 @@ export class ReportsAdministrationComponent implements OnInit {
             });
     }
 
-    loadReports(index:any) {
+    loadReports(index: any) {
         this.selectedGroup = this.groups[index].group_id;
         this.loadingOptions = true;
         this.http.get(this.coreUrl + 'rest/reports/groups/' + this.groups[index].group_id)

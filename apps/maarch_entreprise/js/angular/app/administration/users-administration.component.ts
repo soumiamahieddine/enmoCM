@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -17,6 +18,8 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
     dialogRef: MatDialogRef<any>;
     search: string = null;
     coreUrl: string;
@@ -44,8 +47,16 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         super(http, 'users');
+        $j("link[href='merged_css.php']").remove();
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     updateBreadcrumb(applicationName: string) {
@@ -82,8 +93,8 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
                 .subscribe((data: any) => {
                     this.userDestRedirectModels = data.listModels;
-                    this.config = {data : {userDestRedirect : this.userDestRedirect, userDestRedirectModels : this.userDestRedirectModels}};
-                    this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent,this.config);
+                    this.config = { data: { userDestRedirect: this.userDestRedirect, userDestRedirectModels: this.userDestRedirectModels } };
+                    this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
                     this.dialogRef.afterClosed().subscribe((result: string) => {
                         console.log(result);
                         if (result) {
@@ -112,7 +123,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                 });
                         }
                         this.dialogRef = null;
-                  });
+                    });
 
                 }, (err) => {
                     console.log(err);
@@ -159,8 +170,8 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
             this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
                 .subscribe((data: any) => {
                     this.userDestRedirectModels = data.listModels;
-                    this.config = {data : {userDestRedirect : this.userDestRedirect, userDestRedirectModels : this.userDestRedirectModels}};
-                    this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent,this.config);
+                    this.config = { data: { userDestRedirect: this.userDestRedirect, userDestRedirectModels: this.userDestRedirectModels } };
+                    this.dialogRef = this.dialog.open(UsersAdministrationRedirectModalComponent, this.config);
                     this.dialogRef.afterClosed().subscribe((result: string) => {
                         if (result) {
                             user.redirectListModels = result;
@@ -180,7 +191,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                 this.dataSource.sort = this.sort;
 
                                                 this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-                
+
                                             }, (err) => {
                                                 this.notify.error(JSON.parse(err._body).errors);
                                             });
@@ -222,20 +233,20 @@ export interface Users {
 }
 @Component({
     templateUrl: angularGlobals["users-administration-redirect-modalView"],
-  })
-  export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
+})
+export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any,public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
         super(http, 'users');
     }
-    sendFunction(){
+    sendFunction() {
         var valid = true;
-        this.data.userDestRedirectModels.each(function(element:any){
+        this.data.userDestRedirectModels.each(function (element: any) {
             if (!element.redirectUserId) {
                 valid = false;
             }
         });
         return valid;
     }
-  }
+}
