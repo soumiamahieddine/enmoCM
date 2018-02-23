@@ -12,7 +12,6 @@ import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalCompone
 import { UserAdministrationComponent }                  from './user-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
-import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
 import { EntitiesAdministrationComponent, EntitiesAdministrationRedirectModalComponent} from './entities-administration.component';
 import { EntityAdministrationComponent }                from './entity-administration.component';
@@ -49,7 +48,6 @@ import { NotificationAdministrationComponent }          from './notification-adm
         GroupsAdministrationComponent,
         GroupAdministrationComponent,
         BasketsAdministrationComponent,
-        BasketsOrderAdministrationComponent,
         BasketAdministrationComponent,
         DoctypesAdministrationComponent,
         EntitiesAdministrationComponent,

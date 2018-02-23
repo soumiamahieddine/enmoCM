@@ -10,7 +10,6 @@ function triggerAngular(prodmode, locationToGo) {
         'groups-administration-redirect-modal',
         'group-administration',
         'baskets-administration',
-        'baskets-order-administration',
         'basket-administration',
         'basket-administration-settings-modal',
         'basket-administration-groupList-modal',

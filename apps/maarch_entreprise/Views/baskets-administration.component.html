@@ -37,7 +37,7 @@
                         {{lang.add}}
                     </p>
                 </a>
-                <a mat-list-item routerLink=".">
+                <a mat-list-item (click)="snav2.toggle()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-list-ol"></mat-icon>
                     <p mat-line>
                         {{lang.basketsOrder}}
@@ -90,9 +90,16 @@
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             position='end' [opened]="mobileQuery.matches ? false : false">
 
-            <mat-nav-list>
-                <h3 mat-subheader>Actions</h3>
-            </mat-nav-list>
+            <mat-list>
+                <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="basketsOrder">
+                    <mat-list-item disableRipple="true" *ngFor="let basket of basketsOrder;let i = index" title="deplacer" dnd-sortable
+                        [sortableIndex]="i" (onDropSuccess)="updateBasketOrder(basket)">
+                        <mat-icon color="primary" mat-list-icon class="fa fa-inbox"></mat-icon>
+                        <p mat-line>{{i+1}} - {{basket.basket_name}}</p>
+                    </mat-list-item>
+                </span>
+            </mat-list>
+
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

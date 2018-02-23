@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 
 declare function $j(selector: any): any;
@@ -22,8 +22,10 @@ export class BasketsAdministrationComponent implements OnInit {
     lang: any = LANG;
 
     baskets: any[] = [];
+    basketsOrder: any[] = [];
 
     loading: boolean = false;
+    @ViewChild('snav2') sidenav: MatSidenav;
 
     displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
     dataSource: any;
@@ -63,6 +65,12 @@ export class BasketsAdministrationComponent implements OnInit {
                 this.baskets = data['baskets'];
                 this.loading = false;
                 setTimeout(() => {
+                    this.http.get(this.coreUrl + "rest/sortedBaskets")
+                        .subscribe((data: any) => {
+                            this.basketsOrder = data['baskets'];
+                        }, () => {
+                            location.href = "index.php";
+                        });
                     this.dataSource = new MatTableDataSource(this.baskets);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
@@ -87,5 +95,16 @@ export class BasketsAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         }
+    }
+
+    updateBasketOrder(currentBasket: any) {
+        console.log(this.basketsOrder);
+        this.http.put(this.coreUrl + "rest/sortedBaskets/" + currentBasket.basket_id, this.basketsOrder)
+            .subscribe((data: any) => {
+                this.baskets = data['baskets'];
+                this.notify.success(this.lang.modificationSaved);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 }

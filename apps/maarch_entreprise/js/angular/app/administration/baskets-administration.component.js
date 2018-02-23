@@ -21,6 +21,7 @@ var BasketsAdministrationComponent = /** @class */ (function () {
         this.notify = notify;
         this.lang = translate_component_1.LANG;
         this.baskets = [];
+        this.basketsOrder = [];
         this.loading = false;
         this.displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
         $j("link[href='merged_css.php']").remove();
@@ -51,6 +52,12 @@ var BasketsAdministrationComponent = /** @class */ (function () {
             _this.baskets = data['baskets'];
             _this.loading = false;
             setTimeout(function () {
+                _this.http.get(_this.coreUrl + "rest/sortedBaskets")
+                    .subscribe(function (data) {
+                    _this.basketsOrder = data['baskets'];
+                }, function () {
+                    location.href = "index.php";
+                });
                 _this.dataSource = new material_1.MatTableDataSource(_this.baskets);
                 _this.dataSource.paginator = _this.paginator;
                 _this.dataSource.sort = _this.sort;
@@ -75,6 +82,21 @@ var BasketsAdministrationComponent = /** @class */ (function () {
             });
         }
     };
+    BasketsAdministrationComponent.prototype.updateBasketOrder = function (currentBasket) {
+        var _this = this;
+        console.log(this.basketsOrder);
+        this.http.put(this.coreUrl + "rest/sortedBaskets/" + currentBasket.basket_id, this.basketsOrder)
+            .subscribe(function (data) {
+            _this.baskets = data['baskets'];
+            _this.notify.success(_this.lang.modificationSaved);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+    };
+    __decorate([
+        core_1.ViewChild('snav2'),
+        __metadata("design:type", material_1.MatSidenav)
+    ], BasketsAdministrationComponent.prototype, "sidenav", void 0);
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),
         __metadata("design:type", material_1.MatPaginator)
