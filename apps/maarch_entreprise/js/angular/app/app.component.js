@@ -31,7 +31,6 @@ var AppComponent = /** @class */ (function () {
             encapsulation: core_1.ViewEncapsulation.None,
             styleUrls: [
                 '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
-                //'../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css',
                 'css/maarch-material.css',
                 'css/engine.css',
                 'css/jstree-custom.min.css',
