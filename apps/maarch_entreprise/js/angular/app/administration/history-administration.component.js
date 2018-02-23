@@ -68,6 +68,7 @@ var HistoryAdministrationComponent = /** @class */ (function () {
     };
     HistoryAdministrationComponent.prototype.refreshHistory = function (event) {
         var _this = this;
+        console.log(event);
         this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
             .subscribe(function (data) {
             _this.data = data.historyList;

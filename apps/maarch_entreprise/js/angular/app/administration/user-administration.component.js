@@ -30,7 +30,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UserAdministrationComponent = /** @class */ (function (_super) {
     __extends(UserAdministrationComponent, _super);
     function UserAdministrationComponent(changeDetectorRef, media, http, route, router, zone, notify) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.route = route;
         _this.router = router;

@@ -19,14 +19,24 @@ export class AutoCompletePlugin {
     elemList: any[] = [];
     statusesList: any[] = [];
 
-    constructor(public http: HttpClient, target: any) {
+    constructor(public http: HttpClient, target: any[]) {
         this.coreUrl = angularGlobals.coreUrl;
 
-        if (target == 'users') {
+        if (target.indexOf('users') != -1) {
             this.userCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/users/autocompleter')
+            this.http.get(this.coreUrl + 'rest/administration/users')
                 .subscribe((data: any) => {
-                    this.userList = data;
+                    data.users.forEach((user: any) => {
+                        if (user.enabled == "Y") {
+                            this.userList.push({
+                                "type": "user",
+                                "id": user.user_id,
+                                "idToDisplay": user.firstname + ' ' + user.lastname,
+                                "otherInfo": user.user_id
+                            });
+                        }
+
+                    });
                     this.filteredUsers = this.userCtrl.valueChanges
                         .pipe(
                             startWith(''),
@@ -35,7 +45,8 @@ export class AutoCompletePlugin {
                 }, () => {
                     location.href = "index.php";
                 });
-        } else if (target == 'statuses') {
+        }
+        if (target.indexOf('statuses')  != -1) {
             this.statusCtrl = new FormControl();
             this.http.get(this.coreUrl + 'rest/statuses')
                 .subscribe((data: any) => {
@@ -48,7 +59,8 @@ export class AutoCompletePlugin {
                 }, () => {
                     location.href = "index.php";
                 });
-        } else if (target == 'usersAndEntities') {
+        }
+        if (target.indexOf('usersAndEntities') != -1) {
             this.elementCtrl = new FormControl();
             this.elemList = [];
 
@@ -91,7 +103,8 @@ export class AutoCompletePlugin {
                     location.href = "index.php";
                 });
 
-        } else if (target == 'entities') {
+        }
+        if (target.indexOf('entities') != -1) {
             this.elementCtrl = new FormControl();
             this.elemList = [];
             this.http.get(this.coreUrl + 'rest/entities')
@@ -123,17 +136,17 @@ export class AutoCompletePlugin {
     }
     autocompleteFilterUser(name: string) {
         return this.userList.filter(user =>
-            user.formattedUser.toLowerCase().indexOf(name.toLowerCase()) === 0);
+            user.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
     }
 
     autocompleteFilterStatuses(name: string) {
         return this.statusesList.filter(status =>
-            status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0);
+            status.label_status.toLowerCase().indexOf(name.toLowerCase()) >= 0);
     }
 
     autocompleteFilterElements(name: string) {
         return this.elemList.filter(elem =>
-            elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) === 0);
+            elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
     }
 
 }

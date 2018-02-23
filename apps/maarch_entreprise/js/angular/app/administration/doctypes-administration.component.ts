@@ -38,7 +38,7 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
-        super(http, 'usersAndEntities');
+        super(http, ['usersAndEntities']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

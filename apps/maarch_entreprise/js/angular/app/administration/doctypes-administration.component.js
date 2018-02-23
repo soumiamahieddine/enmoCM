@@ -28,7 +28,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var DoctypesAdministrationComponent = /** @class */ (function (_super) {
     __extends(DoctypesAdministrationComponent, _super);
     function DoctypesAdministrationComponent(changeDetectorRef, media, http, notify) {
-        var _this = _super.call(this, http, 'usersAndEntities') || this;
+        var _this = _super.call(this, http, ['usersAndEntities']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.lang = translate_component_1.LANG;

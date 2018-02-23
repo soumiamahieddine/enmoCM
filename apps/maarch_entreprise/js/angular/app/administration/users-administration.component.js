@@ -32,7 +32,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UsersAdministrationComponent = /** @class */ (function (_super) {
     __extends(UsersAdministrationComponent, _super);
     function UsersAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.dialog = dialog;
@@ -236,7 +236,7 @@ exports.UsersAdministrationComponent = UsersAdministrationComponent;
 var UsersAdministrationRedirectModalComponent = /** @class */ (function (_super) {
     __extends(UsersAdministrationRedirectModalComponent, _super);
     function UsersAdministrationRedirectModalComponent(http, data, dialogRef) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.data = data;
         _this.dialogRef = dialogRef;

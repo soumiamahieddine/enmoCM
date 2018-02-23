@@ -58,7 +58,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
-        super(http, 'users');
+        super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

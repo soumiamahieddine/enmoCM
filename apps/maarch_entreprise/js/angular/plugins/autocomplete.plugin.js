@@ -11,18 +11,27 @@ var AutoCompletePlugin = /** @class */ (function () {
         this.elemList = [];
         this.statusesList = [];
         this.coreUrl = angularGlobals.coreUrl;
-        if (target == 'users') {
+        if (target.indexOf('users') != -1) {
             this.userCtrl = new forms_1.FormControl();
-            this.http.get(this.coreUrl + 'rest/users/autocompleter')
+            this.http.get(this.coreUrl + 'rest/administration/users')
                 .subscribe(function (data) {
-                _this.userList = data;
+                data.users.forEach(function (user) {
+                    if (user.enabled == "Y") {
+                        _this.userList.push({
+                            "type": "user",
+                            "id": user.user_id,
+                            "idToDisplay": user.firstname + ' ' + user.lastname,
+                            "otherInfo": user.user_id
+                        });
+                    }
+                });
                 _this.filteredUsers = _this.userCtrl.valueChanges
                     .pipe(startWith_1.startWith(''), map_1.map(function (user) { return user ? _this.autocompleteFilterUser(user) : _this.userList.slice(); }));
             }, function () {
                 location.href = "index.php";
             });
         }
-        else if (target == 'statuses') {
+        if (target.indexOf('statuses') != -1) {
             this.statusCtrl = new forms_1.FormControl();
             this.http.get(this.coreUrl + 'rest/statuses')
                 .subscribe(function (data) {
@@ -33,7 +42,7 @@ var AutoCompletePlugin = /** @class */ (function () {
                 location.href = "index.php";
             });
         }
-        else if (target == 'usersAndEntities') {
+        if (target.indexOf('usersAndEntities') != -1) {
             this.elementCtrl = new forms_1.FormControl();
             this.elemList = [];
             this.http.get(this.coreUrl + 'rest/administration/users')
@@ -69,7 +78,7 @@ var AutoCompletePlugin = /** @class */ (function () {
                 location.href = "index.php";
             });
         }
-        else if (target == 'entities') {
+        if (target.indexOf('entities') != -1) {
             this.elementCtrl = new forms_1.FormControl();
             this.elemList = [];
             this.http.get(this.coreUrl + 'rest/entities')
@@ -95,17 +104,17 @@ var AutoCompletePlugin = /** @class */ (function () {
     }
     AutoCompletePlugin.prototype.autocompleteFilterUser = function (name) {
         return this.userList.filter(function (user) {
-            return user.formattedUser.toLowerCase().indexOf(name.toLowerCase()) === 0;
+            return user.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0;
         });
     };
     AutoCompletePlugin.prototype.autocompleteFilterStatuses = function (name) {
         return this.statusesList.filter(function (status) {
-            return status.label_status.toLowerCase().indexOf(name.toLowerCase()) === 0;
+            return status.label_status.toLowerCase().indexOf(name.toLowerCase()) >= 0;
         });
     };
     AutoCompletePlugin.prototype.autocompleteFilterElements = function (name) {
         return this.elemList.filter(function (elem) {
-            return elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) === 0;
+            return elem.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0;
         });
     };
     return AutoCompletePlugin;

@@ -48,7 +48,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
-        super(http, 'users');
+        super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -238,7 +238,7 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
     lang: any = LANG;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>) {
-        super(http, 'users');
+        super(http, ['users']);
     }
     sendFunction() {
         var valid = true;

@@ -289,8 +289,13 @@
                             <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
                                     <p mat-line>
-                                        <i class="fa fa-user fa-2x"></i> {{ user.firstname }} {{ user.lastname }}
-                                        <small>{{ user.user_id }}</small>
+                                        <span class="col-xm-1">
+                                            <i color="primary" class="fa fa-user fa-2x"></i>
+                                        </span>
+                                        <span class="col-xm-11">
+                                            {{ user.idToDisplay }}
+                                            <small>{{ user.otherInfo }}</small>
+                                        </span>
                                     </p>
                                 </mat-option>
                             </mat-autocomplete>

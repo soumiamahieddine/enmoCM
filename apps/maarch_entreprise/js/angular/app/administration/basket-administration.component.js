@@ -265,7 +265,7 @@ exports.BasketAdministrationComponent = BasketAdministrationComponent;
 var BasketAdministrationSettingsModalComponent = /** @class */ (function (_super) {
     __extends(BasketAdministrationSettingsModalComponent, _super);
     function BasketAdministrationSettingsModalComponent(http, data, dialogRef) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.data = data;
         _this.dialogRef = dialogRef;
