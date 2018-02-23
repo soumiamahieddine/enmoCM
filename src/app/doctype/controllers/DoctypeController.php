@@ -186,7 +186,7 @@ class DoctypeController
             'recordId'  => $data['type_id'],
             'eventType' => 'UP',
             'eventId'   => 'typesadd',
-            'info'      => _DOCTYPE_EDITED . ' : ' . $data['description']
+            'info'      => _DOCTYPE_UPDATED . ' : ' . $data['description']
         ]);
 
         return $response->withJson(

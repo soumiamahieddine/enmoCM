@@ -70,3 +70,6 @@ define('_DOCUMENTS_LIST_COPIES', 'List of copies');
 define('_CASES_LIST', 'Cases list');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Documents list with signatory');
 define('_FOLDERS_LIST', 'folders list');
+define('_DOCTYPE_UPDATED', 'Document type updated');
+define('_DOCTYPE_ADDED', 'Document type added');
+define('_DOCTYPE_DELETED', 'Document type deleted');

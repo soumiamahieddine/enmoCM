@@ -582,10 +582,7 @@ if (!defined("_MY_INFO")) define("_MY_INFO", "My profile");
 
 //class types
 if (!defined("_UNKNOWN_PARAM")) define("_UNKNOWN_PARAM", "unknown configuration");
-if (!defined("_DOCTYPE_UPDATED")) define("_DOCTYPE_UPDATED", " Modified document type");
 if (!defined("_DOCTYPE_UPDATE")) define("_DOCTYPE_UPDATE", " Document type modification");
-if (!defined("_DOCTYPE_ADDED")) define("_DOCTYPE_ADDED", "New added document type");
-if (!defined("_DELETED_DOCTYPE")) define("_DELETED_DOCTYPE", " Deleted document type");
 if (!defined("_DOCTYPE_DELETION")) define("_DOCTYPE_DELETION", " document type deletion");
 if (!defined("_THE_DOCTYPE")) define("_THE_DOCTYPE", " the document type ");
 if (!defined("_THE_WORDING")) define("_THE_WORDING", " The wording ");

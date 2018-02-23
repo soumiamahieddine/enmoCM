@@ -588,10 +588,7 @@ if (!defined("_MY_INFO")) define("_MY_INFO", "Mon Profil");
 
 //class types
 if (!defined("_UNKNOWN_PARAM")) define("_UNKNOWN_PARAM", "Paramètres inconnus");
-if (!defined("_DOCTYPE_UPDATED")) define("_DOCTYPE_UPDATED", "Type de document modifié");
 if (!defined("_DOCTYPE_UPDATE")) define("_DOCTYPE_UPDATE", "Modification du type de document");
-if (!defined("_DOCTYPE_ADDED")) define("_DOCTYPE_ADDED", "Nouveau type de document ajouté");
-if (!defined("_DELETED_DOCTYPE")) define("_DELETED_DOCTYPE", "Type de document supprimé");
 if (!defined("_DOCTYPE_DELETION")) define("_DOCTYPE_DELETION", "Suppression du type de document");
 if (!defined("_THE_DOCTYPE")) define("_THE_DOCTYPE", "Le type de document ");
 if (!defined("_THE_WORDING")) define("_THE_WORDING", "Le libellé ");
