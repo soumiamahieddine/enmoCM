@@ -576,7 +576,7 @@ ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT '
 ALTER TABLE entities DROP COLUMN IF EXISTS archival_agreement;
 ALTER TABLE entities ADD COLUMN archival_agreement character varying(255) DEFAULT 'MAARCH_LES_BAINS_ACTES';
 
-
+UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
 
 UPDATE doctypes_first_level SET css_style = '#D2B48C' WHERE css_style = 'beige';
 UPDATE doctypes_first_level SET css_style = '#0000FF' WHERE css_style = 'blue_style';

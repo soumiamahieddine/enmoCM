@@ -814,6 +814,7 @@ DELETE FROM entities WHERE entity_id = 'CCAS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CCAS' AND object_type = 'entity_id';
 INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, description) VALUES ('CCAS', 'entity_id', 0, '', 'user_id', 'dest', 'Centre Communal d''Action Sociale');
+UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
