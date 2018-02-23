@@ -71,7 +71,7 @@
                             </mat-form-field>
                             <mat-form-field>
                                 <textarea matInput name="clause" title="{{lang.clause}}" placeholder="{{lang.clause}}" [(ngModel)]="basket.clause" matTextareaAutosize
-                                    matAutosizeMinRows="1"></textarea>
+                                    matAutosizeMinRows="1" required></textarea>
                                 <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
                                 (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>

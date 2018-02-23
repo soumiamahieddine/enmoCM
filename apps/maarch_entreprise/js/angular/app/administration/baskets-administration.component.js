@@ -61,13 +61,19 @@ var BasketsAdministrationComponent = /** @class */ (function () {
     };
     BasketsAdministrationComponent.prototype.delete = function (basket) {
         var _this = this;
-        this.http.delete(this.coreUrl + "rest/baskets/" + basket['basket_id'])
-            .subscribe(function (data) {
-            _this.notify.success(_this.lang.basketDeleted);
-            _this.baskets = data['baskets'];
-        }, function (err) {
-            _this.notify.error(err.error.errors);
-        });
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + basket['basket_name'] + ' »');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/baskets/" + basket['basket_id'])
+                .subscribe(function (data) {
+                _this.notify.success(_this.lang.basketDeleted);
+                _this.baskets = data['baskets'];
+                _this.dataSource = new material_1.MatTableDataSource(_this.baskets);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
     };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),

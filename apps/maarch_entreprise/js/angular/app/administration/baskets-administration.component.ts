@@ -73,12 +73,19 @@ export class BasketsAdministrationComponent implements OnInit {
     }
 
     delete(basket: any) {
-        this.http.delete(this.coreUrl + "rest/baskets/" + basket['basket_id'])
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.basketDeleted);
-                this.baskets = data['baskets'];
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + basket['basket_name'] + ' »');
+
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/baskets/" + basket['basket_id'])
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.basketDeleted);
+                    this.baskets = data['baskets'];
+                    this.dataSource = new MatTableDataSource(this.baskets);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 }
