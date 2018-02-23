@@ -1,14 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -24,31 +14,27 @@ var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
-var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
-var DoctypesAdministrationComponent = /** @class */ (function (_super) {
-    __extends(DoctypesAdministrationComponent, _super);
+var DoctypesAdministrationComponent = /** @class */ (function () {
     function DoctypesAdministrationComponent(changeDetectorRef, media, http, notify) {
-        var _this = _super.call(this, http, ['usersAndEntities']) || this;
-        _this.http = http;
-        _this.notify = notify;
-        _this.lang = translate_component_1.LANG;
-        _this.doctypes = [];
-        _this.currentType = false;
-        _this.currentSecondLevel = false;
-        _this.currentFirstLevel = false;
-        _this.firstLevels = false;
-        _this.FolderTypes = false;
-        _this.secondLevels = false;
-        _this.processModes = false;
-        _this.models = false;
-        _this.indexes = false;
-        _this.loading = false;
-        _this.creationMode = false;
+        this.http = http;
+        this.notify = notify;
+        this.lang = translate_component_1.LANG;
+        this.doctypes = [];
+        this.currentType = false;
+        this.currentSecondLevel = false;
+        this.currentFirstLevel = false;
+        this.firstLevels = false;
+        this.folderTypes = false;
+        this.secondLevels = false;
+        this.processModes = false;
+        this.models = false;
+        this.indexes = false;
+        this.loading = false;
+        this.creationMode = false;
         $j("link[href='merged_css.php']").remove();
-        _this.mobileQuery = media.matchMedia('(max-width: 768px)');
-        _this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
-        _this.mobileQuery.addListener(_this._mobileQueryListener);
-        return _this;
+        this.mobileQuery = media.matchMedia('(max-width: 768px)');
+        this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
     DoctypesAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
         if ($j('#ariane')[0]) {
@@ -114,12 +100,13 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
     };
     DoctypesAdministrationComponent.prototype.loadDoctype = function (data) {
         var _this = this;
+        this.creationMode = false;
         // Doctype
         if (data.original.type_id) {
+            this.currentFirstLevel = false;
+            this.currentSecondLevel = false;
             this.http.get(this.coreUrl + "rest/doctypes/types/" + data.original.type_id)
                 .subscribe(function (data) {
-                _this.currentFirstLevel = false;
-                _this.currentSecondLevel = false;
                 _this.currentType = data['doctype'];
                 _this.secondLevels = data['secondLevel'];
                 _this.processModes = data['processModes'];
@@ -131,24 +118,24 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
             // Second level
         }
         else if (data.original.doctypes_second_level_id) {
+            this.currentFirstLevel = false;
+            this.currentType = false;
             this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.original.doctypes_second_level_id)
                 .subscribe(function (data) {
-                _this.currentFirstLevel = false;
                 _this.currentSecondLevel = data['secondLevel'];
                 _this.firstLevels = data['firstLevel'];
-                _this.currentType = false;
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
             // First level
         }
         else {
+            this.currentSecondLevel = false;
+            this.currentType = false;
             this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.original.doctypes_first_level_id)
                 .subscribe(function (data) {
                 _this.currentFirstLevel = data['firstLevel'];
-                _this.FolderTypes = data['folderTypes'];
-                _this.currentSecondLevel = false;
-                _this.currentType = false;
+                _this.folderTypes = data['folderTypes'];
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -178,30 +165,58 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
     //         this.currentDoctype.listTemplate.cc.unshift(newElemListModel);
     //     }
     // }
-    // saveEntity() {
-    //     if (this.creationMode) {
-    //         this.http.post(this.coreUrl + "rest/entities", this.currentDoctype)
-    //             .subscribe((data: any) => {
-    //                 this.creationMode = false;
-    //                 this.doctypes.push(this.currentDoctype);
-    //                 $j('#jstree').jstree("refresh");
-    //                 this.notify.success(this.lang.entityAdded);
-    //             }, (err) => {
-    //                 this.notify.error(err.error.errors);
-    //             });
-    //     } else {
-    //         this.http.put(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id, this.currentDoctype)
-    //             .subscribe((data: any) => {
-    //                 console.log(data);
-    //                 this.doctypes = data['entities'];
-    //                 $j('#jstree').jstree(true).settings.core.data = this.doctypes;
-    //                 $j('#jstree').jstree("refresh");
-    //                 this.notify.success(this.lang.entityUpdated);
-    //             }, (err) => {
-    //                 this.notify.error(err.error.errors);
-    //             });
-    //     }
-    // }
+    DoctypesAdministrationComponent.prototype.saveFirstLevel = function () {
+        var _this = this;
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + "rest/doctypes/firstLevel", this.currentFirstLevel)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.firstLevelAdded);
+                _this.creationMode = false;
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        else {
+            this.http.put(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id, this.currentFirstLevel)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.firstLevelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+    };
+    DoctypesAdministrationComponent.prototype.saveSecondLevel = function () {
+        var _this = this;
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + "rest/doctypes/secondLevel", this.currentSecondLevel)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.secondLevelAdded);
+                _this.creationMode = false;
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        else {
+            this.http.put(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id, this.currentSecondLevel)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.secondLevelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+    };
     // moveEntity() {
     //     this.http.put(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id, this.currentDoctype)
     //             .subscribe((data: any) => {
@@ -215,6 +230,57 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
         $j('#jstree').jstree('deselect_all');
         $j('#jstree').jstree('select_node', this.doctypes[0]);
     };
+    DoctypesAdministrationComponent.prototype.removeFirstLevel = function () {
+        var _this = this;
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentFirstLevel.doctypes_first_level_label + ' »');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.firstLevelDeleted);
+                $j('#jstree').jstree('select_node', _this.doctypes[0]);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+    };
+    DoctypesAdministrationComponent.prototype.removeSecondLevel = function () {
+        var _this = this;
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentSecondLevel.doctypes_second_level_label + ' »');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id)
+                .subscribe(function (data) {
+                _this.doctypes = data['doctypeTree'];
+                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                $j('#jstree').jstree("refresh");
+                _this.notify.success(_this.lang.secondLevelDeleted);
+                $j('#jstree').jstree('select_node', _this.doctypes[0]);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+    };
+    DoctypesAdministrationComponent.prototype.prepareDoctypeAdd = function () {
+        var _this = this;
+        this.currentFirstLevel = {};
+        this.currentSecondLevel = {};
+        this.currentType = {};
+        $j('#jstree').jstree('deselect_all');
+        this.http.get(this.coreUrl + "rest/administration/doctypes/new")
+            .subscribe(function (data) {
+            _this.folderTypes = data['folderTypes'];
+            _this.firstLevels = data['firstLevel'];
+            _this.secondLevels = data['secondLevel'];
+            _this.processModes = data['processModes'];
+            _this.models = data['models'];
+            _this.indexes = data['models'];
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+        this.creationMode = true;
+    };
     DoctypesAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["doctypes-administrationView"],
@@ -223,5 +289,5 @@ var DoctypesAdministrationComponent = /** @class */ (function (_super) {
         __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
     ], DoctypesAdministrationComponent);
     return DoctypesAdministrationComponent;
-}(autocomplete_plugin_1.AutoCompletePlugin));
+}());
 exports.DoctypesAdministrationComponent = DoctypesAdministrationComponent;

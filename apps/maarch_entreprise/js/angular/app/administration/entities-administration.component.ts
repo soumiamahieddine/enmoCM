@@ -47,7 +47,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
-        super(http, 'usersAndEntities');
+        super(http, ['usersAndEntities']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -341,6 +341,6 @@ export class EntitiesAdministrationRedirectModalComponent extends AutoCompletePl
     lang: any = LANG;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<EntitiesAdministrationRedirectModalComponent>) {
-        super(http, 'entities');
+        super(http, ['entities']);
     }
 }

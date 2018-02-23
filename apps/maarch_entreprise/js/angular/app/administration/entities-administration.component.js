@@ -32,7 +32,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var EntitiesAdministrationComponent = /** @class */ (function (_super) {
     __extends(EntitiesAdministrationComponent, _super);
     function EntitiesAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
-        var _this = _super.call(this, http, 'usersAndEntities') || this;
+        var _this = _super.call(this, http, ['usersAndEntities']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.dialog = dialog;
@@ -346,7 +346,7 @@ exports.EntitiesAdministrationComponent = EntitiesAdministrationComponent;
 var EntitiesAdministrationRedirectModalComponent = /** @class */ (function (_super) {
     __extends(EntitiesAdministrationRedirectModalComponent, _super);
     function EntitiesAdministrationRedirectModalComponent(http, data, dialogRef) {
-        var _this = _super.call(this, http, 'entities') || this;
+        var _this = _super.call(this, http, ['entities']) || this;
         _this.http = http;
         _this.data = data;
         _this.dialogRef = dialogRef;

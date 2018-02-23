@@ -24,6 +24,8 @@ class FirstLevelModelAbstract
         $firstLevel = DatabaseModel::select([
             'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'    => ['doctypes_first_level'],
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
             'order_by' => ['doctypes_first_level_id asc']
         ]);
 

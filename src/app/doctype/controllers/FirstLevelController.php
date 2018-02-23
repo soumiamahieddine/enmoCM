@@ -20,10 +20,19 @@ use Folder\models\FolderTypeModel;
 use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Template\models\TemplateModel;
+use Doctype\models\DoctypeIndexesModel;
 
 class FirstLevelController
 {
     public function getTree(Request $request, Response $response)
+    {
+        return $response->withJson([
+            'structure' => FirstLevelController::getTreeFunction(),
+        ]);
+    }
+
+    public function getTreeFunction()
     {
         $firstLevels  = FirstLevelModel::get();
         $secondLevels = SecondLevelModel::get();
@@ -50,9 +59,7 @@ class FirstLevelController
             array_push($structure, $doctypeValue);
         }
 
-        return $response->withJson([
-            'structure' => $structure,
-        ]);
+        return $structure;
     }
 
     public function getById(Request $request, Response $response, $aArgs)
@@ -73,20 +80,25 @@ class FirstLevelController
             }
 
             $folderTypesSelected = FolderTypeModel::getFolderTypeDocTypeFirstLevel(['doctypes_first_level_id' => $aArgs['id']]);
-            $arrFolderTypesSelected = [];
+            $aFolderTypesSelected = [];
             foreach ($folderTypesSelected as $folderType) {
-                $arrFolderTypesSelected[] = $folderType['foldertype_id'];
+                $aFolderTypesSelected[] = $folderType['foldertype_id'];
             }
-            $obj['firstLevel']['folderTypeSelected'] = $arrFolderTypesSelected;
+            $obj['firstLevel']['foldertype_id'] = $aFolderTypesSelected;
         }
   
         $obj['folderTypes'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
         return $response->withJson($obj);
     }
 
-    public function initFirstLevel(Request $request, Response $response)
+    public function initDoctypes(Request $request, Response $response)
     {
-        $obj['folderType'] = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
+        $obj['folderTypes']  = FolderTypeModel::get(['select' => ['foldertype_id', 'foldertype_label']]);
+        $obj['firstLevel']   = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
+        $obj['secondLevel']  = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['processModes'] = DoctypeModel::getProcessMode();
+        $obj['models']       = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
+        $obj['indexes']      = DoctypeIndexesModel::getAllIndexes();
         return $response->withJson($obj);
     }
 
@@ -125,7 +137,8 @@ class FirstLevelController
 
         return $response->withJson(
             [
-            'firstLevel'  => $firstLevelId
+            'firstLevelId' => $firstLevelId,
+            'doctypeTree'   => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -170,7 +183,8 @@ class FirstLevelController
 
         return $response->withJson(
             [
-            'firstLevel'  => $obj
+            'firstLevelId' => $obj,
+            'doctypeTree'   => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -201,7 +215,10 @@ class FirstLevelController
             'info'      => _DOCTYPE_FIRSTLEVEL_DELETED. ' : ' . $firstLevel['doctypes_first_level_label']
         ]);
 
-        return $response->withJson(['firstLevel' => $firstLevel]);
+        return $response->withJson([
+            'firstLevelDeleted' => $firstLevel,
+            'doctypeTree' => FirstLevelController::getTreeFunction()
+        ]);
     }
 
     protected function control($aArgs, $mode)
@@ -229,7 +246,11 @@ class FirstLevelController
             $errors[] = 'Invalid foldertype_id';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
+        if (empty($aArgs['enabled'])) {
+            $aArgs['enabled'] = 'Y';
+        }
+
+        if ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N') {
             $errors[]= 'Invalid enabled value';
         }
 
@@ -238,7 +259,7 @@ class FirstLevelController
 
     protected function manageValue($request)
     {
-        foreach ($request  as $key => $value) {
+        foreach ($request as $key => $value) {
             if (in_array($key, ['enabled'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';

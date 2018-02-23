@@ -272,20 +272,18 @@ $app->post('/doctypes/firstLevel', \Doctype\controllers\FirstLevelController::cl
 $app->get('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':getById');
 $app->put('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':update');
 $app->delete('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':delete');
-$app->get('/administration/doctypes/firstLevel/new', \Doctype\controllers\FirstLevelController::class . ':initFirstLevel');
+$app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelController::class . ':initDoctypes');
 
 $app->post('/doctypes/secondLevel', \Doctype\controllers\SecondLevelController::class . ':create');
 $app->get('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':getById');
 $app->put('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':update');
 $app->delete('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':delete');
-$app->get('/administration/doctypes/secondLevel/new', \Doctype\controllers\SecondLevelController::class . ':initSecondLevel');
 
 $app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':create');
 $app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
 $app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
 $app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':delete');
 $app->delete('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
-$app->get('/administration/doctypes/types/new', \Doctype\controllers\DoctypeController::class . ':initDoctype');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

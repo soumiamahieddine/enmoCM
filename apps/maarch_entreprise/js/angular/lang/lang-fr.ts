@@ -302,4 +302,10 @@ export const LANG_FR = {
     "generatedFile"                 : "Fichier généré",
     "destruction"                 : "Destruction",
     "conservation"                 : "Conservation",
+    "firstLevelAdded"                 : "Chemise créée",
+    "firstLevelUpdated"                 : "Chemise mise à jour",
+    "firstLevelDeleted"                 : "Chemise supprimée",
+    "secondLevelAdded"                 : "Sous-chemise créée",
+    "secondLevelUpdated"                 : "Sous-chemise mise à jour",
+    "secondLevelDeleted"                 : "Sous-chemise supprimée",
 };

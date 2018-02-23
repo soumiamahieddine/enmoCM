@@ -58,14 +58,6 @@ class DoctypeController
         return $response->withJson($obj);
     }
 
-    public function initDoctype(Request $request, Response $response)
-    {
-        $obj['secondLevel']  = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
-        $obj['processModes'] = DoctypeModel::getProcessMode();
-        $obj['models']       = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
-        return $response->withJson($obj);
-    }
-
     public function create(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_architecture', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {

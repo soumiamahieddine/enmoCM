@@ -31,7 +31,7 @@
             <mat-divider></mat-divider>
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.tools}}</h3>
-                <a mat-list-item (click)="prepareEntityAdd()">
+                <a mat-list-item (click)="prepareDoctypeAdd()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                     <p mat-line>
                         {{lang.add}}
@@ -58,9 +58,9 @@
 
             <mat-nav-list>
                 <mat-tab-group>
-                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel">
+                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel || creationMode">
                         <form class="form-horizontal" #firstLevelForm="ngForm" style="overflow:hidden;">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentFirstLevel.doctypes_first_level_id" required name="doctypes_first_level_id" id="doctypes_first_level_id" title="{{lang.id}}" type="text"
@@ -85,8 +85,8 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <mat-select id="foldertypeList" name="foldertypeList" title="{{lang.folderTypeList}}" placeholder="{{lang.folderTypeList}}"
-                                            [(ngModel)]="currentFirstLevel.folderTypeSelected" multiple required>
-                                            <mat-option *ngFor="let folderType of FolderTypes" [value]="folderType.foldertype_id">
+                                            [(ngModel)]="currentFirstLevel.foldertype_id" multiple required>
+                                            <mat-option *ngFor="let folderType of folderTypes" [value]="folderType.foldertype_id">
                                                 {{folderType.foldertype_label}}
                                             </mat-option>
                                         </mat-select>
@@ -95,18 +95,18 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button [disabled]="!firstLevelForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
-                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!firstLevelForm.form.valid"
-                                        color="warn" (click)="removeEntity()">{{lang.delete}}</button>
-                                    <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
+                                    <button mat-raised-button [disabled]="!firstLevelForm.form.valid" color="primary" (click)="saveFirstLevel()">{{lang.save}}</button>
+                                    <button type="button" mat-raised-button *ngIf="!creationMode" [disabled]="!firstLevelForm.form.valid"
+                                        color="warn" (click)="removeFirstLevel()">{{lang.delete}}</button>
+                                    <button type="button" mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>
                             </div>
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel">
+                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel || creationMode">
                         <form class="form-horizontal" #secondLevelForm="ngForm" style="overflow:hidden;">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentSecondLevel.doctypes_second_level_id" required name="doctypes_second_level_id" id="doctypes_second_level_id" title="{{lang.id}}" type="text"
@@ -141,18 +141,18 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button [disabled]="!secondLevelForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
+                                    <button mat-raised-button [disabled]="!secondLevelForm.form.valid" color="primary" (click)="saveSecondLevel()">{{lang.save}}</button>
                                     <button mat-raised-button *ngIf="!creationMode" [disabled]="!secondLevelForm.form.valid"
-                                        color="warn" (click)="removeEntity()">{{lang.delete}}</button>
+                                        color="warn" (click)="removeSecondLevel()">{{lang.delete}}</button>
                                     <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>
                             </div>
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType">
+                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType || creationMode">
                         <form class="form-horizontal" #typeForm="ngForm" style="overflow:hidden;">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.type_id" required name="type_id" id="type_id" title="{{lang.id}}" type="text"

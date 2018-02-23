@@ -4,8 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
-
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
@@ -16,7 +14,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 
-export class DoctypesAdministrationComponent extends AutoCompletePlugin implements OnInit {
+export class DoctypesAdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
@@ -27,7 +25,7 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
     currentSecondLevel: any = false;
     currentFirstLevel: any = false;
     firstLevels: any = false;
-    FolderTypes: any = false;
+    folderTypes: any = false;
     secondLevels: any = false;
     processModes: any = false;
     models: any = false;
@@ -38,7 +36,6 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
-        super(http, ['usersAndEntities']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -112,41 +109,43 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     loadDoctype(data: any) {
+        this.creationMode = false;
+
         // Doctype
         if(data.original.type_id){
+            this.currentFirstLevel  = false;
+            this.currentSecondLevel = false;
             this.http.get(this.coreUrl + "rest/doctypes/types/" + data.original.type_id )
                 .subscribe((data: any) => {
-                    this.currentFirstLevel  = false;
-                    this.currentSecondLevel = false;
-                    this.currentType        = data['doctype'];
-                    this.secondLevels       = data['secondLevel'];
-                    this.processModes       = data['processModes'];
-                    this.models             = data['models'];
-                    this.indexes            = data['indexes'];
+                    this.currentType  = data['doctype'];
+                    this.secondLevels = data['secondLevel'];
+                    this.processModes = data['processModes'];
+                    this.models       = data['models'];
+                    this.indexes      = data['indexes'];
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
 
         // Second level
         } else if(data.original.doctypes_second_level_id) {
+            this.currentFirstLevel  = false;
+            this.currentType        = false;
             this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.original.doctypes_second_level_id )
                 .subscribe((data: any) => {
-                    this.currentFirstLevel  = false;
                     this.currentSecondLevel = data['secondLevel'];
                     this.firstLevels        = data['firstLevel'];
-                    this.currentType        = false;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
 
         // First level
         } else {
+            this.currentSecondLevel = false;
+            this.currentType        = false;
             this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.original.doctypes_first_level_id )
                 .subscribe((data: any) => {
                     this.currentFirstLevel  = data['firstLevel'];
-                    this.FolderTypes        = data['folderTypes'];
-                    this.currentSecondLevel = false;
-                    this.currentType        = false;
+                    this.folderTypes        = data['folderTypes'];
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -180,31 +179,55 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
 
     // }
 
-    // saveEntity() {
-    //     if (this.creationMode) {
-    //         this.http.post(this.coreUrl + "rest/entities", this.currentDoctype)
-    //             .subscribe((data: any) => {
-    //                 this.creationMode = false;
-    //                 this.doctypes.push(this.currentDoctype);
-    //                 $j('#jstree').jstree("refresh");
-    //                 this.notify.success(this.lang.entityAdded);
-    //             }, (err) => {
-    //                 this.notify.error(err.error.errors);
-    //             });
-    //     } else {
-    //         this.http.put(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id, this.currentDoctype)
-    //             .subscribe((data: any) => {
-    //                 console.log(data);
-    //                 this.doctypes = data['entities'];
-    //                 $j('#jstree').jstree(true).settings.core.data = this.doctypes;
-    //                 $j('#jstree').jstree("refresh");
-    //                 this.notify.success(this.lang.entityUpdated);
-    //             }, (err) => {
-    //                 this.notify.error(err.error.errors);
-    //             });
-    //     }
-    // }
+    saveFirstLevel() {
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + "rest/doctypes/firstLevel", this.currentFirstLevel)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.firstLevelAdded);
+                    this.creationMode = false;
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.put(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id, this.currentFirstLevel)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.firstLevelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
 
+    saveSecondLevel() {
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + "rest/doctypes/secondLevel", this.currentSecondLevel)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.secondLevelAdded);
+                    this.creationMode = false;
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.put(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id, this.currentSecondLevel)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.secondLevelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
     // moveEntity() {
     //     this.http.put(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id, this.currentDoctype)
     //             .subscribe((data: any) => {
@@ -212,7 +235,6 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
     //             }, (err) => {
     //                 this.notify.error(err.error.errors);
     //             });
-
     // }
 
     readMode() {
@@ -221,40 +243,57 @@ export class DoctypesAdministrationComponent extends AutoCompletePlugin implemen
         $j('#jstree').jstree('select_node', this.doctypes[0]);
     }
 
-    // removeEntity() {
-    //     this.http.delete(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id)
-    //         .subscribe((data: any) => {
-    //             this.doctypes = data['entities'];
-    //             $j('#jstree').jstree("refresh");
-    //             this.notify.success(this.lang.entityDeleted);
-    //         }, (err) => {
-    //             this.notify.error(err.error.errors);
-    //         });
-    // }
+    removeFirstLevel() {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentFirstLevel.doctypes_first_level_label + ' »');
 
-    // prepareEntityAdd() {
-    //     $j('#jstree').jstree('deselect_all');
-    //     this.creationMode = true;
-    //     this.currentDoctype = {};
-    // }
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.firstLevelDeleted);
+                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
 
+    removeSecondLevel() {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentSecondLevel.doctypes_second_level_label + ' »');
 
-    // updateStatus(entity: any, method: string) {
-    //     this.http.put(this.coreUrl + "rest/entities/" + entity['entity_id'] + "/status", { "method": method })
-    //         .subscribe((data: any) => {
-    //             this.notify.success("");
-    //         }, (err) => {
-    //             this.notify.error(err.error.errors);
-    //         });
-    // }
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.secondLevelDeleted);
+                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
 
-    // delete(entity: any) {
-    //     this.http.delete(this.coreUrl + "rest/entities/" + entity['entity_id'])
-    //         .subscribe((data: any) => {
-    //             this.notify.success(this.lang.entityDeleted);
-    //             this.doctypes = data['entities'];
-    //         }, (err) => {
-    //             this.notify.error(err.error.errors);
-    //         });
-    // }
+    prepareDoctypeAdd() {
+        this.currentFirstLevel  = {};
+        this.currentSecondLevel = {};
+        this.currentType        = {};
+        $j('#jstree').jstree('deselect_all');
+        this.http.get(this.coreUrl + "rest/administration/doctypes/new")
+            .subscribe((data: any) => {
+                this.folderTypes  = data['folderTypes'];
+                this.firstLevels  = data['firstLevel'];
+                this.secondLevels = data['secondLevel'];
+                this.processModes = data['processModes'];
+                this.models       = data['models'];
+                this.indexes      = data['models'];
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+        this.creationMode = true;
+    }
+
 }
