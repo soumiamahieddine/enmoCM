@@ -414,7 +414,7 @@
     <servicepage>index.php?page=update_control&amp;admin=update_control</servicepage>
     <servicetype>admin</servicetype>
     <system_service>true</system_service>
-    <style>fa fa-thumbs-o-up</style>
+    <style>fa fa-refresh</style>
     <enabled>true</enabled>
   </SERVICE>
 </root>
