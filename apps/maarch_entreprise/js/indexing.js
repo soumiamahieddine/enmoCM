@@ -142,12 +142,12 @@ function changePriorityForSve(doctype_id, path_script){
                 if(response.status == 0 )
                 {
                     //alert(response.value);
-                    document.getElementById("priority").selectedIndex = response.value+1;
+                    //document.getElementById("priority").selectedIndex = response.value+1;
                     Event.fire($("priority"), "chosen:updated");
                     
                 }else if(response.status == 1 ){
                     //alert(response.value);
-                    document.getElementById("priority").selectedIndex = response.value+1;
+                    //document.getElementById("priority").selectedIndex = response.value+1;
                     Event.fire($("priority"), "chosen:updated");
                 }
                 else
