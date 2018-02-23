@@ -18,7 +18,6 @@ use Entity\models\ListInstanceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-
 class ListInstanceController
 {
     public function getById(Request $request, Response $response, array $aArgs)
