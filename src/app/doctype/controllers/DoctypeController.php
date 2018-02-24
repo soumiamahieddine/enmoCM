@@ -46,14 +46,14 @@ class DoctypeController
             }
         }
   
-        $doctypeExt             = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
-        $obj['doctype']         = array_merge($obj['doctype'], $doctypeExt);
-        $obj['secondLevel']     = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
-        $obj['processModes']    = DoctypeModel::getProcessMode();
-        $obj['models']          = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
-        $obj['modelSelected']   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
-        $obj['indexes']         = DoctypeIndexesModel::getAllIndexes();
-        $obj['indexesSelected'] = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
+        $doctypeExt                    = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
+        $template                      = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
+        $obj['doctype']                = array_merge($obj['doctype'], $doctypeExt, $template);
+        $obj['secondLevel']            = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['processModes']           = DoctypeModel::getProcessMode();
+        $obj['models']                 = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
+        $obj['indexes']                = DoctypeIndexesModel::getAllIndexes();
+        $obj['indexesSelected']        = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
 
         return $response->withJson($obj);
     }

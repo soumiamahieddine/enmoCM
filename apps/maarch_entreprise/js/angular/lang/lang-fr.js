@@ -310,4 +310,5 @@ exports.LANG_FR = {
     "secondLevelAdded": "Sous-chemise créée",
     "secondLevelUpdated": "Sous-chemise mise à jour",
     "secondLevelDeleted": "Sous-chemise supprimée",
+    "chooseModel": "Choisissez un modèle",
 };

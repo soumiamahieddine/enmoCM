@@ -278,4 +278,10 @@ exports.LANG_EN = {
     "generatedFile": "Generated file",
     "destruction": "Destruction",
     "conservation": "Retention",
+    "firstLevelAdded": "Folder added",
+    "firstLevelUpdated": "Folder updated",
+    "firstLevelDeleted": "Folder deleted",
+    "secondLevelAdded": "Subfolder added",
+    "secondLevelUpdated": "Subfolder updated",
+    "secondLevelDeleted": "Subfolder deleted",
 };
