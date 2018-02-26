@@ -410,9 +410,8 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('SVR', $responseBody->doctype->process_mode);
         $this->assertNotNull($responseBody->secondLevel);
         $this->assertNotNull($responseBody->processModes);
-        $this->assertSame(null, $responseBody->modelSelected->template_id);
-        $this->assertSame('N', $responseBody->modelSelected->is_generated);
-        $this->assertSame(self::$doctypeId, $responseBody->modelSelected->type_id);
+        $this->assertSame(null, $responseBody->doctype->template_id);
+        $this->assertSame('N', $responseBody->doctype->is_generated);
         $this->assertNotNull($responseBody->models);
         $this->assertNotNull($responseBody->indexes);
         $this->assertSame(self::$doctypeId, $responseBody->indexesSelected[0]->type_id);
