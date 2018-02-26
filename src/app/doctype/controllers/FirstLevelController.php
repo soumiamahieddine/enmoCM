@@ -43,6 +43,7 @@ class FirstLevelController
             $firstLevelValue['id']     = 'firstlevel_'.$firstLevelValue['doctypes_first_level_id'];
             $firstLevelValue['text']   = $firstLevelValue['doctypes_first_level_label'];
             $firstLevelValue['parent'] = '#';
+            $firstLevelValue['state']['opened'] = true;
             array_push($structure, $firstLevelValue);
         }
         foreach ($secondLevels as $secondLevelValue) {

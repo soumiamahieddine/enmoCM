@@ -67,6 +67,16 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                     },
                     "plugins": ["search", "dnd", "contextmenu"],
                 });
+                var to = false;
+                $j('#jstree_search').keyup(function () {
+                    if (to) {
+                        clearTimeout(to);
+                    }
+                    to = setTimeout(function () {
+                        var v = $j('#jstree_search').val();
+                        $j('#jstree').jstree(true).search(v);
+                    }, 250);
+                });
                 $j('#jstree')
                     .on('select_node.jstree', function (e, data) {
                     _this.loadDoctype(data.node);
@@ -78,16 +88,6 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                     .jstree();
             }, 0);
             $j('#jstree').jstree('select_node', _this.doctypes[0]);
-            var to = false;
-            $j('#jstree_search').keyup(function () {
-                if (to) {
-                    clearTimeout(to);
-                }
-                to = setTimeout(function () {
-                    var v = $j('#jstree_search').val();
-                    $j('#jstree').jstree(true).search(v);
-                }, 250);
-            });
             _this.loading = false;
         }, function () {
             location.href = "index.php";

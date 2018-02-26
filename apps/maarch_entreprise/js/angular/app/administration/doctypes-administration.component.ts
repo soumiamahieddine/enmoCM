@@ -76,6 +76,14 @@ export class DoctypesAdministrationComponent implements OnInit {
                         },
                         "plugins": ["search", "dnd", "contextmenu"],
                     });
+                    var to: any = false;
+                    $j('#jstree_search').keyup(function () {
+                        if (to) { clearTimeout(to); }
+                        to = setTimeout(function () {
+                            var v = $j('#jstree_search').val();
+                            $j('#jstree').jstree(true).search(v);
+                        }, 250);
+                    });
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
@@ -90,14 +98,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                         .jstree();
                 }, 0);
                 $j('#jstree').jstree('select_node', this.doctypes[0]);
-                var to: any = false;
-                $j('#jstree_search').keyup(function () {
-                    if (to) { clearTimeout(to); }
-                    to = setTimeout(function () {
-                        var v = $j('#jstree_search').val();
-                        $j('#jstree').jstree(true).search(v);
-                    }, 250);
-                });
                 this.loading = false;
             }, () => {
                 location.href = "index.php";
