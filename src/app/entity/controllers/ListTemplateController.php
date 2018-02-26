@@ -1,16 +1,16 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* @brief List Template Controller
-* @author dev@maarch.org
-*/
+ * @brief List Template Controller
+ *
+ * @author dev@maarch.org
+ */
 
 namespace Entity\controllers;
 
@@ -28,7 +28,7 @@ class ListTemplateController
 {
     public function get(Request $request, Response $response)
     {
-        $rawListTemplates = ListTemplateModel::get(['select' => ['id', 'object_id', 'object_type', 'title', 'description']]);
+        $rawListTemplates = ListTemplateModel::get(['select' => ['id', 'object_id', 'object_type', 'title', 'description'], 'where' => ['(object_type <> ?) AND (object_id LIKE ?)'], 'data' => ['entity_id', 'VISA_CIRCUIT_%']]);
 
         $listTemplates = [];
         $tmpTemplates = [];
@@ -47,9 +47,18 @@ class ListTemplateController
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id']]);
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
+        } else {
+            $listTemplatesObj = array(
+                'object_id' => $listTemplates[0]['object_id'],
+                'object_type' => $listTemplates[0]['object_type'],
+                'object_type' => $listTemplates[0]['object_type'],
+                'title' => $listTemplates[0]['title'],
+                'description' => $listTemplates[0]['description'],
+                'diffusionList' => [$listTemplates],
+            );
         }
 
-        return $response->withJson(['listTemplate' => $listTemplates]);
+        return $response->withJson(['listTemplate' => $listTemplatesObj]);
     }
 
     public function create(Request $request, Response $response)
@@ -81,34 +90,34 @@ class ListTemplateController
                 }
             }
         } else {
-            $data['object_id'] = $data['object_type'] . '_' . DatabaseModel::uniqueId();
+            $data['object_id'] = $data['object_type'].'_'.DatabaseModel::uniqueId();
         }
 
-        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
+        $checkItems = self::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
 
         foreach ($data['items'] as $item) {
             ListTemplateModel::create([
-                'object_id'     => $data['object_id'],
-                'object_type'   => $data['object_type'],
-                'title'         => $data['title'],
-                'description'   => $data['description'],
-                'sequence'      => $item['sequence'],
-                'item_id'       => $item['item_id'],
-                'item_type'     => $item['item_type'],
-                'item_mode'     => $item['item_mode'],
+                'object_id' => $data['object_id'],
+                'object_type' => $data['object_type'],
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'sequence' => $item['sequence'],
+                'item_id' => $item['item_id'],
+                'item_type' => $item['item_type'],
+                'item_mode' => $item['item_mode'],
             ]);
         }
 
         HistoryController::add([
             'tableName' => 'listmodels',
-            'recordId'  => $data['object_id'],
+            'recordId' => $data['object_id'],
             'eventType' => 'ADD',
-            'info'      => _LIST_TEMPLATE_CREATION . " : {$data['title']} {$data['description']}",
-            'moduleId'  => 'listTemplate',
-            'eventId'   => 'listTemplateCreation',
+            'info' => _LIST_TEMPLATE_CREATION." : {$data['title']} {$data['description']}",
+            'moduleId' => 'listTemplate',
+            'eventId' => 'listTemplateCreation',
         ]);
 
         return $response->withJson(['success' => 'success']);
@@ -141,35 +150,35 @@ class ListTemplateController
             }
         }
 
-        $checkItems = ListTemplateController::checkItems(['items' => $data['items']]);
+        $checkItems = self::checkItems(['items' => $data['items']]);
         if (!empty($checkItems['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
 
         ListTemplateModel::delete([
             'where' => ['object_id = ?', 'object_type = ?'],
-            'data'  => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']]
+            'data' => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']],
         ]);
         foreach ($data['items'] as $item) {
             ListTemplateModel::create([
-                'object_id'     => $listTemplates[0]['object_id'],
-                'object_type'   => $listTemplates[0]['object_type'],
-                'title'         => $data['title'],
-                'description'   => $data['description'],
-                'sequence'      => $item['sequence'],
-                'item_id'       => $item['item_id'],
-                'item_type'     => $item['item_type'],
-                'item_mode'     => $item['item_mode'],
+                'object_id' => $listTemplates[0]['object_id'],
+                'object_type' => $listTemplates[0]['object_type'],
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'sequence' => $item['sequence'],
+                'item_id' => $item['item_id'],
+                'item_type' => $item['item_type'],
+                'item_mode' => $item['item_mode'],
             ]);
         }
 
         HistoryController::add([
             'tableName' => 'listmodels',
-            'recordId'  => $listTemplates[0]['object_id'],
+            'recordId' => $listTemplates[0]['object_id'],
             'eventType' => 'UP',
-            'info'      => _LIST_TEMPLATE_MODIFICATION . " : {$data['title']} {$data['description']}",
-            'moduleId'  => 'listTemplate',
-            'eventId'   => 'listTemplateModification',
+            'info' => _LIST_TEMPLATE_MODIFICATION." : {$data['title']} {$data['description']}",
+            'moduleId' => 'listTemplate',
+            'eventId' => 'listTemplateModification',
         ]);
 
         return $response->withJson(['success' => 'success']);
@@ -197,15 +206,15 @@ class ListTemplateController
 
         ListTemplateModel::delete([
             'where' => ['object_id = ?', 'object_type = ?'],
-            'data'  => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']]
+            'data' => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']],
         ]);
         HistoryController::add([
             'tableName' => 'listmodels',
-            'recordId'  => $listTemplates[0]['object_id'],
+            'recordId' => $listTemplates[0]['object_id'],
             'eventType' => 'DEL',
-            'info'      => _LIST_TEMPLATE_SUPPRESSION . " : {$listTemplates[0]['object_id']} {$listTemplates[0]['object_type']}",
-            'moduleId'  => 'listTemplate',
-            'eventId'   => 'listTemplateSuppression',
+            'info' => _LIST_TEMPLATE_SUPPRESSION." : {$listTemplates[0]['object_id']} {$listTemplates[0]['object_type']}",
+            'moduleId' => 'listTemplate',
+            'eventId' => 'listTemplateSuppression',
         ]);
 
         return $response->withJson(['success' => 'success']);

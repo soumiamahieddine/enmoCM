@@ -376,6 +376,7 @@ DROP TABLE IF EXISTS groupbasket_difflist_roles;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS listmodel_type;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE listmodels ADD COLUMN id serial NOT NULL;
+UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
 
 -- ************************************************************************* --
 --                               CONVERT                             --
