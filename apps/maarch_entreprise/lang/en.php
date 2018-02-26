@@ -1827,6 +1827,7 @@ if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
 if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration current use");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
+if (!defined("_ARCHIVE_TRANSFER_COLL")) define("_ARCHIVE_TRANSFER_COLL","Archiving");
 
 /***** Global ******/
 if (!defined('_UNREACHABLE_DOCSERVER'))
