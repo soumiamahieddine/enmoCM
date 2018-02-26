@@ -77,6 +77,7 @@ exports.LANG_FR = {
     "deleteMsg": "Voulez-vous vraiment supprimer cet élément ?",
     "desactivateAbsence": "Désactiver l'absence",
     "description": "Description",
+    "diffusionModels": "Modèles de diffusion",
     "display": "affichage",
     "doNotModifyUnlessExpert": "Ne pas modifier cette section à moins de savoir ce que vous faites. Un mauvais paramètrage peut entrainer des dysfonctionnements de l'application!",
     "email": "Email",

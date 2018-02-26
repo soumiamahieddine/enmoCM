@@ -68,6 +68,8 @@ export const LANG_EN = {
     "deleteMsg"                 : "Do you really want to delete this element",
     "desactivateAbsence"        : "Deactivate absence",
     "description"               : "Description",
+    "diffusionModels"           : "Diffusion models",
+    "display"                   : "display",
     "doNotModifyUnlessExpert"   : "Do not edit this section unless you know what you are doing. Incorrect settings can cause the application to malfunction !",
     "email"                     : "Email",
     "emailSignatures"           : "Email signatures",

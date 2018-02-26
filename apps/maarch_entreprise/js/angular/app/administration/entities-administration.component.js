@@ -32,7 +32,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var EntitiesAdministrationComponent = /** @class */ (function (_super) {
     __extends(EntitiesAdministrationComponent, _super);
     function EntitiesAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
-        var _this = _super.call(this, http, ['usersAndEntities']) || this;
+        var _this = _super.call(this, http, ['usersAndEntities', 'users']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.dialog = dialog;
@@ -112,7 +112,7 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
                             return true;
                         }
                     },
-                    "plugins": ["checkbox", "search", "dnd"]
+                    "plugins": ["checkbox", "search", "dnd", "sort"]
                 });
                 $j('#jstree').jstree('select_node', _this.entities[0]);
                 var to = false;
@@ -122,7 +122,6 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
                     }
                     to = setTimeout(function () {
                         var v = $j('#jstree_search').val();
-                        console.log(v);
                         $j('#jstree').jstree(true).search(v);
                     }, 250);
                 });
@@ -190,8 +189,25 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
             }
         });
         if (!inListModel) {
-            this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+            if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
+                this.currentEntity.listTemplate.dest.unshift(newElemListModel);
+            }
+            else {
+                this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+            }
         }
+        this.elementCtrl.setValue('');
+    };
+    EntitiesAdministrationComponent.prototype.addElemListModelVisa = function (element) {
+        var inListModel = false;
+        var newElemListModel = {
+            "type": element.type,
+            "id": element.id,
+            "labelToDisplay": element.idToDisplay,
+            "descriptionToDisplay": element.otherInfo,
+        };
+        this.currentEntity.visaTemplate.unshift(newElemListModel);
+        this.userCtrl.setValue('');
     };
     EntitiesAdministrationComponent.prototype.saveEntity = function () {
         var _this = this;
@@ -311,15 +327,22 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
             _this.notify.error(err.error.errors);
         });
     };
-    EntitiesAdministrationComponent.prototype.delete = function (entity) {
+    EntitiesAdministrationComponent.prototype.updateDiffList = function (template, role) {
         var _this = this;
-        this.http.delete(this.coreUrl + "rest/entities/" + entity['entity_id'])
-            .subscribe(function (data) {
-            _this.notify.success(_this.lang.entityDeleted);
-            _this.entities = data['entities'];
-        }, function (err) {
-            _this.notify.error(err.error.errors);
-        });
+        if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
+            this.currentEntity.listTemplate.dest.forEach(function (listModel) {
+                if (listModel.id != template.id) {
+                    _this.currentEntity.listTemplate.cc.push(listModel);
+                }
+            });
+            this.currentEntity.listTemplate.dest = [template];
+        }
+    };
+    EntitiesAdministrationComponent.prototype.removeDiffList = function (i, role) {
+        this.currentEntity.listTemplate[role].splice(i, 1);
+    };
+    EntitiesAdministrationComponent.prototype.removeDiffListVisa = function (i) {
+        this.currentEntity.visaTemplate.splice(i, 1);
     };
     __decorate([
         core_1.ViewChild('snav2'),

@@ -47,7 +47,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
-        super(http, ['usersAndEntities']);
+        super(http, ['usersAndEntities', 'users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -90,7 +90,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                                 'name': 'proton',
                                 'responsive': true
                             },
-                            'multiple':false,
+                            'multiple': false,
                             'data': this.entities,
                             "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
                                 if (operation == 'move_node') {
@@ -113,7 +113,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                                 return true;
                             }
                         },
-                        "plugins": ["checkbox","search", "dnd"]
+                        "plugins": ["checkbox", "search", "dnd", "sort"]
                     });
                     $j('#jstree').jstree('select_node', this.entities[0]);
                     var to: any = false;
@@ -121,7 +121,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         if (to) { clearTimeout(to); }
                         to = setTimeout(function () {
                             var v = $j('#jstree_search').val();
-                            console.log(v);
                             $j('#jstree').jstree(true).search(v);
                         }, 250);
                     });
@@ -138,7 +137,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             }
 
                         }).on('deselect_node.jstree', (e: any, data: any) => {
-                    
+
                             this.sidenav.close();
 
                         }).on('move_node.jstree', (e: any, data: any) => {
@@ -197,9 +196,29 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             }
         });
         if (!inListModel) {
-            this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+            if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
+                this.currentEntity.listTemplate.dest.unshift(newElemListModel);
+            } else {
+                this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+            }
+
         }
 
+        this.elementCtrl.setValue('');
+    }
+
+    addElemListModelVisa(element: any) {
+        var inListModel = false;
+        var newElemListModel = {
+            "type": element.type,
+            "id": element.id,
+            "labelToDisplay": element.idToDisplay,
+            "descriptionToDisplay": element.otherInfo,
+        };
+
+        this.currentEntity.visaTemplate.unshift(newElemListModel);
+
+        this.userCtrl.setValue('');
     }
 
     saveEntity() {
@@ -324,14 +343,21 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             });
     }
 
-    delete(entity: any) {
-        this.http.delete(this.coreUrl + "rest/entities/" + entity['entity_id'])
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.entityDeleted);
-                this.entities = data['entities'];
-            }, (err) => {
-                this.notify.error(err.error.errors);
+    updateDiffList(template: any, role: any): any {
+        if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
+            this.currentEntity.listTemplate.dest.forEach((listModel: any) => {
+                if (listModel.id != template.id) {
+                    this.currentEntity.listTemplate.cc.push(listModel);
+                }
             });
+            this.currentEntity.listTemplate.dest = [template];
+        }
+    }
+    removeDiffList(i: number, role: string): any {
+        this.currentEntity.listTemplate[role].splice(i, 1);
+    }
+    removeDiffListVisa(i: number): any {
+        this.currentEntity.visaTemplate.splice(i, 1);
     }
 }
 @Component({
