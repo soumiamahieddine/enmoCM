@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Remplacement de l'entité</h2>
+<h2 mat-dialog-title>{{lang.entityReplacement}}</h2>
 <form #changeEntityForm="ngForm">
     <mat-dialog-content>
         <div class="alert alert-info" role="alert">
@@ -6,31 +6,31 @@
                 <mat-list-item *ngIf="data.entity.documents > 0">
                     <mat-icon color="primary" mat-list-icon class="fa fa-file fa-2x"></mat-icon>
                     <p mat-line>
-                        <b>{{data.entity.entity_label}}</b> est en destination de
-                        <b>{{data.entity.documents}}</b> document(s)</p>
+                        <b>{{data.entity.entity_label}}</b> {{lang.isDestTo}}
+                        <b>{{data.entity.documents}}</b> {{lang.documents}}</p>
                 </mat-list-item>
                 <mat-list-item *ngIf="data.entity.instances > 0">
                     <mat-icon color="primary" mat-list-icon class="fa fa-sitemap fa-2x"></mat-icon>
                     <p mat-line>
-                        <b>{{data.entity.entity_label}}</b> est en copie de
-                        <b>{{data.entity.instances}}</b> document(s)</p>
+                        <b>{{data.entity.entity_label}}</b> {{lang.isCopyTo}}
+                        <b>{{data.entity.instances}}</b> {{lang.documents}}</p>
                 </mat-list-item>
                 <mat-list-item *ngIf="data.entity.users.length > 0">
                     <mat-icon color="primary" mat-list-icon class="fa fa-user fa-2x"></mat-icon>
                     <p mat-line>
-                        <b>{{data.entity.entity_label}}</b> est associé à
-                        <b>{{data.entity.users.length}}</b> utilisateur(s)</p>
+                        <b>{{data.entity.entity_label}}</b> {{lang.isLinkedTo | lowercase}}
+                        <b>{{data.entity.users.length}}</b> {{lang.users | lowercase}}</p>
                 </mat-list-item>
                 <mat-list-item *ngIf="data.entity.templates > 0">
                     <mat-icon color="primary" mat-list-icon class="fa fa-file-text-o fa-2x"></mat-icon>
                     <p mat-line>
-                        <b>{{data.entity.entity_label}}</b> est associé à
-                        <b>{{data.entity.templates}}</b> modèle(s) de document(s)</p>
+                        <b>{{data.entity.entity_label}}</b> {{lang.isLinkedTo | lowercase}}
+                        <b>{{data.entity.templates}}</b> {{lang.templates | lowercase}}</p>
                 </mat-list-item>
             </mat-list>
         </div>
         <mat-form-field>
-            <input type="text" placeholder="Choisissez un service de remplacement" matInput [matAutocomplete]="auto" [formControl]="elementCtrl"
+            <input type="text" placeholder="{{lang.chooseEntity}}" matInput [matAutocomplete]="auto" [formControl]="elementCtrl"
                 [(ngModel)]="data.entity.redirectEntity">
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id">

@@ -54,12 +54,16 @@
 
             <mat-nav-list>
                 <mat-tab-group>
-                    <mat-tab label="Informations">
+                    <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" #entityForm="ngForm" style="overflow:hidden;">
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <mat-form-field>
-                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
+                                        <input matInput [(ngModel)]="currentEntity.parent_entity_id" required name="parent_entity_id" id="parent_entity_id" title="{{lang.isLinkedTo}}" type="text"
+                                            placeholder="{{lang.isLinkedTo}}" maxlength="32" disabled>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type" maxlength="32"
                                             required>
                                             <mat-option *ngFor="let entity_type of entityTypeList" [value]="entity_type.id">
                                                 {{entity_type.label}}
@@ -72,7 +76,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentEntity.entity_id" required name="entity_id" id="entity_id" title="{{lang.id}}" type="text"
-                                            placeholder="{{lang.id}}" maxlength="255" [disabled]="!creationMode">
+                                            placeholder="{{lang.id}}" [disabled]="!creationMode" maxlength="32" pattern="^[\w.-]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -88,7 +92,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentEntity.short_label" required name="short_label" id="short_label" title="{{lang.shortLabel}}"
-                                            type="text" placeholder="{{lang.shortLabel}}" maxlength="255">
+                                            type="text" placeholder="{{lang.shortLabel}}" maxlength="50">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -96,7 +100,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentEntity.email" name="email" id="email" title="{{lang.email}}" type="text" placeholder="{{lang.email}}"
-                                            maxlength="255">
+                                            maxlength="255" pattern="[^@\s]+@[^@\s]+">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -104,7 +108,7 @@
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            Informations complémentaires
+                                            {{lang.otherInformations}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <div class="form-group">
@@ -132,13 +136,12 @@
                                         <div class="col-sm-6">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
-                                                    maxlength="255">
+                                                    maxlength="32">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-sm-6">
                                             <mat-form-field>
-                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
-                                                    maxlength="255">
+                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -185,11 +188,11 @@
                             </div>
                         </form>
                     </mat-tab>
-                    <mat-tab label="Liste de diffusion" *ngIf="!creationMode">
+                    <mat-tab label="{{lang.diffusionList}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12">
                                 <mat-form-field>
-                                    <input #autocompleteFilter type="text" placeholder="Ajouter une personne / un service" matInput [matAutocomplete]="auto"
+                                    <input #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput [matAutocomplete]="auto"
                                         [formControl]="elementCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElemListModel(elem)">
@@ -210,7 +213,7 @@
                                         <h3 *ngIf="role.available" mat-subheader>{{role.label}}</h3>
                                         <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
                                             <div style="min-height:30px;">
-                                                <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="deplacer"
+                                                <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="{{lang.move}}"
                                                     dnd-sortable (onDropSuccess)="updateDiffList(template,role.id)" [sortableIndex]="i"
                                                     [dragEnabled]="role.id != 'dest' && template.type != 'entity'">
                                                     <mat-icon color="primary" mat-list-icon [class]="template.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'"></mat-icon>
@@ -232,7 +235,7 @@
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12">
                                 <mat-form-field>
-                                    <input #autocompleteFilter type="text" placeholder="Ajouter une personne" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                    <input #autocompleteFilter type="text" placeholder="{{lang.addUser}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let elem of filteredUsers | async" [value]="elem.id" (click)="addElemListModelVisa(elem)">
                                             <p mat-line *ngIf="elem.type == 'user'">
@@ -249,7 +252,7 @@
                                 </mat-form-field>
                                 <mat-list>
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
-                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="deplacer" dnd-sortable
+                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}" dnd-sortable
                                             [sortableIndex]="i">
                                             <mat-icon color="primary" mat-list-icon>{{i+1}}</mat-icon>
                                             <p mat-line>{{template.labelToDisplay}}
@@ -264,7 +267,7 @@
                             </div>
                         </div>
                     </mat-tab>
-                    <mat-tab label="Utilisateur(s) associé(s)" *ngIf="!creationMode">
+                    <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
