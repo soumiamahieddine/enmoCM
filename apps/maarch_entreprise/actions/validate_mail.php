@@ -92,22 +92,7 @@ function check_category($coll_id, $res_id)
  **/
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
-    if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
-    {
-        $browser_ie = true;
-        $display_value = 'block';
-    }
-    elseif(preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $_SERVER["HTTP_USER_AGENT"]) )
-    {
-        $browser_ie = true;
-        $display_value = 'block';
-    }
-    else
-    {
-        $browser_ie = false;
-        $display_value = 'table-row';
-    }
-    
+    $displayValue = 'table-row';
     //DECLARATIONS
     require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_security.php");
     require_once("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_business_app_tools.php");

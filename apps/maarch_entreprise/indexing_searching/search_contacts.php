@@ -63,25 +63,11 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 /***********************************************************/
 
 //Check if web brower is ie_6 or not
-if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-    $browser_ie = 'true';
-    $class_for_form = 'form';
-    $hr = '<tr><td colspan="2"><hr></td></tr>';
-    $size = '';
-} elseif(preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $HTTP_USER_AGENT) )
-{
-    $browser_ie = 'true';
-    $class_for_form = 'forms';
-    $hr = '';
-     $size = '';
-}
-else
-{
-    $browser_ie = 'false';
-    $class_for_form = 'forms';
-    $hr = '';
-     $size = '';
-}
+
+$browser_ie = 'false';
+$class_for_form = 'forms';
+$hr = '';
+$size = '';
 
 // building of the parameters array used to pre-load the category list and the search elements
 $param = array();

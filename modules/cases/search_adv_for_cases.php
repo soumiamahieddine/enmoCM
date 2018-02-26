@@ -102,25 +102,11 @@ if (! empty($where)) {
 }
 
 //Check if web brower is ie_6 or not
-if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-    $ieBrowser = 'true';
-    $formClass = 'form';
-    $hr = '<tr><td colspan="2"><hr></td></tr>';
-    $size = '';
-} else if (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
-    && !preg_match('/opera/i', $HTTP_USER_AGENT)
-) {
-    $ieBrowser = 'true';
-    $formClass = 'forms';
-    $hr = '';
-     $size = '';
-} else {
-    $ieBrowser = 'false';
-    $formClass = 'forms';
-    $hr = '';
-    $size = '';
-    // $size = 'style="width:40px;"';
-}
+
+$formClass = 'forms';
+$hr = '';
+$size = '';
+// $size = 'style="width:40px;"';
 
 // building of the parameters array used to pre-load the category list and the search elements
 $param = array();
@@ -752,7 +738,7 @@ function del_query_confirm()
                <tr>
              <td width="70%">
                 <label class="bold"><?php echo _ADD_PARAMETERS;?>:</label>
-                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php functions::xecho($ieBrowser);?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', 'false', '<?php echo _ERROR_IE_SEARCH;?>');">
                     <?php functions::xecho($srcTab);?>
                 </select>
              </td>
@@ -780,7 +766,7 @@ function del_query_confirm()
         </div>
 
         <script type="text/javascript">
-        load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>', '<?php echo _ERROR_IE_SEARCH;?>');
+        load_query(valeurs, loaded_query, 'frmsearch2', 'false', '<?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
     </div>

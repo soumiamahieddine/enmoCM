@@ -95,19 +95,7 @@ $mode_form = 'fullscreen';
 function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $collId, $mode )
 {
     $_SESSION['category_id'] = '';
-    if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-        $ieBrowser = true;
-        $displayValue = 'block';
-    } else if (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
-        && ! preg_match('/opera/i', $_SERVER["HTTP_USER_AGENT"])
-    ) {
-        $ieBrowser = true;
-        $displayValue = 'block';
-    } else {
-        $ieBrowser = false;
-        $displayValue = 'table-row';
-    }
-    
+    $displayValue = 'table-row';
     //DECLARATIONS
     
     //INSTANTIATE

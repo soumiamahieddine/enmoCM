@@ -679,18 +679,7 @@ $core_tools->load_html();
 $core_tools->load_header(_USER_ENTITIES_TITLE);
 $time = $core_tools->get_session_time_expire();
 $displayValue = "";
-if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-    $ieBrowser = true;
-    $displayValue = 'block';
-} elseif (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
-    && ! preg_match('/opera/i', $HTTP_USER_AGENT)
-) {
-    $ieBrowser = true;
-    $displayValue = 'block';
-} else {
-    $ieBrowser = false;
-    $displayValue = '' . $displayValue . '';
-}
+$displayValue = '' . $displayValue . '';
 
 $link = $_SESSION['config']['businessappurl'] . "index.php?display=true&module=entities&page=manage_listinstance&origin=" . $origin;
 if ($onlyCc) $link .= '&only_cc';
