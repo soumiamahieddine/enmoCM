@@ -24,6 +24,8 @@ class SecondLevelModelAbstract
         $firstLevel = DatabaseModel::select([
             'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'    => ['doctypes_second_level'],
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
             'order_by' => ['doctypes_second_level_label asc']
         ]);
 

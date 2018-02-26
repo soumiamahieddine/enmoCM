@@ -39,42 +39,22 @@ class DoctypeControllerTest extends TestCase
         $this->assertNotNull($responseBody->structure[0]->enabled);
     }
 
-    public function testinitFirstLevel()
+    public function testinitDoctypes()
     {
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
         $firstLevelController = new \Doctype\controllers\FirstLevelController();
-        $response          = $firstLevelController->initFirstLevel($request, new \Slim\Http\Response());
+        $response          = $firstLevelController->initDoctypes($request, new \Slim\Http\Response());
         $responseBody      = json_decode((string)$response->getBody());
 
-        $this->assertNotNull($responseBody->folderType);
-        $this->assertNotNull($responseBody->folderType[0]->foldertype_id);
-        $this->assertNotNull($responseBody->folderType[0]->foldertype_label);
-    }
-
-    public function testinitSecondLevel()
-    {
-        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request      = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $secondLevelController = new \Doctype\controllers\SecondLevelController();
-        $response          = $secondLevelController->initSecondLevel($request, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
+        $this->assertNotNull($responseBody->folderTypes);
+        $this->assertNotNull($responseBody->folderTypes[0]->foldertype_id);
+        $this->assertNotNull($responseBody->folderTypes[0]->foldertype_label);
 
         $this->assertNotNull($responseBody->firstLevel);
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_id);
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
-    }
-
-    public function testinitDoctype()
-    {
-        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request      = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $doctypeController = new \Doctype\controllers\DoctypeController();
-        $response          = $doctypeController->initDoctype($request, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->secondLevel);
         $this->assertNotNull($responseBody->processModes);
@@ -105,7 +85,7 @@ class DoctypeControllerTest extends TestCase
         $response     = $firstLevelController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$firstLevelId = $responseBody->firstLevel;
+        self::$firstLevelId = $responseBody->firstLevelId;
 
         $this->assertInternalType('int', self::$firstLevelId);
 
@@ -144,7 +124,7 @@ class DoctypeControllerTest extends TestCase
         $response     = $secondLevelController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$secondLevelId = $responseBody->secondLevel;
+        self::$secondLevelId = $responseBody->secondLevelId;
 
         $this->assertInternalType('int', self::$secondLevelId);
 
@@ -245,10 +225,10 @@ class DoctypeControllerTest extends TestCase
         $response     = $firstLevelController->update($fullRequest, new \Slim\Http\Response(), ["id" => self::$firstLevelId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$firstLevelId, $responseBody->firstLevel->doctypes_first_level_id);
-        $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevel->doctypes_first_level_label);
-        $this->assertSame('#7777', $responseBody->firstLevel->css_style);
-        $this->assertSame('Y', $responseBody->firstLevel->enabled);
+        $this->assertSame(self::$firstLevelId, $responseBody->firstLevelId->doctypes_first_level_id);
+        $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevelId->doctypes_first_level_label);
+        $this->assertSame('#7777', $responseBody->firstLevelId->css_style);
+        $this->assertSame('Y', $responseBody->firstLevelId->enabled);
 
         // UPDATE FAIL
         $aArgs = [
@@ -287,11 +267,11 @@ class DoctypeControllerTest extends TestCase
         $response     = $secondLevelController->update($fullRequest, new \Slim\Http\Response(), ["id" => self::$secondLevelId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$secondLevelId, $responseBody->secondLevel->doctypes_second_level_id);
-        $this->assertSame('testTUsecondlevelUPDATE', $responseBody->secondLevel->doctypes_second_level_label);
-        $this->assertSame(self::$firstLevelId, $responseBody->secondLevel->doctypes_first_level_id);
-        $this->assertSame('#7777', $responseBody->secondLevel->css_style);
-        $this->assertSame('Y', $responseBody->secondLevel->enabled);
+        $this->assertSame(self::$secondLevelId, $responseBody->secondLevelId->doctypes_second_level_id);
+        $this->assertSame('testTUsecondlevelUPDATE', $responseBody->secondLevelId->doctypes_second_level_label);
+        $this->assertSame(self::$firstLevelId, $responseBody->secondLevelId->doctypes_first_level_id);
+        $this->assertSame('#7777', $responseBody->secondLevelId->css_style);
+        $this->assertSame('Y', $responseBody->secondLevelId->enabled);
 
         // UPDATE FAIL
         $aArgs = [
@@ -387,7 +367,7 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevel->doctypes_first_level_label);
         $this->assertSame('#7777', $responseBody->firstLevel->css_style);
         $this->assertSame(true, $responseBody->firstLevel->enabled);
-        $this->assertNotNull($responseBody->firstLevel->folderTypeSelected);
+        $this->assertNotNull($responseBody->firstLevel->foldertype_id);
         $this->assertNotNull($responseBody->folderTypes);
 
         // READ FIRST LEVEL FAIL
@@ -607,11 +587,11 @@ class DoctypeControllerTest extends TestCase
         $response     = $secondLevelController->delete($fullRequest, new \Slim\Http\Response(), ["id" => self::$secondLevelId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$secondLevelId, $responseBody->secondLevel->doctypes_second_level_id);
-        $this->assertSame(self::$firstLevelId, $responseBody->secondLevel->doctypes_first_level_id);
-        $this->assertSame('testTUsecondlevelUPDATE', $responseBody->secondLevel->doctypes_second_level_label);
-        $this->assertSame('#7777', $responseBody->secondLevel->css_style);
-        $this->assertSame('N', $responseBody->secondLevel->enabled);
+        $this->assertSame(self::$secondLevelId, $responseBody->secondLevelDeleted->doctypes_second_level_id);
+        $this->assertSame(self::$firstLevelId, $responseBody->secondLevelDeleted->doctypes_first_level_id);
+        $this->assertSame('testTUsecondlevelUPDATE', $responseBody->secondLevelDeleted->doctypes_second_level_label);
+        $this->assertSame('#7777', $responseBody->secondLevelDeleted->css_style);
+        $this->assertSame('N', $responseBody->secondLevelDeleted->enabled);
 
         //  DELETE FAIL
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
@@ -640,10 +620,10 @@ class DoctypeControllerTest extends TestCase
         $response     = $firstLevelController->delete($fullRequest, new \Slim\Http\Response(), ["id" => self::$firstLevelId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$firstLevelId, $responseBody->firstLevel->doctypes_first_level_id);
-        $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevel->doctypes_first_level_label);
-        $this->assertSame('#7777', $responseBody->firstLevel->css_style);
-        $this->assertSame('N', $responseBody->firstLevel->enabled);
+        $this->assertSame(self::$firstLevelId, $responseBody->firstLevelDeleted->doctypes_first_level_id);
+        $this->assertSame('testTUfirstlevelUPDATE', $responseBody->firstLevelDeleted->doctypes_first_level_label);
+        $this->assertSame('#7777', $responseBody->firstLevelDeleted->css_style);
+        $this->assertSame('N', $responseBody->firstLevelDeleted->enabled);
 
         //  DELETE FAIL
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
