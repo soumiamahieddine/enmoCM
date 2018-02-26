@@ -956,8 +956,8 @@ if (!defined("_RES_ATTACHED"))  define("_RES_ATTACHED", "Documents attachés");
 if (!defined("_SELECT_CONTACT_TO_REPLACE"))  define("_SELECT_CONTACT_TO_REPLACE", "Sélectionner le contact et l'adresse remplaçant");
 if (!defined("_ARE_YOU_SURE_TO_DELETE_CONTACT"))  define("_ARE_YOU_SURE_TO_DELETE_CONTACT", "êtes vous sûr de supprimer le contact ?");
 if (!defined("_CONTACT_CHECK"))  define("_CONTACT_CHECK", "Au moins un courrier enregistré récemment est affecté au même contact.");
-if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "Pas de doublon par organisme/société");
-if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "Pas de doublon par nom/prénom");
+if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "Pas de doublon pour les contacts moraux");
+if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "Pas de doublon pour les contacts physique (prénom nom)");
 
 if (!defined("_YOU_MUST_SELECT_CONTACT")) define("_YOU_MUST_SELECT_CONTACT", "Vous devez sélectionner un contact ");
 if (!defined("_DOC_SENDED_BY_CONTACT")) define("_DOC_SENDED_BY_CONTACT", "<b>Documents et/ou courriers envoyés par ce contact</b>");

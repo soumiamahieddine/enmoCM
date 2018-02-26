@@ -945,8 +945,8 @@ if (!defined("_RES_ATTACHED"))  define("_RES_ATTACHED", "Attached documents");
 if (!defined("_SELECT_CONTACT_TO_REPLACE"))  define("_SELECT_CONTACT_TO_REPLACE", "Select the contact and the address to replace");
 if (!defined("_ARE_YOU_SURE_TO_DELETE_CONTACT"))  define("_ARE_YOU_SURE_TO_DELETE_CONTACT", "Are you sure to delete this contact ?");
 if (!defined("_CONTACT_CHECK"))  define("_CONTACT_CHECK", "A recently recorded mail at least is affected to the same contact.");
-if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "No duplication by organization/ company");
-if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "No duplication by name/ first name");
+if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "No duplication by corporate contact (society)");
+if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "No duplication by physical contact (firstname lastname)");
 
 if (!defined("_YOU_MUST_SELECT_CONTACT")) define("_YOU_MUST_SELECT_CONTACT", "You have to select a contact ");
 if (!defined("_DOC_SENDED_BY_CONTACT")) define("_DOC_SENDED_BY_CONTACT", "<b>Documents and/or mails sent by this contact</b>");
