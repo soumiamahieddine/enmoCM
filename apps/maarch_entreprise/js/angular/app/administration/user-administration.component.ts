@@ -238,7 +238,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                     this.user.groups = data.groups;
                     this.user.allGroups = data.allGroups;
                     this.user.baskets = data.baskets;
-                    this.notify.success(this.lang.groupAdded + ' « ' + group.group_id + ' »');
+                    this.notify.success(this.lang.groupAdded);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -247,7 +247,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
                     this.user.allGroups = data.allGroups;
-                    this.notify.success(this.lang.groupDeleted + ' « ' + group.group_id + ' »');
+                    this.notify.success(this.lang.groupDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -256,7 +256,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data: any) => {
-                this.notify.success(this.lang.groupUpdated + ' « ' + group.group_id + ' »');
+                this.notify.success(this.lang.groupUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -273,7 +273,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             .subscribe((data: any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
-                this.notify.success(this.lang.entityAdded + ' « ' + entiyId + ' »');
+                this.notify.success(this.lang.entityAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -283,7 +283,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     updateEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe((data: any) => {
-                this.notify.success(this.lang.entityUpdated + ' « ' + entity.entity_id + ' »');
+                this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -305,7 +305,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             .subscribe((data: any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
-                this.notify.success(this.lang.entityDeleted + ' « ' + entityId + ' »');
+                this.notify.success(this.lang.entityDeleted);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -384,7 +384,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
                 this.userAbsenceModel = [];
-                this.notify.success(this.lang.absOn + ' ' + this.lang.for + ' « ' + this.user.user_id + ' »');
+                this.notify.success(this.lang.absOn);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -397,7 +397,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 for (let i in this.user.baskets) {
                     this.user.baskets[i].userToDisplay = '';
                 }
-                this.notify.success(this.lang.absOff + ' ' + this.lang.for + ' « ' + this.user.user_id + ' »');
+                this.notify.success(this.lang.absOff);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -407,7 +407,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/users", this.user)
                 .subscribe((data: any) => {
-                    this.notify.success(this.lang.userAdded + ' « ' + data.user.user_id + ' »');
+                    this.notify.success(this.lang.userAdded);
                     this.router.navigate(["/administration/users/" + data.user.id]);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -415,7 +415,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         } else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe((data: any) => {
-                    this.notify.success(this.lang.userUpdated + ' « ' + this.user.user_id + ' »');
+                    this.notify.success(this.lang.userUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

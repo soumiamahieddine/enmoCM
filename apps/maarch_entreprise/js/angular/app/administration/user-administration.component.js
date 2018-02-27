@@ -229,7 +229,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
                 _this.user.baskets = data.baskets;
-                _this.notify.success(_this.lang.groupAdded + ' « ' + group.group_id + ' »');
+                _this.notify.success(_this.lang.groupAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -239,7 +239,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
                 .subscribe(function (data) {
                 _this.user.groups = data.groups;
                 _this.user.allGroups = data.allGroups;
-                _this.notify.success(_this.lang.groupDeleted + ' « ' + group.group_id + ' »');
+                _this.notify.success(_this.lang.groupDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -249,7 +249,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe(function (data) {
-            _this.notify.success(_this.lang.groupUpdated + ' « ' + group.group_id + ' »');
+            _this.notify.success(_this.lang.groupUpdated);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -264,7 +264,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            _this.notify.success(_this.lang.entityAdded + ' « ' + entiyId + ' »');
+            _this.notify.success(_this.lang.entityAdded);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -273,7 +273,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
             .subscribe(function (data) {
-            _this.notify.success(_this.lang.entityUpdated + ' « ' + entity.entity_id + ' »');
+            _this.notify.success(_this.lang.entityUpdated);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -294,7 +294,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             .subscribe(function (data) {
             _this.user.entities = data.entities;
             _this.user.allEntities = data.allEntities;
-            _this.notify.success(_this.lang.entityDeleted + ' « ' + entityId + ' »');
+            _this.notify.success(_this.lang.entityDeleted);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -367,7 +367,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             .subscribe(function (data) {
             _this.user.status = data.user.status;
             _this.userAbsenceModel = [];
-            _this.notify.success(_this.lang.absOn + ' ' + _this.lang.for + ' « ' + _this.user.user_id + ' »');
+            _this.notify.success(_this.lang.absOn);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -380,7 +380,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             for (var i in _this.user.baskets) {
                 _this.user.baskets[i].userToDisplay = '';
             }
-            _this.notify.success(_this.lang.absOff + ' ' + _this.lang.for + ' « ' + _this.user.user_id + ' »');
+            _this.notify.success(_this.lang.absOff);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -390,7 +390,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/users", this.user)
                 .subscribe(function (data) {
-                _this.notify.success(_this.lang.userAdded + ' « ' + data.user.user_id + ' »');
+                _this.notify.success(_this.lang.userAdded);
                 _this.router.navigate(["/administration/users/" + data.user.id]);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -399,7 +399,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe(function (data) {
-                _this.notify.success(_this.lang.userUpdated + ' « ' + _this.user.user_id + ' »');
+                _this.notify.success(_this.lang.userUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
