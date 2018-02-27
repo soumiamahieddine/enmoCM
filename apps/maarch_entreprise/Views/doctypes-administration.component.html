@@ -241,7 +241,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <mat-radio-group name="is_generated" [(ngModel)]="currentType.is_generated">
+                                    <mat-radio-group required name="is_generated" [(ngModel)]="currentType.is_generated">
                                         <mat-radio-button color="primary" name="is_generated" [checked]="currentType.is_generated=='Y'" value="Y">{{lang.generatedFile}}</mat-radio-button>
                                         <mat-radio-button color="primary" name="is_generated" [checked]="currentType.is_generated=='N'" value="N">{{lang.loadedFile}}</mat-radio-button>
                                     </mat-radio-group>
@@ -259,9 +259,9 @@
                             
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button [disabled]="!typeForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
+                                    <button mat-raised-button [disabled]="!typeForm.form.valid" color="primary" (click)="saveType()">{{lang.save}}</button>
                                     <button mat-raised-button *ngIf="!creationMode" [disabled]="!typeForm.form.valid"
-                                        color="warn" (click)="removeEntity()">{{lang.delete}}</button>
+                                        color="warn" (click)="removeType()">{{lang.delete}}</button>
                                     <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>
                             </div>

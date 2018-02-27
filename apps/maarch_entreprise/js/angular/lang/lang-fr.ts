@@ -322,4 +322,7 @@ export const LANG_FR = {
     "secondLevelUpdated"                 : "Sous-chemise mise à jour",
     "secondLevelDeleted"                 : "Sous-chemise supprimée",
     "chooseModel"                 : "Choisissez un modèle",
+    "documentTypeAdded"                 : "Type de document ajouté",
+    "documentTypeUpdated"                 : "Type de document mis à jour",
+    "documentTypeDeleted"                 : "Type de document supprimé",
 };

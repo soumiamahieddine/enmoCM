@@ -154,7 +154,6 @@ class DoctypeControllerTest extends TestCase
 
         $aArgs = [
             'description'                 => 'testUDoctype',
-            'doctypes_first_level_id'     => self::$firstLevelId,
             'doctypes_second_level_id'    => self::$secondLevelId,
             'retention_final_disposition' => 'destruction',
             'retention_rule'              => 'compta_3_03',
@@ -175,14 +174,14 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$doctypeId = $responseBody->doctype;
+        self::$doctypeId = $responseBody->doctypeId;
 
         $this->assertInternalType('int', self::$doctypeId);
+        $this->assertNotNull($responseBody->doctypeTree);
 
         // CREATE FAIL
         $aArgs = [
             'description'                 => '',
-            'doctypes_first_level_id'     => '',
             'doctypes_second_level_id'    => '',
             'retention_final_disposition' => '',
             'retention_rule'              => 'compta_3_03',
@@ -200,11 +199,10 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Invalid description', $responseBody->errors[0]);
-        $this->assertSame('Invalid doctypes_first_level_id', $responseBody->errors[1]);
-        $this->assertSame('Invalid doctypes_second_level_id value', $responseBody->errors[2]);
-        $this->assertSame('Invalid process_delay value', $responseBody->errors[3]);
-        $this->assertSame('Invalid delay1 value', $responseBody->errors[4]);
-        $this->assertSame('Invalid delay2 value', $responseBody->errors[5]);
+        $this->assertSame('Invalid doctypes_second_level_id value', $responseBody->errors[1]);
+        $this->assertSame('Invalid process_delay value', $responseBody->errors[2]);
+        $this->assertSame('Invalid delay1 value', $responseBody->errors[3]);
+        $this->assertSame('Invalid delay2 value', $responseBody->errors[4]);
     }
 
     public function testUpdateFirstLevel()
@@ -301,7 +299,6 @@ class DoctypeControllerTest extends TestCase
 
         $aArgs = [
             'description'                 => 'testUDoctypeUPDATE',
-            'doctypes_first_level_id'     => self::$firstLevelId,
             'doctypes_second_level_id'    => self::$secondLevelId,
             'retention_final_disposition' => 'destruction',
             'retention_rule'              => 'compta_3_03',
@@ -321,12 +318,12 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->update($fullRequest, new \Slim\Http\Response(), ["id" => self::$doctypeId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$doctypeId, $responseBody->doctype);
+        $this->assertSame(self::$doctypeId, $responseBody->doctype->type_id);
+        $this->assertNotNull($responseBody->doctypeTree);
 
         // UPDATE FAIL
         $aArgs = [
             'description'                 => '',
-            'doctypes_first_level_id'     => '',
             'doctypes_second_level_id'    => '',
             'retention_final_disposition' => '',
             'retention_rule'              => 'compta_3_03',
@@ -346,11 +343,10 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('type_id is not a numeric', $responseBody->errors[0]);
         $this->assertSame('Id gaz does not exists', $responseBody->errors[1]);
         $this->assertSame('Invalid description', $responseBody->errors[2]);
-        $this->assertSame('Invalid doctypes_first_level_id', $responseBody->errors[3]);
-        $this->assertSame('Invalid doctypes_second_level_id value', $responseBody->errors[4]);
-        $this->assertSame('Invalid process_delay value', $responseBody->errors[5]);
-        $this->assertSame('Invalid delay1 value', $responseBody->errors[6]);
-        $this->assertSame('Invalid delay2 value', $responseBody->errors[7]);
+        $this->assertSame('Invalid doctypes_second_level_id value', $responseBody->errors[3]);
+        $this->assertSame('Invalid process_delay value', $responseBody->errors[4]);
+        $this->assertSame('Invalid delay1 value', $responseBody->errors[5]);
+        $this->assertSame('Invalid delay2 value', $responseBody->errors[6]);
     }
 
     public function testRead()
@@ -456,7 +452,7 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $doctypeId = $responseBody->doctype;
+        $doctypeId = $responseBody->doctypeId;
 
         $resController = new \Resource\controllers\ResController();
 
@@ -512,6 +508,7 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(false, $responseBody->deleted);
+        $this->assertNull($responseBody->doctypeTree);
 
         $aArgs = [
             "new_type_id" => self::$doctypeId
@@ -520,7 +517,7 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->deleteRedirect($fullRequest, new \Slim\Http\Response(), ["id" => $doctypeId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(true, $responseBody->doctype);
+        $this->assertNotNull($responseBody->doctypeTree);
 
         $res = \Resource\models\ResModel::getById(['resId' => $resId]);
         $this->assertSame(self::$doctypeId, $res['type_id']);
@@ -557,7 +554,7 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBody->deleted);
-        $this->assertNotNull($responseBody->doctypes);
+        $this->assertNotNull($responseBody->doctypeTree);
 
         //  DELETE FAIL
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

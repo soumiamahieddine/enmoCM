@@ -12,14 +12,13 @@
 namespace Doctype\controllers;
 
 use History\controllers\HistoryController;
+use Doctype\controllers\FirstLevelController;
 use Respect\Validation\Validator;
-use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
 use Doctype\models\DoctypeExtModel;
 use Doctype\models\DoctypeIndexesModel;
 use Doctype\models\TemplateDoctypeModel;
-use Folder\models\FolderTypeModel;
 use Core\Models\ServiceModel;
 use Template\models\TemplateModel;
 use Slim\Http\Request;
@@ -64,12 +63,14 @@ class DoctypeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
+        $data                            = $request->getParams();
         
         $errors = $this->control($data, 'create');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
+        $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
+        $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         $doctypeId = DoctypeModel::create([
             'coll_id'                     => 'letterbox_coll',
@@ -116,7 +117,8 @@ class DoctypeController
 
         return $response->withJson(
             [
-            'doctype'  => $doctypeId
+            'doctypeId'   => $doctypeId,
+            'doctypeTree' => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -127,13 +129,15 @@ class DoctypeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data            = $request->getParams();
-        $data['type_id'] = $aArgs['id'];
+        $data                            = $request->getParams();
+        $data['type_id']                 = $aArgs['id'];
         
         $errors = $this->control($data, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
+        $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
+        $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         DoctypeModel::update([
             'type_id'                     => $data['type_id'],
@@ -183,7 +187,8 @@ class DoctypeController
 
         return $response->withJson(
             [
-            'doctype'  => $data['type_id']
+            'doctype'     => $data,
+            'doctypeTree' => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -206,16 +211,15 @@ class DoctypeController
             'data'   => [$aArgs['id']]]))
         ) {
             DoctypeController::deleteAllDoctypeData(['type_id' => $aArgs['id']]);
-            $docTypes = '';
             $deleted  = true;
+            $doctypeTree = FirstLevelController::getTreeFunction();
         } else {
-            $docTypes = DoctypeModel::get();
             $deleted  = false;
         }
 
         return $response->withJson([
-            'deleted'  => $deleted,
-            'doctypes' => $docTypes,
+            'deleted'     => $deleted,
+            'doctypeTree' => $doctypeTree
         ]);
     }
 
@@ -255,7 +259,7 @@ class DoctypeController
 
         return $response->withJson(
             [
-            'doctype'  => true
+            'doctypeTree' => FirstLevelController::getTreeFunction()
             ]
         );
     }
@@ -296,11 +300,6 @@ class DoctypeController
         if (!Validator::notEmpty()->validate($aArgs['description']) ||
             !Validator::length(1, 255)->validate($aArgs['description'])) {
             $errors[] = 'Invalid description';
-        }
-
-        if (!Validator::notEmpty()->validate($aArgs['doctypes_first_level_id']) ||
-            !Validator::intVal()->validate($aArgs['doctypes_first_level_id'])) {
-            $errors[] = 'Invalid doctypes_first_level_id';
         }
 
         if (!Validator::notEmpty()->validate($aArgs['doctypes_second_level_id']) ||

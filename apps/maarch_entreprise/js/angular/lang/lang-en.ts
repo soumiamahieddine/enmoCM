@@ -296,4 +296,7 @@ export const LANG_EN = {
     "secondLevelAdded"                 : "Subfolder added",
     "secondLevelUpdated"                 : "Subfolder updated",
     "secondLevelDeleted"                 : "Subfolder deleted",
+    "documentTypeAdded"                 : "Document type added",
+    "documentTypeUpdated"                 : "Document type updated",
+    "documentTypeDeleted"                 : "Document type deleted",
 };

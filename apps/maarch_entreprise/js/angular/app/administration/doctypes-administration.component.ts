@@ -178,8 +178,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     resetDatas() {
         this.currentFirstLevel  = false;
         this.currentSecondLevel = false;
-        this.currentType        = false;
-        this.readMode();       
+        this.currentType        = false;       
     }
 
     saveFirstLevel() {
@@ -187,6 +186,7 @@ export class DoctypesAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + "rest/doctypes/firstLevel", this.currentFirstLevel)
                 .subscribe((data: any) => {
                     this.resetDatas();
+                    this.readMode();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
@@ -197,7 +197,6 @@ export class DoctypesAdministrationComponent implements OnInit {
         } else {
             this.http.put(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id, this.currentFirstLevel)
                 .subscribe((data: any) => {
-                    this.resetDatas();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
@@ -213,6 +212,7 @@ export class DoctypesAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + "rest/doctypes/secondLevel", this.currentSecondLevel)
                 .subscribe((data: any) => {
                     this.resetDatas();
+                    this.readMode();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
@@ -223,11 +223,36 @@ export class DoctypesAdministrationComponent implements OnInit {
         } else {
             this.http.put(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id, this.currentSecondLevel)
                 .subscribe((data: any) => {
-                    this.resetDatas();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
                     this.notify.success(this.lang.secondLevelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
+    saveType() {
+        if (this.creationMode) {
+            this.http.post(this.coreUrl + "rest/doctypes/types", this.currentType)
+                .subscribe((data: any) => {
+                    this.resetDatas();
+                    this.readMode();
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.documentTypeAdded);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.put(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id, this.currentType)
+                .subscribe((data: any) => {
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.documentTypeUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -254,6 +279,8 @@ export class DoctypesAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id)
                 .subscribe((data: any) => {
+                    this.resetDatas();
+                    this.readMode();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
@@ -271,10 +298,31 @@ export class DoctypesAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id)
                 .subscribe((data: any) => {
+                    this.resetDatas();
+                    this.readMode();
                     this.doctypes = data['doctypeTree'];
                     $j('#jstree').jstree(true).settings.core.data = this.doctypes;
                     $j('#jstree').jstree("refresh");
                     this.notify.success(this.lang.secondLevelDeleted);
+                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
+    removeType() {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentType.description + ' »');
+
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id)
+                .subscribe((data: any) => {
+                    this.resetDatas();
+                    this.readMode();
+                    this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    this.notify.success(this.lang.documentTypeDeleted);
                     $j('#jstree').jstree('select_node', this.doctypes[0]);
                 }, (err) => {
                     this.notify.error(err.error.errors);
