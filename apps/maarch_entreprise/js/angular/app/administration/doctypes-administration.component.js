@@ -8,12 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var layout_1 = require("@angular/cdk/layout");
 var http_1 = require("@angular/common/http");
 var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
+var material_1 = require("@angular/material");
 var DoctypesAdministrationComponent = /** @class */ (function () {
     function DoctypesAdministrationComponent(changeDetectorRef, media, http, notify) {
         this.http = http;
@@ -301,13 +305,17 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id)
                 .subscribe(function (data) {
-                _this.resetDatas();
-                _this.readMode();
-                _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
-                _this.notify.success(_this.lang.documentTypeDeleted);
-                $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                if (data.deleted) {
+                    _this.resetDatas();
+                    _this.readMode();
+                    _this.doctypes = data['doctypeTree'];
+                    $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                    $j('#jstree').jstree("refresh");
+                    _this.notify.success(_this.lang.documentTypeDeleted);
+                    $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                }
+                else {
+                }
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -342,3 +350,21 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
     return DoctypesAdministrationComponent;
 }());
 exports.DoctypesAdministrationComponent = DoctypesAdministrationComponent;
+var DoctypesAdministrationRedirectModalComponent = /** @class */ (function () {
+    function DoctypesAdministrationRedirectModalComponent(http, data, dialogRef) {
+        this.http = http;
+        this.data = data;
+        this.dialogRef = dialogRef;
+        this.lang = translate_component_1.LANG;
+        // super(http, ['entities']);
+    }
+    DoctypesAdministrationRedirectModalComponent = __decorate([
+        core_1.Component({
+            templateUrl: angularGlobals["doctypes-administration-redirect-modalView"],
+        }),
+        __param(1, core_1.Inject(material_1.MAT_DIALOG_DATA)),
+        __metadata("design:paramtypes", [http_1.HttpClient, Object, material_1.MatDialogRef])
+    ], DoctypesAdministrationRedirectModalComponent);
+    return DoctypesAdministrationRedirectModalComponent;
+}());
+exports.DoctypesAdministrationRedirectModalComponent = DoctypesAdministrationRedirectModalComponent;

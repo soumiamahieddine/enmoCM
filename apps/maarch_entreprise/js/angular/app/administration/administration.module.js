@@ -83,6 +83,7 @@ var AdministrationModule = /** @class */ (function () {
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
                 basket_administration_component_1.BasketAdministrationGroupListModalComponent,
+                doctypes_administration_component_1.DoctypesAdministrationRedirectModalComponent,
                 diffusionModels_administration_component_1.DiffusionModelsAdministrationComponent,
                 diffusionModel_administration_component_1.DiffusionModelAdministrationComponent
             ],
@@ -91,7 +92,8 @@ var AdministrationModule = /** @class */ (function () {
                 entities_administration_component_1.EntitiesAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
-                basket_administration_component_1.BasketAdministrationGroupListModalComponent
+                basket_administration_component_1.BasketAdministrationGroupListModalComponent,
+                doctypes_administration_component_1.DoctypesAdministrationRedirectModalComponent
             ],
         })
     ], AdministrationModule);

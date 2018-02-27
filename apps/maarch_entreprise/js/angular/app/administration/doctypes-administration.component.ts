@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -317,13 +318,18 @@ export class DoctypesAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id)
                 .subscribe((data: any) => {
-                    this.resetDatas();
-                    this.readMode();
-                    this.doctypes = data['doctypeTree'];
-                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
-                    $j('#jstree').jstree("refresh");
-                    this.notify.success(this.lang.documentTypeDeleted);
-                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                    if(data.deleted){
+                        this.resetDatas();
+                        this.readMode();
+                        this.doctypes = data['doctypeTree'];
+                        $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                        $j('#jstree').jstree("refresh");
+                        this.notify.success(this.lang.documentTypeDeleted);
+                        $j('#jstree').jstree('select_node', this.doctypes[0]);
+                    } else {
+
+                    }
+
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -349,4 +355,14 @@ export class DoctypesAdministrationComponent implements OnInit {
         this.creationMode = true;
     }
 
+}
+@Component({
+    templateUrl: angularGlobals["doctypes-administration-redirect-modalView"],
+})
+export class DoctypesAdministrationRedirectModalComponent {
+    lang: any = LANG;
+
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DoctypesAdministrationRedirectModalComponent>) {
+        // super(http, ['entities']);
+    }
 }

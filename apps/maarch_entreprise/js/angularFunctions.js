@@ -14,6 +14,7 @@ function triggerAngular(prodmode, locationToGo) {
         'basket-administration-settings-modal',
         'basket-administration-groupList-modal',
         'doctypes-administration',
+        'doctypes-administration-redirect-modal',
         'diffusionModels-administration',
         'diffusionModel-administration',
         'entities-administration',

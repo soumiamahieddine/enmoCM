@@ -17,7 +17,7 @@ import { EntitiesAdministrationComponent, EntitiesAdministrationRedirectModalCom
 import { EntityAdministrationComponent }                from './entity-administration.component';
 import { DiffusionModelsAdministrationComponent }       from './diffusionModels-administration.component';
 import { DiffusionModelAdministrationComponent }        from './diffusionModel-administration.component';
-import { DoctypesAdministrationComponent }              from './doctypes-administration.component';
+import { DoctypesAdministrationComponent, DoctypesAdministrationRedirectModalComponent }              from './doctypes-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
 import { ActionsAdministrationComponent }               from './actions-administration.component';
@@ -74,6 +74,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
         BasketAdministrationGroupListModalComponent,
+        DoctypesAdministrationRedirectModalComponent,
         DiffusionModelsAdministrationComponent,
         DiffusionModelAdministrationComponent
     ],
@@ -82,7 +83,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
         EntitiesAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
-        BasketAdministrationGroupListModalComponent
+        BasketAdministrationGroupListModalComponent,
+        DoctypesAdministrationRedirectModalComponent
     ],
 })
 export class AdministrationModule {}
