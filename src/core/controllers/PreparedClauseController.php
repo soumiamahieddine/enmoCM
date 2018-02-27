@@ -14,10 +14,10 @@
 
 namespace SrcCore\controllers;
 
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
+use User\models\UserModel;
 
 class PreparedClauseController
 {

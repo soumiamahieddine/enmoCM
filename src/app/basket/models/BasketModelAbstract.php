@@ -14,12 +14,12 @@
 
 namespace Basket\models;
 
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
 
 class BasketModelAbstract
 {

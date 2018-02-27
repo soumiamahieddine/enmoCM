@@ -8,19 +8,14 @@
 */
 
 /**
-* @brief Security Model Abstract
+* @brief Security Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
-use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
-
-class SecurityModelAbstract
+class SecurityModel
 {
-
     public static function getPasswordHash($password)
     {
         return password_hash($password, PASSWORD_DEFAULT);

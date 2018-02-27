@@ -105,7 +105,7 @@ abstract class basket_Abstract extends Database
 
         $this->_loadActivityUser($userData['UserId']);
         $this->_loadBasketsPages();
-        $user = \Core\Models\UserModel::getByUserId(['userId' => $userData['UserId'], 'select' => ['id']]);
+        $user = \User\models\UserModel::getByUserId(['userId' => $userData['UserId'], 'select' => ['id']]);
 
         if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
             $db = new Database();

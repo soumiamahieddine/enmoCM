@@ -17,7 +17,6 @@ use Attachments\Models\AttachmentsModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Core\Models\ContactModel;
-use Core\Models\UserModel;
 use Core\Models\LangModel;
 use Docserver\models\DocserverModel;
 use Core\Models\ServiceModel;
@@ -30,6 +29,7 @@ use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use User\models\UserModel;
 use Visa\Models\VisaModel;
 
 //TODO Require once

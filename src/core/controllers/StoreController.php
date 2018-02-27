@@ -16,17 +16,17 @@
 namespace SrcCore\controllers;
 
 use Attachments\Models\AttachmentsModel;
-use Core\Models\ChronoModel;
 use Core\Models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
-use Core\Models\UserModel;
+use SrcCore\models\ChronoModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use Resource\models\ResExtModel;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class StoreController
 {

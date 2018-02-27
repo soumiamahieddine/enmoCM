@@ -14,10 +14,10 @@
 
 namespace Entity\models;
 
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
 
 class EntityModelAbstract
 {

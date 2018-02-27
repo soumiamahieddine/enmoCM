@@ -16,6 +16,7 @@
 namespace Core\Models;
 
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class ServiceModelAbstract
 {
@@ -250,8 +251,6 @@ class ServiceModelAbstract
             if ($path) {
                 $xmlfile = simplexml_load_file($path);
                 foreach ($xmlfile->MENU as $value) {
-                    $id = (string) $value->id;
-            
                     $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;
                     
                     $modulesServices['menuList'][] = [

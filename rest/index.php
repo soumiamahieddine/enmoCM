@@ -84,13 +84,13 @@ if (strpos(getcwd(), '/rest')) {
 
 $userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-    if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+    if (\SrcCore\models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
         $userId = $_SERVER['PHP_AUTH_USER'];
     }
 } else {
-    $cookie = \Core\Models\SecurityModel::getCookieAuth();
-    if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
-        \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+    $cookie = \SrcCore\models\SecurityModel::getCookieAuth();
+    if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
+        \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
         $userId = $cookie['userId'];
     }
 }
@@ -156,10 +156,6 @@ $app->get('/docservers/{id}', \Docserver\controllers\DocserverController::class 
 $app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
 $app->get('/docserverTypes/{id}', \Docserver\controllers\DocserverTypeController::class . ':getById');
 
-//ListModels
-$app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
-$app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':updateListModelsDiffListDestByUserId');
-
 //Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
@@ -224,6 +220,8 @@ $app->post('/listTemplates', \Entity\controllers\ListTemplateController::class .
 $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
+$app->get('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':getByUserWithEntityDest');
+$app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');

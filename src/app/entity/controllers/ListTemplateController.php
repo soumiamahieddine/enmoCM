@@ -23,6 +23,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
 
 class ListTemplateController
 {
@@ -53,7 +54,7 @@ class ListTemplateController
             'object_type'   => $listTemplates[0]['object_type'],
             'title'         => $listTemplates[0]['title'],
             'description'   => $listTemplates[0]['description'],
-            'diffusionList' => [$listTemplates],
+            'diffusionList' => $listTemplates
         ];
 
         return $response->withJson(['listTemplate' => $listTemplate]);
@@ -214,6 +215,38 @@ class ListTemplateController
             'moduleId'  => 'listTemplate',
             'eventId'   => 'listTemplateSuppression',
         ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function getByUserWithEntityDest(Request $request, Response $response, array $aArgs)
+    {
+        $listTemplates = ListTemplateModel::get([
+            'select'    => ['object_id', 'title'],
+            'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?'],
+            'data'      => [$aArgs['itemId'], 'entity_id', 'dest']
+        ]);
+
+        return $response->withJson(['listTemplates' => $listTemplates]);
+    }
+
+    public function updateByUserWithEntityDest(Request $request, Response $response)
+    {
+        $data = $request->getParams();
+
+        foreach ($data['redirectListModels'] as $listModel) {
+            $user = UserModel::getByUserId(['userId' => $listModel['redirectUserId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+
+            ListTemplateModel::update([
+                'set'   => ['item_id' => $listModel['redirectUserId']],
+                'where' => ['item_id = ?', 'object_id = ?', 'object_type = ?', 'item_mode = ?'],
+                'data'  => [$data['user_id'], $listModel['object_id'], 'entity_id', 'dest']
+            ]);
+
+        }
 
         return $response->withJson(['success' => 'success']);
     }

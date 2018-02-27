@@ -10,16 +10,17 @@
 /**
  * @brief User Model
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Models;
+namespace User\models;
 
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use History\controllers\HistoryController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\SecurityModel;
+use SrcCore\models\ValidatorModel;
 
 class UserModelAbstract
 {

@@ -13,10 +13,11 @@
  * @ingroup core
  */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
 use Parameter\models\ParameterModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 
 class ChronoModel
 {

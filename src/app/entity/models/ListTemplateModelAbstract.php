@@ -83,6 +83,21 @@ class ListTemplateModelAbstract
         return true;
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'listmodels',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['where', 'data']);

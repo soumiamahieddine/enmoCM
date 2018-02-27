@@ -15,11 +15,9 @@
 namespace User\controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\SecurityModel;
 use Core\Models\ServiceModel;
-use Core\Models\UserModel;
-use Entities\Models\ListModelsModel;
 use Entity\models\EntityModel;
+use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
@@ -28,7 +26,9 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\controllers\StoreController;
+use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
+use User\models\UserModel;
 
 class UserController
 {
@@ -99,46 +99,7 @@ class UserController
 
         UserModel::delete(['id' => $aArgs['id']]);
 
-        //get New User List
-        if ($GLOBALS['userId'] == 'superadmin') {
-            $users = UserModel::get(
-                [
-                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                'where'     => ['user_id != ?', 'status != ?'],
-                'data'      => ['superadmin', 'DEL']
-                ]
-            );
-        } else {
-            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-            $users = UserModel::getByEntities(
-                [
-                'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
-                'entities'  => $entities
-                ]
-            );
-        }
-
-        $usersId = [];
-        foreach ($users as $value) {
-            $usersId[] = $value['user_id'];
-        }
-
-        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
-        
-        $usersListModels = [];
-        foreach ($listModels as $value) {
-            $usersListModels[] = $value['item_id'];
-        }
-        
-        foreach ($users as $key => $value) {
-            if (in_array($value['user_id'], $usersListModels)) {
-                $users[$key]['inDiffListDest'] = 'Y';
-            } else {
-                $users[$key]['inDiffListDest'] = 'N';
-            }
-        }
-
-        return $response->withJson(['success' => _DELETED_USER, 'users' => $users]);
+        return $response->withJson(['success' => 'success']);
     }
 
     public function getProfile(Request $request, Response $response)
@@ -534,13 +495,13 @@ class UserController
             ]);
         }
 
-        $usersId = [];
+        $usersIds = [];
         foreach ($users as $value) {
-            $usersId[] = $value['user_id'];
+            $usersIds[] = $value['user_id'];
         }
 
-        $listModels = ListModelsModel::getDiffListByUsersId(['select' => ['item_id'], 'users_id' => $usersId, 'object_type' => 'entity_id', 'item_mode' => 'dest']);
-        
+        $listModels = ListTemplateModel::get(['select' => ['item_id'], 'where' => ['item_id in (?)', 'object_type = ?', 'item_mode = ?'], 'data' => [$usersIds, 'entity_id', 'dest']]);
+
         $usersListModels = [];
         foreach ($listModels as $value) {
             $usersListModels[] = $value['item_id'];

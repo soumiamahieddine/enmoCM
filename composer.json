@@ -24,7 +24,6 @@
             "Core\\"          : "core/",
             "Attachments\\"   : "modules/attachments/",
             "Convert\\"       : "modules/convert/",
-            "Entities\\"      : "modules/entities/",
             "Notes\\"         : "modules/notes/",
             "Visa\\"          : "modules/visa/"
     	}

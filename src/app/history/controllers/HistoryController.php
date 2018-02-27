@@ -15,13 +15,13 @@
 namespace History\controllers;
 
 use Core\Models\TextFormatModel;
-use Core\Models\UserModel;
 use Core\Models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use User\models\UserModel;
 
 class HistoryController
 {

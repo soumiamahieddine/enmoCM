@@ -129,7 +129,7 @@ class security extends Database
             $params = [];
         }
 
-        $check = \Core\Models\SecurityModel::authentication(['userId' => $s_login, 'password' => $pass]);
+        $check = \SrcCore\models\SecurityModel::authentication(['userId' => $s_login, 'password' => $pass]);
         if ($check) {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }

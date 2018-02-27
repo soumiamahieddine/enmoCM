@@ -107,8 +107,6 @@ class DocserverController
                 }
                 umask(0022);
                 chmod($monthPath, 0770);
-            } else {
-                //return ['errors' => '[createPathOnDocServer] Folder alreay exists, workbatch already exist:' . $pathToDS];
             }
         }
 

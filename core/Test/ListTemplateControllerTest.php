@@ -77,32 +77,32 @@ class ListTemplateControllerTest extends TestCase
         $response       = $listTemplateController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate[0]->object_type);
-        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate[0]->title);
-        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate[0]->description);
-        $this->assertSame(0, $responseBody->listTemplate[0]->sequence);
-        $this->assertSame('bbain', $responseBody->listTemplate[0]->item_id);
-        $this->assertSame('user_id', $responseBody->listTemplate[0]->item_type);
-        $this->assertSame('visa', $responseBody->listTemplate[0]->item_mode);
-        $this->assertSame('Y', $responseBody->listTemplate[0]->visible);
+        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate->diffusionList[0]->object_type);
+        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate->diffusionList[0]->title);
+        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate->diffusionList[0]->description);
+        $this->assertSame(0, $responseBody->listTemplate->diffusionList[0]->sequence);
+        $this->assertSame('bbain', $responseBody->listTemplate->diffusionList[0]->item_id);
+        $this->assertSame('user_id', $responseBody->listTemplate->diffusionList[0]->item_type);
+        $this->assertSame('visa', $responseBody->listTemplate->diffusionList[0]->item_mode);
+        $this->assertSame('Y', $responseBody->listTemplate->diffusionList[0]->visible);
 
-        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate[1]->object_type);
-        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate[1]->title);
-        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate[1]->description);
-        $this->assertSame(1, $responseBody->listTemplate[1]->sequence);
-        $this->assertSame('ssissoko', $responseBody->listTemplate[1]->item_id);
-        $this->assertSame('user_id', $responseBody->listTemplate[1]->item_type);
-        $this->assertSame('visa', $responseBody->listTemplate[1]->item_mode);
-        $this->assertSame('Y', $responseBody->listTemplate[1]->visible);
+        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate->diffusionList[1]->object_type);
+        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate->diffusionList[1]->title);
+        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate->diffusionList[1]->description);
+        $this->assertSame(1, $responseBody->listTemplate->diffusionList[1]->sequence);
+        $this->assertSame('ssissoko', $responseBody->listTemplate->diffusionList[1]->item_id);
+        $this->assertSame('user_id', $responseBody->listTemplate->diffusionList[1]->item_type);
+        $this->assertSame('visa', $responseBody->listTemplate->diffusionList[1]->item_mode);
+        $this->assertSame('Y', $responseBody->listTemplate->diffusionList[1]->visible);
 
-        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate[2]->object_type);
-        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate[2]->title);
-        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate[2]->description);
-        $this->assertSame(0, $responseBody->listTemplate[2]->sequence);
-        $this->assertSame('bboule', $responseBody->listTemplate[2]->item_id);
-        $this->assertSame('user_id', $responseBody->listTemplate[2]->item_type);
-        $this->assertSame('sign', $responseBody->listTemplate[2]->item_mode);
-        $this->assertSame('Y', $responseBody->listTemplate[2]->visible);
+        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate->diffusionList[2]->object_type);
+        $this->assertSame('TEST-LISTTEMPLATE123-TITLE', $responseBody->listTemplate->diffusionList[2]->title);
+        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $responseBody->listTemplate->diffusionList[2]->description);
+        $this->assertSame(0, $responseBody->listTemplate->diffusionList[2]->sequence);
+        $this->assertSame('bboule', $responseBody->listTemplate->diffusionList[2]->item_id);
+        $this->assertSame('user_id', $responseBody->listTemplate->diffusionList[2]->item_type);
+        $this->assertSame('sign', $responseBody->listTemplate->diffusionList[2]->item_mode);
+        $this->assertSame('Y', $responseBody->listTemplate->diffusionList[2]->visible);
     }
 
     public function testUpdate()
@@ -163,25 +163,25 @@ class ListTemplateControllerTest extends TestCase
         $response       = $listTemplateController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate[0]->object_type);
-        $this->assertSame('TEST-LISTTEMPLATE123-TITLE-UPDATED', $responseBody->listTemplate[0]->title);
-        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION UPDATED', $responseBody->listTemplate[0]->description);
-        $this->assertSame(0, $responseBody->listTemplate[0]->sequence);
-        $this->assertSame('kkaar', $responseBody->listTemplate[0]->item_id);
-        $this->assertSame('user_id', $responseBody->listTemplate[0]->item_type);
-        $this->assertSame('visa', $responseBody->listTemplate[0]->item_mode);
-        $this->assertSame('Y', $responseBody->listTemplate[0]->visible);
+        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate->diffusionList[0]->object_type);
+        $this->assertSame('TEST-LISTTEMPLATE123-TITLE-UPDATED', $responseBody->listTemplate->diffusionList[0]->title);
+        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION UPDATED', $responseBody->listTemplate->diffusionList[0]->description);
+        $this->assertSame(0, $responseBody->listTemplate->diffusionList[0]->sequence);
+        $this->assertSame('kkaar', $responseBody->listTemplate->diffusionList[0]->item_id);
+        $this->assertSame('user_id', $responseBody->listTemplate->diffusionList[0]->item_type);
+        $this->assertSame('visa', $responseBody->listTemplate->diffusionList[0]->item_mode);
+        $this->assertSame('Y', $responseBody->listTemplate->diffusionList[0]->visible);
 
-        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate[1]->object_type);
-        $this->assertSame('TEST-LISTTEMPLATE123-TITLE-UPDATED', $responseBody->listTemplate[1]->title);
-        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION UPDATED', $responseBody->listTemplate[1]->description);
-        $this->assertSame(0, $responseBody->listTemplate[1]->sequence);
-        $this->assertSame('ppetit', $responseBody->listTemplate[1]->item_id);
-        $this->assertSame('user_id', $responseBody->listTemplate[1]->item_type);
-        $this->assertSame('sign', $responseBody->listTemplate[1]->item_mode);
-        $this->assertSame('Y', $responseBody->listTemplate[1]->visible);
+        $this->assertSame('VISA_CIRCUIT', $responseBody->listTemplate->diffusionList[1]->object_type);
+        $this->assertSame('TEST-LISTTEMPLATE123-TITLE-UPDATED', $responseBody->listTemplate->diffusionList[1]->title);
+        $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION UPDATED', $responseBody->listTemplate->diffusionList[1]->description);
+        $this->assertSame(0, $responseBody->listTemplate->diffusionList[1]->sequence);
+        $this->assertSame('ppetit', $responseBody->listTemplate->diffusionList[1]->item_id);
+        $this->assertSame('user_id', $responseBody->listTemplate->diffusionList[1]->item_type);
+        $this->assertSame('sign', $responseBody->listTemplate->diffusionList[1]->item_mode);
+        $this->assertSame('Y', $responseBody->listTemplate->diffusionList[1]->visible);
 
-        $this->assertSame(null, $responseBody->listTemplate[2]);
+        $this->assertSame(null, $responseBody->listTemplate->diffusionList[2]);
     }
 
     public function testDelete()

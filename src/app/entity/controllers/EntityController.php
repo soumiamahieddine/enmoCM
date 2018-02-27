@@ -16,7 +16,6 @@ namespace Entity\controllers;
 
 use Basket\models\BasketModel;
 use Core\Models\ServiceModel;
-use Core\Models\UserModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
@@ -27,6 +26,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateModel;
+use User\models\UserModel;
 
 class EntityController
 {
