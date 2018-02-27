@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Copyright Maarch since 2008 under licence GPLv3.
- * See LICENCE.txt file at the root folder for more details.
- * This file is part of Maarch software.
- */
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+*
+*/
 
 /**
- * @brief   BasketModelAbstract
- *
- * @author  <dev@maarch.org>
- */
+* @brief   BasketModelAbstract
+* @author  <dev@maarch.org>
+*/
 
 namespace Basket\models;
 
@@ -28,11 +28,11 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aBaskets = DatabaseModel::select([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['baskets'],
-            'where' => $aArgs['where'],
-            'data' => $aArgs['data'],
-            'order_by' => $aArgs['orderBy'],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['baskets'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aBaskets;
@@ -45,10 +45,10 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aBasket = DatabaseModel::select([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['baskets'],
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['baskets'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']]
         ]);
 
         return $aBasket[0];
@@ -60,18 +60,18 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
 
         DatabaseModel::insert([
-            'table' => 'baskets',
+            'table'         => 'baskets',
             'columnsValues' => [
-                'basket_id' => $aArgs['id'],
-                'basket_name' => $aArgs['basket_name'],
-                'basket_desc' => $aArgs['basket_desc'],
-                'basket_clause' => $aArgs['clause'],
-                'is_visible' => $aArgs['isVisible'],
-                'is_folder_basket' => $aArgs['isFolderBasket'],
-                'flag_notif' => $aArgs['flagNotif'],
-                'color' => $aArgs['color'],
-                'coll_id' => 'letterbox_coll',
-            ],
+                'basket_id'         => $aArgs['id'],
+                'basket_name'       => $aArgs['basket_name'],
+                'basket_desc'       => $aArgs['basket_desc'],
+                'basket_clause'     => $aArgs['clause'],
+                'is_visible'        => $aArgs['isVisible'],
+                'is_folder_basket'  => $aArgs['isFolderBasket'],
+                'flag_notif'        => $aArgs['flagNotif'],
+                'color'             => $aArgs['color'],
+                'coll_id'           => 'letterbox_coll',
+            ]
         ]);
 
         return true;
@@ -83,19 +83,19 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
 
         DatabaseModel::update([
-            'table' => 'baskets',
-            'set' => [
-                'basket_name' => $aArgs['basket_name'],
-                'basket_desc' => $aArgs['basket_desc'],
-                'basket_clause' => $aArgs['clause'],
-                'is_visible' => $aArgs['isVisible'],
-                'is_folder_basket' => $aArgs['isFolderBasket'],
-                'flag_notif' => $aArgs['flagNotif'],
-                'color' => $aArgs['color'],
-                'coll_id' => 'letterbox_coll',
+            'table'     => 'baskets',
+            'set'       => [
+                'basket_name'       => $aArgs['basket_name'],
+                'basket_desc'       => $aArgs['basket_desc'],
+                'basket_clause'     => $aArgs['clause'],
+                'is_visible'        => $aArgs['isVisible'],
+                'is_folder_basket'  => $aArgs['isFolderBasket'],
+                'flag_notif'        => $aArgs['flagNotif'],
+                'color'             => $aArgs['color'],
+                'coll_id'           => 'letterbox_coll',
             ],
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']]
         ]);
 
         return true;
@@ -103,17 +103,17 @@ class BasketModelAbstract
 
     public static function updateOrder(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'order']);
         ValidatorModel::stringType($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['order']);
 
         DatabaseModel::update([
-            'table' => 'baskets',
-            'set' => [
-                'basket_order' => $aArgs['order'],
+            'table'     => 'baskets',
+            'set'       => [
+                'basket_order'  => $aArgs['order']
             ],
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']]
         ]);
 
         return true;
@@ -127,32 +127,27 @@ class BasketModelAbstract
         DatabaseModel::delete([
             'table' => 'baskets',
             'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
             'table' => 'groupbasket',
             'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
             'table' => 'groupbasket_redirect',
             'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
             'table' => 'groupbasket_status',
             'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'data'  => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
             'table' => 'actions_groupbaskets',
             'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
-        ]);
-        DatabaseModel::delete([
-            'table' => 'user_baskets_secondary',
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
+            'data'  => [$aArgs['id']]
         ]);
 
         return true;
@@ -165,11 +160,11 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
 
         $aGroups = DatabaseModel::select([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['groupbasket'],
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['id']],
-            'order_by' => $aArgs['orderBy'],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['groupbasket'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['id']],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aGroups;
@@ -181,12 +176,12 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['id', 'groupId', 'resultPage']);
 
         DatabaseModel::insert([
-            'table' => 'groupbasket',
+            'table'         => 'groupbasket',
             'columnsValues' => [
-                'basket_id' => $aArgs['id'],
-                'group_id' => $aArgs['groupId'],
-                'result_page' => $aArgs['resultPage'],
-            ],
+                'basket_id'         => $aArgs['id'],
+                'group_id'          => $aArgs['groupId'],
+                'result_page'       => $aArgs['resultPage']
+            ]
         ]);
 
         return true;
@@ -199,16 +194,16 @@ class BasketModelAbstract
         ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
-            'table' => 'actions_groupbaskets',
+            'table'         => 'actions_groupbaskets',
             'columnsValues' => [
-                'id_action' => $aArgs['actionId'],
-                'where_clause' => $aArgs['whereClause'],
-                'group_id' => $aArgs['groupId'],
-                'basket_id' => $aArgs['id'],
-                'used_in_basketlist' => $aArgs['usedInBasketlist'],
-                'used_in_action_page' => $aArgs['usedInActionPage'],
-                'default_action_list' => $aArgs['defaultActionList'],
-            ],
+                'id_action'             => $aArgs['actionId'],
+                'where_clause'          => $aArgs['whereClause'],
+                'group_id'              => $aArgs['groupId'],
+                'basket_id'             => $aArgs['id'],
+                'used_in_basketlist'    => $aArgs['usedInBasketlist'],
+                'used_in_action_page'   => $aArgs['usedInActionPage'],
+                'default_action_list'   => $aArgs['defaultActionList'],
+            ]
         ]);
 
         return true;
@@ -220,10 +215,10 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
         $aRedirects = DatabaseModel::select([
-            'select' => $aArgs['select'],
-            'table' => ['groupbasket_redirect'],
-            'where' => $aArgs['where'],
-            'data' => $aArgs['data'],
+            'select'    => $aArgs['select'],
+            'table'     => ['groupbasket_redirect'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
         ]);
 
         return $aRedirects;
@@ -236,15 +231,15 @@ class BasketModelAbstract
         ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
-            'table' => 'groupbasket_redirect',
+            'table'         => 'groupbasket_redirect',
             'columnsValues' => [
-                'action_id' => $aArgs['actionId'],
-                'group_id' => $aArgs['groupId'],
-                'basket_id' => $aArgs['id'],
-                'entity_id' => $aArgs['entityId'],
-                'keyword' => $aArgs['keyword'],
-                'redirect_mode' => $aArgs['redirectMode'],
-            ],
+                'action_id'     => $aArgs['actionId'],
+                'group_id'      => $aArgs['groupId'],
+                'basket_id'     => $aArgs['id'],
+                'entity_id'     => $aArgs['entityId'],
+                'keyword'       => $aArgs['keyword'],
+                'redirect_mode' => $aArgs['redirectMode']
+            ]
         ]);
 
         return true;
@@ -257,9 +252,9 @@ class BasketModelAbstract
 
         DatabaseModel::update([
             'table' => 'groupbasket_redirect',
-            'set' => $aArgs['set'],
+            'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
-            'data' => $aArgs['data'],
+            'data'  => $aArgs['data']
         ]);
 
         return true;
@@ -271,10 +266,10 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
 
         $aStatuses = DatabaseModel::select([
-            'select' => $aArgs['select'],
-            'table' => ['groupbasket_status'],
-            'where' => $aArgs['where'],
-            'data' => $aArgs['data'],
+            'select'    => $aArgs['select'],
+            'table'     => ['groupbasket_status'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data']
         ]);
 
         return $aStatuses;
@@ -287,13 +282,13 @@ class BasketModelAbstract
         ValidatorModel::intVal($aArgs, ['actionId']);
 
         DatabaseModel::insert([
-            'table' => 'groupbasket_status',
+            'table'         => 'groupbasket_status',
             'columnsValues' => [
-                'action_id' => $aArgs['actionId'],
-                'group_id' => $aArgs['groupId'],
-                'basket_id' => $aArgs['id'],
-                'status_id' => $aArgs['statusId'],
-            ],
+                'action_id'     => $aArgs['actionId'],
+                'group_id'      => $aArgs['groupId'],
+                'basket_id'     => $aArgs['id'],
+                'status_id'     => $aArgs['statusId']
+            ]
         ]);
 
         return true;
@@ -307,22 +302,22 @@ class BasketModelAbstract
         DatabaseModel::delete([
             'table' => 'groupbasket',
             'where' => ['basket_id = ?', 'group_id = ?'],
-            'data' => [$aArgs['id'], $aArgs['groupId']],
+            'data'  => [$aArgs['id'], $aArgs['groupId']]
         ]);
         DatabaseModel::delete([
             'table' => 'actions_groupbaskets',
             'where' => ['basket_id = ?', 'group_id = ?'],
-            'data' => [$aArgs['id'], $aArgs['groupId']],
+            'data'  => [$aArgs['id'], $aArgs['groupId']]
         ]);
         DatabaseModel::delete([
             'table' => 'groupbasket_redirect',
             'where' => ['basket_id = ?', 'group_id = ?'],
-            'data' => [$aArgs['id'], $aArgs['groupId']],
+            'data'  => [$aArgs['id'], $aArgs['groupId']]
         ]);
         DatabaseModel::delete([
             'table' => 'groupbasket_status',
             'where' => ['basket_id = ?', 'group_id = ?'],
-            'data' => [$aArgs['id'], $aArgs['groupId']],
+            'data'  => [$aArgs['id'], $aArgs['groupId']]
         ]);
 
         return true;
@@ -335,10 +330,10 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aGroups = DatabaseModel::select([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['actions_groupbaskets'],
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data' => [$aArgs['id'], $aArgs['groupId']],
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['actions_groupbaskets'],
+            'where'     => ['basket_id = ?', 'group_id = ?'],
+            'data'      => [$aArgs['id'], $aArgs['groupId']]
         ]);
 
         return $aGroups;
@@ -367,10 +362,10 @@ class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aBasket = DatabaseModel::select([
-            'select' => ['basket_clause', 'basket_res_order'],
-            'table' => ['baskets'],
-            'where' => ['basket_id = ?'],
-            'data' => [$aArgs['basketId']],
+            'select'    => ['basket_clause', 'basket_res_order'],
+            'table'     => ['baskets'],
+            'where'     => ['basket_id = ?'],
+            'data'      => [$aArgs['basketId']]
         ]);
 
         if (empty($aBasket[0]) || empty($aBasket[0]['basket_clause'])) {
@@ -380,9 +375,9 @@ class BasketModelAbstract
         $where = PreparedClauseController::getPreparedClause(['clause' => $aBasket[0]['basket_clause'], 'userId' => $aArgs['userId']]);
 
         $aResList = ResModel::getOnView([
-            'select' => $aArgs['select'],
-            'where' => [$where],
-            'orderBy' => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : [$aBasket[0]['basket_res_order']],
+            'select'    => $aArgs['select'],
+            'where'     => [$where],
+            'orderBy'   => empty($aBasket[0]['basket_res_order']) ? ['creation_date DESC'] : [$aBasket[0]['basket_res_order']],
         ]);
 
         return $aResList;
@@ -406,24 +401,24 @@ class BasketModelAbstract
             $data = [$groupIds];
             if (!empty($aArgs['unneededBasketId'])) {
                 $where[] = 'groupbasket.basket_id not in (?)';
-                $data[] = $aArgs['unneededBasketId'];
+                $data[]  = $aArgs['unneededBasketId'];
             }
             $aBaskets = DatabaseModel::select([
-                    'select' => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc', 'basket_clause'],
-                    'table' => ['groupbasket, baskets'],
-                    'where' => $where,
-                    'data' => $data,
-                    'order_by' => ['group_id, basket_order, basket_name'],
+                    'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc', 'basket_clause'],
+                    'table'     => ['groupbasket, baskets'],
+                    'where'     => $where,
+                    'data'      => $data,
+                    'order_by'  => ['group_id, basket_order, basket_name']
             ]);
 
             foreach ($aBaskets as $key => $value) {
                 $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
                 $aBaskets2 = DatabaseModel::select([
-                        'select' => ['new_user'],
-                        'table' => ['user_abs'],
-                        'where' => ['user_abs = ?', 'basket_id = ?'],
-                        'data' => [$aArgs['userId'], $value['basket_id']],
+                        'select'    => ['new_user'],
+                        'table'     => ['user_abs'],
+                        'where'     => ['user_abs = ?', 'basket_id = ?'],
+                        'data'      => [$aArgs['userId'],$value['basket_id']],
                 ]);
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
@@ -440,11 +435,11 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-                'select' => ['ba.basket_id', 'ba.basket_name', 'ua.user_abs', 'ua.basket_owner', 'ua.is_virtual'],
-                'table' => ['baskets ba, user_abs ua'],
-                'where' => ['ua.new_user = ?', 'ua.basket_id = ba.basket_id'],
-                'data' => [$aArgs['userId']],
-                'order_by' => ['ba.basket_order, ba.basket_name'],
+                'select'    => ['ba.basket_id', 'ba.basket_name', 'ua.user_abs', 'ua.basket_owner', 'ua.is_virtual'],
+                'table'     => ['baskets ba, user_abs ua'],
+                'where'     => ['ua.new_user = ?', 'ua.basket_id = ba.basket_id'],
+                'data'      => [$aArgs['userId']],
+                'order_by'  => ['ba.basket_order, ba.basket_name']
         ]);
 
         foreach ($aBaskets as $key => $value) {
@@ -460,14 +455,14 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['userAbs', 'newUser', 'basketId', 'basketOwner', 'isVirtual']);
 
         DatabaseModel::insert([
-            'table' => 'user_abs',
+            'table'         => 'user_abs',
             'columnsValues' => [
-                'user_abs' => $aArgs['userAbs'],
-                'new_user' => $aArgs['newUser'],
-                'basket_id' => $aArgs['basketId'],
-                'basket_owner' => $aArgs['basketOwner'],
-                'is_virtual' => $aArgs['isVirtual'],
-            ],
+                'user_abs'      => $aArgs['userAbs'],
+                'new_user'      => $aArgs['newUser'],
+                'basket_id'     => $aArgs['basketId'],
+                'basket_owner'  => $aArgs['basketOwner'],
+                'is_virtual'    => $aArgs['isVirtual']
+            ]
         ]);
 
         return true;
@@ -479,12 +474,12 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         DatabaseModel::update([
-            'table' => 'user_abs',
-            'set' => [
-                'new_user' => $aArgs['newUser'],
+            'table'     => 'user_abs',
+            'set'       => [
+                'new_user' => $aArgs['newUser']
             ],
-            'where' => ['basket_id = ?', 'basket_owner = ?', 'user_abs = ?', 'new_user = ?'],
-            'data' => [$aArgs['basketId'], $aArgs['basketOwner'], $aArgs['userAbs'], $aArgs['userId']],
+            'where'     => ['basket_id = ?', 'basket_owner = ?', 'user_abs = ?', 'new_user = ?'],
+            'data'      => [$aArgs['basketId'], $aArgs['basketOwner'], $aArgs['userAbs'], $aArgs['userId']]
         ]);
 
         return true;
@@ -498,7 +493,7 @@ class BasketModelAbstract
         DatabaseModel::delete([
             'table' => 'user_abs',
             'where' => ['(user_abs = ? OR basket_owner = ?)', 'basket_id = ?'],
-            'data' => [$aArgs['userId'], $aArgs['userId'], $aArgs['basketId']],
+            'data'  => [$aArgs['userId'], $aArgs['userId'], $aArgs['basketId']]
         ]);
 
         return true;
@@ -510,18 +505,18 @@ class BasketModelAbstract
         ValidatorModel::stringType($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-            'select' => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
-            'table' => ['baskets ba, user_abs ua'],
-            'where' => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
-            'data' => [$aArgs['userId']],
-            'order_by' => ['ua.system_id'],
+            'select'    => ['ba.basket_id', 'ba.basket_name', 'ua.new_user', 'ua.basket_owner'],
+            'table'     => ['baskets ba, user_abs ua'],
+            'where'     => ['ua.user_abs = ?', 'ua.basket_id = ba.basket_id'],
+            'data'      => [$aArgs['userId']],
+            'order_by'  => ['ua.system_id']
         ]);
 
         foreach ($aBaskets as $key => $value) {
             $user = UserModel::getByUserId(['userId' => $value['new_user'], 'select' => ['firstname', 'lastname']]);
-            $aBaskets[$key]['userToDisplay'] = "{$user['firstname']} {$user['lastname']}";
+            $aBaskets[$key]['userToDisplay']     = "{$user['firstname']} {$user['lastname']}";
             $aBaskets[$key]['userIdRedirection'] = $value['new_user'];
-            $aBaskets[$key]['user'] = "{$user['firstname']} {$user['lastname']}";
+            $aBaskets[$key]['user']              = "{$user['firstname']} {$user['lastname']}" ;
         }
 
         return $aBaskets;
@@ -539,17 +534,17 @@ class BasketModelAbstract
         $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         foreach ($groups as $group) {
             $baskets = DatabaseModel::select([
-                'select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.color'],
-                'table' => ['groupbasket, baskets'],
-                'where' => ['groupbasket.basket_id = baskets.basket_id', 'groupbasket.group_id = ?', 'baskets.is_visible = ?', 'baskets.basket_id != ?'],
-                'data' => [$group['group_id'], 'Y', 'IndexingBasket'],
-                'order_by' => ['baskets.basket_order', 'baskets.basket_name'],
+                'select'    => ['baskets.basket_id', 'baskets.basket_name', 'baskets.color'],
+                'table'     => ['groupbasket, baskets'],
+                'where'     => ['groupbasket.basket_id = baskets.basket_id', 'groupbasket.group_id = ?', 'baskets.is_visible = ?', 'baskets.basket_id != ?'],
+                'data'      => [$group['group_id'], 'Y', 'IndexingBasket'],
+                'order_by'  => ['baskets.basket_order', 'baskets.basket_name']
             ]);
             $coloredBaskets = DatabaseModel::select([
-                'select' => ['basket_id', 'color'],
-                'table' => ['users_baskets'],
-                'where' => ['user_serial_id = ?', 'group_id = ?', 'color is not null'],
-                'data' => [$user['id'], $group['group_id']],
+                'select'    => ['basket_id', 'color'],
+                'table'     => ['users_baskets'],
+                'where'     => ['user_serial_id = ?', 'group_id = ?', 'color is not null'],
+                'data'      => [$user['id'], $group['group_id']]
             ]);
 
             foreach ($baskets as $kBasket => $basket) {
@@ -564,9 +559,9 @@ class BasketModelAbstract
             }
 
             $regroupedBaskets[] = [
-                'groupId' => $group['group_id'],
-                'groupDesc' => $group['group_desc'],
-                'baskets' => $baskets,
+                'groupId'     => $group['group_id'],
+                'groupDesc'   => $group['group_desc'],
+                'baskets'     => $baskets
             ];
         }
 
@@ -581,10 +576,10 @@ class BasketModelAbstract
         $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
 
         $coloredBaskets = DatabaseModel::select([
-            'select' => ['basket_id', 'group_id', 'color'],
-            'table' => ['users_baskets'],
-            'where' => ['user_serial_id = ?', 'color is not null'],
-            'data' => [$user['id']],
+            'select'    => ['basket_id', 'group_id', 'color'],
+            'table'     => ['users_baskets'],
+            'where'     => ['user_serial_id = ?', 'color is not null'],
+            'data'      => [$user['id']]
         ]);
 
         return $coloredBaskets;
@@ -606,11 +601,11 @@ class BasketModelAbstract
             $loadedXml = simplexml_load_file($path);
             if ($loadedXml) {
                 foreach ($loadedXml->BASKETPAGE as $value) {
-                    if (empty($aArgs['unneeded']) || !in_array((string) $value->ID, $aArgs['unneeded'])) {
+                    if (empty($aArgs['unneeded']) || !in_array((string)$value->ID, $aArgs['unneeded'])) {
                         $basketPages[] = [
-                            'id' => (string) $value->ID,
-                            'label' => constant((string) $value->LABEL),
-                            'name' => (string) $value->NAME,
+                            'id'    => (string)$value->ID,
+                            'label' => constant((string)$value->LABEL),
+                            'name'  => (string)$value->NAME
                         ];
                     }
                 }

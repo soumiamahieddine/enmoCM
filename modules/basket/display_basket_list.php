@@ -153,7 +153,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
                                         . $_SESSION['config']['businessappurl']
                                         . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
-                                        . $_SESSION['user']['baskets'][$i]['id']
+                                        . $_SESSION['user']['baskets'][$i]['id'] . '&amp;groupId=' . $_SESSION['user']['baskets'][$i]['group_id']
                                         . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                         . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                         . '"><i class="fa-li fa fa-spinner fa-spin" style="margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
@@ -164,7 +164,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
                                         . $_SESSION['config']['businessappurl']
                                         . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
-                                        . $_SESSION['user']['baskets'][$i]['id']
+                                        . $_SESSION['user']['baskets'][$i]['id'] . '&amp;groupId=' . $_SESSION['user']['baskets'][$i]['group_id']
                                         . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                         . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                         . '"><i class="fa-li fa fa-spinner fa-spin" style=";margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
@@ -210,9 +210,9 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             {
                 eval('response = '+answer.responseText);
                 if (response.nb > 0 ) {
-                    $(response.idSpan).innerHTML = '<span class="nbRes">' + response.nb + '</span>';
+                    $j("[name='" + response.idSpan + "']").html("<span class='nbRes'>" + response.nb + "</span>");
                 } else {
-                    $(response.idSpan).innerHTML = '<span class="nbResZero">' + response.nb + '</span>';
+                    $j("[name='" + response.idSpan + "']").html("<span class='nbResZero'>" + response.nb + "</span>");
                 }
                 
             }

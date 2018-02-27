@@ -624,3 +624,17 @@ CREATE TABLE users_baskets_preferences
   CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
 )
 WITH (OIDS=FALSE);
+
+DO $$ BEGIN
+  IF (SELECT count(TABLE_NAME)  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'user_baskets_secondary') = 1 THEN
+    INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+    SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
+    WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
+    ORDER BY users.id;
+    insert into users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+    select users.id, usergroups.id, user_baskets_secondary.basket_id, TRUE from users, usergroups, user_baskets_secondary
+    where users.user_id = user_baskets_secondary.user_id and usergroups.group_id = user_baskets_secondary.group_id
+    order by users.id;
+    DROP TABLE IF EXISTS user_baskets_secondary;
+  END IF;
+END$$;

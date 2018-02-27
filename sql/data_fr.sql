@@ -1181,14 +1181,6 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'del_seda', 'Y', 'apps', 'N', NULL);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
--- BANNETTE SECONDAIRE POUR LE GROUPE DES SUPERVISEURS DE COURRIER
-------------
-TRUNCATE TABLE user_baskets_secondary;
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'ddaull', 'RESPONSABLE', 'EvisBasket');
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'rrenaud', 'DIRECTEUR', 'ValidationBasket');
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'eerina', 'DIRECTEUR', 'ValidationBasket');
-Select setval('user_baskets_secondary_seq', (select max(system_id)+1 from user_baskets_secondary), false);
-------------
 --ACTIONS_GROUPBASKETS
 ------------
 TRUNCATE TABLE actions_groupbaskets;

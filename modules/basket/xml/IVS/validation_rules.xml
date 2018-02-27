@@ -80,10 +80,6 @@
       <parameter name="user_*" type="string" />
       <parameter name="virtual_*" type="YN" />
     </validationRule>
-    <validationRule name="bk_manage_user_baskets_secondary" extends="standardForm" mode="error">
-      <parameter name="baskets_owner" type="login" />
-      <parameter name="basketId" type="string" />
-    </validationRule>
     <validationRule name="bk_view_baskets" extends="standardForm" mode="lax">
       <parameter name="baskets" type="string" />
       <parameter name="extension" type="identifier" />

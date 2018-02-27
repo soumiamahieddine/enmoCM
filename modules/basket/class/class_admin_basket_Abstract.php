@@ -767,9 +767,6 @@ abstract class admin_basket_Abstract extends Database
         $allGroupId = explode(",", $groupIdList);
         $arrayPDO = array_merge($arrayPDO, array($allGroupId));
 
-        $stmt = $db->query("DELETE FROM user_baskets_secondary where basket_id = ? and group_id not in (?)", $arrayPDO);
-        /*var_dump($stmt);
-        echo $_SESSION['m_admin']['basket']['basketId'] . ' ' . $groupIdList;exit;*/
 
         $_SESSION['service_tag'] = 'load_basket_db';
         $core = new core_tools();
@@ -845,7 +842,6 @@ abstract class admin_basket_Abstract extends Database
                     $db->query("delete from ".$_SESSION['tablename']['bask_baskets']."  where basket_id = ?", array($id));
                     $db->query("delete from ".$_SESSION['tablename']['bask_groupbasket']."  where basket_id = ?", array($id));
                     $db->query("delete from ".$_SESSION['tablename']['bask_actions_groupbaskets']."  where basket_id = ?", array($id));
-                    $db->query("delete from user_baskets_secondary where basket_id = ?", array($id));
 
                     $_SESSION['service_tag'] = 'del_basket';
                     $_SESSION['temp_basket_id'] = $id;

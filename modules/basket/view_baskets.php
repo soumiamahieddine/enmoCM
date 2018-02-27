@@ -50,7 +50,7 @@ $_SESSION['location_bar']['level2']['path'] = $_SESSION['config']['businessappur
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
         $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
         if ($_SESSION['save_list']['template'] <> "") {
-            $urlParameters .= '&template='.\Basket\models\BasketModel::getTemplateById(['basketId'=>$_SESSION['current_basket']['id']]);
+            $urlParameters .= '&template='.$_SESSION['save_list']['template'];
         }
         $_SESSION['save_list']['fromDetail'] = "false";
         $_SESSION['save_list']['fromValidateMail'] = "false";
@@ -150,7 +150,7 @@ $bask = new basket();
 if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     //$_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
     $_SESSION['tmpbasket']['status'] = "all";
-    $bask->load_current_basket(trim($_REQUEST['baskets']));
+    $bask->load_current_basket(trim($_REQUEST['baskets']), trim($_REQUEST['groupId']));
     //$bask->show_array($_SESSION['current_basket']);
 }
 
