@@ -6,6 +6,7 @@
 		<comment>_ADMIN_MODULE_FILEPLAN_DESC</comment>
 		<servicepage>index.php?page=fileplan_admin&amp;module=fileplan&amp;load</servicepage>
 		<servicetype>admin</servicetype>
+		<category>classement</category>
 		<system_service>false</system_service>
 		<style>fa fa-files-o</style>
 		<enabled>true</enabled>

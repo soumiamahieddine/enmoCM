@@ -7,6 +7,7 @@
 			<!--servicepage>index.php?page=admin_notif&amp;module=notifications</servicepage-->
 			<servicepage>administration/notifications</servicepage>
 			<servicetype>admin</servicetype>
+			<category>production</category>
 			<system_service>false</system_service>
 			<style>fa fa-bell</style>
 			<enabled>true</enabled>

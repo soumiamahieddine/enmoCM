@@ -49,15 +49,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
 // apply theme
 @include angular-material-theme($theme);
 
-
-/******** BOOTSTRAP THEMING **********/
-$theme-colors: (
-  "primary": mat-color($primary, 500),
-  "danger": mat-color($warn, 500)
-);
-@import "./node_modules/bootstrap/less/bootstrap.less";
-
-
 [color=primary] {
     color: mat-color($primary, 500);
 }
@@ -76,4 +67,33 @@ $theme-colors: (
 .jstree-proton .jstree-hovered {
     background: mat-color($primary, 100) !important;
     box-shadow: inset 0 0 1px mat-color($primary, 500) !important;
+}
+
+.adminArea {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.adminArea_1{
+  padding:20px;
+  border-right: dashed 1px mat-color($primary, 500);
+  border-bottom: dashed 1px mat-color($primary, 500);
+}
+
+.adminArea_2{
+  padding:20px;
+  border-left: dashed 1px mat-color($primary, 500);
+  border-bottom: dashed 1px mat-color($primary, 500);
+}
+
+.adminArea_3{
+  padding:20px;
+  border-right: dashed 1px mat-color($primary, 500);
+  border-top: dashed 1px mat-color($primary, 500);
+}
+
+.adminArea_4{
+  padding:20px;
+  border-left: dashed 1px mat-color($primary, 500);
+  border-top: dashed 1px mat-color($primary, 500);
 }

@@ -42,6 +42,7 @@
     <comment>_ADMIN_USERS_DESC</comment>
     <servicepage>/administration/users</servicepage>
     <servicetype>admin</servicetype>
+    <category>organisation</category>
     <system_service>false</system_service>
     <style>fa fa-user</style>
     <enabled>true</enabled>
@@ -53,6 +54,7 @@
     <comment>_ADMIN_GROUPS_DESC</comment>
     <servicepage>/administration/groups</servicepage>
     <servicetype>admin</servicetype>
+    <category>organisation</category>
     <system_service>false</system_service>
     <style>fa fa-users</style>
     <enabled>true</enabled>
@@ -64,6 +66,7 @@
     <comment>_ADMIN_ARCHITECTURE_DESC</comment>
     <servicepage>/administration/doctypes</servicepage>
     <servicetype>admin</servicetype>
+    <category>classement</category>
     <system_service>false</system_service>
     <style>fa fa-suitcase</style>
     <enabled>true</enabled>
@@ -75,6 +78,7 @@
     <comment>_VIEW_HISTORY_DESC</comment>
     <servicepage>/administration/history</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <system_service>false</system_service>
     <style>fa fa-history</style>
     <enabled>true</enabled>
@@ -86,6 +90,7 @@
     <comment>_VIEW_HISTORY_BATCH_DESC</comment>
     <servicepage>/administration/historyBatch</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <system_service>false</system_service>
     <style>fa fa-history</style>
     <enabled>true</enabled>
@@ -98,6 +103,7 @@
     <comment>_ADMIN_STATUS_DESC</comment>
     <servicepage>/administration/statuses</servicepage>
     <servicetype>admin</servicetype>
+    <category>production</category>
     <style>fa fa-check-circle</style>
     <system_service>false</system_service>
     <angular>true</angular>
@@ -109,6 +115,7 @@
     <comment>_ADMIN_ACTIONS_DESC</comment>
     <servicepage>/administration/actions</servicepage>
     <servicetype>admin</servicetype>
+    <category>production</category>
     <style>fa fa-exchange</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -172,6 +179,7 @@
     <!-- <servicepage>index.php?page=contacts&amp;admin=contacts</servicepage> -->
     <servicepage>index.php?page=admin_contacts&amp;admin=contacts</servicepage>
     <servicetype>admin</servicetype>
+    <category>production</category>
     <style>fa fa-book</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -219,6 +227,7 @@
     <comment>_REOPEN_MAIL_DESC</comment>
     <servicepage>/administration/update-status</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <style>fa fa-envelope-square</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -230,6 +239,7 @@
     <comment>_ADMIN_DOCSERVERS_DESC</comment>
     <servicepage>index.php?page=admin_docservers&amp;admin=docservers&amp;mode=list</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <system_service>false</system_service>
     <style>fa fa-hdd-o</style>
     <enabled>true</enabled>
@@ -369,6 +379,7 @@
     <comment>_ADMIN_PARAMETERS</comment>
     <servicepage>/administration/parameters</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <style>fa fa-wrench</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -380,6 +391,7 @@
     <comment>_ADMIN_PRIORITIES</comment>
     <servicepage>/administration/priorities</servicepage>
     <servicetype>admin</servicetype>
+    <category>production</category>
     <style>fa fa-clock-o</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
@@ -413,6 +425,7 @@
     <comment>_ADMIN_UPDATE_CONTROL_DESC</comment>
     <servicepage>index.php?page=update_control&amp;admin=update_control</servicepage>
     <servicetype>admin</servicetype>
+    <category>supervision</category>
     <system_service>true</system_service>
     <style>fa fa-refresh</style>
     <enabled>true</enabled>

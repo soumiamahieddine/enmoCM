@@ -19,8 +19,10 @@ var AdministrationComponent = /** @class */ (function () {
         this.http = http;
         this.router = router;
         this.lang = translate_component_1.LANG;
-        this.applicationServices = [];
-        this.modulesServices = [];
+        this.organisationServices = [];
+        this.productionServices = [];
+        this.classementServices = [];
+        this.supervisionServices = [];
         this.loading = false;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -52,12 +54,16 @@ var AdministrationComponent = /** @class */ (function () {
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/administration')
             .subscribe(function (data) {
-            _this.applicationServices = data.application;
-            _this.modulesServices = data.modules;
+            console.log();
+            _this.organisationServices = data.administrations.organisation;
+            _this.productionServices = data.administrations.production;
+            _this.classementServices = data.administrations.classement;
+            _this.supervisionServices = data.administrations.supervision;
             _this.loading = false;
         });
     };
     AdministrationComponent.prototype.goToSpecifiedAdministration = function (service) {
+        console.log(service);
         if (service.angular == "true") {
             this.router.navigate([service.servicepage]);
         }

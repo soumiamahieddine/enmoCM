@@ -18,8 +18,10 @@ export class AdministrationComponent implements OnInit {
     coreUrl: string;
     lang: any = LANG;
 
-    applicationServices: any[] = [];
-    modulesServices: any[] = [];
+    organisationServices: any[] = [];
+    productionServices: any[] = [];
+    classementServices: any[] = [];
+    supervisionServices: any[] = [];
 
     loading: boolean = false;
 
@@ -59,14 +61,18 @@ export class AdministrationComponent implements OnInit {
 
         this.http.get(this.coreUrl + 'rest/administration')
             .subscribe((data: any) => {
-                this.applicationServices = data.application;
-                this.modulesServices = data.modules;
+                console.log();
+                this.organisationServices = data.administrations.organisation;
+                this.productionServices = data.administrations.production;
+                this.classementServices = data.administrations.classement;
+                this.supervisionServices = data.administrations.supervision;
 
                 this.loading = false;
             });
     }
 
     goToSpecifiedAdministration(service: any): void {
+        console.log(service);
         if (service.angular == "true") {
             this.router.navigate([service.servicepage]);
         } else {

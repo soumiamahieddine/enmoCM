@@ -1,17 +1,17 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* @brief Service Model
-* @author dev@maarch.org
-* @ingroup core
-*/
+ * @brief Service Model
+ *
+ * @author dev@maarch.org
+ * @ingroup core
+ */
 
 namespace Core\Models;
 
@@ -27,17 +27,17 @@ class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string)$value->enabled === 'true') {
+                if ((string) $value->enabled === 'true') {
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                     $services['application'][] = [
-                        'id'                => (string)$value->id,
-                        'name'              => $name,
-                        'comment'           => $comment,
-                        'servicepage'       => (string)$value->servicepage,
-                        'style'             => (string)$value->style,
-                        'system_service'    => (string)$value->system_service == 'true' ? true : false,
-                        'servicetype'       => (string)$value->servicetype,
+                        'id' => (string) $value->id,
+                        'name' => $name,
+                        'comment' => $comment,
+                        'servicepage' => (string) $value->servicepage,
+                        'style' => (string) $value->style,
+                        'system_service' => (string) $value->system_service == 'true' ? true : false,
+                        'servicetype' => (string) $value->servicetype,
                     ];
                 }
             }
@@ -52,22 +52,22 @@ class ServiceModelAbstract
 
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MODULES as $mod) {
-            $module = (string)$mod->moduleid;
+            $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
-                    if ((string)$value->enabled === 'true') {
-                        $name = defined((string)$value->name) ? constant((string)$value->name) : (string)$value->name;
-                        $comment = defined((string)$value->comment) ? constant((string)$value->comment) : (string)$value->comment;
+                    if ((string) $value->enabled === 'true') {
+                        $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                        $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         $services[$module][] = [
-                            'id'                => (string)$value->id,
-                            'name'              => $name,
-                            'comment'           => $comment,
-                            'servicepage'       => (string)$value->servicepage,
-                            'style'             => (string)$value->style,
-                            'system_service'    => (string)$value->system_service == 'true' ? true : false,
-                            'servicetype'       => (string)$value->servicetype,
+                            'id' => (string) $value->id,
+                            'name' => $name,
+                            'comment' => $comment,
+                            'servicepage' => (string) $value->servicepage,
+                            'style' => (string) $value->style,
+                            'system_service' => (string) $value->system_service == 'true' ? true : false,
+                            'servicetype' => (string) $value->servicetype,
                         ];
                     }
                 }
@@ -84,15 +84,16 @@ class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true') {
+                if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true') {
+                    $category = (string) $value->category;
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                    $applicationServices[] = [
-                        'name'          => $name,
-                        'comment'       => $comment,
-                        'servicepage'   => (string)$value->servicepage,
-                        'style'         => (string)$value->style,
-                        'angular'       => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                    $applicationServices[$category][] = [
+                        'name' => $name,
+                        'comment' => $comment,
+                        'servicepage' => (string) $value->servicepage,
+                        'style' => (string) $value->style,
+                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
                 }
             }
@@ -101,7 +102,6 @@ class ServiceModelAbstract
         return $applicationServices;
     }
 
-    
     public static function getApplicationAdministrationServicesByUserServices(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userServices']);
@@ -112,15 +112,16 @@ class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true' && ((string)$value->system_service == 'true' || in_array((string)$value->id, $aArgs['userServices']))) {
-                    $name = defined((string)$value->name) ? constant((string)$value->name) : (string)$value->name;
-                    $comment = defined((string)$value->comment) ? constant((string)$value->comment) : (string)$value->comment;
-                    $applicationServices[] = [
+                if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
+                    $category = (string) $value->category;
+                    $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                    $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
+                    $applicationServices[$category][] = [
                         'name' => $name,
                         'comment' => $comment,
-                        'servicepage' => (string)$value->servicepage,
-                        'style' => (string)$value->style,
-                        'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                        'servicepage' => (string) $value->servicepage,
+                        'style' => (string) $value->style,
+                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
                 }
             }
@@ -143,20 +144,21 @@ class ServiceModelAbstract
 
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MODULES as $mod) {
-            $module = (string)$mod->moduleid;
+            $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
-                    if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true') {
-                        $name = defined((string)$value->name) ? constant((string)$value->name) : (string)$value->name;
-                        $comment = defined((string)$value->comment) ? constant((string)$value->comment) : (string)$value->comment;
-                        $modulesServices[] = [
+                    if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true') {
+                        $category = (string) $value->category;
+                        $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                        $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
+                        $modulesServices[$category][] = [
                             'name' => $name,
                             'comment' => $comment,
-                            'servicepage' => (string)$value->servicepage,
-                            'style' => (string)$value->style,
-                            'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                            'servicepage' => (string) $value->servicepage,
+                            'style' => (string) $value->style,
+                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
@@ -183,20 +185,21 @@ class ServiceModelAbstract
 
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MODULES as $mod) {
-            $module = (string)$mod->moduleid;
+            $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
             if ($xmlModuleFile) {
                 foreach ($xmlModuleFile->SERVICE as $value) {
-                    if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true' && ((string)$value->system_service == 'true' || in_array((string)$value->id, $aArgs['userServices']))) {
-                        $name = defined((string)$value->name) ? constant((string)$value->name) : (string)$value->name;
-                        $comment = defined((string)$value->comment) ? constant((string)$value->comment) : (string)$value->comment;
-                        $modulesServices[] = [
+                    if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
+                        $category = (string) $value->category;
+                        $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                        $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
+                        $modulesServices[$category][] = [
                             'name' => $name,
                             'comment' => $comment,
-                            'servicepage' => (string)$value->servicepage,
-                            'style' => (string)$value->style,
-                            'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                            'servicepage' => (string) $value->servicepage,
+                            'style' => (string) $value->style,
+                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
@@ -220,17 +223,15 @@ class ServiceModelAbstract
 
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MENU as $value) {
+            $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
-            $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;
-            
             $modulesServices['menuList'][] = [
                 'id' => (string) $value->id,
                 'label' => $label,
                 'link' => (string) $value->url,
-                'icon' => (string)$value->style,
-                'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                'icon' => (string) $value->style,
+                'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
             ];
-
         }
         if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
             $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
@@ -241,29 +242,31 @@ class ServiceModelAbstract
         $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
         foreach ($xmlfile->MODULES as $mod) {
             $path = false;
-            $module = (string)$mod->moduleid;
+            $module = (string) $mod->moduleid;
 
             if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
                 $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } else if (file_exists("modules/{$module}/xml/menu.xml")) {
+            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
                 $path = "modules/{$module}/xml/menu.xml";
             }
             if ($path) {
                 $xmlfile = simplexml_load_file($path);
                 foreach ($xmlfile->MENU as $value) {
-                    $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;
-                    
+                    $id = (string) $value->id;
+
+                    $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
+
                     $modulesServices['menuList'][] = [
                         'id' => (string) $value->id,
                         'label' => $label,
                         'link' => (string) $value->url,
-                        'icon' => (string)$value->style,
-                        'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                        'icon' => (string) $value->style,
+                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
-              
                 }
             }
         }
+
         return $modulesServices;
     }
 
@@ -285,15 +288,14 @@ class ServiceModelAbstract
         $xmlfile = simplexml_load_file($path);
         foreach ($xmlfile->MENU as $value) {
             if (in_array((string) $value->id, $aArgs['userServices'])) {
+                $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
-                $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;
-                
                 $modulesServices['menuList'][] = [
                     'id' => (string) $value->id,
                     'label' => $label,
                     'link' => (string) $value->url,
-                    'icon' => (string)$value->style,
-                    'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                    'icon' => (string) $value->style,
+                    'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                 ];
             }
         }
@@ -306,31 +308,31 @@ class ServiceModelAbstract
         $modulesServices['applicationName'] = $xmlfile->CONFIG->applicationname;
         foreach ($xmlfile->MODULES as $mod) {
             $path = false;
-            $module = (string)$mod->moduleid;
+            $module = (string) $mod->moduleid;
 
             if (file_exists("custom/{$customId}/modules/{$module}/xml/menu.xml")) {
                 $path = "custom/{$customId}/modules/{$module}/xml/menu.xml";
-            } else if (file_exists("modules/{$module}/xml/menu.xml")) {
+            } elseif (file_exists("modules/{$module}/xml/menu.xml")) {
                 $path = "modules/{$module}/xml/menu.xml";
             }
             if ($path) {
                 $xmlfile = simplexml_load_file($path);
                 foreach ($xmlfile->MENU as $value) {
                     if (in_array((string) $value->id, $aArgs['userServices'])) {
-    
-                        $label = defined((string)$value->libconst) ? constant((string)$value->libconst) : (string)$value->libconst;
-                        
+                        $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
+
                         $modulesServices['menuList'][] = [
                             'id' => (string) $value->id,
                             'label' => $label,
                             'link' => (string) $value->url,
-                            'icon' => (string)$value->style,
-                            'angular' => empty((string)$value->angular) ? 'false' : (string)$value->angular
+                            'icon' => (string) $value->style,
+                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
             }
         }
+
         return $modulesServices;
     }
 
@@ -346,9 +348,12 @@ class ServiceModelAbstract
         }
 
         $administration = [];
-        $administration['menu'] = ServiceModel::getApplicationAdministrationMenuByUserServices(['userServices' => $servicesStoredInDB]);
-        $administration['application'] = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
-        $administration['modules'] = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+        $administrationMenu = ServiceModel::getApplicationAdministrationMenuByUserServices(['userServices' => $servicesStoredInDB]);
+        $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+        $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
+
+        $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
+        $administration = array_merge_recursive($administration, $administrationMenu);
 
         return $administration;
     }
@@ -371,8 +376,8 @@ class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string)$value->servicetype == $aArgs['type'] && (string)$value->id == $aArgs['id'] && (string)$value->enabled === 'true'
-                    && ((string)$value->system_service == 'true' || in_array((string)$value->id, $servicesStoredInDB))) {
+                if ((string) $value->servicetype == $aArgs['type'] && (string) $value->id == $aArgs['id'] && (string) $value->enabled === 'true'
+                    && ((string) $value->system_service == 'true' || in_array((string) $value->id, $servicesStoredInDB))) {
                     return true;
                 }
             }
