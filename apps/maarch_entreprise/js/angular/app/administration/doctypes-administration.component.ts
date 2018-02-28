@@ -6,7 +6,6 @@ import { NotificationService } from '../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 declare function $j(selector: any): any;
-
 declare var angularGlobals: any;
 
 
@@ -18,6 +17,8 @@ declare var angularGlobals: any;
 export class DoctypesAdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
+    dialogRef: MatDialogRef<any>;
+    config: any = {};
     coreUrl: string;
     lang: any = LANG;
 
@@ -27,6 +28,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     currentFirstLevel: any = false;
     firstLevels: any = false;
     folderTypes: any = false;
+    types: any = false;
     secondLevels: any = false;
     processModes: any = false;
     models: any = false;
@@ -36,7 +38,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     creationMode: boolean = false;
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -318,7 +320,7 @@ export class DoctypesAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id)
                 .subscribe((data: any) => {
-                    if(data.deleted){
+                    if(data.deleted == 0){
                         this.resetDatas();
                         this.readMode();
                         this.doctypes = data['doctypeTree'];
@@ -327,7 +329,25 @@ export class DoctypesAdministrationComponent implements OnInit {
                         this.notify.success(this.lang.documentTypeDeleted);
                         $j('#jstree').jstree('select_node', this.doctypes[0]);
                     } else {
-
+                        this.config = { data: {count: data.deleted, types: data.doctypes} };
+                        this.dialogRef = this.dialog.open(DoctypesAdministrationRedirectModalComponent, this.config);
+                        this.dialogRef.afterClosed().subscribe((result: any) => {
+                        if (result) {
+                            this.http.put(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id + "/redirect", result)
+                                .subscribe((data: any) => {
+                                    this.resetDatas();
+                                    this.readMode();
+                                    this.doctypes = data['doctypeTree'];
+                                    $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+                                    $j('#jstree').jstree("refresh");
+                                    this.notify.success(this.lang.documentTypeDeleted);
+                                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                                }, (err) => {
+                                    this.notify.error(err.error.errors);
+                                });
+                        }
+                        this.dialogRef = null;
+                        });
                     }
 
                 }, (err) => {

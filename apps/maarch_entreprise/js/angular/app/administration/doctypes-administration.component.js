@@ -19,9 +19,11 @@ var translate_component_1 = require("../translate.component");
 var notification_service_1 = require("../notification.service");
 var material_1 = require("@angular/material");
 var DoctypesAdministrationComponent = /** @class */ (function () {
-    function DoctypesAdministrationComponent(changeDetectorRef, media, http, notify) {
+    function DoctypesAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
         this.http = http;
         this.notify = notify;
+        this.dialog = dialog;
+        this.config = {};
         this.lang = translate_component_1.LANG;
         this.doctypes = [];
         this.currentType = false;
@@ -29,6 +31,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
         this.currentFirstLevel = false;
         this.firstLevels = false;
         this.folderTypes = false;
+        this.types = false;
         this.secondLevels = false;
         this.processModes = false;
         this.models = false;
@@ -305,7 +308,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
         if (r) {
             this.http.delete(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id)
                 .subscribe(function (data) {
-                if (data.deleted) {
+                if (data.deleted == 0) {
                     _this.resetDatas();
                     _this.readMode();
                     _this.doctypes = data['doctypeTree'];
@@ -315,6 +318,26 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                     $j('#jstree').jstree('select_node', _this.doctypes[0]);
                 }
                 else {
+                    _this.config = { data: { count: data.deleted, types: data.doctypes } };
+                    _this.dialogRef = _this.dialog.open(DoctypesAdministrationRedirectModalComponent, _this.config);
+                    _this.dialogRef.afterClosed().subscribe(function (result) {
+                        console.log(result);
+                        if (result) {
+                            _this.http.put(_this.coreUrl + "rest/doctypes/types/" + _this.currentType.type_id + "/redirect", result)
+                                .subscribe(function (data) {
+                                _this.resetDatas();
+                                _this.readMode();
+                                _this.doctypes = data['doctypeTree'];
+                                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
+                                $j('#jstree').jstree("refresh");
+                                _this.notify.success(_this.lang.documentTypeDeleted);
+                                $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                            }, function (err) {
+                                _this.notify.error(err.error.errors);
+                            });
+                        }
+                        _this.dialogRef = null;
+                    });
                 }
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -345,7 +368,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             templateUrl: angularGlobals["doctypes-administrationView"],
             providers: [notification_service_1.NotificationService]
         }),
-        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService])
+        __metadata("design:paramtypes", [core_1.ChangeDetectorRef, layout_1.MediaMatcher, http_1.HttpClient, notification_service_1.NotificationService, material_1.MatDialog])
     ], DoctypesAdministrationComponent);
     return DoctypesAdministrationComponent;
 }());

@@ -205,21 +205,29 @@ class DoctypeController
                 ->withJson(['errors' => 'Id is not a numeric']);
         }
 
-        if (empty(ResModel::get([
-            'select' => ['res_id'],
+        $count = ResModel::get([
+            'select' => ['count(1)'],
             'where'  => ['type_id = ?'],
-            'data'   => [$aArgs['id']]]))
-        ) {
+            'data'   => [$aArgs['id']]]);
+
+        if ($count[0]['count'] == 0) {
             DoctypeController::deleteAllDoctypeData(['type_id' => $aArgs['id']]);
-            $deleted  = true;
+            $deleted     = 0;
             $doctypeTree = FirstLevelController::getTreeFunction();
         } else {
-            $deleted  = false;
+            $deleted  = $count[0]['count'];
+            $doctypes = DoctypeModel::get();
+            foreach ($doctypes as $key => $value) {
+                if ($value['type_id'] == $aArgs['id']) {
+                    $doctypes[$key]['disabled'] = true;
+                }
+            }
         }
 
         return $response->withJson([
             'deleted'     => $deleted,
-            'doctypeTree' => $doctypeTree
+            'doctypeTree' => $doctypeTree,
+            'doctypes'    => $doctypes
         ]);
     }
 
@@ -248,6 +256,12 @@ class DoctypeController
             return $response
                 ->withStatus(500)
                 ->withJson(['errors' => 'new_type_id does not exists']);
+        }
+
+        if ($data['type_id'] == $data['new_type_id']) {
+            return $response
+                ->withStatus(500)
+                ->withJson(['errors' => 'new_type_id is the same as type_id']);
         }
 
         ResModel::update([

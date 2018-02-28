@@ -281,7 +281,7 @@ $app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':
 $app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
 $app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
 $app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':delete');
-$app->delete('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
+$app->put('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

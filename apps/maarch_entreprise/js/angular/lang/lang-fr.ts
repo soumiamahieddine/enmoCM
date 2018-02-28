@@ -325,4 +325,6 @@ export const LANG_FR = {
     "documentTypeAdded"                 : "Type de document ajouté",
     "documentTypeUpdated"                 : "Type de document mis à jour",
     "documentTypeDeleted"                 : "Type de document supprimé",
+    "documentTypeReplacement"                 : "Remplacement du type de document",
+    "transferToDoctype"                 : "Remplacer par le type de document",
 };

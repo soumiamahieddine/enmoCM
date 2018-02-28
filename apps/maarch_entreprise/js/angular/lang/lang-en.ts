@@ -299,4 +299,6 @@ export const LANG_EN = {
     "documentTypeAdded"                 : "Document type added",
     "documentTypeUpdated"                 : "Document type updated",
     "documentTypeDeleted"                 : "Document type deleted",
+    "documentTypeReplacement"                 : "Document type replacement",
+    "transferToDoctype"                 : "TReplace by this document type",
 };

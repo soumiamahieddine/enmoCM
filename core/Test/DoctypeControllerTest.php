@@ -507,13 +507,18 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->delete($fullRequest, new \Slim\Http\Response(), ["id" => $doctypeId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(false, $responseBody->deleted);
+        $this->assertSame(1, $responseBody->deleted);
         $this->assertNull($responseBody->doctypeTree);
+        $this->assertNotNull($responseBody->doctypes);
 
         $aArgs = [
             "new_type_id" => self::$doctypeId
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $requestPut  = \Slim\Http\Request::createFromEnvironment($environment);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $requestPut);
+
         $response     = $doctypeController->deleteRedirect($fullRequest, new \Slim\Http\Response(), ["id" => $doctypeId]);
         $responseBody = json_decode((string)$response->getBody());
 
@@ -553,8 +558,9 @@ class DoctypeControllerTest extends TestCase
         $response     = $doctypeController->delete($fullRequest, new \Slim\Http\Response(), ["id" => self::$doctypeId]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(true, $responseBody->deleted);
+        $this->assertSame(0, $responseBody->deleted);
         $this->assertNotNull($responseBody->doctypeTree);
+        $this->assertNull($responseBody->doctypes);
 
         //  DELETE FAIL
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
