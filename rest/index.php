@@ -115,6 +115,12 @@ $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getA
 $app->get('/administration/users', \User\controllers\UserController::class . ':getUsersForAdministration');
 $app->get('/administration/users/{id}', \User\controllers\UserController::class . ':getUserForAdministration');
 
+//AutoComplete
+$app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
+$app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
+$app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
+$app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
+
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
 $app->post('/baskets', \Basket\controllers\BasketController::class . ':create');
@@ -138,7 +144,7 @@ $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class 
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
-//groups
+//Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');
 $app->post('/groups', \Group\controllers\GroupController::class . ':create');
 $app->get('/groups/{id}', \Group\controllers\GroupController::class . ':getById');
@@ -173,7 +179,6 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
-$app->get('/users/autocompleter', \User\controllers\UserController::class . ':getUsersForAutocompletion');
 $app->post('/users', \User\controllers\UserController::class . ':create');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');

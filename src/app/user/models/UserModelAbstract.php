@@ -16,7 +16,6 @@ namespace User\models;
 
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
-use History\controllers\HistoryController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\SecurityModel;
@@ -26,13 +25,14 @@ class UserModelAbstract
 {
     public static function get(array $aArgs)
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aUsers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data']
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aUsers;

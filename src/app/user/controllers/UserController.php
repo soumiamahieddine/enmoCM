@@ -458,23 +458,6 @@ class UserController
         ]);
     }
 
-    public function getUsersForAutocompletion(Request $request, Response $response)
-    {
-        $excludedUsers = ['superadmin'];
-
-        $users = UserModel::get([
-            'select'    => ['user_id', 'firstname', 'lastname'],
-            'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-            'data'      => ['Y', 'DEL', $excludedUsers]
-        ]);
-
-        foreach ($users as $key => $value) {
-            $users[$key]['formattedUser'] = "{$value['firstname']} {$value['lastname']} ({$value['user_id']})";
-        }
-
-        return $response->withJson($users);
-    }
-
     public function getUsersForAdministration(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
