@@ -405,6 +405,24 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             });
         }
     };
+    UserAdministrationComponent.prototype.test = function (event) {
+        var _this = this;
+        console.log(event.mouseEvent.dataTransfer);
+        if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
+            var reader = new FileReader();
+            this.signatureModel.name = event.mouseEvent.dataTransfer.files[0].name;
+            this.signatureModel.size = event.mouseEvent.dataTransfer.files[0].size;
+            this.signatureModel.type = event.mouseEvent.dataTransfer.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
+            reader.readAsDataURL(event.mouseEvent.dataTransfer.files[0]);
+            reader.onload = function (value) {
+                window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
+                _this.submitSignature();
+            };
+        }
+    };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),
         __metadata("design:type", material_1.MatPaginator)

@@ -421,6 +421,27 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
+
+    test(event:any) {
+        console.log(event.mouseEvent.dataTransfer);
+        if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
+            var reader = new FileReader();
+
+            this.signatureModel.name = event.mouseEvent.dataTransfer.files[0].name;
+            this.signatureModel.size = event.mouseEvent.dataTransfer.files[0].size;
+            this.signatureModel.type = event.mouseEvent.dataTransfer.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
+
+            reader.readAsDataURL(event.mouseEvent.dataTransfer.files[0]);
+
+            reader.onload = (value: any) => {
+                window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
+                this.submitSignature();
+            };
+        }
+    }
 }
 export interface History {
     event_date: Date;

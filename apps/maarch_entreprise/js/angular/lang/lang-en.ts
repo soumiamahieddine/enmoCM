@@ -256,6 +256,8 @@ export const LANG_EN = {
     "updateStatus"              : "Document status modification",
     "updateStatusInformationsChrono" : "When typing the CHRONO of a document, you will modify its status. The document will be present in the basket depending of the status you have chosen.",
     "updateStatusInformationsGed"    : "When typing the GED NUMBER of a document, you will modify its status. The document will be present in the basket depending of the status you have chosen.",
+    "uploadSignFile"            : "Upload a sign file",
+    "uploadSignFileInfo"        : "Click to add sign file from your computer",
     "usedInActionPage"          : "Used in action page",
     "usedInBasketlist"          : "Used in basket list",
     "user"                      : "user",

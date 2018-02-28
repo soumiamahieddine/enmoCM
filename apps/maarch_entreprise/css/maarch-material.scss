@@ -75,25 +75,46 @@ $theme: mat-light-theme($primary, $accent, $warn);
 }
 
 .adminArea_1{
+  overflow: hidden;
   padding:20px;
   border-right: dashed 1px mat-color($primary, 500);
   border-bottom: dashed 1px mat-color($primary, 500);
 }
 
 .adminArea_2{
+  overflow: hidden;
   padding:20px;
   border-left: dashed 1px mat-color($primary, 500);
   border-bottom: dashed 1px mat-color($primary, 500);
 }
 
 .adminArea_3{
+  overflow: hidden;
   padding:20px;
   border-right: dashed 1px mat-color($primary, 500);
   border-top: dashed 1px mat-color($primary, 500);
 }
 
 .adminArea_4{
+  overflow: hidden;
   padding:20px;
   border-left: dashed 1px mat-color($primary, 500);
   border-top: dashed 1px mat-color($primary, 500);
+}
+
+.dndFile{
+  border: dashed 5px grey;
+  padding:10px;
+  text-align:center;
+  opacity:0.5;
+  font-size:15px;
+  font-weight:bolder;
+  margin-bottom:10px;
+
+}
+
+.dndFileHighlighted {
+  opacity : 1 !important;
+  border: dashed 5px mat-color($primary, 500) !important;
+  color : mat-color($primary, 500);
 }
