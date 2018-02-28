@@ -181,15 +181,24 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "id": element.id,
             "labelToDisplay": element.idToDisplay,
             "descriptionToDisplay": element.otherInfo,
+            "sequence": element.sequence,
         };
+        var ElemListModelList: any = [];
         this.currentEntity.roles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
-
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
                         console.log(listModel);
                         if (listModel.id == element.id) {
                             inListModel = true;
+                        } else {
+                            ElemListModelList.push({
+                                "type": element.type,
+                                "object_id": this.currentEntity.entity_id,
+                                "mode": role.id,
+                                "id": element.id,
+                                "sequence": element.sequence
+                            });
                         }
                     });
                 }
@@ -198,8 +207,22 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         if (!inListModel) {
             if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
                 this.currentEntity.listTemplate.dest.unshift(newElemListModel);
+                ElemListModelList.push({
+                    "type": element.type,
+                    "object_id": this.currentEntity.entity_id,
+                    "mode": "dest",
+                    "id": element.id,
+                    "sequence": element.sequence
+                });
             } else {
                 this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+                ElemListModelList.push({
+                    "type": newElemListModel.type,
+                    "object_id": this.currentEntity.entity_id,
+                    "mode": "cc",
+                    "id": newElemListModel.id,
+                    "sequence": newElemListModel.sequence
+                });
             }
 
         }

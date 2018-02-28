@@ -175,7 +175,9 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
             "id": element.id,
             "labelToDisplay": element.idToDisplay,
             "descriptionToDisplay": element.otherInfo,
+            "sequence": element.sequence,
         };
+        var ElemListModelList = [];
         this.currentEntity.roles.forEach(function (role) {
             if (role.available == true) {
                 if (_this.currentEntity.listTemplate[role.id]) {
@@ -184,6 +186,15 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
                         if (listModel.id == element.id) {
                             inListModel = true;
                         }
+                        else {
+                            ElemListModelList.push({
+                                "type": element.type,
+                                "object_id": _this.currentEntity.entity_id,
+                                "mode": role.id,
+                                "id": element.id,
+                                "sequence": element.sequence
+                            });
+                        }
                     });
                 }
             }
@@ -191,9 +202,23 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         if (!inListModel) {
             if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
                 this.currentEntity.listTemplate.dest.unshift(newElemListModel);
+                ElemListModelList.push({
+                    "type": element.type,
+                    "object_id": this.currentEntity.entity_id,
+                    "mode": "dest",
+                    "id": element.id,
+                    "sequence": element.sequence
+                });
             }
             else {
                 this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+                ElemListModelList.push({
+                    "type": newElemListModel.type,
+                    "object_id": this.currentEntity.entity_id,
+                    "mode": "cc",
+                    "id": newElemListModel.id,
+                    "sequence": newElemListModel.sequence
+                });
             }
         }
         this.elementCtrl.setValue('');
