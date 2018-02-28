@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -59,19 +58,12 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.users;
-        }
-    }
-
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/administration/users')
+        this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
                 this.users = data['users'];
                 this.data = this.users;

@@ -321,7 +321,6 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                     _this.config = { data: { count: data.deleted, types: data.doctypes } };
                     _this.dialogRef = _this.dialog.open(DoctypesAdministrationRedirectModalComponent, _this.config);
                     _this.dialogRef.afterClosed().subscribe(function (result) {
-                        console.log(result);
                         if (result) {
                             _this.http.put(_this.coreUrl + "rest/doctypes/types/" + _this.currentType.type_id + "/redirect", result)
                                 .subscribe(function (data) {

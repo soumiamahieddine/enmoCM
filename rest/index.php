@@ -112,8 +112,6 @@ $app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initial
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-$app->get('/administration/users', \User\controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/{id}', \User\controllers\UserController::class . ':getUserForAdministration');
 
 //AutoComplete
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
@@ -179,6 +177,7 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
+$app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');

@@ -24,7 +24,7 @@ export class AutoCompletePlugin {
 
         if (target.indexOf('users') != -1) {
             this.userCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/administration/users')
+            this.http.get(this.coreUrl + 'rest/users')
                 .subscribe((data: any) => {
                     data.users.forEach((user: any) => {
                         if (user.enabled == "Y") {
@@ -64,7 +64,7 @@ export class AutoCompletePlugin {
             this.elementCtrl = new FormControl();
             this.elemList = [];
 
-            this.http.get(this.coreUrl + 'rest/administration/users')
+            this.http.get(this.coreUrl + 'rest/users')
                 .subscribe((data: any) => {
                     data.users.forEach((user: any) => {
                         if (user.enabled == "Y") {

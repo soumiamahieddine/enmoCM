@@ -72,19 +72,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>" + this.lang.users + "</a> > ";
-
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.userCreation;
-        } else {
-            breadCrumb += this.lang.userModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
-
     ngOnInit(): void {
-        //$j('#header').remove();
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -93,7 +81,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
                 this.loading = false;
-                this.updateBreadcrumb(angularGlobals.applicationName);
             } else {
                 this.creationMode = false;
                 this.serialId = params['id'];
@@ -102,7 +89,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                         this.user = data;
                         this.data = data.history;
                         this.userId = data.user_id;
-                        this.updateBreadcrumb(angularGlobals.applicationName);
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
                         this.loading = false;
                         setTimeout(() => {
@@ -120,7 +106,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     toogleRedirect(basket: any) {
         $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
 
-        this.http.get(this.coreUrl + 'rest/administration/users')
+        this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
                 //this.userList = data['users'];
 
@@ -149,7 +135,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 .on('select_node.jstree', (e: any, data: any) => {
                     this.addEntity(data.node.id);
                 }).on('deselect_node.jstree', (e: any, data: any) => {
-                    //console.log(data.node.id);
                     this.deleteEntity(data.node.id);
                 })
                 // create the instance
@@ -220,7 +205,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .subscribe((data: any) => {
-                    this.notify.success(this.lang.pswReseted + ' ' + this.lang.for + ' « ' + user.user_id + ' »');
+                    this.notify.success(this.lang.pswReseted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -300,7 +285,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     deleteEntity(entityId: any) {
-
         this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
                 this.user.entities = data.entities;
@@ -309,14 +293,13 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-
     }
 
     submitSignature() {
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .subscribe((data: any) => {
                 this.user.signatures = data.signatures;
-                this.notify.success(this.lang.signAdded + ' « ' + this.signatureModel.name + ' »');
+                this.notify.success(this.lang.signAdded);
                 this.signatureModel = {
                     base64: "",
                     base64ForJs: "",
@@ -337,7 +320,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe((data: any) => {
                 this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
-                this.notify.success(this.lang.signUpdated + ' « ' + data.signature.signature_label + ' »');
+                this.notify.success(this.lang.signUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -350,7 +333,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + signature.id)
                 .subscribe((data: any) => {
                     this.user.signatures = data.signatures;
-                    this.notify.success(this.lang.signDeleted + ' « ' + signature.signature_label + ' »');
+                    this.notify.success(this.lang.signDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -419,27 +402,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
-        }
-    }
-
-    test(event:any) {
-        console.log(event.mouseEvent.dataTransfer);
-        if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
-            var reader = new FileReader();
-
-            this.signatureModel.name = event.mouseEvent.dataTransfer.files[0].name;
-            this.signatureModel.size = event.mouseEvent.dataTransfer.files[0].size;
-            this.signatureModel.type = event.mouseEvent.dataTransfer.files[0].type;
-            if (this.signatureModel.label == "") {
-                this.signatureModel.label = this.signatureModel.name;
-            }
-
-            reader.readAsDataURL(event.mouseEvent.dataTransfer.files[0]);
-
-            reader.onload = (value: any) => {
-                window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
-                this.submitSignature();
-            };
         }
     }
 }

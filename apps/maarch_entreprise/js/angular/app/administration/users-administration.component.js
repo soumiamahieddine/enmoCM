@@ -60,17 +60,11 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
     UsersAdministrationComponent.prototype.ngOnDestroy = function () {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     };
-    UsersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.users;
-        }
-    };
     UsersAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/administration/users')
+        this.http.get(this.coreUrl + 'rest/users')
             .subscribe(function (data) {
             _this.users = data['users'];
             _this.data = _this.users;

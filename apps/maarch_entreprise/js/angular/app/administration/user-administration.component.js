@@ -75,26 +75,14 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
     UserAdministrationComponent.prototype.ngOnDestroy = function () {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     };
-    UserAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/users\"' style='cursor: pointer'>" + this.lang.users + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.userCreation;
-        }
-        else {
-            breadCrumb += this.lang.userModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    };
     UserAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //$j('#header').remove();
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
                 _this.loading = false;
-                _this.updateBreadcrumb(angularGlobals.applicationName);
             }
             else {
                 _this.creationMode = false;
@@ -104,7 +92,6 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
                     _this.user = data;
                     _this.data = data.history;
                     _this.userId = data.user_id;
-                    _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.minDate = new Date(_this.CurrentYear + '-' + _this.currentMonth + '-01');
                     _this.loading = false;
                     setTimeout(function () {
@@ -120,7 +107,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
     };
     UserAdministrationComponent.prototype.toogleRedirect = function (basket) {
         $j('#redirectUser_' + basket.group_id + '_' + basket.basket_id).toggle();
-        this.http.get(this.coreUrl + 'rest/administration/users')
+        this.http.get(this.coreUrl + 'rest/users')
             .subscribe(function (data) {
             //this.userList = data['users'];
         }, function () {
@@ -147,7 +134,6 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
                 .on('select_node.jstree', function (e, data) {
                 _this.addEntity(data.node.id);
             }).on('deselect_node.jstree', function (e, data) {
-                //console.log(data.node.id);
                 _this.deleteEntity(data.node.id);
             })
                 .jstree();
@@ -211,7 +197,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         if (r) {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/password", {})
                 .subscribe(function (data) {
-                _this.notify.success(_this.lang.pswReseted + ' ' + _this.lang.for + ' « ' + user.user_id + ' »');
+                _this.notify.success(_this.lang.pswReseted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -304,7 +290,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/signatures", this.signatureModel)
             .subscribe(function (data) {
             _this.user.signatures = data.signatures;
-            _this.notify.success(_this.lang.signAdded + ' « ' + _this.signatureModel.name + ' »');
+            _this.notify.success(_this.lang.signAdded);
             _this.signatureModel = {
                 base64: "",
                 base64ForJs: "",
@@ -324,7 +310,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + id, { "label": label })
             .subscribe(function (data) {
             _this.user.signatures[selectedSignature].signature_label = data.signature.signature_label;
-            _this.notify.success(_this.lang.signUpdated + ' « ' + data.signature.signature_label + ' »');
+            _this.notify.success(_this.lang.signUpdated);
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
@@ -336,7 +322,7 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/signatures/" + signature.id)
                 .subscribe(function (data) {
                 _this.user.signatures = data.signatures;
-                _this.notify.success(_this.lang.signDeleted + ' « ' + signature.signature_label + ' »');
+                _this.notify.success(_this.lang.signDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -403,24 +389,6 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
-        }
-    };
-    UserAdministrationComponent.prototype.test = function (event) {
-        var _this = this;
-        console.log(event.mouseEvent.dataTransfer);
-        if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
-            var reader = new FileReader();
-            this.signatureModel.name = event.mouseEvent.dataTransfer.files[0].name;
-            this.signatureModel.size = event.mouseEvent.dataTransfer.files[0].size;
-            this.signatureModel.type = event.mouseEvent.dataTransfer.files[0].type;
-            if (this.signatureModel.label == "") {
-                this.signatureModel.label = this.signatureModel.name;
-            }
-            reader.readAsDataURL(event.mouseEvent.dataTransfer.files[0]);
-            reader.onload = function (value) {
-                window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
-                _this.submitSignature();
-            };
         }
     };
     __decorate([

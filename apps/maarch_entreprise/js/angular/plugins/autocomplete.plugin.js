@@ -13,7 +13,7 @@ var AutoCompletePlugin = /** @class */ (function () {
         this.coreUrl = angularGlobals.coreUrl;
         if (target.indexOf('users') != -1) {
             this.userCtrl = new forms_1.FormControl();
-            this.http.get(this.coreUrl + 'rest/administration/users')
+            this.http.get(this.coreUrl + 'rest/users')
                 .subscribe(function (data) {
                 data.users.forEach(function (user) {
                     if (user.enabled == "Y") {
@@ -45,7 +45,7 @@ var AutoCompletePlugin = /** @class */ (function () {
         if (target.indexOf('usersAndEntities') != -1) {
             this.elementCtrl = new forms_1.FormControl();
             this.elemList = [];
-            this.http.get(this.coreUrl + 'rest/administration/users')
+            this.http.get(this.coreUrl + 'rest/users')
                 .subscribe(function (data) {
                 data.users.forEach(function (user) {
                     if (user.enabled == "Y") {
