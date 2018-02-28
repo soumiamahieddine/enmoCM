@@ -1732,3 +1732,9 @@ UPDATE doctypes SET duration_current_use = 12;
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;
+
+TRUNCATE TABLE users_baskets_preferences;
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
+WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
+ORDER BY users.id;
