@@ -89,18 +89,17 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         if (user.inDiffListDest == 'Y') {
             user.mode = 'up';
             this.userDestRedirect = user;
-            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
-                _this.userDestRedirectModels = data.listModels;
+                _this.userDestRedirectModels = data.listTemplates;
                 _this.config = { data: { userDestRedirect: _this.userDestRedirect, userDestRedirectModels: _this.userDestRedirectModels } };
                 _this.dialogRef = _this.dialog.open(UsersAdministrationRedirectModalComponent, _this.config);
                 _this.dialogRef.afterClosed().subscribe(function (result) {
-                    console.log(result);
                     if (result) {
                         user.enabled = 'N';
                         user.redirectListModels = result;
                         //first, update listModels
-                        _this.http.put(_this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                        _this.http.put(_this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                             .subscribe(function (data) {
                             if (data.errors) {
                                 user.enabled = 'Y';
@@ -161,16 +160,16 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         if (user.inDiffListDest == 'Y') {
             user.mode = 'del';
             this.userDestRedirect = user;
-            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
-                _this.userDestRedirectModels = data.listModels;
+                _this.userDestRedirectModels = data.listTemplates;
                 _this.config = { data: { userDestRedirect: _this.userDestRedirect, userDestRedirectModels: _this.userDestRedirectModels } };
                 _this.dialogRef = _this.dialog.open(UsersAdministrationRedirectModalComponent, _this.config);
                 _this.dialogRef.afterClosed().subscribe(function (result) {
                     if (result) {
                         user.redirectListModels = result;
                         //first, update listModels
-                        _this.http.put(_this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                        _this.http.put(_this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                             .subscribe(function (data) {
                             if (data.errors) {
                                 _this.notify.error(data.errors);

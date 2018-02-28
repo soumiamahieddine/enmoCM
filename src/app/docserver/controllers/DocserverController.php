@@ -10,32 +10,31 @@
 /**
 * @brief Docserver Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Docserver\controllers;
 
 use Core\Models\ServiceModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\ValidatorModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Docserver\models\DocserverModel;
 use SrcCore\controllers\StoreController;
 
 class DocserverController
 {
-    public function get(RequestInterface $request, ResponseInterface $response)
+    public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         return $response->withJson(['docservers' => DocserverModel::get()]);
     }
 
-    public function getById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -48,9 +47,9 @@ class DocserverController
         return $response->withJson($docserver);
     }
 
-    public function delete(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $_SESSION['user']['UserId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

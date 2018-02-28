@@ -662,9 +662,16 @@ class UserController
         }
 
         UserModel::addEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId'], 'role' => $data['role'], 'primaryEntity' => $pEntity]);
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'UP',
+            'info'      => _USER_ENTITY_CREATION . " : {$user['user_id']} {$data['entityId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
 
         return $response->withJson([
-            'success'       => _ADDED_ENTITY,
             'entities'      => UserModel::getEntitiesById(['userId' => $user['user_id']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']])
         ]);
@@ -686,6 +693,14 @@ class UserController
         }
 
         UserModel::updateEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _USER_ENTITY_MODIFICATION . " : {$aArgs['id']} {$aArgs['entityId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
 
         return $response->withJson(['success' => _UPDATED_ENTITY]);
     }
@@ -724,8 +739,16 @@ class UserController
             UserModel::reassignPrimaryEntity(['userId' => $user['user_id']]);
         }
 
+        HistoryController::add([
+            'tableName' => 'users',
+            'recordId'  => $user['user_id'],
+            'eventType' => 'UP',
+            'info'      => _USER_ENTITY_SUPPRESSION . " : {$user['user_id']} {$aArgs['entityId']}",
+            'moduleId'  => 'user',
+            'eventId'   => 'userModification',
+        ]);
+
         return $response->withJson([
-            'success'       => _DELETED_ENTITY,
             'entities'      => UserModel::getEntitiesById(['userId' => $user['user_id']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']])
         ]);

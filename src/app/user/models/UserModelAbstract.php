@@ -652,16 +652,6 @@ class UserModelAbstract
             ]
         ]);
 
-        $entityInfos = EntityModel::getByID(['entityId' => $aArgs['entityId']]);
-
-        HistoryController::add([
-            'tableName' => 'users',
-            'recordId'  => $user['user_id'],
-            'eventType' => 'ENTITY ADD',
-            'eventId'   => 'entityadded',
-            'info'       => $_SESSION['user']['UserId'].' '._ADDED_USER.' '.$user['user_id'].' '._IN_ENTITY.' '.$entityInfos['entity_label']
-        ]);
-
         return true;
     }
 
@@ -748,16 +738,6 @@ class UserModelAbstract
             'table'     => 'users_entities',
             'where'     => ['entity_id = ?', 'user_id = ?'],
             'data'      => [$aArgs['entityId'], $user['user_id']]
-        ]);
-
-        $entityInfos=EntityModel::getByID(['entityId' => $aArgs['entityId']]);
-
-        HistoryController::add([
-            'tableName' => 'users',
-            'recordId'  =>$user['user_id'],
-            'eventType' => 'ENTITY DELETE',
-            'eventId'   => 'entitydeleted',
-            'info'       =>$_SESSION['user']['UserId'].' '._REMOVED_USER.' '.$user['user_id'].' '._FROM_ENTITY.' '.$entityInfos['entity_label']
         ]);
 
         return true;

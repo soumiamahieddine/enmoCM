@@ -62,6 +62,9 @@ define('_TO_SIGN', 'For signature');
 define('_USER_GROUP_CREATION', 'Group added for user');
 define('_USER_GROUP_MODIFICATION', 'Group updated for user');
 define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
+define('_USER_ENTITY_CREATION', 'Entity added for user');
+define('_USER_ENTITY_MODIFICATION', 'Entity updated for user');
+define('_USER_ENTITY_SUPPRESSION', 'Entity deleted for user');
 define('_VISA_USER', 'For visa');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

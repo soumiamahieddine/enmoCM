@@ -103,7 +103,7 @@ class BasketModelAbstract
 
     public static function updateOrder(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'order']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['order']);
 

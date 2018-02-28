@@ -41,7 +41,7 @@ export const APP_DATE_FORMATS =
             dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
             monthYearA11yLabel: { year: 'numeric', month: 'long' },
         }
-    }
+    };
 
 
 import { NgModule } from '@angular/core';
