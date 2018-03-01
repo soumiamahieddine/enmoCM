@@ -15,9 +15,9 @@
 namespace Contact\models;
 
 
-use Core\Models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class ContactModelAbstract
 {

@@ -10,12 +10,10 @@
 /**
  * @brief Note Model
  * @author dev@maarch.org
- * @ingroup notes
  */
 
-namespace Notes\Models;
+namespace Note\models;
 
 class NoteModel extends NoteModelAbstract
 {
-    // Do your stuff in this class
 }

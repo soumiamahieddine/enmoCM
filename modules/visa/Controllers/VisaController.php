@@ -22,7 +22,7 @@ use Docserver\models\DocserverModel;
 use Core\Models\ServiceModel;
 use Entity\models\ListInstanceModel;
 use Link\models\LinkModel;
-use Notes\Models\NoteModel;
+use Note\models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\controllers\ResController;

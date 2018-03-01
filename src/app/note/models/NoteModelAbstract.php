@@ -10,17 +10,15 @@
 /**
  * @brief Note Model
  * @author dev@maarch.org
- * @ingroup notes
  */
 
-namespace Notes\Models;
+namespace Note\models;
 
-use Core\Models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class NoteModelAbstract
 {
-
     public static function countByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);
@@ -43,7 +41,7 @@ class NoteModelAbstract
         }
 
         $aNotes = DatabaseModel::select([
-            'select'    => ['notes.id','user_id', 'item_id'],
+            'select'    => ['notes.id', 'user_id', 'item_id'],
             'table'     => ['notes', 'note_entities'],
             'left_join' => ['notes.id = note_entities.note_id'],
             'where'     => ['identifier = ?'],
@@ -67,5 +65,4 @@ class NoteModelAbstract
 
         return $nb;
     }
-
 }

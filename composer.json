@@ -12,6 +12,7 @@
             "Group\\"         : "src/app/group/",
             "History\\"       : "src/app/history/",
             "Link\\"          : "src/app/link/",
+            "Note\\"          : "src/app/note/",
             "Notification\\"  : "src/app/notification/",
             "Parameter\\"     : "src/app/parameter/",
             "Priority\\"      : "src/app/priority/",
@@ -24,7 +25,6 @@
             "Core\\"          : "core/",
             "Attachments\\"   : "modules/attachments/",
             "Convert\\"       : "modules/convert/",
-            "Notes\\"         : "modules/notes/",
             "Visa\\"          : "modules/visa/"
     	}
     },
