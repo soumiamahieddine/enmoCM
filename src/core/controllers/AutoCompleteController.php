@@ -100,7 +100,7 @@ class AutoCompleteController
     public static function getStatuses(Request $request, Response $response)
     {
         $statuses = StatusModel::get([
-            'select'    => ['id', 'label_status']
+            'select'    => ['id', 'label_status', 'img_filename']
         ]);
 
         $data = [];
@@ -109,7 +109,7 @@ class AutoCompleteController
                 'type'          => 'status',
                 'id'            => $value['id'],
                 'idToDisplay'   => $value['label_status'],
-                'otherInfo'     => $value['label_status']
+                'otherInfo'     => $value['img_filename']
             ];
         }
 
