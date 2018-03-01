@@ -71,6 +71,11 @@ class VisaController
             'id' => ActionModel::getDefaultActionByGroupBasketId(['groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]),
             'actionLabel' => $actionLabel
         ];
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['COUNT(*)'],
+            'where'     => ['res_id = ?', 'item_mode in (?)'],
+            'data'      => [$aArgs['resId'], ['visa', 'sign']]
+        ]);
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -84,7 +89,7 @@ class VisaController
         $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
-        $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+        $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
