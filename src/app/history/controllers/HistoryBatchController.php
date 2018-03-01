@@ -14,7 +14,7 @@
 
 namespace History\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use History\models\HistoryBatchModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
