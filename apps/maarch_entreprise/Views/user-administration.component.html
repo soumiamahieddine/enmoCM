@@ -283,10 +283,10 @@
                                 placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl"
                                 (change)="addBasketRedirection(i,basket)">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
-                                    <p mat-line>
+                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id">
+                                    <p mat-line matTooltip="{{ user.otherInfo }}">
                                         <span class="col-xm-1">
-                                            <i color="primary" class="fa fa-user fa-2x"></i>
+                                            <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
                                         </span>
                                         <span class="col-xm-11">
                                             {{ user.idToDisplay }}

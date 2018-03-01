@@ -13,18 +13,9 @@ var AutoCompletePlugin = /** @class */ (function () {
         this.coreUrl = angularGlobals.coreUrl;
         if (target.indexOf('users') != -1) {
             this.userCtrl = new forms_1.FormControl();
-            this.http.get(this.coreUrl + 'rest/users')
+            this.http.get(this.coreUrl + 'rest/autocomplete/users')
                 .subscribe(function (data) {
-                data.users.forEach(function (user) {
-                    if (user.enabled == "Y") {
-                        _this.userList.push({
-                            "type": "user",
-                            "id": user.user_id,
-                            "idToDisplay": user.firstname + ' ' + user.lastname,
-                            "otherInfo": user.user_id
-                        });
-                    }
-                });
+                _this.userList = data;
                 _this.filteredUsers = _this.userCtrl.valueChanges
                     .pipe(startWith_1.startWith(''), map_1.map(function (user) { return user ? _this.autocompleteFilterUser(user) : _this.userList.slice(); }));
             }, function () {
@@ -33,9 +24,9 @@ var AutoCompletePlugin = /** @class */ (function () {
         }
         if (target.indexOf('statuses') != -1) {
             this.statusCtrl = new forms_1.FormControl();
-            this.http.get(this.coreUrl + 'rest/statuses')
+            this.http.get(this.coreUrl + 'rest/autocomplete/statuses')
                 .subscribe(function (data) {
-                _this.statusesList = data['statuses'];
+                _this.statusesList = data;
                 _this.filteredStatuses = _this.statusCtrl.valueChanges
                     .pipe(startWith_1.startWith(''), map_1.map(function (status) { return status ? _this.autocompleteFilterStatuses(status) : _this.statusesList.slice(); }));
             }, function () {
@@ -45,30 +36,12 @@ var AutoCompletePlugin = /** @class */ (function () {
         if (target.indexOf('usersAndEntities') != -1) {
             this.elementCtrl = new forms_1.FormControl();
             this.elemList = [];
-            this.http.get(this.coreUrl + 'rest/users')
+            this.http.get(this.coreUrl + 'rest/autocomplete/users')
                 .subscribe(function (data) {
-                data.users.forEach(function (user) {
-                    if (user.enabled == "Y") {
-                        _this.elemList.push({
-                            "type": "user",
-                            "id": user.user_id,
-                            "idToDisplay": user.firstname + ' ' + user.lastname,
-                            "otherInfo": user.user_id
-                        });
-                    }
-                });
-                _this.http.get(_this.coreUrl + 'rest/entities')
+                _this.elemList = data;
+                _this.http.get(_this.coreUrl + 'rest/autocomplete/entities')
                     .subscribe(function (data) {
-                    data.entities.forEach(function (entity) {
-                        if (entity.allowed == true) {
-                            _this.elemList.push({
-                                "type": "entity",
-                                "id": entity.entity_id,
-                                "idToDisplay": entity.entity_label,
-                                "otherInfo": entity.entity_id
-                            });
-                        }
-                    });
+                    _this.elemList = _this.elemList.concat(data);
                     _this.filteredElements = _this.elementCtrl.valueChanges
                         .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
                 }, function () {
@@ -81,20 +54,22 @@ var AutoCompletePlugin = /** @class */ (function () {
         if (target.indexOf('entities') != -1) {
             this.elementCtrl = new forms_1.FormControl();
             this.elemList = [];
-            this.http.get(this.coreUrl + 'rest/entities')
+            this.http.get(this.coreUrl + 'rest/autocomplete/entities')
                 .subscribe(function (data) {
-                data.entities.forEach(function (entity) {
-                    if (entity.allowed == true) {
-                        _this.elemList.push({
-                            "type": "entity",
-                            "id": entity.entity_id,
-                            "idToDisplay": entity.entity_label,
-                            "otherInfo": entity.entity_id
-                        });
-                    }
-                });
+                _this.elemList = data;
                 _this.filteredElements = _this.elementCtrl.valueChanges
                     .pipe(startWith_1.startWith(''), map_1.map(function (elem) { return elem ? _this.autocompleteFilterElements(elem) : _this.elemList.slice(); }));
+            }, function () {
+                location.href = "index.php";
+            });
+        }
+        else if (target.indexOf('visaUsers') != -1) {
+            this.userCtrl = new forms_1.FormControl();
+            this.http.get(this.coreUrl + 'rest/autocomplete/users/visa')
+                .subscribe(function (data) {
+                _this.userList = data;
+                _this.filteredUsers = _this.userCtrl.valueChanges
+                    .pipe(startWith_1.startWith(''), map_1.map(function (user) { return user ? _this.autocompleteFilterUser(user) : _this.userList.slice(); }));
             }, function () {
                 location.href = "index.php";
             });
@@ -109,7 +84,7 @@ var AutoCompletePlugin = /** @class */ (function () {
     };
     AutoCompletePlugin.prototype.autocompleteFilterStatuses = function (name) {
         return this.statusesList.filter(function (status) {
-            return status.label_status.toLowerCase().indexOf(name.toLowerCase()) >= 0;
+            return status.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0;
         });
     };
     AutoCompletePlugin.prototype.autocompleteFilterElements = function (name) {

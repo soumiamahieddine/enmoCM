@@ -24,19 +24,9 @@ export class AutoCompletePlugin {
 
         if (target.indexOf('users') != -1) {
             this.userCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/users')
+            this.http.get(this.coreUrl + 'rest/autocomplete/users')
                 .subscribe((data: any) => {
-                    data.users.forEach((user: any) => {
-                        if (user.enabled == "Y") {
-                            this.userList.push({
-                                "type": "user",
-                                "id": user.user_id,
-                                "idToDisplay": user.firstname + ' ' + user.lastname,
-                                "otherInfo": user.user_id
-                            });
-                        }
-
-                    });
+                    this.userList = data;
                     this.filteredUsers = this.userCtrl.valueChanges
                         .pipe(
                             startWith(''),
@@ -48,9 +38,9 @@ export class AutoCompletePlugin {
         }
         if (target.indexOf('statuses')  != -1) {
             this.statusCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/statuses')
+            this.http.get(this.coreUrl + 'rest/autocomplete/statuses')
                 .subscribe((data: any) => {
-                    this.statusesList = data['statuses'];
+                    this.statusesList = data;
                     this.filteredStatuses = this.statusCtrl.valueChanges
                         .pipe(
                             startWith(''),
@@ -64,32 +54,13 @@ export class AutoCompletePlugin {
             this.elementCtrl = new FormControl();
             this.elemList = [];
 
-            this.http.get(this.coreUrl + 'rest/users')
+            this.http.get(this.coreUrl + 'rest/autocomplete/users')
                 .subscribe((data: any) => {
-                    data.users.forEach((user: any) => {
-                        if (user.enabled == "Y") {
-                            this.elemList.push({
-                                "type": "user",
-                                "id": user.user_id,
-                                "idToDisplay": user.firstname + ' ' + user.lastname,
-                                "otherInfo": user.user_id
-                            });
-                        }
+                    this.elemList = data;
 
-                    });
-                    this.http.get(this.coreUrl + 'rest/entities')
+                    this.http.get(this.coreUrl + 'rest/autocomplete/entities')
                         .subscribe((data: any) => {
-                            data.entities.forEach((entity: any) => {
-                                if (entity.allowed == true) {
-                                    this.elemList.push({
-                                        "type": "entity",
-                                        "id": entity.entity_id,
-                                        "idToDisplay": entity.entity_label,
-                                        "otherInfo": entity.entity_id
-                                    });
-                                }
-
-                            });
+                            this.elemList = this.elemList.concat(data);
                             this.filteredElements = this.elementCtrl.valueChanges
                                 .pipe(
                                     startWith(''),
@@ -107,19 +78,9 @@ export class AutoCompletePlugin {
         if (target.indexOf('entities') != -1) {
             this.elementCtrl = new FormControl();
             this.elemList = [];
-            this.http.get(this.coreUrl + 'rest/entities')
+            this.http.get(this.coreUrl + 'rest/autocomplete/entities')
                 .subscribe((data: any) => {
-                    data.entities.forEach((entity: any) => {
-                        if (entity.allowed == true) {
-                            this.elemList.push({
-                                "type": "entity",
-                                "id": entity.entity_id,
-                                "idToDisplay": entity.entity_label,
-                                "otherInfo": entity.entity_id
-                            });
-                        }
-
-                    });
+                    this.elemList = data;
                     this.filteredElements = this.elementCtrl.valueChanges
                         .pipe(
                             startWith(''),
@@ -129,6 +90,19 @@ export class AutoCompletePlugin {
                     location.href = "index.php";
                 });
 
+        } else if (target.indexOf('visaUsers') != -1) {
+            this.userCtrl = new FormControl();
+            this.http.get(this.coreUrl + 'rest/autocomplete/users/visa')
+                .subscribe((data: any) => {
+                    this.userList = data;
+                    this.filteredUsers = this.userCtrl.valueChanges
+                        .pipe(
+                            startWith(''),
+                            map(user => user ? this.autocompleteFilterUser(user) : this.userList.slice())
+                        );
+                }, () => {
+                    location.href = "index.php";
+                });
         } else {
 
         }
@@ -141,7 +115,7 @@ export class AutoCompletePlugin {
 
     autocompleteFilterStatuses(name: string) {
         return this.statusesList.filter(status =>
-            status.label_status.toLowerCase().indexOf(name.toLowerCase()) >= 0);
+            status.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
     }
 
     autocompleteFilterElements(name: string) {

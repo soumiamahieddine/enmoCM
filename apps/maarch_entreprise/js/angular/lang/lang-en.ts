@@ -20,6 +20,7 @@ export const LANG_EN = {
     "addStatus"                 : "Add a status",
     "addUser"                   : "Add a user",
     "addUserOrEntity"           : "Add a user / an entity",
+    "addVisaSignUser"           : "Add a visa / sign user",
     "administration"            : "Administration",
     "administrationServices"    : "Administration services",
     "allActions"                : "All actions",

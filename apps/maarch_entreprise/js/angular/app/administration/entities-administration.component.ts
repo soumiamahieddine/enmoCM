@@ -47,7 +47,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
-        super(http, ['usersAndEntities', 'users']);
+        super(http, ['usersAndEntities', 'visaUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -175,30 +175,31 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     addElemListModel(element: any) {
+        /* create listDiff struct */
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "entity_id",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
         var inListModel = false;
-        var newElemListModel = {
-            "type": element.type,
-            "id": element.id,
-            "labelToDisplay": element.idToDisplay,
-            "descriptionToDisplay": element.otherInfo,
-            "sequence": element.sequence,
-        };
-        var ElemListModelList: any = [];
+        var newElemListModel: any = {};
+
         this.currentEntity.roles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
-                        console.log(listModel);
-                        if (listModel.id == element.id) {
+                        /* insert current diff list */
+                        newDiffList.items.push({
+                            "item_type": listModel.item_type,
+                            "item_mode": role.id,
+                            "item_id": listModel.item_id,
+                            "sequence": listModel.sequence
+                        });
+
+                        if (listModel.item_id == element.id) {
                             inListModel = true;
-                        } else {
-                            ElemListModelList.push({
-                                "type": element.type,
-                                "object_id": this.currentEntity.entity_id,
-                                "mode": role.id,
-                                "id": element.id,
-                                "sequence": element.sequence
-                            });
                         }
                     });
                 }
@@ -206,41 +207,120 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         });
         if (!inListModel) {
             if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
+                newElemListModel = {
+                    "item_type": "user_id",
+                    "item_id": element.id,
+                    "labelToDisplay": element.idToDisplay,
+                    "descriptionToDisplay": element.otherInfo,
+                    "item_mode": "dest",
+                    "sequence": 0
+                };
                 this.currentEntity.listTemplate.dest.unshift(newElemListModel);
-                ElemListModelList.push({
-                    "type": element.type,
-                    "object_id": this.currentEntity.entity_id,
-                    "mode": "dest",
-                    "id": element.id,
-                    "sequence": element.sequence
-                });
-            } else {
-                this.currentEntity.listTemplate.cc.unshift(newElemListModel);
-                ElemListModelList.push({
-                    "type": newElemListModel.type,
-                    "object_id": this.currentEntity.entity_id,
-                    "mode": "cc",
-                    "id": newElemListModel.id,
+                newDiffList.items.push({
+                    "item_type": "user_id",
+                    "item_mode": "dest",
+                    "item_id": newElemListModel.item_id,
                     "sequence": newElemListModel.sequence
                 });
+            } else {
+                var itemType = '';
+                if (element.type == 'user') {
+                    itemType = 'user_id';
+                } else {
+                    itemType = 'entity_id';
+                }
+
+                newElemListModel = {
+                    "item_type": itemType,
+                    "item_id": element.id,
+                    "labelToDisplay": element.idToDisplay,
+                    "descriptionToDisplay": element.otherInfo,
+                    "item_mode": "cc",
+                    "sequence": 0
+                };
+                this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+                newDiffList.items.push({
+                    "item_type": newElemListModel.item_type,
+                    "item_mode": "cc",
+                    "item_id": newElemListModel.item_id,
+                    "sequence": 0
+                });
             }
-
+            if (this.currentEntity.listTemplate.id) {
+                this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
+                    .subscribe((data: any) => {
+                        this.currentEntity.listTemplate.id = data.id;
+                        this.notify.success(this.lang.entityUpdated);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            } else {
+                this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+                    .subscribe((data: any) => {
+                        this.currentEntity.listTemplate.id = data.id;
+                        this.notify.success(this.lang.entityUpdated);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            }
         }
-
         this.elementCtrl.setValue('');
     }
 
     addElemListModelVisa(element: any) {
-        var inListModel = false;
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "VISA_CIRCUIT",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
+        var itemMode = '';
+
         var newElemListModel = {
-            "type": element.type,
-            "id": element.id,
-            "labelToDisplay": element.idToDisplay,
-            "descriptionToDisplay": element.otherInfo,
+            "id": '',
+            "item_type": 'user_id',
+            "item_mode": "sign",
+            "mode": "sign",
+            "item_id": element.id,
+            "sequence": this.currentEntity.visaTemplate.length,
+            "idToDisplay": element.idToDisplay,
+            "descriptionToDisplay": element.otherInfo
         };
 
-        this.currentEntity.visaTemplate.unshift(newElemListModel);
+        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+            listModel.sequence = i;
+            listModel.mode = "visa";
+            newDiffList.items.push({
+                "id": listModel.id,
+                "item_id": listModel.item_id,
+                "item_type": "user_id",
+                "item_mode": listModel.mode,
+                "sequence": listModel.sequence
+            });
+        });
 
+        newDiffList.items.push(newElemListModel);
+
+        if (this.currentEntity.visaTemplate.length > 0) {
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.visaTemplate[0].id, newDiffList)
+                .subscribe((data: any) => {
+                    newElemListModel.id = data.id;
+                    this.currentEntity.visaTemplate.push(newElemListModel);
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+                .subscribe((data: any) => {
+                    newElemListModel.id = data.id
+                    this.currentEntity.visaTemplate.push(newElemListModel);
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
         this.userCtrl.setValue('');
     }
 
@@ -367,20 +447,148 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     updateDiffList(template: any, role: any): any {
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "entity_id",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
+
         if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
             this.currentEntity.listTemplate.dest.forEach((listModel: any) => {
-                if (listModel.id != template.id) {
+                if (listModel.item_id != template.item_id) {
                     this.currentEntity.listTemplate.cc.push(listModel);
                 }
             });
             this.currentEntity.listTemplate.dest = [template];
         }
+
+        this.currentEntity.roles.forEach((role: any) => {
+            if (role.available == true) {
+                if (this.currentEntity.listTemplate[role.id]) {
+                    this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
+                        newDiffList.items.push({
+                            "item_id": listModel.item_id,
+                            "item_type": listModel.item_type,
+                            "item_mode": role.id,
+                            "sequence": listModel.sequence
+                        })
+                    });
+                }
+            }
+        });
+        if (this.currentEntity.listTemplate.id) {
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
+                .subscribe((data: any) => {
+                    this.currentEntity.listTemplate.id = data.id;
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+                .subscribe((data: any) => {
+                    this.currentEntity.listTemplate.id = data.id;
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+    updateDiffListVisa(template: any): any {
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "VISA_CIRCUIT",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
+        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+            listModel.sequence = i;
+            if (i == (this.currentEntity.visaTemplate.length - 1)) {
+                listModel.mode = "sign";
+            } else {
+                listModel.mode = "visa";
+            }
+            newDiffList.items.push({
+                "id": listModel.id,
+                "item_id": listModel.item_id,
+                "item_type": "user_id",
+                "item_mode": listModel.mode,
+                "sequence": listModel.sequence
+            });
+        });
+        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.entityUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+
     }
     removeDiffList(i: number, role: string): any {
         this.currentEntity.listTemplate[role].splice(i, 1);
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "entity_id",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
+        this.currentEntity.roles.forEach((role: any) => {
+            if (role.available == true) {
+                if (this.currentEntity.listTemplate[role.id]) {
+                    this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
+                        newDiffList.items.push({
+                            "item_id": listModel.item_id,
+                            "item_type": listModel.item_type,
+                            "item_mode": role.id,
+                            "sequence": listModel.sequence
+                        });
+                    });
+                }
+            }
+        });
+        this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
+            .subscribe((data: any) => {
+                this.currentEntity.listTemplate.id = data.id;
+                this.notify.success(this.lang.entityUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
-    removeDiffListVisa(i: number): any {
+    removeDiffListVisa(template: any, i: number): any {
         this.currentEntity.visaTemplate.splice(i, 1);
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "VISA_CIRCUIT",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        }
+
+        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+            listModel.sequence = i;
+            if (i == (this.currentEntity.visaTemplate.length - 1)) {
+                listModel.mode = "sign";
+            } else {
+                listModel.mode = "visa";
+            }
+            newDiffList.items.push({
+                "item_id": listModel.item_id,
+                "item_type": "user_id",
+                "item_mode": listModel.mode,
+                "sequence": listModel.sequence
+            });
+        });
+        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.entityUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+
     }
 }
 @Component({

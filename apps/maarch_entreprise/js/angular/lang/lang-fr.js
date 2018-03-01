@@ -25,6 +25,7 @@ exports.LANG_FR = {
     "addStatus": "Ajouter un statut",
     "addUser": "Ajouter un utilisateur",
     "addUserOrEntity": "Ajouter un utilisateur / une entité",
+    "addVisaSignUser": "Ajouter un viseur / signataire",
     "administration": "Administration",
     "administrationServices": "Droits d'administration",
     "allActions": "Toutes les actions",

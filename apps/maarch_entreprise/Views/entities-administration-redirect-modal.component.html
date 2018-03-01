@@ -35,7 +35,7 @@
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id">
                     <p mat-line>
-                        <i [class]="elem.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'"></i> {{ elem.idToDisplay }}
+                        <mat-icon [class]="elem.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'" style="margin-right:0px;"></mat-icon> {{ elem.idToDisplay }}
                         <small>{{ elem.otherInfo }}</small>
                     </p>
                 </mat-option>
