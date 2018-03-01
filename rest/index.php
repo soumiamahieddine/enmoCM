@@ -242,11 +242,11 @@ $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . 
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration'); //TODO No date
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':get'); //TODO No date
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');//TODO No date
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryBatchController::class . ':get');//TODO No date
 
 //actions
 $app->get('/actions', \Action\controllers\ActionController::class . ':get');
