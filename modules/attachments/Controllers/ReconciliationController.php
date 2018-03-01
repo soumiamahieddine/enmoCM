@@ -1,16 +1,5 @@
 <?php
 
-namespace Attachments\Controllers;
-
-use Attachment\Models\AttachmentModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Respect\Validation\Validator;
-use Resource\controllers\ResController;
-use Docserver\models\DocserverModel;
-use Docserver\models\DocserverTypeModel;
-use Docserver\controllers\DocserverToolsController;
-use Core\Models\ResModel;
 
 class ReconciliationController{
     public function storeAttachmentResource($aArgs)
@@ -275,26 +264,25 @@ class ReconciliationController{
         $filetmp .= $tmp;
         $filetmp .= $filename;
 
-        $docserver = DocserverModel::getById([
+        $docserver = \Docserver\models\DocserverModel::getById([
             'id' => $docserverId
         ]);
-        $docserverType = DocserverTypeModel::getById([
+        $docserverType = \Docserver\models\DocserverTypeModel::getById([
             'id' => $docserver['docserver_type_id']
         ]);
 
-        $fingerprint = DocserverToolsController::doFingerprint(
-            [
-                'path'            => $filetmp,
-                'fingerprintMode' => $docserverType['fingerprint_mode'],
-            ]
-        );
+        if (empty($docserverType['fingerprint_mode']) || $docserverType['fingerprint_mode'] == 'NONE') {
+            $fingerprint =  '0';
+        } else {
+            $fingerprint = hash_file(strtolower($docserverType['fingerprint_mode']), $filetmp);
+        }
 
         $filesize = filesize($filetmp);
         array_push(
             $data,
             array(
                 'column' => "fingerprint",
-                'value' => $fingerprint['fingerprint'],
+                'value' => $fingerprint,
                 'type' => "string"
             )
         );
@@ -346,7 +334,7 @@ class ReconciliationController{
             }
 
             unset($prepareData['res_id']); // NCH01
-            AttachmentModel::create($prepareData);
+            \Attachment\Models\AttachmentModel::create($prepareData);
 
             return true;
         }

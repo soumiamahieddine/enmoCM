@@ -30,8 +30,6 @@
           <directory suffix=".php">core/Models</directory>
           <directory suffix=".php">modules/visa/Controllers</directory>
           <directory suffix=".php">modules/visa/Models</directory>          
-          <directory suffix=".php">modules/attachments/Controllers</directory>
-          <directory suffix=".php">modules/attachments/Models</directory>          
           <directory suffix=".php">modules/convert/Controllers</directory>
           <directory suffix=".php">modules/convert/Models</directory>
       </whitelist>

@@ -6,12 +6,10 @@
  *
  */
 
-use \Attachments\Models\ReconciliationModel;
-
 $core = new core_tools();
 $core->test_user();
 $db = new Database();
-$reconciliationControler = new \Attachments\Controllers\ReconciliationController();
+$reconciliationControler = new ReconciliationController();
 
 $letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
 
@@ -35,14 +33,10 @@ foreach($formValues as $tmpTab){
 $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = $tabFormValues;    // declare SESSION var, used in remove_letterbox
 
 // Retrieve the informations of the newly scanned document (the one to attach as an attachment)
-$queryChildInfos = ReconciliationModel::selectReconciliation([
-        'table'     => [$letterboxTable],
-        'where'     => ['res_id = (?)'],
-        'data'      => [$childResId]
-]);
+$queryChildInfos = \Resource\models\ResModel::getById(['resId' => $childResId]);
 
 $aArgs['data'] = array();
-foreach ($queryChildInfos[0] as $key => $value){
+foreach ($queryChildInfos as $key => $value){
     if($value != ''
         && $key != 'modification_date'
         && $key != 'is_frozen'
@@ -168,14 +162,12 @@ for($i = 0; $i <= count($aArgs['data']); $i++){
     }
     if($aArgs['data'][$i]['column'] == 'docserver_id'){
         // Retrieve the PATH TEMPLATE
-        $docserverPath = ReconciliationModel::selectReconciliation([
+        $docserverPath = \Docserver\models\DocserverModel::getById([
             'select'    => ['path_template'],
-            'table'     => ['docservers'],
-            'where'     => ['docserver_id = (?)'],
-            'data'      => [$aArgs['data'][$i]['value']]
+            'id'        => $aArgs['data'][$i]['value']
         ]);
 
-        $aArgs['docserverPath'] = $docserverPath[0]['path_template'];
+        $aArgs['docserverPath'] = $docserverPath['path_template'];
         $aArgs['docserverId'] = $aArgs['data'][$i]['value'];
     }
 }
