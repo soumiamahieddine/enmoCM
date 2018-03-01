@@ -17,7 +17,7 @@ namespace Resource\controllers;
 use Basket\models\BasketModel;
 use Note\models\NoteModel;
 use SrcCore\controllers\StoreController;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Status\models\StatusModel;
 use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;

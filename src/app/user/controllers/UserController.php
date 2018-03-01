@@ -15,7 +15,7 @@
 namespace User\controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;

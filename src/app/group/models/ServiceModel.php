@@ -10,12 +10,10 @@
 /**
 * @brief Service Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Group\models;
 
 class ServiceModel extends ServiceModelAbstract
 {
-    // Do your stuff in this class
 }

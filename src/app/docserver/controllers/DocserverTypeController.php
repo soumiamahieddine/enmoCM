@@ -14,7 +14,7 @@
 
 namespace Docserver\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Docserver\models\DocserverTypeModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

@@ -14,7 +14,7 @@
 
 namespace History\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;

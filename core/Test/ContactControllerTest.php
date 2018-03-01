@@ -102,10 +102,10 @@ class ContactControllerTest extends TestCase
         //  READ
         $contact = \Contact\models\ContactModel::getById(['id' => self::$id]);
         $this->assertInternalType('array', $contact);
-        $this->assertEmpty(null, $contact);
+        $this->assertEmpty($contact);
 
         $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
         $this->assertInternalType('array', $contact);
-        $this->assertEmpty(null, $contact);
+        $this->assertEmpty($contact);
     }
 }

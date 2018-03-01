@@ -17,7 +17,7 @@ use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

@@ -16,7 +16,7 @@ use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

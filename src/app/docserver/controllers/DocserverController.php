@@ -14,7 +14,7 @@
 
 namespace Docserver\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\ValidatorModel;

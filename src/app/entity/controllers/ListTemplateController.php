@@ -14,7 +14,7 @@
 
 namespace Entity\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;

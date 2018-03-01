@@ -14,7 +14,7 @@
 
 namespace Group\models;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;

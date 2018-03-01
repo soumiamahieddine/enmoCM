@@ -10,13 +10,13 @@
  * @brief Service Model
  *
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Models;
+namespace Group\models;
 
 use SrcCore\models\CoreConfigModel;
-use User\models\UserModel;
+use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class ServiceModelAbstract
 {
@@ -252,16 +252,14 @@ class ServiceModelAbstract
             if ($path) {
                 $xmlfile = simplexml_load_file($path);
                 foreach ($xmlfile->MENU as $value) {
-                    $id = (string) $value->id;
-
                     $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
                     $modulesServices['menuList'][] = [
-                        'id' => (string) $value->id,
-                        'label' => $label,
-                        'link' => (string) $value->url,
-                        'icon' => (string) $value->style,
-                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        'id'        => (string) $value->id,
+                        'label'     => $label,
+                        'link'      => (string) $value->url,
+                        'icon'      => (string) $value->style,
+                        'angular'   => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
                 }
             }
@@ -270,7 +268,7 @@ class ServiceModelAbstract
         return $modulesServices;
     }
 
-    public static function getApplicationAdministrationMenuByUserServices(array $aArgs = [])
+    public static function getApplicationAdministrationMenuByUserServices(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userServices']);
         ValidatorModel::arrayType($aArgs, ['userServices']);
@@ -341,7 +339,7 @@ class ServiceModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $rawServicesStoredInDB = UserModel::getServicesById(['userId' => $aArgs['userId']]);
+        $rawServicesStoredInDB = ServiceModel::getByUserId(['userId' => $aArgs['userId']]);
         $servicesStoredInDB = [];
         foreach ($rawServicesStoredInDB as $value) {
             $servicesStoredInDB[] = $value['service_id'];
@@ -358,6 +356,21 @@ class ServiceModelAbstract
         return $administration;
     }
 
+    public static function getByUserId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        $aServices = DatabaseModel::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services'],
+            'where'     => ['usergroup_content.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aServices;
+    }
+
     public static function hasService(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'location', 'type']);
@@ -366,7 +379,7 @@ class ServiceModelAbstract
         if ($aArgs['userId'] == 'superadmin') {
             return true;
         }
-        $rawServicesStoredInDB = UserModel::getServicesById(['userId' => $aArgs['userId']]);
+        $rawServicesStoredInDB = ServiceModel::getByUserId(['userId' => $aArgs['userId']]);
         $servicesStoredInDB = [];
         foreach ($rawServicesStoredInDB as $value) {
             $servicesStoredInDB[] = $value['service_id'];
