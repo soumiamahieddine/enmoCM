@@ -15,7 +15,7 @@
 
 namespace SrcCore\controllers;
 
-use Core\Models\TextFormatModel;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 
 if (!defined('_LOG4PHP'))
@@ -36,6 +36,7 @@ if (!defined('_LOGGER_NAME_FUNC_DEFAULT'))
 
 require_once 'apps/maarch_entreprise/tools/log4php/Logger.php';
 
+//TODO Cleaning Refactoring
 class LogsController
 {
     protected static function getLoggingMethodConfFile()

@@ -8,14 +8,13 @@
 */
 
 /**
-* @brief Text Format Model Abstract
+* @brief Text Format Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace SrcCore\models;
 
-class TextFormatModelAbstract
+class TextFormatModel
 {
     public static function normalize(array $aArgs)
     {

@@ -33,9 +33,8 @@ use Docserver\models\DocserverModel;
 use Docserver\models\ResDocserverModel;
 use SrcCore\controllers\LogsController;
 use SrcCore\controllers\StoreController;
+use SrcCore\models\TextFormatModel;
 
-
-//include_once('html2text/html2text.php');
 
 class ProcessFulltextController
 {
@@ -505,7 +504,7 @@ class ProcessFulltextController
     private function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) 
     {
         // $IndexFileDirectory is replace by tempIndexFileDirectory
-        $fileContent = \Core\Models\TextFormatModel::normalize(['string' => $fileContent]);
+        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
         $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
         $indexFileDirectory = (string) $tempIndexFileDirectory; 
         // with version 1.12, we need a string, not an XML element

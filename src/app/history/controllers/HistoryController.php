@@ -14,8 +14,8 @@
 
 namespace History\controllers;
 
-use Core\Models\TextFormatModel;
 use Core\Models\ServiceModel;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
