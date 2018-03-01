@@ -327,4 +327,16 @@ export const LANG_FR = {
     "documentTypeDeleted"               : "Type de document supprimé",
     "documentTypeReplacement"           : "Remplacement du type de document",
     "transferToDoctype"                 : "Remplacer par le type de document",
+    "complementaryFields"                 : "Champs complémentaires",
+    "archival"                 : "Archivage",
+    "field"                 : "Champ",
+    "mandatory"                 : "Obligatoire",
+    "fieldType"                 : "Type champ",
+    "fieldNature"                 : "Nature champ",
+    "databaseColumn"                 : "Colonne BDD",
+    "used"                 : "Utilisé",
+    "toolTipDeleteDoctype"                 : "Si des courriers sont rattachés à ce type de document, un écran de réaffectation s'affichera",
+    "cantMoveDoctype"                 : "Le type de document peut uniquement être déplacé dans une sous-chemise",
+    "noDoctypeSelected"                 : "Aucun type de document sélectionné",
+
 };

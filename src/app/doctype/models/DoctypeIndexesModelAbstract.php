@@ -109,14 +109,14 @@ class DoctypeIndexesModelAbstract
                     'order_by' => [str_ireplace("order by", "", $order)]
                 ]);
 
-                foreach($res as $value){
+                foreach ($res as $value) {
                     array_push(
-                         $values,
-                         array(
-                             'id'    => (string) $value[0],
-                             'label' => (string) $value[1],
-                         )
-                     );
+                        $values,
+                        array(
+                            'id'    => (string) $value[0],
+                            'label' => (string) $value[1],
+                        )
+                    );
                 }
                 $tmpArr = array(
                     'column'        => (string) $item->column,

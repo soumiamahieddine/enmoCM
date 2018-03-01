@@ -45,14 +45,30 @@ class DoctypeController
             }
         }
   
-        $doctypeExt                    = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
-        $template                      = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
-        $obj['doctype']                = array_merge($obj['doctype'], $doctypeExt, $template);
-        $obj['secondLevel']            = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
-        $obj['processModes']           = DoctypeModel::getProcessMode();
-        $obj['models']                 = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
-        $obj['indexes']                = DoctypeIndexesModel::getAllIndexes();
-        $obj['indexesSelected']        = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
+        $doctypeExt = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
+        $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
+
+        $indexes  = DoctypeIndexesModel::getAllIndexes();
+        $indexesSelected = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
+        foreach ($indexes as $key => $value) {
+            foreach ($indexesSelected as $valueSelected) {
+                if ($value['column'] == $valueSelected['field_name']) {
+                    $indexes[$key]['use'] = true;
+                    if ($valueSelected['mandatory'] == 'Y') {
+                        $valueSelected['mandatory'] = true;
+                    } else {
+                        $valueSelected['mandatory'] = false;
+                    }
+                    $indexes[$key]['mandatory'] = $valueSelected['mandatory'];
+                    break;
+                }
+            }
+        }
+
+        $obj['doctype']      = array_merge($obj['doctype'], $doctypeExt, $template, ['indexes' => $indexes]);
+        $obj['secondLevel']  = SecondLevelModel::get(['select' => ['doctypes_second_level_id', 'doctypes_second_level_label']]);
+        $obj['processModes'] = DoctypeModel::getProcessMode();
+        $obj['models']       = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
 
         return $response->withJson($obj);
     }
@@ -63,13 +79,20 @@ class DoctypeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data                            = $request->getParams();
+        $data = $request->getParams();
         
-        $errors = $this->control($data, 'create');
+        $errors = DoctypeController::control($data, 'create');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
-        $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
+
+        $data = DoctypeController::manageValue($data);
+        $secondLevelInfo = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
+        
+        if (empty($secondLevelInfo)) {
+            return $response->withStatus(500)->withJson(['errors' => 'doctypes_second_level_id does not exists']);
+        }
+
         $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         $doctypeId = DoctypeModel::create([
@@ -97,13 +120,15 @@ class DoctypeController
         ]);
 
         if (!empty($data['indexes'])) {
-            foreach ($data['indexes'] as $fieldName => $mandatory) {
-                DoctypeIndexesModel::create([
-                    "type_id"    => $doctypeId,
-                    "coll_id"    => 'letterbox_coll',
-                    "field_name" => $fieldName,
-                    "mandatory"  => $mandatory
-                ]);
+            foreach ($data['indexes'] as $value) {
+                if (!empty($value['use'])) {
+                    DoctypeIndexesModel::create([
+                        "type_id"    => $doctypeId,
+                        "coll_id"    => 'letterbox_coll',
+                        "field_name" => $value['column'],
+                        "mandatory"  => $value['mandatory']
+                    ]);
+                }
             }
         }
 
@@ -132,11 +157,15 @@ class DoctypeController
         $data                            = $request->getParams();
         $data['type_id']                 = $aArgs['id'];
         
-        $errors = $this->control($data, 'update');
+        $errors = DoctypeController::control($data, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
+        $data = DoctypeController::manageValue($data);
         $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
+        if (empty($secondLevelInfo)) {
+            return $response->withStatus(500)->withJson(['errors' => 'doctypes_second_level_id does not exists']);
+        }
         $data['doctypes_first_level_id'] = $secondLevelInfo['doctypes_first_level_id'];
     
         DoctypeModel::update([
@@ -167,13 +196,15 @@ class DoctypeController
         DoctypeIndexesModel::delete(["type_id" => $data['type_id']]);
 
         if (!empty($data['indexes'])) {
-            foreach ($data['indexes'] as $fieldName => $mandatory) {
-                DoctypeIndexesModel::create([
-                    "type_id"    => $data['type_id'],
-                    "coll_id"    => 'letterbox_coll',
-                    "field_name" => $fieldName,
-                    "mandatory"  => $mandatory
-                ]);
+            foreach ($data['indexes'] as $value) {
+                if (!empty($value['use'])) {
+                    DoctypeIndexesModel::create([
+                        "type_id"    => $data['type_id'],
+                        "coll_id"    => 'letterbox_coll',
+                        "field_name" => $value['column'],
+                        "mandatory"  => $value['mandatory']
+                    ]);
+                }
             }
         }
 
@@ -295,7 +326,7 @@ class DoctypeController
         ]);
     }
 
-    protected function control($aArgs, $mode)
+    protected static function control($aArgs, $mode)
     {
         $errors = [];
 
@@ -334,5 +365,17 @@ class DoctypeController
         }
 
         return $errors;
+    }
+
+    protected static function manageValue($request)
+    {
+        foreach ($request['indexes'] as $key => $value) {
+            if (!empty($value['mandatory'])) {
+                $request['indexes'][$key]['mandatory'] = 'Y';
+            } else {
+                $request['indexes'][$key]['mandatory'] = 'N';
+            }
+        }
+        return $request;
     }
 }

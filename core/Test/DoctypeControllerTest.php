@@ -164,10 +164,42 @@ class DoctypeControllerTest extends TestCase
             'process_mode'                => 'NORMAL',
             'template_id'                 => '',
             'is_generated'                => 'N',
-            'indexes'                     => [
-                                            'custom_t1' => 'N',
-                                            'custom_t2' => 'Y',
-                                        ],
+            'indexes' => [
+                0 => [
+                    "column"        => "custom_t1",
+                    "label"         => "PO#",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ],
+                1 => [
+                    "column"        => "custom_t2",
+                    "label"         => "Imput",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false,
+                    "use"           => true,
+                    "mandatory"     => false
+                ],
+                2 => [
+                    "column"        => "custom_f1",
+                    "label"         => "Mnt",
+                    "type"          => "float",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ],
+                3 => [
+                    "column"        => "custom_t3",
+                    "label"         => "Id/Matricule",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ]
+            ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -309,9 +341,44 @@ class DoctypeControllerTest extends TestCase
             'process_mode'                => 'SVR',
             'template_id'                 => '',
             'is_generated'                => 'N',
-            'indexes'                     => [
-                                            'custom_t1' => 'N',
-                                        ],
+            'indexes' => [
+                0 => [
+                    "column"        => "custom_t1",
+                    "label"         => "PO#",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false,
+                    "use"           => true,
+                    "mandatory"     => true
+                ],
+                1 => [
+                    "column"        => "custom_t2",
+                    "label"         => "Imput",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false,
+                    "use"           => false,
+                    "mandatory"     => false
+                ],
+                2 => [
+                    "column"        => "custom_f1",
+                    "label"         => "Mnt",
+                    "type"          => "float",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ],
+                3 => [
+                    "column"        => "custom_t3",
+                    "label"         => "Id/Matricule",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ]
+            ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -409,10 +476,10 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame(null, $responseBody->doctype->template_id);
         $this->assertSame('N', $responseBody->doctype->is_generated);
         $this->assertNotNull($responseBody->models);
-        $this->assertNotNull($responseBody->indexes);
-        $this->assertSame(self::$doctypeId, $responseBody->indexesSelected[0]->type_id);
-        $this->assertSame('custom_t1', $responseBody->indexesSelected[0]->field_name);
-        $this->assertSame('N', $responseBody->indexesSelected[0]->mandatory);
+        $this->assertNotNull($responseBody->doctype->indexes);
+        $this->assertSame('custom_t1', $responseBody->doctype->indexes[0]->column);
+        $this->assertSame(true, $responseBody->doctype->indexes[0]->mandatory);
+        $this->assertSame(true, $responseBody->doctype->indexes[0]->use);
 
         // READ DOCTYPE FAIL
         $response          = $doctypeController->getById($request, new \Slim\Http\Response(), ["id" => 'GAZ']);
@@ -442,10 +509,44 @@ class DoctypeControllerTest extends TestCase
             'process_mode'                => 'NORMAL',
             'template_id'                 => '',
             'is_generated'                => 'N',
-            'indexes'                     => [
-                                            'custom_t1' => 'N',
-                                            'custom_t2' => 'Y',
-                                        ],
+            'indexes' => [
+                0 => [
+                    "column"        => "custom_t1",
+                    "label"         => "PO#",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false,
+                    "use"           => false,
+                    "mandatory"     => false
+                ],
+                1 => [
+                    "column"        => "custom_t2",
+                    "label"         => "Imput",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false,
+                    "use"           => true,
+                    "mandatory"     => true
+                ],
+                2 => [
+                    "column"        => "custom_f1",
+                    "label"         => "Mnt",
+                    "type"          => "float",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ],
+                3 => [
+                    "column"        => "custom_t3",
+                    "label"         => "Id/Matricule",
+                    "type"          => "string",
+                    "img"           => "arrow-right",
+                    "type_field"    => "input",
+                    "default_value" => false
+                ]
+            ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 

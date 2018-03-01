@@ -35,9 +35,11 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
         this.secondLevels = false;
         this.processModes = false;
         this.models = false;
-        this.indexes = false;
         this.loading = false;
         this.creationMode = false;
+        this.newSecondLevel = false;
+        this.displayedColumns = ['label', 'use', 'mandatory', 'column'];
+        this.dataSource = new material_1.MatTableDataSource(this.currentType.indexes);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
@@ -86,11 +88,9 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 });
                 $j('#jstree')
                     .on('select_node.jstree', function (e, data) {
-                    _this.loadDoctype(data.node);
+                    _this.loadDoctype(data, false);
                 }).on('move_node.jstree', function (e, data) {
-                    _this.loadDoctype(data.node.id);
-                    // this.currentDoctype.parent_entity_id = data.parent;
-                    // this.moveEntity();
+                    _this.loadDoctype(data, true);
                 })
                     .jstree();
             }, 0);
@@ -100,29 +100,47 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             location.href = "index.php";
         });
     };
-    DoctypesAdministrationComponent.prototype.loadDoctype = function (data) {
+    DoctypesAdministrationComponent.prototype.loadDoctype = function (data, move) {
         var _this = this;
         this.creationMode = false;
         // Doctype
-        if (data.original.type_id) {
+        if (data.node.original.type_id) {
             this.currentFirstLevel = false;
             this.currentSecondLevel = false;
-            this.http.get(this.coreUrl + "rest/doctypes/types/" + data.original.type_id)
-                .subscribe(function (data) {
-                _this.currentType = data['doctype'];
-                _this.secondLevels = data['secondLevel'];
-                _this.processModes = data['processModes'];
-                _this.models = data['models'];
-                _this.indexes = data['indexes'];
+            this.http.get(this.coreUrl + "rest/doctypes/types/" + data.node.original.type_id)
+                .subscribe(function (dataValue) {
+                _this.currentType = dataValue['doctype'];
+                _this.secondLevels = dataValue['secondLevel'];
+                _this.processModes = dataValue['processModes'];
+                _this.models = dataValue['models'];
+                _this.loadIndexesTable();
+                if (move) {
+                    if (_this.currentType) {
+                        _this.newSecondLevel = data.parent.replace("secondlevel_", "");
+                        // Is integer
+                        if (!isNaN(parseFloat(_this.newSecondLevel)) && isFinite(_this.newSecondLevel)) {
+                            if (_this.currentType.doctypes_second_level_id != _this.newSecondLevel) {
+                                _this.currentType.doctypes_second_level_id = _this.newSecondLevel;
+                                _this.saveType();
+                            }
+                        }
+                        else {
+                            alert(_this.lang.cantMoveDoctype);
+                        }
+                    }
+                    else {
+                        alert(_this.lang.noDoctypeSelected);
+                    }
+                }
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
             // Second level
         }
-        else if (data.original.doctypes_second_level_id) {
+        else if (data.node.original.doctypes_second_level_id) {
             this.currentFirstLevel = false;
             this.currentType = false;
-            this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.original.doctypes_second_level_id)
+            this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.node.original.doctypes_second_level_id)
                 .subscribe(function (data) {
                 _this.currentSecondLevel = data['secondLevel'];
                 _this.firstLevels = data['firstLevel'];
@@ -134,7 +152,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
         else {
             this.currentSecondLevel = false;
             this.currentType = false;
-            this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.original.doctypes_first_level_id)
+            this.http.get(this.coreUrl + "rest/doctypes/firstLevel/" + data.node.original.doctypes_first_level_id)
                 .subscribe(function (data) {
                 _this.currentFirstLevel = data['firstLevel'];
                 _this.folderTypes = data['folderTypes'];
@@ -143,34 +161,19 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             });
         }
     };
-    // addElemListModel(element: any) {
-    //     var inListModel = false;
-    //     var newElemListModel = {
-    //         "type": element.type,
-    //         "id": element.id,
-    //         "labelToDisplay": element.idToDisplay,
-    //         "descriptionToDisplay": element.otherInfo,
-    //     };
-    //     this.currentDoctype.roles.forEach((role: any) => {
-    //         if (role.available == true) {
-    //             if (this.currentDoctype.listTemplate[role.id]) {
-    //                 this.currentDoctype.listTemplate[role.id].forEach((listModel: any) => {
-    //                     console.log(listModel);
-    //                     if (listModel.id == element.id) {
-    //                         inListModel = true;
-    //                     }
-    //                 });
-    //             }
-    //         }
-    //     });
-    //     if (!inListModel) {
-    //         this.currentDoctype.listTemplate.cc.unshift(newElemListModel);
-    //     }
-    // }
+    DoctypesAdministrationComponent.prototype.loadIndexesTable = function () {
+        this.dataSource = new material_1.MatTableDataSource(this.currentType.indexes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    };
     DoctypesAdministrationComponent.prototype.resetDatas = function () {
         this.currentFirstLevel = false;
         this.currentSecondLevel = false;
         this.currentType = false;
+    };
+    DoctypesAdministrationComponent.prototype.refreshTree = function () {
+        $j('#jstree').jstree(true).settings.core.data = this.doctypes;
+        $j('#jstree').jstree("refresh");
     };
     DoctypesAdministrationComponent.prototype.saveFirstLevel = function () {
         var _this = this;
@@ -180,8 +183,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 _this.resetDatas();
                 _this.readMode();
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.firstLevelAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -191,8 +193,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + "rest/doctypes/firstLevel/" + this.currentFirstLevel.doctypes_first_level_id, this.currentFirstLevel)
                 .subscribe(function (data) {
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.firstLevelUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -207,8 +208,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 _this.resetDatas();
                 _this.readMode();
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.secondLevelAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -218,8 +218,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + "rest/doctypes/secondLevel/" + this.currentSecondLevel.doctypes_second_level_id, this.currentSecondLevel)
                 .subscribe(function (data) {
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.secondLevelUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -234,8 +233,7 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 _this.resetDatas();
                 _this.readMode();
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.documentTypeAdded);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -245,22 +243,13 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             this.http.put(this.coreUrl + "rest/doctypes/types/" + this.currentType.type_id, this.currentType)
                 .subscribe(function (data) {
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
+                _this.refreshTree();
                 _this.notify.success(_this.lang.documentTypeUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
         }
     };
-    // moveEntity() {
-    //     this.http.put(this.coreUrl + "rest/entities/" + this.currentDoctype.entity_id, this.currentDoctype)
-    //             .subscribe((data: any) => {
-    //                 this.notify.success(this.lang.entityUpdated);
-    //             }, (err) => {
-    //                 this.notify.error(err.error.errors);
-    //             });
-    // }
     DoctypesAdministrationComponent.prototype.readMode = function () {
         this.creationMode = false;
         $j('#jstree').jstree('deselect_all');
@@ -275,10 +264,9 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 _this.resetDatas();
                 _this.readMode();
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
-                _this.notify.success(_this.lang.firstLevelDeleted);
+                _this.refreshTree();
                 $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                _this.notify.success(_this.lang.firstLevelDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -293,10 +281,9 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                 _this.resetDatas();
                 _this.readMode();
                 _this.doctypes = data['doctypeTree'];
-                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                $j('#jstree').jstree("refresh");
-                _this.notify.success(_this.lang.secondLevelDeleted);
+                _this.refreshTree();
                 $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                _this.notify.success(_this.lang.secondLevelDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -312,10 +299,9 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                     _this.resetDatas();
                     _this.readMode();
                     _this.doctypes = data['doctypeTree'];
-                    $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                    $j('#jstree').jstree("refresh");
-                    _this.notify.success(_this.lang.documentTypeDeleted);
+                    _this.refreshTree();
                     $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                    _this.notify.success(_this.lang.documentTypeDeleted);
                 }
                 else {
                     _this.config = { data: { count: data.deleted, types: data.doctypes } };
@@ -327,10 +313,9 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
                                 _this.resetDatas();
                                 _this.readMode();
                                 _this.doctypes = data['doctypeTree'];
-                                $j('#jstree').jstree(true).settings.core.data = _this.doctypes;
-                                $j('#jstree').jstree("refresh");
-                                _this.notify.success(_this.lang.documentTypeDeleted);
+                                _this.refreshTree();
                                 $j('#jstree').jstree('select_node', _this.doctypes[0]);
+                                _this.notify.success(_this.lang.documentTypeDeleted);
                             }, function (err) {
                                 _this.notify.error(err.error.errors);
                             });
@@ -356,12 +341,27 @@ var DoctypesAdministrationComponent = /** @class */ (function () {
             _this.secondLevels = data['secondLevel'];
             _this.processModes = data['processModes'];
             _this.models = data['models'];
-            _this.indexes = data['models'];
+            _this.currentType.indexes = data['indexes'];
+            _this.loadIndexesTable();
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
         this.creationMode = true;
     };
+    DoctypesAdministrationComponent.prototype.selectIndexesUse = function (e, index) {
+        this.currentType.indexes[index].use = e.checked;
+    };
+    DoctypesAdministrationComponent.prototype.selectIndexesMandatory = function (e, index) {
+        this.currentType.indexes[index].mandatory = e.checked;
+    };
+    __decorate([
+        core_1.ViewChild(material_1.MatPaginator),
+        __metadata("design:type", material_1.MatPaginator)
+    ], DoctypesAdministrationComponent.prototype, "paginator", void 0);
+    __decorate([
+        core_1.ViewChild(material_1.MatSort),
+        __metadata("design:type", material_1.MatSort)
+    ], DoctypesAdministrationComponent.prototype, "sort", void 0);
     DoctypesAdministrationComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["doctypes-administrationView"],
@@ -378,7 +378,6 @@ var DoctypesAdministrationRedirectModalComponent = /** @class */ (function () {
         this.data = data;
         this.dialogRef = dialogRef;
         this.lang = translate_component_1.LANG;
-        // super(http, ['entities']);
     }
     DoctypesAdministrationRedirectModalComponent = __decorate([
         core_1.Component({
