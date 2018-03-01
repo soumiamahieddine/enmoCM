@@ -7,14 +7,35 @@
 *
 */
 
-namespace Attachments\Models;
+/**
+ * @brief Attachment Model Abstract
+ * @author dev@maarch.org
+ */
+
+namespace Attachment\models;
 
 use Core\Models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
-class AttachmentsModelAbstract
+class AttachmentModelAbstract
 {
+    public static function getOnView(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+
+        $aAttachments = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['res_view_attachments'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
+        ]);
+
+        return $aAttachments;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
@@ -83,80 +104,6 @@ class AttachmentsModelAbstract
         }
 
         return $attachmentTypes;
-    }
-
-    public static function getAttachmentsWithOptions(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data', 'orderBy']);
-
-        $select = [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_view_attachments'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-        ];
-        if (!empty($aArgs['orderBy'])) {
-            $select['order_by'] = $aArgs['orderBy'];
-        }
-
-        $aReturn = DatabaseModel::select($select);
-
-        return $aReturn;
-    }
-
-    public static function getAvailableAttachmentsInByResIdMaster(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIdMaster', 'in']);
-        ValidatorModel::intVal($aArgs, ['resIdMaster']);
-        ValidatorModel::arrayType($aArgs, ['in']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['in']]
-        ]);
-
-        return $aReturn;
-    }
-
-    public static function getAvailableAndTemporaryAttachmentsNotInByResIdMaster(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIdMaster', 'notIn']);
-        ValidatorModel::intVal($aArgs, ['resIdMaster']);
-        ValidatorModel::arrayType($aArgs, ['notIn', 'orderBy']);
-
-        $select = [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn']],
-        ];
-        if (!empty($aArgs['orderBy'])) {
-            $select['order_by'] = $aArgs['orderBy'];
-        }
-
-        $aReturn = DatabaseModel::select($select);
-
-        return $aReturn;
-    }
-
-    public static function getObsAttachmentsNotInByResIdMaster(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIdMaster', 'notIn']);
-        ValidatorModel::intVal($aArgs, ['resIdMaster']);
-        ValidatorModel::arrayType($aArgs, ['notIn', 'orderBy']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['res_view_attachments'],
-            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
-            'data'      => [$aArgs['resIdMaster'], $aArgs['notIn'], 'OBS'],
-            'order_by'  => ['relation ASC']
-        ]);
-
-        return $aReturn;
     }
 
     public static function unsignAttachment(array $aArgs = [])

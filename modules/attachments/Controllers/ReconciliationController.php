@@ -2,20 +2,15 @@
 
 namespace Attachments\Controllers;
 
+use Attachment\Models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
-use Attachments\Models\AttachmentsModel;
 use Resource\controllers\ResController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
-use Docserver\controllers\DocserverController;
 use Docserver\controllers\DocserverToolsController;
 use Core\Models\ResModel;
-
-
-require_once 'modules/attachments/Models/AttachmentsModel.php';
-
 
 class ReconciliationController{
     public function storeAttachmentResource($aArgs)
@@ -351,7 +346,7 @@ class ReconciliationController{
             }
 
             unset($prepareData['res_id']); // NCH01
-            AttachmentsModel::create($prepareData);
+            AttachmentModel::create($prepareData);
 
             return true;
         }

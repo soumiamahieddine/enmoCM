@@ -23,7 +23,7 @@
 
 namespace Convert\Controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\Models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
@@ -130,9 +130,9 @@ class ProcessThumbnailsController
         if ($args['resTable'] == 'res_letterbox') {
             $res = ResModel::getById(['resId' => $resId]);
         } elseif ($args['resTable'] == 'res_attachments') {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'false']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'false']);
         } else {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'true']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'true']);
         }
 
         if ($res['res_id'] <> '') {

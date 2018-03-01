@@ -167,7 +167,7 @@ $app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Co
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
+$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 
 //Res
 $app->post('/res', \Resource\controllers\ResController::class . ':create');

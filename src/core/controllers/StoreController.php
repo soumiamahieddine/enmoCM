@@ -15,7 +15,7 @@
 
 namespace SrcCore\controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\Models\AttachmentModel;
 use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
@@ -78,7 +78,7 @@ class StoreController
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
             } elseif ($aArgs['table'] == 'res_attachments') {
-                $resId = AttachmentsModel::create($data);
+                $resId = AttachmentModel::create($data);
             }
 
             return $resId;
