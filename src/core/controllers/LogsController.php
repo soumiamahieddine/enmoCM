@@ -36,9 +36,10 @@ class LogsController
         }
         $time = $timeend - $timestart;
 
-        self::$level(
-            ['message' => $message.'. Done in ' . number_format($time, 3) . ' secondes.']
-        );
+        //TODO : USE NEW METHOD
+        // self::$level(
+        //     ['message' => $message.'. Done in ' . number_format($time, 3) . ' secondes.']
+        // );
     }
 
     public static function buildLoggingMethod()
