@@ -2,7 +2,7 @@
 
 namespace Priority\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;

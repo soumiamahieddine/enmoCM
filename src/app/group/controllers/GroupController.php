@@ -2,7 +2,7 @@
 
 namespace Group\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;

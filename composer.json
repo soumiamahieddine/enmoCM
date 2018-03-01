@@ -24,7 +24,6 @@
             "User\\"          : "src/app/user/",
 
             "Core\\"          : "core/",
-            "Attachments\\"   : "modules/attachments/",
             "Convert\\"       : "modules/convert/",
             "Visa\\"          : "modules/visa/"
     	}

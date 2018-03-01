@@ -19,7 +19,7 @@ use Doctype\models\DoctypeModel;
 use Doctype\models\DoctypeExtModel;
 use Doctype\models\DoctypeIndexesModel;
 use Doctype\models\TemplateDoctypeModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Template\models\TemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

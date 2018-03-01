@@ -559,7 +559,7 @@ class ProcessFulltextController
     {
         //echo 'launchIndexFullTextWithZendIndex' . PHP_EOL;
         // $IndexFileDirectory is replace by tempIndexFileDirectory
-        $fileContent = \Core\Models\TextFormatModel::normalize(['string' => $fileContent]);
+        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
         $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
 
         // with version 1.12, we need a string, not an XML element

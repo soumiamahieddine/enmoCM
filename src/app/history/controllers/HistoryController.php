@@ -14,8 +14,8 @@
 
 namespace History\controllers;
 
-use Core\Models\ServiceModel;
 use SrcCore\controllers\LogsController;
+use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
