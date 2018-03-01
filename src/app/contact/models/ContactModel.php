@@ -11,10 +11,9 @@
 /**
 * @brief Contact Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Contact\models;
 
 
 class ContactModel extends ContactModelAbstract

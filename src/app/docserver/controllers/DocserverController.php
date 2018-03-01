@@ -109,7 +109,7 @@ class DocserverController
             }
         }
 
-        return $pathToDS;
+        return ['pathToDocServer' => $pathToDS];
     }
 
     public static function getNextFileNameInDocServer(array $aArgs)

@@ -50,7 +50,7 @@ Class Purge{
 
     private function purgeResource($resId)
     {
-        $action = new \Core\Controllers\ResController();
+        $action = new \Resource\controllers\ResController();
         $data = [];
 
         array_push($data, array(
@@ -72,6 +72,6 @@ Class Purge{
 
     private function purgeContact($contactId)
     {
-        \Core\Models\ContactModel::purgeContact(['id' => $contactId]);
+        \Contact\models\ContactModel::purgeContact(['id' => $contactId]);
     }
 }

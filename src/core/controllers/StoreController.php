@@ -16,7 +16,7 @@
 namespace SrcCore\controllers;
 
 use Attachments\Models\AttachmentsModel;
-use Core\Models\ContactModel;
+use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
@@ -115,7 +115,7 @@ class StoreController
             return ['errors' => '[storeRessourceOnDocserver] ' . $pathOnDocserver['errors']];
         }
 
-        $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver]);
+        $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);
         if (!empty($docinfo['errors'])) {
             return ['errors' => '[storeRessourceOnDocserver] ' . $docinfo['errors']];
         }

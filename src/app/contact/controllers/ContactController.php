@@ -10,12 +10,11 @@
 /**
  * @brief Contact Controller
  * @author dev@maarch.org
- * @ingroup core
  */
 
 namespace Contact\controllers;
 
-use Core\Models\ContactModel;
+use Contact\models\ContactModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;

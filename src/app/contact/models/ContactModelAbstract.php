@@ -10,17 +10,18 @@
 /**
 * @brief Contact Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
-namespace Core\Models;
+namespace Contact\models;
 
 
+use Core\Models\ValidatorModel;
+use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
 
 class ContactModelAbstract
 {
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -121,16 +122,16 @@ class ContactModelAbstract
         return $nextSequenceId;
     }
 
-    public static function getByAddressId(array $aArgs = [])
+    public static function getByAddressId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['contactId', 'addressId']);
-        ValidatorModel::intVal($aArgs, ['contactId', 'addressId']);
+        ValidatorModel::notEmpty($aArgs, ['addressId']);
+        ValidatorModel::intVal($aArgs, ['addressId']);
 
         $aContact = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['contact_addresses'],
-            'where'     => ['id = ?', 'contact_id = ?'],
-            'data'      => [$aArgs['addressId'], $aArgs['contactId']],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['addressId']],
         ]);
 
         if (empty($aContact[0])) {
@@ -140,12 +141,12 @@ class ContactModelAbstract
         return $aContact[0];
     }
 
-    public static function getLabelledContactWithAddress(array $aArgs = [])
+    public static function getLabelledContactWithAddress(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId', 'addressId']);
         ValidatorModel::intVal($aArgs, ['contactId', 'addressId']);
 
-        $rawContact = ContactModel::getByAddressId(['contactId' => $aArgs['contactId'], 'addressId' => $aArgs['addressId'], 'select' => ['firstname', 'lastname']]);
+        $rawContact = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => ['firstname', 'lastname']]);
 
         $labelledContact = '';
         if (!empty($rawContact)) {
@@ -180,21 +181,20 @@ class ContactModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select([
+        $firstCount = ResModel::getOnView([
             'select'    => ['count(*) as count'],
-            'table'     => ['res_view_letterbox'],
             'where'     => ['contact_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
-        
-        $aReturnBis = DatabaseModel::select([
+
+        $secondCount = DatabaseModel::select([
             'select'    => ['count(*) as count'],
             'table'     => ['contacts_res'],
             'where'     => ['contact_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
 
-        if ($aReturn[0]['count'] < 1 && $aReturnBis[0]['count'] < 1) {
+        if ($firstCount[0]['count'] < 1 && $secondCount[0]['count'] < 1) {
             DatabaseModel::delete([
                 'table' => 'contact_addresses',
                 'where' => ['contact_id = ?'],
