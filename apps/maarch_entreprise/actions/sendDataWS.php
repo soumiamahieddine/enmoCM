@@ -14,7 +14,7 @@ function manage_send($aId)
         $bodyParams = [
             'custom_t1' => $document['custom_t1'],
         ];
-        \Core\Models\CurlModel::exec(['curlCallId' => 'sendData', 'bodyData' => $bodyParams]);
+        \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendData', 'bodyData' => $bodyParams]);
 
         $result .= $resId . '#';
     }

@@ -10,12 +10,9 @@
 /**
  * @brief Curl Model
  * @author dev@maarch.org
- * @ingroup core
  */
 
-namespace Core\Models;
-
-use SrcCore\models\CoreConfigModel;
+namespace SrcCore\models;
 
 class CurlModel
 {
