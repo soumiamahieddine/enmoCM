@@ -79,7 +79,7 @@ class HistoryController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $historyList                     = HistoryModel::getHistoryList(['event_date' => $aArgs['date']]);
+        $historyList                     = HistoryModel::get(['event_date' => $aArgs['date']]);
         $historyListFilters['users']     = HistoryModel::getFilter(['select' => 'user_id', 'event_date' => $aArgs['date']]);
         $historyListFilters['eventType'] = HistoryModel::getFilter(['select' => 'event_type', 'event_date' => $aArgs['date']]);
 
