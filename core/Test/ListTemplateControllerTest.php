@@ -51,7 +51,7 @@ class ListTemplateControllerTest extends TestCase
         $response     = $listTemplateController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertInternalType('int', $responseBody->id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -136,7 +136,7 @@ class ListTemplateControllerTest extends TestCase
         $response     = $listTemplateController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertInternalType('int', $responseBody->id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

@@ -97,8 +97,9 @@ class ListTemplateController
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
 
+        $listTemplateId = null;
         foreach ($data['items'] as $item) {
-            ListTemplateModel::create([
+            $listTemplateId = ListTemplateModel::create([
                 'object_id'     => $data['object_id'],
                 'object_type'   => $data['object_type'],
                 'title'         => $data['title'],
@@ -119,7 +120,7 @@ class ListTemplateController
             'eventId'   => 'listTemplateCreation',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['id' => $listTemplateId]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
@@ -158,8 +159,10 @@ class ListTemplateController
             'where' => ['object_id = ?', 'object_type = ?'],
             'data'  => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']]
         ]);
+
+        $listTemplateId = null;
         foreach ($data['items'] as $item) {
-            ListTemplateModel::create([
+            $listTemplateId = ListTemplateModel::create([
                 'object_id'     => $listTemplates[0]['object_id'],
                 'object_type'   => $listTemplates[0]['object_type'],
                 'title'         => $data['title'],
@@ -180,7 +183,7 @@ class ListTemplateController
             'eventId'   => 'listTemplateModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['id' => $listTemplateId]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)

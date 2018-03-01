@@ -65,9 +65,12 @@ class ListTemplateModelAbstract
         ValidatorModel::stringType($aArgs, ['object_id', 'object_type', 'item_id', 'item_type', 'title', 'description']);
         ValidatorModel::intVal($aArgs, ['sequence']);
 
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'listmodels_id_seq']);
+
         DatabaseModel::insert([
             'table'         => 'listmodels',
             'columnsValues' => [
+                'id'            => $nextSequenceId,
                 'object_id'     => $aArgs['object_id'],
                 'object_type'   => $aArgs['object_type'],
                 'sequence'      => $aArgs['sequence'],
@@ -76,11 +79,11 @@ class ListTemplateModelAbstract
                 'item_mode'     => $aArgs['item_mode'],
                 'title'         => $aArgs['title'],
                 'description'   => $aArgs['description'],
-                'visible'       => 'Y',
+                'visible'       => 'Y'
             ]
         ]);
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function update(array $aArgs)
