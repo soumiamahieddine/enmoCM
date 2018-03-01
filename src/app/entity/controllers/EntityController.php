@@ -94,7 +94,7 @@ class EntityController
                 $entity['listTemplate']['id'] = $listTemplate['id'];
                 if ($listTemplate['item_type'] == 'user_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'type'                  => 'user',
+                        'item_type'             => $listTemplate['item_type'],
                         'item_id'               => $listTemplate['item_id'],
                         'sequence'              => $listTemplate['sequence'],
                         'title'                 => $listTemplate['title'],
@@ -104,7 +104,7 @@ class EntityController
                     ];
                 } elseif ($listTemplate['item_type'] == 'entity_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'type'                  => 'entity',
+                        'item_type'             => $listTemplate['item_type'],
                         'item_id'               => $listTemplate['item_id'],
                         'sequence'              => $listTemplate['sequence'],
                         'title'                 => $listTemplate['title'],
