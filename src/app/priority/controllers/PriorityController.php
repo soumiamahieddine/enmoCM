@@ -20,7 +20,7 @@ class PriorityController
     {
         $priotity = PriorityModel::getById(['id' => $aArgs['id']]);
 
-        if(empty($priotity)){
+        if (empty($priotity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Priority not found']);
         }
 

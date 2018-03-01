@@ -29,7 +29,8 @@ export class PriorityAdministrationComponent implements OnInit {
         useDoctypeDelay : false,
         color           : "#135f7f",
         delays          : "0",
-        working_days    : "false"
+        working_days    : "false",
+        default_priority: false
     };
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
