@@ -98,7 +98,6 @@ export class BasketsAdministrationComponent implements OnInit {
     }
 
     updateBasketOrder(currentBasket: any) {
-        console.log(this.basketsOrder);
         this.http.put(this.coreUrl + "rest/sortedBaskets/" + currentBasket.basket_id, this.basketsOrder)
             .subscribe((data: any) => {
                 this.baskets = data['baskets'];
