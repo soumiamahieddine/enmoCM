@@ -1754,7 +1754,8 @@ vertical-align: middle;
 /* Home */
 
 #bodylogin {
-    background: White url(static.php?filename=bg_home_home.gif) center center no-repeat;
+    background: White url(static.php?filename=logo_maarch_only.svg) center center no-repeat;
+    background-size: 50%; 
     height: auto;
     text-align: left;
 }

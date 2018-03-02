@@ -1,24 +1,23 @@
 <?php
 /**
-* File : search_customer.php
+* File : search_customer.php.
 *
 * Advanced search form
 *
-* @package  Maarch Framework 3.0
 * @version 2.1
+*
 * @since 10/2005
+*
 * @license GPL
 * @author Loïc Vinet  <dev@maarch.org>
 * @author Claire Figueras  <dev@maarch.org>
 */
+require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+    .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'class_business_app_tools.php';
 
-require_once
-    "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR 
-    . "class_business_app_tools.php";
-    
-$appTools   = new business_app_tools();
-$core       = new core_tools();
+$appTools = new business_app_tools();
+$core = new core_tools();
 
 $core->test_user();
 $core->load_lang();
@@ -45,7 +44,7 @@ if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
     $level = $_REQUEST['level'];
 }
 $pagePath = $_SESSION['config']['businessappurl']
-           . 'index.php?page=search_folder_tree&module=folder';
+           .'index.php?page=search_folder_tree&module=folder';
 $pageLabel = _VIEW_FOLDER_TREE;
 $pageId = 'search_folder_tree';
 $core->manage_location_bar(
@@ -53,10 +52,10 @@ $core->manage_location_bar(
 );
 /***********************************************************/
 
-$_SESSION['origin'] = "search_folder_tree";
+$_SESSION['origin'] = 'search_folder_tree';
 ?>
 
-<h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE;?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <h2>
@@ -64,7 +63,7 @@ $_SESSION['origin'] = "search_folder_tree";
             <table width="100%" border="0">
                 <tr>
                     <td align="right">
-                        <label for="folder"><?php echo _FOLDER;?> :</label>
+                        <label for="folder"><?php echo _FOLDER; ?> :</label>
                     </td>
                     <td class="indexing_field">
                         <div class="typeahead__container">
@@ -75,7 +74,7 @@ $_SESSION['origin'] = "search_folder_tree";
                             </div>
                         </div>
                     </td>
-                    <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER;?> :</label></td>
+                    <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER; ?> :</label></td>
                     <td>
                         <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
                         <div id="show_subfolder" class="autocomplete"></div>
@@ -89,7 +88,7 @@ $_SESSION['origin'] = "search_folder_tree";
                             <a href="javascript://" onClick="window.top.location.href='<?php
                                     echo $_SESSION['config']['businessappurl'];
                                     ?>index.php?page=search_folder_tree&module=folder&erase=true';">
-                                    <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH;?>"></i>
+                                    <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH; ?>"></i>
                             </a>
                         </div>
                     </td>
@@ -103,10 +102,8 @@ $_SESSION['origin'] = "search_folder_tree";
                 <div id="loading" style="display:none;"><i class="fa fa-spinner fa-2x"></i></div>
                 <div id="myTree" style="height: 100%;overflow: auto;">&nbsp;</div>
             </td>
-            <td width="45%" style="vertical-align: top;">
-                <div id="docView"><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']
-                    .'static.php?filename=bg_home_home.gif'; 
-                    ?>"  width="400px" alt="Maarch" /></p></div>
+            <td width="45%" style="vertical-align: top;background: url(static.php?filename=logo_maarch_only.svg) center center no-repeat;background-size: 90%;">
+                <div id="docView"></div>
             </td>
         </tr>
     </table>
