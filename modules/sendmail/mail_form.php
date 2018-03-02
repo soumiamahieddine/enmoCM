@@ -42,7 +42,6 @@ require_once 'modules/sendmail/sendmail_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 require_once 'modules/sendmail/class/class_email_signatures.php';
-require_once 'core/Models/UserModel.php';
 
 $core_tools     = new core_tools();
 $request        = new request();
