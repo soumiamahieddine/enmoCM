@@ -328,6 +328,23 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
             });
         }
     };
+    UserAdministrationComponent.prototype.test = function (event) {
+        var _this = this;
+        if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
+            var reader = new FileReader();
+            this.signatureModel.name = event.mouseEvent.dataTransfer.files[0].name;
+            this.signatureModel.size = event.mouseEvent.dataTransfer.files[0].size;
+            this.signatureModel.type = event.mouseEvent.dataTransfer.files[0].type;
+            if (this.signatureModel.label == "") {
+                this.signatureModel.label = this.signatureModel.name;
+            }
+            reader.readAsDataURL(event.mouseEvent.dataTransfer.files[0]);
+            reader.onload = function (value) {
+                window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
+                _this.submitSignature();
+            };
+        }
+    };
     UserAdministrationComponent.prototype.addBasketRedirection = function (i, basket) {
         var r = false;
         if (this.user.status != 'ABS') {
