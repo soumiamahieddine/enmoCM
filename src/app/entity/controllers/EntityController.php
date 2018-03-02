@@ -117,9 +117,9 @@ class EntityController
             if ($listTemplate['object_type'] == 'VISA_CIRCUIT' && !empty($listTemplate['item_id'])) {
                 $entity['visaTemplate'][] = [
                     'id'                    => $listTemplate['id'],
-                    'type'                  => 'user',
+                    'item_type'             => $listTemplate['item_type'],
                     'item_id'               => $listTemplate['item_id'],
-                    'mode'                  => $listTemplate['item_mode'],
+                    'item_mode'             => $listTemplate['item_mode'],
                     'sequence'              => $listTemplate['sequence'],
                     'title'                 => $listTemplate['title'],
                     'description'           => $listTemplate['description'],
