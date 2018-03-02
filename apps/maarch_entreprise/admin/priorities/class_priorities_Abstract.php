@@ -87,7 +87,7 @@ abstract class PrioritiesAbstract extends Database
         foreach ($priorities as $priority) {
             $_SESSION['mail_priorities'][$i] = $priority['label'];
             $_SESSION['mail_priorities_attribute'][$i] = ($priority['delays'] == null ? 'false' : $priority['delays']);
-            $_SESSION['mail_priorities_wdays'][$i] = ($priority['delays'] ? 'true' : 'false');
+            $_SESSION['mail_priorities_wdays'][$i] = ($priority['working_days'] ? 'true' : 'false');
             $_SESSION['mail_priorities_color'][$i] = $priority['color'];
             if ($priority['default_priority']) {
                 $_SESSION['default_mail_priority'] = $i;

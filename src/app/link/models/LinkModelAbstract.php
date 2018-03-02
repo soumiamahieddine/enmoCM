@@ -10,12 +10,12 @@
 /**
  * @brief Link Model
  * @author dev@maarch.org
- * @ingroup link
  */
 
 namespace Link\models;
 
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
 class LinkModelAbstract
 {
