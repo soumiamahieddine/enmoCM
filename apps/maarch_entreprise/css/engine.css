@@ -165,7 +165,13 @@ div.mat-expansion-panel-content:not(.mat-expanded) {
 }
 
 .admin-toolbar .maarchLogo {
-    transform: scale(5);
+    height: 100%;
+    width: 120px;
+    /*transform: scale(5);*/
+}
+
+.admin-toolbar .maarchLogo svg{
+    vertical-align: middle;
 }
 
 .mat-toolbar.mat-primary {
@@ -194,7 +200,7 @@ h1.admin-app-name {
 }
 
 .admin-toolbar-title {
-    margin-left: 30px !important;
+    /*margin-left: 30px !important;*/
 }
 
 .admin-toolbar-title small {
