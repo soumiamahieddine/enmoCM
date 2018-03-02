@@ -70,6 +70,9 @@ var StatusesAdministrationComponent = /** @class */ (function () {
             this.http.delete(this.coreUrl + 'rest/statuses/' + status.identifier)
                 .subscribe(function (data) {
                 _this.statuses = data.statuses;
+                _this.dataSource = new material_1.MatTableDataSource(_this.statuses);
+                _this.dataSource.paginator = _this.paginator;
+                _this.dataSource.sort = _this.sort;
                 _this.notify.success(_this.lang.statusDeleted);
             }, function (err) {
                 _this.notify.error(err.error.errors);
