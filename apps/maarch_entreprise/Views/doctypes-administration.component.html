@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <mat-form-field>
-                                        <input matInput type="color" name="css_style" id="css_style" [(ngModel)]="currentFirstLevel.css_style">
+                                        <input matInput type="color" name="css_style" matTooltip="{{lang.chooseColor}}" id="css_style" [(ngModel)]="currentFirstLevel.css_style">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <mat-form-field>
-                                        <input matInput type="color" name="css_style" id="css_style" [(ngModel)]="currentSecondLevel.css_style">
+                                        <input matInput type="color" matTooltip="{{lang.chooseColor}}" name="css_style" id="css_style" [(ngModel)]="currentSecondLevel.css_style">
                                     </mat-form-field>
                                 </div>
                             </div>
