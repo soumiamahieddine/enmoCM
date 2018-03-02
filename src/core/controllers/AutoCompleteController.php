@@ -61,7 +61,8 @@ class AutoCompleteController
 
         $data = [];
         foreach ($users as $key => $value) {
-            if (ServiceModel::hasService(['id' => 'visa_documents', 'userId' => $value['user_id'], 'location' => 'visa', 'type' => 'use'])) {
+            if (ServiceModel::hasService(['id' => 'visa_documents', 'userId' => $value['user_id'], 'location' => 'visa', 'type' => 'use'])
+                || ServiceModel::hasService(['id' => 'sign_document', 'userId' => $value['user_id'], 'location' => 'visa', 'type' => 'use'])) {
                 $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $value['user_id']]);
                 $data[] = [
                     'type'          => 'user',
