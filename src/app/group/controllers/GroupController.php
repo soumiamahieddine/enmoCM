@@ -2,13 +2,13 @@
 
 namespace Group\controllers;
 
-use Core\Models\ServiceModel;
-use Core\Models\ValidatorModel;
+use Group\models\ServiceModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\ValidatorModel;
 
 class GroupController
 {

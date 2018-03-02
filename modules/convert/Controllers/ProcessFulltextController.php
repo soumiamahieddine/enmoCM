@@ -23,7 +23,7 @@
 
 namespace Convert\Controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
@@ -33,9 +33,8 @@ use Docserver\models\DocserverModel;
 use Docserver\models\ResDocserverModel;
 use SrcCore\controllers\LogsController;
 use SrcCore\controllers\StoreController;
+use SrcCore\models\TextFormatModel;
 
-
-//include_once('html2text/html2text.php');
 
 class ProcessFulltextController
 {
@@ -184,9 +183,9 @@ class ProcessFulltextController
         if ($args['resTable'] == 'res_letterbox') {
             $res = ResModel::getById(['resId' => $resId]);
         } elseif ($args['resTable'] == 'res_attachments') {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'false']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'false']);
         } else {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'true']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'true']);
         }
 
         if ($res['res_id'] <> '') {
@@ -505,7 +504,7 @@ class ProcessFulltextController
     private function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) 
     {
         // $IndexFileDirectory is replace by tempIndexFileDirectory
-        $fileContent = \Core\Models\TextFormatModel::normalize(['string' => $fileContent]);
+        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
         $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
         $indexFileDirectory = (string) $tempIndexFileDirectory; 
         // with version 1.12, we need a string, not an XML element
@@ -560,7 +559,7 @@ class ProcessFulltextController
     {
         //echo 'launchIndexFullTextWithZendIndex' . PHP_EOL;
         // $IndexFileDirectory is replace by tempIndexFileDirectory
-        $fileContent = \Core\Models\TextFormatModel::normalize(['string' => $fileContent]);
+        $fileContent = TextFormatModel::normalize(['string' => $fileContent]);
         $fileContent = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $fileContent);
 
         // with version 1.12, we need a string, not an XML element

@@ -400,10 +400,10 @@ switch ($mode) {
                                         "UPDATE " . EMAILS_TABLE . " SET to_list = ?, cc_list = ?, cci_list = ?, email_object = ?, 
 												email_body = ?, is_res_master_attached = ?, res_version_id_list = ?, 
 												res_attachment_id_list = ?, res_version_att_id_list = ?, note_id_list = ?, 
-												is_html = ?, email_status = ?, sender_email = ? where email_id = ? "
+												is_html = ?, email_status = ?, sender_email = ?, send_date = ? where email_id = ? "
                                             ." and res_id =  ? and user_id = ?",
                                             array($to, $cc, $cci, $object, $body, $res_master_attached, $version_list, $attachment_list, $attachment_version_list, $note_list, $isHtml,
-												$email_status, $senderEmail, $id, $identifier, $userId )
+												$email_status, $senderEmail, NULL, $id, $identifier, $userId )
                                     );
                                     
                                     //History

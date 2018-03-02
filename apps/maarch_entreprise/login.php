@@ -1,23 +1,20 @@
 <?php
 /**
-* File : login.php
-*
-* Identification form : Login page
-*
-* @package  Maarch PeopleBox 1.1
-* @version 1.1
-* @since 02/2007
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni  <dev@maarch.org>
-*/
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 
-//print_r($_REQUEST);
-if (isset($_GET['target_page']) && trim($_GET['target_page']) <> '') {
+*
+* @brief   login
+*
+* @author  dev <dev@maarch.org>
+* @ingroup apps
+*/
+if (isset($_GET['target_page']) && trim($_GET['target_page']) != '') {
     $_SESSION['target_page'] = $_GET['target_page'];
-    if (trim($_GET['target_module']) <> '') {
+    if (trim($_GET['target_module']) != '') {
         $_SESSION['target_module'] = $_GET['target_module'];
-    } else if (trim($_GET['target_admin']) <> '') {
+    } elseif (trim($_GET['target_admin']) != '') {
         $_SESSION['target_admin'] = $_GET['target_admin'];
     }
 }
@@ -27,8 +24,8 @@ if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQ
     $_SESSION['withRA_CODE'] = 'ok';
     $_SESSION['HTTP_REQUEST'] = array();
     header(
-        'location: ' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=login'
+        'location: '.$_SESSION['config']['businessappurl']
+        .'index.php?display=true&page=login'
     );
     exit;
 }
@@ -52,30 +49,28 @@ $serverPath = implode(
     DIRECTORY_SEPARATOR, array_slice(
         $tmpPath, 0, array_search('apps', $tmpPath)
     )
-) . DIRECTORY_SEPARATOR;
+).DIRECTORY_SEPARATOR;
 
-$_SESSION['urltomodules'] = $_SESSION['config']['coreurl'] . 'modules/';
-$_SESSION['urltocore'] = $_SESSION['config']['coreurl'] . 'core/';
+$_SESSION['urltomodules'] = $_SESSION['config']['coreurl'].'modules/';
+$_SESSION['urltocore'] = $_SESSION['config']['coreurl'].'core/';
 
 if (isset($_SESSION['config']['corepath'])
-    && ! empty($_SESSION['config']['corepath'] )
+    && !empty($_SESSION['config']['corepath'])
 ) {
-    require_once
-        'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_business_app_tools.php';
-    require_once
-        'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_login.php';
-    $configCorePath = 'core' . DIRECTORY_SEPARATOR . 'xml'
-                      . DIRECTORY_SEPARATOR . 'config.xml';
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+        .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+        .'class_business_app_tools.php';
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+        .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+        .'class_login.php';
+    $configCorePath = 'core'.DIRECTORY_SEPARATOR.'xml'
+                      .DIRECTORY_SEPARATOR.'config.xml';
 } else {
-    require_once 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
-    require_once 'class' . DIRECTORY_SEPARATOR . 'class_login.php';
-    $configCorePath = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
-                      . 'core' . DIRECTORY_SEPARATOR . 'xml'
-                      . DIRECTORY_SEPARATOR . 'config.xml';
+    require_once 'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php';
+    require_once 'class'.DIRECTORY_SEPARATOR.'class_login.php';
+    $configCorePath = '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR
+                      .'core'.DIRECTORY_SEPARATOR.'xml'
+                      .DIRECTORY_SEPARATOR.'config.xml';
 }
 
 $core = new core_tools();
@@ -87,16 +82,13 @@ $businessAppTools->build_business_app_config();
 
 $core->load_modules_config($_SESSION['modules']);
 $core->load_lang();
-//$func->show_array($_SESSION);
 $core->load_app_services();
 $core->load_modules_services($_SESSION['modules']);
-//$core->load_menu($_SESSION['modules']);
-// transfer in class_security (login + reopen)
 
 //Reading base version
 $businessAppTools->compare_base_version(
-    'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'database_version.xml'
+    'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+    .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'database_version.xml'
 );
 
 //LGI TEST FOR SMARTPHONE
@@ -104,9 +96,9 @@ if ($core->detectSmartphone()) {
     $_SESSION['isSmartphone'] = true;
     header('location: smartphone/hello.php');
     exit;
+} else {
+    $_SESSION['isSmartphone'] = false;
 }
-
-else $_SESSION['isSmartphone'] = false;
 $core->load_html();
 $core->load_header('', true, false);
 $time = $core->get_session_time_expire();
@@ -119,67 +111,52 @@ if (isset($_SESSION['error'])) {
 } else {
     $error = '';
 }
+$core->load_js();
 
-?>
-<?php $core->load_js();?>
-<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php echo $_SESSION['config']['coreurl'];?>');">
-    <?php
-    if(isset($_SESSION['error'])) {
-        ?>
-        <div class="error" id="main_error_popup" onclick="this.hide();">
-            <?php
-            functions::xecho($_SESSION['error']);
-            ?>
-        </div>
-        <?php
-    }
+echo "<body id='bodylogin' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
 
-    if(isset($_SESSION['info'])) {
-        ?>
-        <div class="info" id="main_info" onclick="this.hide();">
-            <?php
-            functions::xecho($_SESSION['info']);
-            ?>
-        </div>
-        <?php
-    }
-    ?>
-    <div id="loginpage">
-        <p id="logo"><img src="<?php
-            echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
-        <div align="center">
-            <h3>
-                <?php functions::xecho($_SESSION['config']['applicationname']); ?>
-            </h3>
-        </div>
-        <?php
+if (isset($_SESSION['error'])) {
+    echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
+    echo $_SESSION['error'];
+    echo '</div>';
+}
 
-            if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
-                ?>
-                <script>
-                    var main_error = $('main_error_popup');
-                    if (main_error != null) {
-                        main_error.style.display = 'table-cell';
-                        Element.hide.delay(10, 'main_error_popup');
-                    }
-                </script>
-                <?php
-            }
+if (isset($_SESSION['info'])) {
+    echo '<div class="info" id="main_info" onclick="this.hide();">';
+    echo $_SESSION['info'];
+    echo '</div>';
+}
 
-            if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
-                ?>
-                <script>
-                    var main_info = $('main_info');
-                    if (main_info != null) {
-                        main_info.style.display = 'table-cell';
-                        Element.hide.delay(10, 'main_info');
-                    }
-                </script>
-                <?php
-            }
-        $loginObj->execute_login_script($loginMethods);
-        ?>
-    </div>
-</body>
-</html>
+echo '<div id="loginpage">';
+echo "<p id='logo'><img src='{$_SESSION['config']['businessappurl']}static.php?filename=logo.svg' alt='Maarch'/></p>";
+
+echo '<div align="center">';
+echo '<h3>';
+echo $_SESSION['config']['applicationname'];
+echo '</h3>';
+echo '</div>';
+
+if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+    echo '<script>';
+    echo "var main_error = $('main_error_popup');";
+    echo 'if (main_error != null) {';
+    echo "main_error.style.display = 'table-cell';";
+    echo "Element.hide.delay(10, 'main_error_popup');";
+    echo '}';
+    echo '</script>';
+}
+
+if (isset($_SESSION['info']) && $_SESSION['info'] != '') {
+    echo '<script>';
+    echo "var main_info = $('main_info');";
+    echo 'if (main_info != null) {';
+    echo "main_info.style.display = 'table-cell';";
+    echo "Element.hide.delay(10, 'main_info');";
+    echo '}';
+    echo '</script>';
+}
+$loginObj->execute_login_script($loginMethods);
+
+echo '</div>';
+echo '</body>';
+echo '</html>';

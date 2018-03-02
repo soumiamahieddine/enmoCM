@@ -61,7 +61,7 @@
                             [matAutocomplete]="auto" required>
                         <mat-autocomplete #auto="matAutocomplete">
                             <mat-option *ngFor="let status of filteredStatuses | async" [value]="status.id">
-                                {{status.label_status}}
+                                {{status.idToDisplay}}
                                 <small style="opacity:0.3;">{{status.id}}</small>
                             </mat-option>
                         </mat-autocomplete>

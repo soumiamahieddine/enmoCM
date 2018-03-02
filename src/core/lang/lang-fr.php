@@ -62,6 +62,9 @@ define('_TO_SIGN', 'Pour signature');
 define('_USER_GROUP_CREATION', 'Groupe ajouté pour utilisateur');
 define('_USER_GROUP_MODIFICATION', 'Groupe modifié pour utilisateur');
 define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');
+define('_USER_ENTITY_CREATION', 'Entité ajoutée pour utilisateur');
+define('_USER_ENTITY_MODIFICATION', 'Entité modifiée pour utilisateur');
+define('_USER_ENTITY_SUPPRESSION', 'Entité supprimée pour utilisateur');
 define('_VISA_USER', 'Pour visa');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et réponses');
@@ -70,3 +73,6 @@ define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
 define('_CASES_LIST', 'Liste des affaires');
 define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Liste des documents avec signataire');
 define('_FOLDERS_LIST', 'Liste de dossiers');
+define('_DOCTYPE_UPDATED', 'Type de document modifié');
+define('_DOCTYPE_ADDED', 'Type de document ajouté');
+define('_DOCTYPE_DELETED', 'Type de document supprimé');

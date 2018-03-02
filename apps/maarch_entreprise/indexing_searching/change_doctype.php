@@ -108,19 +108,7 @@ if(is_array($indexes)){
 }
 
 $opt_indexes = '';
-if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-    $browser_ie = true;
-    $display_value = 'block';
-} elseif (
-    preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) 
-    && !preg_match('/opera/i', $HTTP_USER_AGENT)
-) {
-    $browser_ie = true;
-    $display_value = 'block';
-} else {
-    $browser_ie = false;
-    $display_value = 'table-row';
-}
+$displayValue = 'table-row';
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {

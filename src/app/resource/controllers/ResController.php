@@ -15,18 +15,18 @@
 namespace Resource\controllers;
 
 use Basket\models\BasketModel;
+use Note\models\NoteModel;
 use SrcCore\controllers\StoreController;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Status\models\StatusModel;
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use Notes\Models\NoteModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use User\models\UserModel;
 
 class ResController
 {

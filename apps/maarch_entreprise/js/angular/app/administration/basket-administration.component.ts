@@ -258,7 +258,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     allEntities: any[] = [];
     statuses: any;
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, 'users');
+        super(http, ['users']);
     }
     ngOnInit(): void {
         this.http.get(this.coreUrl + "rest/entities")

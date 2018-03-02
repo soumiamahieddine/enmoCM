@@ -47,6 +47,9 @@
                             <mat-form-field>
                                 <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
                                     maxlength="128" required>
+                                    <span matSuffix>
+                                        <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}"></mat-checkbox>
+                                    </span>
                             </mat-form-field>
                         </div>
                         <div class="col-md-1 col-xs-1">
@@ -59,7 +62,7 @@
                         <div class="col-md-3">
                             <mat-form-field>
                                 <span matPrefix>
-                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="Utiliser ce délai de traitement au lieu de celui définit dans le type document"></mat-checkbox>&nbsp;</span>
+                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;</span>
                                 <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
                                     required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
                             </mat-form-field>
@@ -70,7 +73,7 @@
                         </div>
                         <div class="col-md-3">
                             <mat-form-field>
-                                <mat-select [disabled]="!priority.useDoctypeDelay" name="processType" placeholder="Type de traitement" [(ngModel)]="priority.working_days">
+                                <mat-select [disabled]="!priority.useDoctypeDelay" name="processType" placeholder="{{lang.processType}}" [(ngModel)]="priority.working_days">
                                     <mat-option value="true">
                                         {{lang.workingDays}}
                                     </mat-option>

@@ -6,8 +6,6 @@
  *
  */
 
-use Attachments\Models\ReconciliationModel;
-
 
 $core = new core_tools();
 $core->test_user();
@@ -54,29 +52,22 @@ for ($i = 0; $i < count($_GET['field']); $i++){
 }
 
 // Get the informations of the current document in case there is more than one response project
-$defaultInfos = ReconciliationModel::selectReconciliation([
-        'select'    =>  ['subject'],
-        'where'     =>  ['res_id = (?)'],
-        'table'     =>  $letterboxTable,
-        'data'      =>  [$_SESSION['doc_id']]
-]);
+$defaultInfos = \Resource\models\ResModel::getById(['resId' => $_SESSION['doc_id'], 'select' => ['subject']]);
 
 //If there is one res_id, we get the recipient information, the chrono number and the title
 if(count($_GET['field']) == 1){
 
     // Check if there is a response project and retrieve the infos about it
-    $queryProjectResponse = ReconciliationModel::selectReconciliation([
+    $queryProjectResponse = \Attachment\models\AttachmentModel::getOnView([
         'select'    =>  ['identifier, title, dest_contact_id, dest_address_id'],
         'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project' AND status <> 'DEL'"],
-        'table'     =>  $attachmentTable,
         'data'      =>  [$_GET['field']]
     ]);
 
     // Get the informations from res_view_letterbox, in order to get the contact infos if there is no project response
-    $queryResViewLetterbox = ReconciliationModel::selectReconciliation([
+    $queryResViewLetterbox = \Resource\models\ResModel::getOnView([
         'select'    =>  ['contact_id, address_id'],
-        'where'     =>  ["res_id = (?)"],
-        'table'     =>  'res_view_letterbox',
+        'where'     =>  ['res_id = (?)'],
         'data'      =>  [$_GET['field']]
     ]);
 
@@ -148,14 +139,14 @@ if(count($_GET['field']) == 1){
 	$str = '<select id="listProjectResponse" name="chrono_number_list" onchange="fillHiddenInput(this.options[this.selectedIndex].value)">';
 	$str .= "<option value=''>" . _CHOOSE_CHRONO_NUMBER . "</option>";
     for($i = 0; $i< count($_GET['field']); $i++){
-        $queryAllProjectReponse = ReconciliationModel::selectReconciliation([
+        $queryAllProjectReponse = \Attachment\models\AttachmentModel::getOnView([
             'select'    =>  ['title,identifier, dest_contact_id, dest_address_id'],
             'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project'"],
-            'table'     =>  $attachmentTable,
             'data'      =>  [$_GET['field'][$i]]
         ]);
 
-	    // Check if one of the selected document own a response projet, if attach_to_empty parameter is false
+
+        // Check if one of the selected document own a response projet, if attach_to_empty parameter is false
 	    if($attach_to_empty == 'false' && !$queryAllProjectReponse){
             ?>
             <script type="text/javascript">

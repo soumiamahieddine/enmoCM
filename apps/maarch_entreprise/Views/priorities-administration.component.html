@@ -86,6 +86,12 @@
                             </span>
                         </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="default_priority">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.defaultPriority}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
+                            <mat-checkbox color="primary" [checked]="element.default_priority" disabled></mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align: right;">

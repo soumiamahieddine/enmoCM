@@ -20,7 +20,7 @@ function manage_send($aId)
             'encodedFile'   => $encodedFile,
             'fileFormat'    => $document['format']
         ];
-        $response = \Core\Models\CurlModel::exec(['curlCallId' => 'sendFile', 'bodyData' => $bodyParams]);
+        $response = \SrcCore\models\CurlModel::exec(['curlCallId' => 'sendFile', 'bodyData' => $bodyParams]);
 
         if (!empty($response['publikId'])) {
             \Resource\models\ResModel::update(['set' => ['custom_t1' => $response['publikId']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);

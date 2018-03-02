@@ -95,19 +95,7 @@ $mode_form = 'fullscreen';
 function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $collId, $mode )
 {
     $_SESSION['category_id'] = '';
-    if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-        $ieBrowser = true;
-        $displayValue = 'block';
-    } else if (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
-        && ! preg_match('/opera/i', $_SERVER["HTTP_USER_AGENT"])
-    ) {
-        $ieBrowser = true;
-        $displayValue = 'block';
-    } else {
-        $ieBrowser = false;
-        $displayValue = 'table-row';
-    }
-    
+    $displayValue = 'table-row';
     //DECLARATIONS
     
     //INSTANTIATE
@@ -187,8 +175,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     }
     $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
         . " on status_id = id "
-        . " WHERE basket_id= ? and (group_id = ? OR group_id in (select group_id from user_baskets_secondary where user_id = ? and basket_id = ?)) and action_id = ?";
-    $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $_SESSION['user']['UserId'], $owner_basket_id, $actionId));
+        . " WHERE basket_id= ? and (group_id = ?) and action_id = ?";
+    $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $actionId));
 
     if($stmt->rowCount() > 0) {
         while($status = $stmt->fetchObject()) {
@@ -956,7 +944,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page='
                 . 'file_iframe" name="file_iframe" id="file_iframe" '
-                . 'scrolling="auto" frameborder="0" style="display:block;" onmouseover="this.focus()">'
+                . 'scrolling="auto" frameborder="0" style="display:block;" >'
                 . '</iframe>';
     }
     $frmStr .= '</div>';
@@ -1017,7 +1005,7 @@ function check_form($formId, $values)
 {
     
     if ($_SESSION['upfile']['format']=='maarch'){
-        $_SESSION['upfile']='';
+        $_SESSION['upfile']=[];
         $_SESSION['upfile']['error']='0';
         $_SESSION['upfile']['format']='maarch';
     } elseif (empty($_SESSION['upfile']['format'])) {

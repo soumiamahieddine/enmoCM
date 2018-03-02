@@ -13,24 +13,23 @@
 */
 namespace Visa\Controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
-use Core\Models\ContactModel;
-use Core\Models\UserModel;
+use Contact\models\ContactModel;
 use Core\Models\LangModel;
 use Docserver\models\DocserverModel;
-use Core\Models\ServiceModel;
 use Entity\models\ListInstanceModel;
+use Group\models\ServiceModel;
 use Link\models\LinkModel;
-use Notes\Models\NoteModel;
+use Note\models\NoteModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Visa\Models\VisaModel;
+use User\models\UserModel;
 
 //TODO Require once
 require_once 'modules/basket/class/class_modules_tools.php';
@@ -71,6 +70,11 @@ class VisaController
             'id' => ActionModel::getDefaultActionByGroupBasketId(['groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]),
             'actionLabel' => $actionLabel
         ];
+        $listInstances = ListInstanceModel::get([
+            'select'    => ['COUNT(*)'],
+            'where'     => ['res_id = ?', 'item_mode in (?)'],
+            'data'      => [$aArgs['resId'], ['visa', 'sign']]
+        ]);
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
@@ -84,7 +88,7 @@ class VisaController
         $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
         $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
-        $datas['hasWorkflow']   = VisaModel::hasVisaWorkflowByResId(['resId' => $resId]);
+        $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
         $datas['lang']          = LangModel::getSignatureBookLang();
@@ -94,12 +98,12 @@ class VisaController
 
     public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
     {
-        AttachmentsModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
+        AttachmentModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
 
         $isVersion = ($aArgs['collId'] == 'res_attachments' ? 'false' : 'true');
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
-        if (!AttachmentsModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
-            $attachment = AttachmentsModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
+        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
+            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
@@ -143,10 +147,10 @@ class VisaController
         $incomingMail['alt_identifier'] = $incomingExtMail['alt_identifier'];
         $incomingMail['category_id'] = $incomingExtMail['category_id'];
 
-        $incomingMailAttachments = AttachmentsModel::getAvailableAttachmentsInByResIdMaster([
-            'resIdMaster' => $resId,
-            'in'          => ['incoming_mail_attachment', 'converted_pdf'],
-            'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename']
+        $incomingMailAttachments = AttachmentModel::getOnView([
+            'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename'],
+            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
         ]);
 
         $documents = [
@@ -197,7 +201,7 @@ class VisaController
 
     private function getAttachmentsForSignatureBook(array $aArgs = [])
     {
-        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         $orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
         $c = 2;
@@ -209,16 +213,16 @@ class VisaController
         }
         $orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
 
-        $attachments = AttachmentsModel::getAvailableAndTemporaryAttachmentsNotInByResIdMaster([
-            'resIdMaster'   => $aArgs['resId'],
-            'notIn'         => ['incoming_mail_attachment', 'print_folder'],
-            'select'        => [
+        $attachments = AttachmentModel::getOnView([
+            'select'    => [
                 'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
                 'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
                 'dest_address_id', 'origin', 'doc_date', 'attachment_id_master'
             ],
-            'orderBy'       => [$orderBy]
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
+            'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder']],
+            'orderBy'   => [$orderBy]
         ]);
 
         $canModify = ServiceModel::hasService(['id' => 'modify_attachments', 'userId' => $_SESSION['user']['UserId'], 'location' => 'attachments', 'type' => 'use']);
@@ -308,12 +312,11 @@ class VisaController
             $attachments[$key]['viewerLink'] = "index.php?display=true&module=attachments&page=view_attachment&res_id_master={$aArgs['resId']}&id={$viewerId}&isVersion={$isVersion}";
         }
 
-        $obsAttachments = AttachmentsModel::getObsAttachmentsNotInByResIdMaster([
-                'resIdMaster'   => $aArgs['resId'],
-                'notIn'         => ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'],
-                'select'        => [
-                    'res_id', 'res_id_version', 'attachment_id_master', 'relation', 'creation_date', 'title'
-                ]
+        $obsAttachments = AttachmentModel::getOnView([
+            'select'    => ['res_id', 'res_id_version', 'attachment_id_master', 'relation', 'creation_date', 'title'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
+            'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'], 'OBS'],
+            'orderBy'  => ['relation ASC']
         ]);
 
         $obsData = [];
@@ -359,13 +362,13 @@ class VisaController
             $resListForRequest[] = $value['res_id'];
         }
 
-        $attachmentsInResList = AttachmentsModel::getAttachmentsWithOptions([
+        $attachmentsInResList = AttachmentModel::getOnView([
             'select'    => ['res_id_master', 'status', 'attachment_type'],
             'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resListForRequest]
         ]);
 
-        $attachmentTypes = AttachmentsModel::getAttachmentsTypesByXML();
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachmentsInResList as $value) {
             if ($resListForAttachments[$value['res_id_master']] === null) {
                 $resListForAttachments[$value['res_id_master']] = true;

@@ -14,10 +14,10 @@
 
 namespace SrcCore\controllers;
 
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
+use User\models\UserModel;
 
 class PreparedClauseController
 {
@@ -92,9 +92,11 @@ class PreparedClauseController
 
                 $allSubEntities = [];
                 foreach ($aEntities as $entity) {
-                    $subEntitiesForEntity = EntityModel::getEntityChildren(['entityId' => trim($entity)]);
-                    unset($subEntitiesForEntity[0]);
-                    $allSubEntities = array_merge($allSubEntities, $subEntitiesForEntity);
+                    if (!empty($entity)) {
+                        $subEntitiesForEntity = EntityModel::getEntityChildren(['entityId' => trim($entity)]);
+                        unset($subEntitiesForEntity[0]);
+                        $allSubEntities = array_merge($allSubEntities, $subEntitiesForEntity);
+                    }
                 }
 
                 $allSubEntitiesClause = '';

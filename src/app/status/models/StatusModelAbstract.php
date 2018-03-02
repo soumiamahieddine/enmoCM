@@ -20,8 +20,10 @@ use SrcCore\models\DatabaseModel;
 
 class StatusModelAbstract
 {
-    public static function get()
+    public static function get(array $aArgs = [])
     {
+        ValidatorModel::arrayType($aArgs, ['select']);
+
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status'],
@@ -31,7 +33,7 @@ class StatusModelAbstract
         return $aReturn;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
@@ -46,7 +48,7 @@ class StatusModelAbstract
         return $aReturn;
     }
 
-    public static function getByIdentifier(array $aArgs = [])
+    public static function getByIdentifier(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['identifier']);
         ValidatorModel::intVal($aArgs, ['identifier']);

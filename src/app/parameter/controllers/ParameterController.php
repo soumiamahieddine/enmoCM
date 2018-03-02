@@ -17,7 +17,7 @@
 
 namespace Parameter\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;

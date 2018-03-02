@@ -15,11 +15,11 @@
 
 namespace Status\controllers;
 
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Status\models\StatusModel;
 use Status\models\StatusImagesModel;
-use Core\Models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

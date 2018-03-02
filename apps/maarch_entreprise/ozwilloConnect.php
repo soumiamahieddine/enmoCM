@@ -23,15 +23,15 @@ if (empty($idToken->app_user) && empty($idToken->app_admin)) {
 }
 
 $profile = $oidc->requestUserInfo();
-$user = \Core\Models\UserModel::getByUserId(['userId' => $idToken->sub]);
+$user = \User\models\UserModel::getByUserId(['userId' => $idToken->sub]);
 
 if (empty($user)) {
     $firstname = empty($profile->given_name) ? 'utilisateur' : $profile->given_name;
     $lastname = empty($profile->family_name) ? 'utilisateur' : $profile->family_name;
-    \Core\Models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'changePassword' => 'N']]);
-    $user = \Core\Models\UserModel::getByUserId(['userId' => $idToken->sub]);
-    \Core\Models\UserModel::addGroup(['id' => $user['id'], 'groupId' => 'AGENT']);
-    \Core\Models\UserModel::addEntity(['id' => $user['id'], 'entityId' => 'VILLE', 'primaryEntity' => 'Y']);
+    \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'changePassword' => 'N']]);
+    $user = \User\models\UserModel::getByUserId(['userId' => $idToken->sub]);
+    \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => 'AGENT']);
+    \User\models\UserModel::addEntity(['id' => $user['id'], 'entityId' => 'VILLE', 'primaryEntity' => 'Y']);
 }
 
 $_SESSION['ozwillo']['userId'] =  $idToken->sub;

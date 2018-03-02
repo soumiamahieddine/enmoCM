@@ -1,22 +1,22 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /**
-* @brief Basket Controller
-* @author dev@maarch.org
-*/
+ * @brief Basket Controller
+ * @author dev@maarch.org
+ */
 
 namespace Basket\controllers;
 
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
@@ -47,7 +47,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        return $response->withJson(['basket'  => $basket]);
+        return $response->withJson(['basket' => $basket]);
     }
 
     public function create(Request $request, Response $response)
@@ -186,53 +186,10 @@ class BasketController
 
         $data = $request->getParams();
 
-        $allowedMethods = ['UP', 'DOWN'];
-        $allowedPowers = ['ONE', 'ALL'];
-        $check = Validator::stringType()->notEmpty()->validate($data['method']) && in_array($data['method'], $allowedMethods);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['power']) && in_array($data['power'], $allowedPowers);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $baskets = BasketModel::get([
-            'select'    => ['basket_id'],
-            'where'     => ['is_visible = ?'],
-            'data'      => ['Y'],
-            'orderBy'   => ['basket_order']
-        ]);
-        if (($data['method'] == 'UP' && $baskets[0]['basket_id'] == $aArgs['id']) || ($data['method'] == 'DOWN' && $baskets[count($baskets) - 1]['basket_id'] == $aArgs['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket is already sorted']);
-        }
-
-        $basketsToUpdate = [];
-        foreach ($baskets as $key => $basket) {
-            if ($basket['basket_id'] == $aArgs['id'])
-                continue;
-            if ($data['method'] == 'UP' && $data['power'] == 'ALL') {
-                if ($key == 0) {
-                    $basketsToUpdate[] = $aArgs['id'];
-                }
-                $basketsToUpdate[] = $basket['basket_id'];
-            } elseif ($data['method'] == 'UP' && $data['power'] == 'ONE') {
-                if (!empty($baskets[$key + 1]) && $baskets[$key + 1]['basket_id'] == $aArgs['id']) {
-                    $basketsToUpdate[] = $aArgs['id'];
-                }
-                $basketsToUpdate[] = $basket['basket_id'];
-            } elseif ($data['method'] == 'DOWN' && $data['power'] == 'ALL') {
-                $basketsToUpdate[] = $basket['basket_id'];
-                if (count($baskets) == $key + 1) {
-                    $basketsToUpdate[] = $aArgs['id'];
-                }
-            } elseif ($data['method'] == 'DOWN' && $data['power'] == 'ONE') {
-                $basketsToUpdate[] = $basket['basket_id'];
-                if (!empty($baskets[$key - 1]) && $baskets[$key - 1]['basket_id'] == $aArgs['id']) {
-                    $basketsToUpdate[] = $aArgs['id'];
-                }
+        foreach ($data as $key => $basketToUpdate) {
+            if ($key != $basketToUpdate['basket_order']) {
+                BasketModel::updateOrder(['id' => $basketToUpdate['basket_id'], 'order' => $key]);
             }
-        }
-
-        foreach ($basketsToUpdate as $key => $basketToUpdate) {
-            BasketModel::updateOrder(['id' => $basketToUpdate, 'order' => $key + 1]);
         }
 
         HistoryController::add([

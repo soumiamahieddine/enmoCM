@@ -813,11 +813,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 break;
             }
         }
-        if($ok == true){
-            $query = "DELETE FROM user_baskets_secondary WHERE user_id = :userId AND group_id NOT IN (SELECT group_id FROM usergroup_content WHERE user_id = :userId)";
-            $stmt = self::$db->query($query, array(":userId" => $userId));  
-        }
-        
+
         return $ok;
     }
     

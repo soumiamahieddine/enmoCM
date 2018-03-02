@@ -23,7 +23,7 @@
 
 namespace Convert\Controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
@@ -130,9 +130,9 @@ class ProcessThumbnailsController
         if ($args['resTable'] == 'res_letterbox') {
             $res = ResModel::getById(['resId' => $resId]);
         } elseif ($args['resTable'] == 'res_attachments') {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'false']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'false']);
         } else {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'true']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'true']);
         }
 
         if ($res['res_id'] <> '') {
@@ -145,8 +145,8 @@ class ProcessThumbnailsController
             }
             $resourcePath = ResDocserverModel::getSourceResourcePath(
                 [
-                    'resTable' => $resTable, 
-                    'adrTable' => $adrTable, 
+                    'resTable' => $resTable,
+                    'adrTable' => $adrTable,
                     'resId'    => $res['res_id'],
                     'adrType'  => $adrType
                 ]
@@ -156,7 +156,7 @@ class ProcessThumbnailsController
             $returnArray = array(
                 'status' => '1',
                 'value' => '',
-                'error' => 'file not already converted in pdf for thumbnails. path :' 
+                'error' => 'file not already converted in pdf for thumbnails. path :'
                     . $resourcePath . ", adrType : CONV, adr_table : " . $adrTable,
             );
             ProcessThumbnailsModel::manageErrorOnDb(
@@ -181,7 +181,7 @@ class ProcessThumbnailsController
 
         //now do the thumbnails !
         $resultOfConversion = $this->launchThumbnails(
-            $fileNameOnTmp, 
+            $fileNameOnTmp,
             $tmpDir,
             pathinfo($resourcePath, PATHINFO_EXTENSION)
         );
@@ -192,9 +192,9 @@ class ProcessThumbnailsController
                 ['resTable' => $resTable, 'resId' => $resId, 'result' => '-1']
             );
             LogsController::executionTimeLog(
-                $timestart, 
-                '', 
-                'debug', 
+                $timestart,
+                '',
+                'debug',
                 '[TIMER] Convert_ProcessThumbnailsAbstract_Service::thumbnails aucunContenuAIndexer'
             );
             return $resultOfConversion;
@@ -217,7 +217,7 @@ class ProcessThumbnailsController
             $returnArray = array(
                 'status' => '1',
                 'value' => '',
-                'error' => 'Ds of collection and ds type not found for thumbnails:' 
+                'error' => 'Ds of collection and ds type not found for thumbnails:'
                     . $collId . ' THUMBNAILS',
             );
             ProcessThumbnailsModel::manageErrorOnDb(
@@ -233,8 +233,8 @@ class ProcessThumbnailsController
         $resultOfUpDb = ProcessThumbnailsModel::updateDatabase(
             [
                 'collId'     => $collId,
-                'resTable'   => $resTable, 
-                'adrTable'   => $adrTable, 
+                'resTable'   => $resTable,
+                'adrTable'   => $adrTable,
                 'resId'      => $resId,
                 'docserver'  => $targetDs,
                 'path'       => $storeResult['destination_dir'],
@@ -258,9 +258,9 @@ class ProcessThumbnailsController
             'error' => '',
         );
         LogsController::executionTimeLog(
-            $timestart, 
-            '', 
-            'debug', 
+            $timestart,
+            '',
+            'debug',
             '[TIMER] Convert_ProcessThumbnailsAbstract_Service::thumbnails'
         );
         return $returnArray;
@@ -275,8 +275,8 @@ class ProcessThumbnailsController
      * @return array $returnArray the result
      */
     private function launchThumbnails(
-        $srcfile, 
-        $tgtdir=false, 
+        $srcfile,
+        $tgtdir=false,
         $srcfmt
     ) {
         $timestart = microtime(true);
@@ -292,24 +292,24 @@ class ProcessThumbnailsController
         if (strtoupper($srcfmt) == 'MAARCH' || strtoupper($srcfmt) == 'HTML') {
             copy($srcfile, str_ireplace('.maarch', '.', $srcfile) . '.html');
             if (file_exists('/usr/bin/mywkhtmltoimage')) {
-                $command = "mywkhtmltoimage  --width 164 --height 105 --quality 100 --zoom 0.2 " 
-                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " " 
+                $command = "mywkhtmltoimage  --width 164 --height 105 --quality 100 --zoom 0.2 "
+                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " "
                     . escapeshellarg($tgtdir . basename(str_ireplace('.maarch', '.', $srcfile)) . '.png');
             } else {
                 $envVar = "export DISPLAY=FRPAROEMINT:0.0 ; ";
-                $command = $envVar . "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 " 
-                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " " 
+                $command = $envVar . "wkhtmltoimage --width 164 --height 105 --quality 100 --zoom 0.2 "
+                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " "
                     . escapeshellarg($tgtdir . basename(str_ireplace('.maarch', '.', $srcfile)) . '.png');
             }
         } else {
-            $command = "convert -thumbnail 200x300 -background white -alpha remove " 
+            $command = "convert -thumbnail 200x300 -background white -alpha remove "
                 . escapeshellarg($srcfile) . "[0] "
                 . escapeshellarg($tgtdir . basename($srcfile) . '.png');
         }
         //echo $command . PHP_EOL;exit;
         $timestart_command = microtime(true);
         exec($command, $output, $return);
-        LogsController::debug(['message'=>'[TIMER] Commande : ' . $command]);
+        // LogsController::debug(['message'=>'[TIMER] Commande : ' . $command]);
         LogsController::executionTimeLog($timestart_command, '', 'debug', '[TIMER] Convert_ProcessThumbnailsAbstract_Service::launchThumbnails__exec');
 
         if ($return === 0) {
@@ -335,9 +335,9 @@ class ProcessThumbnailsController
             );
         }
         LogsController::executionTimeLog(
-            $timestart, 
-            '', 
-            'debug', 
+            $timestart,
+            '',
+            'debug',
             '[TIMER] Convert_ProcessThumbnailsAbstract_Service::launchThumbnails
         ');
         return $returnArray;

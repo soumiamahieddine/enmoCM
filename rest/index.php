@@ -84,13 +84,13 @@ if (strpos(getcwd(), '/rest')) {
 
 $userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-    if (\Core\Models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+    if (\SrcCore\models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
         $userId = $_SERVER['PHP_AUTH_USER'];
     }
 } else {
-    $cookie = \Core\Models\SecurityModel::getCookieAuth();
-    if (!empty($cookie) &&\Core\Models\SecurityModel::cookieAuthentication($cookie)) {
-        \Core\Models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+    $cookie = \SrcCore\models\SecurityModel::getCookieAuth();
+    if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
+        \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
         $userId = $cookie['userId'];
     }
 }
@@ -112,8 +112,12 @@ $app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initial
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-$app->get('/administration/users', \User\controllers\UserController::class . ':getUsersForAdministration');
-$app->get('/administration/users/{id}', \User\controllers\UserController::class . ':getUserForAdministration');
+
+//AutoComplete
+$app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
+$app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
+$app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
+$app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -138,7 +142,7 @@ $app->put('/statuses/{identifier}', \Status\controllers\StatusController::class 
 $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::class . ':delete');
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
-//groups
+//Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');
 $app->post('/groups', \Group\controllers\GroupController::class . ':create');
 $app->get('/groups/{id}', \Group\controllers\GroupController::class . ':getById');
@@ -156,10 +160,6 @@ $app->get('/docservers/{id}', \Docserver\controllers\DocserverController::class 
 $app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
 $app->get('/docserverTypes/{id}', \Docserver\controllers\DocserverTypeController::class . ':getById');
 
-//ListModels
-$app->get('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':getListModelsDiffListDestByUserId');
-$app->put('/listModels/itemId/{itemId}/itemMode/{itemMode}/objectType/{objectType}', \Entities\Controllers\ListModelsController::class . ':updateListModelsDiffListDestByUserId');
-
 //Visa
 $app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
 $app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
@@ -167,7 +167,7 @@ $app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Co
 $app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \Attachments\Controllers\AttachmentsController::class . ':setInSignatureBook');
+$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 
 //Res
 $app->post('/res', \Resource\controllers\ResController::class . ':create');
@@ -177,7 +177,7 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
 //Users
-$app->get('/users/autocompleter', \User\controllers\UserController::class . ':getUsersForAutocompletion');
+$app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
@@ -224,6 +224,8 @@ $app->post('/listTemplates', \Entity\controllers\ListTemplateController::class .
 $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':getById');
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
+$app->get('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':getByUserWithEntityDest');
+$app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -240,11 +242,11 @@ $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . 
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':getForAdministration'); //TODO No date
+$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':get'); //TODO No date
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryController::class . ':getBatchForAdministration');//TODO No date
+$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryBatchController::class . ':get');//TODO No date
 
 //actions
 $app->get('/actions', \Action\controllers\ActionController::class . ':get');
@@ -272,20 +274,18 @@ $app->post('/doctypes/firstLevel', \Doctype\controllers\FirstLevelController::cl
 $app->get('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':getById');
 $app->put('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':update');
 $app->delete('/doctypes/firstLevel/{id}', \Doctype\controllers\FirstLevelController::class . ':delete');
-$app->get('/administration/doctypes/firstLevel/new', \Doctype\controllers\FirstLevelController::class . ':initFirstLevel');
+$app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelController::class . ':initDoctypes');
 
 $app->post('/doctypes/secondLevel', \Doctype\controllers\SecondLevelController::class . ':create');
 $app->get('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':getById');
 $app->put('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':update');
 $app->delete('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':delete');
-$app->get('/administration/doctypes/secondLevel/new', \Doctype\controllers\SecondLevelController::class . ':initSecondLevel');
 
 $app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':create');
 $app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
 $app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
 $app->delete('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':delete');
-$app->delete('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
-$app->get('/administration/doctypes/types/new', \Doctype\controllers\DoctypeController::class . ':initDoctype');
+$app->put('/doctypes/types/{id}/redirect', \Doctype\controllers\DoctypeController::class . ':deleteRedirect');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

@@ -14,9 +14,10 @@ var user_administration_component_1 = require("./user-administration.component")
 var groups_administration_component_1 = require("./groups-administration.component");
 var group_administration_component_1 = require("./group-administration.component");
 var baskets_administration_component_1 = require("./baskets-administration.component");
-var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
 var doctypes_administration_component_1 = require("./doctypes-administration.component");
+var diffusionModels_administration_component_1 = require("./diffusionModels-administration.component");
+var diffusionModel_administration_component_1 = require("./diffusionModel-administration.component");
 var entities_administration_component_1 = require("./entities-administration.component");
 var entity_administration_component_1 = require("./entity-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
@@ -49,10 +50,11 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/groups/new', component: group_administration_component_1.GroupAdministrationComponent },
                     { path: 'administration/groups/:id', component: group_administration_component_1.GroupAdministrationComponent },
                     { path: 'administration/baskets', component: baskets_administration_component_1.BasketsAdministrationComponent },
-                    { path: 'administration/baskets-sorted', component: baskets_order_administration_component_1.BasketsOrderAdministrationComponent },
                     { path: 'administration/baskets/new', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/baskets/:id', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/doctypes', component: doctypes_administration_component_1.DoctypesAdministrationComponent },
+                    { path: 'administration/diffusionModels', component: diffusionModels_administration_component_1.DiffusionModelsAdministrationComponent },
+                    { path: 'administration/diffusionModels/:id', component: diffusionModel_administration_component_1.DiffusionModelAdministrationComponent },
                     { path: 'administration/entities', component: entities_administration_component_1.EntitiesAdministrationComponent },
                     { path: 'administration/entities/new', component: entity_administration_component_1.EntityAdministrationComponent },
                     { path: 'administration/entities/:id', component: entity_administration_component_1.EntityAdministrationComponent },

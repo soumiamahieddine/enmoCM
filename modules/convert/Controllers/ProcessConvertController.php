@@ -23,7 +23,7 @@
 
 namespace Convert\Controllers;
 
-use Attachments\Models\AttachmentsModel;
+use Attachment\models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
@@ -133,16 +133,16 @@ class ProcessConvertController
         if ($args['resTable'] == 'res_letterbox') {
             $res = ResModel::getById(['resId' => $resId]);
         } elseif ($args['resTable'] == 'res_attachments') {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'false']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'false']);
         } else {
-            $res = AttachmentsModel::getById(['id' => $resId, 'isVersion' => 'true']);
+            $res = AttachmentModel::getById(['id' => $resId, 'isVersion' => 'true']);
         }
 
         if ($res['res_id'] <> '') {
             $resourcePath = ResDocserverModel::getSourceResourcePath(
                 [
-                    'resTable' => $resTable, 
-                    'adrTable' => $adrTable, 
+                    'resTable' => $resTable,
+                    'adrTable' => $adrTable,
                     'resId' => $res['res_id'],
                     'adrType' => 'DOC'
                 ]
@@ -175,8 +175,8 @@ class ProcessConvertController
         //now do the conversion !
         if (strtoupper($res['format']) <> 'PDF') {
             $resultOfConversion = $this->launchConvert(
-                $fileNameOnTmp, 
-                'pdf', 
+                $fileNameOnTmp,
+                'pdf',
                 $tmpDir,
                 pathinfo($resourcePath, PATHINFO_EXTENSION)
             );
@@ -211,7 +211,7 @@ class ProcessConvertController
             $returnArray = array(
                 'status' => '1',
                 'value' => '',
-                'error' => 'Ds of collection and ds type not found for convert:' 
+                'error' => 'Ds of collection and ds type not found for convert:'
                     . $collId . ' CONVERT',
             );
             ProcessConvertModel::manageErrorOnDb(
@@ -224,7 +224,7 @@ class ProcessConvertController
             $returnArray = array(
                 'status' => '1',
                 'value' => '',
-                'error' => $storeResult['errors'] . ' error for convert:' 
+                'error' => $storeResult['errors'] . ' error for convert:'
                     . $fileNameOnTmp,
             );
             ProcessConvertModel::manageErrorOnDb(
@@ -240,8 +240,8 @@ class ProcessConvertController
         $resultOfUpDb = ProcessConvertModel::updateDatabase(
             [
                 'collId'     => $collId,
-                'resTable'   => $resTable, 
-                'adrTable'   => $adrTable, 
+                'resTable'   => $resTable,
+                'adrTable'   => $adrTable,
                 'resId'      => $resId,
                 'docserver'  => $targetDs,
                 'path'       => $storeResult['destination_dir'],
@@ -273,9 +273,9 @@ class ProcessConvertController
             'error' => '',
         );
         LogsController::executionTimeLog(
-            $timestart, 
-            '', 
-            'debug', 
+            $timestart,
+            '',
+            'debug',
             '[TIMER] Convert_ProcessConvertAbstract_Service::convert'
         );
         return $returnArray;
@@ -291,9 +291,9 @@ class ProcessConvertController
      * @return array $returnArray the result
      */
     public function launchConvert(
-        $srcfile, 
-        $tgtfmt, 
-        $tgtdir=false, 
+        $srcfile,
+        $tgtfmt,
+        $tgtdir=false,
         $srcfmt=null
     ) {
         $timestart=microtime(true);
@@ -301,25 +301,25 @@ class ProcessConvertController
         $processHtml = false;
         $executable='';
         
-        LogsController::info(['message'=>'[TIMER] Debut Convert_ProcessConvertAbstract_Service::launchConvert']);
+        // LogsController::info(['message'=>'[TIMER] Debut Convert_ProcessConvertAbstract_Service::launchConvert']);
         if (strtoupper($srcfmt) == 'MAARCH' || strtoupper($srcfmt) == 'HTML') {
             $processHtml = true;
-            LogsController::info(['message'=>'[TIMER] srcfmt ' . $srcfmt]);
+            // LogsController::info(['message'=>'[TIMER] srcfmt ' . $srcfmt]);
             copy($srcfile, str_ireplace('.maarch', '.', $srcfile) . '.html');
             if (file_exists('/usr/bin/mywkhtmltopdf')) {
-                $command = "mywkhtmltopdf " 
-                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " " 
+                $command = "mywkhtmltopdf "
+                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " "
                     . escapeshellarg($tgtdir . basename(str_ireplace('.maarch', '.', $srcfile)) . '.pdf');
             } else {
                 $envVar = "export DISPLAY=FRPAROEMINT:0.0 ; ";
-                $command = $envVar . "wkhtmltopdf " 
-                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " " 
+                $command = $envVar . "wkhtmltopdf "
+                    . escapeshellarg(str_ireplace('.maarch', '.', $srcfile) . '.html') . " "
                     . escapeshellarg($tgtdir . basename(str_ireplace('.maarch', '.', $srcfile)) . '.pdf');
             }
             $executable='wkhtmltopdf';
         } else {
             $executable='soffice';
-            LogsController::info(['message'=>'[TIMER] let LO do it ' . $this->libreOfficeExecutable]);
+            // LogsController::info(['message'=>'[TIMER] let LO do it ' . $this->libreOfficeExecutable]);
             if ($this->libreOfficeExecutable == "cloudooo") {
                 $serverAddress = "http://192.168.21.40:8011";
                 $tokens = array();
@@ -364,11 +364,11 @@ class ProcessConvertController
         }
         //echo $command . '<br />';exit;
         if ($this->libreOfficeExecutable == "cloudooo" && !$processHtml) {
-            LogsController::info(['message'=>'[TIMER] commande : cloudooo url ' . $serverAddress]);
-            LogsController::info(['message'=>'[TIMER] Debut Convert_ProcessConvertAbstract_Service::launchConvert__exec']);
+            // LogsController::info(['message'=>'[TIMER] commande : cloudooo url ' . $serverAddress]);
+            // LogsController::info(['message'=>'[TIMER] Debut Convert_ProcessConvertAbstract_Service::launchConvert__exec']);
             $req = new PhpXmlRpc\Request('convertFile', $v);
             //LogsController::info(['message'=>'[TIMER] commande : cloudooo url ' . $serverAddress]);
-            LogsController::info(['message'=>'[TIMER] Fin Convert_ProcessConvertAbstract_Service::launchConvert__exec']);
+            // LogsController::info(['message'=>'[TIMER] Fin Convert_ProcessConvertAbstract_Service::launchConvert__exec']);
             $client = new PhpXmlRpc\Client($serverAddress);
             $resp = $client->send($req);
             if (!$resp->faultCode()) {
@@ -384,19 +384,19 @@ class ProcessConvertController
                 );
             } else {
                 //print "An error occurred: ";
-                //print "Code: " . htmlspecialchars($resp->faultCode()) 
+                //print "Code: " . htmlspecialchars($resp->faultCode())
                 //    . " Reason: '" . htmlspecialchars($resp->faultString()) . "'\n";
                 $returnArray = array(
                     'status' => '1',
                     'value' => '',
-                    'error' => "Code: " . htmlspecialchars($resp->faultCode()) 
+                    'error' => "Code: " . htmlspecialchars($resp->faultCode())
                         . " Reason: '" . htmlspecialchars($resp->faultString()),
                 );
             }
         } else {
             $timestart_command = microtime(true);
             exec("timeout -k 5m 3m " . $command, $output, $return);
-            LogsController::debug(['message'=>'[TIMER] commande : ' . $command]);
+            // LogsController::debug(['message'=>'[TIMER] commande : ' . $command]);
             LogsController::executionTimeLog($timestart_command, '', 'info', '[TIMER] ' . $executable . ' - Convert_ProcessConvertAbstract_Service::launchConvert__exec');
             if ($return === 0) {
                 $returnArray = array(
@@ -422,9 +422,9 @@ class ProcessConvertController
             );
         }
         LogsController::executionTimeLog(
-            $timestart, 
-            '', 
-            'info', 
+            $timestart,
+            '',
+            'info',
             '[TIMER] Fin Convert_ProcessConvertAbstract_Service::launchConvert'
         );
         return $returnArray;

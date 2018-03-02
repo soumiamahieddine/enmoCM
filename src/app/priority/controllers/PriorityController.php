@@ -2,7 +2,7 @@
 
 namespace Priority\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
@@ -20,7 +20,7 @@ class PriorityController
     {
         $priotity = PriorityModel::getById(['id' => $aArgs['id']]);
 
-        if(empty($priotity)){
+        if (empty($priotity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Priority not found']);
         }
 

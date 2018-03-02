@@ -18,10 +18,11 @@ var groups_administration_component_1 = require("./groups-administration.compone
 var user_administration_component_1 = require("./user-administration.component");
 var group_administration_component_1 = require("./group-administration.component");
 var baskets_administration_component_1 = require("./baskets-administration.component");
-var baskets_order_administration_component_1 = require("./baskets-order-administration.component");
 var basket_administration_component_1 = require("./basket-administration.component");
 var entities_administration_component_1 = require("./entities-administration.component");
 var entity_administration_component_1 = require("./entity-administration.component");
+var diffusionModels_administration_component_1 = require("./diffusionModels-administration.component");
+var diffusionModel_administration_component_1 = require("./diffusionModel-administration.component");
 var doctypes_administration_component_1 = require("./doctypes-administration.component");
 var statuses_administration_component_1 = require("./statuses-administration.component");
 var status_administration_component_1 = require("./status-administration.component");
@@ -58,7 +59,6 @@ var AdministrationModule = /** @class */ (function () {
                 groups_administration_component_1.GroupsAdministrationComponent,
                 group_administration_component_1.GroupAdministrationComponent,
                 baskets_administration_component_1.BasketsAdministrationComponent,
-                baskets_order_administration_component_1.BasketsOrderAdministrationComponent,
                 basket_administration_component_1.BasketAdministrationComponent,
                 doctypes_administration_component_1.DoctypesAdministrationComponent,
                 entities_administration_component_1.EntitiesAdministrationComponent,
@@ -82,14 +82,18 @@ var AdministrationModule = /** @class */ (function () {
                 entities_administration_component_1.EntitiesAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
-                basket_administration_component_1.BasketAdministrationGroupListModalComponent
+                basket_administration_component_1.BasketAdministrationGroupListModalComponent,
+                doctypes_administration_component_1.DoctypesAdministrationRedirectModalComponent,
+                diffusionModels_administration_component_1.DiffusionModelsAdministrationComponent,
+                diffusionModel_administration_component_1.DiffusionModelAdministrationComponent
             ],
             entryComponents: [
                 users_administration_component_1.UsersAdministrationRedirectModalComponent,
                 entities_administration_component_1.EntitiesAdministrationRedirectModalComponent,
                 groups_administration_component_1.GroupsAdministrationRedirectModalComponent,
                 basket_administration_component_1.BasketAdministrationSettingsModalComponent,
-                basket_administration_component_1.BasketAdministrationGroupListModalComponent
+                basket_administration_component_1.BasketAdministrationGroupListModalComponent,
+                doctypes_administration_component_1.DoctypesAdministrationRedirectModalComponent
             ],
         })
     ], AdministrationModule);

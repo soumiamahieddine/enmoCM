@@ -1,20 +1,20 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /**
-* @brief List Template Controller
-* @author dev@maarch.org
-*/
+ * @brief List Template Controller
+ * @author dev@maarch.org
+ */
 
 namespace Entity\controllers;
 
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -23,6 +23,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
 
 class ListTemplateController
 {
@@ -48,8 +49,15 @@ class ListTemplateController
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
+        $listTemplate = [
+            'object_id'     => $listTemplates[0]['object_id'],
+            'object_type'   => $listTemplates[0]['object_type'],
+            'title'         => $listTemplates[0]['title'],
+            'description'   => $listTemplates[0]['description'],
+            'diffusionList' => $listTemplates
+        ];
 
-        return $response->withJson(['listTemplate' => $listTemplates]);
+        return $response->withJson(['listTemplate' => $listTemplate]);
     }
 
     public function create(Request $request, Response $response)
@@ -89,8 +97,9 @@ class ListTemplateController
             return $response->withStatus(400)->withJson(['errors' => $checkItems['errors']]);
         }
 
+        $listTemplateId = null;
         foreach ($data['items'] as $item) {
-            ListTemplateModel::create([
+            $listTemplateId = ListTemplateModel::create([
                 'object_id'     => $data['object_id'],
                 'object_type'   => $data['object_type'],
                 'title'         => $data['title'],
@@ -111,7 +120,7 @@ class ListTemplateController
             'eventId'   => 'listTemplateCreation',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['id' => $listTemplateId]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
@@ -150,8 +159,10 @@ class ListTemplateController
             'where' => ['object_id = ?', 'object_type = ?'],
             'data'  => [$listTemplates[0]['object_id'], $listTemplates[0]['object_type']]
         ]);
+
+        $listTemplateId = null;
         foreach ($data['items'] as $item) {
-            ListTemplateModel::create([
+            $listTemplateId = ListTemplateModel::create([
                 'object_id'     => $listTemplates[0]['object_id'],
                 'object_type'   => $listTemplates[0]['object_type'],
                 'title'         => $data['title'],
@@ -172,7 +183,7 @@ class ListTemplateController
             'eventId'   => 'listTemplateModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['id' => $listTemplateId]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -207,6 +218,38 @@ class ListTemplateController
             'moduleId'  => 'listTemplate',
             'eventId'   => 'listTemplateSuppression',
         ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function getByUserWithEntityDest(Request $request, Response $response, array $aArgs)
+    {
+        $listTemplates = ListTemplateModel::get([
+            'select'    => ['object_id', 'title'],
+            'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?'],
+            'data'      => [$aArgs['itemId'], 'entity_id', 'dest']
+        ]);
+
+        return $response->withJson(['listTemplates' => $listTemplates]);
+    }
+
+    public function updateByUserWithEntityDest(Request $request, Response $response)
+    {
+        $data = $request->getParams();
+
+        foreach ($data['redirectListModels'] as $listModel) {
+            $user = UserModel::getByUserId(['userId' => $listModel['redirectUserId']]);
+            if (empty($user)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User not found']);
+            }
+
+            ListTemplateModel::update([
+                'set'   => ['item_id' => $listModel['redirectUserId']],
+                'where' => ['item_id = ?', 'object_id = ?', 'object_type = ?', 'item_mode = ?'],
+                'data'  => [$data['user_id'], $listModel['object_id'], 'entity_id', 'dest']
+            ]);
+
+        }
 
         return $response->withJson(['success' => 'success']);
     }

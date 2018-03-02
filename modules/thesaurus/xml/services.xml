@@ -6,6 +6,7 @@
 		<comment>_ADMIN_THESAURUS_DESC</comment>
 		<servicepage>index.php?page=manage_thesaurus_list_controller&amp;module=thesaurus</servicepage>
 		<servicetype>admin</servicetype>
+		<category>classement</category>
 		<system_service>false</system_service>
 		<style>fa fa-bookmark-o</style>
 		<enabled>true</enabled>

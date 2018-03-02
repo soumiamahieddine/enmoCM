@@ -15,18 +15,18 @@
 namespace Entity\controllers;
 
 use Basket\models\BasketModel;
-use Core\Models\ServiceModel;
-use Core\Models\UserModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
 use Entity\models\UserEntityModel;
+use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateModel;
+use User\models\UserModel;
 
 class EntityController
 {
@@ -79,7 +79,7 @@ class EntityController
         }
 
         $listTemplates = ListTemplateModel::get([
-            'select'    => ['object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description'],
+            'select'    => ['id', 'object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description', 'sequence'],
             'where'     => ['object_id = ?'],
             'data'      => [$aArgs['id']]
         ]);
@@ -91,17 +91,24 @@ class EntityController
         $entity['visaTemplate'] = [];
         foreach ($listTemplates as $listTemplate) {
             if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
+                $entity['listTemplate']['id'] = $listTemplate['id'];
                 if ($listTemplate['item_type'] == 'user_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'type'                  => 'user',
-                        'id'                    => $listTemplate['item_id'],
+                        'item_type'             => $listTemplate['item_type'],
+                        'item_id'               => $listTemplate['item_id'],
+                        'sequence'              => $listTemplate['sequence'],
+                        'title'                 => $listTemplate['title'],
+                        'description'           => $listTemplate['description'],
                         'labelToDisplay'        => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
                         'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                     ];
                 } elseif ($listTemplate['item_type'] == 'entity_id') {
                     $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'type'                  => 'entity',
-                        'id'                    => $listTemplate['item_id'],
+                        'item_type'             => $listTemplate['item_type'],
+                        'item_id'               => $listTemplate['item_id'],
+                        'sequence'              => $listTemplate['sequence'],
+                        'title'                 => $listTemplate['title'],
+                        'description'           => $listTemplate['description'],
                         'labelToDisplay'        => EntityModel::getById(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
                         'descriptionToDisplay'  => ''
                     ];
@@ -109,8 +116,13 @@ class EntityController
             }
             if ($listTemplate['object_type'] == 'VISA_CIRCUIT' && !empty($listTemplate['item_id'])) {
                 $entity['visaTemplate'][] = [
-                    'type'                  => 'user',
-                    'mode'                  => $listTemplate['item_mode'],
+                    'id'                    => $listTemplate['id'],
+                    'item_type'             => $listTemplate['item_type'],
+                    'item_id'               => $listTemplate['item_id'],
+                    'item_mode'             => $listTemplate['item_mode'],
+                    'sequence'              => $listTemplate['sequence'],
+                    'title'                 => $listTemplate['title'],
+                    'description'           => $listTemplate['description'],
                     'idToDisplay'           => UserModel::getLabelledUserById(['userId' => $listTemplate['item_id']]),
                     'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
                 ];

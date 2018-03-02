@@ -15,18 +15,18 @@
 
 namespace SrcCore\controllers;
 
-use Attachments\Models\AttachmentsModel;
-use Core\Models\ChronoModel;
-use Core\Models\ContactModel;
+use Attachment\models\AttachmentModel;
+use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
-use Core\Models\UserModel;
+use SrcCore\models\ChronoModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use Resource\models\ResExtModel;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class StoreController
 {
@@ -78,7 +78,7 @@ class StoreController
             if ($aArgs['table'] == 'res_letterbox') {
                 $resId = ResModel::create($data);
             } elseif ($aArgs['table'] == 'res_attachments') {
-                $resId = AttachmentsModel::create($data);
+                $resId = AttachmentModel::create($data);
             }
 
             return $resId;
@@ -115,7 +115,7 @@ class StoreController
             return ['errors' => '[storeRessourceOnDocserver] ' . $pathOnDocserver['errors']];
         }
 
-        $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver]);
+        $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);
         if (!empty($docinfo['errors'])) {
             return ['errors' => '[storeRessourceOnDocserver] ' . $docinfo['errors']];
         }

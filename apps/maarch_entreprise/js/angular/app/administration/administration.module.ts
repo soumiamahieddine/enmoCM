@@ -12,11 +12,12 @@ import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalCompone
 import { UserAdministrationComponent }                  from './user-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
-import { BasketsOrderAdministrationComponent }          from './baskets-order-administration.component';
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
 import { EntitiesAdministrationComponent, EntitiesAdministrationRedirectModalComponent} from './entities-administration.component';
 import { EntityAdministrationComponent }                from './entity-administration.component';
-import { DoctypesAdministrationComponent }              from './doctypes-administration.component';
+import { DiffusionModelsAdministrationComponent }       from './diffusionModels-administration.component';
+import { DiffusionModelAdministrationComponent }        from './diffusionModel-administration.component';
+import { DoctypesAdministrationComponent, DoctypesAdministrationRedirectModalComponent }              from './doctypes-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
 import { ActionsAdministrationComponent }               from './actions-administration.component';
@@ -49,7 +50,6 @@ import { NotificationAdministrationComponent }          from './notification-adm
         GroupsAdministrationComponent,
         GroupAdministrationComponent,
         BasketsAdministrationComponent,
-        BasketsOrderAdministrationComponent,
         BasketAdministrationComponent,
         DoctypesAdministrationComponent,
         EntitiesAdministrationComponent,
@@ -73,14 +73,18 @@ import { NotificationAdministrationComponent }          from './notification-adm
         EntitiesAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
-        BasketAdministrationGroupListModalComponent
+        BasketAdministrationGroupListModalComponent,
+        DoctypesAdministrationRedirectModalComponent,
+        DiffusionModelsAdministrationComponent,
+        DiffusionModelAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
         EntitiesAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
-        BasketAdministrationGroupListModalComponent
+        BasketAdministrationGroupListModalComponent,
+        DoctypesAdministrationRedirectModalComponent
     ],
 })
 export class AdministrationModule {}

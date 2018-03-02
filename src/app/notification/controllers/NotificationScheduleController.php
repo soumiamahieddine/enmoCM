@@ -18,7 +18,7 @@ namespace Notification\controllers;
 use Respect\Validation\Validator;
 use Notification\models\NotificationModel;
 use Notification\models\NotificationScheduleModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;

@@ -582,10 +582,7 @@ if (!defined("_MY_INFO")) define("_MY_INFO", "My profile");
 
 //class types
 if (!defined("_UNKNOWN_PARAM")) define("_UNKNOWN_PARAM", "unknown configuration");
-if (!defined("_DOCTYPE_UPDATED")) define("_DOCTYPE_UPDATED", " Modified document type");
 if (!defined("_DOCTYPE_UPDATE")) define("_DOCTYPE_UPDATE", " Document type modification");
-if (!defined("_DOCTYPE_ADDED")) define("_DOCTYPE_ADDED", "New added document type");
-if (!defined("_DELETED_DOCTYPE")) define("_DELETED_DOCTYPE", " Deleted document type");
 if (!defined("_DOCTYPE_DELETION")) define("_DOCTYPE_DELETION", " document type deletion");
 if (!defined("_THE_DOCTYPE")) define("_THE_DOCTYPE", " the document type ");
 if (!defined("_THE_WORDING")) define("_THE_WORDING", " The wording ");
@@ -948,8 +945,8 @@ if (!defined("_RES_ATTACHED"))  define("_RES_ATTACHED", "Attached documents");
 if (!defined("_SELECT_CONTACT_TO_REPLACE"))  define("_SELECT_CONTACT_TO_REPLACE", "Select the contact and the address to replace");
 if (!defined("_ARE_YOU_SURE_TO_DELETE_CONTACT"))  define("_ARE_YOU_SURE_TO_DELETE_CONTACT", "Are you sure to delete this contact ?");
 if (!defined("_CONTACT_CHECK"))  define("_CONTACT_CHECK", "A recently recorded mail at least is affected to the same contact.");
-if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "No duplication by organization/ company");
-if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "No duplication by name/ first name");
+if (!defined("_NO_SOCIETY_DUPLICATES"))  define("_NO_SOCIETY_DUPLICATES", "No duplication by corporate contact (society)");
+if (!defined("_NO_NAME_DUPLICATES"))  define("_NO_NAME_DUPLICATES", "No duplication by physical contact (firstname lastname)");
 
 if (!defined("_YOU_MUST_SELECT_CONTACT")) define("_YOU_MUST_SELECT_CONTACT", "You have to select a contact ");
 if (!defined("_DOC_SENDED_BY_CONTACT")) define("_DOC_SENDED_BY_CONTACT", "<b>Documents and/or mails sent by this contact</b>");
@@ -1830,6 +1827,7 @@ if (!defined("_RETENTION_RULE")) define("_RETENTION_RULE","Retention rule");
 if (!defined("_DURATION_CURRENT_USE")) define("_DURATION_CURRENT_USE","Duration current use");
 
 if (!defined("_UNSELECT_ALL")) define("_UNSELECT_ALL","Unselect all");
+if (!defined("_ARCHIVE_TRANSFER_COLL")) define("_ARCHIVE_TRANSFER_COLL","Archiving");
 
 /***** Global ******/
 if (!defined('_UNREACHABLE_DOCSERVER'))

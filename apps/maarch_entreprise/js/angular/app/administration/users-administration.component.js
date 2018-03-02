@@ -32,7 +32,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UsersAdministrationComponent = /** @class */ (function (_super) {
     __extends(UsersAdministrationComponent, _super);
     function UsersAdministrationComponent(changeDetectorRef, media, http, notify, dialog) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.dialog = dialog;
@@ -60,17 +60,11 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
     UsersAdministrationComponent.prototype.ngOnDestroy = function () {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     };
-    UsersAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.users;
-        }
-    };
     UsersAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/administration/users')
+        this.http.get(this.coreUrl + 'rest/users')
             .subscribe(function (data) {
             _this.users = data['users'];
             _this.data = _this.users;
@@ -89,18 +83,17 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         if (user.inDiffListDest == 'Y') {
             user.mode = 'up';
             this.userDestRedirect = user;
-            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
-                _this.userDestRedirectModels = data.listModels;
+                _this.userDestRedirectModels = data.listTemplates;
                 _this.config = { data: { userDestRedirect: _this.userDestRedirect, userDestRedirectModels: _this.userDestRedirectModels } };
                 _this.dialogRef = _this.dialog.open(UsersAdministrationRedirectModalComponent, _this.config);
                 _this.dialogRef.afterClosed().subscribe(function (result) {
-                    console.log(result);
                     if (result) {
                         user.enabled = 'N';
                         user.redirectListModels = result;
                         //first, update listModels
-                        _this.http.put(_this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                        _this.http.put(_this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                             .subscribe(function (data) {
                             if (data.errors) {
                                 user.enabled = 'Y';
@@ -161,16 +154,16 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         if (user.inDiffListDest == 'Y') {
             user.mode = 'del';
             this.userDestRedirect = user;
-            this.http.get(this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id')
+            this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
-                _this.userDestRedirectModels = data.listModels;
+                _this.userDestRedirectModels = data.listTemplates;
                 _this.config = { data: { userDestRedirect: _this.userDestRedirect, userDestRedirectModels: _this.userDestRedirectModels } };
                 _this.dialogRef = _this.dialog.open(UsersAdministrationRedirectModalComponent, _this.config);
                 _this.dialogRef.afterClosed().subscribe(function (result) {
                     if (result) {
                         user.redirectListModels = result;
                         //first, update listModels
-                        _this.http.put(_this.coreUrl + 'rest/listModels/itemId/' + user.user_id + '/itemMode/dest/objectType/entity_id', user)
+                        _this.http.put(_this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id, user)
                             .subscribe(function (data) {
                             if (data.errors) {
                                 _this.notify.error(data.errors);
@@ -236,7 +229,7 @@ exports.UsersAdministrationComponent = UsersAdministrationComponent;
 var UsersAdministrationRedirectModalComponent = /** @class */ (function (_super) {
     __extends(UsersAdministrationRedirectModalComponent, _super);
     function UsersAdministrationRedirectModalComponent(http, data, dialogRef) {
-        var _this = _super.call(this, http, 'users') || this;
+        var _this = _super.call(this, http, ['users']) || this;
         _this.http = http;
         _this.data = data;
         _this.dialogRef = dialogRef;

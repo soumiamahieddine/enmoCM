@@ -33,7 +33,7 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     loading: boolean = false;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
-        super(http, 'statuses');
+        super(http, ['statuses']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

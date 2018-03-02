@@ -142,12 +142,12 @@ function changePriorityForSve(doctype_id, path_script){
                 if(response.status == 0 )
                 {
                     //alert(response.value);
-                    document.getElementById("priority").selectedIndex = response.value+1;
+                    //document.getElementById("priority").selectedIndex = response.value+1;
                     Event.fire($("priority"), "chosen:updated");
                     
                 }else if(response.status == 1 ){
                     //alert(response.value);
-                    document.getElementById("priority").selectedIndex = response.value+1;
+                    //document.getElementById("priority").selectedIndex = response.value+1;
                     Event.fire($("priority"), "chosen:updated");
                 }
                 else
@@ -1350,7 +1350,7 @@ function changeCycle(path_manage_script)
 
 function getIframeContent(path_manage_script)
 {
-    if ($j('#choose_file_div') && $j("#file_iframe").contentDocument) {
+    if ($j('#choose_file_div') && $j("#file_iframe").contents()[0]) {
         var choose_file_div = $('choose_file_div');
         if (choose_file_div.style.display == 'none') {
             var iframe = document.getElementById("file_iframe");

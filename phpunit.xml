@@ -5,9 +5,10 @@
             <!--directory>core/Test</directory-->
             <file>core/Test/ActionControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
+            <file>core/Test/ContactControllerTest.php</file>
+            <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/EntityControllerTest.php</file>
             <file>core/Test/ListTemplateControllerTest.php</file>
-            <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/NotificationControllerTest.php</file>
             <file>core/Test/NotificationScheduleControllerTest.php</file>
             <file>core/Test/ParameterControllerTest.php</file>
@@ -20,21 +21,15 @@
             <file>modules/convert/Test/ProcessFulltextTest.php</file>
             <file>modules/convert/Test/ProcessManageConvertTest.php</file>
             <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
+            <!-- The last one should be history -->
+            <file>core/Test/HistoryControllerTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
       <whitelist>
           <directory suffix="Test.php">core/Test</directory>
           <directory suffix=".php">src</directory>
-          <directory suffix=".php">core/Controllers</directory>
-          <directory suffix=".php">core/Models</directory>        
           <directory suffix=".php">modules/visa/Controllers</directory>
-          <directory suffix=".php">modules/visa/Models</directory>          
-          <directory suffix=".php">modules/attachments/Controllers</directory>
-          <directory suffix=".php">modules/attachments/Models</directory>          
-          <directory suffix=".php">modules/entities/Controllers</directory>
-          <directory suffix=".php">modules/entities/Models</directory>
-          <directory suffix=".php">modules/notes/Models</directory>
           <directory suffix=".php">modules/convert/Controllers</directory>
           <directory suffix=".php">modules/convert/Models</directory>
       </whitelist>

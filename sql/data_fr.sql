@@ -814,6 +814,7 @@ DELETE FROM entities WHERE entity_id = 'CCAS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CCAS' AND object_type = 'entity_id';
 INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, description) VALUES ('CCAS', 'entity_id', 0, '', 'user_id', 'dest', 'Centre Communal d''Action Sociale');
+UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
@@ -1139,7 +1140,8 @@ TRUNCATE TABLE difflist_types;
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('entity_id', 'Diffusion aux services', 'dest copy avis', 'Y', 'Y');
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('type_id', 'Diffusion selon le type de document', 'dest copy', 'Y', 'Y');
 INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('foldertype_id', 'Diffusion selon le type de dossiers', 'dest copy', 'Y', 'Y');
-INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('VISA_CIRCUIT', 'Circuit de visa', 'visa sign ', 'N', 'N');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('VISA_CIRCUIT', 'Circuit de visa', 'visa sign ', 'N', 'Y');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('AVIS_CIRCUIT', 'Circuit d''avis', 'avis ', 'N', 'Y');
 ------------
 --ACTIONS
 ------------
@@ -1178,14 +1180,6 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'N', 'Y', 'reply_seda', 'Y', 'apps', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'del_seda', 'Y', 'apps', 'N', NULL);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
-------------
--- BANNETTE SECONDAIRE POUR LE GROUPE DES SUPERVISEURS DE COURRIER
-------------
-TRUNCATE TABLE user_baskets_secondary;
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'ddaull', 'RESPONSABLE', 'EvisBasket');
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'rrenaud', 'DIRECTEUR', 'ValidationBasket');
-INSERT INTO user_baskets_secondary (user_id, group_id, basket_id) VALUES ( 'eerina', 'DIRECTEUR', 'ValidationBasket');
-Select setval('user_baskets_secondary_seq', (select max(system_id)+1 from user_baskets_secondary), false);
 ------------
 --ACTIONS_GROUPBASKETS
 ------------
@@ -1738,3 +1732,9 @@ UPDATE doctypes SET duration_current_use = 12;
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;
+
+TRUNCATE TABLE users_baskets_preferences;
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
+WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
+ORDER BY users.id;

@@ -14,8 +14,6 @@
 
 namespace SrcCore\models;
 
-use SrcCore\models\ValidatorModel;
-
 class DatabaseModel
 {
     /**

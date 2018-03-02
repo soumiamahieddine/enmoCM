@@ -7,21 +7,23 @@
                 <b>destinataire</b> des modèles liste de difffusion suivante, veuillez choisir un utilisateur de
                 <b>remplacement</b> :
             </div>
-            <div *ngFor="let userDestRedirectModel of data.userDestRedirectModels;let i of index" id="{{userDestRedirectModel.object_id}}" class="form-group">
-                
+            <div *ngFor="let userDestRedirectModel of data.userDestRedirectModels;let i of index" id="{{userDestRedirectModel.object_id}}"
+                class="form-group">
+
                 <mat-form-field class="example-full-width">
-                    <input name="userDestRedirectModel_{{i}}" id="userDestRedirectModel_{{i}}" [(ngModel)]="userDestRedirectModel.redirectUserId" type="text" placeholder="Nouveau destinataire pour : {{userDestRedirectModel.title}}"
-                        matInput [matAutocomplete]="auto" [formControl]="userCtrl" required>
+                    <input name="userDestRedirectModel_{{i}}" id="userDestRedirectModel_{{i}}" [(ngModel)]="userDestRedirectModel.redirectUserId"
+                        type="text" placeholder="Nouveau destinataire pour : {{userDestRedirectModel.title}}" matInput [matAutocomplete]="auto"
+                        [formControl]="userCtrl" required>
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.user_id">
+                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id">
                             <div class="container-fluid">
-                                <div class="col-md-1">
-                                    <mat-icon class="fa fa-user fa-2x"></mat-icon>
-                                </div>
-                                <div class="col-md-11">
-                                    {{ user.firstname }} {{ user.lastname }}
-                                    <small>{{ user.user_id }}</small>
-                                </div>
+                                <span class="col-xm-1">
+                                    <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
+                                </span>
+                                <span class="col-xm-11">
+                                    {{ user.idToDisplay }}
+                                    <small>{{ user.otherInfo }}</small>
+                                </span>
                             </div>
                         </mat-option>
                     </mat-autocomplete>

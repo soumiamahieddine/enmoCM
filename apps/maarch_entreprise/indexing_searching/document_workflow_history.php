@@ -120,11 +120,6 @@ if (isset($_REQUEST['load'])) {
                 $list->setOrderField('event_date');
                 $orderstr = "order by event_date desc";
             }
-            
-    //From filters
-        $where = "";
-        $filterClause = $list->getFilters(); 
-        if (!empty($filterClause)) $where = ' and '.$filterClause;//Filter clause
         
         //Query
             if((empty($table)|| !$table) && (!empty($view) && $view <> false)) {

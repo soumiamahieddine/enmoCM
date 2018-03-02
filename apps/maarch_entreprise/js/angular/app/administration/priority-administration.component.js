@@ -27,7 +27,8 @@ var PriorityAdministrationComponent = /** @class */ (function () {
             useDoctypeDelay: false,
             color: "#135f7f",
             delays: "0",
-            working_days: "false"
+            working_days: "false",
+            default_priority: false
         };
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');

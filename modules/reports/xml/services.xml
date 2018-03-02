@@ -6,6 +6,7 @@
 		<comment>_ADMIN_REPORTS_DESC</comment>
 		<servicepage>/administration/reports</servicepage>
 		<servicetype>admin</servicetype>
+		<category>supervision</category>
 		<system_service>false</system_service>
 		<style>fa fa-area-chart</style>
 		<enabled>true</enabled>

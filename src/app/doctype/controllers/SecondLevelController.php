@@ -11,12 +11,13 @@
 
 namespace Doctype\controllers;
 
+use Doctype\controllers\FirstLevelController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Core\Models\ServiceModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -40,12 +41,6 @@ class SecondLevelController
             }
         }
   
-        $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
-        return $response->withJson($obj);
-    }
-
-    public function initSecondLevel(Request $request, Response $response)
-    {
         $obj['firstLevel'] = FirstLevelModel::get(['select' => ['doctypes_first_level_id', 'doctypes_first_level_label']]);
         return $response->withJson($obj);
     }
@@ -76,7 +71,8 @@ class SecondLevelController
 
         return $response->withJson(
             [
-            'secondLevel'  => $secondLevelId
+            'secondLevelId' => $secondLevelId,
+            'doctypeTree'   => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -111,7 +107,8 @@ class SecondLevelController
 
         return $response->withJson(
             [
-            'secondLevel'  => $data
+            'secondLevelId' => $data,
+            'doctypeTree'   => FirstLevelController::getTreeFunction(),
             ]
         );
     }
@@ -140,7 +137,10 @@ class SecondLevelController
             'info'      => _DOCTYPE_SECONDLEVEL_DELETED. ' : ' . $secondLevel['doctypes_second_level_label']
         ]);
 
-        return $response->withJson(['secondLevel' => $secondLevel]);
+        return $response->withJson([
+            'secondLevelDeleted' => $secondLevel,
+            'doctypeTree'        => FirstLevelController::getTreeFunction()
+        ]);
     }
 
     protected function control($aArgs, $mode)
@@ -169,7 +169,11 @@ class SecondLevelController
             $errors[] = 'Invalid doctypes_first_level_id';
         }
 
-        if (!Validator::notEmpty()->validate($aArgs['enabled']) || ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N')) {
+        if (empty($aArgs['enabled'])) {
+            $aArgs['enabled'] = 'Y';
+        }
+
+        if ($aArgs['enabled'] != 'Y' && $aArgs['enabled'] != 'N') {
             $errors[]= 'Invalid enabled value';
         }
 
@@ -178,7 +182,7 @@ class SecondLevelController
 
     protected function manageValue($request)
     {
-        foreach ($request  as $key => $value) {
+        foreach ($request as $key => $value) {
             if (in_array($key, ['enabled'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';

@@ -14,12 +14,12 @@
 
 namespace Basket\models;
 
-use Core\Models\UserModel;
 use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserModel;
 
 class BasketModelAbstract
 {
@@ -103,7 +103,7 @@ class BasketModelAbstract
 
     public static function updateOrder(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'order']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['order']);
 
@@ -146,11 +146,6 @@ class BasketModelAbstract
         ]);
         DatabaseModel::delete([
             'table' => 'actions_groupbaskets',
-            'where' => ['basket_id = ?'],
-            'data'  => [$aArgs['id']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'user_baskets_secondary',
             'where' => ['basket_id = ?'],
             'data'  => [$aArgs['id']]
         ]);

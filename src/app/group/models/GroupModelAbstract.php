@@ -14,11 +14,11 @@
 
 namespace Group\models;
 
-use Core\Models\ServiceModel;
-use Core\Models\UserModel;
+use Group\models\ServiceModel;
 use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class GroupModelAbstract
 {

@@ -42,7 +42,6 @@ require_once 'modules/sendmail/sendmail_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 require_once 'modules/sendmail/class/class_email_signatures.php';
-require_once 'core/Models/UserModel.php';
 
 $core_tools     = new core_tools();
 $request        = new request();
@@ -103,7 +102,7 @@ $core_tools->load_header('', true, false);
 ?><body><?php
 $core_tools->load_js(); 
 
-$aUserEntities = \Core\Models\UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
+$aUserEntities = \User\models\UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
 $userEntities = [];
 foreach ($aUserEntities as $value) {
     $userEntities[] = $value['entity_id'];

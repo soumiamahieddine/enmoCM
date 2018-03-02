@@ -1,21 +1,5 @@
 <?php
 
-namespace Attachments\Controllers;
-
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Respect\Validation\Validator;
-use Attachments\Models\AttachmentsModel;
-use Resource\controllers\ResController;
-use Docserver\models\DocserverModel;
-use Docserver\models\DocserverTypeModel;
-use Docserver\controllers\DocserverController;
-use Docserver\controllers\DocserverToolsController;
-use Core\Models\ResModel;
-
-
-require_once 'modules/attachments/Models/AttachmentsModel.php';
-
 
 class ReconciliationController{
     public function storeAttachmentResource($aArgs)
@@ -280,26 +264,25 @@ class ReconciliationController{
         $filetmp .= $tmp;
         $filetmp .= $filename;
 
-        $docserver = DocserverModel::getById([
+        $docserver = \Docserver\models\DocserverModel::getById([
             'id' => $docserverId
         ]);
-        $docserverType = DocserverTypeModel::getById([
+        $docserverType = \Docserver\models\DocserverTypeModel::getById([
             'id' => $docserver['docserver_type_id']
         ]);
 
-        $fingerprint = DocserverToolsController::doFingerprint(
-            [
-                'path'            => $filetmp,
-                'fingerprintMode' => $docserverType['fingerprint_mode'],
-            ]
-        );
+        if (empty($docserverType['fingerprint_mode']) || $docserverType['fingerprint_mode'] == 'NONE') {
+            $fingerprint =  '0';
+        } else {
+            $fingerprint = hash_file(strtolower($docserverType['fingerprint_mode']), $filetmp);
+        }
 
         $filesize = filesize($filetmp);
         array_push(
             $data,
             array(
                 'column' => "fingerprint",
-                'value' => $fingerprint['fingerprint'],
+                'value' => $fingerprint,
                 'type' => "string"
             )
         );
@@ -351,7 +334,7 @@ class ReconciliationController{
             }
 
             unset($prepareData['res_id']); // NCH01
-            AttachmentsModel::create($prepareData);
+            \Attachment\models\AttachmentModel::create($prepareData);
 
             return true;
         }

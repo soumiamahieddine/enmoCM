@@ -28,7 +28,7 @@ var autocomplete_plugin_1 = require("../../plugins/autocomplete.plugin");
 var UpdateStatusAdministrationComponent = /** @class */ (function (_super) {
     __extends(UpdateStatusAdministrationComponent, _super);
     function UpdateStatusAdministrationComponent(changeDetectorRef, media, http, notify) {
-        var _this = _super.call(this, http, 'statuses') || this;
+        var _this = _super.call(this, http, ['statuses']) || this;
         _this.http = http;
         _this.notify = notify;
         _this.lang = translate_component_1.LANG;

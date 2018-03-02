@@ -76,7 +76,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(_USER_UPDATED, $responseBody->success);
+        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -106,7 +106,7 @@ class UserControllerTest extends TestCase
         $response       = $userController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame(_DELETED_USER, $responseBody->success);
+        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
