@@ -62,6 +62,7 @@ export const LANG_FR = {
     "chooseGroup"                  : "Choisissez un groupe",
     "chooseRedirectGroup"          : "Choisissez un groupe de remplacement",
     "chronoNumber"                 : "Numéro chrono",
+    "clauseGroup"                  : "Périmètre documentaire",
     "clause"                       : "Clause",
     "clickOn"                      : "Cliquez sur",
     "color"                        : "Couleur",
