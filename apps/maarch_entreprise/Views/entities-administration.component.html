@@ -210,7 +210,7 @@
                                 </mat-form-field>
                                 <mat-list>
                                     <span *ngFor="let role of currentEntity.roles; let i = index">
-                                        <h3 *ngIf="role.available" mat-subheader>{{role.label}}</h3>
+                                        <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary">{{role.label}}</h3>
                                         <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
                                             <div style="min-height:30px;">
                                                 <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="{{lang.move}}"
@@ -254,7 +254,7 @@
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
                                         <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}" dnd-sortable
                                             [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
-                                            <mat-icon color="primary" [class]="template.mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
+                                            <mat-icon color="primary" [class]="template.item_mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
                                             <p mat-line>{{template.idToDisplay}}
                                                 <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                             </p>

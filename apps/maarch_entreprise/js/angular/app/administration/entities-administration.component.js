@@ -160,6 +160,9 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
             .subscribe(function (data) {
             _this.currentEntity = data['entity'];
+            if (_this.currentEntity.visaTemplate[0]) {
+                _this.idCircuitVisa = _this.currentEntity.visaTemplate[0].id;
+            }
             _this.dataSource = new material_1.MatTableDataSource(_this.currentEntity.users);
             _this.dataSource.paginator = _this.paginator;
             _this.dataSource.sort = _this.sort;
@@ -274,7 +277,6 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
             "id": '',
             "item_type": 'user_id',
             "item_mode": "sign",
-            "mode": "sign",
             "item_id": element.id,
             "sequence": this.currentEntity.visaTemplate.length,
             "idToDisplay": element.idToDisplay,
@@ -282,20 +284,20 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         };
         this.currentEntity.visaTemplate.forEach(function (listModel, i) {
             listModel.sequence = i;
-            listModel.mode = "visa";
+            listModel.item_mode = "visa";
             newDiffList.items.push({
                 "id": listModel.id,
                 "item_id": listModel.item_id,
                 "item_type": "user_id",
-                "item_mode": listModel.mode,
+                "item_mode": listModel.item_mode,
                 "sequence": listModel.sequence
             });
         });
         newDiffList.items.push(newElemListModel);
         if (this.currentEntity.visaTemplate.length > 0) {
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.visaTemplate[0].id, newDiffList)
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe(function (data) {
-                newElemListModel.id = data.id;
+                _this.idCircuitVisa = data.id;
                 _this.currentEntity.visaTemplate.push(newElemListModel);
                 _this.notify.success(_this.lang.entityUpdated);
             }, function (err) {
@@ -305,7 +307,7 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         else {
             this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                 .subscribe(function (data) {
-                newElemListModel.id = data.id;
+                _this.idCircuitVisa = data.id;
                 _this.currentEntity.visaTemplate.push(newElemListModel);
                 _this.notify.success(_this.lang.entityUpdated);
             }, function (err) {
@@ -494,21 +496,22 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         this.currentEntity.visaTemplate.forEach(function (listModel, i) {
             listModel.sequence = i;
             if (i == (_this.currentEntity.visaTemplate.length - 1)) {
-                listModel.mode = "sign";
+                listModel.item_mode = "sign";
             }
             else {
-                listModel.mode = "visa";
+                listModel.item_mode = "visa";
             }
             newDiffList.items.push({
                 "id": listModel.id,
                 "item_id": listModel.item_id,
                 "item_type": "user_id",
-                "item_mode": listModel.mode,
+                "item_mode": listModel.item_mode,
                 "sequence": listModel.sequence
             });
         });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
+        this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
             .subscribe(function (data) {
+            _this.idCircuitVisa = data.id;
             _this.notify.success(_this.lang.entityUpdated);
         }, function (err) {
             _this.notify.error(err.error.errors);
@@ -549,34 +552,46 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
     EntitiesAdministrationComponent.prototype.removeDiffListVisa = function (template, i) {
         var _this = this;
         this.currentEntity.visaTemplate.splice(i, 1);
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "VISA_CIRCUIT",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        };
-        this.currentEntity.visaTemplate.forEach(function (listModel, i) {
-            listModel.sequence = i;
-            if (i == (_this.currentEntity.visaTemplate.length - 1)) {
-                listModel.mode = "sign";
-            }
-            else {
-                listModel.mode = "visa";
-            }
-            newDiffList.items.push({
-                "item_id": listModel.item_id,
-                "item_type": "user_id",
-                "item_mode": listModel.mode,
-                "sequence": listModel.sequence
+        if (this.currentEntity.visaTemplate.length > 0) {
+            var newDiffList = {
+                "object_id": this.currentEntity.entity_id,
+                "object_type": "VISA_CIRCUIT",
+                "title": this.currentEntity.entity_id,
+                "description": this.currentEntity.entity_id,
+                "items": Array()
+            };
+            this.currentEntity.visaTemplate.forEach(function (listModel, i) {
+                listModel.sequence = i;
+                if (i == (_this.currentEntity.visaTemplate.length - 1)) {
+                    listModel.item_mode = "sign";
+                }
+                else {
+                    listModel.item_mode = "visa";
+                }
+                newDiffList.items.push({
+                    "item_id": listModel.item_id,
+                    "item_type": "user_id",
+                    "item_mode": listModel.item_mode,
+                    "sequence": listModel.sequence
+                });
             });
-        });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
-            .subscribe(function (data) {
-            _this.notify.success(_this.lang.entityUpdated);
-        }, function (err) {
-            _this.notify.error(err.error.errors);
-        });
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
+                .subscribe(function (data) {
+                _this.idCircuitVisa = data.id;
+                _this.notify.success(_this.lang.entityUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        else {
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                .subscribe(function (data) {
+                _this.idCircuitVisa = null;
+                _this.notify.success(_this.lang.entityUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
     };
     __decorate([
         core_1.ViewChild('snav2'),
