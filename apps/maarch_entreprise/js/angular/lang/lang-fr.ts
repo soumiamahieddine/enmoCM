@@ -203,7 +203,7 @@ export const LANG_FR = {
     "parameters"                    : "Paramètres",
     "parameterUpdated"              : "Paramètre modifié",
     "phoneNumber"                   : "Numéro de téléphone",
-    "previous"                      : "Précecdent",
+    "previous"                      : "Précédent",
     "primaryEntity"                 : "Entité primaire",
     "priorities"                    : "Priorité(s)",
     "priorityAdded"                 : "Priorité ajoutée",
