@@ -92,7 +92,6 @@ export class GroupsAdministrationComponent implements OnInit {
             this.config = { data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
             this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: string) => {
-                console.log(result);
                 if (result) {
                     if (result == "_NO_REPLACEMENT") {
                         this.deleteGroup(group);

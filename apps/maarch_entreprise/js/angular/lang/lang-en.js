@@ -303,7 +303,7 @@ exports.LANG_EN = {
     "documentTypeUpdated": "Document type updated",
     "documentTypeDeleted": "Document type deleted",
     "documentTypeReplacement": "Document type replacement",
-    "transferToDoctype": "TReplace by this document type",
+    "transferToDoctype": "Replace by this document type",
     "complementaryFields": "Complementary fields",
     "archival": "Archival",
     "field": "Field",

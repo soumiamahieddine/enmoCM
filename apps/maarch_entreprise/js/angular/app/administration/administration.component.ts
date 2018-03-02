@@ -61,7 +61,6 @@ export class AdministrationComponent implements OnInit {
 
         this.http.get(this.coreUrl + 'rest/administration')
             .subscribe((data: any) => {
-                console.log();
                 this.organisationServices = data.administrations.organisation;
                 this.productionServices = data.administrations.production;
                 this.classementServices = data.administrations.classement;
@@ -72,7 +71,6 @@ export class AdministrationComponent implements OnInit {
     }
 
     goToSpecifiedAdministration(service: any): void {
-        console.log(service);
         if (service.angular == "true") {
             this.router.navigate([service.servicepage]);
         } else {

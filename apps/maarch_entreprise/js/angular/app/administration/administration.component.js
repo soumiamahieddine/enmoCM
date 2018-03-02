@@ -54,7 +54,6 @@ var AdministrationComponent = /** @class */ (function () {
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/administration')
             .subscribe(function (data) {
-            console.log();
             _this.organisationServices = data.administrations.organisation;
             _this.productionServices = data.administrations.production;
             _this.classementServices = data.administrations.classement;
@@ -63,7 +62,6 @@ var AdministrationComponent = /** @class */ (function () {
         });
     };
     AdministrationComponent.prototype.goToSpecifiedAdministration = function (service) {
-        console.log(service);
         if (service.angular == "true") {
             this.router.navigate([service.servicepage]);
         }

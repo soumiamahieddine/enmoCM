@@ -46,7 +46,7 @@ export const LANG_FR = {
     "basketModification"           : "Modification d'une bannette",
     "basketNotification"           : "Activer / désactiver la notification de cette bannette",
     "baskets"                      : "Bannettes",
-    "basketsOrder"                 : "Gerer l'ordre des bannettes",
+    "basketsOrder"                 : "Gérer l'ordre des bannettes",
     "basketUpdated"                : "Bannette modifiée",
     "calDays"                      : "jour(s) calendaire(s)",
     "canBeModified"                : "Modification des index",

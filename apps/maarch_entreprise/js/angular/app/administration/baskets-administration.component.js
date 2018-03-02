@@ -84,7 +84,6 @@ var BasketsAdministrationComponent = /** @class */ (function () {
     };
     BasketsAdministrationComponent.prototype.updateBasketOrder = function (currentBasket) {
         var _this = this;
-        console.log(this.basketsOrder);
         this.http.put(this.coreUrl + "rest/sortedBaskets/" + currentBasket.basket_id, this.basketsOrder)
             .subscribe(function (data) {
             _this.baskets = data['baskets'];
