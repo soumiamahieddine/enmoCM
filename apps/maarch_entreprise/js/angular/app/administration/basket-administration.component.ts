@@ -269,7 +269,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: 'Toute les entités'
+                    text: 'Toutes les entités'
                 }, {
                     id: 'ENTITIES_JUST_BELOW',
                     keyword: 'ENTITIES_JUST_BELOW',

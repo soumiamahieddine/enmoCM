@@ -56,7 +56,7 @@ export const LANG_FR = {
     "changeMyPassword"             : "Modifier mon mot de passe",
     "chooseBasket"                 : "Choisissez une banette",
     "chooseCategoryAssociation"    : "Choisissez une ou plusieurs catégories associée",
-    "chooseCategoryAssociationHelp" : "Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories",
+    "chooseCategoryAssociationHelp" : "Si aucune catégorie sélectionnée alors l'action est valable pour toutes les catégories",
     "chooseDefaultAction"          : "Choisissez une action principale",
     "chooseEntity"                 : "Choisissez une entité",
     "chooseGroup"                  : "Choisissez un groupe",

@@ -268,7 +268,7 @@ Rajouter après la ligne 55 :
     Tracer l'action : Oui
     Action de dossier : Non
     Choisissez une ou plusieurs catégories associées : 
-    (Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories)
+    (Si aucune catégorie sélectionnée alors l'action est valable pour toutes les catégories)
     Aucune
 
 **Créer une nouvelle bannette**

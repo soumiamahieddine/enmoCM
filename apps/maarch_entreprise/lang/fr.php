@@ -1750,7 +1750,7 @@ if (!defined("_WITHOUT_FILE")) define("_WITHOUT_FILE", "Sans fichier");
 if (!defined("_ASSOCIATED_CATEGORY")) define("_ASSOCIATED_CATEGORY", "Catégorie associée");
 if (!defined("_NO_CATEGORY_ASSOCIATED")) define("_NO_CATEGORY_ASSOCIATED", "Ne pas associer une catégorie");
 if (!defined("_CHOOSE_CATEGORY_ASSOCIATION")) define("_CHOOSE_CATEGORY_ASSOCIATION", "Choisissez une ou plusieurs catégories associées");
-if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "Si aucune catégorie sélectionnée alors l'action est valable pour toute les catégories");
+if (!defined("_CHOOSE_CATEGORY_ASSOCIATION_HELP")) define("_CHOOSE_CATEGORY_ASSOCIATION_HELP", "Si aucune catégorie sélectionnée alors l'action est valable pour toutes les catégories");
 
 //SERVICE VIEW DOC HISTORY
 if (!defined("_VIEW_DOC_HISTORY")) define("_VIEW_DOC_HISTORY", "Voir l'historique des actions sur le document");
