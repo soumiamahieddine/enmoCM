@@ -15,7 +15,7 @@
 
 namespace SrcCore\controllers;
 
-use Attachment\Models\AttachmentModel;
+use Attachment\models\AttachmentModel;
 use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;

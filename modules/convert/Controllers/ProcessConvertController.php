@@ -23,7 +23,7 @@
 
 namespace Convert\Controllers;
 
-use Attachment\Models\AttachmentModel;
+use Attachment\models\AttachmentModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;

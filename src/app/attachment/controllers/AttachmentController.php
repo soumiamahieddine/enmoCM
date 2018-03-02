@@ -14,7 +14,7 @@
 
 namespace Attachment\controllers;
 
-use Attachment\Models\AttachmentModel;
+use Attachment\models\AttachmentModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

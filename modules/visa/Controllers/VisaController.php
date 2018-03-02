@@ -13,7 +13,7 @@
 */
 namespace Visa\Controllers;
 
-use Attachment\Models\AttachmentModel;
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Contact\models\ContactModel;
@@ -30,7 +30,6 @@ use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
-use Visa\Models\VisaModel;
 
 //TODO Require once
 require_once 'modules/basket/class/class_modules_tools.php';

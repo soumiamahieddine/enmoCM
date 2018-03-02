@@ -12,7 +12,7 @@
  * @author dev@maarch.org
  */
 
-namespace Attachment\Models;
+namespace Attachment\models;
 
 class AttachmentModel extends AttachmentModelAbstract
 {

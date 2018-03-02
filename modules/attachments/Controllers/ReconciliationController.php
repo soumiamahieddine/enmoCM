@@ -334,7 +334,7 @@ class ReconciliationController{
             }
 
             unset($prepareData['res_id']); // NCH01
-            \Attachment\Models\AttachmentModel::create($prepareData);
+            \Attachment\models\AttachmentModel::create($prepareData);
 
             return true;
         }

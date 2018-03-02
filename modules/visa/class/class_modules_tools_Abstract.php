@@ -225,7 +225,7 @@ abstract class visa_Abstract extends Database
 	public function checkResponseProject($res_id, $coll_id) {
 		$this->errorMessageVisa = null;
 
-		$attachmentTypes = \Attachment\Models\AttachmentModel::getAttachmentsTypesByXML();
+		$attachmentTypes = \Attachment\models\AttachmentModel::getAttachmentsTypesByXML();
 
 		$noSignableAttachments = [];
 		foreach ($attachmentTypes as $key => $value) {

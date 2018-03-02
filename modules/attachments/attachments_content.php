@@ -433,7 +433,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                             )
                         );
 
-                        $attachmentTypesList = \Attachment\Models\AttachmentModel::getAttachmentsTypesByXML();
+                        $attachmentTypesList = \Attachment\models\AttachmentModel::getAttachmentsTypesByXML();
                         foreach ($attachmentTypesList as $keyAttachment => $valueAttachment) {
                             if ($keyAttachment == $attachment_types && $valueAttachment['sign']) {
                                 array_push(
@@ -937,7 +937,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                         'type' => "string",
                     )
                 );
-                $attachmentTypesList = \Attachment\Models\AttachmentModel::getAttachmentsTypesByXML();
+                $attachmentTypesList = \Attachment\models\AttachmentModel::getAttachmentsTypesByXML();
                 foreach ($attachmentTypesList as $keyAttachment => $valueAttachment) {
                     if ($keyAttachment == $previous_attachment->attachment_type && $valueAttachment['sign']) {
                         array_push(

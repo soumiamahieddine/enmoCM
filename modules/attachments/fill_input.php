@@ -58,7 +58,7 @@ $defaultInfos = \Resource\models\ResModel::getById(['resId' => $_SESSION['doc_id
 if(count($_GET['field']) == 1){
 
     // Check if there is a response project and retrieve the infos about it
-    $queryProjectResponse = \Attachment\Models\AttachmentModel::getOnView([
+    $queryProjectResponse = \Attachment\models\AttachmentModel::getOnView([
         'select'    =>  ['identifier, title, dest_contact_id, dest_address_id'],
         'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project' AND status <> 'DEL'"],
         'data'      =>  [$_GET['field']]
@@ -139,7 +139,7 @@ if(count($_GET['field']) == 1){
 	$str = '<select id="listProjectResponse" name="chrono_number_list" onchange="fillHiddenInput(this.options[this.selectedIndex].value)">';
 	$str .= "<option value=''>" . _CHOOSE_CHRONO_NUMBER . "</option>";
     for($i = 0; $i< count($_GET['field']); $i++){
-        $queryAllProjectReponse = \Attachment\Models\AttachmentModel::getOnView([
+        $queryAllProjectReponse = \Attachment\models\AttachmentModel::getOnView([
             'select'    =>  ['title,identifier, dest_contact_id, dest_address_id'],
             'where'     =>  ["res_id_master = (?) AND attachment_type = 'response_project'"],
             'data'      =>  [$_GET['field'][$i]]
