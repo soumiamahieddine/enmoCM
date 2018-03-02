@@ -28,7 +28,6 @@ function doctype_template(args)
 			model_frame = args[i]['value'];
 		}
 	}
-	console.log(file_iframe.src.includes("display=true&module=templates&page=file_iframe&model_id"));
 	if(is_generated == true)
 	{
 		if(choose_file_div != null)
