@@ -294,7 +294,8 @@ h1.admin-app-name {
         min-width: initial;
     }
     .admin-toolbar .maarchLogo {
-        transform: scale(1.5);
+        height: 100%;
+        width: 50px;
     }
     .admin-toolbar-title {
         margin-left: 0px !important;

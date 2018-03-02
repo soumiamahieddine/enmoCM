@@ -1,96 +1,12 @@
 <h2 mat-dialog-title color="primary">{{lang.linkGroup}}</h2>
 
 <mat-dialog-content>
-    <mat-horizontal-stepper linear="true" #stepper="matHorizontalStepper">
-        <ng-template matStepperIcon="create">
-            <mat-icon class="fa fa-paw"></mat-icon>
-        </ng-template>
-        <ng-template matStepperIcon="edit">
-            <mat-icon class="fa fa-paw"></mat-icon>
-        </ng-template>
-        <mat-step [stepControl]="firstFormGroup">
-            <form>
-                <ng-template matStepLabel>{{lang.chooseGroup}}</ng-template>
-                <mat-form-field [formGroup]="firstFormGroup">
-                    <mat-select placeholder="{{lang.availableGroups}}" [(ngModel)]="this.groupId" formControlName="firstCtrl" required>
-                        <span *ngFor="let group of data.groups">
-                            <mat-option  *ngIf="group.isUsed == false" [value]="group.group_id">
-                                {{group.group_desc}}
-                            </mat-option>
-                        </span>
-                    </mat-select>
-                </mat-form-field>
-                <div style="margin-top:10px;">
-                    <button style="float:right;" mat-raised-button color="primary" matStepperNext>{{lang.next}} <mat-icon class="fa fa-chevron-right"></mat-icon></button>
-                </div>
-            </form>
-        </mat-step>
-        <mat-step>
-            <form #defaultActionForm="ngForm">
-                <ng-template matStepLabel>{{lang.chooseDefaultAction}}</ng-template>
-                <div class="example-container">
-                    <mat-paginator #paginator [length]="100" [pageSize]="5"></mat-paginator>
-                    <div class="col-md-6">
-                        <mat-button-toggle-group (change)="initAction($event)">
-                            <mat-button-toggle name="filterType" value="process" matTooltip="{{lang.processAction}}">
-                                <mat-icon class="fa fa-check fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle name="filterType" value="validate_mail" matTooltip="{{lang.validateAction}}">
-                                <mat-icon class="fa fa-edit fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                            <mat-button-toggle name="filterType" value="" matTooltip="{{lang.allActions}}" checked="true">
-                                <mat-icon class="fa fa-list fa-2x"></mat-icon>
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                    </div>
-                    <div class="col-md-6">
-                        <mat-form-field>
-                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                        </mat-form-field>
-                    </div>
-                    <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_action" matSortDirection="asc">
-                        <ng-container matColumnDef="label_action">
-                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                            <mat-cell *matCellDef="let element" style="flex:6;">
-                                <mat-radio-button name="actionsList" color="primary" required (change)="selectDefaultAction(element)">{{element.label_action}}</mat-radio-button>
-                                <small>({{element.origin}})</small>
-                            </mat-cell>
-                        </ng-container>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                    </mat-table>
-                </div>
-                <div style="margin-top:10px;">
-                    <button style="float:left;" color="primary" mat-raised-button matStepperPrevious><mat-icon class="fa fa-chevron-left"></mat-icon> {{lang.previous}}</button>
-                    <button style="float:right;" color="primary" mat-raised-button matStepperNext [disabled]="!defaultActionForm.form.valid">{{lang.next}} <mat-icon class="fa fa-chevron-right"></mat-icon></button>
-                </div>
-            </form>
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>{{lang.otherActions}}</ng-template>
-            <div class="example-container">
-                <div class="col-md-6">
-                    <mat-paginator #paginator2 [length]="100" [pageSize]="5"></mat-paginator>
-                </div>
-                <div class="col-md-6">
-                    <mat-form-field>
-                        <input matInput (keyup)="applyFilter2($event.target.value)" placeholder="{{lang.filterBy}}">
-                    </mat-form-field>
-                </div>
-                <mat-table #table [dataSource]="dataSource2" matSort matSortActive="label_action" matSortDirection="asc">
-                    <ng-container matColumnDef="label_action">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:6;">
-                            <mat-checkbox name="actionsList" color="primary" required (change)="selectAction($event,element)" [disabled]="element.action_page == 'process' || element.action_page == 'validate_mail' || element.action_page == 'index_mlb' || element.default_action_list == true">{{element.label_action}}</mat-checkbox>
-                            <small>({{element.origin}})</small>
-                        </mat-cell>
-                    </ng-container>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
-            </div>
-            <div style="margin-top:10px;">
-                <button style="float:left;" color="primary" mat-raised-button matStepperPrevious><mat-icon class="fa fa-chevron-left"></mat-icon> {{lang.previous}}</button>
-                <button style="float:right;" color="primary" mat-raised-button (click)="validateForm();">{{lang.validate}}</button>
-            </div>
-        </mat-step>
-    </mat-horizontal-stepper>
+    <mat-nav-list>
+            <span *ngFor="let group of data.groups">
+                <mat-list-item *ngIf="group.isUsed == false" (click)="validateForm(group);">
+                    {{group.group_desc}}
+                </mat-list-item>
+            </span>
+
+    </mat-nav-list>
 </mat-dialog-content>

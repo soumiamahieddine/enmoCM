@@ -193,6 +193,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
                 tmpAction.default_action_list = false;
             }
         });
+        this.addAction(group);
     };
     BasketAdministrationComponent.prototype.unlinkGroup = function (groupIndex) {
         var _this = this;
@@ -236,6 +237,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.addAction = function (group) {
         var _this = this;
+        console.log(group);
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(function (data) {
             //this.basketGroups.push(data);
@@ -243,6 +245,20 @@ var BasketAdministrationComponent = /** @class */ (function () {
         }, function (err) {
             _this.notify.error(err.error.errors);
         });
+    };
+    BasketAdministrationComponent.prototype.unlinkAction = function (group, action) {
+        var _this = this;
+        var r = confirm(this.lang.unlinkAction + ' ?');
+        if (r) {
+            action.checked = false;
+            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+                .subscribe(function (data) {
+                //this.basketGroups.push(data);
+                _this.notify.success(_this.lang.basketUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
     };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),
@@ -470,28 +486,15 @@ var BasketAdministrationSettingsModalComponent = /** @class */ (function (_super
     return BasketAdministrationSettingsModalComponent;
 }(autocomplete_plugin_1.AutoCompletePlugin));
 exports.BasketAdministrationSettingsModalComponent = BasketAdministrationSettingsModalComponent;
-var forms_1 = require("@angular/forms");
 var BasketAdministrationGroupListModalComponent = /** @class */ (function () {
-    function BasketAdministrationGroupListModalComponent(http, data, dialogRef, _formBuilder) {
+    function BasketAdministrationGroupListModalComponent(http, data, dialogRef) {
         this.http = http;
         this.data = data;
         this.dialogRef = dialogRef;
-        this._formBuilder = _formBuilder;
         this.lang = translate_component_1.LANG;
-        this.displayedColumns = ['label_action'];
         this.actionAll = [];
         this.newBasketGroup = {};
     }
-    BasketAdministrationGroupListModalComponent.prototype.applyFilter = function (filterValue) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    };
-    BasketAdministrationGroupListModalComponent.prototype.applyFilter2 = function (filterValue) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource2.filter = filterValue;
-    };
     BasketAdministrationGroupListModalComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
@@ -507,20 +510,8 @@ var BasketAdministrationGroupListModalComponent = /** @class */ (function () {
                 tmpAction.checked = false;
                 _this.actionAll.push(tmpAction);
             });
-            _this.dataSource = new material_1.MatTableDataSource(_this.actionAll);
-            _this.dataSource.sort = _this.sort;
-            _this.dataSource.paginator = _this.paginator;
-            _this.dataSource2 = new material_1.MatTableDataSource(_this.actionAll);
-            _this.dataSource2.sort = _this.sort;
-            _this.dataSource2.paginator = _this.paginator2;
         }, function (err) {
             location.href = "index.php";
-        });
-        this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', forms_1.Validators.required]
-        });
-        this.secondFormGroup = this._formBuilder.group({
-            secondCtrl: ['', forms_1.Validators.required]
         });
         this.data.groups.forEach(function (tmpGroup) {
             _this.data.linkedGroups.forEach(function (tmpLinkedGroup) {
@@ -531,50 +522,27 @@ var BasketAdministrationGroupListModalComponent = /** @class */ (function () {
             });
         });
     };
-    BasketAdministrationGroupListModalComponent.prototype.initAction = function (actionType) {
-        this.dataSource.filter = actionType.value;
-    };
-    BasketAdministrationGroupListModalComponent.prototype.selectDefaultAction = function (action) {
-        this.actionAll.forEach(function (tmpAction) {
-            if (action.id == tmpAction.id) {
-                tmpAction.checked = true;
-                tmpAction.default_action_list = true;
-            }
-            else {
-                tmpAction.checked = false;
-                tmpAction.default_action_list = false;
-            }
-        });
-    };
-    BasketAdministrationGroupListModalComponent.prototype.selectAction = function (e, action) {
-        action.checked = e.checked;
-    };
-    BasketAdministrationGroupListModalComponent.prototype.validateForm = function () {
-        this.newBasketGroup.group_id = this.groupId;
-        this.newBasketGroup.basket_id = this.data.basketId;
-        this.newBasketGroup.result_page = 'list_with_attachments';
-        this.newBasketGroup.groupActions = this.actionAll;
+    BasketAdministrationGroupListModalComponent.prototype.validateForm = function (group) {
+        if (this.data.linkedGroups.length == 0) {
+            this.newBasketGroup.result_page = 'list_with_attachments';
+            this.actionAll[0].used_in_action_page = true;
+            this.actionAll[0].default_action_list = true;
+            this.actionAll[0].checked = true;
+            this.newBasketGroup.groupActions = this.actionAll;
+        }
+        else {
+            this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length - 1]));
+        }
+        this.newBasketGroup.group_id = group.group_id;
         this.dialogRef.close(this.newBasketGroup);
     };
-    __decorate([
-        core_1.ViewChild(material_1.MatSort),
-        __metadata("design:type", material_1.MatSort)
-    ], BasketAdministrationGroupListModalComponent.prototype, "sort", void 0);
-    __decorate([
-        core_1.ViewChild('paginator'),
-        __metadata("design:type", material_1.MatPaginator)
-    ], BasketAdministrationGroupListModalComponent.prototype, "paginator", void 0);
-    __decorate([
-        core_1.ViewChild('paginator2'),
-        __metadata("design:type", material_1.MatPaginator)
-    ], BasketAdministrationGroupListModalComponent.prototype, "paginator2", void 0);
     BasketAdministrationGroupListModalComponent = __decorate([
         core_1.Component({
             templateUrl: angularGlobals["basket-administration-groupList-modalView"],
             styles: [".mat-dialog-content{height: 65vh;}"]
         }),
         __param(1, core_1.Inject(material_1.MAT_DIALOG_DATA)),
-        __metadata("design:paramtypes", [http_1.HttpClient, Object, material_1.MatDialogRef, forms_1.FormBuilder])
+        __metadata("design:paramtypes", [http_1.HttpClient, Object, material_1.MatDialogRef])
     ], BasketAdministrationGroupListModalComponent);
     return BasketAdministrationGroupListModalComponent;
 }());
