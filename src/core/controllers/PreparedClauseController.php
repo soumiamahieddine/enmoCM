@@ -92,9 +92,11 @@ class PreparedClauseController
 
                 $allSubEntities = [];
                 foreach ($aEntities as $entity) {
-                    $subEntitiesForEntity = EntityModel::getEntityChildren(['entityId' => trim($entity)]);
-                    unset($subEntitiesForEntity[0]);
-                    $allSubEntities = array_merge($allSubEntities, $subEntitiesForEntity);
+                    if (!empty($entity)) {
+                        $subEntitiesForEntity = EntityModel::getEntityChildren(['entityId' => trim($entity)]);
+                        unset($subEntitiesForEntity[0]);
+                        $allSubEntities = array_merge($allSubEntities, $subEntitiesForEntity);
+                    }
                 }
 
                 $allSubEntitiesClause = '';
