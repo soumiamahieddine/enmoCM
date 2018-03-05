@@ -63,8 +63,8 @@ class ParameterController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']);
-        $check = $check && Validator::intVal()->validate($data['param_value_int']);
-        $check = $check && Validator::stringType()->validate($data['param_value_string']);
+        $check = $check && (empty($data['param_value_int']) || Validator::intVal()->validate($data['param_value_int']));
+        $check = $check && (empty($data['param_value_string']) || Validator::stringType()->validate($data['param_value_string']));
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -100,8 +100,8 @@ class ParameterController
 
         $data = $request->getParams();
 
-        $check = Validator::intVal()->validate($data['param_value_int']);
-        $check = $check && Validator::stringType()->validate($data['param_value_string']);
+        $check = (empty($data['param_value_int']) || Validator::intVal()->validate($data['param_value_int']));
+        $check = $check && (empty($data['param_value_string']) || Validator::stringType()->validate($data['param_value_string']));
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
