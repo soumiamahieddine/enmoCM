@@ -23,17 +23,14 @@ use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
 use Link\models\LinkModel;
 use Note\models\NoteModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
-//TODO Require once
-require_once 'modules/basket/class/class_modules_tools.php';
-require_once 'core/class/class_core_tools.php';
 
 class VisaController
 {
@@ -41,7 +38,6 @@ class VisaController
     {
         $resId = $aArgs['resId'];
         $_SESSION['doc_id'] = $resId; //TODO Set session for some actions
-        $collId = 'letterbox_coll';
 
         if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -51,17 +47,26 @@ class VisaController
             return $response->withStatus(500)->withJson(['errors' => _UNREACHABLE_DOCSERVER]);
         }
 
-        $documents = $this->getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
+        $documents = VisaController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
         if (!empty($documents['error'])) {
             return $response->withJson($documents);
         }
 
-        $basket = new \basket();
-        $actions = $basket->get_actions_from_current_basket($resId, $collId, 'PAGE_USE', true);
-
-        $actionsData = [];
-        foreach ($actions as $value) {
-            $actionsData[] = ['value' => $value['VALUE'], 'label' => $value['LABEL']];
+        $actions = [];
+        $rawActions = ActionModel::getForBasketPage(['basketId' => $aArgs['basketId'], 'groupId' => $aArgs['groupId']]);
+        foreach ($rawActions as $rawAction) {
+            if ($rawAction['default_action_list'] == 'Y') {
+                $actions[] = ['value' => 'end_action', 'label' => $rawAction['label_action'] . ' ('. _BY_DEFAULT .')'];
+            } else {
+                if (empty($rawAction->where_clause)) {
+                    $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
+                } else {
+                    $ressource = ResModel::get(['where' => ['res_id = ?', $rawAction->where_clause], 'data' => [$resId]]);
+                    if (!empty($ressource)) {
+                        $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
+                    }
+                }
+            }
         }
 
         $actionLabel = (_ID_TO_DISPLAY == 'res_id' ? $documents[0]['res_id'] : $documents[0]['alt_id']);
@@ -79,8 +84,8 @@ class VisaController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $datas = [];
-        $datas['actions']       = $actionsData;
-        $datas['attachments']   = $this->getAttachmentsForSignatureBook(['resId' => $resId]);
+        $datas['actions']       = $actions;
+        $datas['attachments']   = VisaController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
         $datas['documents']     = $documents;
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
@@ -96,7 +101,7 @@ class VisaController
         return $response->withJson($datas);
     }
 
-    public function unsignFile(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function unsignFile(Request $request, Response $response, array $aArgs)
     {
         AttachmentModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
 
@@ -114,21 +119,17 @@ class VisaController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getIncomingMailAndAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getIncomingMailAndAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        $resId = $aArgs['resId'];
-
-        return $response->withJson($this->getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]));
+        return $response->withJson(VisaController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $aArgs['resId']]));
     }
 
-    public function getAttachmentsById(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        $resId = $aArgs['resId'];
-
-        return $response->withJson($this->getAttachmentsForSignatureBook(['resId' => $resId]));
+        return $response->withJson(VisaController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
-    private function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
+    private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
     {
         $resId = $aArgs['resId'];
 
@@ -199,8 +200,11 @@ class VisaController
         return $documents;
     }
 
-    private function getAttachmentsForSignatureBook(array $aArgs = [])
+    private static function getAttachmentsForSignatureBook(array $aArgs)
     {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         $orderBy = "CASE attachment_type WHEN 'response_project' THEN 1";
@@ -225,8 +229,8 @@ class VisaController
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = ServiceModel::hasService(['id' => 'modify_attachments', 'userId' => $_SESSION['user']['UserId'], 'location' => 'attachments', 'type' => 'use']);
-        $canDelete = ServiceModel::hasService(['id' => 'delete_attachments', 'userId' => $_SESSION['user']['UserId'], 'location' => 'attachments', 'type' => 'use']);
+        $canModify = ServiceModel::hasService(['id' => 'modify_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
+        $canDelete = ServiceModel::hasService(['id' => 'delete_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
@@ -284,10 +288,10 @@ class VisaController
 
             $attachments[$key]['canModify'] = false;
             $attachments[$key]['canDelete'] = false;
-            if ($canModify || $value['typist'] == $_SESSION['user']['UserId']) {
+            if ($canModify || $value['typist'] == $aArgs['userId']) {
                 $attachments[$key]['canModify'] = true;
             }
-            if ($canDelete || $value['typist'] == $_SESSION['user']['UserId']) {
+            if ($canDelete || $value['typist'] == $aArgs['userId']) {
                 $attachments[$key]['canDelete'] = true;
             }
 
@@ -385,11 +389,12 @@ class VisaController
                 $resList[$key]['sender'] = $value['user_firstname'] . ' ' . $value['user_lastname'];
             }
 
+            $priority = PriorityModel::getById(['id' => $value['priority'], 'select' => ['color', 'label']]);
             $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
             $resList[$key]['process_limit_date'] = (empty($resList[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resList[$key]['process_limit_date'])));
             $resList[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
-            $resList[$key]['priorityColor'] = $_SESSION['mail_priorities_color'][$value['priority']]; //TODO No Session
-            $resList[$key]['priorityLabel'] = $_SESSION['mail_priorities'][$value['priority']]; //TODO No Session
+            $resList[$key]['priorityColor'] = $priority['color'];
+            $resList[$key]['priorityLabel'] = $priority['label'];
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
 

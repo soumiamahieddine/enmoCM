@@ -36,16 +36,14 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         _this.http = http;
         _this.notify = notify;
         _this.dialog = dialog;
-        _this.search = null;
-        _this.users = [];
-        _this.userDestRedirect = {};
-        _this.userDestRedirectModels = [];
         _this.lang = translate_component_1.LANG;
         _this.loading = false;
         _this.data = [];
         _this.config = {};
-        _this.displayedColumns = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
+        _this.userDestRedirect = {};
+        _this.userDestRedirectModels = [];
         _this.dataSource = new material_1.MatTableDataSource(_this.data);
+        _this.displayedColumns = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
         $j("link[href='merged_css.php']").remove();
         _this.mobileQuery = media.matchMedia('(max-width: 768px)');
         _this._mobileQueryListener = function () { return changeDetectorRef.detectChanges(); };
@@ -66,8 +64,7 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         this.loading = true;
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe(function (data) {
-            _this.users = data['users'];
-            _this.data = _this.users;
+            _this.data = data['users'];
             _this.loading = false;
             setTimeout(function () {
                 _this.dataSource = new material_1.MatTableDataSource(_this.data);
@@ -81,7 +78,6 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
     UsersAdministrationComponent.prototype.suspendUser = function (user) {
         var _this = this;
         if (user.inDiffListDest == 'Y') {
-            user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
@@ -102,16 +98,16 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                             else {
                                 //then suspend user
                                 _this.http.put(_this.coreUrl + 'rest/users/' + user.id, user)
-                                    .subscribe(function (data) {
+                                    .subscribe(function () {
                                     user.inDiffListDest = 'N';
-                                    _this.notify.success(_this.lang.userSuspended + ' « ' + user.user_id + ' »');
+                                    _this.notify.success(_this.lang.userSuspended);
                                 }, function (err) {
                                     user.enabled = 'Y';
-                                    _this.notify.error(JSON.parse(err._body).errors);
+                                    _this.notify.error(err.error.errors);
                                 });
                             }
                         }, function (err) {
-                            _this.notify.error(JSON.parse(err._body).errors);
+                            _this.notify.error(err.error.errors);
                         });
                     }
                     _this.dialogRef = null;
@@ -126,11 +122,11 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
-                    .subscribe(function (data) {
-                    _this.notify.success(_this.lang.userSuspended + ' « ' + user.user_id + ' »');
+                    .subscribe(function () {
+                    _this.notify.success(_this.lang.userSuspended);
                 }, function (err) {
                     user.enabled = 'Y';
-                    _this.notify.error(JSON.parse(err._body).errors);
+                    _this.notify.error(err.error.errors);
                 });
             }
         }
@@ -141,18 +137,17 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
-                .subscribe(function (data) {
-                _this.notify.success(_this.lang.userAuthorized + ' « ' + user.user_id + ' »');
+                .subscribe(function () {
+                _this.notify.success(_this.lang.userAuthorized);
             }, function (err) {
                 user.enabled = 'N';
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
     };
     UsersAdministrationComponent.prototype.deleteUser = function (user) {
         var _this = this;
         if (user.inDiffListDest == 'Y') {
-            user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe(function (data) {
@@ -171,38 +166,45 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                             else {
                                 //then delete user
                                 _this.http.delete(_this.coreUrl + 'rest/users/' + user.id)
-                                    .subscribe(function (data) {
-                                    user.inDiffListDest = 'N';
-                                    _this.data = data.users;
+                                    .subscribe(function () {
+                                    for (var i in _this.data) {
+                                        if (_this.data[i].id == user.id) {
+                                            _this.data.splice(Number(i), 1);
+                                        }
+                                    }
                                     _this.dataSource = new material_1.MatTableDataSource(_this.data);
                                     _this.dataSource.paginator = _this.paginator;
                                     _this.dataSource.sort = _this.sort;
                                     _this.notify.success(_this.lang.userDeleted + ' « ' + user.user_id + ' »');
                                 }, function (err) {
-                                    _this.notify.error(JSON.parse(err._body).errors);
+                                    _this.notify.error(err.error.errors);
                                 });
                             }
                         }, function (err) {
-                            _this.notify.error(JSON.parse(err._body).errors);
+                            _this.notify.error(err.error.errors);
                         });
                     }
                 });
             }, function (err) {
-                _this.notify.error(JSON.parse(err._body).errors);
+                _this.notify.error(err.error.errors);
             });
         }
         else {
             var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + user.user_id + ' »');
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
-                    .subscribe(function (data) {
-                    _this.data = data.users;
+                    .subscribe(function () {
+                    for (var i in _this.data) {
+                        if (_this.data[i].id == user.id) {
+                            _this.data.splice(Number(i), 1);
+                        }
+                    }
                     _this.dataSource = new material_1.MatTableDataSource(_this.data);
                     _this.dataSource.paginator = _this.paginator;
                     _this.dataSource.sort = _this.sort;
-                    _this.notify.success(_this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                    _this.notify.success(_this.lang.userDeleted);
                 }, function (err) {
-                    _this.notify.error(JSON.parse(err._body).errors);
+                    _this.notify.error(err.error.errors);
                 });
             }
         }
