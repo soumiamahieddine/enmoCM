@@ -364,6 +364,15 @@ var UserAdministrationComponent = /** @class */ (function (_super) {
     UserAdministrationComponent.prototype.delBasketRedirection = function (i) {
         this.user.baskets[i].userToDisplay = '';
     };
+    UserAdministrationComponent.prototype.toggleBasket = function (basket) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", { "basketId": basket.basket_id, "groupSerialId": basket.groupSerialId, "allowed": basket.allowed })
+            .subscribe(function (data) {
+            _this.notify.success(_this.lang.basketUpdated);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+    };
     UserAdministrationComponent.prototype.activateAbsence = function () {
         var _this = this;
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "ABS" })
