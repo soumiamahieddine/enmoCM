@@ -77,6 +77,12 @@ var BasketsAdministrationComponent = /** @class */ (function () {
                 _this.dataSource = new material_1.MatTableDataSource(_this.baskets);
                 _this.dataSource.paginator = _this.paginator;
                 _this.dataSource.sort = _this.sort;
+                _this.http.get(_this.coreUrl + "rest/sortedBaskets")
+                    .subscribe(function (data) {
+                    _this.basketsOrder = data['baskets'];
+                }, function () {
+                    location.href = "index.php";
+                });
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
