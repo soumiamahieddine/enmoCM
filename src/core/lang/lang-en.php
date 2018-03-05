@@ -27,6 +27,7 @@ define('_BASKET_GROUP_SUPPRESSION', 'Group deleted for basket');
 define('_BASKET_MODIFICATION', 'Basket modification');
 define('_BASKET_SUPPRESSION', 'Basket suppression');
 define('_BASKETS_SORT_MODIFICATION', 'Baskets order modification');
+define('_BY_DEFAULT', 'by default');
 define('_DELETE_NOTIFICATIONS', 'Notification deleted');
 define('_DEST_USER', 'Recipient');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Doctype first level added');

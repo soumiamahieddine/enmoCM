@@ -27,6 +27,7 @@ define('_BASKET_GROUP_SUPPRESSION', 'Groupe supprimé pour bannette');
 define('_BASKET_MODIFICATION', 'Modification bannette');
 define('_BASKET_SUPPRESSION', 'Suppression bannette');
 define('_BASKETS_SORT_MODIFICATION', 'Modification ordre bannettes');
+define('_BY_DEFAULT', 'par défaut');
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
