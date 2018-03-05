@@ -31,7 +31,7 @@ if (empty($user)) {
     \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'changePassword' => 'N']]);
     $user = \User\models\UserModel::getByUserId(['userId' => $idToken->sub]);
     \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => 'AGENT']);
-    \User\models\UserModel::addEntity(['id' => $user['id'], 'entityId' => 'VILLE', 'primaryEntity' => 'Y']);
+    \User\models\UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => 'VILLE', 'primaryEntity' => 'Y']);
 }
 
 $_SESSION['ozwillo']['userId'] =  $idToken->sub;

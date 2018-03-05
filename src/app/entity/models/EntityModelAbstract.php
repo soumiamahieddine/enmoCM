@@ -222,9 +222,12 @@ class EntityModelAbstract
                 $allEntities[$key]['icon'] = "fa fa-sitemap";
             }
             $allEntities[$key]['text'] = $value['entity_label'];
-            if (in_array($value['entity_id'], $userEntities) || !in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {
+            if (in_array($value['entity_id'], $userEntities)) {
                 $allEntities[$key]['state']['opened'] = true;
                 $allEntities[$key]['state']['selected'] = true;
+            }
+            if (!in_array($value['entity_id'], $entitiesAllowedForAdministrator)) {
+                $allEntities[$key]['state']['disabled'] = true;
             }
         }
 

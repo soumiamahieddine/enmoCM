@@ -19,6 +19,7 @@ use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserBasketPreferenceModel;
 use User\models\UserModel;
 
 class BasketModelAbstract
@@ -397,31 +398,40 @@ class BasketModelAbstract
 
         $aBaskets = [];
         if (!empty($groupIds)) {
-            $where = ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'];
+            $where = ['groupbasket.group_id in (?)', 'groupbasket.basket_id = baskets.basket_id', 'groupbasket.group_id = usergroups.group_id'];
             $data = [$groupIds];
             if (!empty($aArgs['unneededBasketId'])) {
                 $where[] = 'groupbasket.basket_id not in (?)';
                 $data[]  = $aArgs['unneededBasketId'];
             }
             $aBaskets = DatabaseModel::select([
-                    'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc', 'basket_clause'],
-                    'table'     => ['groupbasket, baskets'],
+                    'select'    => ['usergroups.id as groupSerialId', 'groupbasket.basket_id', 'groupbasket.group_id', 'basket_name', 'basket_desc', 'basket_clause'],
+                    'table'     => ['groupbasket, baskets, usergroups'],
                     'where'     => $where,
                     'data'      => $data,
-                    'order_by'  => ['group_id, basket_order, basket_name']
+                    'order_by'  => ['groupbasket.group_id, basket_order, basket_name']
             ]);
 
+            $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
             foreach ($aBaskets as $key => $value) {
+                unset($aBaskets[$key]['groupserialid']);
+                $aBaskets[$key]['groupSerialId'] = $value['groupserialid'];
                 $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
                 $aBaskets2 = DatabaseModel::select([
                         'select'    => ['new_user'],
                         'table'     => ['user_abs'],
                         'where'     => ['user_abs = ?', 'basket_id = ?'],
-                        'data'      => [$aArgs['userId'],$value['basket_id']],
+                        'data'      => [$aArgs['userId'], $value['basket_id']],
                 ]);
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
+                $userPref = UserBasketPreferenceModel::get([
+                    'select'    => [1],
+                    'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                    'data'      => [$user['id'], $value['groupserialid'], $value['basket_id']]
+                ]);
+                $aBaskets[$key]['allowed'] = !empty($userPref);
             }
             $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
         }

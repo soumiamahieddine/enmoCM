@@ -28,6 +28,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\controllers\StoreController;
 use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class UserController
@@ -50,6 +51,8 @@ class UserController
                 'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
                 'entities'  => $entities
             ]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail']]);
+            $users = array_merge($users, $usersNoEntities);
         }
 
         $usersIds = [];
@@ -635,7 +638,7 @@ class UserController
             $pEntity = 'Y';
         }
 
-        UserModel::addEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId'], 'role' => $data['role'], 'primaryEntity' => $pEntity]);
+        UserEntityModel::addUserEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId'], 'role' => $data['role'], 'primaryEntity' => $pEntity]);
         HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $user['user_id'],
@@ -666,7 +669,7 @@ class UserController
             $data['user_role'] = '';
         }
 
-        UserModel::updateEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
+        UserEntityModel::updateUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
         HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $aArgs['id'],
@@ -690,7 +693,7 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        UserModel::updatePrimaryEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
+        UserEntityModel::updateUserPrimaryEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         return $response->withJson(['entities' => UserModel::getEntitiesById(['userId' => $user['user_id']])]);
     }
@@ -707,10 +710,10 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
-        UserModel::deleteEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
+        UserEntityModel::deleteUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         if (!empty($primaryEntity['entity_id']) && $primaryEntity['entity_id'] == $aArgs['entityId']) {
-            UserModel::reassignPrimaryEntity(['userId' => $user['user_id']]);
+            UserEntityModel::reassignUserPrimaryEntity(['userId' => $user['user_id']]);
         }
 
         HistoryController::add([
@@ -834,6 +837,8 @@ class UserController
                         'select'    => ['users.id'],
                         'entities'  => $entities
                     ]);
+                    $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
+                    $users = array_merge($users, $usersNoEntities);
                     $allowed = false;
                     foreach ($users as $value) {
                         if ($value['id'] == $aArgs['id']) {
