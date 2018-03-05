@@ -140,13 +140,13 @@ export class ProfileComponent implements OnInit {
                 setTimeout(() => {
                     $j("#absenceUser").typeahead({
                         order: "asc",
-                        display: "formattedUser",
-                        templateValue: "{{user_id}}",
+                        display: "idToDisplay",
+                        templateValue: "{{id}}",
                         source: {
                             ajax: {
                                 type: "GET",
                                 dataType: "json",
-                                url: this.coreUrl + "rest/users/autocompleter",
+                                url: this.coreUrl + "rest/autocomplete/users",
                             }
                         }
                     });

@@ -124,13 +124,13 @@ var ProfileComponent = /** @class */ (function () {
             setTimeout(function () {
                 $j("#absenceUser").typeahead({
                     order: "asc",
-                    display: "formattedUser",
-                    templateValue: "{{user_id}}",
+                    display: "idToDisplay",
+                    templateValue: "{{id}}",
                     source: {
                         ajax: {
                             type: "GET",
                             dataType: "json",
-                            url: _this.coreUrl + "rest/users/autocompleter",
+                            url: _this.coreUrl + "rest/autocomplete/users",
                         }
                     }
                 });
