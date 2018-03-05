@@ -774,16 +774,15 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
         }
 
-        $preference = UserBasketPreferenceModel::get([
-            'select'    => [1],
-            'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
-            'data'      => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
-        ]);
-        if (!empty($preference)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
-        }
-
         if ($data['allowed']) {
+            $preference = UserBasketPreferenceModel::get([
+                'select'    => [1],
+                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                'data'      => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
+            ]);
+            if (!empty($preference)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
+            }
             $data['userSerialId'] = $aArgs['id'];
             $data['display'] = 'true';
             UserBasketPreferenceModel::create($data);
