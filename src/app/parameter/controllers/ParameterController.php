@@ -63,8 +63,15 @@ class ParameterController
         $data = $request->getParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']);
+        $check = $check && Validator::intVal()->validate($data['param_value_int']);
+        $check = $check && Validator::stringType()->validate($data['param_value_string']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $parameter = ParameterModel::getById(['id' => $data['id']]);
+        if (!empty($parameter)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Parameter already exists']);
         }
 
         ParameterModel::create($data);
@@ -92,6 +99,12 @@ class ParameterController
         }
 
         $data = $request->getParams();
+
+        $check = Validator::intVal()->validate($data['param_value_int']);
+        $check = $check && Validator::stringType()->validate($data['param_value_string']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
 
         $data['id'] = $aArgs['id'];
         ParameterModel::update($data);

@@ -76,13 +76,13 @@
                         </div>
                         <div class="col-sm-6">
                             <mat-form-field *ngIf="type == 'string'">
-                                <input matInput [(ngModel)]="parameter.param_value_string" name="paramValueString" type="text" placeholder="{{lang.value}}">
+                                <input matInput [(ngModel)]="parameter.param_value_string" name="paramValueString" type="text" placeholder="{{lang.value}}" required>
                             </mat-form-field>
                             <mat-form-field *ngIf="type == 'int'">
-                                <input matInput [(ngModel)]="parameter.param_value_int" name="paramValueInt" type="number" placeholder="{{lang.value}}">
+                                <input matInput [(ngModel)]="parameter.param_value_int" name="paramValueInt" type="number" placeholder="{{lang.value}}" pattern="^[0-9]*$" required>
                             </mat-form-field>
                             <mat-form-field *ngIf="type == 'date'">
-                                <input matInput [(ngModel)]="parameter.param_value_date" name="paramValueDate" [matDatepicker]="picker" placeholder="{{lang.date}}">
+                                <input matInput [(ngModel)]="parameter.param_value_date" name="paramValueDate" [matDatepicker]="picker" placeholder="{{lang.date}}" required>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker startView="month"></mat-datepicker>
                             </mat-form-field>
