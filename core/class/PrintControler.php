@@ -271,7 +271,12 @@ class PrintControler extends PrintFunctions
 				$pdf->SetY($pdf->GetY()+4);
                 
 				//TITLE
-				$pdf->Cell(182,5,utf8_decode(_PRINTED_FILE_NUMBER . ' : ') . $this->array_print[$cpt]['res_id'],1,1, 'C', false);
+                if($this->array_print[$cpt]['alt_identifier'] <> '' && _ID_TO_DISPLAY == 'chrono_number'){
+                    $fileNumber = $this->array_print[$cpt]['alt_identifier'];
+                } else {
+                    $fileNumber = $this->array_print[$cpt]['res_id'];
+                }
+				$pdf->Cell(182,5,utf8_decode(_PRINTED_FILE_NUMBER . ' : ') . $fileNumber, 1, 1, 'C', false);
 				
 				//BREAK A LINE
 				$pdf->SetY($pdf->GetY()+4);
@@ -741,20 +746,17 @@ class PrintFunctions
 	
 	function free_notes($libelle)
 	{
-		foreach($this->object_print as $line_name => $line_value) {
-			$return = "";
-			$return = "NOTE 1\r\n"
-				. "__________________________________"
-				. "__________________________________"
-				. "_______________\r\n";
-			$return .= "NOTE 2\r\n"
-				. "__________________________________"
-				. "__________________________________"
-				. "_______________\r\n";
-			$return .= "NOTE 3\r\n\r\n";
-			
-			$line_value->free_notes = $return;
-		}
+        foreach($this->object_print as $line_name => $line_value) {
+            $return = "";
+            $line   = "";
+            foreach($_SESSION['features']['notes_in_print_page'] as $value) {
+    			$return .= $line . $value."\r\n\r\n\r\n";
+                $line = "__________________________________"
+                    . "__________________________________"
+                    . "_______________\r\n";
+            }
+    		$line_value->free_notes = $return;
+        }
 	}
 	
 	function retrieve_notes($libelle)

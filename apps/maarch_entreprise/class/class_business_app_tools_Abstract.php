@@ -670,6 +670,11 @@ abstract class business_app_tools_Abstract extends Database
             }elseif(strtoupper($send_to_contact_with_mandatory_attachment) == 'FALSE'){
                 $_SESSION['features']['send_to_contact_with_mandatory_attachment'] = FALSE;
             }
+            if(!empty($feats->notes_in_print_page->label)){
+                foreach ($feats->notes_in_print_page->label as $value) {
+                    $_SESSION['features']['notes_in_print_page'][] = (string) $value;
+                }
+            }
         }
     }
 
