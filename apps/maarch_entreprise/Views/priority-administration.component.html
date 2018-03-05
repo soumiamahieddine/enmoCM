@@ -64,7 +64,7 @@
                                 <span matPrefix>
                                     <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;</span>
                                 <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
-                                    required pattern="^(?!0*(\.0+)?$)(\d+|\d*\.\d+)$">
+                                    required pattern="^\d+$">
                             </mat-form-field>
                         </div>
                         <div class="col-md-6">
