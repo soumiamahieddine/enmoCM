@@ -71,7 +71,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket already exists']);
         }
 
-        if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
@@ -112,7 +112,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if (!PreparedClauseController::isClauseValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 

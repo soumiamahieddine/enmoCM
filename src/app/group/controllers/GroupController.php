@@ -9,6 +9,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class GroupController
 {
@@ -60,7 +61,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Group already exists']);
         }
 
-        if (!PreparedClauseController::isClauseValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
@@ -92,7 +93,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if (!PreparedClauseController::isClauseValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
@@ -180,6 +181,26 @@ class GroupController
         GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function getGroupsClause(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        $groups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
+        $groupsClause = '';
+        foreach ($groups as $key => $group) {
+            if (!empty($group['where_clause'])) {
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'userId' => $aArgs['userId']]);
+                if ($key > 0) {
+                    $groupsClause .= ' or ';
+                }
+                $groupsClause .= "({$groupClause})";
+            }
+        }
+
+        return $groupsClause;
     }
 
     public static function arraySort($aArgs)

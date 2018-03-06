@@ -211,10 +211,11 @@ class PreparedClauseController
         return $clause;
     }
 
-    public static function isClauseValid(array $aArgs)
+    public static function isRequestValid(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['clause', 'userId']);
         ValidatorModel::stringType($aArgs, ['clause', 'userId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $clause = PreparedClauseController::getPreparedClause(['clause' => $aArgs['clause'], 'userId' => $aArgs['userId']]);
 
@@ -223,8 +224,12 @@ class PreparedClauseController
             return false;
         }
 
+        if (empty($aArgs['select'])) {
+            $aArgs['select'] = [1];
+        }
+
         try {
-            ResModel::getOnView(['select' => [1], 'where' => [$clause]]);
+            ResModel::getOnView(['select' => $aArgs['select'], 'where' => [$clause]]);
         } catch (\Exception $e) {
             return false;
         }

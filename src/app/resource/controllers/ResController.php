@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use Basket\models\BasketModel;
+use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use SrcCore\controllers\StoreController;
 use Group\models\ServiceModel;
@@ -215,89 +216,32 @@ class ResController
         return false;
     }
 
-
-    //TODO REFACTORING
-    public function getListDocs(Request $request, Response $response, array $aArgs)
+    public function getList(Request $request, Response $response)
     {
-        $clause = $aArgs['clause'];
-        $clause_elem = explode("&",$clause);
+        $data = $request->getParams();
 
-        $tab_where = array();
-        foreach ($clause_elem as $elem) {
-            $tmp = explode("=",$elem);
-            $column = $tmp[0];
-            $values = explode(",",$tmp[1]);
-            $tmp_values = array();
-            foreach ($values as $v) {
-                if (!empty($v)){
-                    if ($column == "date_begin"){
-                        $v_date = explode("-",$v);
-                        array_push($tmp_values, "creation_date >= '".$v_date[2]."-".$v_date[1]."-".$v_date[0]."'");
-                    }
-                    else if ($column == "date_end"){
-                        $v_date = explode("-",$v);
-                        array_push($tmp_values, "creation_date <= '".$v_date[2]."-".$v_date[1]."-".$v_date[0]." 23:59:59'");
-                    }
-                    else if ($column == "type_id"){
-                        array_push($tmp_values, "type_id = '".trim($v)."'");
-                    }
-                    else
-                        array_push($tmp_values, $column."='".trim($v)."'");
-                }
+        $check = Validator::stringType()->notEmpty()->validate($data['clause']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $select = explode(',', $data['select']);
+        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
+        }
+
+        $where = [$data['clause']];
+        if ($GLOBALS['userId'] != 'superadmin') {
+            $groupsClause = GroupController::getGroupsClause(['userId' => $GLOBALS['userId']]);
+            if (empty($groupsClause)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User has no groups']);
             }
-            if (count($tmp_values) > 0) array_push($tab_where, "(".implode(" OR ", $tmp_values).")");
+            $where[] = "({$groupsClause})";
         }
 
-        $clause = implode(" AND ", $tab_where);
-        if (empty($clause)) $clause = ' 1=1 ';
+        $resources = ResModel::getOnView(['select' => $select, 'where' => $where]);
 
-        $colSelect = $aArgs['select'];
-        $select_elem = explode(",",$colSelect);
-        $tab_tables = array();
-
-        foreach ($select_elem as $col) {
-            $c_elem=explode(".",$col);
-            if (!in_array($c_elem[0], $tab_tables)){
-                //ajout de la table
-                array_push($tab_tables,$c_elem[0]);
-
-                //ajout de la jointure
-                if ($c_elem[0] == "mlb_coll_ext")
-                    $clause .= " AND res_letterbox.res_id = mlb_coll_ext.res_id ";
-                elseif ($c_elem[0] == "doctypes")
-                    $clause .= " AND res_letterbox.type_id = doctypes.type_id ";
-                elseif ($c_elem[0] == "entities")
-                    $clause .= " AND res_letterbox.destination=entities.entity_id ";
-            }
-        }
-
-        $securityClause = $_SESSION['user']['security']['letterbox_coll']['DOC']['where'];
-        if(empty($securityClause)){
-            $securityClause = '1=2';
-        }
-
-        $clause .= ' AND ' . $securityClause;
-
-        $result = array();        
-        $resList = ResModel::getDocsByClause(
-            [
-                'select'  => [$colSelect],
-                //'table'  => implode(",",$tab_tables),
-                'clause'   => $clause
-            ]
-        );
-
-        foreach ($resList as $doc) {
-            $result_infos = array();
-            foreach ($doc as $key => $value) {
-                if (empty($value)) $result_infos[$key] = '';
-                elseif ($key=='creation_date' || ($key=='closing_date' && !empty($value)) || ($key=='process_limit_date' && !empty($value)) || ($key=='admission_date' && !empty($value))) {
-                    $result_infos[$key] = str_replace("-","/",\functions::format_date_db($value, false, '', false));
-                }
-                else $result_infos[$key] = $value;
-            }
-            array_push($result,$result_infos);            
-        }
-        return $response->withJson(['docs' => $result, 'nb_docs' => count($resList)]);
+        return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
     }
 }
