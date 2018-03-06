@@ -173,6 +173,7 @@ $app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\Attachmen
 $app->post('/res', \Resource\controllers\ResController::class . ':create');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
+$app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 
@@ -303,8 +304,5 @@ $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
-
-//liste documents
-$app->get('/res/listDocs/{clause}/{select}', \Resource\controllers\ResController::class . ':getListDocs');//TODO No clause
 
 $app->run();

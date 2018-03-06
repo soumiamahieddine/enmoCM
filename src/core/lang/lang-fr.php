@@ -41,6 +41,7 @@ define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
 define('_INVALID_CLAUSE', 'Clause non valide');
+define('_INVALID_REQUEST', 'Requête non valide');
 define('_LIST_TEMPLATE_CREATION', 'Création liste de diffusion');
 define('_LIST_TEMPLATE_MODIFICATION', 'Modification liste de diffusion');
 define('_LIST_TEMPLATE_SUPPRESSION', 'Suppression liste de diffusion');

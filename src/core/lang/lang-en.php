@@ -41,6 +41,7 @@ define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');
 define('_INVALID_CLAUSE', 'Clause is not valid');
+define('_INVALID_REQUEST', 'Request is not valid');
 define('_LIST_TEMPLATE_CREATION', 'List model creation');
 define('_LIST_TEMPLATE_MODIFICATION', 'List model modification');
 define('_LIST_TEMPLATE_SUPPRESSION', 'List model suppression');
