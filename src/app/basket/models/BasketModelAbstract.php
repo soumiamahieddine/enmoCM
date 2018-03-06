@@ -154,40 +154,6 @@ class BasketModelAbstract
         return true;
     }
 
-    public static function getGroups(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
-
-        $aGroups = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['groupbasket'],
-            'where'     => ['basket_id = ?'],
-            'data'      => [$aArgs['id']],
-            'order_by'  => $aArgs['orderBy']
-        ]);
-
-        return $aGroups;
-    }
-
-    public static function createGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'resultPage']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'resultPage']);
-
-        DatabaseModel::insert([
-            'table'         => 'groupbasket',
-            'columnsValues' => [
-                'basket_id'         => $aArgs['id'],
-                'group_id'          => $aArgs['groupId'],
-                'result_page'       => $aArgs['resultPage']
-            ]
-        ]);
-
-        return true;
-    }
-
     public static function createGroupAction(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
@@ -295,35 +261,6 @@ class BasketModelAbstract
         return true;
     }
 
-    public static function deleteGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId']);
-
-        DatabaseModel::delete([
-            'table' => 'groupbasket',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'actions_groupbaskets',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'groupbasket_redirect',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'groupbasket_status',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-
-        return true;
-    }
-
     public static function getActionsForGroupById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
@@ -345,15 +282,7 @@ class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::stringType($aArgs, ['id', 'groupId']);
 
-        $groups = BasketModel::getGroups(['id' => $aArgs['id'], 'select' => ['group_id']]);
-
-        foreach ($groups as $group) {
-            if ($group['group_id'] == $aArgs['groupId']) {
-                return true;
-            }
-        }
-
-        return false;
+        return !empty(GroupBasketModel::get(['where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $aArgs['groupId']]]));
     }
 
     public static function getResListById(array $aArgs)

@@ -16,6 +16,7 @@ namespace Basket\controllers;
 
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
+use Basket\models\GroupBasketModel;
 use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
@@ -222,7 +223,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        $groups = BasketModel::getGroups(['id' => $aArgs['id'], 'orderBy' => ['group_id']]);
+        $groups = GroupBasketModel::get(['where' => ['basket_id = ?'], 'data' => [$aArgs['id']], 'orderBy' => ['group_id']]);
         $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
@@ -320,7 +321,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group already exist for this basket']);
         }
 
-        BasketModel::createGroup(['id' => $aArgs['id'], 'groupId' => $data['group_id'], 'resultPage' => $data['result_page']]);
+        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $data['group_id'], 'resultPage' => $data['result_page']]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
@@ -396,9 +397,9 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
         }
 
-        BasketModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
 
-        BasketModel::createGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'resultPage' => $data['result_page']]);
+        GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'resultPage' => $data['result_page']]);
         foreach ($data['groupActions'] as $groupAction) {
             if ($groupAction['checked']) {
                 BasketModel::createGroupAction([
@@ -458,7 +459,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        BasketModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
