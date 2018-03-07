@@ -318,6 +318,7 @@ class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
         ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
+        ValidatorModel::boolType($aArgs, ['absenceUneeded']);
 
         $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupIds = [];
@@ -362,7 +363,9 @@ class BasketModelAbstract
                 ]);
                 $aBaskets[$key]['allowed'] = !empty($userPref);
             }
-            $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            if (empty($aArgs['absenceUneeded'])) {
+                $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            }
         }
 
         return $aBaskets;
