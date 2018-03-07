@@ -49,12 +49,35 @@ class ListTemplateController
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
+
+        foreach ($listTemplates as $key => $value) {
+            if ($value['item_type'] == 'entity_id') {
+                $listTemplates[$key]['idToDisplay'] = EntityModel::getById(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['descriptionToDisplay'] = '';
+            } else {
+                $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['item_id']]);
+                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+            }
+        }
+
+        $roles = EntityModel::getRoles();
+        $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => [$listTemplates[0]['object_type']]]);
+        $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
+        foreach ($roles as $key => $role) {
+            if (!in_array($role['id'], $rolesForService)) {
+                unset($roles[$key]);
+            } elseif ($role['id'] == 'copy') {
+                $entity['roles'][$key]['id'] = 'cc';
+            }
+        }
+
         $listTemplate = [
             'object_id'     => $listTemplates[0]['object_id'],
             'object_type'   => $listTemplates[0]['object_type'],
             'title'         => $listTemplates[0]['title'],
             'description'   => $listTemplates[0]['description'],
-            'diffusionList' => $listTemplates
+            'diffusionList' => $listTemplates,
+            'roles'         => array_values($roles)
         ];
 
         return $response->withJson(['listTemplate' => $listTemplate]);
