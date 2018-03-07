@@ -49,6 +49,15 @@ class ListTemplateController
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
+        foreach ($listTemplates as $key => $value) {
+            if ($value['item_type'] == 'entity_id') {
+                $listTemplates[$key]['idToDisplay'] = EntityModel::getById(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['descriptionToDisplay'] = '';
+            } else {
+                $listTemplates[$key]['idToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['item_id']]);
+                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+            }
+        }
         $listTemplate = [
             'object_id'     => $listTemplates[0]['object_id'],
             'object_type'   => $listTemplates[0]['object_type'],
