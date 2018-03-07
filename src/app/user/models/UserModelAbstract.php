@@ -15,7 +15,6 @@
 namespace User\models;
 
 use Docserver\models\DocserverModel;
-use Entity\models\EntityModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\SecurityModel;

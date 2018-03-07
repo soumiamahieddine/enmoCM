@@ -288,7 +288,11 @@ class BasketController
         }
 
         $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
-        $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
+        if ($aArgs['id'] == 'IndexingBasket') {
+            $basketPages = BasketModel::getBasketPages();
+        } else {
+            $basketPages = BasketModel::getBasketPages(['unneeded' => ['redirect_to_action']]);
+        }
 
         return $response->withJson(['groups' => $groups, 'allGroups' => $allGroups, 'pages' => $basketPages]);
     }

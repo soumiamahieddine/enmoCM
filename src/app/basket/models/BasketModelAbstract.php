@@ -524,7 +524,7 @@ class BasketModelAbstract
         return $coloredBaskets;
     }
 
-    public static function getBasketPages(array $aArgs)
+    public static function getBasketPages(array $aArgs = [])
     {
         ValidatorModel::arrayType($aArgs, ['unneeded']);
 
