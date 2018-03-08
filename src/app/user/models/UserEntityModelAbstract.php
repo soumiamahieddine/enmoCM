@@ -29,8 +29,8 @@ class UserEntityModelAbstract
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['users', 'users_entities'],
             'left_join' => ['users.user_id = users_entities.user_id'],
-            'where'     => ['users_entities IS NULL', 'users.user_id not in (?)'],
-            'data'      => [$excludedUsers]
+            'where'     => ['users_entities IS NULL', 'users.user_id not in (?)', 'status != ?'],
+            'data'      => [$excludedUsers, 'DEL']
         ]);
 
         return $aUsersEntities;
@@ -142,5 +142,20 @@ class UserEntityModelAbstract
         ]);
 
         return true;
+    }
+
+    public static function getUsersByEntities(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entities']);
+        ValidatorModel::arrayType($aArgs, ['entities', 'select']);
+
+        $aUsers = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users, users_entities'],
+            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)', 'status != ?'],
+            'data'      => [$aArgs['entities'], 'DEL']
+        ]);
+
+        return $aUsers;
     }
 }

@@ -144,21 +144,6 @@ class UserModelAbstract
         return $aUser[0];
     }
 
-    public static function getByEntities(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['entities']);
-        ValidatorModel::arrayType($aArgs, ['entities']);
-
-        $aUsers = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users, users_entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
-            'data'      => [$aArgs['entities']]
-        ]);
-
-        return $aUsers;
-    }
-
     public static function getByEmail(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['mail']);

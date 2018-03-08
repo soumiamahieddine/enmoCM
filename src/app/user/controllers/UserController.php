@@ -48,7 +48,7 @@ class UserController
             ]);
         } else {
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-            $users = UserModel::getByEntities([
+            $users = UserEntityModel::getUsersByEntities([
                 'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
                 'entities'  => $entities
             ]);
@@ -850,7 +850,7 @@ class UserController
                 }
                 if ($GLOBALS['userId'] != 'superadmin') {
                     $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                    $users = UserModel::getByEntities([
+                    $users = UserEntityModel::getUsersByEntities([
                         'select'    => ['users.id'],
                         'entities'  => $entities
                     ]);
