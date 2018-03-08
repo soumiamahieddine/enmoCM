@@ -38,6 +38,7 @@ var DiffusionModelAdministrationComponent = /** @class */ (function (_super) {
         _this.lang = translate_component_1.LANG;
         _this.diffusionModel = {};
         _this.loading = false;
+        _this.itemTypeList = [];
         _this.displayedColumns = ['firstname', 'lastname'];
         $j("link[href='merged_css.php']").remove();
         _this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -72,6 +73,7 @@ var DiffusionModelAdministrationComponent = /** @class */ (function (_super) {
                 _this.creationMode = true;
                 _this.loading = false;
                 _this.updateBreadcrumb(angularGlobals.applicationName);
+                _this.itemTypeList = [{ "id": "VISA_CIRCUIT", "label": _this.lang.visa }, { "id": "AVIS_CIRCUIT", "label": _this.lang.avis }];
             }
             else {
                 _this.creationMode = false;
@@ -79,10 +81,9 @@ var DiffusionModelAdministrationComponent = /** @class */ (function (_super) {
                     .subscribe(function (data) {
                     _this.updateBreadcrumb(angularGlobals.applicationName);
                     _this.diffusionModel = data['listTemplate'];
-                    _this.diffusionModel.roles = [{
-                            "id": "avis",
-                            "label": "avis"
-                        }];
+                    if (_this.diffusionModel.diffusionList[0]) {
+                        _this.idCircuit = _this.diffusionModel.diffusionList[0].id;
+                    }
                     _this.loading = false;
                     setTimeout(function () {
                         _this.dataSource = new material_1.MatTableDataSource(_this.diffusionModel);
@@ -94,6 +95,156 @@ var DiffusionModelAdministrationComponent = /** @class */ (function (_super) {
                 });
             }
         });
+    };
+    DiffusionModelAdministrationComponent.prototype.addElemListModel = function (element) {
+        var _this = this;
+        var newDiffList = {
+            "object_id": this.diffusionModel.entity_id,
+            "object_type": this.diffusionModel.object_type,
+            "title": this.diffusionModel.title,
+            "description": this.diffusionModel.description,
+            "items": Array()
+        };
+        if (this.diffusionModel.object_type == 'VISA_CIRCUIT') {
+            var itemMode = 'sign';
+        }
+        else {
+            var itemMode = 'avis';
+        }
+        var newElemListModel = {
+            "id": '',
+            "item_type": 'user_id',
+            "item_mode": itemMode,
+            "item_id": element.id,
+            "sequence": this.diffusionModel.diffusionList.length,
+            "idToDisplay": element.idToDisplay,
+            "descriptionToDisplay": element.otherInfo
+        };
+        this.diffusionModel.diffusionList.forEach(function (listModel, i) {
+            listModel.sequence = i;
+            if (_this.diffusionModel.object_type == 'VISA_CIRCUIT') {
+                listModel.item_mode = "visa";
+            }
+            else {
+                listModel.item_mode = "avis";
+            }
+            newDiffList.items.push({
+                "id": listModel.id,
+                "item_id": listModel.item_id,
+                "item_type": "user_id",
+                "item_mode": listModel.item_mode,
+                "sequence": listModel.sequence
+            });
+        });
+        newDiffList.items.push(newElemListModel);
+        if (this.diffusionModel.diffusionList.length > 0) {
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuit, newDiffList)
+                .subscribe(function (data) {
+                _this.idCircuit = data.id;
+                _this.diffusionModel.diffusionList.push(newElemListModel);
+                _this.notify.success(_this.lang.diffusionModelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        else {
+            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+                .subscribe(function (data) {
+                _this.idCircuit = data.id;
+                _this.diffusionModel.diffusionList.push(newElemListModel);
+                _this.notify.success(_this.lang.diffusionModelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        this.userCtrl.setValue('');
+    };
+    DiffusionModelAdministrationComponent.prototype.updateDiffList = function () {
+        var _this = this;
+        var newDiffList = {
+            "object_id": this.diffusionModel.entity_id,
+            "object_type": this.diffusionModel.object_type,
+            "title": this.diffusionModel.title,
+            "description": this.diffusionModel.description,
+            "items": Array()
+        };
+        this.diffusionModel.diffusionList.forEach(function (listModel, i) {
+            listModel.sequence = i;
+            if (_this.diffusionModel.object_type == 'VISA_CIRCUIT') {
+                if (i == (_this.diffusionModel.diffusionList.length - 1)) {
+                    listModel.item_mode = "sign";
+                }
+                else {
+                    listModel.item_mode = "visa";
+                }
+            }
+            else {
+                listModel.item_mode = "avis";
+            }
+            newDiffList.items.push({
+                "id": listModel.id,
+                "item_id": listModel.item_id,
+                "item_type": "user_id",
+                "item_mode": listModel.item_mode,
+                "sequence": listModel.sequence
+            });
+        });
+        this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuit, newDiffList)
+            .subscribe(function (data) {
+            _this.idCircuit = data.id;
+            _this.notify.success(_this.lang.diffusionModelUpdated);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+    };
+    DiffusionModelAdministrationComponent.prototype.removeDiffList = function (template, i) {
+        var _this = this;
+        this.diffusionModel.diffusionList.splice(i, 1);
+        if (this.diffusionModel.diffusionList.length > 0) {
+            var newDiffList = {
+                "object_id": this.diffusionModel.entity_id,
+                "object_type": this.diffusionModel.object_type,
+                "title": this.diffusionModel.title,
+                "description": this.diffusionModel.description,
+                "items": Array()
+            };
+            this.diffusionModel.diffusionList.forEach(function (listModel, i) {
+                listModel.sequence = i;
+                if (_this.diffusionModel.object_type == 'VISA_CIRCUIT') {
+                    if (i == (_this.diffusionModel.diffusionList.length - 1)) {
+                        listModel.item_mode = "sign";
+                    }
+                    else {
+                        listModel.item_mode = "visa";
+                    }
+                }
+                else {
+                    listModel.item_mode = "avis";
+                }
+                newDiffList.items.push({
+                    "item_id": listModel.item_id,
+                    "item_type": "user_id",
+                    "item_mode": listModel.item_mode,
+                    "sequence": listModel.sequence
+                });
+            });
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuit, newDiffList)
+                .subscribe(function (data) {
+                _this.idCircuit = data.id;
+                _this.notify.success(_this.lang.diffusionModelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
+        else {
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuit)
+                .subscribe(function (data) {
+                _this.idCircuit = null;
+                _this.notify.success(_this.lang.diffusionModelUpdated);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
     };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),

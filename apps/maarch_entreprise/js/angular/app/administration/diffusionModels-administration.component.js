@@ -52,7 +52,11 @@ var DiffusionModelsAdministrationComponent = /** @class */ (function () {
         this.loading = true;
         this.http.get(this.coreUrl + "rest/listTemplates")
             .subscribe(function (data) {
-            _this.listTemplates = data['listTemplates'];
+            data['listTemplates'].forEach(function (template) {
+                if (template.object_id.indexOf('VISA_CIRCUIT_') != -1 || template.object_id.indexOf('AVIS_CIRCUIT_') != -1) {
+                    _this.listTemplates.push(template);
+                }
+            });
             _this.loading = false;
             setTimeout(function () {
                 _this.dataSource = new material_1.MatTableDataSource(_this.listTemplates);
@@ -65,18 +69,27 @@ var DiffusionModelsAdministrationComponent = /** @class */ (function () {
     };
     DiffusionModelsAdministrationComponent.prototype.delete = function (listTemplate) {
         var _this = this;
-        this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
-            .subscribe(function (data) {
-            setTimeout(function () {
-                _this.listTemplates = data['listTemplates'];
-                _this.dataSource = new material_1.MatTableDataSource(_this.listTemplates);
-                _this.dataSource.paginator = _this.paginator;
-                _this.dataSource.sort = _this.sort;
-            }, 0);
-            _this.notify.success(_this.lang.groupDeleted);
-        }, function (err) {
-            _this.notify.error(err.error.errors);
-        });
+        var r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + listTemplate.title + ' »');
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
+                .subscribe(function (data) {
+                setTimeout(function () {
+                    var i = 0;
+                    _this.listTemplates.forEach(function (template) {
+                        if (template.id == listTemplate['id']) {
+                            _this.listTemplates.splice(i, 1);
+                        }
+                        i++;
+                    });
+                    _this.dataSource = new material_1.MatTableDataSource(_this.listTemplates);
+                    _this.dataSource.paginator = _this.paginator;
+                    _this.dataSource.sort = _this.sort;
+                }, 0);
+                _this.notify.success(_this.lang.diffusionModelDeleted);
+            }, function (err) {
+                _this.notify.error(err.error.errors);
+            });
+        }
     };
     __decorate([
         core_1.ViewChild(material_1.MatPaginator),
