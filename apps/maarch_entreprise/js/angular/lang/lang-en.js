@@ -322,4 +322,5 @@ exports.LANG_EN = {
     'actives': 'Active(s)',
     'inactives': 'Inactive(s)',
     'quotaExceeded': 'Quota exceeded'
+    "chooseColor": "Choose a color",
 };
