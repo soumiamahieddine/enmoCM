@@ -22,6 +22,11 @@ use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
+use Notification\controllers\NotificationController;
+use Notification\controllers\NotificationsEventsController;
+use Notification\models\NotificationModel;
+use Notification\models\NotificationsEventsModel;
+use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -76,7 +81,15 @@ class UserController
             }
         }
 
-        return $response->withJson(['users' => $users]);
+        $quota = [];
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int'])) {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['N', 'OK','superadmin']]);
+            $quota = ['actives' => $activeUser[0]['count'], 'inactives' => $inactiveUser[0]['count'], 'userQuota' => $userQuota['param_value_int']];
+        }
+
+        return $response->withJson(['users' => $users, 'quota' => $quota]);
     }
 
     public function getDetailledById(Request $request, Response $response, array $aArgs)
@@ -128,6 +141,14 @@ class UserController
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
 
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int'])) {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
+                NotificationsEventsController::fill_event_stack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+            }
+        }
+
         return $response->withJson(['user' => $newUser]);
     }
 
@@ -149,7 +170,17 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['enabled']]);
+
         UserModel::update(['id' => $aArgs['id'], 'user' => $data]);
+
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int']) && $user['enabled'] == 'N' && $data['enabled'] == 'Y') {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
+                NotificationsEventsController::fill_event_stack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+            }
+        }
 
         return $response->withJson(['success' => 'success']);
     }

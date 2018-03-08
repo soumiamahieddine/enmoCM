@@ -96,6 +96,130 @@ class UserControllerTest extends TestCase
         $this->assertSame(null, $responseBody->thumbprint);
     }
 
+    public function testRead()
+    {
+        $userController = new \User\controllers\UserController();
+        $parameterController = new \Parameter\controllers\ParameterController();
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'description'           => 'User quota',
+            'param_value_int'       => 0
+        ];
+        $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+
+        // READ in case of deactivated user_quota
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $userController->get($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->users);
+        $this->assertNull($responseBody->quota->userQuota);
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'description'           => 'User quota',
+            'param_value_int'       => 20
+        ];
+        $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+
+        // READ in case of enabled user_quotat
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $userController->get($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->users);
+        $this->assertNotNull($responseBody->quota);
+        $this->assertSame(20, $responseBody->quota->userQuota);
+        $this->assertNotNull($responseBody->quota->actives);
+        $this->assertInternalType('int', $responseBody->quota->inactives);
+
+    }
+
+    public function testUserQuota()
+    {
+        $userController = new \User\controllers\UserController();
+        $parameterController = new \Parameter\controllers\ParameterController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'userId'    => 'TEST-CKENTquota',
+            'firstname' => 'TEST-CLARKquota',
+            'lastname'  => 'TEST-KENTquota'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $userId = $responseBody->user->id;
+
+        $this->assertInternalType('int', $userId);
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'user_id'    => 'TEST-CKENTquota',
+            'firstname' => 'TEST-CLARKquota2',
+            'lastname'  => 'TEST-KENTquota2',
+            'mail'      => 'ck@dailyP.com',
+            'phone'     => '0122334455',
+            'initials'  => 'CK',
+            'enabled'   => 'N',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' =>$userId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  UPDATE disabled user for user_quota (avoid notification sending)
+        $aArgs = [
+            'user_id'    => 'TEST-CKENTquota',
+            'firstname' => 'TEST-CLARKquota2',
+            'lastname'  => 'TEST-KENTquota2',
+            'mail'      => 'ck@dailyP.com',
+            'phone'     => '0122334455',
+            'initials'  => 'CK',
+            'enabled'   => 'Y',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' =>$userId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  DELETE
+        //  REAL DELETE
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'users',
+            'where' => ['id = ?'],
+            'data'  => [$userId]
+        ]);
+
+        //  UPDATE
+        $aArgs = [
+            'description'           => 'User quota',
+            'param_value_int'       => 0
+        ];
+        $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+    }
+
     public function testDelete()
     {
         $userController = new \User\controllers\UserController();

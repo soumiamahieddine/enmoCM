@@ -344,5 +344,9 @@ export const LANG_FR = {
     "tooltipPriorityDefault"                 : "Positionner cette priorité par défaut lors de l'enregistrement d'un courrier",
     "defaultPriority"                 : "Priorité par défaut",
     "chooseColor"                 : "Choisissez une couleur",
+    'quota'                   : 'Quota',
+    'actives'              : 'Actif(s)',
+    'inactives'            : 'Inactif(s)',
+    'quotaExceeded'        : 'Quota dépassé'
 
 };
