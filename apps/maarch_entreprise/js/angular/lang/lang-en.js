@@ -253,6 +253,7 @@ exports.LANG_EN = {
     "totalProcessed": "Processed element(s)",
     "toUsersEntities": "To users in entities",
     "type": "Type",
+    "unlinkAction": "Unlink action",
     "unlinkGroup": "Unlink group",
     "unselectAll": "Unselect all",
     "update": "Update",

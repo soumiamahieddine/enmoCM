@@ -273,6 +273,7 @@ exports.LANG_FR = {
     "totalProcessed": "Élément(s) analysé(s)",
     "toUsersEntities": "Vers les utilisateurs des services",
     "type": "Type",
+    "unlinkAction": "Dissocier l'action",
     "unlinkGroup": "Dissocier le groupe",
     "unselectAll": "Tout désélectionner",
     "update": "Modifier",
