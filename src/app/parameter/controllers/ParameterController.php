@@ -33,7 +33,7 @@ class ParameterController
         foreach ($parameters as $key => $parameter) {
             if (!empty($parameter['param_value_string'])) {
                 $parameters[$key]['value'] = $parameter['param_value_string'];
-            } elseif (!empty($parameter['param_value_int'])) {
+            } elseif (is_int($parameter['param_value_int'])) {
                 $parameters[$key]['value'] = $parameter['param_value_int'];
             } elseif (!empty($parameter['param_value_date'])) {
                 $parameters[$key]['value'] = $parameter['param_value_date'];

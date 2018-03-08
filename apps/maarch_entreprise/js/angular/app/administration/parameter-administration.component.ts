@@ -64,7 +64,7 @@ export class ParameterAdministrationComponent implements OnInit {
                         this.parameter = data.parameter;
                         this.updateBreadcrumb(angularGlobals.applicationName);
 
-                        if (this.parameter.param_value_int) {
+                        if (typeof (this.parameter.param_value_int) == "number") {
                             this.type = "int";
                         } else if (this.parameter.param_value_date) {
                             this.type = "date";
