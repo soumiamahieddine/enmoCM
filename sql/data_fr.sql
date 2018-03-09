@@ -1094,6 +1094,9 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SEND_SEDA ', 'Courrier envoyé au système d''archivage', 'Y', 'N', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ACK_SEDA ', 'Accusé de reception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REPLY_SEDA', 'Courrier archivé', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('RETRN', 'Retrouné', 'Y', 'N', '', 'apps', 'N', 'N');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NO_RETRN', 'Pas de retour', 'Y', 'N', '', 'apps', 'N', 'N');
+
 ------------
 --STATUS IMAGES-
 ------------
@@ -1480,36 +1483,33 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
-<p> </p>
-<p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
-<p> </p>
-<p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des nouveaux courriers présents dans cette bannette :</font></p>
-<p> </p>
-<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici la liste des nouveaux courriers pr&eacute###sents dans cette bannette :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
 <tbody>
 <tr>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Référence</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origine</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Emetteur</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Objet</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Liens</strong></font></td>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Origine</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Emetteur</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Type</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
 </tr>
 <tr>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
-<td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
-</td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
-<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
-<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.res_id]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.typist]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.subject]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.type_label]</td>
+<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+</table>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
 VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p><font face="verdana,geneva" size="2">Bonjour [recipient.firstname] [recipient.lastname], [recipient.text]</font></p>
 <p>&nbsp###</p>

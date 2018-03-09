@@ -54,6 +54,7 @@ var AdministrationRoutingModule = /** @class */ (function () {
                     { path: 'administration/baskets/:id', component: basket_administration_component_1.BasketAdministrationComponent },
                     { path: 'administration/doctypes', component: doctypes_administration_component_1.DoctypesAdministrationComponent },
                     { path: 'administration/diffusionModels', component: diffusionModels_administration_component_1.DiffusionModelsAdministrationComponent },
+                    { path: 'administration/diffusionModels/new', component: diffusionModel_administration_component_1.DiffusionModelAdministrationComponent },
                     { path: 'administration/diffusionModels/:id', component: diffusionModel_administration_component_1.DiffusionModelAdministrationComponent },
                     { path: 'administration/entities', component: entities_administration_component_1.EntitiesAdministrationComponent },
                     { path: 'administration/entities/new', component: entity_administration_component_1.EntityAdministrationComponent },

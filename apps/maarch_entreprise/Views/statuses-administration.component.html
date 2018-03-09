@@ -58,32 +58,31 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_status" matSortDirection="asc">
                     <ng-container matColumnDef="img_filename">
                         <mat-header-cell *matHeaderCellDef>{{lang.imgRelated}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" color="primary" matTooltip="{{lang.view}}" routerLink="/administration/statuses/{{element.identifier}}"
-                            style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element" color="primary">
                             <mat-icon class="fm {{element.img_filename}} fm-2x" *ngIf="element.img_filename.indexOf('fm') == 0" aria-hidden="true"></mat-icon>
                             <mat-icon class="fa {{element.img_filename}} fa-2x" *ngIf="element.img_filename.indexOf('fa') == 0" aria-hidden="true"></mat-icon>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/statuses/{{element.identifier}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                         {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="label_status">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.statusName}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/statuses/{{element.identifier}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                         {{element.label_status}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="identifier">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align:right">
-                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deleteStatus(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteStatus(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/statuses/{{row.identifier}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>

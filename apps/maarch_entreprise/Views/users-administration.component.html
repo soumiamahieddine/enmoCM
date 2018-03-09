@@ -58,19 +58,19 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="user_id" matSortDirection="asc">
                     <ng-container matColumnDef="user_id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/users/{{element.id}}"> {{element.user_id}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.user_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="lastname">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/users/{{element.id}}"> {{element.lastname}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="firstname">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/users/{{element.id}}"> {{element.firstname}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="status">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.status}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/users/{{element.id}}">
+                        <mat-cell *matCellDef="let element">
                             <span *ngIf="element.status == 'OK' && element.enabled == 'Y'" color="primary" class="label">{{lang.active}}</span>
                             <span *ngIf="element.enabled == 'N'" color="warn" class="label">{{lang.inactive}}</span>
                             <span *ngIf="element.status == 'ABS'" color="warn" class="label">{{lang.abs}}</span>
@@ -78,34 +78,34 @@
                     </ng-container>
                     <ng-container matColumnDef="mail">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.email}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/users/{{element.id}}"> {{element.mail}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.mail}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef style="text-align: right;padding: 10px">
                         </mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align:right">
                             <button mat-icon-button color="primary" *ngIf="element.enabled == 'Y' && element.inDiffListDest == 'Y'" matTooltip="{{lang.suspend}}"
-                                (click)="suspendUser(element)">
+                                (click)="$event.stopPropagation();suspendUser(element)">
                                 <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                             <button mat-icon-button color="primary" *ngIf="element.enabled == 'Y' && element.inDiffListDest == 'N'" matTooltip="{{lang.suspend}}"
-                                (click)="suspendUser(element)">
+                                (click)="$event.stopPropagation();suspendUser(element)">
                                 <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
                             </button>
-                            <button mat-icon-button color="accent" *ngIf="element.enabled == 'N'" matTooltip="{{lang.authorize}}" (click)="activateUser(element)">
+                            <button mat-icon-button color="accent" *ngIf="element.enabled == 'N'" matTooltip="{{lang.authorize}}" (click)="$event.stopPropagation();activateUser(element)">
                                 <mat-icon class="fa fa-check fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                             <button mat-icon-button color="warn" *ngIf="element.inDiffListDest == 'Y'" matTooltip="{{lang.delete}}" data-toggle="modal"
-                                data-target="#changeDiffListDest" (click)="deleteUser(element)">
+                                data-target="#changeDiffListDest" (click)="$event.stopPropagation();deleteUser(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
-                            <button mat-icon-button color="warn" *ngIf="element.inDiffListDest == 'N'" matTooltip="{{lang.delete}}" (click)="deleteUser(element)">
+                            <button mat-icon-button color="warn" *ngIf="element.inDiffListDest == 'N'" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteUser(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>

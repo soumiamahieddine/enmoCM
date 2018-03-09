@@ -58,12 +58,12 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
                     <ng-container matColumnDef="label">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                             <input type="color" value="{{element.color}}" style="background:none;border:none;width:45px;" disabled> {{element.label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="delays">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processDelay}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
@@ -74,7 +74,7 @@
                     </ng-container>
                     <ng-container matColumnDef="working_days">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
@@ -88,20 +88,20 @@
                     </ng-container>
                     <ng-container matColumnDef="default_priority">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.defaultPriority}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element" >
                             <span *ngIf="element.default_priority" color="primary" class="fa fa-check fa-2x"></span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align: right;">
-                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deletePriority(element.id)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deletePriority(element.id)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/priorities/{{row.id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>

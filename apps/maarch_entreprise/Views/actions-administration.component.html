@@ -58,22 +58,22 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
                     <ng-container matColumnDef="id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/actions/{{element.id}}" style="cursor:pointer;"> {{element.id}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="label_action">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/actions/{{element.id}}" style="cursor:pointer;"> {{element.label_action}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="history">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionHistory}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/actions/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                             <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="is_folder_action">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.isFolderAction}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/actions/{{element.id}}" style="cursor:pointer;">
+                        <mat-cell *matCellDef="let element">
                             <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>
@@ -81,13 +81,13 @@
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align:right">
-                            <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="deleteAction(element)">
+                            <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteAction(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/actions/{{row.id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>

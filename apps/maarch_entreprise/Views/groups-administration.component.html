@@ -58,24 +58,24 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="group_desc" matSortDirection="asc">
                     <ng-container matColumnDef="group_id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;" routerLink="/administration/groups/{{element.id}}">
+                        <mat-cell *matCellDef="let element">
                         {{element.group_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="group_desc">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" style="cursor:pointer;flex:2;" routerLink="/administration/groups/{{element.id}}">
+                        <mat-cell *matCellDef="let element" style="flex:2;">
                         {{element.group_desc}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef style="flex:1;"></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align:right;flex:1;">
-                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" delay="1000" (click)="preDelete(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();preDelete(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/groups/{{row.id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>

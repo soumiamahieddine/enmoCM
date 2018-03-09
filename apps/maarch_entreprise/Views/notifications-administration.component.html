@@ -64,18 +64,16 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="notification_id" matSortDirection="asc">
                     <ng-container matColumnDef="notification_id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/notifications/{{element.notification_sid}}"
-                            style="cursor:pointer;flex:1;"> {{element.notification_id}} </mat-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.notification_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/notifications/{{element.notification_sid}}"
-                            style="cursor:pointer;flex:2;"> {{element.description}} </mat-cell>
+                        <mat-cell *matCellDef="let element" style="flex:2;"> {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="is_enabled">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.NotificationEnabled}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/notifications/{{element.notification_sid}}"
-                            style="cursor:pointer;flex:1;">
+                        <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" 
+                            style="flex:1;">
                             <span *ngIf="element.is_enabled == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.is_enabled == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>
@@ -83,13 +81,13 @@
                     <ng-container matColumnDef="notifications">
                         <mat-header-cell *matHeaderCellDef style="flex:1;"></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="text-align:right;flex:1;">
-                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="deleteNotification(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteNotification(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/notifications/{{row.notification_sid}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>
