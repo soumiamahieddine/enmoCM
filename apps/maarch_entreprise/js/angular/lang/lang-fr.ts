@@ -346,7 +346,7 @@ export const LANG_FR = {
     "toolTipDeleteDoctype"              : "Si des courriers sont rattachés à ce type de document, un écran de réaffectation s'affichera",
     "cantMoveDoctype"                   : "Le type de document peut uniquement être déplacé dans une sous-chemise",
     "noDoctypeSelected"                 : "Aucun type de document sélectionné",
-    "tooltipPriorityDelay"              : "Utiliser ce délai de traitement au lieu de celui définit dans le type document",
+    "tooltipPriorityDelay"              : "Utiliser ce délai de traitement au lieu de celui défini dans le type document",
     "tooltipPriorityDefault"            : "Positionner cette priorité par défaut lors de l'enregistrement d'un courrier",
     "defaultPriority"                   : "Priorité par défaut",
     "chooseColor"                       : "Choisissez une couleur",
