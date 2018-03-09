@@ -133,15 +133,20 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
                                                     maxlength="32">
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <mat-form-field>
-                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}">
+                                                <input matInput [(ngModel)]="currentEntity.city" name="city" id="city" title="{{lang.city}}" type="text" placeholder="{{lang.city}}" maxlength="255">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <mat-form-field>
+                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}" maxlength="255">
                                             </mat-form-field>
                                         </div>
                                     </div>

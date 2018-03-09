@@ -58,6 +58,7 @@ export const LANG_EN = {
     "chooseGroup"               : "Choose a group",
     "chooseRedirectGroup"       : "Choose another group",
     "chronoNumber"              : "Chrono number",
+    "city"                      : "City",
     "clause"                    : "Clause",
     "clickOn"                   : "Click on",
     "color"                     : "Color",
