@@ -26,8 +26,7 @@ class NotificationsEventsModelAbstract
         ValidatorModel::stringType($aArgs, ['table_name', 'user_id', 'event_info']);
         ValidatorModel::intval($aArgs, ['notification_sid']);
 
-        $db = new \Database();
-        $aArgs['event_date'] = $db->current_datetime();
+        $aArgs['event_date'] = 'CURRENT_TIMESTAMP';
 
         $aReturn = DatabaseModel::insert([
             'table'         => 'notif_event_stack',

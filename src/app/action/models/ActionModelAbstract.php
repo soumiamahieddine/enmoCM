@@ -205,11 +205,9 @@ class ActionModelAbstract
     public static function getKeywords()
     {
         $tabKeyword   = [];
-        $tabKeyword[] = ['value' => '', label => _NO_KEYWORD];
-        $tabKeyword[] = ['value' => 'redirect', label => _REDIRECT, desc => _KEYWORD_REDIRECT_DESC];
-        //$tabKeyword[] = ['value' => 'to_validate', label => _TO_VALIDATE];
-        $tabKeyword[] = ['value' => 'indexing', label => _INDEXING, desc => _KEYWORD_INDEXING_DESC];
-        //$tabKeyword[] = ['value' => 'workflow', label => _WF];
+        $tabKeyword[] = ['value' => '', 'label' => _NO_KEYWORD];
+        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECT, 'desc' => _KEYWORD_REDIRECT_DESC];
+        $tabKeyword[] = ['value' => 'indexing', 'label' => _INDEXING, 'desc' => _KEYWORD_INDEXING_DESC];
 
         return $tabKeyword;
     }
@@ -250,5 +248,21 @@ class ActionModelAbstract
         }
 
         return $action[0]['id_action'];
+    }
+
+    public static function getForBasketPage(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);
+        ValidatorModel::stringType($aArgs, ['basketId', 'groupId']);
+
+        $actions = DatabaseModel::select([
+            'select'    => ['id_action', 'where_clause', 'default_action_list', 'actions.label_action'],
+            'table'     => ['actions_groupbaskets, actions'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'used_in_action_page = ?', 'actions_groupbaskets.id_action = actions.id'],
+            'data'      => [$aArgs['basketId'], $aArgs['groupId'], 'Y'],
+            'order_by'  => ['default_action_list DESC']
+        ]);
+
+        return $actions;
     }
 }

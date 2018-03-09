@@ -1018,6 +1018,7 @@ abstract class foldertype_Abstract
             }
         }
 
+        $functions = new functions(); 
         // Checks type indexes
         $datePattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
         foreach (array_keys($values) as $key) {
@@ -1033,19 +1034,19 @@ abstract class foldertype_Abstract
             } else if ($indexes[$key]['type'] == 'string'  
             	&& ! empty($values[$key])
             ) {
-                $fieldValue = functions::wash(
+                $fieldValue = $functions->wash(
                 	$values[$key], "no", $indexes[$key]['label']
                 );
             } else if ($indexes[$key]['type'] == 'float' 
             	&& ! empty($values[$key]) 
             ) {
-                $fieldValue = functions::wash(
+                $fieldValue = $functions->wash(
                 	$values[$key], "float", $indexes[$key]['label']
                 );
             } else if ($indexes[$key]['type'] == 'integer' 
             	&& ! empty($values[$key]) 
             ) {
-                $fieldValue = functions::wash(
+                $fieldValue = $functions->wash(
                 	$values[$key], "num", $indexes[$key]['label']
                 );
             }
@@ -1118,7 +1119,11 @@ abstract class foldertype_Abstract
         $indexes = $this->get_indexes($foldertypeId);
 
         foreach (array_keys($values) as $key) {
-            if ($indexes[$key]['type'] == 'date' && ! empty($values[$key])) {
+            if ($indexes[$key]['type'] == 'date') {
+                if($values[$key] === ''){
+                    $values[$key] = NULL;
+                }
+
                 array_push(
                 	$data, 
                 	array(
@@ -1127,9 +1132,11 @@ abstract class foldertype_Abstract
                 		'type' => "date"
                 	)
                 );
-            } else if ($indexes[$key]['type'] == 'string' 
-            	&& ! empty($values[$key])
-            ) {
+            } else if ($indexes[$key]['type'] == 'string') {
+                if($values[$key] === ''){
+                    $values[$key] = NULL;
+                }
+
                 array_push(
                 	$data, 
                 	array(
@@ -1138,9 +1145,11 @@ abstract class foldertype_Abstract
                 		'type' => "string"
                 	)
                 );
-            } else if ($indexes[$key]['type'] == 'float' 
-            	&& ! empty($values[$key])
-            ) {
+            } else if ($indexes[$key]['type'] == 'float') {
+                if($values[$key] === ''){
+                    $values[$key] = NULL;
+                }
+
                 array_push(
                 	$data, 
                 	array(
@@ -1149,9 +1158,11 @@ abstract class foldertype_Abstract
                 		'type' => "float"
                 	)
                 );
-            } else if ($indexes[$key]['type'] == 'integer' 
-            	&& !empty($values[$key])
-            ) {
+            } else if ($indexes[$key]['type'] == 'integer') {
+                if($values[$key] === ''){
+                    $values[$key] = NULL;
+                }
+
                 array_push(
                 	$data, 
                 	array(

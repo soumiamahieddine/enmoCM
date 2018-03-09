@@ -19,6 +19,7 @@ use Resource\models\ResModel;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use User\models\UserBasketPreferenceModel;
 use User\models\UserModel;
 
 class BasketModelAbstract
@@ -153,40 +154,6 @@ class BasketModelAbstract
         return true;
     }
 
-    public static function getGroups(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
-        ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
-
-        $aGroups = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['groupbasket'],
-            'where'     => ['basket_id = ?'],
-            'data'      => [$aArgs['id']],
-            'order_by'  => $aArgs['orderBy']
-        ]);
-
-        return $aGroups;
-    }
-
-    public static function createGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'resultPage']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId', 'resultPage']);
-
-        DatabaseModel::insert([
-            'table'         => 'groupbasket',
-            'columnsValues' => [
-                'basket_id'         => $aArgs['id'],
-                'group_id'          => $aArgs['groupId'],
-                'result_page'       => $aArgs['resultPage']
-            ]
-        ]);
-
-        return true;
-    }
-
     public static function createGroupAction(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'usedInBasketlist', 'usedInActionPage', 'defaultActionList']);
@@ -294,35 +261,6 @@ class BasketModelAbstract
         return true;
     }
 
-    public static function deleteGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['id', 'groupId']);
-
-        DatabaseModel::delete([
-            'table' => 'groupbasket',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'actions_groupbaskets',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'groupbasket_redirect',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'groupbasket_status',
-            'where' => ['basket_id = ?', 'group_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['groupId']]
-        ]);
-
-        return true;
-    }
-
     public static function getActionsForGroupById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
@@ -344,15 +282,7 @@ class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::stringType($aArgs, ['id', 'groupId']);
 
-        $groups = BasketModel::getGroups(['id' => $aArgs['id'], 'select' => ['group_id']]);
-
-        foreach ($groups as $group) {
-            if ($group['group_id'] == $aArgs['groupId']) {
-                return true;
-            }
-        }
-
-        return false;
+        return !empty(GroupBasketModel::get(['where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $aArgs['groupId']]]));
     }
 
     public static function getResListById(array $aArgs)
@@ -388,6 +318,7 @@ class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
         ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
+        ValidatorModel::boolType($aArgs, ['absenceUneeded']);
 
         $userGroups = UserModel::getGroupsByUserId(['userId' => $aArgs['userId']]);
         $groupIds = [];
@@ -397,33 +328,44 @@ class BasketModelAbstract
 
         $aBaskets = [];
         if (!empty($groupIds)) {
-            $where = ['group_id in (?)', 'groupbasket.basket_id = baskets.basket_id'];
+            $where = ['groupbasket.group_id in (?)', 'groupbasket.basket_id = baskets.basket_id', 'groupbasket.group_id = usergroups.group_id'];
             $data = [$groupIds];
             if (!empty($aArgs['unneededBasketId'])) {
                 $where[] = 'groupbasket.basket_id not in (?)';
                 $data[]  = $aArgs['unneededBasketId'];
             }
             $aBaskets = DatabaseModel::select([
-                    'select'    => ['groupbasket.basket_id', 'group_id', 'basket_name', 'basket_desc', 'basket_clause'],
-                    'table'     => ['groupbasket, baskets'],
+                    'select'    => ['usergroups.id as groupSerialId', 'groupbasket.basket_id', 'groupbasket.group_id', 'basket_name', 'basket_desc', 'basket_clause'],
+                    'table'     => ['groupbasket, baskets, usergroups'],
                     'where'     => $where,
                     'data'      => $data,
-                    'order_by'  => ['group_id, basket_order, basket_name']
+                    'order_by'  => ['groupbasket.group_id, basket_order, basket_name']
             ]);
 
+            $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
             foreach ($aBaskets as $key => $value) {
+                unset($aBaskets[$key]['groupserialid']);
+                $aBaskets[$key]['groupSerialId'] = $value['groupserialid'];
                 $aBaskets[$key]['is_virtual'] = 'N';
                 $aBaskets[$key]['basket_owner'] = $aArgs['userId'];
                 $aBaskets2 = DatabaseModel::select([
                         'select'    => ['new_user'],
                         'table'     => ['user_abs'],
                         'where'     => ['user_abs = ?', 'basket_id = ?'],
-                        'data'      => [$aArgs['userId'],$value['basket_id']],
+                        'data'      => [$aArgs['userId'], $value['basket_id']],
                 ]);
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
+                $userPref = UserBasketPreferenceModel::get([
+                    'select'    => [1],
+                    'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                    'data'      => [$user['id'], $value['groupserialid'], $value['basket_id']]
+                ]);
+                $aBaskets[$key]['allowed'] = !empty($userPref);
             }
-            $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            if (empty($aArgs['absenceUneeded'])) {
+                $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));
+            }
         }
 
         return $aBaskets;
@@ -585,7 +527,7 @@ class BasketModelAbstract
         return $coloredBaskets;
     }
 
-    public static function getBasketPages(array $aArgs)
+    public static function getBasketPages(array $aArgs = [])
     {
         ValidatorModel::arrayType($aArgs, ['unneeded']);
 

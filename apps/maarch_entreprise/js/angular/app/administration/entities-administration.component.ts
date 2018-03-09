@@ -32,6 +32,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
     loading: boolean = false;
     creationMode: boolean = false;
+    idCircuitVisa:number;
 
     displayedColumns = ['firstname', 'lastname'];
     dataSource = new MatTableDataSource(this.currentEntity.users);
@@ -166,6 +167,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
+                if (this.currentEntity.visaTemplate[0]) {
+                    this.idCircuitVisa = this.currentEntity.visaTemplate[0].id;
+                }
                 this.dataSource = new MatTableDataSource(this.currentEntity.users);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -281,7 +285,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "id": '',
             "item_type": 'user_id',
             "item_mode": "sign",
-            "mode": "sign",
             "item_id": element.id,
             "sequence": this.currentEntity.visaTemplate.length,
             "idToDisplay": element.idToDisplay,
@@ -290,12 +293,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
         this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
-            listModel.mode = "visa";
+            listModel.item_mode = "visa";
             newDiffList.items.push({
                 "id": listModel.id,
                 "item_id": listModel.item_id,
                 "item_type": "user_id",
-                "item_mode": listModel.mode,
+                "item_mode": listModel.item_mode,
                 "sequence": listModel.sequence
             });
         });
@@ -303,9 +306,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         newDiffList.items.push(newElemListModel);
 
         if (this.currentEntity.visaTemplate.length > 0) {
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.visaTemplate[0].id, newDiffList)
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
-                    newElemListModel.id = data.id;
+                    this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
                     this.notify.success(this.lang.entityUpdated);
                 }, (err) => {
@@ -314,7 +317,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         } else {
             this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
-                    newElemListModel.id = data.id
+                    this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
                     this.notify.success(this.lang.entityUpdated);
                 }, (err) => {
@@ -507,20 +510,21 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
             if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                listModel.mode = "sign";
+                listModel.item_mode = "sign";
             } else {
-                listModel.mode = "visa";
+                listModel.item_mode = "visa";
             }
             newDiffList.items.push({
                 "id": listModel.id,
                 "item_id": listModel.item_id,
                 "item_type": "user_id",
-                "item_mode": listModel.mode,
+                "item_mode": listModel.item_mode,
                 "sequence": listModel.sequence
             });
         });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
+        this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
             .subscribe((data: any) => {
+                this.idCircuitVisa = data.id;
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -560,35 +564,47 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
     removeDiffListVisa(template: any, i: number): any {
         this.currentEntity.visaTemplate.splice(i, 1);
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "VISA_CIRCUIT",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        }
-
-        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
-            listModel.sequence = i;
-            if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                listModel.mode = "sign";
-            } else {
-                listModel.mode = "visa";
+        
+        if (this.currentEntity.visaTemplate.length > 0) {
+            var newDiffList = {
+                "object_id": this.currentEntity.entity_id,
+                "object_type": "VISA_CIRCUIT",
+                "title": this.currentEntity.entity_id,
+                "description": this.currentEntity.entity_id,
+                "items": Array()
             }
-            newDiffList.items.push({
-                "item_id": listModel.item_id,
-                "item_type": "user_id",
-                "item_mode": listModel.mode,
-                "sequence": listModel.sequence
+    
+            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+                listModel.sequence = i;
+                if (i == (this.currentEntity.visaTemplate.length - 1)) {
+                    listModel.item_mode = "sign";
+                } else {
+                    listModel.item_mode = "visa";
+                }
+                newDiffList.items.push({
+                    "item_id": listModel.item_id,
+                    "item_type": "user_id",
+                    "item_mode": listModel.item_mode,
+                    "sequence": listModel.sequence
+                });
             });
-        });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + template.id, newDiffList)
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.entityUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-
+    
+            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
+                .subscribe((data: any) => {
+                    this.idCircuitVisa = data.id;
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }else{
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                .subscribe((data: any) => {
+                    this.idCircuitVisa = null;
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 }
 @Component({

@@ -58,16 +58,6 @@ export class BasketAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/baskets\"' style='cursor: pointer'>" + this.lang.baskets + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.basketCreation;
-        } else {
-            breadCrumb += this.lang.basketModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
 
@@ -76,12 +66,10 @@ export class BasketAdministrationComponent implements OnInit {
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.basketIdAvailable = false;
                 this.loading = false;
             } else {
                 this.creationMode = false;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.basketIdAvailable = true;
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/baskets/" + this.id)
@@ -165,7 +153,7 @@ export class BasketAdministrationComponent implements OnInit {
     onSubmit() {
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.basketAdded);
                     this.router.navigate(["/administration/baskets"]);
                 }, (err) => {
@@ -173,7 +161,7 @@ export class BasketAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basket)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.basketUpdated);
                     this.router.navigate(["/administration/baskets"]);
                 }, (err) => {
@@ -195,6 +183,7 @@ export class BasketAdministrationComponent implements OnInit {
                 tmpAction.default_action_list = false;
             }
         });
+        this.addAction(group);
     }
 
     unlinkGroup(groupIndex: any) {
@@ -202,7 +191,7 @@ export class BasketAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.allGroups.forEach((tmpGroup: any) => {
                         if (tmpGroup.group_id == this.basketGroups[groupIndex].group_id) {
                             tmpGroup.isUsed = false;
@@ -222,7 +211,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
-                    .subscribe((data: any) => {
+                    .subscribe(() => {
                         this.basketGroups.push(result);
                         this.allGroups.forEach((tmpGroup: any) => {
                             if (tmpGroup.group_id == result.group_id) {
@@ -240,15 +229,28 @@ export class BasketAdministrationComponent implements OnInit {
 
     addAction(group: any) {
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe((data: any) => {
-                //this.basketGroups.push(data);
+            .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
 
+    unlinkAction(group: any, action: any) {
+        let r = confirm(this.lang.unlinkAction + " ?");
+
+        if (r) {
+            action.checked = false;
+            this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            .subscribe(() => {
+                this.notify.success(this.lang.basketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+        }
+    }
 }
+
 @Component({
     templateUrl: angularGlobals["basket-administration-settings-modalView"],
     styles: [".mat-dialog-content{height: 65vh;}"]
@@ -269,7 +271,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                     parent: '#',
                     icon: 'fa fa-hashtag',
                     allowed: true,
-                    text: 'Toute les entités'
+                    text: 'Toutes les entités'
                 }, {
                     id: 'ENTITIES_JUST_BELOW',
                     keyword: 'ENTITIES_JUST_BELOW',
@@ -452,7 +454,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 }
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 @Component({
     templateUrl: angularGlobals["basket-administration-groupList-modalView"],
     styles: [".mat-dialog-content{height: 65vh;}"]
@@ -460,32 +462,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class BasketAdministrationGroupListModalComponent {
     lang: any = LANG;
     coreUrl: string;
-    groupId: any;
-    firstFormGroup: FormGroup;
-    secondFormGroup: FormGroup;
-    displayedColumns = ['label_action'];
-    dataSource: any;
-    dataSource2: any;
     actionAll: any = [];
     newBasketGroup: any = {};
 
-
-    @ViewChild(MatSort) sort: MatSort;
-    @ViewChild('paginator') paginator: MatPaginator;
-    @ViewChild('paginator2') paginator2: MatPaginator;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    }
-    applyFilter2(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource2.filter = filterValue;
-    }
-
-
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>, private _formBuilder: FormBuilder) { }
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) { }
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
         this.http.get(this.coreUrl + "rest/actions")
@@ -500,24 +480,11 @@ export class BasketAdministrationGroupListModalComponent {
                     tmpAction.checked = false;
                     this.actionAll.push(tmpAction);
                 });
-                this.dataSource = new MatTableDataSource(this.actionAll);
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-
-                this.dataSource2 = new MatTableDataSource(this.actionAll);
-                this.dataSource2.sort = this.sort;
-                this.dataSource2.paginator = this.paginator2;
 
             }, (err) => {
                 location.href = "index.php";
             });
 
-        this.firstFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
-        this.secondFormGroup = this._formBuilder.group({
-            secondCtrl: ['', Validators.required]
-        });
         this.data.groups.forEach((tmpGroup: any) => {
             this.data.linkedGroups.forEach((tmpLinkedGroup: any) => {
                 if (tmpGroup.group_id == tmpLinkedGroup.group_id) {
@@ -528,30 +495,17 @@ export class BasketAdministrationGroupListModalComponent {
         });
     }
 
-    initAction(actionType: any) {
-        this.dataSource.filter = actionType.value;
-    }
-
-    selectDefaultAction(action: any) {
-        this.actionAll.forEach((tmpAction: any) => {
-            if (action.id == tmpAction.id) {
-                tmpAction.checked = true;
-                tmpAction.default_action_list = true
-            } else {
-                tmpAction.checked = false;
-                tmpAction.default_action_list = false
-            }
-        });
-    }
-    selectAction(e: any, action: any) {
-        action.checked = e.checked;
-    }
-
-    validateForm() {
-        this.newBasketGroup.group_id = this.groupId;
-        this.newBasketGroup.basket_id = this.data.basketId;
-        this.newBasketGroup.result_page = 'list_with_attachments';
-        this.newBasketGroup.groupActions = this.actionAll;
+    validateForm(group:any) {
+        if(this.data.linkedGroups.length == 0) {
+            this.newBasketGroup.result_page = 'list_with_attachments';
+            this.actionAll[0].used_in_action_page = true;
+            this.actionAll[0].default_action_list = true;
+            this.actionAll[0].checked = true;
+            this.newBasketGroup.groupActions = this.actionAll;
+        } else {
+            this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length-1]));
+        }
+        this.newBasketGroup.group_id = group.group_id;
         this.dialogRef.close(this.newBasketGroup);
     }
 }

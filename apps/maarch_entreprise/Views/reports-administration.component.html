@@ -37,9 +37,9 @@
             </div>
             <mat-card *ngIf="!loading">
                 <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
-                    <mat-tab *ngFor="let group of groups" label="{{group.group_id}}">
+                    <mat-tab *ngFor="let group of groups" label="{{group.group_desc}">
                         <ng-template mat-tab-label>
-                            {{group.group_id}}
+                            {{group.group_desc}}
                         </ng-template>
                         <div *ngIf="loadingOptions">
                             <mat-spinner style="margin:auto;"></mat-spinner>

@@ -15,7 +15,6 @@
 namespace User\models;
 
 use Docserver\models\DocserverModel;
-use Entity\models\EntityModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\SecurityModel;
@@ -143,21 +142,6 @@ class UserModelAbstract
         }
 
         return $aUser[0];
-    }
-
-    public static function getByEntities(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['entities']);
-        ValidatorModel::arrayType($aArgs, ['entities']);
-
-        $aUsers = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users, users_entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
-            'data'      => [$aArgs['entities']]
-        ]);
-
-        return $aUsers;
     }
 
     public static function getByEmail(array $aArgs = [])
@@ -618,114 +602,6 @@ class UserModelAbstract
         }
 
         return false;
-    }
-
-    public static function addEntity(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'entityId', 'primaryEntity']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['entityId', 'role', 'primaryEntity']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::insert([
-            'table'         => 'users_entities',
-            'columnsValues' => [
-                'user_id'           => $user['user_id'],
-                'entity_id'         => $aArgs['entityId'],
-                'user_role'         => $aArgs['role'],
-                'primary_entity'    => $aArgs['primaryEntity']
-            ]
-        ]);
-
-        return true;
-    }
-
-    public static function updateEntity(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['entityId', 'role']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::update([
-            'table'     => 'users_entities',
-            'set'       => [
-                'user_role'      => $aArgs['role']
-            ],
-            'where'     => ['user_id = ?', 'entity_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['entityId']]
-        ]);
-
-        return true;
-    }
-
-    public static function updatePrimaryEntity(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['entityId']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $entities = EntityModel::getByUserId(['userId' => $user['user_id']]);
-        foreach ($entities as $entity) {
-            if ($entity['primary_entity'] == 'Y') {
-                DatabaseModel::update([
-                    'table'     => 'users_entities',
-                    'set'       => [
-                        'primary_entity'    => 'N'
-                    ],
-                    'where'     => ['user_id = ?', 'entity_id = ?'],
-                    'data'      => [$user['user_id'], $entity['entity_id']]
-                ]);
-            }
-        }
-
-        DatabaseModel::update([
-            'table'     => 'users_entities',
-            'set'       => [
-                'primary_entity'    => 'Y'
-            ],
-            'where'     => ['user_id = ?', 'entity_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['entityId']]
-        ]);
-
-        return true;
-    }
-
-    public static function reassignPrimaryEntity(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $entities = EntityModel::getByUserId(['userId' => $aArgs['userId']]);
-        if (!empty($entities[0])) {
-            DatabaseModel::update([
-                'table'     => 'users_entities',
-                'set'       => [
-                    'primary_entity'    => 'Y'
-                ],
-                'where'     => ['user_id = ?', 'entity_id = ?'],
-                'data'      => [$aArgs['userId'], $entities[0]['entity_id']]
-            ]);
-        }
-
-        return true;
-    }
-
-    public static function deleteEntity(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['entityId']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::delete([
-            'table'     => 'users_entities',
-            'where'     => ['entity_id = ?', 'user_id = ?'],
-            'data'      => [$aArgs['entityId'], $user['user_id']]
-        ]);
-
-        return true;
     }
 
     public static function updateBasketColor(array $aArgs)

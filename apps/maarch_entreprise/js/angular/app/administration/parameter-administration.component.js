@@ -58,7 +58,7 @@ var ParameterAdministrationComponent = /** @class */ (function () {
                     .subscribe(function (data) {
                     _this.parameter = data.parameter;
                     _this.updateBreadcrumb(angularGlobals.applicationName);
-                    if (_this.parameter.param_value_int) {
+                    if (typeof (_this.parameter.param_value_int) == "number") {
                         _this.type = "int";
                     }
                     else if (_this.parameter.param_value_date) {

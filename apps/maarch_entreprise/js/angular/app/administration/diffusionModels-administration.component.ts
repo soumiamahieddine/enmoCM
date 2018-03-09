@@ -37,7 +37,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -62,7 +62,11 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
         this.http.get(this.coreUrl + "rest/listTemplates")
             .subscribe((data: any) => {
-                this.listTemplates = data['listTemplates'];
+                data['listTemplates'].forEach((template: any) => {
+                    if (template.object_id.indexOf('VISA_CIRCUIT_') != -1 || template.object_id.indexOf('AVIS_CIRCUIT_') != -1) {
+                        this.listTemplates.push(template);
+                    }
+                });
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.listTemplates);
@@ -75,18 +79,28 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     }
 
     delete(listTemplate: any) {
-        this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
-            .subscribe((data: any) => {
-                setTimeout(() => {
-                    this.listTemplates = data['listTemplates'];
-                    this.dataSource = new MatTableDataSource(this.listTemplates);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
-                this.notify.success(this.lang.groupDeleted);
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + listTemplate.title + ' »');
 
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
+                .subscribe((data: any) => {
+                    setTimeout(() => {
+                        var i = 0;
+                        this.listTemplates.forEach((template: any) => {
+                            if (template.id == listTemplate['id']) {
+                                this.listTemplates.splice(i, 1);
+                            }
+                            i++;
+                        });
+                        this.dataSource = new MatTableDataSource(this.listTemplates);
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }, 0);
+                    this.notify.success(this.lang.diffusionModelDeleted);
+
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 }

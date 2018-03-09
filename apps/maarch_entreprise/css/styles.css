@@ -1754,7 +1754,8 @@ vertical-align: middle;
 /* Home */
 
 #bodylogin {
-    background: White url(static.php?filename=bg_home_home.gif) center center no-repeat;
+    background: White url(static.php?filename=logo_maarch_only.svg) center center no-repeat;
+    background-size: 50%; 
     height: auto;
     text-align: left;
 }
@@ -3120,13 +3121,6 @@ hr{
 #admin_groups {
     /*background:  url(static.php?filename=manage_groups.gif) no-repeat 2px top;*/
     background-image : url(static.php?filename=manage_groups.gif);
-    background-repeat: no-repeat;
-    background-position : 2px top;
-}
-
-#admin_architecture {
-/*  background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
-    background-image : url(static.php?filename=manage_architecture.gif);
     background-repeat: no-repeat;
     background-position : 2px top;
 }

@@ -81,7 +81,6 @@ export class HistoryAdministrationComponent implements OnInit {
     }
 
     refreshHistory(event: MatDatepickerInputEvent<Date>) {
-        console.log(event);
         this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
             .subscribe((data: any) => {
                 this.data = data.historyList;

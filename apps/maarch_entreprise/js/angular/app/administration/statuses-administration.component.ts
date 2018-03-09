@@ -85,6 +85,9 @@ export class StatusesAdministrationComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/statuses/' + status.identifier)
                 .subscribe((data: any) => {
                     this.statuses = data.statuses;
+                    this.dataSource = new MatTableDataSource(this.statuses);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                     this.notify.success(this.lang.statusDeleted);
 
                 }, (err) => {

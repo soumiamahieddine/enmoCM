@@ -17,26 +17,24 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    dialogRef: MatDialogRef<any>;
-    search: string = null;
-    coreUrl: string;
 
-    users: any[] = [];
-    userDestRedirect: any = {};
-    userDestRedirectModels: any[] = [];
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    lang: any = LANG;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    loading: boolean = false;
+    data                            : any[]     = [];
+    config                          : any       = {};
+    userDestRedirect                : any       = {};
+    userDestRedirectModels          : any[]     = [];
 
-    data: Users[] = [];
+    dataSource          = new MatTableDataSource(this.data);
+    displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
 
-    config: any = {};
 
-    displayedColumns = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
-    dataSource = new MatTableDataSource(this.data);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -44,7 +42,6 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
     }
-
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         super(http, ['users']);
@@ -60,13 +57,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
-                this.users = data['users'];
-                this.data = this.users;
+                this.data = data['users'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
@@ -80,7 +75,6 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     suspendUser(user: any) {
         if (user.inDiffListDest == 'Y') {
-            user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
@@ -100,17 +94,17 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                     } else {
                                         //then suspend user
                                         this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
-                                            .subscribe((data: any) => {
+                                            .subscribe(() => {
                                                 user.inDiffListDest = 'N';
-                                                this.notify.success(this.lang.userSuspended + ' « ' + user.user_id + ' »');
+                                                this.notify.success(this.lang.userSuspended);
 
                                             }, (err) => {
                                                 user.enabled = 'Y';
-                                                this.notify.error(JSON.parse(err._body).errors);
+                                                this.notify.error(err.error.errors);
                                             });
                                     }
                                 }, (err) => {
-                                    this.notify.error(JSON.parse(err._body).errors);
+                                    this.notify.error(err.error.errors);
                                 });
                         }
                         this.dialogRef = null;
@@ -126,12 +120,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
             if (r) {
                 user.enabled = 'N';
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
-                    .subscribe((data: any) => {
-                        this.notify.success(this.lang.userSuspended + ' « ' + user.user_id + ' »');
-
+                    .subscribe(() => {
+                        this.notify.success(this.lang.userSuspended);
                     }, (err) => {
                         user.enabled = 'Y';
-                        this.notify.error(JSON.parse(err._body).errors);
+                        this.notify.error(err.error.errors);
                     });
             }
         }
@@ -143,19 +136,17 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         if (r) {
             user.enabled = 'Y';
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
-                .subscribe((data: any) => {
-                    this.notify.success(this.lang.userAuthorized + ' « ' + user.user_id + ' »');
-
+                .subscribe(() => {
+                    this.notify.success(this.lang.userAuthorized);
                 }, (err) => {
                     user.enabled = 'N';
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }
 
     deleteUser(user: any) {
         if (user.inDiffListDest == 'Y') {
-            user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
@@ -173,9 +164,12 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                     } else {
                                         //then delete user
                                         this.http.delete(this.coreUrl + 'rest/users/' + user.id)
-                                            .subscribe((data: any) => {
-                                                user.inDiffListDest = 'N';
-                                                this.data = data.users;
+                                            .subscribe(() => {
+                                                for (let i in this.data) {
+                                                    if (this.data[i].id == user.id) {
+                                                        this.data.splice(Number(i), 1);
+                                                    }
+                                                }
                                                 this.dataSource = new MatTableDataSource(this.data);
                                                 this.dataSource.paginator = this.paginator;
                                                 this.dataSource.sort = this.sort;
@@ -183,43 +177,39 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                 this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
                                             }, (err) => {
-                                                this.notify.error(JSON.parse(err._body).errors);
+                                                this.notify.error(err.error.errors);
                                             });
                                     }
                                 }, (err) => {
-                                    this.notify.error(JSON.parse(err._body).errors);
+                                    this.notify.error(err.error.errors);
                                 });
                         }
                     });
 
                 }, (err) => {
-                    this.notify.error(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                 });
         } else {
             let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + user.user_id + ' »');
 
             if (r) {
                 this.http.delete(this.coreUrl + 'rest/users/' + user.id, user)
-                    .subscribe((data: any) => {
-                        this.data = data.users;
+                    .subscribe(() => {
+                        for (let i in this.data) {
+                            if (this.data[i].id == user.id) {
+                                this.data.splice(Number(i), 1);
+                            }
+                        }
                         this.dataSource = new MatTableDataSource(this.data);
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
-                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
-
+                        this.notify.success(this.lang.userDeleted);
                     }, (err) => {
-                        this.notify.error(JSON.parse(err._body).errors);
+                        this.notify.error(err.error.errors);
                     });
             }
         }
     }
-}
-export interface Users {
-    user_id: string;
-    lastname: string;
-    firstname: string;
-    status: string;
-    mail: string;
 }
 @Component({
     templateUrl: angularGlobals["users-administration-redirect-modalView"],
@@ -237,6 +227,7 @@ export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugi
                 valid = false;
             }
         });
+
         return valid;
     }
 }

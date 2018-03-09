@@ -132,17 +132,10 @@ class DocserverModelAbstract
         return true;
     }
 
-
-    /**
-     * Get docservers to insert a new doc.
-     * Can return null if no corresponding object.
-     * @param  $aArgs array
-     * @return array
-     */
     public static function getDocserverToInsert(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['collId']);
-        ValidatorModel::stringType($aArgs, ['collId']);
+        ValidatorModel::stringType($aArgs, ['collId', 'typeId']);
 
         if (empty($aArgs['typeId'])) {
             $aArgs['typeId'] = 'DOC';

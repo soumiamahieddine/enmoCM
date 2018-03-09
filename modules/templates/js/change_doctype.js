@@ -28,7 +28,7 @@ function doctype_template(args)
 			model_frame = args[i]['value'];
 		}
 	}
-	console.log(file_iframe.src.includes("display=true&module=templates&page=file_iframe&model_id"));
+
 	if(is_generated == true)
 	{
 		if(choose_file_div != null)
@@ -42,13 +42,12 @@ function doctype_template(args)
 	}
 	else
 	{
-		// if(choose_file_div != null)
-		// {
-		// 	choose_file_div.style.display = 'block';
-		// }
-		if(file_iframe != null && doc_frame!= '' && doc_frame != null && file_iframe.src.includes("display=true&module=templates&page=file_iframe&model_id"))
-		{
-			file_iframe.src = doc_frame;
+		if(file_iframe.src.includes("display=true&module=templates&page=file_iframe&model_id")){
+			choose_file_div.style.display = 'block';
+			if(file_iframe != null && doc_frame!= '' && doc_frame != null)
+			{
+				file_iframe.src = doc_frame;
+			}
 		}
 	}
 }

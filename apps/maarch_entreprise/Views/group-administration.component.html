@@ -56,7 +56,7 @@
                                     <input matInput name="comment" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="group.security.maarch_comment">
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <textarea matInput name="clause" title="{{lang.clause}}" placeholder="{{lang.clause}}" [(ngModel)]="group.security.where_clause"
+                                    <textarea matInput name="clause" title="{{lang.clauseGroup}}" placeholder="{{lang.clauseGroup}}" [(ngModel)]="group.security.where_clause"
                                         required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5"></textarea>
                                     <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
                                         (click)="snav2.toggle()"></mat-icon>

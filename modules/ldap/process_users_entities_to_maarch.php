@@ -216,7 +216,7 @@ function infoBalise($description, $balise)
         }
 
 
-        /*Fonction qui va supprimer tout les users de la table users_entities lorsque les entitées ne sont pas présente dans le ldap*/
+        /*Fonction qui va supprimer tous les users de la table users_entities lorsque les entitées ne sont pas présente dans le ldap*/
         function deleteUsersEntities($idEntitiesTab,$user_id, $db)
         {
 

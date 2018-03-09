@@ -32,11 +32,11 @@
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.tools}}</h3>
                 <a mat-list-item *ngIf="!creationMode" (click)="linkGroup()">
-                        <mat-icon color="primary" mat-list-icon class="fa fa-link"></mat-icon>
-                        <p mat-line>
-                            {{lang.linkGroup}}
-                        </p>
-                    </a>
+                    <mat-icon color="primary" mat-list-icon class="fa fa-link"></mat-icon>
+                    <p mat-line>
+                        {{lang.linkGroup}}
+                    </p>
+                </a>
             </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -48,8 +48,8 @@
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #basketForm="ngForm">
                             <mat-form-field>
-                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()" maxlength="32"
-                                    pattern="^[\w.-]*$" required>
+                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()"
+                                    maxlength="32" pattern="^[\w.-]*$" required>
                                 <i *ngIf="creationMode" class="fa fa-circle-o" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i>
                                 <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-1 col-xs-1">
                                 <mat-form-field>
-                                    <input matInput type="color" name="color" [(ngModel)]="basket.color">
+                                    <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}" [(ngModel)]="basket.color">
                                 </mat-form-field>
                             </div>
                             <mat-form-field>
@@ -73,25 +73,25 @@
                                 <textarea matInput name="clause" title="{{lang.clause}}" placeholder="{{lang.clause}}" [(ngModel)]="basket.clause" matTextareaAutosize
                                     matAutosizeMinRows="1" required></textarea>
                                 <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
-                                (click)="snav2.toggle()"></mat-icon>
+                                    (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
                             <div class="col-md-4 col-xs-4 text-center">
                                 <mat-slide-toggle color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
                                     &nbsp;
-                                    <mat-icon color="primary" [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.5'}" class="fa fa-search fa-2x"></mat-icon>
+                                    <mat-icon color="primary" [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.5'}" style="width: auto;" class="fa fa-search fa-2x"></mat-icon>
                                 </mat-slide-toggle>
 
                             </div>
                             <div class="col-md-4 col-xs-4 text-center">
                                 <mat-slide-toggle color="primary" matTooltip="{{lang.isFolderBasket}}" name="isFolderBasket" [(ngModel)]="basket.isFolderBasket">
                                     &nbsp;
-                                    <mat-icon [ngStyle]="{'opacity': basket.isFolderBasket ? '' : '0.5'}" class="fa fa-folder fa-2x"></mat-icon>
+                                    <mat-icon [ngStyle]="{'opacity': basket.isFolderBasket ? '' : '0.5'}" style="width: auto;" class="fa fa-folder fa-2x"></mat-icon>
                                 </mat-slide-toggle>
                             </div>
                             <div class="col-md-4 col-xs-4 text-center">
                                 <mat-slide-toggle color="primary" matTooltip="{{lang.basketNotification}}" name="flagNotif" [(ngModel)]="basket.flagNotif">
                                     &nbsp;
-                                    <mat-icon [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.5'}" class="fa fa-bell fa-2x"></mat-icon>
+                                    <mat-icon [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.5'}" style="width: auto;" class="fa fa-bell fa-2x"></mat-icon>
                                 </mat-slide-toggle>
                             </div>
                             <div class="col-md-12 text-center" style="padding:10px;">
@@ -104,63 +104,71 @@
                             <span>{{group.group_id}}</span>
                             <mat-icon color="warn" class="fa fa-unlink" matTooltip="dissocier le groupe de la bannette" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
-                        <mat-form-field class="demo-chip-list">
-                            <mat-chip-list #chipList>
-                                <span *ngFor="let action of group.groupActions">
-                                    <mat-chip color="primary" [ngStyle]="{'font-weight': action.default_action_list == true ? 'bold' : ''}" style="cursor:pointer;margin:5px;"
-                                        matTooltip="accéder aux paramètres" *ngIf="action.checked == true" selectable="false"
-                                        removable="false" (click)="openSettings(group,action)">
-                                        {{action.id}}
-                                        <i class="fa fa-circle" style="font-size:4px;padding:0 5px"></i> {{action.label_action}}&nbsp;
-                                        <small *ngIf="action.default_action_list == true">({{lang.default}})</small>
-                                    </mat-chip>
-                                </span>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-chip-list #chipList class="mat-chip-list-stacked">
+                                    <span *ngFor="let action of group.groupActions">
+                                        <mat-chip color="primary" [ngStyle]="{'font-weight': action.default_action_list == true ? 'bold' : ''}" style="cursor:pointer;margin:5px;border-radius:0px;display:flex;"
+                                            *ngIf="action.checked == true" selectable="true" removable="true" (remove)="unlinkAction(group,action)">
+                                            <mat-checkbox color="primary" [checked]="action.default_action_list == true" (click)="setDefaultAction(group,action)"></mat-checkbox>
+                                            &nbsp;
+                                            <span matTooltip="accéder aux paramètres" (click)="openSettings(group,action)">{{action.label_action}}</span>&nbsp;
+                                            <small *ngIf="action.default_action_list == true">({{lang.default}})</small>
+                                            <span style="flex: 1 1 auto;"></span>
+                                            <mat-icon matTooltip="{{lang.delete}}" matChipRemove color="warn" *ngIf="action.default_action_list != true" class="fa fa-times"></mat-icon>
+                                        </mat-chip>
+                                    </span>
+                                </mat-chip-list>
+                                <input placeholder="Action(s) choisie(s)" [matChipInputFor]="chipList" disabled />
+                            </mat-form-field>
 
-                                <input placeholder="Action choisie" [matChipInputFor]="chipList" disabled />
-                            </mat-chip-list>
-                        </mat-form-field>
-                        <mat-accordion>
-                            <mat-expansion-panel (opened)="initAction(i)">
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title>
-                                        {{lang.actionAvailable}}
-                                    </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <div class="example-container">
-                                    <mat-form-field>
-                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                                    </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-accordion>
+                                <mat-expansion-panel (opened)="initAction(i)">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{lang.actionAvailable}}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="example-container">
+                                        <mat-form-field>
+                                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                        </mat-form-field>
 
-                                    <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_action" matSortDirection="asc">
-                                        <ng-container matColumnDef="label_action">
-                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                            <mat-cell *matCellDef="let element" style="flex:6;">
-                                                <mat-checkbox color="primary" (change)="addAction(group)" [(ngModel)]="element.checked">{{element.label_action}}</mat-checkbox>
-                                            </mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef="actions">
-                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                            <mat-cell *matCellDef="let element" style="text-align:right">
-                                                <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="!element.checked">
-                                                    <mat-icon class="fa fa-bars"></mat-icon>
-                                                </button>
-                                                <mat-menu #menu="matMenu">
-                                                    <button mat-menu-item [disabled]="element.default_action_list==true" (click)="setDefaultAction(group,element)">
-                                                        <mat-icon class="fa fa-check-circle"></mat-icon>
-                                                        <span>{{lang.defaultAction}}</span>
+                                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_action" matSortDirection="asc">
+                                            <ng-container matColumnDef="label_action">
+                                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                                <mat-cell *matCellDef="let element" style="flex:6;">
+                                                    <mat-checkbox color="primary" (change)="addAction(group)" [(ngModel)]="element.checked">{{element.label_action}}</mat-checkbox>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <ng-container matColumnDef="actions">
+                                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                                <mat-cell *matCellDef="let element" style="text-align:right">
+                                                    <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="!element.checked">
+                                                        <mat-icon class="fa fa-bars"></mat-icon>
                                                     </button>
-                                                    <button mat-menu-item (click)="openSettings(group,element)">
-                                                        <mat-icon class="fa fa-cogs"></mat-icon>
-                                                        <span>{{lang.moreOptions}}</span>
-                                                    </button>
-                                                </mat-menu>
-                                            </mat-cell>
-                                        </ng-container>
-                                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                                    </mat-table>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
+                                                    <mat-menu #menu="matMenu">
+                                                        <button mat-menu-item [disabled]="element.default_action_list==true" (click)="setDefaultAction(group,element)">
+                                                            <mat-icon class="fa fa-check-circle"></mat-icon>
+                                                            <span>{{lang.defaultAction}}</span>
+                                                        </button>
+                                                        <button mat-menu-item (click)="openSettings(group,element)">
+                                                            <mat-icon class="fa fa-cogs"></mat-icon>
+                                                            <span>{{lang.moreOptions}}</span>
+                                                        </button>
+                                                    </mat-menu>
+                                                </mat-cell>
+                                            </ng-container>
+                                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                        </mat-table>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+
+
                     </mat-tab>
                 </mat-tab-group>
             </mat-card>

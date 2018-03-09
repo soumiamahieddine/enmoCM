@@ -1,8 +1,9 @@
 <?php
+
 /*
-*    Copyright 2008-2015 Maarch
+*    Copyright 2015 Maarch
 *
-*   This file is part of Maarch Framework.
+*  This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,23 +16,11 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
-* @brief Contains the apps tools class
-*
-*
-* @file
-* @date $date$
-* @version $Revision$
-* @ingroup apps
-*/
+namespace Basket\models;
 
-require_once 'apps/'. $_SESSION['config']['app_id'] .'/class/class_business_app_tools_Abstract.php';
-
-class business_app_tools extends business_app_tools_Abstract
+class GroupBasketModel extends GroupBasketModelAbstract
 {
-    // custom
-
 }

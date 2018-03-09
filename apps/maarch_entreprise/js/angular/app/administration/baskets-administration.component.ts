@@ -91,6 +91,12 @@ export class BasketsAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.baskets);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
+                    this.http.get(this.coreUrl + "rest/sortedBaskets")
+                        .subscribe((data: any) => {
+                            this.basketsOrder = data['baskets'];
+                        }, () => {
+                            location.href = "index.php";
+                        });
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -98,7 +104,6 @@ export class BasketsAdministrationComponent implements OnInit {
     }
 
     updateBasketOrder(currentBasket: any) {
-        console.log(this.basketsOrder);
         this.http.put(this.coreUrl + "rest/sortedBaskets/" + currentBasket.basket_id, this.basketsOrder)
             .subscribe((data: any) => {
                 this.baskets = data['baskets'];

@@ -89,7 +89,7 @@
                     <ng-container matColumnDef="default_priority">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.defaultPriority}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" routerLink="/administration/priorities/{{element.id}}" style="cursor:pointer;">
-                            <mat-checkbox color="primary" [checked]="element.default_priority" disabled></mat-checkbox>
+                            <span *ngIf="element.default_priority" color="primary" class="fa fa-check fa-2x"></span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">

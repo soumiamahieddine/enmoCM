@@ -382,6 +382,15 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.user.baskets[i].userToDisplay = '';
     }
 
+    toggleBasket(basket: any) {
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"basketId" : basket.basket_id, "groupSerialId":basket.groupSerialId, "allowed":basket.allowed})
+        .subscribe((data: any) => {
+            this.notify.success(this.lang.basketUpdated);
+        }, (err) => {
+            this.notify.error(err.error.errors);
+        });
+    }
+
     activateAbsence() {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "ABS" })
             .subscribe((data: any) => {

@@ -7,9 +7,6 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{baskets.length}} {{lang.baskets}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
-        </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"

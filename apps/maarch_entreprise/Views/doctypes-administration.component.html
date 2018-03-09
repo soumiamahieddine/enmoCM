@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <mat-form-field>
-                                        <input matInput type="color" name="css_style" id="css_style" [(ngModel)]="currentFirstLevel.css_style">
+                                        <input matInput type="color" name="css_style" matTooltip="{{lang.chooseColor}}" id="css_style" [(ngModel)]="currentFirstLevel.css_style">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <mat-form-field>
-                                        <input matInput type="color" name="css_style" id="css_style" [(ngModel)]="currentSecondLevel.css_style">
+                                        <input matInput type="color" matTooltip="{{lang.chooseColor}}" name="css_style" id="css_style" [(ngModel)]="currentSecondLevel.css_style">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -274,31 +274,31 @@
                                     </mat-expansion-panel-header>
                                     <mat-table #table [dataSource]="dataSource">
                                         <ng-container matColumnDef="label">
-                                            <mat-header-cell *matHeaderCellDef>{{field}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.field}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.label}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="use">
-                                            <mat-header-cell *matHeaderCellDef>{{used}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.used}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element;let i = index">
                                                 <mat-checkbox color="primary" [checked]="element.use" (change)="selectIndexesUse($event, i)"></mat-checkbox>
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="mandatory">
-                                            <mat-header-cell *matHeaderCellDef>{{mandatory}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.mandatory}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element;let i = index">
                                                 <mat-checkbox color="primary" [checked]="element.mandatory" (change)="selectIndexesMandatory($event, i)"></mat-checkbox>
                                             </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="type">
-                                            <mat-header-cell *matHeaderCellDef>{{fieldType}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.fieldType}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.type}} </mat-cell>
                                         </ng-container>                                        
                                         <ng-container matColumnDef="type_field">
-                                            <mat-header-cell *matHeaderCellDef>{{fieldNature}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.fieldNature}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.type_field}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="column">
-                                            <mat-header-cell *matHeaderCellDef>{{databaseColumn}}</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef>{{lang.databaseColumn}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.column}} </mat-cell>
                                         </ng-container>
                                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

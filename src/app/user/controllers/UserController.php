@@ -15,6 +15,7 @@
 namespace User\controllers;
 
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -28,6 +29,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\controllers\StoreController;
 use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class UserController
@@ -46,10 +48,12 @@ class UserController
             ]);
         } else {
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-            $users = UserModel::getByEntities([
+            $users = UserEntityModel::getUsersByEntities([
                 'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
                 'entities'  => $entities
             ]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail']]);
+            $users = array_merge($users, $usersNoEntities);
         }
 
         $usersIds = [];
@@ -89,7 +93,7 @@ class UserController
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id']]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'absenceUneeded' => true]);
         $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
@@ -523,7 +527,8 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (empty(GroupModel::getByGroupId(['groupId' => $data['groupId']]))) {
+        $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $data['groupId']]);
+        if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this group']);
@@ -533,6 +538,16 @@ class UserController
         }
 
         UserModel::addGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId'], 'role' => $data['role']]);
+
+        $baskets = GroupBasketModel::get(['select' => ['basket_id'], 'where' => ['group_id = ?'], 'data' => [$data['groupId']]]);
+        foreach ($baskets as $basket) {
+            UserBasketPreferenceModel::create([
+                'userSerialId'  => $aArgs['id'],
+                'groupSerialId' => $group['id'],
+                'basketId'      => $basket['basket_id'],
+                'display'       => 'true'
+            ]);
+        }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         HistoryController::add([
@@ -587,11 +602,17 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
+        $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
+        if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
         UserModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+
+        UserBasketPreferenceModel::delete([
+            'where' => ['user_serial_id = ?', 'group_serial_id = ?'],
+            'data'  => [$aArgs['id'], $group['id']]
+        ]);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         HistoryController::add([
@@ -635,7 +656,7 @@ class UserController
             $pEntity = 'Y';
         }
 
-        UserModel::addEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId'], 'role' => $data['role'], 'primaryEntity' => $pEntity]);
+        UserEntityModel::addUserEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId'], 'role' => $data['role'], 'primaryEntity' => $pEntity]);
         HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $user['user_id'],
@@ -666,7 +687,7 @@ class UserController
             $data['user_role'] = '';
         }
 
-        UserModel::updateEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
+        UserEntityModel::updateUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId'], 'role' => $data['user_role']]);
         HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $aArgs['id'],
@@ -690,7 +711,7 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        UserModel::updatePrimaryEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
+        UserEntityModel::updateUserPrimaryEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         return $response->withJson(['entities' => UserModel::getEntitiesById(['userId' => $user['user_id']])]);
     }
@@ -707,10 +728,10 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
-        UserModel::deleteEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
+        UserEntityModel::deleteUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         if (!empty($primaryEntity['entity_id']) && $primaryEntity['entity_id'] == $aArgs['entityId']) {
-            UserModel::reassignPrimaryEntity(['userId' => $user['user_id']]);
+            UserEntityModel::reassignUserPrimaryEntity(['userId' => $user['user_id']]);
         }
 
         HistoryController::add([
@@ -760,7 +781,7 @@ class UserController
         if (!$groupFound) {
             return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
         }
-        $groups = BasketModel::getGroups(['id' => $data['basketId']]);
+        $groups = GroupBasketModel::get(['where' => ['basket_id = ?'], 'data' => [$data['basketId']]]);
         $groupFound = false;
         foreach ($groups as $value) {
             if ($value['group_id'] == $group['group_id']) {
@@ -771,16 +792,15 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
         }
 
-        $preference = UserBasketPreferenceModel::get([
-            'select'    => [1],
-            'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
-            'data'      => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
-        ]);
-        if (!empty($preference)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
-        }
-
         if ($data['allowed']) {
+            $preference = UserBasketPreferenceModel::get([
+                'select'    => [1],
+                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                'data'      => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
+            ]);
+            if (!empty($preference)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
+            }
             $data['userSerialId'] = $aArgs['id'];
             $data['display'] = 'true';
             UserBasketPreferenceModel::create($data);
@@ -830,10 +850,12 @@ class UserController
                 }
                 if ($GLOBALS['userId'] != 'superadmin') {
                     $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                    $users = UserModel::getByEntities([
+                    $users = UserEntityModel::getUsersByEntities([
                         'select'    => ['users.id'],
                         'entities'  => $entities
                     ]);
+                    $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
+                    $users = array_merge($users, $usersNoEntities);
                     $allowed = false;
                     foreach ($users as $value) {
                         if ($value['id'] == $aArgs['id']) {
