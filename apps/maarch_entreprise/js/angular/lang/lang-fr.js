@@ -148,7 +148,7 @@ exports.LANG_FR = {
     "keywordHelpDesc_10": "Sous-entités immédiates (n-1) des entités données en argument",
     "keywordHelpDesc_11": "Exemple dans la définition de la sécurité d'un groupe (where clause) : accès sur les ressources concernant le service d'appartenance principal de l'utilisateur connecté, ou les sous-services de ce service",
     "keywordHelpDesc_2": "Courriel de l'utilisateur connecté",
-    "keywordHelpDesc_3": "Toutes les entités rattachées à l'utilisateur connecté. N'inclue pas les sous-entités",
+    "keywordHelpDesc_3": "Toutes les entités rattachées à l'utilisateur connecté. N'inclut pas les sous-entités",
     "keywordHelpDesc_4": "Entité primaire de l'utilisateur connecté",
     "keywordHelpDesc_5": "Sous-entités de la liste d'argument, qui peut aussi être @my_entities ou @my_primary_entity",
     "keywordHelpDesc_6": "Entité parente de l'entité en argument",
