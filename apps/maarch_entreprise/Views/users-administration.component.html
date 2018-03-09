@@ -7,14 +7,12 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{data.length}} {{lang.users}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
-        </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
             <mat-nav-list>
+                <h3 mat-subheader>{{lang.browsing}}</h3>
                 <a mat-list-item href="index.php">
                     <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
                     <p mat-line>
@@ -30,11 +28,27 @@
             </mat-nav-list>
             <mat-divider></mat-divider>
             <mat-nav-list>
-                <h3 mat-subheader>{{lang.tools}}</h3>
+                <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item routerLink="/administration/users/new">
                     <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                     <p mat-line>
                         {{lang.add}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>Menu personnel</h3>
+                <a mat-list-item routerLink="/profile">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-user-circle-o"></mat-icon>
+                    <p mat-line>
+                        Mon profile
+                    </p>
+                </a>
+                <a mat-list-item href="index.php?display=true&page=logout&logout=true">
+                    <mat-icon color="warn" mat-list-icon class="fa fa-sign-out"></mat-icon>
+                    <p mat-line>
+                        Se déconnecter
                     </p>
                 </a>
             </mat-nav-list>
@@ -105,7 +119,8 @@
                         </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" style="cursor:pointer;"
+                        matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
             </mat-card>
         </mat-sidenav-content>
