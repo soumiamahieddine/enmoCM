@@ -167,7 +167,7 @@ export const LANG_FR = {
     "module"                       : "Module",
     "modules"                      : "Modules",
     "moreOptions"                  : "Plus d'options",
-    "move"                         : "Déplaçer",
+    "move"                         : "Déplacer",
     "myProfile"                    : "Mon profil",
     "newAction"                    : "Nouvelle action",
     "newElement"                   : "Nouvel élément",
