@@ -305,7 +305,7 @@ export const LANG_FR = {
     "workingDays"                       : "jour(s) ouvré(s)",
     "yes"                               : "Oui",
     "zipcode"                           : "Code postal",
-    "doctypesAdmin"                     : "Typologies documentaire",
+    "doctypesAdmin"                     : "Typologie(s) documentaire(s)",
     "firstLevelDoctype"                 : "Chemise",
     "secondLevelDoctype"                : "Sous-chemise",
     "doctype"                           : "Type de document",
