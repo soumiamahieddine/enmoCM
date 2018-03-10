@@ -10,6 +10,8 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
+var menu_component_1 = require("../menu/menu.component");
+var menu_nav_component_1 = require("../menu/menu-nav.component");
 var app_material_module_1 = require("../app-material.module");
 var administration_routing_module_1 = require("./administration-routing.module");
 var administration_component_1 = require("./administration.component");
@@ -53,6 +55,8 @@ var AdministrationModule = /** @class */ (function () {
                 administration_routing_module_1.AdministrationRoutingModule
             ],
             declarations: [
+                menu_component_1.MenuComponent,
+                menu_nav_component_1.MenuNavComponent,
                 administration_component_1.AdministrationComponent,
                 users_administration_component_1.UsersAdministrationComponent,
                 user_administration_component_1.UserAdministrationComponent,

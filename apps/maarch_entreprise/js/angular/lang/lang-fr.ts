@@ -161,6 +161,7 @@ export const LANG_FR = {
     "lastname"                     : "Nom",
     "life_cycle"                   : "Cycle de vie",
     "linkGroup"                    : "Associer un groupe",
+    "logout"                       : "Se déconnecter",
     "maarchApplication"            : "Application Maarch",
     "manageAbsences"               : "Rediriger mes bannettes",
     "manageSignatures"             : "Gérer les signatures",

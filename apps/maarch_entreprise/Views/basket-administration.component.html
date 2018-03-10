@@ -14,30 +14,19 @@
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
-            <mat-nav-list>
-                <a mat-list-item href="index.php">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
-                    <p mat-line>
-                        {{lang.home}}
-                    </p>
-                </a>
-                <a mat-list-item routerLink="/administration/baskets">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
-                    <p mat-line>
-                        {{lang.back}}
-                    </p>
-                </a>
-            </mat-nav-list>
+            <menu-nav></menu-nav>
             <mat-divider></mat-divider>
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.tools}}</h3>
-                <a mat-list-item *ngIf="!creationMode" (click)="linkGroup()">
+            <mat-nav-list *ngIf="!creationMode">
+                <h3 mat-subheader>{{lang.actions}}</h3>
+                <a mat-list-item (click)="linkGroup()">
                     <mat-icon color="primary" mat-list-icon class="fa fa-link"></mat-icon>
                     <p mat-line>
                         {{lang.linkGroup}}
                     </p>
                 </a>
             </mat-nav-list>
+            <mat-divider></mat-divider>
+            <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">

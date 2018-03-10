@@ -11,21 +11,7 @@
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.browsing}}</h3>
-                <a mat-list-item href="index.php">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
-                    <p mat-line>
-                        {{lang.home}}
-                    </p>
-                </a>
-                <a mat-list-item routerLink="/administration">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
-                    <p mat-line>
-                        {{lang.back}}
-                    </p>
-                </a>
-            </mat-nav-list>
+            <menu-nav></menu-nav>
             <mat-divider></mat-divider>
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.actions}}</h3>
@@ -37,21 +23,7 @@
                 </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
-            <mat-nav-list>
-                <h3 mat-subheader>Menu personnel</h3>
-                <a mat-list-item routerLink="/profile">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-user-circle-o"></mat-icon>
-                    <p mat-line>
-                        Mon profile
-                    </p>
-                </a>
-                <a mat-list-item href="index.php?display=true&page=logout&logout=true">
-                    <mat-icon color="warn" mat-list-icon class="fa fa-sign-out"></mat-icon>
-                    <p mat-line>
-                        Se déconnecter
-                    </p>
-                </a>
-            </mat-nav-list>
+            <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">

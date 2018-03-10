@@ -146,6 +146,7 @@ export const LANG_EN = {
     "lastname"                  : "Lastname",
     "life_cycle"                : "Life cycle",
     "linkGroup"                 : "Link a group",
+    "logout"                    : "Logout",
     "maarchApplication"         : "Maarch App",
     "manageAbsences"            : "Manage absences",
     "manageSignatures"          : "Manage signatures",

@@ -2,6 +2,8 @@ var angularGlobals = {};
 function triggerAngular(prodmode, locationToGo) {
     var views = [
         //'header',
+        'menu',
+        'menuNav',
         'administration',
         'users-administration',
         'users-administration-redirect-modal',
