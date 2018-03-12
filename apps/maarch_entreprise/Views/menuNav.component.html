@@ -1,0 +1,15 @@
+<mat-nav-list>
+    <h3 mat-subheader>{{lang.browsing}}</h3>
+    <a mat-list-item href="index.php">
+        <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+        <p mat-line>
+            {{lang.home}}
+        </p>
+    </a>
+    <a mat-list-item (click)="backClicked()">
+        <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+        <p mat-line>
+            {{lang.back}}
+        </p>
+    </a>
+</mat-nav-list>

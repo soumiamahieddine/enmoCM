@@ -3,6 +3,8 @@ import { CommonModule }                         from '@angular/common';
 import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 
+import { MenuComponent }                        from '../menu/menu.component';
+import { MenuNavComponent }                        from '../menu/menu-nav.component';
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
@@ -44,6 +46,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
         AdministrationRoutingModule
     ],
     declarations: [
+        MenuComponent,
+        MenuNavComponent,
         AdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,

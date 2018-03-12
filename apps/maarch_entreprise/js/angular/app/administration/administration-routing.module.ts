@@ -45,6 +45,7 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
             { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
             { path: 'administration/doctypes', component: DoctypesAdministrationComponent },
             { path: 'administration/diffusionModels', component: DiffusionModelsAdministrationComponent },
+            { path: 'administration/diffusionModels/new', component: DiffusionModelAdministrationComponent },
             { path: 'administration/diffusionModels/:id', component: DiffusionModelAdministrationComponent },
             { path: 'administration/entities', component: EntitiesAdministrationComponent },
             { path: 'administration/entities/new', component: EntityAdministrationComponent },
