@@ -153,6 +153,7 @@ if (!defined("_EMAIL")) define("_EMAIL", "Courriel");
 if (!defined("_DOCTYPE"))    define("_DOCTYPE", "Type de document");
 if (!defined("_DOCTYPES_MAIL"))    define("_DOCTYPES_MAIL", "Type(s) de courrier");
 if (!defined("_TYPE"))    define("_TYPE", "Type");
+if (!defined("_URL"))    define("_URL", "URL");
 if (!defined("_WARNING_MESSAGE_DEL_TYPE"))
     define("_WARNING_MESSAGE_DEL_TYPE", "Avertissement :<br> La suppression d'un type de document entraine la réaffectation des documents à un nouveau type.");
 if (!defined("_WARNING_MESSAGE_DEL_GROUP"))
@@ -926,7 +927,11 @@ if (!defined("_CONTACT_MODIFIED")) define("_CONTACT_MODIFIED", "Contact modifié
 if (!defined("_CONTACT_DELETED")) define("_CONTACT_DELETED", "Contact supprimé");
 if (!defined("_MODIFY_CONTACT")) define("_MODIFY_CONTACT", "Modifier un contact");
 if (!defined("_IS_CORPORATE_PERSON")) define("_IS_CORPORATE_PERSON", "Personne morale");
-if (!defined("_INDIVIDUAL")) define("_INDIVIDUAL", "Personne physique");
+if (!defined("_IS_INTERNAL_CONTACT")) define("_IS_INTERNAL_CONTACT","Contact interne");
+if (!defined("_IS_EXTERNAL_CONTACT")) define("_IS_EXTERNAL_CONTACT","Contact externe");
+if (!defined("_SEARCH_DIRECTORY")) define("_SEARCH_DIRECTORY","Recherche annuaire");
+if (!defined("_EXTERNAL_CONTACT_ID")) define("_EXTERNAL_CONTACT_ID","Identifiant contact externe");
+if (!defined("_INDIVIDUAL")) define("_INDIVIDUAL", "Particulier");
 if (!defined("_CONTACT_TARGET")) define("_CONTACT_TARGET", "Pour quel contact est il possible d'utiliser ce type ?");
 if (!defined("_CONTACT_TARGET_LIST")) define("_CONTACT_TARGET_LIST", "Cible du type de contact");
 if (!defined("_CONTACT_TYPE_CREATION")) define("_CONTACT_TYPE_CREATION", "Possibilité de créer un contact de ce type hors panneau d'administration ?");
@@ -1108,6 +1113,14 @@ if (!defined("_CHOOSE_A_CONTACT")) define("_CHOOSE_A_CONTACT","Choisissez un con
 
 if (!defined("_CREATE_CONTACTS")) define("_CREATE_CONTACTS","Tous les contacts");
 if (!defined("_LINKED_CONTACT")) define("_LINKED_CONTACT","Lié au contact");
+
+if (!defined("_COMMUNICATION_TYPE")) define("_COMMUNICATION_TYPE","Moyen de communication");
+if (!defined("_COMMUNICATION_VALUE")) define("_COMMUNICATION_VALUE","Valeur");
+if (!defined("_COMMUNICATION_ADDED")) define("_COMMUNICATION_ADDED","Communication ajoutée");
+if (!defined("_COMMUNICATION_MODIFIED")) define("_COMMUNICATION_MODIFIED","Communication modifiée");
+if (!defined("_COMMUNICATION_DELETED")) define("_COMMUNICATION_DELETED","Communication supprimée");
+if (!defined("_CHOOSE_COMMUNICATION_TYPES")) define("_CHOOSE_COMMUNICATION_TYPES","Choissisez le moyen de communication");
+if (!defined("_CONTACT_COMMUNICATION_DEFINE")) define("_CONTACT_COMMUNICATION_DEFINE","Moyen de communication défini");
 
 //// INDEXING SEARCHING
 if (!defined("_NO_COLLECTION_ACCESS_FOR_THIS_USER")) define("_NO_COLLECTION_ACCESS_FOR_THIS_USER", "Aucun accès aux collections documentaires pour cet utilisateur");
@@ -2067,7 +2080,8 @@ if (!defined('_UPDATE_DESC_END'))
     define('_UPDATE_DESC_END', 'Mise à jour réussie');
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE'))
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucune version disponible pour une mise à jour');
-
+if (!defined('_SAVE_NUMERIC_PACKAGE'))
+    define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
 //PARAMETERS
 if(!defined('_ID_IS_EMPTY_CONTROLLER'))
     define('_ID_IS_EMPTY_CONTROLLER',' L\'identifiant est vide');

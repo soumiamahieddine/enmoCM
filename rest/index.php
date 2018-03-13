@@ -298,6 +298,7 @@ $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::clas
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
+$app->get('/contact/checkCommunication', \Core\Controllers\ContactController::class . ':getCheckCommunication');
 
 //Templates
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
