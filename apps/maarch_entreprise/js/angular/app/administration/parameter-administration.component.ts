@@ -11,7 +11,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals['parameter-administrationView'],
+    templateUrl: "../../../../Views/parameter-administration.component.html",
     providers: [NotificationService]
 })
 export class ParameterAdministrationComponent implements OnInit {

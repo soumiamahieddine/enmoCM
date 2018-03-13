@@ -9,7 +9,7 @@ declare var angularGlobals : any;
 
 @Component({
     selector: 'menu-app',
-    templateUrl :   angularGlobals["menuView"],
+    templateUrl :   "../../../../Views/menu.component.html",
 })
 export class MenuComponent implements OnInit {
 

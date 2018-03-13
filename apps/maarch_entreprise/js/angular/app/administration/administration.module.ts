@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 
 import { MenuComponent }                        from '../menu/menu.component';
-import { MenuNavComponent }                        from '../menu/menu-nav.component';
+import { MenuNavComponent }                     from '../menu/menu-nav.component';
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
@@ -16,7 +16,6 @@ import { GroupAdministrationComponent }                 from './group-administra
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
 import { EntitiesAdministrationComponent, EntitiesAdministrationRedirectModalComponent} from './entities-administration.component';
-import { EntityAdministrationComponent }                from './entity-administration.component';
 import { DiffusionModelsAdministrationComponent }       from './diffusionModels-administration.component';
 import { DiffusionModelAdministrationComponent }        from './diffusionModel-administration.component';
 import { DoctypesAdministrationComponent, DoctypesAdministrationRedirectModalComponent }              from './doctypes-administration.component';
@@ -57,7 +56,6 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketAdministrationComponent,
         DoctypesAdministrationComponent,
         EntitiesAdministrationComponent,
-        EntityAdministrationComponent,
         StatusesAdministrationComponent,
         StatusAdministrationComponent,
         ActionsAdministrationComponent,

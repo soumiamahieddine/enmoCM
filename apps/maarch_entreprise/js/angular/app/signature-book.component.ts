@@ -24,7 +24,7 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: angularGlobals["signature-bookView"],
+  templateUrl: "../../../Views/signature-book.component.html",
 })
 export class SignatureBookComponent implements OnInit {
 

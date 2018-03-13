@@ -110,7 +110,7 @@ var ProfileComponent = /** @class */ (function () {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
-        this.http.get(this.coreUrl + 'rest/currentUser/profile')
+        this.http.get('../../rest/currentUser/profile')
             .subscribe(function (data) {
             _this.user = data;
             _this.user.baskets.forEach(function (value, index) {
@@ -431,8 +431,8 @@ var ProfileComponent = /** @class */ (function () {
     ], ProfileComponent.prototype, "sort", void 0);
     ProfileComponent = __decorate([
         core_1.Component({
-            templateUrl: angularGlobals.profileView,
-            styleUrls: ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+            templateUrl: "../../../Views/profile.component.html",
+            styleUrls: ['../../../css/profile.component.css'],
             providers: [notification_service_1.NotificationService]
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, core_1.NgZone, notification_service_1.NotificationService])

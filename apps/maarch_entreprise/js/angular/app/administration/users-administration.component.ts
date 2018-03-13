@@ -12,8 +12,8 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: angularGlobals["users-administrationView"],
-    styleUrls: ['css/users-administration.component.css'],
+    templateUrl: "../../../../Views/users-administration.component.html",
+    styleUrls: ['../../../../css/users-administration.component.css'],
     providers: [NotificationService]
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -212,7 +212,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 }
 @Component({
-    templateUrl: angularGlobals["users-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/users-administration-redirect-modal.component.html"
 })
 export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;

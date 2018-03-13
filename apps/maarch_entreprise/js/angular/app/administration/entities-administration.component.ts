@@ -14,7 +14,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["entities-administrationView"],
+    templateUrl: "../../../../Views/entities-administration.component.html",
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -55,18 +55,11 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Entités";
-        }
-    }
-
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -620,7 +613,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 }
 @Component({
-    templateUrl: angularGlobals["entities-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/entities-administration-redirect-modal.component.html"
 })
 export class EntitiesAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;

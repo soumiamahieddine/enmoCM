@@ -28,7 +28,7 @@ var MenuNavComponent = /** @class */ (function () {
     MenuNavComponent = __decorate([
         core_1.Component({
             selector: 'menu-nav',
-            templateUrl: angularGlobals["menuNavView"],
+            templateUrl: "../../../../Views/menuNav.component.html",
         }),
         __metadata("design:paramtypes", [http_1.HttpClient, common_1.Location])
     ], MenuNavComponent);

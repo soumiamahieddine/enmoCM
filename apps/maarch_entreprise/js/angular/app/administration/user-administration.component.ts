@@ -13,8 +13,8 @@ declare const angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["user-administrationView"],
-    styleUrls: ['css/user-administration.component.css'],
+    templateUrl: "../../../../Views/user-administration.component.html",
+    styleUrls: ['../../../../css/user-administration.component.css'],
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {

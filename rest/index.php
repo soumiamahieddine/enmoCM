@@ -108,7 +108,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
-$app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
+$app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');

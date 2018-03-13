@@ -12,7 +12,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["actions-administrationView"],
+    templateUrl: "../../../../Views/actions-administration.component.html",
     providers: [NotificationService]
 })
 

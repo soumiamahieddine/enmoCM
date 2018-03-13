@@ -10,7 +10,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["doctypes-administrationView"],
+    templateUrl: "../../../../Views/doctypes-administration.component.html",
     providers: [NotificationService]
 })
 
@@ -49,18 +49,11 @@ export class DoctypesAdministrationComponent implements OnInit {
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Typologie documentaire";
-        }
-    }
-
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -371,7 +364,7 @@ export class DoctypesAdministrationComponent implements OnInit {
 
 }
 @Component({
-    templateUrl: angularGlobals["doctypes-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/doctypes-administration-redirect-modal.component.html"
 })
 export class DoctypesAdministrationRedirectModalComponent {
     lang: any = LANG;

@@ -13,7 +13,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["notifications-schedule-administrationView"],
+    templateUrl: "../../../../Views/notifications-schedule-administration.component.html",
     providers: [NotificationService]
 })
 export class NotificationsScheduleAdministrationComponent implements OnInit {

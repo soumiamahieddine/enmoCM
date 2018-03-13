@@ -23,7 +23,7 @@ var MenuComponent = /** @class */ (function () {
     MenuComponent = __decorate([
         core_1.Component({
             selector: 'menu-app',
-            templateUrl: angularGlobals["menuView"],
+            templateUrl: "../../../../Views/menu.component.html",
         }),
         __metadata("design:paramtypes", [http_1.HttpClient])
     ], MenuComponent);

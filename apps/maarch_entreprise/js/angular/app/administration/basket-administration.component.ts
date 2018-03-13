@@ -14,7 +14,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["basket-administrationView"],
+    templateUrl: "../../../../Views/basket-administration.component.html",
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
@@ -261,7 +261,7 @@ export class BasketAdministrationComponent implements OnInit {
 }
 
 @Component({
-    templateUrl: angularGlobals["basket-administration-settings-modalView"],
+    templateUrl: "../../../../Views/basket-administration-settings-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
@@ -463,9 +463,8 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 }
 
-import { FormGroup, Validators } from '@angular/forms';
 @Component({
-    templateUrl: angularGlobals["basket-administration-groupList-modalView"],
+    templateUrl: "../../../../Views/basket-administration-groupList-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationGroupListModalComponent {

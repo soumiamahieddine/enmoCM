@@ -10,7 +10,7 @@ declare var angularGlobals : any;
 
 @Component({
     selector: 'menu-nav',
-    templateUrl :   angularGlobals["menuNavView"],
+    templateUrl :   "../../../../Views/menuNav.component.html",
 })
 export class MenuNavComponent implements OnInit {
 

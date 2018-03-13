@@ -40,7 +40,6 @@
 include_once '../../core/class/class_functions.php';
 include_once '../../core/class/class_db_pdo.php';
 include_once '../../core/init.php';
-include_once 'apps/maarch_entreprise/define.php';
 
 if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
@@ -372,20 +371,4 @@ if (file_exists($path)) {
     </div>
     </div>
 </body>
-<?php
-if (PROD_MODE) {
-?>
-<!--    <script src="js/angular/main.bundle.min.js"></script>-->
-<?php
-} else {
-    ?>
-    <script src="../../node_modules/systemjs/dist/system.src.js"></script>
-    <script src="js/angular/systemjs.config.js"></script>
-<!--    <script>-->
-<!--        System.import('js/angular/main.js').catch(function(err){ console.error(err); });-->
-<!--    </script>-->
-    <?php
-}
-?>
-
 </html>

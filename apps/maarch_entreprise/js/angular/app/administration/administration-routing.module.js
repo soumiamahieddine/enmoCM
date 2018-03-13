@@ -42,7 +42,7 @@ var AdministrationRoutingModule = /** @class */ (function () {
         core_1.NgModule({
             imports: [
                 router_1.RouterModule.forChild([
-                    { path: 'administration', component: administration_component_1.AdministrationComponent },
+                    { path: '', component: administration_component_1.AdministrationComponent },
                     { path: 'administration/users', component: users_administration_component_1.UsersAdministrationComponent },
                     { path: 'administration/users/new', component: user_administration_component_1.UserAdministrationComponent },
                     { path: 'administration/users/:id', component: user_administration_component_1.UserAdministrationComponent },

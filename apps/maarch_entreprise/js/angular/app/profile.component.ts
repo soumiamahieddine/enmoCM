@@ -13,8 +13,8 @@ declare var angularGlobals : any;
 
 
 @Component({
-    templateUrl : angularGlobals.profileView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+    templateUrl : "../../../Views/profile.component.html",
+    styleUrls   : ['../../../css/profile.component.css'],
     providers   : [NotificationService]
 })
 export class ProfileComponent implements OnInit {
@@ -125,7 +125,7 @@ export class ProfileComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/currentUser/profile')
+        this.http.get('../../rest/currentUser/profile')
             .subscribe((data : any) => {
                 this.user = data;
 
