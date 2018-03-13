@@ -49,16 +49,16 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="basket_id" matSortDirection="asc">
                     <ng-container matColumnDef="basket_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.basket_id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.basket_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="basket_name">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header >{{lang.label}}</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="basket_desc">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"  > {{element.basket_desc}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.basket_desc}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>

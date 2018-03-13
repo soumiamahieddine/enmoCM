@@ -48,8 +48,8 @@
                             <input type="color" value="{{element.color}}" style="background:none;border:none;width:45px;" disabled> {{element.label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="delays">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processDelay}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processDelay}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
@@ -59,8 +59,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="working_days">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.processType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processType}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
                             </span>
@@ -73,8 +73,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="default_priority">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.defaultPriority}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" >
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.defaultPriority}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.default_priority" color="primary" class="fa fa-check fa-2x"></span>
                         </mat-cell>
                     </ng-container>

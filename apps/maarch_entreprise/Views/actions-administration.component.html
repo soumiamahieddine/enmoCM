@@ -43,23 +43,23 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="label_action">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionName}}</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="history">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.actionHistory}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.actionHistory}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.history == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.history == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="is_folder_action">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.isFolderAction}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.isFolderAction}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>

@@ -48,8 +48,8 @@
                         {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                         {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="value">

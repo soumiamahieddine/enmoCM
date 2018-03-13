@@ -37,20 +37,20 @@
                         <mat-cell *matCellDef="let element" style="flex:1;">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="event_type">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.event}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.event_type}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.event}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.event_type}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="user_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.user}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.user_id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.user}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.user_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="info">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:3;">{{lang.description}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:3;"> {{element.info}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="remote_ip">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.ip}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.remote_ip}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.ip}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.remote_ip}} </mat-cell>
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

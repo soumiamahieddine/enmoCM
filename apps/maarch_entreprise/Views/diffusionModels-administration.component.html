@@ -48,8 +48,8 @@
                         {{element.title}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:2;">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:2;" [class.hide-for-mobile]="mobileQuery.matches">
                         {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="object_type">

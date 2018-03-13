@@ -43,8 +43,8 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="group_desc" matSortDirection="asc">
                     <ng-container matColumnDef="group_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             {{element.group_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="group_desc">

@@ -49,17 +49,17 @@
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="notification_id" matSortDirection="asc">
                     <ng-container matColumnDef="notification_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.notification_id}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches"> {{element.notification_id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:2;"> {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="is_enabled">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.NotificationEnabled}}</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">{{lang.NotificationEnabled}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" matTooltip="{{lang.view}}" 
-                            style="flex:1;">
+                            style="flex:1;" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.is_enabled == 'N'"> {{lang.no}} </span>
                             <span *ngIf="element.is_enabled == 'Y'"> {{lang.yes}} </span>
                         </mat-cell>

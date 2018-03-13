@@ -50,8 +50,8 @@
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                         {{element.id}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="label_status">
