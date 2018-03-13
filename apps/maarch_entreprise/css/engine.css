@@ -302,3 +302,7 @@ h1.admin-app-name {
     }
 }
 .jstree-checkbox { display: none !important; }
+
+.card-app-content {
+    min-height: 100%;
+}

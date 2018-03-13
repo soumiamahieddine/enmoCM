@@ -17,7 +17,7 @@
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading">
+            <mat-card *ngIf="!loading" class="card-app-content">
                 <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
                     <mat-tab *ngFor="let group of groups" label="{{group.group_desc}">
                         <ng-template mat-tab-label>

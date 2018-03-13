@@ -18,7 +18,7 @@
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading">
+            <mat-card *ngIf="!loading" class="card-app-content">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #updateStatusForm="ngForm">
                     <mat-tab-group (selectedTabChange)="resetInput($event)">
                         <mat-tab label="{{lang.chronoNumber}}">

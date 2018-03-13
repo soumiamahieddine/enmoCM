@@ -22,7 +22,7 @@
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading">
+            <mat-card *ngIf="!loading" class="card-app-content">
                 <div *ngIf="action.is_system == true" class="alert alert-danger" role="alert">
                     <b>{{lang.isSytemAction}} !</b> {{lang.doNotModifyUnlessExpert}}</div>
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #actionsFormUp="ngForm">
