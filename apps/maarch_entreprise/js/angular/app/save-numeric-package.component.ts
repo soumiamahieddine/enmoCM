@@ -3,18 +3,13 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 declare function $j(selector: any) : any;
-declare function disablePrototypeJS(method: string, plugins: any) : any;
-declare function createModal(a: string, b: string, c: string, d: string) : any;
-declare function autocomplete(a: number, b: string) : any;
 
-declare var tinymce : any;
-declare var Prototype : any;
 declare var angularGlobals : any;
 
 
 @Component({
-    templateUrl : angularGlobals["save-numeric-packageView"],
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
+    templateUrl : "../../../../Views/save-numeric-package.component.html",
+    // styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
 })
 export class SaveNumericPackageComponent implements OnInit {
 
@@ -49,13 +44,6 @@ export class SaveNumericPackageComponent implements OnInit {
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();
-        }
-
-        if (Prototype.BrowserFeatures.ElementExtensions) {
-            //FIX PROTOTYPE CONFLICT
-            let pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover','tab'];
-            disablePrototypeJS('show', pluginsToDisable);
-            disablePrototypeJS('hide', pluginsToDisable);
         }
 
     }
