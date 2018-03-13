@@ -141,6 +141,42 @@ while ($state <> 'END') {
 			$GLOBALS['mailer']->setHeadCharset($GLOBALS['charset']);
 			
 			//--> Set attachments
+
+			//zip M2M
+			if ($email->message_exchange_id) {
+				$GLOBALS['logger']->write("set zip on message: " . $email->message_exchange_id, 'INFO');
+
+				//Get uri zip
+				$query = "SELECT * FROM message_exchange WHERE message_id = ?";
+				$smtp = $stmt = Bt_doQuery($GLOBALS['db'], $query, array($email->message_exchange_id));
+				$messageExchange = $smtp->fetchObject();
+
+		        $docserver     = \Core\Models\DocserverModel::getById(['docserver_id' => $messageExchange->docserver_id]);
+		        $docserverType = \Core\Models\DocserverTypeModel::getById(['docserver_type_id' => $docserver[0]['docserver_type_id']]);
+
+		        $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange->path);
+		        $filePath      = $docserver[0]['path_template'] . $pathDirectory . $messageExchange->filename;
+		        $fingerprint   = \Core\Controllers\DocserverToolsController::doFingerprint([
+		            'path'            => $filePath,
+		            'fingerprintMode' => $docserverType[0]['fingerprint_mode'],
+		        ]);
+
+		        if($fingerprint['fingerprint'] != $messageExchange->fingerprint){
+		        	$GLOBALS['logger']->write(_PB_WITH_FINGERPRINT_OF_DOCUMENT.'. ResId master : ' . $email->res_id, 'ERROR');
+		        }
+
+				//Get file content
+				if(is_file($filePath)) {
+					//Filename
+					$resFilename = $sendmail_tools->createFilename($messageExchange->reference, 'zip');
+					$GLOBALS['logger']->write("set attachment filename : " . $resFilename, 'INFO');
+
+					//File content
+					$file_content = $GLOBALS['mailer']->getFile($filePath);
+					//Add file
+					$GLOBALS['mailer']->addAttachment($file_content, $resFilename);
+				}
+            } else {
 				//Res master
 				if ($email->is_res_master_attached == 'Y') {
 					$GLOBALS['logger']->write("set attachment on res master : " . $email->res_id, 'INFO');
@@ -242,7 +278,7 @@ while ($state <> 'END') {
 						$GLOBALS['mailer']->addAttachment($file_content, $noteFile['filename'], $noteFile['mime_type']); 
 					}
 				}
-			
+            }
 
 			//Now send the mail
 			$GLOBALS['logger']->write("sending e-mail ...", 'INFO');
@@ -302,6 +338,14 @@ while ($state <> 'END') {
 				. ", email_status = ? "
 				. " WHERE email_id = ? ";
 			$stmt = Bt_doQuery($GLOBALS['db'], $query, array($exec_result, $email->email_id));
+
+            if ($email->message_exchange_id) {
+                //Update message table
+                $query = "UPDATE message_exchange"
+                    . " SET status = ? "
+                    . " WHERE message_id = ? ";
+                $stmt = Bt_doQuery($GLOBALS['db'], $query, array($exec_result, $email->message_exchange_id));
+            }
 			$currentEmail++;
 			$state = 'SEND_AN_EMAIL';
 		} else {
