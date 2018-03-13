@@ -80,6 +80,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'file
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_contacts');
@@ -1003,6 +1004,8 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
 VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 TRUNCATE TABLE docservers;
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
@@ -1033,7 +1036,8 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
-
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Fast internal disc bay for archive transfer', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/archive_transfer/', NULL, NULL, NULL, '2017-01-13 14:47:49.197164', NULL, 'archive_transfer_coll', 10, 'NANTERRE', 2);
 ------------
 --SUPERADMIN USER
 ------------
