@@ -2616,46 +2616,46 @@ $$ LANGUAGE SQL;
 
 CREATE TABLE message_exchange
 (
-  "message_id" text NOT NULL,
-  "schema" text,
-  "type" text NOT NULL,
-  "status" text NOT NULL,
+  message_id text NOT NULL,
+  schema text,
+  type text NOT NULL,
+  status text NOT NULL,
   
-  "date" timestamp NOT NULL,
-  "reference" text NOT NULL,
+  date timestamp NOT NULL,
+  reference text NOT NULL,
   
-  "account_id" text,
-  "sender_org_identifier" text NOT NULL,
-  "sender_org_name" text,
-  "recipient_org_identifier" text NOT NULL,
-  "recipient_org_name" text,
+  account_id text,
+  sender_org_identifier text NOT NULL,
+  sender_org_name text,
+  recipient_org_identifier text NOT NULL,
+  recipient_org_name text,
 
-  "archival_agreement_reference" text,
-  "reply_code" text,
-  "operation_date" timestamp,
-  "reception_date" timestamp,
+  archival_agreement_reference text,
+  reply_code text,
+  operation_date timestamp,
+  reception_date timestamp,
   
-  "related_reference" text,
-  "request_reference" text,
-  "reply_reference" text,
-  "derogation" boolean,
+  related_reference text,
+  request_reference text,
+  reply_reference text,
+  derogation boolean,
   
-  "data_object_count" integer,
-  "size" numeric,
+  data_object_count integer,
+  size numeric,
   
-  "data" text,
+  data text,
   
-  "active" boolean,
-  "archived" boolean,
+  active boolean,
+  archived boolean,
   
-  "res_id_master" numeric default NULL,
+  res_id_master numeric default NULL,
 
-  "docserver_id" character varying(32) NOT NULL,
-  "path" character varying(255) DEFAULT NULL,
-  "filename" character varying(255) DEFAULT NULL,
-  "fingerprint" character varying(255) DEFAULT NULL,
-  "filesize" bigint,
-  "file_path" text default NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL,
+  filename character varying(255) DEFAULT NULL,
+  fingerprint character varying(255) DEFAULT NULL,
+  filesize bigint,
+  file_path text default NULL,
 
   PRIMARY KEY ("message_id")
 )
@@ -2665,10 +2665,10 @@ WITH (
 
 CREATE TABLE unit_identifier
 (
-  "message_id" text NOT NULL,
-  "tablename" text NOT NULL,
-  "res_id" text NOT NULL,
-  "disposition" text default NULL
+  message_id text NOT NULL,
+  tablename text NOT NULL,
+  res_id text NOT NULL,
+  disposition text default NULL
 );
 
 DROP TABLE IF EXISTS users_baskets;
