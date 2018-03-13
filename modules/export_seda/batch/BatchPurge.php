@@ -1,25 +1,22 @@
 <?php
-$checkAllReply = new CheckAllReply();
+$batchPurge = new BatchPurge();
 
 require_once __DIR__ . '/../RequestSeda.php';
 require_once __DIR__ . '/../class/AbstractMessage.php';
-require_once __DIR__ . '/../CheckReply.php';
+require_once __DIR__ . '/../Purge.php';
 
-$CheckReply = new CheckReply();
-$CheckReply->checkAll();
+$batchPurge->purge();
 
-Class CheckAllReply {
-    protected $token;
-    protected $SAE;
+Class BatchPurge {
     protected $db;
-    protected $checkReply;
 
     public function __construct()
     {
         $this->initSession();
     }
 
-    private function initSession() {
+    private function initSession()
+    {
         try {
             include('Maarch_CLITools/ArgsParser.php');;
         } catch (IncludeFileError $e) {
@@ -30,15 +27,15 @@ Class CheckAllReply {
         // Defines scripts arguments
         $argsparser = new ArgsParser();
         // The config file
-                $argsparser->add_arg(
-                    'config',
-                    array(
-                        'short' => 'c',
-                        'long' => 'config',
-                        'mandatory' => true,
-                        'help' => 'Config file path is mandatory.',
-                    )
-                );
+        $argsparser->add_arg(
+            'config',
+            array(
+                'short' => 'c',
+                'long' => 'config',
+                'mandatory' => true,
+                'help' => 'Config file path is mandatory.',
+            )
+        );
 
         $options = $argsparser->parse_args($GLOBALS['argv']);
         // If option = help then options = false and the script continues ...
@@ -71,5 +68,17 @@ Class CheckAllReply {
         $_SESSION['custom_override_id'] = $xml->CONFIG->CustomId;
         $_SESSION['collection_id_choice'] = $xml->COLLECTION->Id;
         $_SESSION['tablename']['docservers'] = 'docservers';
+    }
+
+    public function purge()
+    {
+        $db = new RequestSeda();
+        $letters = $db->getLettersByStatus('REPLY_SEDA');
+
+
+        $purge = new Purge();
+        foreach ($letters as $letter) {
+            $purge->purge($letter->res_id);
+        }
     }
 }

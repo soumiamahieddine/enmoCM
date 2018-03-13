@@ -26,11 +26,45 @@ require_once __DIR__ . '/AbstractMessage.php';
 class ArchiveTransfer
 {
     private $db;
+    private $abstractMessage;
+    private $externalLink;
+    private $xml;
+    protected $entities;
 
     public function __construct()
     {
         $this->db = new RequestSeda();
+        $this->abstractMessage = new AbstractMessage();
         $_SESSION['error'] = "";
+
+        $getXml = false;
+        $path = '';
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'export_seda'. DIRECTORY_SEPARATOR . 'xml'
+            . DIRECTORY_SEPARATOR . 'config.xml'
+        )) {
+            $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+                . DIRECTORY_SEPARATOR . 'export_seda'. DIRECTORY_SEPARATOR . 'xml'
+                . DIRECTORY_SEPARATOR . 'config.xml';
+            $getXml = true;
+        } elseif (file_exists(
+            $_SESSION['config']['corepath'] . 'modules'
+            . DIRECTORY_SEPARATOR . 'export_seda'.  DIRECTORY_SEPARATOR . 'xml'
+            . DIRECTORY_SEPARATOR . 'config.xml'
+        )) {
+            $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'export_seda'
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'config.xml';
+            $getXml = true;
+        }
+
+        if ($getXml) {
+            $this->xml = simplexml_load_file($path);
+        }
+
+        $this->entities = [];
     }
 
     public function receive($listResId)
@@ -42,8 +76,24 @@ class ArchiveTransfer
         $messageObject = new stdClass();
         $messageObject = $this->initMessage($messageObject);
 
-        $result = '';
+        if (!empty($_SESSION['error'])) {
+            return;
+        }
+
+        $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[] = $this->getArchiveUnit(
+            "RecordGrp",
+            null,
+            null,
+            'group_1',
+            null,
+            null
+        );
+
+        $result = $startDate = $endDate = '';
+        $i = 1;
         foreach ($listResId as $resId) {
+            $this->externalLink = false;
+
             if (!empty($result)) {
                 $result .= ',';
             }
@@ -51,44 +101,165 @@ class ArchiveTransfer
 
             $letterbox = $this->db->getLetter($resId);
             $attachments = $this->db->getAttachments($letterbox->res_id);
+            $notes = $this->db->getNotes($letterbox->res_id);
+            $mails = $this->db->getMails($letterbox->res_id);
+            $links = $this->db->getLinks($letterbox->res_id);
 
-            $archiveUnitId = uniqid();
-            if ($letterbox->filename) {
-                $messageObject->dataObjectPackage->descriptiveMetadata[] = $this->getArchiveUnit($letterbox, "File", $attachments, $archiveUnitId, $letterbox->res_id, null);
-                $messageObject->dataObjectPackage->binaryDataObject[] = $this->getBinaryDataObject($letterbox);
+            $relatedObjectReference = [];
+            if (is_array($links)) {
+                foreach ($links as $link) {
+                    if (!array_search($link, $listResId)) {
+                        $relatedObjectReference[$link] = false;
+                    } else {
+                        $relatedObjectReference[$link] = true;
+                    }
+                }
             } else {
-                $messageObject->dataObjectPackage->descriptiveMetadata[] = $this->getArchiveUnit($letterbox, "File");
+                if (!array_search($links, $listResId)) {
+                    $relatedObjectReference[$links] = false;
+                } else {
+                    $relatedObjectReference[$links] = true;
+                }
+            }
+
+            $archiveUnitId = 'letterbox_' . $resId;
+            if ($letterbox->filename) {
+                $docServers = $this->db->getDocServer($letterbox->docserver_id);
+                $uri = str_replace("##", DIRECTORY_SEPARATOR, $letterbox->path);
+                $uri = str_replace("#", DIRECTORY_SEPARATOR, $uri);
+                $uri .= $letterbox->filename;
+                $filePath = $docServers->path_template . $uri;
+
+                if (!file_exists($filePath)) {
+                    $_SESSION['error'] = _ERROR_FILE_NOT_EXIST;
+                    return;
+                }
+
+                $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit[] = $this->getArchiveUnit(
+                    "File",
+                    $letterbox,
+                    $attachments,
+                    $archiveUnitId,
+                    $letterbox->res_id,
+                    $relatedObjectReference
+                );
+
+                $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject(
+                    $filePath,
+                    $_SESSION['collections'][0]['table'] . '_' . $letterbox->res_id
+                );
+            } else {
+                $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit[] = $this->getArchiveUnit(
+                    "File",
+                    $letterbox,
+                    null,
+                    null,
+                    null,
+                    $relatedObjectReference
+                );
             }
 
             if ($attachments) {
+                $j = 1;
                 foreach ($attachments as $attachment) {
-                    //if ($attachment->attachment_type == "simple_attachment" || $attachment->attachment_type == "signed_response") {
+                    $docServers = $this->db->getDocServer($attachment->docserver_id);
+
+                    $uri = str_replace("##", DIRECTORY_SEPARATOR, $attachment->path);
+                    $uri = str_replace("#", DIRECTORY_SEPARATOR, $uri);
+                    $uri .= $attachment->filename;
+
+                    $filePath = $docServers->path_template . $uri;
                     if ($attachment->attachment_type == "signed_response") {
-                        $messageObject->dataObjectPackage->descriptiveMetadata[] = $this->getArchiveUnit($attachment, "Response", null, null, "response_" . $attachment->res_id, "arch_" . $archiveUnitId);
-                        $messageObject->dataObjectPackage->binaryDataObject[] = $this->getBinaryDataObject($attachment, "response");
+                        $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit[] = $this->getArchiveUnit(
+                            "Response",
+                            $attachment,
+                            null,
+                            'attachment_'. $i. '_'. $j,
+                            "response_" . $attachment->res_id,
+                            $archiveUnitId
+                        );
+
+                        $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject(
+                            $filePath,
+                            $_SESSION['collections'][1]['table'] . '_'.  $attachment->res_id
+                        );
+                        $j++;
                     } else {
-                        $messageObject->dataObjectPackage->binaryDataObject[] = $this->getBinaryDataObject($attachment, "attachment");
+                        $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject(
+                            $filePath,
+                            $_SESSION['collections'][1]['table']. '_'.  $attachment->res_id
+                        );
                     }
-
-
-                    //}
                 }
+            }
+
+            if ($notes) {
+                foreach ($notes as $note) {
+                    $id = 'note_'.$note->id;
+                    $filePath = $_SESSION['config']['tmppath']. DIRECTORY_SEPARATOR. $id. '.pdf';
+
+                    $this->abstractMessage->createPDF($id, $note->note_text);
+                    $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject($filePath, $id);
+                }
+            }
+
+            if ($mails) {
+                foreach ($mails as $mail) {
+                    $id = 'email_'.$mail->email_id;
+                    $filePath = $_SESSION['config']['tmppath']. DIRECTORY_SEPARATOR. $id. '.pdf';
+                    $body = str_replace('###', ';', $mail->email_body);
+                    $data = 'email n°' . $mail->email_id . '
+' .'de ' . $mail->sender_email . '
+' . 'à ' . $mail->to_list . '
+' . 'objet : ' . $mail->email_object . '
+' . 'corps : ' . strip_tags(html_entity_decode($body));
+
+                    $this->abstractMessage->createPDF($id, $data);
+                    $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject($filePath, $id);
+                }
+            }
+
+            $format = 'Y-m-d H:i:s.u';
+            $creationDate = DateTime::createFromFormat($format, $letterbox->creation_date);
+            if ($startDate == '') {
+                $startDate = $creationDate;
+            } elseif ( date_diff($startDate, $creationDate) > 0 ) {
+                $startDate = $creationDate;
+            }
+
+            $modificationDate = DateTime::createFromFormat($format, $letterbox->modification_date);
+            if ($endDate == '') {
+                $endDate = $modificationDate;
+            } elseif ( date_diff($endDate, $modificationDate) < 0) {
+                $endDate = $modificationDate;
+            }
+
+            $i++;
+        }
+
+        $originator = "";
+        foreach ($messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit as $archiveUnit) {
+            if (!empty($archiveUnit->Content->OriginatingAgency->Identifier->value)) {
+                $originator = $archiveUnit->Content->OriginatingAgency->Identifier->value;
+                break;
             }
         }
 
-        $messageId = $this->db->insertMessage($messageObject, "ArchiveTransfer");
+        if (!empty($originator)) {
+            $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->OriginatingAgency = new stdClass();
+            $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->OriginatingAgency->Identifier = new stdClass();
+            $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->OriginatingAgency->Identifier->value = $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit[0]->Content->OriginatingAgency->Identifier->value;
+        } else {
+            $_SESSION['error'] = _ERROR_ORIGINATOR_EMPTY;
+        }
+
+        $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->StartDate = $startDate->format('Y-m-d');
+        $messageObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->EndDate = $endDate->format('Y-m-d');
+
+        $messageId = $this->saveMessage($messageObject);
 
         foreach ($listResId as $resId) {
             $this->db->insertUnitIdentifier($messageId, "res_letterbox", $resId);
-        }
-
-        if ($messageId) {
-            $abstractMessage = new AbstractMessage();
-            $abstractMessage->saveXml($messageObject,"ArchiveTransfer",".xml");
-
-            $this->sendAttachment($messageObject);
-        } else {
-            return false;
         }
 
         return $result;
@@ -117,63 +288,112 @@ class ArchiveTransfer
         return true;
     }
 
-    private function sendAttachment($messageObject)
+    private function saveMessage($messageObject)
     {
-        $messageId = $messageObject->messageIdentifier->value;
+        $data = new stdClass();
 
-        foreach ($messageObject->dataObjectPackage->binaryDataObject as $binaryDataObject) {
-            $basename = basename($binaryDataObject->uri);
-            $dest = __DIR__ . DIRECTORY_SEPARATOR . '..'. DIRECTORY_SEPARATOR.'message' . DIRECTORY_SEPARATOR . $messageId . DIRECTORY_SEPARATOR . $basename;
+        $data->messageId                             = $messageObject->MessageIdentifier->value;
+        $data->date                                  = $messageObject->Date;
 
-            copy($binaryDataObject->uri, $dest);
-        }
+        $data->messageIdentifier                     = new stdClass();
+        $data->messageIdentifier->value              = $messageObject->MessageIdentifier->value;
+
+        $data->transferringAgency                    = new stdClass();
+        $data->transferringAgency->identifier        = new stdClass();
+        $data->transferringAgency->identifier->value = $messageObject->TransferringAgency->Identifier->value;
+
+        $data->archivalAgency                        = new stdClass();
+        $data->archivalAgency->identifier            = new stdClass();
+        $data->archivalAgency->identifier->value     = $messageObject->ArchivalAgency->Identifier->value;
+
+        $data->archivalAgreement                     = new stdClass();
+        $data->archivalAgreement->value              = $messageObject->ArchivalAgreement->value;
+
+        $data->replyCode                             = new stdClass();
+        $data->replyCode->value                      = $messageObject->ReplyCode->value;
+
+        $aArgs                                       = [];
+        $aArgs['fullMessageObject']                  = $messageObject;
+        $aArgs['SenderOrgNAme']                      = "";
+        $aArgs['RecipientOrgNAme']                   = "";
+
+        $messageId = $this->db->insertMessage($data, "ArchiveTransfer", $aArgs);
+
+        return $messageId;
     }
 
     private function initMessage($messageObject)
     {
+
+        $this->directoryMessage = (string) $this->xml->CONFIG->directoryMessage;
+
+        if (!$this->directoryMessage || !is_dir($this->directoryMessage)) {
+            $_SESSION['error'] .= _DIRECTORY_MESSAGE_REQUIRED;
+            return;
+        }
+
         $date = new DateTime;
-        $messageObject->date = $date->format(DateTime::ATOM);
-        $messageObject->messageIdentifier = new stdClass();
-        $messageObject->messageIdentifier->value = $_SESSION['user']['UserId'] . "-" . date('Ymd-His');
+        $messageObject->Date = $date->format(DateTime::ATOM);
+        $messageObject->MessageIdentifier = new stdClass();
+        $messageObject->MessageIdentifier->value = $_SESSION['user']['UserId'] . "-" . date('Ymd-His');
 
-        $messageObject->transferringAgency = new stdClass();
-        $messageObject->transferringAgency->identifier = new stdClass();
+        $messageObject->TransferringAgency = new stdClass();
+        $messageObject->TransferringAgency->Identifier = new stdClass();
 
-        $messageObject->archivalAgency = new stdClass();
-        $messageObject->archivalAgency->identifier = new stdClass();
+        $messageObject->ArchivalAgency = new stdClass();
+        $messageObject->ArchivalAgency->Identifier = new stdClass();
 
-        $messageObject->archivalAgreement = new stdClass();
+        $messageObject->ArchivalAgreement = new stdClass();
 
-        foreach ($_SESSION['user']['entities'] as $entitie) {
-            $entitie = $this->db->getEntitie($entitie['ENTITY_ID']);
-            if ($entitie) {
-                $messageObject->transferringAgency->identifier->value = $entitie->business_id;
-                $messageObject->archivalAgency->identifier->value = $entitie->archival_agency;
+        foreach ($_SESSION['user']['entities'] as $entity) {
+            $res = array_key_exists($entity['ENTITY_ID'], $this->entities);
+            if ($res === false) {
+                $this->entities[$entity['ENTITY_ID']] = $entity = $this->db->getEntity($entity['ENTITY_ID']);
+            } else {
+                $entity = $this->entities[$entity['ENTITY_ID']];
+            }
 
-                if (!$entitie->business_id) {
-                    $_SESSION['error'] .= _TRANSFERRING_AGENCY_SIREN_COMPULSORY;
+            if ($entity) {
+                if (!(string) $this->xml->CONFIG->senderOrgRegNumber) {
+                    $_SESSION['error'] .= _TRANSFERRING_AGENCY_SIREN_REQUIRED;
                 }
 
-                if (!$entitie->archival_agency) {
-                    $_SESSION['error'] .= _ARCHIVAL_AGENCY_SIREN_COMPULSORY;
+                if (!$entity->archival_agency) {
+                    $_SESSION['error'] .= _ARCHIVAL_AGENCY_SIREN_REQUIRED;
                 }
 
-                $messageObject->archivalAgreement->value = $entitie->archival_agreement;
+                if (!$entity->archival_agreement) {
+                    $_SESSION['error'] .= _ARCHIVAL_AGREEMENT_REQUIRED;
+                }
+
+                if (!empty($_SESSION['error'])) {
+                    return;
+                }
+
+                $messageObject->TransferringAgency->Identifier->value = (string) $this->xml->CONFIG->senderOrgRegNumber;
+                $messageObject->ArchivalAgency->Identifier->value = $entity->archival_agency;
+                $messageObject->ArchivalAgreement->value = $entity->archival_agreement;
             } else {
                 $_SESSION['error'] .= _NO_ENTITIES;
             }
         }
 
-        $messageObject->dataObjectPackage = new stdClass();
-        $messageObject->dataObjectPackage->binaryDataObject = [];
-        $messageObject->dataObjectPackage->descriptiveMetadata = [];
-        $messageObject->dataObjectPackage->managementMetadata = new stdClass();
+        $messageObject->DataObjectPackage = new stdClass();
+        $messageObject->DataObjectPackage->BinaryDataObject = [];
+        $messageObject->DataObjectPackage->DescriptiveMetadata = new stdClass();
+        $messageObject->DataObjectPackage->ManagementMetadata = new stdClass();
 
         return $messageObject;
     }
 
-    private function getArchiveUnit($object, $type, $attachments = null, $archiveUnitId = null, $dataObjectReferenceId = null, $relatedObjectReference = null)
-    {
+    private function getArchiveUnit(
+        $type,
+        $object = null,
+        $attachments = null,
+        $archiveUnitId = null,
+        $dataObjectReferenceId = null,
+        $relatedObjectReference = null
+    ) {
         $archiveUnit = new stdClass();
 
         if ($archiveUnitId) {
@@ -182,171 +402,314 @@ class ArchiveTransfer
             $archiveUnit->id = uniqid();
         }
 
-        if ($relatedObjectReference) {
-            $archiveUnit->content = $this->getContent($object, $type, $relatedObjectReference);
+        if (isset($object)) {
+            if ($relatedObjectReference) {
+                $archiveUnit->Content = $this->getContent($type, $object, $relatedObjectReference);
+            } else {
+                $archiveUnit->Content = $this->getContent($type, $object);
+            }
+
+            $archiveUnit->Management = $this->getManagement($object);
         } else {
-            $archiveUnit->content = $this->getContent($object, $type);
+            $archiveUnit->Content = $this->getContent($type);
+            $archiveUnit->Management = $this->getManagement();
         }
 
-        if ($object->type_id != 0) {
-            $archiveUnit->management = $this->getManagement($object);
-        }
 
         if ($dataObjectReferenceId) {
-            $archiveUnit->dataObjectReference = new stdClass();
-            $archiveUnit->dataObjectReference->dataObjectReferenceId = "doc_" . $dataObjectReferenceId;
+            $archiveUnit->DataObjectReference = new stdClass();
+            if ($type == 'File') {
+                $archiveUnit->DataObjectReference->DataObjectReferenceId = $_SESSION['collections'][0]['table'] . '_' .$dataObjectReferenceId;
+            } elseif ($type == 'Note') {
+                $archiveUnit->DataObjectReference->DataObjectReferenceId = 'note_' .$dataObjectReferenceId;
+            } elseif ($type == 'Email') {
+                $archiveUnit->DataObjectReference->DataObjectReferenceId = 'email_' .$dataObjectReferenceId;
+            } else {
+                $archiveUnit->DataObjectReference->DataObjectReferenceId = $_SESSION['collections'][1]['table'] . '_' .$dataObjectReferenceId;
+            }
+
         }
 
+        $archiveUnit->ArchiveUnit = [];
         if ($attachments) {
-            $archiveUnit->archiveUnit = [];
+            $i = 1;
             foreach ($attachments as $attachment) {
                 if ($attachment->res_id_master == $object->res_id) {
                     if ($attachment->attachment_type != "signed_response") {
-                        $archiveUnit->archiveUnit[] = $this->getArchiveUnit($attachment, "Item", null, null, "attachment_" . $attachment->res_id);
+                        $archiveUnit->ArchiveUnit[] = $this->getArchiveUnit(
+                            "Item",
+                            $attachment,
+                            null,
+                            $archiveUnitId. '_attachment_' . $i,
+                            $attachment->res_id
+                        );
+                    }
+                }
+                $i++;
+            }
+        }
+
+        if ($object->res_id) {
+            if ($type != 'Note' && $type != 'Email') {
+                $notes = $this->db->getNotes($object->res_id);
+                if ($notes) {
+                    $i = 1;
+                    foreach ($notes as $note) {
+                        $note->title = 'Note n° ' . $note->id;
+                        $archiveUnit->ArchiveUnit[] = $this->getArchiveUnit(
+                            "Note",
+                            $note,
+                            null,
+                            $archiveUnitId . '_note_' . $i,
+                            $note->id
+                        );
+                        $i++;
                     }
                 }
             }
-            if (count($archiveUnit->archiveUnit) == 0) {
-                unset($archiveUnit->archiveUnit);
+
+            if ($type != 'Email' && $type != 'Note') {
+                $emails = $this->db->getMails($object->res_id);
+                if ($emails) {
+                    $i = 1;
+                    foreach ($emails as $email) {
+                        $email->title = 'Email n° ' . $email->email_id;
+                        $archiveUnit->ArchiveUnit[] = $this->getArchiveUnit(
+                            "Email",
+                            $email,
+                            null,
+                            $archiveUnitId . '_email_' . $i,
+                            $email->email_id
+                        );
+                        $i++;
+                    }
+                }
             }
+        }
+        if (count($archiveUnit->ArchiveUnit) == 0) {
+            unset($archiveUnit->ArchiveUnit);
         }
 
         return $archiveUnit;
     }
 
-    private function getContent($object, $type, $relatedObjectReference = null)
+    private function getContent($type, $object = null, $relatedObjectReference = null)
     {
 
         $content = new stdClass();
 
-        if ($type == "File") {
-            $content->descriptionLevel = $type;
+        switch ($type) {
+            case 'RecordGrp':
+                $content->DescriptionLevel = $type;
+                $content->Title = [];
+                $content->DocumentType = 'Dossier';
 
-            $content->receivedDate = $object->admission_date;
-            $sentDate = new DateTime($object->doc_date);
-            $receivedDate = new DateTime($object->admission_date);
-            $acquiredDate = new DateTime();
-            $content->sentDate = $sentDate->format(DateTime::ATOM);
-            $content->receivedDate = $receivedDate->format(DateTime::ATOM);
-            $content->acquiredDate = $acquiredDate->format(DateTime::ATOM);
+                return $content;
+                break;
+            case 'File':
+                $content->DescriptionLevel = $type;
 
-            $content->addressee = [];
-            $content->keyword = [];
+                $sentDate = new DateTime($object->doc_date);
+                $receivedDate = new DateTime($object->admission_date);
+                $acquiredDate = new DateTime($object->creaction_date);
+                $content->SentDate = $sentDate->format(DateTime::ATOM);
+                $content->ReceivedDate = $receivedDate->format(DateTime::ATOM);
+                $content->AcquiredDate = $acquiredDate->format(DateTime::ATOM);
 
-            if ($object->exp_contact_id) {
+                $content->Addressee = [];
+                $content->Keyword = [];
 
-                $contact = $this->db->getContact($object->exp_contact_id);
-                $entitie = $this->db->getEntitie($object->destination);
+                $keyword = $addressee = $entity = "";
 
-                $content->keyword[] = $this->getKeyword($contact);
-                $content->addressee[] = $this->getAddresse($entitie, "entitie");
-            } else if ($object->dest_contact_id) {
-                $contact = $this->db->getContact($object->dest_contact_id);
-                $entitie = $this->db->getEntitie($object->destination);
+                if ($object->destination) {
+                    $res = array_key_exists($object->destination, $this->entities);
+                    if ($res === false) {
+                        $this->entities[$object->destination] = $entity = $this->db->getEntity($object->destination);
+                    } else {
+                        $entity = $this->entities[$object->destination];
+                    }
+                }
 
-                $content->addressee[] = $this->getAddresse($contact);
-                $content->keyword[] = $this->getKeyword($entitie, "entitie");
-            } else if ($object->exp_user_id) {
-                $user = $this->db->getUserInformation($object->exp_user_id);
-                $entitie = $this->db->getEntitie($object->initiator);
-                //$entitie = $this->getEntitie($letterbox->destination);
+                if ($object->exp_contact_id) {
+                    $contact = $this->db->getContact($object->exp_contact_id);
+                    $keyword = $this->getKeyword($contact);
+                    $addressee = $this->getAddresse($entity, "entity");
+                } elseif ($object->dest_contact_id) {
+                    $contact = $this->db->getContact($object->dest_contact_id);
+                    $addressee = $this->getAddresse($contact);
+                    $keyword = $this->getKeyword($entity, "entity");
+                } elseif ($object->exp_user_id) {
+                    $user = $this->db->getUserInformation($object->exp_user_id);
+                    $keyword = $this->getKeyword($user);
+                    $addressee = $this->getAddresse($entity, "entity");
+                }
 
-                $content->keyword[] = $this->getKeyword($user);
-                $content->addressee[] = $this->getAddresse($entitie, "entitie");
-            }
+                if (!empty($keyword)) {
+                    $content->Keyword[] = $keyword;
+                }
 
-            $content->source = $_SESSION['mail_nature'][$object->nature_id];
+                if (!empty($addressee)) {
+                    $content->Addressee[] = $addressee;
+                }
 
-            $content->documentType = $object->type_label;
-            $content->originatingAgencyArchiveUnitIdentifier = $object->alt_identifier;
-            $content->originatingSystemId = $object->res_id;
+                $content->Source = $_SESSION['mail_nature'][$object->nature_id];
 
-            $content->title = [];
-            $content->title[] = $object->subject;
+                $content->DocumentType = $object->type_label;
+                $content->OriginatingAgencyArchiveUnitIdentifier = $object->alt_identifier;
+                $content->OriginatingSystemId = $object->res_id;
 
-        } else {
-            $content->descriptionLevel = "Item";
-            $content->title = [];
-            $content->title[] = $object->title;
-            $content->originatingSystemId = $object->res_id;
-            $content->documentType = "Attachment";
+                $content->Title = [];
+                $content->Title[] = $object->subject;
+                break;
+            case 'Item':
+            case 'Attachment':
+            case 'Response':
+            case 'Note':
+            case 'Email':
+                $content->DescriptionLevel = "Item";
+                $content->Title = [];
+                $content->Title[] = $object->title;
 
-            if ($type == "Response") {
-                $content->documentType = "Reply";
+                if ($type == "Item") {
+                    $content->DocumentType = "Pièce jointe";
+                    $date = new DateTime($object->creation_date);
+                    $content->CreatedDate = $date->format('Y-m-d');
+                } elseif ($type == "Note") {
+                    $content->DocumentType = "Note";
+                    $date = new DateTime($object->date_note);
+                    $content->CreatedDate = $date->format('Y-m-d');
+                } elseif ($type == "Email") {
+                    $content->DocumentType = "Courriel";
+                    $date = new DateTime($object->creation_date);
+                    $content->CreatedDate = $date->format('Y-m-d');
+                } elseif ($type == "Response") {
+                    $content->DocumentType = "Réponse";
+                    $date = new DateTime($object->creation_date);
+                    $content->CreatedDate = $date->format('Y-m-d');
+                }
 
+                break;
+        }
 
-                $content->relatedObjectReference = new stdClass();
-                $content->relatedObjectReference->references = [];
+        if (isset($relatedObjectReference)) {
+            $content->RelatedObjectReference = new stdClass();
+            $content->RelatedObjectReference->References = [];
 
+            foreach ($relatedObjectReference as $key => $value) {
                 $reference = new stdClass();
-                $reference->archiveUnitRefId = $relatedObjectReference;
-                $content->relatedObjectReference->references[] = $reference;
+                if ($value) {
+                    $reference->ArchiveUnitRefId = 'letterbox_' . $key;
+                    $content->RelatedObjectReference->References[] = $reference;
+                } else {
+                    $destination = $this->db->getDestinationLetter($key);
+                    if (isset($destination)) {
+                        $res = array_key_exists($destination, $this->entities);
+                        if ($res === false) {
+                            $this->entities[$destination] = $entity = $this->db->getEntity($destination);
+                        } else {
+                            $entity = $this->entities[$destination];
+                        }
 
+                        $reference->RepositoryArchiveUnitPID = 'originator:' . $entity->business_id . ':' . $key;
+                        $content->RelatedObjectReference->References[] = $reference;
+                    }
+                }
+            }
+
+        }
+
+        if (isset($object->destination)) {
+            $content->OriginatingAgency = new stdClass();
+            $content->OriginatingAgency->Identifier = new stdClass();
+
+            $res = array_key_exists($object->destination, $this->entities);
+            if ($res === false) {
+                $this->entities[$object->destination] = $entity = $this->db->getEntity($object->destination);
+            } else {
+                $entity = $this->entities[$object->destination];
+            }
+            $content->OriginatingAgency->Identifier->value = $entity->business_id;
+
+            if (empty($content->OriginatingAgency->Identifier->value)) {
+                unset($content->OriginatingAgency);
             }
         }
 
-        if (isset($object->initiator)) {
-            $content->originatingAgency = new stdClass();
-            $content->originatingAgency->identifier = new stdClass();
-            $content->originatingAgency->identifier->value = $this->db->getEntitie($object->initiator)->business_id;
+        if (isset($object->res_id)) {
+            $content->CustodialHistory = new stdClass();
+            $content->CustodialHistory->CustodialHistoryItem = [];
+
+            $histories = $this->db->getHistory($_SESSION['collections'][0]['view'], $object->res_id);
+            foreach ($histories as $history) {
+                if ($history->event_type != 'VIEW') {
+                    $content->CustodialHistory->CustodialHistoryItem[] = $this->getCustodialHistoryItem($history);
+                }
+            }
+
+            if (count($content->CustodialHistory->CustodialHistoryItem) == 0) {
+                unset($content->CustodialHistory);
+            }
         }
-
-        /*$notes = $this->getNotes($letterbox->res_id);
-        $content->custodialHistory = new stdClass();
-        $content->custodialHistory->custodialHistoryItem = [];
-
-        foreach ($notes as $note) {
-            $content->custodialHistory->custodialHistoryItem[] = $this->getCustodialHistoryItem($note);
-        }*/
 
         return $content;
     }
 
-    private function getManagement($letterbox)
+    private function getManagement($letterbox = null)
     {
         $management = new stdClass();
 
-        $docTypes = $this->db->getDocTypes($letterbox->type_id);
+        if ($letterbox && $letterbox->type_id != 0) {
+            $docTypes = $this->db->getDocTypes($letterbox->type_id);
 
-        $management->appraisalRule = new stdClass();
-        $management->appraisalRule->rule = new stdClass();
-        $management->appraisalRule->rule->value = $docTypes->retention_rule;
-        if ($docTypes->retention_final_disposition == "preservation") {
-            $management->appraisalRule->finalAction = "Keep";
-        } else {
-            $management->appraisalRule->finalAction = "Destroy";
+            $management->AppraisalRule = new stdClass();
+            $management->AppraisalRule->Rule = new stdClass();
+            $management->AppraisalRule->Rule->value = $docTypes->retention_rule;
+            $management->AppraisalRule->StartDate = date("Y-m-d");
+            if ($docTypes->retention_final_disposition == "conservation") {
+                $management->AppraisalRule->FinalAction = "Keep";
+            } else {
+                $management->AppraisalRule->FinalAction = "Destroy";
+            }
         }
 
+        if ((string) $this->xml->CONFIG->accessRuleCode) {
+            $management->AccessRule = new stdClass();
+            $management->AccessRule->Rule = new stdClass();
+            $management->AccessRule->Rule->value = (string)$this->xml->CONFIG->accessRuleCode;
+            $management->AccessRule->StartDate = date("Y-m-d");
+        }
 
         return $management;
     }
 
-    private function getBinaryDataObject($object, $attachment = false)
+    private function getBinaryDataObject($filePath, $id)
     {
-        $docServers = $this->db->getDocServer($object->docserver_id);
-
         $binaryDataObject = new stdClass();
 
-        if ($attachment) {
-            $binaryDataObject->id = $attachment . "_" . $object->res_id;
+        $pathInfo = pathinfo($filePath);
+
+        if ($id && $id != $pathInfo['filename']) {
+            $filename = $pathInfo['filename'] . '_' . $id . '.' . $pathInfo['extension'];
         } else {
-            $binaryDataObject->id = $object->res_id;
+            $filename = $pathInfo['filename'] . '_' . rand() . '.' . $pathInfo['extension'];
         }
 
-        $binaryDataObject->messageDigest = new stdClass();
-        $binaryDataObject->messageDigest->value = $object->fingerprint;
-        $binaryDataObject->messageDigest->algorithm = "sha256";
+        $binaryDataObject->id = $id;
+        $binaryDataObject->Uri = $filePath;
+        $binaryDataObject->MessageDigest = new stdClass();
+        $binaryDataObject->MessageDigest->value = hash_file('sha256', $filePath);
+        $binaryDataObject->MessageDigest->algorithm = "sha256";
+        $binaryDataObject->Size = filesize($filePath);
 
-        $binaryDataObject->size = new stdClass();
-        $binaryDataObject->size->value = $object->filesize;
 
-        $uri = str_replace("##", DIRECTORY_SEPARATOR, $object->path);
-        $uri = str_replace("#", DIRECTORY_SEPARATOR, $uri);
-        $uri .= $object->filename;
-        $binaryDataObject->uri = $docServers->path_template . $uri;
+        $binaryDataObject->Attachment = new stdClass();
+        $binaryDataObject->Attachment->filename = $filename;
 
-        $binaryDataObject->fileInfo = new stdClass();
-        $binaryDataObject->fileInfo->filename = basename($binaryDataObject->uri);
+        $binaryDataObject->FileInfo = new stdClass();
+        $binaryDataObject->FileInfo->Filename = $filename;
+
+        $binaryDataObject->FormatIdentification = new stdClass();
+        $binaryDataObject->FormatIdentification->MimeType = mime_content_type($filePath);
 
         return $binaryDataObject;
     }
@@ -354,17 +717,21 @@ class ArchiveTransfer
     private function getKeyword($informations, $type = null)
     {
         $keyword = new stdClass();
-        $keyword->keywordContent = new stdClass();
+        $keyword->KeywordContent = new stdClass();
 
-        if ($type == "entitie") {
-            $keyword->keywordType = "corpname";
-            $keyword->keywordContent->value = $informations->business_id;
-        } else if ($informations->is_corporate_person == "Y") {
-            $keyword->keywordType = "corpname";
-            $keyword->keywordContent->value = $informations->society;
+        if ($type == "entity") {
+            $keyword->KeywordType = "corpname";
+            $keyword->KeywordContent->value = $informations->business_id;
+        } elseif ($informations->is_corporate_person == "Y") {
+            $keyword->KeywordType = "corpname";
+            $keyword->KeywordContent->value = $informations->society;
         } else {
-            $keyword->keywordType = "persname";
-            $keyword->keywordContent->value = $informations->lastname . " " . $informations->firstname;
+            $keyword->KeywordType = "persname";
+            $keyword->KeywordContent->value = $informations->lastname . " " . $informations->firstname;
+        }
+
+        if (empty($keyword->KeywordContent->value)) {
+            return null;
         }
 
         return $keyword;
@@ -373,101 +740,135 @@ class ArchiveTransfer
     private function getAddresse($informations, $type = null)
     {
         $addressee = new stdClass();
-        if ($type == "entitie") {
-            $addressee->corpname = $informations->entity_label;
-            $addressee->identifier = $informations->business_id;
-        } else if ($informations->is_corporate_person == "Y") {
-            $addressee->corpname = $informations->society;
-            $addressee->identifier = $informations->contact_id;
+        if ($type == "entity") {
+            $addressee->Corpname = $informations->entity_label;
+            $addressee->Identifier = $informations->business_id;
+        } elseif ($informations->is_corporate_person == "Y") {
+            $addressee->Corpname = $informations->society;
+            $addressee->Identifier = $informations->contact_id;
         } else {
-            $addressee->firstName = $informations->firstname;
-            $addressee->birthName = $informations->lastname;
+            $addressee->FirstName = $informations->firstname;
+            $addressee->BirthName = $informations->lastname;
         }
 
+        if ((empty($addressee->Identifier) || empty($addressee->Corpname)) && (empty($addressee->FirstName) || empty($addressee->BirthName))) {
+            return null;
+        }
 
         return $addressee;
     }
 
-    private function getCustodialHistoryItem($note)
+    private function getCustodialHistoryItem($history)
     {
-        $custodialHistoryItem = new stdClass();
+        $date = new DateTime($history->event_date);
 
-        $custodialHistoryItem->value = $note->note_text;
-        $custodialHistoryItem->when = $note->date_note;
+        $custodialHistoryItem = new stdClass();
+        $custodialHistoryItem->value = $history->info;
+        $custodialHistoryItem->when = $date->format('Y-m-d');
 
         return $custodialHistoryItem;
     }
 
-    private function getEntitie($entityId, $param) {
-        $entitie = $this->db->getEntitie($entityId);
+    private function getEntity($entityId, $param)
+    {
+        $res = array_key_exists($entityId, $this->entities);
+        if ($res === false) {
+            $this->entities[$entityId] = $entity = $this->db->getEntity($entityId);
+        } else {
+            $entity = $this->entities[$entityId];
+        }
 
-        if (!$entitie) {
+        if (!$entity) {
             return false;
         }
 
-        if (!$entitie->business_id) {
-            $businessId = $this->getEntitieParent($entitie->parent_entity_id,'business_id');
+        if (!$entity->business_id) {
+            $businessId = $this->getEntityParent(
+                $entity->parent_entity_id,
+                'business_id'
+            );
 
             if (!$businessId) {
                 return false;
             }
 
-            $entitie->business_id = $businessId;
+            $entity->business_id = $businessId;
         }
 
-        if (!$entitie->archival_agreement) {
-            $archivalAgreement = $this->getEntitieParent($entitie->parent_entity_id,'archival_agreement');
+        if (!$entity->archival_agreement) {
+            $archivalAgreement = $this->getEntityParent(
+                $entity->parent_entity_id,
+                'archival_agreement'
+            );
 
             if (!$archivalAgreement) {
                 return false;
             }
 
-            $entitie->archival_agreement = $archivalAgreement;
+            $entity->archival_agreement = $archivalAgreement;
         }
 
-        if (!$entitie->archival_agency) {
-            $archivalAgency = $this->getEntitieParent($entitie->parent_entity_id,'archival_agency');
+        if (!$entity->archival_agency) {
+            $archivalAgency = $this->getEntityParent(
+                $entity->parent_entity_id,
+                'archival_agency'
+            );
 
             if (!$archivalAgency) {
                 return false;
             }
 
-            $entitie->archival_agency = $archivalAgency;
+            $entity->archival_agency = $archivalAgency;
         }
 
-        return $entitie;
+        return $entity;
     }
 
-    private function getEntitieParent($parentId,$param) {
-        $entitie = $this->db->getEntitie($parentId);
+    private function getEntityParent($parentId, $param)
+    {
+        $res = array_key_exists($parentId, $this->entities);
+        if ($res === false) {
+            $this->entities[$parentId] = $entity = $this->db->getEntity($parentId);
+        } else {
+            $entity = $this->entities[$parentId];
+        }
 
-        if (!$entitie) {
+        if (!$entity) {
             return false;
         }
 
         $res = false;
 
         if ($param == 'business_id') {
-            if (!$entitie->business_id) {
-                $res = $this->getEntitieParent($entitie->parent_entity_id,'business_id');
+            if (!$entity->business_id) {
+                $res = $this->getEntityParent(
+                    $entity->parent_entity_id,
+                    'business_id'
+                );
             } else {
-                $res = $entitie->business_id;
+                $res = $entity->business_id;
             }
         }
 
         if ($param == 'archival_agreement') {
-            if (!$entitie->archival_agreement) {
-                $res = $this->getEntitieParent($entitie->parent_entity_id,'archival_agreement');
+            if (!$entity->archival_agreement) {
+                $res = $this->getEntityParent(
+                    $entity->parent_entity_id,
+                    'archival_agreement'
+                );
             } else {
-                $res = $entitie->archival_agreement;
+                $res = $entity->archival_agreement;
             }
         }
 
         if ($param == 'archival_agency') {
-            if (!$entitie->archival_agency) {
-                $res = $this->getEntitieParent($entitie->parent_entity_id,'archival_agency');
+            if (!$entity->archival_agency) {
+                $res = $this->getEntityParent(
+                    $entity->parent_entity_id,
+                    'archival_agency'
+                );
             } else {
-                $res = $entitie->archival_agency;
+                $res = $entity->archival_agency;
             }
         }
 
