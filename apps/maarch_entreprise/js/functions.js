@@ -1940,7 +1940,9 @@ function show_admin_contacts( is_corporate, display)
         {
             //society_mandatory.style.display = 'none';
             society_mandatory.css('display', 'none');
-
+        }
+    }
+}
 /**
 * Show or hide the data related to a person in the external contacts admin
 *
