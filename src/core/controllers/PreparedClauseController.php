@@ -229,7 +229,7 @@ class PreparedClauseController
         }
 
         try {
-            ResModel::getOnView(['select' => $aArgs['select'], 'where' => [$clause]]);
+            ResModel::getOnView(['select' => $aArgs['select'], 'where' => [$clause, '1=1']]);
         } catch (\Exception $e) {
             return false;
         }
