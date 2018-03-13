@@ -43,7 +43,7 @@
                                 <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
                             </mat-form-field>
-                            <div class="col-md-11 col-xs-11">
+                            <div class="col-md-11 col-xs-11" style="padding-left:0px;">
                                 <mat-form-field>
                                     <input matInput name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="basket.basket_name" maxlength="255"
                                         [ngStyle]="{'color': basket.color}" required>
