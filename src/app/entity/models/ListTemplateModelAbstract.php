@@ -128,4 +128,19 @@ class ListTemplateModelAbstract
 
         return $aListTemplatesTypes;
     }
+
+    public static function updateTypes(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'difflist_types',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
 }

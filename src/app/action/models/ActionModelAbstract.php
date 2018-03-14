@@ -62,26 +62,28 @@ class ActionModelAbstract
 
     public static function create(array $aArgs)
     {
-        $actioncategories = $aArgs['actionCategories'];
+        $actionCategories = empty($aArgs['actionCategories']) ? [] : $aArgs['actionCategories'];
         unset($aArgs['actionCategories']);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'actions_id_seq']);
+        $aArgs['id'] = $nextSequenceId;
+
         DatabaseModel::insert([
             'table'         => 'actions',
             'columnsValues' => $aArgs
         ]);
 
-        $tab['action_id'] = max(ActionModel::get())['id'];
-
-        for ($i=0;$i<count($actioncategories);$i++) {
-            $tab['category_id'] = $actioncategories[$i];
-            DatabaseModel::insert(
-                [
+        $data = [];
+        $data['action_id'] = $nextSequenceId;
+        foreach ($actionCategories as $actionCategory) {
+            $data['category_id'] = $actionCategory;
+            DatabaseModel::insert([
                 'table'         => 'actions_categories',
-                'columnsValues' => $tab
-                ]
-            );
+                'columnsValues' => $data
+            ]);
         }
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function update(array $aArgs)

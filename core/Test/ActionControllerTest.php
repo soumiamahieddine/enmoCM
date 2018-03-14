@@ -38,20 +38,9 @@ class ActionsControllerTest extends TestCase
         $response     = $actionController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$id = $responseBody->action->id;
+        self::$id = $responseBody->actionId;
 
         $this->assertInternalType('int', self::$id);
-        $this->assertSame('indexing', $responseBody->action->keyword);
-        $this->assertSame('TEST-LABEL', $responseBody->action->label_action);
-        $this->assertSame('_NOSTATUS_', $responseBody->action->id_status);
-        $this->assertSame('N', $responseBody->action->is_system);
-        $this->assertSame('N', $responseBody->action->is_folder_action);
-        $this->assertSame('Y', $responseBody->action->enabled);
-        $this->assertSame('index_mlb', $responseBody->action->action_page);
-        $this->assertSame('Y', $responseBody->action->history);
-        $this->assertSame('apps', $responseBody->action->origin);
-        $this->assertSame('N', $responseBody->action->create_id);
-
 
         // FAIL CREATE
         $aArgs = [
@@ -136,17 +125,7 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertSame(self::$id, $responseBody->action->id);
-        $this->assertSame('', $responseBody->action->keyword);
-        $this->assertSame('TEST-LABEL_UPDATED', $responseBody->action->label_action);
-        $this->assertSame('COU', $responseBody->action->id_status);
-        $this->assertSame('N', $responseBody->action->is_system);
-        $this->assertSame('Y', $responseBody->action->is_folder_action);
-        $this->assertSame('Y', $responseBody->action->enabled);
-        $this->assertSame('process', $responseBody->action->action_page);
-        $this->assertSame('N', $responseBody->action->history);
-        $this->assertSame('apps', $responseBody->action->origin);
-        $this->assertSame('N', $responseBody->action->create_id);
+        $this->assertSame('success', $responseBody->success);
 
         // UPDATE FAIL
         $aArgs = [
@@ -177,7 +156,7 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertNotNull($responseBody->action);
+        $this->assertNotNull($responseBody->actions);
 
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
@@ -185,7 +164,7 @@ class ActionsControllerTest extends TestCase
         $response     = $actionController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertNull($responseBody->action[0]);
+        $this->assertNull($responseBody->actions[0]);
 
         // FAIL DELETE
         $actionController = new \Action\controllers\ActionController();
