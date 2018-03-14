@@ -192,7 +192,7 @@ class EntityModelAbstract
 
         $aReturn = self::getById([
             'select'   => ['entity_id', 'entity_label', 'parent_entity_id'],
-            'entityId' => [$aArgs['entityId']]
+            'entityId' => $aArgs['entityId']
         ]);
 
         if (!empty($aReturn[0]['parent_entity_id'])) {

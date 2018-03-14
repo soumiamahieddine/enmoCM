@@ -378,7 +378,7 @@ class SendMessageExchangeController
         $contentObject->DocumentType                           = $aArgs['DocumentType'];
         $contentObject->Status                                 = \Status\models\StatusModel::getById(['id' => $aArgs['Status']])[0]['label_status'];
 
-        $userInfos = \User\models\UserModel::getById(['userId' => $aArgs['Writer']]);
+        $userInfos = \User\models\UserModel::getByUserId(['userId' => $aArgs['Writer']]);
         $writer                = new stdClass();
         $writer->FirstName     = $userInfos['firstname'];
         $writer->BirthName     = $userInfos['lastname'];
