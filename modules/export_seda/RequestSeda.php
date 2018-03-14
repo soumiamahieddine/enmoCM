@@ -22,10 +22,6 @@
 require_once "core/class/class_request.php";
 require_once "core/class/class_resource.php";
 require_once "core/class/docservers_controler.php";
-require_once "core/Models/DocserverModel.php";
-require_once "core/Models/DocserverTypeModel.php";
-require_once "core/Controllers/DocserverController.php";
-require_once "core/Controllers/DocserverToolsController.php";
 
 class RequestSeda
 {
@@ -454,13 +450,13 @@ class RequestSeda
             $messageObjectToSave = $aArgs['fullMessageObject'];
         }
 
-        if(empty($aArgs['resIdMaster'])){
+        if (empty($aArgs['resIdMaster'])) {
             $resIdMaster = null;
         } else {
             $resIdMaster = $aArgs['resIdMaster'];
         }
 
-        if (empty($aArgs['filePath'])){
+        if (empty($aArgs['filePath'])) {
             $filePath = null;
         } else {
             $filePath = $aArgs['filePath'];
@@ -478,25 +474,27 @@ class RequestSeda
                         'tmpFileName'   => $pathInfo['basename'],
                     ]
             ];
-            
-            $ds          = new \Core\Controllers\DocserverController();
-            $storeResult = $ds->storeResourceOnDocserver($aFileInfo);
+
+            $ds          =  new docservers_controler();
+            $storeResult = $ds->storeResourceOnDocserver('archive_transfer_coll', $aFileInfo);
             $docserver_id = $storeResult['docserver_id'];
             $filepath     = $storeResult['destination_dir'];
             $filename     = $storeResult['file_destination_name'];
 
-            $docserver     = \Core\Models\DocserverModel::getById(['docserver_id' => $docserver_id]);
-            $docserverType = \Core\Models\DocserverTypeModel::getById(['docserver_type_id' => $docserver[0]['docserver_type_id']]);
+            $docserver     = \Docserver\models\DocserverModel::getById(['docserver_id' => $docserver_id]);
+            $docserverType = \Docserver\models\DocserverTypeModel::getById(
+                ['docserver_type_id' => $docserver[0]['docserver_type_id']]
+            );
 
-            $fingerprint = \Core\Controllers\DocserverToolsController::doFingerprint([
+            $fingerprint = \Docserver\controllers\DocserverToolsController::doFingerprint([
                 'path'            => $filePath,
                 'fingerprintMode' => $docserverType[0]['fingerprint_mode'],
             ]);
 
         }
 
-		try {
-			$query = ("INSERT INTO message_exchange (
+        try {
+            $query = ("INSERT INTO message_exchange (
 				message_id,
 				schema,
 				type,
@@ -522,24 +520,24 @@ class RequestSeda
                 filesize)
 				VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-			$queryParams[] = $messageObject->messageId; // Message Id
-			$queryParams[] = "2.1"; //Schema
-			$queryParams[] = $type; // Type
-			$queryParams[] = $status; // Status
-			$queryParams[] = $messageObject->date; // Date
-			$queryParams[] = $messageObject->MessageIdentifier->value; // Reference
-			$queryParams[] = $_SESSION['user']['UserId']; // Account Id
-			$queryParams[] = $messageObject->TransferringAgency->Identifier->value; // Sender org identifier id
-			$queryParams[] = $aArgs['SenderOrgNAme']; //SenderOrgNAme
-			$queryParams[] = $messageObject->ArchivalAgency->Identifier->value; // Recipient org identifier id
-			$queryParams[] = $aArgs['RecipientOrgNAme']; //RecipientOrgNAme
-			$queryParams[] = $messageObject->archivalAgreement->value; // Archival agreement reference
-			$queryParams[] = $messageObject->replyCode->value; //ReplyCode
-			$queryParams[] = 0; // size
-			$queryParams[] = json_encode($messageObjectToSave);//$messageObject; // Data
-			$queryParams[] = 1; // active
+            $queryParams[] = $messageObject->messageId; // Message Id
+            $queryParams[] = "2.1"; //Schema
+            $queryParams[] = $type; // Type
+            $queryParams[] = $status; // Status
+            $queryParams[] = $messageObject->date; // Date
+            $queryParams[] = $messageObject->MessageIdentifier->value; // Reference
+            $queryParams[] = $_SESSION['user']['UserId']; // Account Id
+            $queryParams[] = $messageObject->TransferringAgency->Identifier->value; // Sender org identifier id
+            $queryParams[] = $aArgs['SenderOrgNAme']; //SenderOrgNAme
+            $queryParams[] = $messageObject->ArchivalAgency->Identifier->value; // Recipient org identifier id
+            $queryParams[] = $aArgs['RecipientOrgNAme']; //RecipientOrgNAme
+            $queryParams[] = $messageObject->ArchivalAgreement->value; // Archival agreement reference
+            $queryParams[] = $messageObject->ReplyCode; //ReplyCode
+            $queryParams[] = 0; // size
+            $queryParams[] = json_encode($messageObjectToSave);//$messageObject; // Data
+            $queryParams[] = 1; // active
             $queryParams[] = 0; // archived
-			$queryParams[] = $resIdMaster; // res_id_master
+            $queryParams[] = $resIdMaster; // res_id_master
             $queryParams[] = $docserver_id;
             $queryParams[] = $filepath;
             $queryParams[] = $filename;
@@ -569,7 +567,8 @@ class RequestSeda
         $storeResult = array();
 
         $storeResult = $docserverControler->storeResourceOnDocserver(
-            $_SESSION['collection_id_choice'], $fileInfos
+            $_SESSION['collection_id_choice'],
+            $fileInfos
         );
 
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
@@ -735,7 +734,7 @@ class RequestSeda
             $queryParams[] = $messageId;
             $queryParams[] = $tableName;
             $queryParams[] = $resId;
-	    $queryParams[] = $disposition;
+            $queryParams[] = $disposition;
 
             $this->statement['insertUnitIdentifier']->execute($queryParams);
         } catch (Exception $e) {
@@ -849,7 +848,7 @@ class RequestSeda
 
         $query = "SELECT * FROM message_exchange WHERE reference = ?";
 
-        return $this->db->query($query,$queryParams);
+        return $this->db->query($query, $queryParams);
     }
 
     public function getMessagesByReferenceByDate($id)
@@ -860,7 +859,7 @@ class RequestSeda
 
         $query = "SELECT * FROM message_exchange WHERE reference = ? ORDER BY date asc";
 
-        return $this->db->query($query,$queryParams);
+        return $this->db->query($query, $queryParams);
     }
 
     public function getMessageByIdentifierAndResId($aArgs = [])
@@ -871,7 +870,7 @@ class RequestSeda
         $queryParams[] = $aArgs['message_id'];
         $queryParams[] = $aArgs['res_id_master'];
 
-        $smtp = $this->db->query($query,$queryParams);
+        $smtp = $this->db->query($query, $queryParams);
 
         $message = $smtp->fetchObject();
 
@@ -885,7 +884,7 @@ class RequestSeda
 
         $query = "SELECT * FROM entities WHERE business_id = ?";
 
-        $smtp = $this->db->query($query,$queryParams);
+        $smtp = $this->db->query($query, $queryParams);
 
         while ($res = $smtp->fetchObject()) {
             $entities[] = $res;
@@ -901,7 +900,7 @@ class RequestSeda
         try {
             $query = "UPDATE message_exchange SET operation_date = ? WHERE message_id = ?";
 
-            $smtp = $this->db->query($query,$queryParams);
+            $smtp = $this->db->query($query, $queryParams);
         } catch (Exception $e) {
             return false;
         }
@@ -917,7 +916,7 @@ class RequestSeda
         try {
             $query = "UPDATE message_exchange SET reception_date = ? WHERE message_id = ?";
 
-            $smtp = $this->db->query($query,$queryParams);
+            $smtp = $this->db->query($query, $queryParams);
         } catch (Exception $e) {
             return false;
         }

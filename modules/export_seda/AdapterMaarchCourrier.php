@@ -1,9 +1,6 @@
 <?php
 
 require_once __DIR__. DIRECTORY_SEPARATOR. 'RequestSeda.php';
-require_once "core/Models/DocserverModel.php";
-require_once "core/Models/DocserverTypeModel.php";
-require_once "core/Controllers/DocserverToolsController.php";
 
 class AdapterMaarchCourrier{
 
@@ -21,8 +18,8 @@ class AdapterMaarchCourrier{
 
         $messageObject = json_decode($message->data);
 
-        $docserver     = \Core\Models\DocserverModel::getById(['docserver_id' => $message->docserver_id]);
-        $docserverType = \Core\Models\DocserverTypeModel::getById(['docserver_type_id' => $docserver[0]['docserver_type_id']]);
+        $docserver     = \Docserver\models\DocserverModel::getById(['docserver_id' => $message->docserver_id]);
+        $docserverType = \Docserver\models\DocserverTypeModel::getById(['docserver_type_id' => $docserver[0]['docserver_type_id']]);
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message->path);
         $filePath      = $docserver[0]['path_template'] . $pathDirectory . $message->filename;
