@@ -12,7 +12,7 @@
             {{lang.administration}}
         </p>
     </a>
-    <a mat-list-item (click)="backClicked()">
+    <a mat-list-item (click)="backClicked()" *ngIf="router.url != '/administration'">
         <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
         <p mat-line>
             {{lang.back}}
