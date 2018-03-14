@@ -43,7 +43,6 @@ require_once 'modules/notifications/notifications_tables_definition.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 require_once 'modules/sendmail/Controllers/SendMessageExchangeController.php';
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once "core/Models/DocserverModel.php";
 require_once "core/Models/DocserverTypeModel.php";
 require_once "core/Controllers/DocserverToolsController.php";
@@ -554,9 +553,9 @@ switch ($mode) {
             if (!isset($_SESSION['adresses'][$_REQUEST['field']])) $_SESSION['adresses'][$_REQUEST['field']] = array();
 
             if ($_REQUEST['for'] == 'add') {
-                $contactLabel         = ContactsModel::getContactFullLabel(['addressId' => $contactAddress]);
-                $contactInfo          = ContactsModel::getFullAddressById(['addressId' => $contactAddress]);
-                $contactCommunication = ContactsModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
+                $contactLabel         = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $contactAddress]);
+                $contactInfo          = \Contact\models\ContactModel::getFullAddressById(['addressId' => $contactAddress]);
+                $contactCommunication = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
                 $_SESSION['adresses'][$_REQUEST['field']][$contactAddress] = $contactLabel.'. ('._COMMUNICATION_TYPE.' : '.$contactCommunication['value'].'))';
 
             } else  if ($_REQUEST['for'] == 'del') {

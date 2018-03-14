@@ -13,8 +13,6 @@
 * @ingroup core
 */
 
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
-require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'modules/export_seda/RequestSeda.php';
 require_once "core/class/class_request.php";
 

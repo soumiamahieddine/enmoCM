@@ -21,7 +21,6 @@ use Core\Models\ResModel;
 use Core\Models\ActionsModel;
 
 require_once __DIR__. '/../../export_seda/Controllers/ReceiveMessage.php';
-require_once "core/class/class_history.php";
 require_once "modules/sendmail/Controllers/SendMessageExchangeController.php";
 require_once 'modules/export_seda/RequestSeda.php';
 

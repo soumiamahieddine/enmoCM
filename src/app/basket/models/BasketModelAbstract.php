@@ -556,4 +556,26 @@ class BasketModelAbstract
 
         return $basketPages;
     }
+
+    public static function getDefaultActionIdByBasketId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);
+        ValidatorModel::stringType($aArgs, ['basketId', 'groupId']);
+
+        $aAction = DatabaseModel::select(
+            [
+            'select'    => ['id_action'],
+            'table'     => ['actions_groupbaskets'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'default_action_list = \'Y\''],
+            'data'      => [$aArgs['basketId'], $aArgs['groupId']]
+            ]
+        );
+
+        if (empty($aAction[0])) {
+            return '';
+        }
+
+        return $aAction[0]['id_action'];
+    }
+
 }

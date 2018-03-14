@@ -65,4 +65,25 @@ class NoteModelAbstract
 
         return $nb;
     }
+
+    public static function create(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
+
+        DatabaseModel::insert([
+            'table' => 'notes',
+            'columnsValues' => [
+                'identifier' => $aArgs['identifier'],
+                'tablename'  => $aArgs['tablename'],
+                'user_id'    => $aArgs['user_id'],
+                'date_note'  => 'CURRENT_TIMESTAMP',
+                'note_text'  => $aArgs['note_text'],
+                'coll_id'    => $aArgs['coll_id'],
+            ]
+        ]);
+
+        return true;
+    }
+
 }

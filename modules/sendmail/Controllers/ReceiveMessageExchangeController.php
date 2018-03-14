@@ -15,21 +15,20 @@
 
 namespace Sendmail\Controllers;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Core\Controllers\ResController;
-use Core\Controllers\ResExtController;
-use Core\Models\UserModel;
-use Core\Models\CoreConfigModel;
-use Core\Models\ServiceModel;
-use Entities\Models\EntitiesModel;
-use Baskets\Models\BasketsModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use SrcCore\controllers\StoreController;
+use User\models\UserModel;
+use SrcCore\models\CoreConfigModel;
+use Group\models\ServiceModel;
+use Entity\models\EntitiesModel;
+use Basket\models\BasketsModel;
+use Resource\models\ResModel;
+use Note\models\NoteModel;
+use History\controllers\HistoryController;
 
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
-require_once 'modules/notes/Models/NotesModel.php';
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
-require_once "core/class/class_history.php";
 require_once "modules/sendmail/Controllers/SendMessageExchangeController.php";
 require_once 'modules/export_seda/RequestSeda.php';
 
@@ -38,7 +37,7 @@ class ReceiveMessageExchangeController
 
     private static $aComments = [];
 
-    public function saveMessageExchange(RequestInterface $request, ResponseInterface $response)
+    public function saveMessageExchange(Request $request, Response $response)
     {
 
         if (!ServiceModel::hasService(['id' => 'save_numeric_package', 'userId' => $_SESSION['user']['UserId'], 'location' => 'sendmail', 'type' => 'menu'])) {
@@ -112,10 +111,13 @@ class ReceiveMessageExchangeController
             return $response->withStatus(400)->withJson(["errors" => $resAttachmentReturn['errors']]);
         }
 
-        $hist = new \history();
-        $hist->add(
-                'res_letterbox', $resLetterboxReturn[0], "ADD", 'resadd', _NUMERIC_PACKAGE_IMPORTED, 'POSTGRESQL', 'sendmail'
-            );
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $resLetterboxReturn[0],
+            'eventType' => 'ADD',
+            'eventId'   => 'resadd',
+            'info'       => _NUMERIC_PACKAGE_IMPORTED
+        ]);
 
         $basketRedirection = null;
         $userBaskets = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
@@ -266,8 +268,7 @@ class ReceiveMessageExchangeController
             "status"      => $defaultConfig['status']
         ];
 
-        $resController = new ResController();
-        $resId         = $resController->storeResource($allDatas);
+        $resId         = StoreController::storeResource($allDatas);
         return $resId;
     }
 
@@ -302,15 +303,15 @@ class ReceiveMessageExchangeController
         array_push($aDataContact, ['column' => 'contact_purpose_id',  'value' => $defaultConfigAddress['contact_purpose_id'],      'type' => 'integer', 'table' => 'contact_addresses']);
         array_push($aDataContact, ['column' => 'external_contact_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
         array_push($aDataContact, ['column' => 'departement',         'value' => $transferringAgencyMetadata->Name,                'type' => 'string',  'table' => 'contact_addresses']);
-        $contactModel = new \ContactsModel();
-        $contactAlreadyCreated = $contactModel->getAddressByExternalContactId(['externalContactId' => $transferringAgency->Identifier->value]);
+
+        $contactAlreadyCreated = \Contact\models\ContactModel::getAddressByExternalContactId(['externalContactId' => $transferringAgency->Identifier->value]);
         if(!empty($contactAlreadyCreated)){
             $contact['contactId'] = $contactAlreadyCreated['contact_id'];
             $contact['addressId'] = $contactAlreadyCreated['ca_id'];
         } else {
-            $contact = $contactModel->CreateContactM2M($aDataContact, $transferringAgencyMetadata->Communication[0]->value);
+            $contact = \Contact\models\ContactModel::CreateContactM2M($aDataContact, $transferringAgencyMetadata->Communication[0]->value);
         }
-        $contactCommunicationExisted = $contactModel->getContactCommunication([
+        $contactCommunicationExisted = \Contact\models\ContactModel::getContactCommunication([
             "contactId" => $contact['contactId']
         ]);
 
@@ -322,7 +323,7 @@ class ReceiveMessageExchangeController
                 } else {
                     $contactCommunicationValue = $value->value;
                 }
-                $contactModel->createContactCommunication([
+                \Contact\models\ContactModel::createContactCommunication([
                     "contactId" => $contact['contactId'], 
                     "type"      => $value->Channel, 
                     "value"     => $contactCommunicationValue
@@ -351,8 +352,7 @@ class ReceiveMessageExchangeController
             "resTable" => "res_letterbox"
         ];
 
-        $ResExtController = new ResExtController();
-        $return           = $ResExtController->storeExtResource($allDatas); 
+        $return = ResModel::createExt($allDatas);
 
         return $return;
     }
@@ -371,6 +371,15 @@ class ReceiveMessageExchangeController
             ];
 
             $noteModel->create($aDataNote);
+
+            HistoryController::add([
+                'tableName' => 'notes',
+                'recordId'  => $aArgs['identifier'],
+                'eventType' => 'ADD',
+                'eventId'   => 'noteadd',
+                'info'       => _NOTES_ADDED . ' : ' . $return['status']['id']
+            ]);
+
             $countNote++;
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] '.$countNote . ' note(s) enregistrée(s)';
@@ -383,7 +392,6 @@ class ReceiveMessageExchangeController
         $resIdMaster       = $aArgs['resId'];
         $defaultConfig     = $aArgs['defaultConfig']['res_attachments'];
         $dataObjectPackage = $dataObject->DataObjectPackage;
-        $resController     = new ResController();
 
         $attachments = $dataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->ArchiveUnit;
 
@@ -419,7 +427,7 @@ class ReceiveMessageExchangeController
                     "status"      => 'TRA'
                 ];
                 
-                $resId = $resController->storeResource($allDatas);
+                $resId = StoreController::storeResource($allDatas);
                 $countAttachment++;
             }
         }

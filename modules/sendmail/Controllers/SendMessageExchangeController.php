@@ -13,7 +13,6 @@
 * @ingroup core
 */
 
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'modules/sendmail/Controllers/ReceiveMessageExchangeController.php';
 require_once 'modules/export_seda/RequestSeda.php';
@@ -47,7 +46,7 @@ class SendMessageExchangeController
         }
 
         /***************** GET MAIL INFOS *****************/
-        $AllUserEntities = \Entities\Models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        $AllUserEntities = \Entities\models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
         foreach ($AllUserEntities as $value) {
             if($value['entity_id'] == $aArgs['sender_email']){
                 $TransferringAgencyInformations = $value;
@@ -82,7 +81,7 @@ class SendMessageExchangeController
         /**************** GET ATTACHMENTS INFOS ***************/
         $AttachmentsInfo = [];
         if (!empty($aArgs['join_attachment'])) {
-            $AttachmentsInfo = \Attachments\Models\AttachmentsModel::getAttachmentsWithOptions(['where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
+            $AttachmentsInfo = \Attachment\models\AttachmentsModel::getOnView(['where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
             foreach ($AttachmentsInfo as $key => $value) {
                 $AttachmentsInfo[$key]['Title']                                  = $value['title'];
                 $AttachmentsInfo[$key]['OriginatingAgencyArchiveUnitIdentifier'] = $value['identifier'];
@@ -92,7 +91,7 @@ class SendMessageExchangeController
         }
         $AttVersionInfo = [];
         if (!empty($aArgs['join_version_attachment'])) {
-            $AttVersionInfo = \Attachments\Models\AttachmentsModel::getAttachmentsWithOptions(['where' => ['res_id_version in (?)'], 'data' => [$aArgs['join_version_attachment']]]);
+            $AttVersionInfo = \Attachment\models\AttachmentsModel::getOnView(['where' => ['res_id_version in (?)'], 'data' => [$aArgs['join_version_attachment']]]);
             foreach ($AttVersionInfo as $key => $value) {
                 $AttVersionInfo[$key]['res_id']                                 = $value['res_id_version'];
                 $AttVersionInfo[$key]['Title']                                  = $value['title'];
@@ -142,9 +141,9 @@ class SendMessageExchangeController
 
         foreach ($_SESSION['adresses']['to'] as $key => $value) {
             /******** GET ARCHIVAl INFORMATIONs **************/
-            $contactInfo                       = ContactsModel::getFullAddressById(['addressId' => $key]);
-            $ArchivalAgencyCommunicationType   = ContactsModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
-            $ArchivalAgencyContactInformations = ContactsModel::getFullAddressById(['addressId' => $key]);
+            $contactInfo                       = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]);
+            $ArchivalAgencyCommunicationType   = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
+            $ArchivalAgencyContactInformations = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]);
 
             /******** GENERATE MESSAGE EXCHANGE OBJECT *********/
             $dataObject = self::generateMessageObject([
@@ -226,7 +225,7 @@ class SendMessageExchangeController
     {
         $aReturn    = [];
 
-        $entityRoot = \Entities\Models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
+        $entityRoot = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
         $headerNote = $_SESSION['user']['FirstName'] . ' ' . $_SESSION['user']['LastName'] . ' (' . $entityRoot[0]['entity_label'] . ' - ' . $aArgs['TransferringAgencyInformations']['entity_label'] . ' - ' .$_SESSION['user']['Mail'].') : ';
         $oBody        = new stdClass();
         $oBody->value = $headerNote . ' ' . $aArgs['body'];
@@ -247,8 +246,8 @@ class SendMessageExchangeController
 
                     $oComment        = new stdClass();
                     $date            = new DateTime($value['date_note']);
-                    $entityRoot      = \Entities\Models\EntitiesModel::getEntityRootById(['entityId' => $value['entity_id']]);
-                    $userEntity      = \Entities\Models\EntitiesModel::getById(['entityId' => $value['entity_id']]);
+                    $entityRoot      = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $value['entity_id']]);
+                    $userEntity      = \Entities\models\EntitiesModel::getById(['entityId' => $value['entity_id']]);
                     $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s').' ('.$entityRoot[0]['entity_label'].' - '.$userEntity['entity_label'].') : '.$value['note_text'];
                     array_push($aReturn, $oComment);
                 }
@@ -444,7 +443,7 @@ class SendMessageExchangeController
 
         $TransferringAgencyObject->OrganizationDescriptiveMetadata                      = new stdClass();
 
-        $entityRoot = \Entities\Models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgency']['EntitiesInformations']['entity_id']]);
+        $entityRoot = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgency']['EntitiesInformations']['entity_id']]);
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->LegalClassification = $entityRoot[0]['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->Name                = $aArgs['TransferringAgency']['EntitiesInformations']['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->UserIdentifier      = $_SESSION['user']['UserId'];

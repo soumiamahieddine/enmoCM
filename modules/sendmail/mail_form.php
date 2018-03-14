@@ -42,7 +42,6 @@ require_once 'modules/sendmail/sendmail_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
 require_once 'modules/sendmail/class/class_email_signatures.php';
-require_once 'apps/maarch_entreprise/Models/ContactsModel.php';
 require_once 'modules/sendmail/Controllers/ReadMessageExchangeController.php';
     
 $core_tools     = new core_tools();
@@ -167,7 +166,7 @@ if ($mode == 'add') {
             }
         } 
     } else {
-        $userEntitiesMails = \Entities\Models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        $userEntitiesMails = \Entities\models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
         if(empty($userEntitiesMails)){
             $content .= '<option value="" >'._NO_SENDER.'</option>';
         } else {
@@ -250,7 +249,7 @@ if ($mode == 'add') {
     }
     if($formContent != 'messageExchange'){
         if($address_id != null){
-            $adr         = ContactsModel::getFullAddressById(['select' => ['email'], 'addressId' => $address_id]);
+            $adr         = \Contact\models\ContactModel::getFullAddressById(['select' => ['email'], 'addressId' => $address_id]);
             $adress_mail = $adr[0]['email'];
         }elseif($exp_user_id != null){
             $stmt        = $db->query("SELECT mail FROM users WHERE user_id = ?", array($exp_user_id));
@@ -268,10 +267,10 @@ if ($mode == 'add') {
             $contact_id = $dest_contact_id;
         }
         if(!empty($contact_id)){
-            $communicationTypeModel = ContactsModel::getContactCommunication(['contactId' => $contact_id]);
-            $contactInfo            = ContactsModel::getById(['id' => $contact_id, 'table' => ['view_contacts']]);
+            $communicationTypeModel = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contact_id]);
+            $contactInfo            = \Contact\models\ContactModel::getById(['id' => $contact_id, 'table' => ['view_contacts']]);
             if(!empty($communicationTypeModel) && !empty($contactInfo[0]['external_contact_id'])){
-                $adress_mail = ContactsModel::getContactFullLabel(['addressId' => $address_id]);
+                $adress_mail = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $address_id]);
                 $adress_mail .= '. (' . _COMMUNICATION_TYPE . ' : '.$communicationTypeModel['value'] . ')';
             }
         }
