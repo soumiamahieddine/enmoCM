@@ -32,7 +32,7 @@ class ReadMessageExchangeController
         $unitIdentifierData         = $RequestSeda->getUnitIdentifierByMessageId($aArgs['id']);
         $aDataForm['reference']     = $messageExchangeData->reference;
         $messageReview              = $RequestSeda->getMessagesByReferenceByDate($aDataForm['reference'].'_Notification');
-        if(!empty($messageReview)){
+        if (!empty($messageReview)) {
             foreach ($messageReview as $value) {
                 $oMessageReview = json_decode($value['data']);
                 $aDataForm['messageReview'][] = $oMessageReview->Comment[0]->value;
@@ -54,7 +54,7 @@ class ReadMessageExchangeController
         if (!empty($reference)) {
             $replyData = $RequestSeda->getMessageByReference($reference);
             $oReplyData = json_decode($replyData->data);
-            $aDataForm['operationComments'] = $aReplyComment = $oReplyData->Comment;
+            $aDataForm['operationComments'] = $oReplyData->Comment;
         }
 
         $messageExchangeData         = json_decode($messageExchangeData->data);

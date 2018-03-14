@@ -26,20 +26,18 @@ use Basket\models\BasketsModel;
 use Resource\models\ResModel;
 use Note\models\NoteModel;
 use History\controllers\HistoryController;
+use Contact\models\ContactModel;
 
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
-require_once "modules/sendmail/Controllers/SendMessageExchangeController.php";
 require_once 'modules/export_seda/RequestSeda.php';
 
 class ReceiveMessageExchangeController
 {
-
     private static $aComments = [];
 
     public function saveMessageExchange(Request $request, Response $response)
     {
-
         if (!ServiceModel::hasService(['id' => 'save_numeric_package', 'userId' => $_SESSION['user']['UserId'], 'location' => 'sendmail', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
@@ -52,7 +50,7 @@ class ReceiveMessageExchangeController
 
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Réception du pli numérique';
         $tmpName = self::createFile(['base64' => $data['base64'], 'extension' => $data['extension'], 'size' => $data['size']]);
-        if(!empty($tmpName['errors'])){
+        if (!empty($tmpName['errors'])) {
             return $response->withStatus(400)->withJson($tmpName);
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Pli numérique déposé sur le serveur';
@@ -77,7 +75,7 @@ class ReceiveMessageExchangeController
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Enregistrement du message';
         $resLetterboxReturn = self::saveResLetterbox(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
 
-        if(!empty($resLetterboxReturn['errors'])){
+        if (!empty($resLetterboxReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $resLetterboxReturn['errors']]);
         }
 
@@ -85,7 +83,7 @@ class ReceiveMessageExchangeController
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Selection ou création du contact';
         $contactReturn = self::saveContact(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
 
-        if($contactReturn['returnCode'] <> 0){
+        if ($contactReturn['returnCode'] <> 0) {
             return $response->withStatus(400)->withJson(["errors" => $contactReturn['errors']]);
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Contact sélectionné ou créé';
@@ -93,21 +91,21 @@ class ReceiveMessageExchangeController
         /************** MLB COLL EXT **************/
         $return = self::saveExtensionTable(["contact" => $contactReturn, "resId" => $resLetterboxReturn[0]]);
 
-        if(!empty($return['errors'])){
+        if (!empty($return['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $return['errors']]);
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Message enregistré';
         /************** NOTES *****************/
         $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn[0]]);
 
-        if(!empty($notesReturn['errors'])){
+        if (!empty($notesReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $notesReturn['errors']]);
         }
 
         /************** RES ATTACHMENT *****************/
         $resAttachmentReturn = self::saveResAttachment(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn[0], "defaultConfig" => $aDefaultConfig]);
 
-        if(!empty($resAttachmentReturn['errors'])){
+        if (!empty($resAttachmentReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $resAttachmentReturn['errors']]);
         }
 
@@ -138,7 +136,7 @@ class ReceiveMessageExchangeController
             }
         }
 
-        if(empty($basketRedirection)){
+        if (empty($basketRedirection)) {
             $basketRedirection = 'index.php';
         }
 
@@ -148,7 +146,6 @@ class ReceiveMessageExchangeController
             "resId"             => $resLetterboxReturn[0],
             'basketRedirection' => $basketRedirection
         ]);
-
     }
 
     public static function checkNeededParameters($aArgs = [])
@@ -172,12 +169,10 @@ class ReceiveMessageExchangeController
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
-        $size     = strlen($file);
-        $type     = explode('/', $mimeType);
         $ext      = $aArgs['extension'];
         $tmpName  = 'tmp_file_' .$_SESSION['user']['UserId']. '_ArchiveTransfer_' .rand(). '.' . $ext;
 
-        if(!in_array(strtolower($ext), ['zip', 'tar'])){
+        if (!in_array(strtolower($ext), ['zip', 'tar'])) {
             return ["errors" => _WRONG_FILE_TYPE_M2M];
         }
 
@@ -208,9 +203,9 @@ class ReceiveMessageExchangeController
             }
         }
 
-        if(filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_EMAIL)){
+        if (filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_EMAIL)) {
             $aDefaultConfig['m2m_communication_type'][0] = 'email';
-        } else if (filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_URL)) {
+        } elseif (filter_var($aDefaultConfig['m2m_communication'][0], FILTER_VALIDATE_URL)) {
             $aDefaultConfig['m2m_communication_type'][0] = 'url';
         }
 
@@ -237,13 +232,13 @@ class ReceiveMessageExchangeController
         $Communication  = $archivalAgency->OrganizationDescriptiveMetadata->Contact[0]->Communication;
 
         foreach ($Communication as $value) {
-            if($value->Channel == 'email'){
+            if ($value->Channel == 'email') {
                 $email = $value->value;
                 break;
             }
         }
 
-        if(!empty($email)){
+        if (!empty($email)) {
             $destUser = UserModel::getByEmail(['mail' => $email]);
         }
 
@@ -280,20 +275,6 @@ class ReceiveMessageExchangeController
         $transferringAgency         = $dataObject->TransferringAgency;
         $transferringAgencyMetadata = $transferringAgency->OrganizationDescriptiveMetadata;
 
-        $personName  = $transferringAgencyMetadata->Contact[0]->PersonName;
-        $aPersonName = explode(" ", $personName);
-
-        $Communication = $transferringAgencyMetadata->Contact[0]->Communication;
-
-        foreach ($Communication as $value) {
-            if($value->Channel == 'phone'){
-                $phone = $value->value;
-            }
-            if($value->Channel == 'email'){
-                $email = $value->value;
-            }
-        }
-
         $aDataContact = [];
         array_push($aDataContact, ['column' => 'contact_type',        'value' => $defaultConfigContacts['contact_type'],           'type' => 'integer', 'table' => 'contacts_v2']);
         array_push($aDataContact, ['column' => 'society',             'value' => $transferringAgencyMetadata->LegalClassification, 'type' => 'string',  'table' => 'contacts_v2']);
@@ -304,28 +285,28 @@ class ReceiveMessageExchangeController
         array_push($aDataContact, ['column' => 'external_contact_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
         array_push($aDataContact, ['column' => 'departement',         'value' => $transferringAgencyMetadata->Name,                'type' => 'string',  'table' => 'contact_addresses']);
 
-        $contactAlreadyCreated = \Contact\models\ContactModel::getAddressByExternalContactId(['externalContactId' => $transferringAgency->Identifier->value]);
-        if(!empty($contactAlreadyCreated)){
+        $contactAlreadyCreated = ContactModel::getAddressByExternalContactId(['externalContactId' => $transferringAgency->Identifier->value]);
+        if (!empty($contactAlreadyCreated)) {
             $contact['contactId'] = $contactAlreadyCreated['contact_id'];
             $contact['addressId'] = $contactAlreadyCreated['ca_id'];
         } else {
-            $contact = \Contact\models\ContactModel::CreateContactM2M($aDataContact, $transferringAgencyMetadata->Communication[0]->value);
+            $contact = ContactModel::CreateContactM2M($aDataContact, $transferringAgencyMetadata->Communication[0]->value);
         }
-        $contactCommunicationExisted = \Contact\models\ContactModel::getContactCommunication([
+        $contactCommunicationExisted = ContactModel::getContactCommunication([
             "contactId" => $contact['contactId']
         ]);
 
         $contactCommunication = $transferringAgencyMetadata->Communication;
-        if(empty($contactCommunicationExisted) && !empty($contactCommunication)){
-            foreach ( $contactCommunication as $value) {
-                if(strrpos($value->value, "/rest/") !== false){
+        if (empty($contactCommunicationExisted) && !empty($contactCommunication)) {
+            foreach ($contactCommunication as $value) {
+                if (strrpos($value->value, "/rest/") !== false) {
                     $contactCommunicationValue = substr($value->value, 0, strrpos($value->value, "/rest/")+1);
                 } else {
                     $contactCommunicationValue = $value->value;
                 }
-                \Contact\models\ContactModel::createContactCommunication([
-                    "contactId" => $contact['contactId'], 
-                    "type"      => $value->Channel, 
+                ContactModel::createContactCommunication([
+                    "contactId" => $contact['contactId'],
+                    "type"      => $value->Channel,
                     "value"     => $contactCommunicationValue
                 ]);
             }
@@ -359,7 +340,6 @@ class ReceiveMessageExchangeController
 
     protected static function saveNotes($aArgs = [])
     {
-        $noteModel = new \NotesModel();
         $countNote = 0;
         foreach ($aArgs['dataObject']->Comment as $value) {
             $aDataNote = [
@@ -370,14 +350,14 @@ class ReceiveMessageExchangeController
                 "coll_id"    => "letterbox_coll",
             ];
 
-            $noteModel->create($aDataNote);
+            NoteModel::create($aDataNote);
 
             HistoryController::add([
                 'tableName' => 'notes',
                 'recordId'  => $aArgs['identifier'],
                 'eventType' => 'ADD',
                 'eventId'   => 'noteadd',
-                'info'       => _NOTES_ADDED . ' : ' . $return['status']['id']
+                'info'       => _NOTES_ADDED
             ]);
 
             $countNote++;
@@ -398,7 +378,7 @@ class ReceiveMessageExchangeController
         // First one is the main document. Already added
         unset($attachments[0]);
         $countAttachment = 0;
-        if(!empty($attachments)){
+        if (!empty($attachments)) {
             foreach ($attachments as $value) {
                 $attachmentContent      = $value->Content;
                 $attachmentDataObjectId = $value->DataObjectReference[0]->DataObjectReferenceId;
@@ -441,7 +421,7 @@ class ReceiveMessageExchangeController
         $dataObjectId = $aArgs['binaryDataObjectId'];
 
         foreach ($dataObject as $value) {
-            if($value->id == $dataObjectId){
+            if ($value->id == $dataObjectId) {
                 return $value;
             }
         }
@@ -480,7 +460,7 @@ class ReceiveMessageExchangeController
         $acknowledgementObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $_SESSION['user']['UserId'];
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_AckSent';
-        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
+        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
 
         $acknowledgementObject->DataObjectPackage = new \stdClass();
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata = new \stdClass();
@@ -489,7 +469,7 @@ class ReceiveMessageExchangeController
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content = new \stdClass();
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0] = '[CAPTUREM2M_ACK]'.date("Ymd_his");
 
-        $sendMessage->send($acknowledgementObject,$messageId, 'Acknowledgement');
+        $sendMessage->send($acknowledgementObject, $messageId, 'Acknowledgement');
     }
 
     protected function sendReply($aArgs = [])
@@ -520,7 +500,7 @@ class ReceiveMessageExchangeController
         $filePath = $sendMessage->generateMessageFile($replyObject, "ArchiveTransferReply", $_SESSION['config']['tmppath']);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
-        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
+        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
 
@@ -533,12 +513,11 @@ class ReceiveMessageExchangeController
 
         $replyObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0] = '[CAPTUREM2M_REPLY]'.date("Ymd_his");
 
-        $sendMessage->send($replyObject,$messageId, 'ArchiveTransferReply');
+        $sendMessage->send($replyObject, $messageId, 'ArchiveTransferReply');
     }
 
     public function saveMessageExchangeReturn(RequestInterface $request, ResponseInterface $response)
     {
-
         if (empty($_SESSION['user']['UserId'])) {
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
@@ -564,16 +543,14 @@ class ReceiveMessageExchangeController
             $dataObject->TransferringAgency = $dataObject->Sender;
             $dataObject->ArchivalAgency     = $dataObject->Receiver;
             $RequestSeda->updateReceptionDateMessage(['reception_date' => $dataObject->Date, 'message_id' => $messageExchange->message_id]);
-        } else if($dataObject->type == 'ArchiveTransferReply'){
+        } elseif ($dataObject->type == 'ArchiveTransferReply') {
             $messageExchange = $RequestSeda->getMessageByReference($dataObject->MessageRequestIdentifier->value);
         }
 
-        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => $data['type']]);
+        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => $data['type']]);
 
         return $response->withJson([
             "messageId" => $messageId
         ]);
-
     }
-
 }
