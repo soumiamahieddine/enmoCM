@@ -48,12 +48,12 @@ class SendMessageExchangeController
         /***************** GET MAIL INFOS *****************/
         $AllUserEntities = \Entities\models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
         foreach ($AllUserEntities as $value) {
-            if($value['entity_id'] == $aArgs['sender_email']){
+            if ($value['entity_id'] == $aArgs['sender_email']) {
                 $TransferringAgencyInformations = $value;
             }
         }
 
-        if(empty($TransferringAgencyInformations)){
+        if (empty($TransferringAgencyInformations)) {
             return ['errors' => "no sender"];
         }
 
@@ -105,8 +105,8 @@ class SendMessageExchangeController
         /******************* GET NOTE INFOS **********************/
         $aComments = self::generateComments([
             'resId' => $aArgs['identifier'],
-            'notes' => $aArgs['notes'], 
-            'body'  => $aArgs['body_from_raw'], 
+            'notes' => $aArgs['notes'],
+            'body'  => $aArgs['body_from_raw'],
             'TransferringAgencyInformations' => $TransferringAgencyInformations]);
 
         /*********** ORDER ATTACHMENTS IN MAIL ***************/
@@ -116,7 +116,7 @@ class SendMessageExchangeController
         } else {
             foreach ($aAllAttachment as $key => $value) {
                 if ($value['res_id'] == $MainExchangeDoc['res_id'] && $MainExchangeDoc['tablename'] == $value['tablenameExchangeMessage']) {
-                    if($AllInfoMainMail['category_id'] == 'outgoing'){
+                    if ($AllInfoMainMail['category_id'] == 'outgoing') {
                         $aOutgoingMailInfo                                           = $AllInfoMainMail;
                         $aOutgoingMailInfo['Title']                                  = $AllInfoMainMail['subject'];
                         $aOutgoingMailInfo['OriginatingAgencyArchiveUnitIdentifier'] = $AllInfoMainMail['alt_identifier'];
@@ -185,7 +185,7 @@ class SendMessageExchangeController
                 array_push($errors, $res['content']);
                 return ['errors' => $errors];
             }
-         } 
+        }
 
         return true;
     }
@@ -231,16 +231,15 @@ class SendMessageExchangeController
         $oBody->value = $headerNote . ' ' . $aArgs['body'];
         array_push($aReturn, $oBody);
 
-        if(!empty($aArgs['notes'])){
-            $noteModel = new \NotesModel();
-            $notes     = $noteModel->getByResId([
-                'select' => ['notes.id', 'notes.user_id', 'notes.date_note', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'], 
+        if (!empty($aArgs['notes'])) {
+            $notes     = \Note\models\NotesModel::getByResId([
+                'select' => ['notes.id', 'notes.user_id', 'notes.date_note', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'],
                 'resId' => $aArgs['resId']
             ]);
 
-            if(!empty($notes)){
+            if (!empty($notes)) {
                 foreach ($notes as $value) {
-                    if(!in_array($value['id'], $aArgs['notes'])){
+                    if (!in_array($value['id'], $aArgs['notes'])) {
                         continue;
                     }
 
@@ -374,9 +373,9 @@ class SendMessageExchangeController
         $contentObject->OriginatingSystemId                    = $aArgs['OriginatingSystemId'];
         $contentObject->OriginatingAgencyArchiveUnitIdentifier = $aArgs['OriginatingAgencyArchiveUnitIdentifier'];
         $contentObject->DocumentType                           = $aArgs['DocumentType'];
-        $contentObject->Status                                 = \Core\Models\StatusModel::getById(['id' => $aArgs['Status']])[0]['label_status'];
+        $contentObject->Status                                 = \Status\models\StatusModel::getById(['id' => $aArgs['Status']])[0]['label_status'];
 
-        $userInfos = \Core\Models\UserModel::getById(['userId' => $aArgs['Writer']]);
+        $userInfos = \User\models\UserModel::getById(['userId' => $aArgs['Writer']]);
         $writer                = new stdClass();
         $writer->FirstName     = $userInfos['firstname'];
         $writer->BirthName     = $userInfos['lastname'];
@@ -399,7 +398,7 @@ class SendMessageExchangeController
         if (isset($aArgs['ArchivalAgency']['CommunicationType']['type'])) {
             $arcCommunicationObject          = new stdClass();
             $arcCommunicationObject->Channel = $aArgs['ArchivalAgency']['CommunicationType']['type'];
-            if($aArgs['ArchivalAgency']['CommunicationType']['type'] == 'url'){
+            if ($aArgs['ArchivalAgency']['CommunicationType']['type'] == 'url') {
                 $postUrl = '/rest/saveNumericPackage';
             }
             $arcCommunicationObject->value   = $aArgs['ArchivalAgency']['CommunicationType']['value'].$postUrl;
@@ -499,7 +498,7 @@ class SendMessageExchangeController
         $oData->archivalAgreement->value              = ""; // TODO : ???
         
         $replyCode = "";
-        if(!empty($dataObject->ReplyCode->value)){
+        if (!empty($dataObject->ReplyCode->value)) {
             $replyCode = $dataObject->ReplyCode->value;
         }
 
@@ -536,7 +535,7 @@ class SendMessageExchangeController
             $RequestSeda->insertUnitIdentifier($messageId, $value['tablenameExchangeMessage'], $value['res_id'], $disposition);
         }
 
-        if(!empty($aArgs['notes'])){
+        if (!empty($aArgs['notes'])) {
             foreach ($aArgs['notes'] as $value) {
                 $RequestSeda->insertUnitIdentifier($messageId, "notes", $value, "note");
             }
@@ -549,7 +548,7 @@ class SendMessageExchangeController
     {
         $dataObject = $aArgs['dataObject'];
         $aCleanDataObject = [];
-        if(!empty($dataObject->DataObjectPackage->BinaryDataObject)){
+        if (!empty($dataObject->DataObjectPackage->BinaryDataObject)) {
             foreach ($dataObject->DataObjectPackage->BinaryDataObject as $key => $value) {
                 $value->Attachment->value = "";
                 $aCleanDataObject[$key] = $value;
