@@ -312,6 +312,9 @@ if (! empty($_SESSION['error'])) {
                     $res['url'] = 'index.php?display=true&page=login';
                 }
             }
+            if ($_SESSION['user']['UserId'] == 'superadmin') {
+                $res['url'] .= '?administration=true';
+            }
             header(
                 'location: ' . $_SESSION['config']['businessappurl'] . $res['url']
             );

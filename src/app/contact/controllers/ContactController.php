@@ -72,7 +72,8 @@ class ContactController
         return $response->withJson(['contactId' => $contactId, 'addressId' => $addressId]);
     }
 
-    public function getCheckCommunication(Request $request, Response $response, $aArgs) {
+    public function getCheckCommunication(Request $request, Response $response, $aArgs)
+    {
         $data = $request->getParams();
 
         if (isset($data['contactId'])) {
@@ -86,11 +87,7 @@ class ContactController
                 ->withJson(['errors' => _ID . ' ' . _IS_EMPTY]);
         }
 
-        $data = [
-            $obj,
-        ];
-
-        return $response->withJson($data);
+        return $response->withJson([$obj]);
     }
 
 
