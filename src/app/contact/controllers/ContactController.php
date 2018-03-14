@@ -74,12 +74,9 @@ class ContactController
 
     public function getCheckCommunication(Request $request, Response $response, $aArgs)
     {
-        $data = $request->getParams();
-
-        if (isset($data['contactId'])) {
-            $contactId = $data['contactId'];
+        if (!empty($aArgs['contactId'])) {
             $obj = ContactModel::getCommunicationByContactId([
-                'contactId' => $contactId
+                'contactId' => $aArgs['contactId']
             ]);
         } else {
             return $response
@@ -89,6 +86,4 @@ class ContactController
 
         return $response->withJson([$obj]);
     }
-
-
 }

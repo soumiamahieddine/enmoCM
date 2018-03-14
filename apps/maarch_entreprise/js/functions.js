@@ -1813,10 +1813,9 @@ function checkCommunication(contactId){
     }
 
     $j.ajax({
-        url      : '../../rest/contact/checkCommunication',
+        url      : '../../rest/contact/checkCommunication/'+contactId,
         type     : 'get',
         data: {
-            contactId  : contactId
         },
         success: function(answer) {
             if(answer[0]) {
