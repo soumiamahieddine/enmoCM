@@ -14,6 +14,8 @@
 
 namespace SrcCore\models;
 
+use User\models\UserModel;
+
 class SecurityModel
 {
     public static function getPasswordHash($password)
@@ -93,12 +95,18 @@ class SecurityModel
             }
         }
 
-        $previousCookie = SecurityModel::getCookieAuth();
-        if (empty($previousCookie)) {
+        $user = DatabaseModel::select([
+            'select'    => ['cookie_key'],
+            'table'     => ['users'],
+            'where'     => ['user_id = ?', 'cookie_date > CURRENT_TIMESTAMP'],
+            'data'      => [$args['userId']]
+        ]);
+        if (empty($user[0]['cookie_key'])) {
             $cookieKey = SecurityModel::getPasswordHash($args['userId']);
         } else {
-            $cookieKey = $previousCookie['cookieKey'];
+            $cookieKey = $user[0]['cookie_key'];
         }
+
         $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
         $cookieTime = time() + 60 * $cookieTime;
 
@@ -123,16 +131,6 @@ class SecurityModel
         $previousCookie = SecurityModel::getCookieAuth();
 
         if (!empty($previousCookie)) {
-            DatabaseModel::update([
-                'table' => 'users',
-                'set'   => [
-                    'cookie_key'    => '',
-                    'cookie_date'   => date('Y-m-d H:i:s', time() - 1),
-                ],
-                'where' => ['user_id = ?'],
-                'data'  => [$previousCookie['userId']]
-            ]);
-
             $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
             setcookie('maarchCourrierAuth', '', time() - 1, $cookiePath, '', false, true);
         }
