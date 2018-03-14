@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { NotificationService } from './notification.service';
 
 declare function $j(selector: any) : any;
 
@@ -8,7 +8,7 @@ declare var angularGlobals : any;
 
 
 @Component({
-    templateUrl : "../../../../Views/save-numeric-package.component.html",
+    templateUrl : "../../../Views/save-numeric-package.component.html",
     // styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
 })
 export class SaveNumericPackageComponent implements OnInit {
@@ -24,11 +24,10 @@ export class SaveNumericPackageComponent implements OnInit {
         extension               : "",
     };
 
-    resultInfo                  : string    = "";
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private zone: NgZone) {
+    constructor(public http: Http, private zone: NgZone, private notify: NotificationService) {
         window['angularSaveNumericPackageComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -95,14 +94,9 @@ export class SaveNumericPackageComponent implements OnInit {
     submitNumericPackage() {
         if(this.numericPackage.size != 0) {
             this.http.post(this.coreUrl + 'rest/saveNumericPackage', this.numericPackage)
-                .map(res => res.json())
-                .subscribe((data) => {
+                .subscribe((data : any) => {
                     if (data.errors) {
-                        this.resultInfo = data.errors;
-                        $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        }); 
+                        this.notify.error(data.errors);
                     } else {
                         this.numericPackage  = {
                             base64                  : "",
@@ -113,11 +107,7 @@ export class SaveNumericPackageComponent implements OnInit {
                             extension               : "",
                         };
                         $j("#numericPackageFilePath").val(null);
-                        this.resultInfo = 'Pli numérique correctement importé';
-                        $j('#resultInfo').removeClass().addClass('alert alert-success alert-dismissible');
-                        $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                            $j("#resultInfo").slideUp(500);
-                        }); 
+                        this.notify.success('Pli numérique correctement importé');
 
                         if(data.basketRedirection != null){
                             window.location.href = data.basketRedirection;
@@ -132,11 +122,7 @@ export class SaveNumericPackageComponent implements OnInit {
             this.numericPackage.base64      = "";
             this.numericPackage.extension   = "";
 
-            this.resultInfo = "Aucun pli numérique séléctionné";
-            $j('#resultInfo').removeClass().addClass('alert alert-danger alert-dismissible');
-            $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function(){
-                $j("#resultInfo").slideUp(500);
-            });
+            this.notify.error("Aucun pli numérique séléctionné");
         }
     }
 
