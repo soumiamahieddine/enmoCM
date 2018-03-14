@@ -222,6 +222,4 @@ class ContactModelAbstract
 
         return $aReturn[0];
     }
-
-
 }
