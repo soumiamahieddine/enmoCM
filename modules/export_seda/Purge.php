@@ -56,7 +56,7 @@ Class Purge{
         $xml = simplexml_load_file($fileName);
 
         if (strpos($xml->ReplyCode, '000') === false) {
-            $_SESSION['error'] = _ERROR_LETTER_ARCHIVED. $resId;
+            $_SESSION['error'] = _LETTER_NO_ARCHIVED. $resId;
             return false;
         }
 

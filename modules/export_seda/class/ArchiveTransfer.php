@@ -295,22 +295,21 @@ class ArchiveTransfer
         $data->messageId                             = $messageObject->MessageIdentifier->value;
         $data->date                                  = $messageObject->Date;
 
-        $data->messageIdentifier                     = new stdClass();
-        $data->messageIdentifier->value              = $messageObject->MessageIdentifier->value;
+        $data->MessageIdentifier                     = new stdClass();
+        $data->MessageIdentifier->value              = $messageObject->MessageIdentifier->value;
 
-        $data->transferringAgency                    = new stdClass();
-        $data->transferringAgency->identifier        = new stdClass();
-        $data->transferringAgency->identifier->value = $messageObject->TransferringAgency->Identifier->value;
+        $data->TransferringAgency                    = new stdClass();
+        $data->TransferringAgency->Identifier        = new stdClass();
+        $data->TransferringAgency->Identifier->value = $messageObject->TransferringAgency->Identifier->value;
 
-        $data->archivalAgency                        = new stdClass();
-        $data->archivalAgency->identifier            = new stdClass();
-        $data->archivalAgency->identifier->value     = $messageObject->ArchivalAgency->Identifier->value;
+        $data->ArchivalAgency                        = new stdClass();
+        $data->ArchivalAgency->Identifier            = new stdClass();
+        $data->ArchivalAgency->Identifier->value     = $messageObject->ArchivalAgency->Identifier->value;
 
-        $data->archivalAgreement                     = new stdClass();
-        $data->archivalAgreement->value              = $messageObject->ArchivalAgreement->value;
+        $data->ArchivalAgreement                     = new stdClass();
+        $data->ArchivalAgreement->value              = $messageObject->ArchivalAgreement->value;
 
-        $data->replyCode                             = new stdClass();
-        $data->replyCode->value                      = $messageObject->ReplyCode->value;
+        $data->ReplyCode                             = $messageObject->ReplyCode;
 
         $aArgs                                       = [];
         $aArgs['fullMessageObject']                  = $messageObject;

@@ -484,8 +484,7 @@ class ReceiveMessageExchangeController
         $replyObject->MessageIdentifier                 = new \stdClass();
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
 
-        $replyObject->ReplyCode                         = new \stdClass();
-        $replyObject->ReplyCode->value                  = $aArgs['replyCode'];
+        $replyObject->ReplyCode                         = $aArgs['replyCode'];
 
         $replyObject->MessageRequestIdentifier        = new \stdClass();
         $replyObject->MessageRequestIdentifier->value = $dataObject->MessageIdentifier->value;

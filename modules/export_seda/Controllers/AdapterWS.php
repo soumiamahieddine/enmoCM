@@ -15,7 +15,8 @@ class AdapterWS{
     {
         $transfer = new Transfer();
 
-        $res = $transfer->transfer('maarchcourrier', $messageId, $type);
+        $message = $this->db->getMessageByIdentifier($messageId);
+        $res = $transfer->transfer('maarchcourrier', $message->reference, $type);
 
         if ($res['status'] == 1) {
             $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'E');

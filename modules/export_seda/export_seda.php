@@ -48,7 +48,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $db = new Database();
         $stmt = $db->query("select message_id from unit_identifier where res_id = ?", array($values[0]));
         $unitIdentifier = $stmt->fetchObject();
-        $stmt = $db->query("select data from seda where message_id = ?", array($unitIdentifier->message_id));
+        $stmt = $db->query("select data from message_exchange where message_id = ?", array($unitIdentifier->message_id));
 
         $messageData = $stmt->fetchObject();
 

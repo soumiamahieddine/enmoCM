@@ -486,9 +486,9 @@ class RequestSeda
                 ['docserver_type_id' => $docserver[0]['docserver_type_id']]
             );
 
-            $fingerprint = \Docserver\controllers\DocserverToolsController::doFingerprint([
-                'path'            => $filePath,
-                'fingerprintMode' => $docserverType[0]['fingerprint_mode'],
+            $fingerprint = \SrcCore\controllers\StoreController::getFingerPrint([
+                'filePath'              => $filePath,
+                'mode'                  => $docserverType[0]['fingerprint_mode'],
             ]);
 
         }

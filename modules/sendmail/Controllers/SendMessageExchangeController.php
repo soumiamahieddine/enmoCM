@@ -501,12 +501,12 @@ class SendMessageExchangeController
         $oData->archivalAgreement->value              = ""; // TODO : ???
         
         $replyCode = "";
-        if (!empty($dataObject->ReplyCode->value)) {
-            $replyCode = $dataObject->ReplyCode->value;
+        if(!empty($dataObject->ReplyCode)){
+            $replyCode = $dataObject->ReplyCode;
         }
 
         $oData->replyCode                             = new stdClass();
-        $oData->replyCode->value                      = $replyCode;
+        $oData->replyCode                             = $replyCode;
 
         $dataObject = self::cleanBase64Value(['dataObject' => $dataObject]);
 
