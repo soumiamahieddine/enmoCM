@@ -13,13 +13,10 @@
 * @ingroup core
 */
 
-require_once 'apps/maarch_entreprise/Models/ResModel.php';
 require_once 'modules/sendmail/Controllers/ReceiveMessageExchangeController.php';
 require_once 'modules/export_seda/RequestSeda.php';
-require_once 'modules/notes/Models/NotesModel.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
 require_once "core/class/class_request.php";
-require_once "core/class/class_history.php";
 
 class SendMessageExchangeController
 {
@@ -30,7 +27,7 @@ class SendMessageExchangeController
         if (!empty($errors)) {
             return ['errors' => $errors];
         }
-        $mlbCollExt = ResModel::getMlbCollExtById(['resId' => $aArgs['identifier']]);
+        $mlbCollExt = Resource\models\ResModel::getExtById(['resId' => $aArgs['identifier']]);
         if (empty($mlbCollExt)) {
             return ['errors' => "wrong identifier"];
         }
@@ -57,7 +54,7 @@ class SendMessageExchangeController
             return ['errors' => "no sender"];
         }
 
-        $AllInfoMainMail = ResModel::getById(['resId' => $aArgs['identifier']]);
+        $AllInfoMainMail = Resource\models\ResModel::getById(['resId' => $aArgs['identifier']]);
 
         $tmpMainExchangeDoc = explode("__", $aArgs['main_exchange_doc']);
         $MainExchangeDoc    = ['tablename' => $tmpMainExchangeDoc[0], 'res_id' => $tmpMainExchangeDoc[1]];
@@ -136,7 +133,6 @@ class SendMessageExchangeController
         $mainDocument[0]['Title'] = '[CAPTUREM2M]'.$aArgs['object'];
 
         $sendMessage = new SendMessage();
-        $hist    = new history();
         $request = new request();
 
         foreach ($_SESSION['adresses']['to'] as $key => $value) {
@@ -166,15 +162,22 @@ class SendMessageExchangeController
             $messageId = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $aArgs['identifier'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer']);
             self::saveUnitIdentifier(['attachment' => $aMergeAttachment, 'notes' => $aArgs['notes'], 'messageId' => $messageId]);
 
-            $hist->add(
-                'res_letterbox', $aArgs['identifier'], "UP", 'resup', _NUMERIC_PACKAGE_ADDED . _ON_DOC_NUM
-                . $aArgs['identifier'] . ' ('.$messageId.') : "' . $request->cut_string($mainDocument[0]['Title'], 254) .'"',
-                $_SESSION['config']['databasetype'], 'sendmail'
-            );
-            $hist->add(
-                'message_exchange', $messageId, "ADD", 'messageexchangeadd', _NUMERIC_PACKAGE_ADDED . ' (' . $messageId . ')',
-                $_SESSION['config']['databasetype'], 'sendmail'
-            );
+            \History\controllers\HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $aArgs['identifier'],
+                'eventType' => 'UP',
+                'eventId'   => 'resup',
+                'info'       => _NUMERIC_PACKAGE_ADDED . _ON_DOC_NUM
+                . $aArgs['identifier'] . ' ('.$messageId.') : "' . $request->cut_string($mainDocument[0]['Title'], 254) .'"'
+            ]);
+
+            \History\controllers\HistoryController::add([
+                'tableName' => 'message_exchange',
+                'recordId'  => $messageId,
+                'eventType' => 'ADD',
+                'eventId'   => 'messageexchangeadd',
+                'info'       => _NUMERIC_PACKAGE_ADDED . ' (' . $messageId . ')'
+            ]);
 
             /******** ENVOI *******/
             $res = $sendMessage->send($dataObject, $messageId, 'ArchiveTransfer');
