@@ -71,19 +71,29 @@ if (isset($_REQUEST['identifier']) && ! empty($_REQUEST['identifier'])) {
 if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
     $collId = trim($_REQUEST['coll_id']);
     $parameters .= '&coll_id='.$_REQUEST['coll_id'];
-	$view = $sec->retrieve_view_from_coll_id($collId);
+    $view = $sec->retrieve_view_from_coll_id($collId);
     $table = $sec->retrieve_table_from_coll($collId);
 }
 
 //Keep some origin parameters
-if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size='.$_REQUEST['size'];
+if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) {
+    $parameters .= '&size='.$_REQUEST['size'];
+}
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $parameters .= '&order='.$_REQUEST['order'];
-    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+        $parameters .= '&order_field='.$_REQUEST['order_field'];
+    }
 }
-if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
-if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) $parameters .= '&template='.$_REQUEST['template'];
-if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+    $parameters .= '&what='.$_REQUEST['what'];
+}
+if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) {
+    $parameters .= '&template='.$_REQUEST['template'];
+}
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) {
+    $parameters .= '&start='.$_REQUEST['start'];
+}
 
 if (isset($_REQUEST['formContent']) && !empty($_REQUEST['formContent'])) {
     $formContent = $_GET['formContent'];
@@ -104,9 +114,9 @@ $path_to_script = $_SESSION['config']['businessappurl']
     
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header('', true, false);           
+$core_tools->load_header('', true, false);
 ?><body><?php
-$core_tools->load_js(); 
+$core_tools->load_js();
 
 $aUserEntities = \User\models\UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
 $userEntities = [];
@@ -114,7 +124,7 @@ foreach ($aUserEntities as $value) {
     $userEntities[] = $value['entity_id'];
 }
 
-if(empty($userEntities)){
+if (empty($userEntities)) {
     $userEntities = [''];
 }
 
@@ -130,14 +140,14 @@ if ($mode == 'add') {
     $content .= '<div style="padding: 10px;">';
     $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
     $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
-    if($formContent == 'messageExchange'){
+    if ($formContent == 'messageExchange') {
         $content .= '<input type="hidden" value="N" name="is_html" id="is_html">';
     } else {
         $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     }
     $content .= '<input type="hidden" value="'.$_GET['formContent'].'" name="formContent" id="formContent">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5" ';
-    if($formContent == 'messageExchange'){
+    if ($formContent == 'messageExchange') {
         $content .= 'style="margin-left: -30px;" ';
     }
     $content .= '>';
@@ -147,45 +157,45 @@ if ($mode == 'add') {
     $content .='<select name="sender_email" id="sender_email">';
     $userEntitiesMails = array();
 
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         if ($core_tools->test_service('use_mail_services', 'sendmail', false)) {
             $userEntitiesMails = $sendmail_tools->getAttachedEntitiesMails($_SESSION['user']['UserId']);
         }
 
         $content .='<option value="'.$_SESSION['user']['Mail'].'" ';
-        if(empty($userEntitiesMails)){
+        if (empty($userEntitiesMails)) {
             $content .= 'selected="selected"';
         }
         $content .='>'.functions::xssafe($_SESSION['user']['FirstName']) . ' ' . functions::xssafe($_SESSION['user']['LastName']) . ' (' . $_SESSION['user']['Mail'] . ')</option>';
         foreach ($userEntitiesMails as $key => $value) {
             $primaryentity = explode(',', $key);
-            if($primaryentity[0] == $_SESSION['user']['primaryentity']['id']){
+            if ($primaryentity[0] == $_SESSION['user']['primaryentity']['id']) {
                 $content .= '<option value="'.$key.'" selected="selected" >' . $value . '</option>';
-            }else{
+            } else {
                 $content .= '<option value="'.$key.'" >' . $value . '</option>';
             }
-        } 
+        }
     } else {
-        $userEntitiesMails = \Entities\models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
-        if(empty($userEntitiesMails)){
+        $userEntitiesMails = \Entity\models\EntityModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        if (empty($userEntitiesMails)) {
             $content .= '<option value="" >'._NO_SENDER.'</option>';
         } else {
             foreach ($userEntitiesMails as $value) {
-                if(!empty($value['business_id'])){
-                    if($value['entity_id'] == $_SESSION['user']['primaryentity']['id']){
+                if (!empty($value['business_id'])) {
+                    if ($value['entity_id'] == $_SESSION['user']['primaryentity']['id']) {
                         $content .= '<option value="'.$value['entity_id'].'" selected="selected" >' . $value['entity_label'] . ' ('.$value['business_id'].')</option>';
-                    }else{
+                    } else {
                         $content .= '<option value="'.$value['entity_id'].'" >' . $value['entity_label'] . ' ('.$value['business_id'].')</option>';
                     }
                 }
-            } 
+            }
         }
     }
 
     $content .='</select>';
     $content .='</td>';
     $content .= '</tr>';
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         $content .= '<tr>';
         $content .= '<td align="right" >'._EMAIL.'</label></td>';
         $content .= '<td colspan="2"><input type="text" name="email" id="email" value="" class="emailSelect" />';
@@ -247,36 +257,36 @@ if ($mode == 'add') {
         $rawSubject = $stmt->fetchObject();
         $subject = $rawSubject->subject;
     }
-    if($formContent != 'messageExchange'){
-        if($address_id != null){
+    if ($formContent != 'messageExchange') {
+        if ($address_id != null) {
             $adr         = \Contact\models\ContactModel::getFullAddressById(['select' => ['email'], 'addressId' => $address_id]);
             $adress_mail = $adr[0]['email'];
-        }elseif($exp_user_id != null){
+        } elseif ($exp_user_id != null) {
             $stmt        = $db->query("SELECT mail FROM users WHERE user_id = ?", array($exp_user_id));
             $adr         = $stmt->fetchObject();
             $adress_mail = $adr->mail;
-        }elseif($dest_user_id != null){
+        } elseif ($dest_user_id != null) {
             $stmt        = $db->query("SELECT mail FROM users WHERE user_id = ?", array($dest_user_id));
             $adr         = $stmt->fetchObject();
             $adress_mail = $adr->mail;
         }
-    } else if($address_id != null) {
-        if($exp_contact_id != null){
+    } elseif ($address_id != null) {
+        if ($exp_contact_id != null) {
             $contact_id = $exp_contact_id;
         } else {
             $contact_id = $dest_contact_id;
         }
-        if(!empty($contact_id)){
+        if (!empty($contact_id)) {
             $communicationTypeModel = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contact_id]);
             $contactInfo            = \Contact\models\ContactModel::getById(['id' => $contact_id, 'table' => ['view_contacts']]);
-            if(!empty($communicationTypeModel) && !empty($contactInfo[0]['external_contact_id'])){
+            if (!empty($communicationTypeModel) && !empty($contactInfo[0]['external_contact_id'])) {
                 $adress_mail = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $address_id]);
                 $adress_mail .= '. (' . _COMMUNICATION_TYPE . ' : '.$communicationTypeModel['value'] . ')';
             }
         }
     }
-    if($adress_mail != null and $_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id){
-        if($formContent == 'messageExchange'){
+    if ($adress_mail != null and $_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id) {
+        if ($formContent == 'messageExchange') {
             $_SESSION['adresses']['to'][$address_id] = $adress_mail;
             $onclickfunction = 'updateDestUser';
             $elementToDel    = $address_id;
@@ -300,11 +310,11 @@ if ($mode == 'add') {
 
     $content .= '</tr>';
 
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         $content .= '<tr><td colspan="3"><a href="javascript://" '
-    		.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
-    		.'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
-    		._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
+            .'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
+            .'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
+            ._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
         $content .= '<tr id="tr_cc" style="display:none">';
         $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
         $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">'
@@ -321,10 +331,11 @@ if ($mode == 'add') {
 
     $content .= '<td colspan="2">';
 
-    if ($category_id == 'outgoing')
+    if ($category_id == 'outgoing') {
         $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . $subject . '" '.$readOnlyObject.'/>';
-    else
+    } else {
         $content .= '<input name="object" id="object" class="emailInput" type="text" value="' . _EMAIL_OBJECT_ANSWER . ' ' . functions::format_date_db($admission_date).'" '.$readOnlyObject.'/>';
+    }
 
     $content .= '</td></tr>';
     $content .= '</table><br />';
@@ -332,7 +343,7 @@ if ($mode == 'add') {
     $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'joined_files\', \'divStatus_joined_files\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;' 
+    $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'
         . _JOINED_FILES;
     $content .= '</h4>';
     
@@ -343,72 +354,71 @@ if ($mode == 'add') {
     if (count($joined_files) >0) {
         $content .='<br/>';
         $content .='<div><span style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</span>';
-            if($formContent == 'messageExchange'){
-                $content .='<span style="float: right;font-weight:bold">Principal</span>';
-            }
-            $content .='</div>';
-        for($i=0; $i < count($joined_files); $i++) {
+        if ($formContent == 'messageExchange') {
+            $content .='<span style="float: right;font-weight:bold">Principal</span>';
+        }
+        $content .='</div>';
+        for ($i=0; $i < count($joined_files); $i++) {
             //Get data
-            $id          = $joined_files[$i]['id']; 
+            $id          = $joined_files[$i]['id'];
             $description = $joined_files[$i]['label'];
             $format      = $joined_files[$i]['format'];
             $format      = $joined_files[$i]['format'];
             $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
             $att_type    = $joined_files[$i]['format'];
             $filesize    = $joined_files[$i]['filesize']/1024;
-            ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
-			//Show data
-			$version = '';
+            ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize, 2).' Octets';
+            //Show data
+            $version = '';
             $content .= "<table cellspacing=\"3\" id=\"main_document\" style=\"border-collapse:collapse;width:100%;\"><tr>";
-            if($joined_files[$i]['is_version'] === true){
-				//Version
-				$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
-				//Contents
-				$content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
-					. "\" title=\"".$description
-					. "\"><input type=\"checkbox\" id=\"join_file_".$id
-					. "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
-					. " class=\"check\" value=\""
-					. $id."\" ></th>"
-					. "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;text-align:left;\"";
+            if ($joined_files[$i]['is_version'] === true) {
+                //Version
+                $version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
+                //Contents
+                $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
+                    . "\" title=\"".$description
+                    . "\"><input type=\"checkbox\" id=\"join_file_".$id
+                    . "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
+                    . " class=\"check\" value=\""
+                    . $id."\" ></th>"
+                    . "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;text-align:left;\"";
                 $content .= ' onclick="clickAttachments('.$id.')" ';
                 $content .= "><strong>" . $description . "</strong> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span></</td>";
-			} else {
-				$content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
-					. "\" title=\"".$description
-					. "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
-					. " class=\"check\" value=\""
-					. $id."\" ></th>"
-					. "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;text-align:left;\"";
+            } else {
+                $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
+                    . "\" title=\"".$description
+                    . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
+                    . " class=\"check\" value=\""
+                    . $id."\" ></th>"
+                    . "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;text-align:left;\"";
                 $content .= ' onclick="clickAttachments('.$id.')" ';
                 $content .= "><strong>" . $description . "</strong> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span></td>";
             }
-            if($formContent == 'messageExchange'){
-                $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" value=\"res_letterbox__".$id."\">";   
+            if ($formContent == 'messageExchange') {
+                $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" value=\"res_letterbox__".$id."\">";
                 $content .= "</td>";
             }
             $content .= "</tr></table>";
-			$filename = $sendmail_tools->createFilename($description.$version, $format);
+            $filename = $sendmail_tools->createFilename($description.$version, $format);
             $all_joined_files .= $description.': '.$filename.PHP_EOL;
         }
     }
     
     //Attachments
-    if ($core_tools->is_module_loaded('attachments')) { 
+    if ($core_tools->is_module_loaded('attachments')) {
         $attachment_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier, true);
         if (count($attachment_files) >0) {
             $content .='<br/>';
             $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._ATTACHMENTS.'</div>';
             $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
 
-            for($i=0; $i < count($attachment_files); $i++) {
-
+            for ($i=0; $i < count($attachment_files); $i++) {
                 $content .= "<tr style=\"vertical-align:top;\">";
 
                 //Get data
-                $id           = $attachment_files[$i]['id']; 
-                $isVersion    = $attachment_files[$i]['is_version']; 
-                $id_converted = $attachment_files[$i]['converted_pdf']; 
+                $id           = $attachment_files[$i]['id'];
+                $isVersion    = $attachment_files[$i]['is_version'];
+                $id_converted = $attachment_files[$i]['converted_pdf'];
                 $description  = $attachment_files[$i]['label'];
                 if (strlen($description) > 73) {
                     $description = substr($description, 0, 70);
@@ -425,7 +435,7 @@ if ($mode == 'add') {
                 $dest_lastname   = $attachment_files[$i]['lastname'];
                 ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
                 
-                if($isVersion){
+                if ($isVersion) {
                     $inputName = "join_version_attachment[]";
                     $mainExchangeDocValue = "res_version_attachments";
                 } else {
@@ -445,38 +455,38 @@ if ($mode == 'add') {
                     }
                 $content .= "/></th>";
 
-                if(!$id_converted){
+                if (!$id_converted) {
                     $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                     $content .= ' onclick="clickAttachmentsInput('.$i.')" ';
-                }else{
+                } else {
                     $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                 }
 
                 $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
-                if($id_converted){
+                if ($id_converted) {
                     $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
                     . $id_converted."\" />version pdf)";
                 }
                 $content .= "<br/>";
-                if ($chrono != "")
+                if ($chrono != "") {
                     $content .= "<span style='font-size: 10px;color: rgb(22, 173, 235);font-style:italic;'>" . $chrono . "</span> - ";
+                }
                 $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
-                $content .= "</td>";   
-                if($formContent == 'messageExchange'){
-                    $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" value=\"".$mainExchangeDocValue."__".$id."\">";   
+                $content .= "</td>";
+                if ($formContent == 'messageExchange') {
+                    $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" value=\"".$mainExchangeDocValue."__".$id."\">";
                     $content .= "</td>";
                 }
 
                 $content .= "</tr>";
 
-				$filename = $sendmail_tools->createFilename($description, $format);
-
+                $filename = $sendmail_tools->createFilename($description, $format);
             }
             $content .= "</table>";
         }
     }
-    //Notes            
+    //Notes
     if ($core_tools->is_module_loaded('notes')) {
         require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
             . "class" . DIRECTORY_SEPARATOR
@@ -487,11 +497,11 @@ if ($mode == 'add') {
             $content .='<br/>';
             $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._NOTES.'</div>';
             $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
-            for($i=0; $i < count($user_notes); $i++) {
+            for ($i=0; $i < count($user_notes); $i++) {
                 $content .= "<tr style=\"vertical-align:top;\">";
 
                 //Get data
-                $id = $user_notes[$i]['id']; 
+                $id = $user_notes[$i]['id'];
                 $noteShort = functions::xssafe($request->cut_string($user_notes[$i]['label'], 50));
                 $note = functions::xssafe($user_notes[$i]['label']);
                 $userArray = $users_tools->get_user($user_notes[$i]['author']);
@@ -504,7 +514,7 @@ if ($mode == 'add') {
                     . $id."\"></th><td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                 $content .= ' onclick="clickAttachmentsNotes('.$id.')" ';
                 $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
-                    ."<strong>". $noteShort."</strong></td>"; 
+                    ."<strong>". $noteShort."</strong></td>";
 
                 $content .= "</tr>";
             }
@@ -525,7 +535,7 @@ if ($mode == 'add') {
 
     $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
 
-    foreach ( $userTemplates as $result) {
+    foreach ($userTemplates as $result) {
         $content .= "<option value='" . $result['template_id'] ."'>" . $result['template_label'] . "</option>";
     }
     $content .= '</select>';
@@ -544,7 +554,7 @@ if ($mode == 'add') {
 
     //Body
 
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         $displayHtml  = 'block';
         $displayRaw   = 'none';
         $textAreaMode = 'html';
@@ -557,7 +567,7 @@ if ($mode == 'add') {
     $content .='<script type="text/javascript">var mode="'.$textAreaMode.'";</script>';
 
      //Show/hide html VS raw mode
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         $content .= '<a href="javascript://" onclick="switchMode(\'show\');"><em>'._HTML_OR_RAW.'</em></a>';
     }
     
@@ -584,7 +594,7 @@ if ($mode == 'add') {
     $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
                 .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                 .$path_to_script.'&mode=added&for=send\', \'formEmail\');" />&nbsp;';
-    if($formContent != 'messageExchange'){
+    if ($formContent != 'messageExchange') {
         //Save
         $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
@@ -598,15 +608,13 @@ if ($mode == 'add') {
     $content .= '</div>';
 
 //UPDATE OR TRANSFER
-} else if ($mode == 'up' || $mode == 'transfer') {
- 
+} elseif ($mode == 'up' || $mode == 'transfer') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-        
         $id = $_REQUEST['id'];
         $emailArray = $sendmail_tools->getEmail($id);
 
         //Check if mail exists
-        if (count($emailArray) > 0 ) {
+        if (count($emailArray) > 0) {
             $content .= '<div>';
             $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
             $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
@@ -614,7 +622,7 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-			$content .= '<td align="right" nowrap width="10%"><b>'.ucfirst(_FROM_SHORT).' </b></td><td>';
+            $content .= '<td align="right" nowrap width="10%"><b>'.ucfirst(_FROM_SHORT).' </b></td><td>';
 
             $userEntitiesMails = array();
 
@@ -677,11 +685,11 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['cc'] = array();
                 $_SESSION['adresses']['cc'] = $emailArray['cc'];
             }
-			$content .= '<tr><td colspan="3"><a href="javascript://" '
-				.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
-				.'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
-				._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
-			$content .= '<tr id="tr_cc" style="display:none">';
+            $content .= '<tr><td colspan="3"><a href="javascript://" '
+                .'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
+                .'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
+                ._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
+            $content .= '<tr id="tr_cc" style="display:none">';
             $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
             $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cc');
@@ -710,7 +718,7 @@ if ($mode == 'add') {
             $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'joined_files\', \'divStatus_joined_files\');" '
                 . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-            $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;' 
+            $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'
                 . _JOINED_FILES;
             $content .= '</h4>';
             //
@@ -720,21 +728,21 @@ if ($mode == 'add') {
             if (count($joined_files) >0) {
                 $content .='<br/>';
                 $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</div>';
-                for($i=0; $i < count($joined_files); $i++) {
+                for ($i=0; $i < count($joined_files); $i++) {
                     //Get data
-                    $id          = $joined_files[$i]['id']; 
+                    $id          = $joined_files[$i]['id'];
                     $description = $joined_files[$i]['label'];
                     $format      = $joined_files[$i]['format'];
                     $format      = $joined_files[$i]['format'];
                     $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
                     $att_type    = $joined_files[$i]['format'];
                     $filesize    = $joined_files[$i]['filesize']/1024;
-					($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
+                    ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize, 2).' Octets';
 
                     //Show data
-					$version = '';
-					$content .= "<table cellspacing=\"3\" id=\"main_document\" style=\"border-collapse:collapse;width:100%;\"><tr>";
-                    if($joined_files[$i]['is_version'] === true){
+                    $version = '';
+                    $content .= "<table cellspacing=\"3\" id=\"main_document\" style=\"border-collapse:collapse;width:100%;\"><tr>";
+                    if ($joined_files[$i]['is_version'] === true) {
                         //Version
                         $version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
                         //Contents
@@ -754,7 +762,7 @@ if ($mode == 'add') {
                         $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
                             . "\" title=\"".$description
                             . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\"";
-                            ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
+                        ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
                         $content .= " ".$checked
                             . " class=\"check\" value=\""
                             . $id."\" ></th>"
@@ -764,7 +772,7 @@ if ($mode == 'add') {
                     }
                     $content .= "</tr></table>";
                     //Filename
-					$filename = $sendmail_tools->createFilename($description.$version, $format);
+                    $filename = $sendmail_tools->createFilename($description.$version, $format);
                     $all_joined_files .= $description.': '.$filename.PHP_EOL;
                 }
             }
@@ -776,13 +784,13 @@ if ($mode == 'add') {
                     $content .='<br/>';
                     $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._ATTACHMENTS.'</div>';
                     $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
-                    for($i=0; $i < count($attachment_files); $i++) {
+                    for ($i=0; $i < count($attachment_files); $i++) {
                         $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id           = $attachment_files[$i]['id']; 
-                        $isVersion    = $attachment_files[$i]['is_version']; 
-                        $id_converted = $attachment_files[$i]['converted_pdf']; 
+                        $id           = $attachment_files[$i]['id'];
+                        $isVersion    = $attachment_files[$i]['is_version'];
+                        $id_converted = $attachment_files[$i]['converted_pdf'];
                         $description  = $attachment_files[$i]['label'];
                         if (strlen($description) > 73) {
                             $description = substr($description, 0, 70);
@@ -799,7 +807,7 @@ if ($mode == 'add') {
                         $dest_lastname   = $attachment_files[$i]['lastname'];
                         ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
 
-                        if($isVersion){
+                        if ($isVersion) {
                             $inputName = "join_version_attachment[]";
                         } else {
                             $inputName = "join_attachment[]";
@@ -809,11 +817,11 @@ if ($mode == 'add') {
                             . "\" title=\"".$description
                             . "\"><input style=\"margin-left: 3px\" type=\"checkbox\" id=\"join_attachment_".$id."\" name=\"".$inputName."\"";
 
-                        if(($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))){
+                        if (($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))) {
                             $checked = ' checked="checked"';
                         }
 
-                        $content .= " ".$checked    
+                        $content .= " ".$checked
                             . " class=\"check\" value=\""
                             . $id."\"";
                         
@@ -823,40 +831,41 @@ if ($mode == 'add') {
                             }
                         $content .= "/></th>";
 
-                        if(!$id_converted){
+                        if (!$id_converted) {
                             $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                             $content .= ' onclick="clickAttachmentsInput('.$id.')" ';
-                        }else{
+                        } else {
                             $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                         }
 
                         $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
-                        if($id_converted){
+                        if ($id_converted) {
                             $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                             . " class=\"check\"";
 
                             (in_array($id_converted, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
-                            $content .= " ".$checked   
+                            $content .= " ".$checked
                             . " value=\""
                             . $id_converted."\" />version pdf)";
                         }
                         $content .= "<br/><span style='font-size: 10px;color: rgb(22, 173, 235);font-style:italic;'>";
-                        if ($chrono != "")
+                        if ($chrono != "") {
                             $content .= "<span style='font-size: 10px;color: rgb(22, 173, 235);font-style:italic;'>" . $chrono . "</span> - ";
+                        }
                         $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
-                        $content .= "</td>";   
+                        $content .= "</td>";
 
                         $content .= "</tr>";
 
                         //Filename
-						$filename = $sendmail_tools->createFilename($description, $format);
+                        $filename = $sendmail_tools->createFilename($description, $format);
                         $all_joined_files .= $description.': '.$filename.PHP_EOL;
                     }
                     $content .= "</table>";
                 }
             }
             
-            //Notes            
+            //Notes
             if ($core_tools->is_module_loaded('notes')) {
                 require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR
@@ -867,11 +876,11 @@ if ($mode == 'add') {
                     $content .='<br/>';
                     $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._NOTES.'</div>';
                     $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
-                    for($i=0; $i < count($user_notes); $i++) {
+                    for ($i=0; $i < count($user_notes); $i++) {
                         $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id = $user_notes[$i]['id']; 
+                        $id = $user_notes[$i]['id'];
                         $noteShort = functions::xssafe($request->cut_string($user_notes[$i]['label'], 50));
                         $note = functions::xssafe($user_notes[$i]['label']);
                         $userArray = $users_tools->get_user($user_notes[$i]['author']);
@@ -888,7 +897,7 @@ if ($mode == 'add') {
                             . $id."\"></th><td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                         $content .= ' onclick="clickAttachmentsNotes('.$id.')" ';
                         $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
-                            ."<strong>". $noteShort."</strong></td>"; 
+                            ."<strong>". $noteShort."</strong></td>";
 
                         $content .= "</tr>";
                     }
@@ -911,7 +920,7 @@ if ($mode == 'add') {
 
             $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
 
-            foreach ( $userTemplates as $result) {
+            foreach ($userTemplates as $result) {
                 $content .= "<option value='" . $result['template_id'] ."'>" . $result['template_label'] . "</option>";
             }
             $content .='</select>';
@@ -967,11 +976,11 @@ if ($mode == 'add') {
                 $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                     .$path_to_script.'&mode=updated&for=send\', \'formEmail\');" />&nbsp;';
-                //Save button    
+                //Save button
                 $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                    .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';                     
-                //Delete button    
+                    .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';
+                //Delete button
                 $content .=' <input type="button" name="valid" value="&nbsp;'._REMOVE_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''
                     ._REALLY_DELETE.': '.$request->cut_string($emailArray['object'], 50)
@@ -985,7 +994,7 @@ if ($mode == 'add') {
                 //Save copy button
                 $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_COPY_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                    .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';    
+                    .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';
             }
             
             //Cancel button
@@ -995,16 +1004,15 @@ if ($mode == 'add') {
             $content .= '</form>';
             $content .= '</div>';
         } else {
-            $content = $request->wash_html($id.': '._EMAIL_DONT_EXIST.'!','NONE');
+            $content = $request->wash_html($id.': '._EMAIL_DONT_EXIST.'!', 'NONE');
         }
     } else {
-        $content = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');
+        $content = $request->wash_html(_ID.' '._IS_EMPTY.'!', 'NONE');
     }
-} else if ($mode == 'read') {
+} elseif ($mode == 'read') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-        
         $id = $_REQUEST['id'];
-        if($formContent == 'messageExchange'){
+        if ($formContent == 'messageExchange') {
             $emailArray = ReadMessageExchangeController::getMessageExchange(['id' => $id]);
         } else {
             $emailArray = $sendmail_tools->getEmail($id, false);
@@ -1018,7 +1026,7 @@ if ($mode == 'add') {
 
             $content .= '<td width="10%" align="right" nowrap><b>'.ucfirst(_FROM_SHORT).' </b></td><td width="90%" colspan="2">';
 
-            if($formContent == 'messageExchange'){
+            if ($formContent == 'messageExchange') {
                 $content .= $emailArray['from'];
             } else {
                 $usermailArray = $users_tools->get_user($emailArray['userId']);
@@ -1026,7 +1034,7 @@ if ($mode == 'add') {
 
                 if (in_array($emailArray['sender_email'], array_keys($mailEntities))) {
                     $content .= $mailEntities[$emailArray['sender_email']];
-                } else if ($emailArray['sender_email'] == $usermailArray['mail']) {
+                } elseif ($emailArray['sender_email'] == $usermailArray['mail']) {
                     $content .= $usermailArray['firstname'] . " " . $usermailArray['lastname'] . " (".$emailArray['sender_email'].")";
                 } else {
                     $content .= $sendmail_tools->explodeSenderEmail($emailArray['sender_email']);
@@ -1044,14 +1052,14 @@ if ($mode == 'add') {
             $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'
                 ._SEND_TO_SHORT.'</label></td>';
             $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
-            if($formContent == 'messageExchange'){
+            if ($formContent == 'messageExchange') {
                 $content .= $emailArray['contactInfo'];
             } else {
                 $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to', true);
             }
             $content .= '</div></td>';
             $content .= '</tr>';
-            if($formContent == 'messageExchange'){
+            if ($formContent == 'messageExchange') {
                 $content .= '<tr><td align="right" nowrap width="10%"></td><td width="90%">' . _COMMUNICATION_TYPE . ' : '.$emailArray['communicationType'].'</td></tr>';
             } else {
                 //CC
@@ -1075,15 +1083,15 @@ if ($mode == 'add') {
                 $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">';
                 $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cci', true);
                 $content .= '</div></td>';
-                $content .= '</tr>';  
-            } 
+                $content .= '</tr>';
+            }
             //Object
             $content .= '<tr>';
             $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span> <label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><div name="object" id="object" class="emailInput">'
                 .$emailArray['object'].'</div></td>';
             $content .= '</tr>';
-            if($formContent == 'messageExchange'){
+            if ($formContent == 'messageExchange') {
                 $content .= '<tr><td width="10%" align="right" nowrap>'._IDENTIFIER.'</td><td><div class="emailInput">'.$emailArray['reference'].'</div></td></tr>';
             }
             $content .= '</table><br />';
@@ -1093,7 +1101,7 @@ if ($mode == 'add') {
             $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'joined_files\', \'divStatus_joined_files\');" '
                 . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-            $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;' 
+            $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'
                 . _JOINED_FILES;
             $content .= '</h4>';
             //
@@ -1103,25 +1111,25 @@ if ($mode == 'add') {
             if (count($joined_files) >0) {
                 $content .='<br/>';
                 $content .='<div><span style="color:rgb(22, 173, 235);font-weight:bold;">'._DOC.'</span>';
-                    if($formContent == 'messageExchange'){
-                        $content .='<span style="float: right;font-weight:bold">Principal</span>';
-                    }
-            $content .='</div>';
-                for($i=0; $i < count($joined_files); $i++) {
+                if ($formContent == 'messageExchange') {
+                    $content .='<span style="float: right;font-weight:bold">Principal</span>';
+                }
+                $content .='</div>';
+                for ($i=0; $i < count($joined_files); $i++) {
                     //Get data
-                    $id          = $joined_files[$i]['id']; 
+                    $id          = $joined_files[$i]['id'];
                     $description = $joined_files[$i]['label'];
                     $format      = $joined_files[$i]['format'];
                     $format      = $joined_files[$i]['format'];
                     $mime_type   = $is->get_mime_type($joined_files[$i]['format']);
                     $att_type    = $joined_files[$i]['format'];
                     $filesize    = $joined_files[$i]['filesize']/1024;
-                    ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
+                    ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize, 2).' Octets';
 
                     //Show data
                     $version = '';
                     $content .= "<table cellspacing=\"3\" id=\"main_document\" style=\"border-collapse:collapse;width:100%;\"><tr>";
-                    if($joined_files[$i]['is_version'] === true){
+                    if ($joined_files[$i]['is_version'] === true) {
                         //Version
                         $version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
                         //Contents
@@ -1141,7 +1149,7 @@ if ($mode == 'add') {
                         $content .= "<th style=\"width:25px;border: dashed 1px grey;border-right:none;vertical-align:middle;\" alt=\"".$description
                             . "\" title=\"".$description
                             . "\"><input type=\"checkbox\" disabled=\"disabled\" id=\"join_file_".$id."\" name=\"join_file[]\"";
-                            ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
+                        ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
                         $content .= " ".$checked
                             . " class=\"check\" value=\""
                             . $id."\" ></th>"
@@ -1149,11 +1157,11 @@ if ($mode == 'add') {
                         $content .= ' onclick="clickAttachments('.$id.')" ';
                         $content .= "><strong>" . $description . "</strong> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span></td>";
                     }
-                    if($formContent == 'messageExchange'){
+                    if ($formContent == 'messageExchange') {
                         $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" disabled ";
-                        if($emailArray['disposition']->tablename == 'res_letterbox' && $emailArray['disposition']->res_id == $id){
+                        if ($emailArray['disposition']->tablename == 'res_letterbox' && $emailArray['disposition']->res_id == $id) {
                             $content .= " checked ";
-                        } 
+                        }
                         $content .= "></td>";
                     }
                     $content .= "</tr></table>";
@@ -1170,13 +1178,13 @@ if ($mode == 'add') {
                     $content .='<br/>';
                     $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._ATTACHMENTS.'</div>';
                     $content .= "<table cellspacing=\"3\" id=\"show_pj_mail\" style=\"border-collapse:collapse;width:100%;\">";
-                    for($i=0; $i < count($attachment_files); $i++) {
+                    for ($i=0; $i < count($attachment_files); $i++) {
                         $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id           = $attachment_files[$i]['id']; 
-                        $isVersion    = $attachment_files[$i]['is_version']; 
-                        $id_converted = $attachment_files[$i]['converted_pdf']; 
+                        $id           = $attachment_files[$i]['id'];
+                        $isVersion    = $attachment_files[$i]['is_version'];
+                        $id_converted = $attachment_files[$i]['converted_pdf'];
                         $description  = $attachment_files[$i]['label'];
                         if (strlen($description) > 73) {
                             $description = substr($description, 0, 70);
@@ -1193,7 +1201,7 @@ if ($mode == 'add') {
                         $dest_lastname   = $attachment_files[$i]['lastname'];
                         ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
 
-                        if($isVersion){
+                        if ($isVersion) {
                             $inputName = "join_version_attachment[]";
                         } else {
                             $inputName = "join_attachment[]";
@@ -1204,44 +1212,45 @@ if ($mode == 'add') {
                             . "\"><input style=\"margin-left: 3px\" disabled=\"disabled\" type=\"checkbox\" id=\"join_attachment_".$id."\" name=\"".$inputName."\"";
 
                         $checked = "";
-                        if(($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))){
+                        if (($isVersion && in_array($id, $emailArray['attachments_version'])) || (!$isVersion && in_array($id, $emailArray['attachments']))) {
                             $checked = ' checked="checked"';
                         }
 
-                        $content .= " ".$checked    
+                        $content .= " ".$checked
                             . " class=\"check\" value=\""
                             . $id."\"";
                         
                         $content .= "/></th>";
 
-                        if(!$id_converted){
+                        if (!$id_converted) {
                             $content .= "<td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                             $content .= ' onclick="clickAttachmentsInput('.$id.')" ';
-                        }else{
+                        } else {
                             $content .= "<td style=\"border: dashed 1px grey;border-left:none;padding:5px;\"";
                         }
 
                         $content .= "><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">" . $attachment_type . "</span> <span style=\"font-size: 10px;color: grey;\">(" . $att_type . " - " . $filesize .")</span><br/><strong>" . $description . "</strong>";
-                        if($id_converted){
+                        if ($id_converted) {
                             $content .= " (<input style=\"margin: 0px\" title=\"envoyer la version PDF\" disabled=\"disabled\" type=\"checkbox\" id=\"join_attachment_".$id_converted."\" name=\"join_attachment[]\""
                             . " class=\"check\"";
 
                             (in_array($id_converted, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
-                            $content .= " ".$checked   
+                            $content .= " ".$checked
                             . " value=\""
                             . $id_converted."\" />version pdf)";
                         }
                         $content .= "<br/><span style='font-size: 10px;color: rgb(22, 173, 235);font-style:italic;'>";
-                        if ($chrono != "")
+                        if ($chrono != "") {
                             $content .= "<span style='font-size: 10px;color: rgb(22, 173, 235);font-style:italic;'>" . $chrono . "</span> - ";
+                        }
                         $content .= "<span style='font-size: 10px;color: grey;font-style:italic;'>" . $dest_firstname . " " . $dest_lastname. " " . $dest_society . "</span>";
-                        $content .= "</td>";   
-                        if($formContent == 'messageExchange'){
+                        $content .= "</td>";
+                        if ($formContent == 'messageExchange') {
                             $content .= "<td style=\"width:1%;text-align:center;width: 8%;margin-right: 2px;vertical-align: middle\"><input type=radio name=\"main_exchange_doc\" disabled ";
-                            if($emailArray['disposition']->res_id == $id && ($emailArray['disposition']->tablename == 'res_attachments' && !$isVersion) 
-                                || ($emailArray['disposition']->tablename == 'res_version_attachments' && $isVersion)){
+                            if ($emailArray['disposition']->res_id == $id && ($emailArray['disposition']->tablename == 'res_attachments' && !$isVersion)
+                                || ($emailArray['disposition']->tablename == 'res_version_attachments' && $isVersion)) {
                                 $content .= " checked ";
-                            } 
+                            }
                             $content .= "></td>";
                         }
                         $content .= "</tr>";
@@ -1254,7 +1263,7 @@ if ($mode == 'add') {
                 }
             }
             
-            //Notes            
+            //Notes
             if ($core_tools->is_module_loaded('notes')) {
                 require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR
@@ -1265,11 +1274,11 @@ if ($mode == 'add') {
                     $content .='<br/>';
                     $content .='<div style="color:rgb(22, 173, 235);font-weight:bold;">'._NOTES.'</div>';
                     $content .= "<table cellspacing=\"3\" style=\"border-collapse:collapse;width:100%;\">";
-                    for($i=0; $i < count($user_notes); $i++) {
+                    for ($i=0; $i < count($user_notes); $i++) {
                         $content .= "<tr style=\"vertical-align:top;\">";
 
                         //Get data
-                        $id = $user_notes[$i]['id']; 
+                        $id = $user_notes[$i]['id'];
                         $noteShort = functions::xssafe($request->cut_string($user_notes[$i]['label'], 50));
                         $note = functions::xssafe($user_notes[$i]['label']);
                         $userArray = $users_tools->get_user($user_notes[$i]['author']);
@@ -1286,10 +1295,9 @@ if ($mode == 'add') {
                             . $id."\"></th><td style=\"cursor:pointer;border: dashed 1px grey;border-left:none;padding:5px;\"";
                         $content .= ' onclick="clickAttachmentsNotes('.$id.')" ';
                         $content .= "title=\"".$note."\"><span style=\"font-size: 10px;color: rgb(22, 173, 235);\">".$userArray['firstname']." ".$userArray['lastname']." </span><span style=\"font-size: 10px;color: grey;\">".$date."</span><br/>"
-                            ."<strong>". $noteShort."</strong></td>"; 
+                            ."<strong>". $noteShort."</strong></td>";
 
                         $content .= "</tr>";
-
                     }
                     
                     $content .= "</table>";
@@ -1301,7 +1309,7 @@ if ($mode == 'add') {
             $content .= '</div>';
             $content .='<hr />';
             //Body (html or raw mode)
-            if ($emailArray['isHtml'] == 'Y') { 
+            if ($emailArray['isHtml'] == 'Y') {
                 $content .='<script type="text/javascript">var mode="html";</script>';
                 //load tinyMCE editor
                 ob_start();
@@ -1323,40 +1331,38 @@ if ($mode == 'add') {
                 $content .='</div>';
             }
 
-            if(!empty($emailArray['receptionDate'])){
+            if (!empty($emailArray['receptionDate'])) {
                 $content .='<br><hr style="margin-top:2px;" />';
                 $content .= '<b>'._RECEPTION_DATE.' : </b>' . $emailArray['receptionDate'].'<br><br>';
             }
-            if(!empty($emailArray['operationDate'])){
-
+            if (!empty($emailArray['operationDate'])) {
                 $content .= '<div onclick="new Effect.toggle(\'operationCommentsDiv\', \'blind\', {delay:0.2});" onmouseover="this.style.cursor=\'pointer\';">
                                 <span id="divStatus_operationComments" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'._MORE_INFORMATIONS.'
                             </div>';
                 $content .= '<div id="operationCommentsDiv" style="display:none">';
-                    foreach ($emailArray['operationComments'] as $value) {
-                        $content .= $value->value.'<br>';
-                    }
+                foreach ($emailArray['operationComments'] as $value) {
+                    $content .= $value->value.'<br>';
+                }
                 $content .= '</div><br>';
                 $content .= '<b>'._OPERATION_DATE.' : </b>' . $emailArray['operationDate'].'<br><br>';
             }
-            if(!empty($emailArray['messageReview'])){
-
+            if (!empty($emailArray['messageReview'])) {
                 $content .= '<h4>'._M2M_FOLLOWUP_REQUEST.'</h4>';
                 $content .= '<div>';
-                    foreach ($emailArray['messageReview'] as $value) {
-                        $content .= $value.'<br>';
-                    }
+                foreach ($emailArray['messageReview'] as $value) {
+                    $content .= $value.'<br>';
+                }
                 $content .= '</div>';
             }
                 //Buttons
                 $content .='<br><hr style="margin-top:2px;" />';
-                $content .='<div align="center">';
+            $content .='<div align="center">';
                 //Close button
                 $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
                             ._CLOSE.'" onclick="window.parent.destroyModal(\'form_email\');"/>';
-                $content .='</div>';
+            $content .='</div>';
             $content .= '</div>';
-        } else if ($emailArray['type'] == 'ArchiveTransferReplySent'){
+        } elseif ($emailArray['type'] == 'ArchiveTransferReplySent') {
             $content .= '<b>'._REPLY_RESPONSE_SENT.' : </b>' . $emailArray['creationDate'].'<br><br>';
 
             foreach ($emailArray['operationComments'] as $value) {
@@ -1371,10 +1377,10 @@ if ($mode == 'add') {
                         ._CLOSE.'" onclick="window.parent.destroyModal(\'form_email\');"/>';
             $content .='</div>';
         } else {
-            $content = $request->wash_html($id.': '._EMAIL_DONT_EXIST.'!','NONE');
+            $content = $request->wash_html($id.': '._EMAIL_DONT_EXIST.'!', 'NONE');
         }
     } else {
-        $content = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');
+        $content = $request->wash_html(_ID.' '._IS_EMPTY.'!', 'NONE');
     }
 }
 echo $content;

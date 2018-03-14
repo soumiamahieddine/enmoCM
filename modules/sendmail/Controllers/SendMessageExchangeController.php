@@ -43,7 +43,7 @@ class SendMessageExchangeController
         }
 
         /***************** GET MAIL INFOS *****************/
-        $AllUserEntities = \Entities\models\EntitiesModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
+        $AllUserEntities = \Entity\models\EntityModel::getEntitiesByUserId(['user_id' => $_SESSION['user']['UserId']]);
         foreach ($AllUserEntities as $value) {
             if ($value['entity_id'] == $aArgs['sender_email']) {
                 $TransferringAgencyInformations = $value;
@@ -228,7 +228,7 @@ class SendMessageExchangeController
     {
         $aReturn    = [];
 
-        $entityRoot = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
+        $entityRoot = \Entity\models\EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
         $headerNote = $_SESSION['user']['FirstName'] . ' ' . $_SESSION['user']['LastName'] . ' (' . $entityRoot[0]['entity_label'] . ' - ' . $aArgs['TransferringAgencyInformations']['entity_label'] . ' - ' .$_SESSION['user']['Mail'].') : ';
         $oBody        = new stdClass();
         $oBody->value = $headerNote . ' ' . $aArgs['body'];
@@ -248,8 +248,8 @@ class SendMessageExchangeController
 
                     $oComment        = new stdClass();
                     $date            = new DateTime($value['date_note']);
-                    $entityRoot      = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $value['entity_id']]);
-                    $userEntity      = \Entities\models\EntitiesModel::getById(['entityId' => $value['entity_id']]);
+                    $entityRoot      = \Entity\models\EntityModel::getEntityRootById(['entityId' => $value['entity_id']]);
+                    $userEntity      = \Entity\models\EntityModel::getById(['entityId' => $value['entity_id']]);
                     $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s').' ('.$entityRoot[0]['entity_label'].' - '.$userEntity['entity_label'].') : '.$value['note_text'];
                     array_push($aReturn, $oComment);
                 }
@@ -445,7 +445,7 @@ class SendMessageExchangeController
 
         $TransferringAgencyObject->OrganizationDescriptiveMetadata                      = new stdClass();
 
-        $entityRoot = \Entities\models\EntitiesModel::getEntityRootById(['entityId' => $aArgs['TransferringAgency']['EntitiesInformations']['entity_id']]);
+        $entityRoot = \Entity\models\EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgency']['EntitiesInformations']['entity_id']]);
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->LegalClassification = $entityRoot[0]['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->Name                = $aArgs['TransferringAgency']['EntitiesInformations']['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->UserIdentifier      = $_SESSION['user']['UserId'];

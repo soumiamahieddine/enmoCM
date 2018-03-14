@@ -137,6 +137,22 @@ class EntityModelAbstract
         return $aReturn;
     }
 
+    public static function getByBusinessId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['businessId']);
+        ValidatorModel::stringType($aArgs, ['businessId']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['business_id = ? and enabled = ?'],
+            'data'      => [$aArgs['businessId'], 'Y'],
+            'limit'     => 1,
+        ]);
+
+        return $aReturn;
+    }
+
     public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);

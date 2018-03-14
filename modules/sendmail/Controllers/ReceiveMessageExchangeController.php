@@ -21,7 +21,7 @@ use SrcCore\controllers\StoreController;
 use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
 use Group\models\ServiceModel;
-use Entity\models\EntitiesModel;
+use Entity\models\EntityModel;
 use Basket\models\BasketsModel;
 use Resource\models\ResModel;
 use Note\models\NoteModel;
@@ -228,7 +228,7 @@ class ReceiveMessageExchangeController
         $fileFormat       = substr($filename, strrpos($filename, '.') + 1);
 
         $archivalAgency = $dataObject->ArchivalAgency;
-        $destination    = EntitiesModel::getByBusinessId(['businessId' => $archivalAgency->Identifier->value]);
+        $destination    = EntityModel::getByBusinessId(['businessId' => $archivalAgency->Identifier->value]);
         $Communication  = $archivalAgency->OrganizationDescriptiveMetadata->Contact[0]->Communication;
 
         foreach ($Communication as $value) {
