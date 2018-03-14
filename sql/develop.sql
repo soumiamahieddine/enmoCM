@@ -719,3 +719,6 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 ALTER TABLE sendmail ALTER COLUMN res_id DROP NOT NULL;
+
+ALTER TABLE notifications DROP COLUMN IF EXISTS rss_url_template;
+UPDATE notifications SET event_id = 'baskets' WHERE notification_id = 'BASKETS';

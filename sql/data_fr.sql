@@ -1519,36 +1519,35 @@ VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers
 <p>&nbsp###</p>
 <p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p><font face="verdana,geneva" size="2">Bonjour [recipient.firstname] [recipient.lastname], [recipient.text]</font></p>
+VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
 <p>&nbsp###</p>
-<p><font face="verdana,geneva" size="2"> </font></p>
-<p>&nbsp###</p>
-<p><font face="verdana,geneva" size="2">Voici la liste des notes pour les courriers suivants :</font></p>
-<p>&nbsp###</p>
-<table style="width: 982px### height: 77px###" border="1" cellspacing="3" cellpadding="3" frame="box">
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici les nouvelles annotations sur les courriers suivants :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
 <tbody>
 <tr>
-<td><strong>Reference</strong></td>
-<td><strong>Num</strong></td>
-<td><strong>Date</strong></td>
-<td><strong>Objet</strong></td>
-<td><strong>Note</strong></td>
-<td><strong>Ajout&eacute### par</strong></td>
-<td><strong>Contact</strong></td>
-<td><strong>Liens</strong></td>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Num</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Note</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Ajout&eacute### par</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Contact</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
 </tr>
 <tr>
-<td>[notes.identifier]</td>
-<td>[notes.# ###frm=0000]</td>
-<td>[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
-<td>[notes.subject]</td>
-<td>[notes.note_text]</td>
-<td>[notes.user_id]</td>
-<td>[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
-<td><a href="[notes.linktodetail]" name="detail">d&eacute###tail</a> <a href="[notes.linktodoc]" name="doc">doc</a></td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.identifier]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.# ###frm=0000]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.subject]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.note_text]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.user_id]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
+<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
+</table>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (9, 'Demande - Voirie', 'Demande - Voirie', '<h2>Demande Intervention VOIRIE</h2>
 <hr />
 <table style="border: 1pt solid #000000### width: 597px### background-color: #f0f0f0### height: 172px###" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp###</caption>
@@ -1697,19 +1696,19 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --NOTIFICATIONS
 ------------
 TRUNCATE TABLE notifications;
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template)
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties)
 VALUES (1, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', 'http://localhost/maarch_entreprise');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (2, 'RET2', '2ie alerte sur courriers en retard', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (3, 'RET1', '1ère alerte sur courriers en retard', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (4, 'BASKETS', 'Notification de bannettes', '', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (2, 'RET2', 'Courriers en retard de traitement', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (3, 'RET1', 'Courriers arrivant à échéance', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (4, 'BASKETS', 'Notification de bannettes', 'baskets', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
 VALUES (5, 'ANC', 'Nouvelle annotation sur courrier en copie', 'noteadd', 'EMAIL', 8, '', 'copy_list', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
 VALUES (6, 'AND', 'Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
 VALUES (7, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
 Select setval('notifications_seq', (select max(notification_sid)+1 from notifications), false);
 

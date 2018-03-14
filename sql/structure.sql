@@ -948,7 +948,6 @@ CREATE TABLE notifications
   event_id character varying(255) NOT NULL,
   notification_mode character varying(30) NOT NULL,
   template_id bigint,
-  rss_url_template text,
   diffusion_type character varying(50) NOT NULL,
   diffusion_properties text,
   attachfor_type character varying(50),

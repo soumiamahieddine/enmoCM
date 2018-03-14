@@ -12,7 +12,6 @@
 		<parameter name="description" type="string" />
 		<parameter name="event_id" type="integer" />
 		<parameter name="notification_mode" type="string" />
-		<parameter name="rss_url_template" type="string" />
 		<parameter name="template_id" type="integer" />
 		<parameter name="is_enabled" type="YN" />
 		<parameter name="diffusion_type" type="string" />

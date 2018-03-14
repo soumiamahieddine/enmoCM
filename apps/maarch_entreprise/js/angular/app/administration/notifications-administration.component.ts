@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 
 declare function $j(selector: any): any;
@@ -23,6 +23,29 @@ export class NotificationsAdministrationComponent implements OnInit {
     notifications: any[] = [];
     loading: boolean = false;
     lang: any = LANG;
+
+    hours : any;
+    minutes : any;
+
+    months : any = [];
+
+    dom : any = [];
+
+    dow : any = []
+
+    newCron: any = {
+        "m" : "",
+        "h" : "",
+        "dom" : "",
+        "mon" : "",
+        "cmd" : "",
+        "state": "normal"
+    }
+
+    authorizedNotification :any;
+    crontab:any;
+
+    @ViewChild('snav2') sidenav: MatSidenav;
 
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
     dataSource = new MatTableDataSource(this.notifications);
@@ -46,8 +69,6 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
@@ -65,12 +86,6 @@ export class NotificationsAdministrationComponent implements OnInit {
             });
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.notifications;
-        }
-    }
-
     deleteNotification(notification: any) {
         let r = confirm(this.lang.deleteMsg);
 
@@ -83,10 +98,108 @@ export class NotificationsAdministrationComponent implements OnInit {
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                     }, 0);
+                    this.sidenav.close();
                     this.notify.success(this.lang.notificationDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
+    }
+
+    loadCron() {
+
+        this.hours = [{label:this.lang.eachHour,value:'*'}];
+        this.minutes = [{label:this.lang.eachMinute,value:'*'}];
+
+        this.months = [
+            {label:this.lang.eachMonth,value:'*'},
+            {label:this.lang.january,value:"0"},
+            {label:this.lang.february,value:"1"},
+            {label:this.lang.march,value:"2"},
+            {label:this.lang.april,value:"3"},
+            {label:this.lang.may,value:"4"},
+            {label:this.lang.june,value:"5"},
+            {label:this.lang.july,value:"6"},
+            {label:this.lang.august,value:"7"},
+            {label:this.lang.september,value:"8"},
+            {label:this.lang.october,value:"9"},
+            {label:this.lang.november,value:"10"},
+            {label:this.lang.december,value:"11"}
+        ]
+
+        this.dom = [{label:this.lang.notUsed,value:'*'}];
+
+        this.dow = [
+            {label:this.lang.eachDay,value:'*'},
+            {label:this.lang.monday,value:"0"},
+            {label:this.lang.thuesday,value:"1"},
+            {label:this.lang.wednesday,value:"2"},
+            {label:this.lang.thursday,value:"3"},
+            {label:this.lang.friday,value:"4"},
+            {label:this.lang.saturday,value:"5"},
+            {label:this.lang.sunday,value:"6"}
+        ];
+
+        this.newCron = {
+            "m" : "",
+            "h" : "",
+            "dom" : "",
+            "mon" : "",
+            "cmd" : "",
+            "state": "normal"
+        };
+
+        for (var i = 0; i <= 23; i++) {
+            this.hours.push({label:i,value:String(i)});
+        }
+
+        for (var i = 0; i <= 59; i++) {
+            this.minutes.push({label:i,value:String(i)});
+        }
+
+        for (var i = 0; i <= 31; i++) {
+            this.dom.push({label:i,value:String(i)});
+        }
+
+        this.http.get(this.coreUrl + 'rest/notifications/schedule')
+            .subscribe((data: any) => {
+                this.crontab = data.crontab;
+                this.authorizedNotification = data.authorizedNotification;
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+
+    }
+
+    saveCron() {
+        var description = this.newCron.cmd.split("/");
+        this.newCron.description = description[description.length-1];
+        this.crontab.push(this.newCron);
+        this.http.post(this.coreUrl + 'rest/notifications/schedule', this.crontab)
+            .subscribe((data: any) => {
+                this.newCron = {
+                    "m" : "",
+                    "h" : "",
+                    "dom" : "",
+                    "mon" : "",
+                    "cmd" : "",
+                    "description" : "",
+                    "state": "normal"
+                }
+                this.notify.success(this.lang.notificationScheduleUpdated);
+            }, (err) => {
+                this.crontab.pop();
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    deleteCron(i:number) {
+        this.crontab[i].state = 'deleted';
+        this.http.post(this.coreUrl + 'rest/notifications/schedule', this.crontab)
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.notificationScheduleUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 }

@@ -27,7 +27,7 @@ function triggerAngular(prodmode, locationToGo) {
                     if (i === 2) {
                         setTimeout(function () {
                             head.appendChild(script);
-                        }, 600);
+                        }, 400);
                     } else {
                         head.appendChild(script);
                     }
