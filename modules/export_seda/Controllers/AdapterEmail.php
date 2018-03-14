@@ -1,10 +1,9 @@
 <?php
 
 require_once __DIR__. DIRECTORY_SEPARATOR. '..' . DIRECTORY_SEPARATOR. 'RequestSeda.php';
-require_once __DIR__. DIRECTORY_SEPARATOR. '..' . DIRECTORY_SEPARATOR. '..'. DIRECTORY_SEPARATOR. 'sendmail'. DIRECTORY_SEPARATOR. 'Models'. DIRECTORY_SEPARATOR. 'MailModel.php';
 
-class AdapterEmail{
-
+class AdapterEmail
+{
     private $db;
     public function __construct()
     {
@@ -38,10 +37,9 @@ class AdapterEmail{
             $date = new DateTime;
             $sendmail->creation_date = $date->format(DateTime::ATOM);
 
-            $mailModel = new MailModel();
-            $mailModel->createMail($sendmail);
+            \Sendmail\Models\MailModel::createMail($sendmail);
 
-            $this->db->updateStatusMessage($messageObject->MessageIdentifier->value,'I');
+            $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'I');
         }
 
         return $res;

@@ -14,56 +14,29 @@
 */
 
 
-require_once 'apps/maarch_entreprise/services/Table.php';
-
-class MailModelAbstract extends Apps_Table_Service
+class MailModelAbstract
 {
-    private $db;
-
-    public function __construct($db = null)
-    {
-        if ($db) {
-            $this->db = $db;
-        } else {
-            $this->db = new Database();
-        }
-    }
-
-    public function CreateMail($data)
+    public static function createMail($data)
     {
         try {
-            $query = ("INSERT INTO sendmail (
-                coll_id,
-				res_id,
-				user_id,
-				to_list,
-				cc_list,
-				cci_list,
-				email_object,
-	            email_body ,
-				is_res_master_attached,
-				email_status,
-				creation_date,
-				sender_email,
-				message_exchange_id)
-				VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-            $queryParams[] = $data->coll_id;
-            $queryParams[] = $data->res_id;
-            $queryParams[] = $data->user_id;
-            $queryParams[] = $data->to_list;
-            $queryParams[] = $data->cc_list;
-            $queryParams[] = $data->cci_list;
-            $queryParams[] = $data->email_object;
-            $queryParams[] = $data->email_body;
-            $queryParams[] = $data->is_res_master_attached;
-            $queryParams[] = $data->email_status;
-            $queryParams[] = $data->creation_date;
-            $queryParams[] = $data->sender_email;
-            $queryParams[] = $data->message_exchange_id;
-
-            $res = $this->db->query($query,$queryParams);
-
+            \SrcCore\models\DatabaseModel::insert([
+                    'table'         => 'sendmail',
+                    'columnsValues' => [
+                        'coll_id' => $data->coll_id,
+                        'res_id' => $data->res_id,
+                        'user_id' => $data->user_id,
+                        'to_list' => $data->to_list,
+                        'cc_list' => $data->cc_list,
+                        'cci_list' => $data->cci_list,
+                        'email_object' => $data->email_object,
+                        'email_body'  => $data->email_body,
+                        'is_res_master_attached' => $data->is_res_master_attached,
+                        'email_status' => $data->email_status,
+                        'creation_date' => $data->creation_date,
+                        'sender_email' => $data->sender_email,
+                        'message_exchange_id' => $data->message_exchange_id,
+                    ]
+                ]);
         } catch (Exception $e) {
             return false;
         }
