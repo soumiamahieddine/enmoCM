@@ -194,7 +194,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.process_delay" required name="process_delay" id="process_delay" title="{{lang.processDelayDay}}"
-                                            type="number" placeholder="{{lang.processDelayDay}}">
+                                            type="number" placeholder="{{lang.processDelayDay}}" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.delay1" required name="delay1" id="delay1" title="{{lang.delay1}}"
-                                            type="number" placeholder="{{lang.delay1}}">
+                                            type="number" placeholder="{{lang.delay1}}" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -210,7 +210,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.delay2" required name="delay2" id="delay2" title="{{lang.delay2}}"
-                                            type="number" placeholder="{{lang.delay2}}" maxlength="255">
+                                            type="number" placeholder="{{lang.delay2}}" maxlength="255" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -269,7 +269,7 @@
                                         <div class="col-sm-6">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentType.duration_current_use" name="duration_current_use" id="duration_current_use" title="{{lang.durationCurrentUse}}"
-                                                    type="number" placeholder="{{lang.durationCurrentUse}}">
+                                                    type="number" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
                                             </mat-form-field>
                                         </div>
                                     </div>

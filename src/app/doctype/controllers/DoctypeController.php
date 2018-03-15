@@ -352,15 +352,18 @@ class DoctypeController
             $errors[]= 'Invalid doctypes_second_level_id value';
         }
         if (!Validator::notEmpty()->validate($aArgs['process_delay']) ||
-            !Validator::intVal()->validate($aArgs['process_delay'])) {
+            !Validator::intVal()->validate($aArgs['process_delay']) ||
+            $aArgs['process_delay'] < 0) {
             $errors[]= 'Invalid process_delay value';
         }
         if (!Validator::notEmpty()->validate($aArgs['delay1']) ||
-            !Validator::intVal()->validate($aArgs['delay1'])) {
+            !Validator::intVal()->validate($aArgs['delay1']) ||
+            $aArgs['delay1'] < 0) {
             $errors[]= 'Invalid delay1 value';
         }
         if (!Validator::notEmpty()->validate($aArgs['delay2']) ||
-            !Validator::intVal()->validate($aArgs['delay2'])) {
+            !Validator::intVal()->validate($aArgs['delay2']) ||
+            $aArgs['delay2'] < 0) {
             $errors[]= 'Invalid delay2 value';
         }
 
