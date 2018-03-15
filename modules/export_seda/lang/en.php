@@ -2,6 +2,8 @@
 
 if (!defined("_EXPORT_SEDA_COMMENT"))
     define("_EXPORT_SEDA_COMMENT", "Export");
+if (!defined("_EXPORT_SEDA_LIST"))
+    define("_EXPORT_SEDA_LIST", "List of letter to archive");
 
 if (!defined("_EXPORT_SEDA"))
     define("_EXPORT_SEDA", "Export");
@@ -23,6 +25,15 @@ if (!defined("_INFORMATION_ARCHIVE"))
     define("_INFORMATION_ARCHIVE", "Information archive");
 if (!defined("_ARCHIVE_IDENTIFIER"))
     define("_ARCHIVE_IDENTIFIER", "Archive identifier");
+
+if (!defined("_PACKAGE_TITLE"))
+    define("_PACKAGE_TITLE", "Package title");
+
+if (!defined("_GENERATE_MESSAGE"))
+    define("_GENERATE_MESSAGE", "Generate message");
+
+if (!defined("_MESSAGE_TITLE_EMPTY"))
+    define("_MESSAGE_TITLE_EMPTY", "Message title empty");
 
 if (!defined("_DESCRIPTION_LEVEL"))
     define("_DESCRIPTION_LEVEL", "Description level");
@@ -67,14 +78,20 @@ if (!defined("_RECEIVED_MESSAGE"))
 if (!defined("_ERROR_MESSAGE"))
     define("_RECEIVED_MESSAGE", "Message non-reçu");
 
+if (!defined("_DIRECTORY_MESSAGE_REQUIRED"))
+    define("_DIRECTORY_MESSAGE_REQUIRED", "Directory message not configured");
+
 if (!defined("_ACKNOWLEDGEMENT_REFERENCE"))
     define("_ACKNOWLEDGEMENT_REFERENCE", "Acknowledgement reference");
 
-if (!defined("_TRANSFERRING_AGENCY_SIREN_COMPULSORY"))
-    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Transferring agency SIREN compulsory");
+if (!defined("_TRANSFERRING_AGENCY_SIREN_REQUIRED"))
+    define("_TRANSFERRING_AGENCY_SIREN_REQUIRED", "Transferring agency SIREN required");
 
-if (!defined("_ARCHIVAL_AGENCY_SIREN_COMPULSORY"))
-    define("_ARCHIVAL_AGENCY_SIREN_COMPULSORY", "Archive agency SIREN compulsory");
+if (!defined("_ARCHIVAL_AGENCY_SIREN_REQUIRED"))
+    define("_ARCHIVAL_AGENCY_SIREN_REQUIRED", "Archive agency SIREN required");
+
+if (!defined("_ARCHIVAL_AGREEMENT_REQUIRED"))
+    define("_ARCHIVAL_AGREEMENT_REQUIRED", "Archival agreement required");
 
 if (!defined("_VALIDATE_MANUAL_DELIVERY"))
     define("_VALIDATE_MANUAL_DELIVERY", "Validate manual delivery");
@@ -87,6 +104,12 @@ if (!defined("_ERROR_STATUS_SEDA"))
 
 if (!defined("_ERROR_NO_ACKNOWLEDGEMENT"))
     define("_ERROR_NO_ACKNOWLEDGEMENT", "No acknowledgement for this letter : ");
+
+if (!defined("_NO_LETTER_PURGE"))
+    define("_NO_LETTER_PURGE", "No letter to purge");
+
+if (!defined("_PURGE"))
+    define("_PURGE", "letters purge");
 
 if (!defined("_ERROR_NO_XML_ACKNOWLEDGEMENT"))
     define("_ERROR_NO_XML_ACKNOWLEDGEMENT", "The acknowledgement is malformed. Letter number : ");
@@ -114,3 +137,21 @@ if (!defined("_LETTER_NO_ARCHIVED"))
 
 if (!defined("_ERROR_LETTER_ARCHIVED"))
     define("_ERROR_LETTER_ARCHIVED", "You can not reset an archived letter. Letter number : ");
+
+if (!defined("_ERROR_ORIGINATOR_EMPTY"))
+    define("_ERROR_ORIGINATOR_EMPTY", "At least one originator must be retained");
+
+if (!defined("_ERROR_FILE_NOT_EXIST"))
+    define("_ERROR_FILE_NOT_EXIST", "All the documents must be present in the storage areas");
+
+if (!defined("_ERROR_REPLY_NOT_EXIST"))
+    define("_ERROR_REPLY_NOT_EXIST", "Reply not exist. Letter number : ");
+
+if (!defined("_ERROR_EXTENSION_CERTIFICATE"))
+    define("_ERROR_EXTENSION_CERTIFICATE", "Wrong certificate format (.crt or .pem)");
+
+if (!defined("_ERROR_UNKNOW_CERTIFICATE"))
+    define("_ERROR_UNKNOW_CERTIFICATE", "Unknow certificate");
+
+if (!defined("_UNKNOWN_TARGET"))
+    define("_UNKNOWN_TARGET", "Unknown target");

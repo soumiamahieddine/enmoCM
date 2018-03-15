@@ -20,10 +20,15 @@ Class Reset{
 
         $docServer = $this->db->getDocServer($reply->docserver_id);
         $fileName = $docServer->path_template. DIRECTORY_SEPARATOR . $dir . $reply->filename;
+
+        if (!file_exists($fileName)) {
+            $_SESSION['error'] = _ERROR_REPLY_NOT_EXIST . $resId;
+            return;
+        }
+
         $xml = simplexml_load_file($fileName);
 
-
-        if ((string) $xml->ReplyCode == "000") {
+        if (strpos($xml->ReplyCode, '000') !== false) {
             $_SESSION['error'] = _ERROR_LETTER_ARCHIVED. $resId;
             return false;
         }

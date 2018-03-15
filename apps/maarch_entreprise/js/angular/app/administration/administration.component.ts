@@ -10,7 +10,7 @@ declare const angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals.administrationView,
+    templateUrl: "../../../../Views/administration.component.html"
 })
 export class AdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;

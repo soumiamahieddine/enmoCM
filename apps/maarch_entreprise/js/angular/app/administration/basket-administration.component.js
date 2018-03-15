@@ -59,16 +59,6 @@ var BasketAdministrationComponent = /** @class */ (function () {
     BasketAdministrationComponent.prototype.ngOnDestroy = function () {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     };
-    BasketAdministrationComponent.prototype.updateBreadcrumb = function (applicationName) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/baskets\"' style='cursor: pointer'>" + this.lang.baskets + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.basketCreation;
-        }
-        else {
-            breadCrumb += this.lang.basketModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    };
     BasketAdministrationComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.coreUrl = angularGlobals.coreUrl;
@@ -76,13 +66,11 @@ var BasketAdministrationComponent = /** @class */ (function () {
         this.route.params.subscribe(function (params) {
             if (typeof params['id'] == "undefined") {
                 _this.creationMode = true;
-                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.basketIdAvailable = false;
                 _this.loading = false;
             }
             else {
                 _this.creationMode = false;
-                _this.updateBreadcrumb(angularGlobals.applicationName);
                 _this.basketIdAvailable = true;
                 _this.id = params['id'];
                 _this.http.get(_this.coreUrl + "rest/baskets/" + _this.id)
@@ -163,16 +151,16 @@ var BasketAdministrationComponent = /** @class */ (function () {
         var _this = this;
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
-                .subscribe(function (data) {
+                .subscribe(function () {
                 _this.notify.success(_this.lang.basketAdded);
-                _this.router.navigate(["/administration/baskets"]);
+                _this.router.navigate(["/administration/baskets/" + _this.basket.id]);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
         }
         else {
             this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basket)
-                .subscribe(function (data) {
+                .subscribe(function () {
                 _this.notify.success(_this.lang.basketUpdated);
                 _this.router.navigate(["/administration/baskets"]);
             }, function (err) {
@@ -195,12 +183,21 @@ var BasketAdministrationComponent = /** @class */ (function () {
         });
         this.addAction(group);
     };
+    BasketAdministrationComponent.prototype.updateResultPage = function (group) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            .subscribe(function () {
+            _this.notify.success(_this.lang.basketUpdated);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
+    };
     BasketAdministrationComponent.prototype.unlinkGroup = function (groupIndex) {
         var _this = this;
         var r = confirm(this.lang.unlinkGroup + ' ?');
         if (r) {
             this.http.delete(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
-                .subscribe(function (data) {
+                .subscribe(function () {
                 _this.allGroups.forEach(function (tmpGroup) {
                     if (tmpGroup.group_id == _this.basketGroups[groupIndex].group_id) {
                         tmpGroup.isUsed = false;
@@ -220,7 +217,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
         this.dialogRef.afterClosed().subscribe(function (result) {
             if (result) {
                 _this.http.post(_this.coreUrl + "rest/baskets/" + _this.id + "/groups", result)
-                    .subscribe(function (data) {
+                    .subscribe(function () {
                     _this.basketGroups.push(result);
                     _this.allGroups.forEach(function (tmpGroup) {
                         if (tmpGroup.group_id == result.group_id) {
@@ -237,10 +234,8 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.addAction = function (group) {
         var _this = this;
-        console.log(group);
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe(function (data) {
-            //this.basketGroups.push(data);
+            .subscribe(function () {
             _this.notify.success(_this.lang.basketUpdated);
         }, function (err) {
             _this.notify.error(err.error.errors);
@@ -248,12 +243,11 @@ var BasketAdministrationComponent = /** @class */ (function () {
     };
     BasketAdministrationComponent.prototype.unlinkAction = function (group, action) {
         var _this = this;
-        var r = confirm(this.lang.unlinkAction + ' ?');
+        var r = confirm(this.lang.unlinkAction + " ?");
         if (r) {
             action.checked = false;
             this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-                .subscribe(function (data) {
-                //this.basketGroups.push(data);
+                .subscribe(function () {
                 _this.notify.success(_this.lang.basketUpdated);
             }, function (err) {
                 _this.notify.error(err.error.errors);
@@ -362,7 +356,7 @@ var BasketAdministrationSettingsModalComponent = /** @class */ (function (_super
         this.allEntities.forEach(function (entity) {
             entity.state = { "opened": false, "selected": false };
             _this.data.action.redirects.forEach(function (keyword) {
-                if (entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') {
+                if ((entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'ENTITY')) {
                     entity.state = { "opened": true, "selected": true };
                 }
             });

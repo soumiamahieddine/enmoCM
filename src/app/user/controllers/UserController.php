@@ -53,7 +53,7 @@ class UserController
             ]);
         } else {
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-            $users = UserModel::getByEntities([
+            $users = UserEntityModel::getUsersByEntities([
                 'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'enabled', 'mail'],
                 'entities'  => $entities
             ]);
@@ -106,7 +106,7 @@ class UserController
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'absenceUneeded' => true]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id']]);
         $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
@@ -323,7 +323,7 @@ class UserController
             }
         }
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
@@ -337,7 +337,7 @@ class UserController
 
         BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
@@ -657,7 +657,8 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
+            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 
@@ -881,7 +882,7 @@ class UserController
                 }
                 if ($GLOBALS['userId'] != 'superadmin') {
                     $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                    $users = UserModel::getByEntities([
+                    $users = UserEntityModel::getUsersByEntities([
                         'select'    => ['users.id'],
                         'entities'  => $entities
                     ]);

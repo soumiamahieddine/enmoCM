@@ -1,17 +1,17 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* @brief Notifications Model
-* @author dev@maarch.org
-* @ingroup Module
-*/
+ * @brief Notifications Model
+ *
+ * @author dev@maarch.org
+ * @ingroup Module
+ */
 
 namespace Notification\models;
 
@@ -50,10 +50,10 @@ class NotificationScheduleModelAbstract
 
         HistoryController::add([
             'tableName' => 'notifications',
-            'recordId'  => $GLOBALS['userId'],
+            'recordId' => $GLOBALS['userId'],
             'eventType' => 'UP',
-            'eventId'   => 'notificationadd',
-            'info'      => _NOTIFICATION_SCHEDULE_UPDATED
+            'eventId' => 'notificationadd',
+            'info' => _NOTIFICATION_SCHEDULE_UPDATED,
         ]);
 
         return true;
@@ -61,17 +61,17 @@ class NotificationScheduleModelAbstract
 
     public static function getCrontab(array $aArgs = [])
     {
-        if (!isset($aArgs["setHiddenValue"])) {
-            $aArgs["setHiddenValue"] = true;
+        if (!isset($aArgs['setHiddenValue'])) {
+            $aArgs['setHiddenValue'] = true;
         }
 
-        $crontab  = shell_exec('crontab -l');
+        $crontab = shell_exec('crontab -l');
         // TODO check crontab is installed
-        $lines    = explode("\n", $crontab);
-        $data     = array();
+        $lines = explode("\n", $crontab);
+        $data = array();
         $customId = CoreConfigModel::getCustomId();
-        $corePath = str_replace("custom/".$customId."/src/app/notification/models", "", __DIR__);
-        $corePath = str_replace("src/app/notification/models", "", $corePath);
+        $corePath = str_replace('custom/'.$customId.'/src/app/notification/models', '', __DIR__);
+        $corePath = str_replace('src/app/notification/models', '', $corePath);
 
         foreach ($lines as $cronLine) {
             $cronLine = trim($cronLine);
@@ -89,28 +89,32 @@ class NotificationScheduleModelAbstract
                 list($m, $h, $dom, $mon, $dow, $cmd) = explode(' ', $cronLine, 6);
             }
 
-            if ($customId <> '') {
-                $pathToFolow = $corePath . 'custom/'.$customId . '/';
+            if ($customId != '') {
+                $pathToFolow = $corePath.'custom/'.$customId.'/';
             } else {
                 $pathToFolow = $corePath;
             }
 
-            $state = "normal";
-            if (strpos($cmd, $pathToFolow.'modules/notifications/batch/scripts/') !== 0 && $aArgs["setHiddenValue"]) {
-                $cmd   = "hidden";
+            $state = 'normal';
+            if (strpos($cmd, $pathToFolow.'modules/notifications/batch/scripts/') !== 0 && $aArgs['setHiddenValue']) {
+                $cmd = 'hidden';
                 $state = 'hidden';
             }
 
+            $filename = explode('/', $cmd);
+
             $data[] = array(
-                'm'     => $m,
-                'h'     => $h,
-                'dom'   => $dom,
-                'mon'   => $mon,
-                'dow'   => $dow,
-                'cmd'   => $cmd,
-                'state' => $state
+                'm' => $m,
+                'h' => $h,
+                'dom' => $dom,
+                'mon' => $mon,
+                'dow' => $dow,
+                'cmd' => $cmd,
+                'description' => end($filename),
+                'state' => $state,
             );
         }
+
         return $data;
     }
 
@@ -120,31 +124,31 @@ class NotificationScheduleModelAbstract
         ValidatorModel::intVal($aArgs, ['notification_sid']);
 
         $notification_sid = $aArgs['notification_sid'];
-        $notification_id  = $aArgs['notification_id'];
+        $notification_id = $aArgs['notification_id'];
 
         //Creer le script sh pour les notifications
-        $filename = "notification";
+        $filename = 'notification';
         $customId = CoreConfigModel::getCustomId();
-        if (isset($customId) && $customId<>"") {
-            $filename.="_".str_replace(" ", "", $customId);
+        if (isset($customId) && $customId != '') {
+            $filename .= '_'.str_replace(' ', '', $customId);
         }
-        $filename.="_".$notification_sid.".sh";
+        $filename .= '_'.$notification_id.'.sh';
 
-        $corePath = str_replace("custom/".$customId."/src/app/notification/models", "", __DIR__);
-        $corePath = str_replace("src/app/notification/models", "", $corePath);
+        $corePath = str_replace('custom/'.$customId.'/src/app/notification/models', '', __DIR__);
+        $corePath = str_replace('src/app/notification/models', '', $corePath);
 
-        if (file_exists($corePath. 'custom/'.$customId .'/modules/notifications/batch/config/config.xml')) {
-            $ConfigNotif = $corePath. 'custom/'. $customId .'/modules/notifications/batch/config/config.xml';
-        } elseif (file_exists($corePath. 'custom/'. $customId .'/modules/notifications/batch/config/config_'.$customId.'.xml')) {
-            $ConfigNotif = $corePath. 'custom/'. $customId .'/modules/notifications/batch/config/config_'.$customId.'.xml';
-        } elseif (file_exists($corePath. 'modules/notifications/batch/config/config_'.$customId.'.xml')) {
-            $ConfigNotif = $corePath. 'modules/notifications/batch/config/config_'.$customId.'.xml';
+        if (file_exists($corePath.'custom/'.$customId.'/modules/notifications/batch/config/config.xml')) {
+            $ConfigNotif = $corePath.'custom/'.$customId.'/modules/notifications/batch/config/config.xml';
+        } elseif (file_exists($corePath.'custom/'.$customId.'/modules/notifications/batch/config/config_'.$customId.'.xml')) {
+            $ConfigNotif = $corePath.'custom/'.$customId.'/modules/notifications/batch/config/config_'.$customId.'.xml';
+        } elseif (file_exists($corePath.'modules/notifications/batch/config/config_'.$customId.'.xml')) {
+            $ConfigNotif = $corePath.'modules/notifications/batch/config/config_'.$customId.'.xml';
         } else {
-            $ConfigNotif = $corePath. 'modules/notifications/batch/config/config.xml';
+            $ConfigNotif = $corePath.'modules/notifications/batch/config/config.xml';
         }
-        
-        if ($customId <> '') {
-            $pathToFolow = $corePath . 'custom/'.$customId . '/';
+
+        if ($customId != '') {
+            $pathToFolow = $corePath.'custom/'.$customId.'/';
             if (!file_exists($pathToFolow.'modules/notifications/batch/scripts/')) {
                 mkdir($pathToFolow.'modules/notifications/batch/scripts/', 0777, true);
             }
@@ -175,14 +179,14 @@ class NotificationScheduleModelAbstract
         fwrite($file_open, 'php \'process_email_stack.php\' -c '.$ConfigNotif);
         fwrite($file_open, "\n");
         fclose($file_open);
-        shell_exec("chmod +x " . escapeshellarg($pathToFolow . "modules/notifications/batch/scripts/" . $filename));
+        shell_exec('chmod +x '.escapeshellarg($pathToFolow.'modules/notifications/batch/scripts/'.$filename));
 
         HistoryController::add([
             'tableName' => 'notifications',
-            'recordId'  => $notification_id,
+            'recordId' => $notification_id,
             'eventType' => 'ADD',
-            'eventId'   => 'notificationadd',
-            'info'      => _NOTIFICATION_SCRIPT_ADDED
+            'eventId' => 'notificationadd',
+            'info' => _NOTIFICATION_SCRIPT_ADDED,
         ]);
 
         return true;

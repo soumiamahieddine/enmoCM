@@ -316,7 +316,7 @@ class BasketController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions']]);
+        $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions'], 'userId' => $GLOBALS['userId']]);
         if (!empty($data['groupActions']['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $data['groupActions']['errors']]);
         }
@@ -392,7 +392,7 @@ class BasketController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions']]);
+        $data['groupActions'] = BasketController::checkGroupActions(['groupActions' => $data['groupActions'], 'userId' => $GLOBALS['userId']]);
         if (!empty($data['groupActions']['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $data['groupActions']['errors']]);
         }
@@ -478,8 +478,9 @@ class BasketController
 
     private static function checkGroupActions(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['groupActions']);
+        ValidatorModel::notEmpty($aArgs, ['groupActions', 'userId']);
         ValidatorModel::arrayType($aArgs, ['groupActions']);
+        ValidatorModel::stringType($aArgs, ['userId']);
 
         $defaultAction = false;
         $actions = ActionModel::get(['select' => ['id']]);
@@ -498,10 +499,17 @@ class BasketController
                 if ($groupAction['default_action_list'] === true) {
                     $defaultAction = true;
                 }
+
                 $aArgs['groupActions'][$key]['where_clause'] = empty($groupAction['where_clause']) ? '' : $groupAction['where_clause'];
                 $aArgs['groupActions'][$key]['used_in_basketlist'] = empty($groupAction['used_in_basketlist']) ? 'N' : 'Y';
                 $aArgs['groupActions'][$key]['used_in_action_page'] = empty($groupAction['used_in_action_page']) ? 'N' : 'Y';
                 $aArgs['groupActions'][$key]['default_action_list'] = empty($groupAction['default_action_list']) ? 'N' : 'Y';
+                
+                if (!empty($aArgs['groupActions'][$key]['where_clause'])) {
+                    if (!PreparedClauseController::isRequestValid(['clause' => $aArgs['groupActions'][$key]['where_clause'], 'userId' => $aArgs['userId']])) {
+                        return ['errors' => _INVALID_CLAUSE];
+                    }
+                }
             }
         }
         if (!$defaultAction) {

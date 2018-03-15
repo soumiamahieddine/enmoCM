@@ -10,8 +10,8 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: angularGlobals['status-administrationView'],
-    styleUrls: ['css/status-administration.component.css'],
+    templateUrl: "../../../../Views/status-administration.component.html",
+    // styleUrls: ['css/status-administration.component.css'],
     providers: [NotificationService]
 })
 export class StatusAdministrationComponent implements OnInit {

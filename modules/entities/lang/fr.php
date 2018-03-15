@@ -215,7 +215,7 @@ if (!defined("_WARNING_MESSAGE_DEL_ENTITY"))
 
 /******************** Keywords Helper ************/
 if (!defined("_HELP_KEYWORD1"))
-    define("_HELP_KEYWORD1", "toutes les entités rattachées à l'utilisateur connecté. N'inclue pas les sous-entités");
+    define("_HELP_KEYWORD1", "toutes les entités rattachées à l'utilisateur connecté. N'inclut pas les sous-entités");
 if (!defined("_HELP_KEYWORD2"))
     define("_HELP_KEYWORD2", "entité primaire de l'utilisateur connecté");
 if (!defined("_HELP_KEYWORD3"))

@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "maarchCourrier"
+  },
+  "apps": [
+    {
+      "root": "apps/maarch_entreprise/js/angular",
+      "outDir": "dist",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "prefix": "app",
+      "styles": [
+      ],
+      "scripts": []
+    }
+  ],
+  "defaults": {
+    "styleExt": "css",
+    "component": {}
+  }
+}

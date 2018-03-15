@@ -24,22 +24,24 @@ class CoreController
 {
     public function initialize(Request $request, Response $response)
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        $data = $request->getParams();
-
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
-        $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['lang'] = CoreConfigModel::getLanguage();
+        $aInit['scriptsToinject'] = [];
 
-        if (!empty($data['views'])) {
-            foreach ($data['views'] as $view) {
-                $aInit[$view.'View'] = 'Views/'.$view.'.component.html';
-                if (file_exists("custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html")) {
-                    $aInit[$view.'View'] = "../../custom/{$customId}/apps/maarch_entreprise/Views/{$view}.component.html";
+        $scriptsToInject =  scandir('dist');
+        foreach ($scriptsToInject as $key => $value) {
+            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false) {
+                if (strstr($value, '.js.map') === false) {
+                    $aInit['scriptsToinject'][] = $value;
                 }
             }
+        }
+
+        if (!empty($aInit['scriptsToinject'][2]) && strstr($aInit['scriptsToinject'][2], 'vendor.') !== false) {
+            $tmp = $aInit['scriptsToinject'][1];
+            $aInit['scriptsToinject'][1] = $aInit['scriptsToinject'][2];
+            $aInit['scriptsToinject'][2] = $tmp;
         }
 
         return $response->withJson($aInit);

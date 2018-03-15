@@ -10,9 +10,8 @@ import { BasketsAdministrationComponent }               from './baskets-administ
 import { BasketAdministrationComponent }                from './basket-administration.component';
 import { DoctypesAdministrationComponent }              from './doctypes-administration.component';
 import { DiffusionModelsAdministrationComponent }       from './diffusionModels-administration.component';
-import { DiffusionModelAdministrationComponent }       from './diffusionModel-administration.component';
+import { DiffusionModelAdministrationComponent }        from './diffusionModel-administration.component';
 import { EntitiesAdministrationComponent }              from './entities-administration.component';
-import { EntityAdministrationComponent }                from './entity-administration.component';
 import { StatusesAdministrationComponent }              from './statuses-administration.component';
 import { StatusAdministrationComponent }                from './status-administration.component';
 import { ActionsAdministrationComponent }               from './actions-administration.component';
@@ -45,10 +44,9 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
             { path: 'administration/baskets/:id', component: BasketAdministrationComponent },
             { path: 'administration/doctypes', component: DoctypesAdministrationComponent },
             { path: 'administration/diffusionModels', component: DiffusionModelsAdministrationComponent },
+            { path: 'administration/diffusionModels/new', component: DiffusionModelAdministrationComponent },
             { path: 'administration/diffusionModels/:id', component: DiffusionModelAdministrationComponent },
             { path: 'administration/entities', component: EntitiesAdministrationComponent },
-            { path: 'administration/entities/new', component: EntityAdministrationComponent },
-            { path: 'administration/entities/:id', component: EntityAdministrationComponent },
             { path: 'administration/statuses', component: StatusesAdministrationComponent },
             { path: 'administration/statuses/new', component: StatusAdministrationComponent },
             { path: 'administration/statuses/:identifier', component: StatusAdministrationComponent },

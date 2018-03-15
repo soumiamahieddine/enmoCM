@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
@@ -11,8 +10,7 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: angularGlobals['statuses-administrationView'],
-    styleUrls: [],
+    templateUrl: "../../../../Views/statuses-administration.component.html",
     providers: [NotificationService]
 })
 export class StatusesAdministrationComponent implements OnInit {
@@ -21,7 +19,6 @@ export class StatusesAdministrationComponent implements OnInit {
     coreUrl: string;
     lang: any = LANG;
 
-    nbStatus: number;
     statuses: Status[] = [];
 
     loading: boolean = false;
@@ -49,15 +46,11 @@ export class StatusesAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-
-        this.prepareStatus();
-
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe((data: any) => {
                 this.statuses = data.statuses;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.statuses);
@@ -68,15 +61,6 @@ export class StatusesAdministrationComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-    }
-
-    prepareStatus() {
-        $j('#inner_content').remove();
-    }
-
-    updateBreadcrumb(applicationName: string) {
-        $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.statuses;
     }
 
     deleteStatus(status: any) {

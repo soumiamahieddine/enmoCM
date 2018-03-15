@@ -137,6 +137,22 @@ class EntityModelAbstract
         return $aReturn;
     }
 
+    public static function getByBusinessId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['businessId']);
+        ValidatorModel::stringType($aArgs, ['businessId']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['entities'],
+            'where'     => ['business_id = ? and enabled = ?'],
+            'data'      => [$aArgs['businessId'], 'Y'],
+            'limit'     => 1,
+        ]);
+
+        return $aReturn;
+    }
+
     public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
@@ -151,6 +167,39 @@ class EntityModelAbstract
         ]);
 
         return $aEntities;
+    }
+
+    public static function getEntitiesByUserId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['user_id']);
+        ValidatorModel::stringType($aArgs, ['user_id']);
+
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['users_entities', 'entities'],
+            'left_join' => ['users_entities.entity_id = entities.entity_id'],
+            'where'     => ['user_id = ?', 'business_id <> \'\''],
+            'data'      => [$aArgs['user_id']]
+        ]);
+
+        return $aReturn;
+    }
+
+    public static function getEntityRootById(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['entityId']);
+        ValidatorModel::stringType($aArgs, ['entityId']);
+
+        $aReturn = self::getById([
+            'select'   => ['entity_id', 'entity_label', 'parent_entity_id'],
+            'entityId' => $aArgs['entityId']
+        ]);
+
+        if (!empty($aReturn[0]['parent_entity_id'])) {
+            $aReturn = self::getEntityRootById(['entityId' => $aReturn[0]['parent_entity_id']]);
+        }
+
+        return $aReturn;
     }
 
     public static function getEntityChildren(array $aArgs)

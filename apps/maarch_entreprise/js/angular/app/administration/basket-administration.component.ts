@@ -14,7 +14,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["basket-administrationView"],
+    templateUrl: "../../../../Views/basket-administration.component.html",
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
@@ -58,16 +58,6 @@ export class BasketAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/baskets\"' style='cursor: pointer'>" + this.lang.baskets + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.basketCreation;
-        } else {
-            breadCrumb += this.lang.basketModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
 
@@ -76,12 +66,10 @@ export class BasketAdministrationComponent implements OnInit {
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.basketIdAvailable = false;
                 this.loading = false;
             } else {
                 this.creationMode = false;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.basketIdAvailable = true;
                 this.id = params['id'];
                 this.http.get(this.coreUrl + "rest/baskets/" + this.id)
@@ -165,15 +153,15 @@ export class BasketAdministrationComponent implements OnInit {
     onSubmit() {
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.basketAdded);
-                    this.router.navigate(["/administration/baskets"]);
+                    this.router.navigate(["/administration/baskets/" + this.basket.id]);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put(this.coreUrl + "rest/baskets/" + this.id, this.basket)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.basketUpdated);
                     this.router.navigate(["/administration/baskets"]);
                 }, (err) => {
@@ -198,12 +186,21 @@ export class BasketAdministrationComponent implements OnInit {
         this.addAction(group);
     }
 
+    updateResultPage(group: any) {
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            .subscribe(() => {
+                this.notify.success(this.lang.basketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
     unlinkGroup(groupIndex: any) {
         let r = confirm(this.lang.unlinkGroup + ' ?');
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + this.basketGroups[groupIndex].group_id)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.allGroups.forEach((tmpGroup: any) => {
                         if (tmpGroup.group_id == this.basketGroups[groupIndex].group_id) {
                             tmpGroup.isUsed = false;
@@ -223,7 +220,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
                 this.http.post(this.coreUrl + "rest/baskets/" + this.id + "/groups", result)
-                    .subscribe((data: any) => {
+                    .subscribe(() => {
                         this.basketGroups.push(result);
                         this.allGroups.forEach((tmpGroup: any) => {
                             if (tmpGroup.group_id == result.group_id) {
@@ -240,10 +237,8 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     addAction(group: any) {
-        console.log(group);
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe((data: any) => {
-                //this.basketGroups.push(data);
+            .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -251,14 +246,12 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     unlinkAction(group: any, action: any) {
-
-        let r = confirm(this.lang.unlinkAction + ' ?');
+        let r = confirm(this.lang.unlinkAction + " ?");
 
         if (r) {
             action.checked = false;
             this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
-            .subscribe((data: any) => {
-                //this.basketGroups.push(data);
+            .subscribe(() => {
                 this.notify.success(this.lang.basketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -266,8 +259,9 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 }
+
 @Component({
-    templateUrl: angularGlobals["basket-administration-settings-modalView"],
+    templateUrl: "../../../../Views/basket-administration-settings-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
@@ -349,9 +343,9 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         this.allEntities.forEach((entity: any) => {
             entity.state = { "opened": false, "selected": false };
             this.data.action.redirects.forEach((keyword: any) => {
-                if (entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') {
+                if ((entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'ENTITY')) {
                     entity.state = { "opened": true, "selected": true };
-                }
+                } 
             });
         });
 
@@ -469,9 +463,8 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 }
 
-import { FormGroup, Validators } from '@angular/forms';
 @Component({
-    templateUrl: angularGlobals["basket-administration-groupList-modalView"],
+    templateUrl: "../../../../Views/basket-administration-groupList-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationGroupListModalComponent {

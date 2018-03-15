@@ -144,21 +144,6 @@ class UserModelAbstract
         return $aUser[0];
     }
 
-    public static function getByEntities(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['entities']);
-        ValidatorModel::arrayType($aArgs, ['entities']);
-
-        $aUsers = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['users, users_entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id in (?)'],
-            'data'      => [$aArgs['entities']]
-        ]);
-
-        return $aUsers;
-    }
-
     public static function getByEmail(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['mail']);
@@ -173,6 +158,21 @@ class UserModelAbstract
         ]);
 
         return $aUser;
+    }
+
+    public static function getGroupsById(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId']);
+        ValidatorModel::stringType($aArgs, ['userId']);
+
+        $aGroups = DatabaseModel::select([
+            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$aArgs['userId']]
+        ]);
+
+        return $aGroups;
     }
 
     public static function updatePassword(array $aArgs = [])
@@ -193,7 +193,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function resetPassword(array $aArgs = [])
+    public static function resetPassword(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -201,7 +201,8 @@ class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'  => SecurityModel::getPasswordHash('maarch')
+                'password'          => SecurityModel::getPasswordHash('maarch'),
+                'change_password'   => 'Y',
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

@@ -20,7 +20,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-tab-group [(selectedIndex)]="selectedTabIndex_1">
+        <mat-tab-group>
             <mat-tab *ngIf="data.action.keyword == 'redirect'||data.action.keyword == 'indexing'">
                 <ng-template mat-tab-label *ngIf="data.action.keyword == 'redirect'">
                     {{lang.redirects}}

@@ -359,7 +359,7 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
         this.isDraggable = true;
         $j('#jstree').jstree('deselect_all');
         for (var i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].allowed == true) {
+            if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
                 $j('#jstree').jstree('select_node', this.entities[i]);
                 break;
             }
@@ -416,12 +416,24 @@ var EntitiesAdministrationComponent = /** @class */ (function (_super) {
     EntitiesAdministrationComponent.prototype.prepareEntityAdd = function () {
         this.creationMode = true;
         this.isDraggable = false;
-        this.currentEntity = { "entity_type": this.entityTypeList[0].id };
-        $j('#jstree').jstree('deselect_all');
-        for (var i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].allowed == true) {
-                $j('#jstree').jstree('select_node', this.entities[i]);
-                break;
+        console.log(this.currentEntity.entity_id);
+        if (this.currentEntity.entity_id) {
+            for (var i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].entity_id == this.currentEntity.entity_id) {
+                    this.currentEntity = { "entity_type": this.entityTypeList[0].id };
+                    this.currentEntity.parent_entity_id = this.entities[i].entity_id;
+                    break;
+                }
+            }
+        }
+        else {
+            this.currentEntity = { "entity_type": this.entityTypeList[0].id };
+            $j('#jstree').jstree('deselect_all');
+            for (var i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].allowed == true) {
+                    $j('#jstree').jstree('select_node', this.entities[i]);
+                    break;
+                }
             }
         }
     };

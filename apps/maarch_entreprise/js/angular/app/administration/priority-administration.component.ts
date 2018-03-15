@@ -11,7 +11,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["priority-administrationView"],
+    templateUrl: "../../../../Views/priority-administration.component.html",
     providers: [NotificationService]
 })
 export class PriorityAdministrationComponent implements OnInit {

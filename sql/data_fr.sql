@@ -80,6 +80,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'file
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'notes_restriction');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_contacts');
@@ -341,230 +342,230 @@ TRUNCATE TABLE DOCTYPES_INDEXES;
 TRUNCATE TABLE TEMPLATES_DOCTYPE_EXT;
 TRUNCATE TABLE FOLDERTYPES_DOCTYPES_LEVEL1;
 
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (1, 'COURRIERS', 'black_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (1, 'COURRIERS', '#000000', 'Y');
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (1, 1);
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (1, '01. Correspondances', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',101, 'Abonnements – documentation – archives', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (1, '01. Correspondances', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',101, 'Abonnements – documentation – archives', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (101, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',102, 'Convocation', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',102, 'Convocation', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (102, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',103, 'Demande de documents', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',103, 'Demande de documents', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (103, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',104, 'Demande de fournitures et matériels', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',104, 'Demande de fournitures et matériels', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (104, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',105, 'Demande de RDV', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',105, 'Demande de RDV', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (105, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',106, 'Demande de renseignements', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',106, 'Demande de renseignements', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (106, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',107, 'Demande mise à jour de fichiers', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',107, 'Demande mise à jour de fichiers', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (107, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',108, 'Demande Multi-Objet', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',108, 'Demande Multi-Objet', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (108, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',109, 'Installation provisoire dans un équipement ville', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',109, 'Installation provisoire dans un équipement ville', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (109, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',110, 'Invitation', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',110, 'Invitation', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (110, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',111, 'Rapport – Compte-rendu – Bilan', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',111, 'Rapport – Compte-rendu – Bilan', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (111, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',112, 'Réservation d''un local communal et scolaire', 'Y', 1, 1, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',112, 'Réservation d''un local communal et scolaire', 'Y', 1, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (112, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (2, '02. Cabinet', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',201, 'Pétition', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (2, '02. Cabinet', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',201, 'Pétition', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (201, 15, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',202, 'Communication', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',202, 'Communication', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (202, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',203, 'Politique', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',203, 'Politique', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (203, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',204, 'Relations et solidarité internationales ', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',204, 'Relations et solidarité internationales ', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (204, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',205, 'Remerciements et félicitations', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',205, 'Remerciements et félicitations', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (205, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',206, 'Sécurité', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',206, 'Sécurité', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (206, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',207, 'Suggestion', 'Y', 1, 2, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',207, 'Suggestion', 'Y', 1, 2);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (207, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (3, '03. Éducation', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',301, 'Culture', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (3, '03. Éducation', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',301, 'Culture', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (301, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',302, 'Demande scolaire hors inscription et dérogation', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',302, 'Demande scolaire hors inscription et dérogation', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (302, 60, 14, 1, 'SVR');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',303, 'Éducation nationale', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',303, 'Éducation nationale', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (303, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',304, 'Jeunesse', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',304, 'Jeunesse', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (304, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',305, 'Lycées et collèges', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',305, 'Lycées et collèges', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (305, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',306, 'Parentalité', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',306, 'Parentalité', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (306, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',307, 'Petite Enfance', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',307, 'Petite Enfance', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (307, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',308, 'Sport', 'Y', 1, 3, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',308, 'Sport', 'Y', 1, 3);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (308, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (4, '04. Finances', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',401, 'Contestation financière', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (4, '04. Finances', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',401, 'Contestation financière', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (401, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',402, 'Contrat de prêt', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',402, 'Contrat de prêt', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (402, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',403, 'Garantie d''emprunt', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',403, 'Garantie d''emprunt', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (403, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',404, 'Paiement', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',404, 'Paiement', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (404, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',405, 'Quotient familial', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',405, 'Quotient familial', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (405, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',406, 'Subvention', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',406, 'Subvention', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (406, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',407, 'Facture ou avoir', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',407, 'Facture ou avoir', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (407, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (407, 'letterbox_coll', 'custom_t1', 'Y');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (407, 'letterbox_coll', 'custom_t2', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (407, 'letterbox_coll', 'custom_f1', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',408, 'Proposition financière', 'Y', 1, 4, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',408, 'Proposition financière', 'Y', 1, 4);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (408, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (5, '05. Juridique', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',501, 'Hospitalisation d''office', 'Y', 1, 5, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (5, '05. Juridique', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',501, 'Hospitalisation d''office', 'Y', 1, 5);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (501, 2, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',502, 'Mise en demeure', 'Y', 1, 5, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',502, 'Mise en demeure', 'Y', 1, 5);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (502, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',503, 'Plainte', 'Y', 1, 5, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',503, 'Plainte', 'Y', 1, 5);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (503, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',504, 'Recours contentieux', 'Y', 1, 5, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',504, 'Recours contentieux', 'Y', 1, 5);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (504, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',505, 'Recours gracieux et réclamations', 'Y', 1, 5, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',505, 'Recours gracieux et réclamations', 'Y', 1, 5);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (505, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (6, '06. Population ', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',601, 'Débits de boisson', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (6, '06. Population ', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',601, 'Débits de boisson', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (601, 60, 14, 1, 'SVR');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',602, 'Demande d’État Civil', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',602, 'Demande d’État Civil', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (602, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',603, 'Élections', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',603, 'Élections', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (603, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',604, 'Étrangers', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',604, 'Étrangers', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (604, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',605, 'Marché', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',605, 'Marché', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (605, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',606, 'Médaille du travail', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',606, 'Médaille du travail', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (606, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',607, 'Stationnement taxi', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',607, 'Stationnement taxi', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (607, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',608, 'Vente au déballage', 'Y', 1, 6, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',608, 'Vente au déballage', 'Y', 1, 6);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (608, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (7, '07. Ressources Humaines', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',701, 'Arrêts de travail et maladie', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (7, '07. Ressources Humaines', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',701, 'Arrêts de travail et maladie', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (701, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (701, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',702, 'Assurance du personnel', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',702, 'Assurance du personnel', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (702, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (702, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',703, 'Candidature', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',703, 'Candidature', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (703, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',704, 'Carrière', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',704, 'Carrière', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (704, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (704, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',705, 'Conditions de travail santé', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',705, 'Conditions de travail santé', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (705, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (705, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',706, 'Congés exceptionnels et concours', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',706, 'Congés exceptionnels et concours', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (706, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (706, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',707, 'Formation', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',707, 'Formation', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (707, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (707, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',708, 'Instances RH', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',708, 'Instances RH', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (708, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (708, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',709, 'Retraite', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',709, 'Retraite', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (709, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (709, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',710, 'Stage', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',710, 'Stage', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (710, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (710, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',711, 'Syndicats', 'Y', 1, 7, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',711, 'Syndicats', 'Y', 1, 7);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (711, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (711, 'letterbox_coll', 'custom_t3', 'N');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (8, '08. Social', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',801, 'Aide à domicile', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (8, '08. Social', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',801, 'Aide à domicile', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (801, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',802, 'Aide Financière', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',802, 'Aide Financière', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (802, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',803, 'Animations retraités', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',803, 'Animations retraités', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (803, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',804, 'Domiciliation', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',804, 'Domiciliation', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (804, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',805, 'Dossier de logement', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',805, 'Dossier de logement', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (805, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',806, 'Expulsion', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',806, 'Expulsion', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (806, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',807, 'Foyer', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',807, 'Foyer', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (807, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',808, 'Obligation alimentaire', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',808, 'Obligation alimentaire', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (808, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',809, 'RSA', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',809, 'RSA', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (809, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',810, 'Scolarisation à domicile', 'Y', 1, 8, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',810, 'Scolarisation à domicile', 'Y', 1, 8);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (810, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (9, '09. Technique', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',901, 'Aire d''accueil des gens du voyage', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (9, '09. Technique', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',901, 'Aire d''accueil des gens du voyage', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (901, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',902, 'Assainissement', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',902, 'Assainissement', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (902, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',903, 'Assurance et sinistre', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',903, 'Assurance et sinistre', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (903, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',904, 'Autorisation d''occupation du domaine public', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',904, 'Autorisation d''occupation du domaine public', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (904, 60, 14, 1, 'SVR');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',905, 'Contrat et convention hors marchés publics', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',905, 'Contrat et convention hors marchés publics', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (905, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',906, 'Détention de chiens dangereux', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',906, 'Détention de chiens dangereux', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (906, 60, 14, 1, 'SVR');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',907, 'Espaces verts – Environnement – Développement durable', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',907, 'Espaces verts – Environnement – Développement durable', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (907, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',908, 'Hygiène et Salubrité', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',908, 'Hygiène et Salubrité', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (908, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',909, 'Marchés Publics', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',909, 'Marchés Publics', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (909, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',910, 'Mobiliers urbains', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',910, 'Mobiliers urbains', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (910, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',911, 'NTIC', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',911, 'NTIC', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (911, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',912, 'Opération d''aménagement', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',912, 'Opération d''aménagement', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (912, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',913, 'Patrimoine', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',913, 'Patrimoine', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (913, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',914, 'Problème de voisinage', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',914, 'Problème de voisinage', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (914, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',915, 'Propreté', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',915, 'Propreté', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (915, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',916, 'Stationnement et circulation', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',916, 'Stationnement et circulation', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (916, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',917, 'Transports', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',917, 'Transports', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (917, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',918, 'Travaux', 'Y', 1, 9, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',918, 'Travaux', 'Y', 1, 9);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (918, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, '10. Urbanisme', 1, 'black_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1001, 'Alignement', 'Y', 1, 10, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, '10. Urbanisme', 1, '#000000', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1001, 'Alignement', 'Y', 1, 10);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1001, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1002, 'Avis d''urbanisme', 'Y', 1, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1002, 'Avis d''urbanisme', 'Y', 1, 10);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1002, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1003, 'Commerces', 'Y', 1, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1003, 'Commerces', 'Y', 1, 10);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1003, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1004, 'Numérotation', 'Y', 1, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1004, 'Numérotation', 'Y', 1, 10);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1004, 60, 14, 1, 'NORMAL');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (11, '11. Silence vaut acceptation', 1, 'orange_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1101, 'Autorisation de buvette', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (11, '11. Silence vaut acceptation', 1, '#FF4500', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1101, 'Autorisation de buvette', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1101, 60, 14, 1, 'SVA');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1102, 'Cimetière', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1102, 'Cimetière', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1102, 60, 14, 1, 'SVA');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1103, 'Demande de dérogation scolaire', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1103, 'Demande de dérogation scolaire', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1103, 60, 14, 1, 'SVA');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1104, 'Inscription à la cantine et activités périscolaires ', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1104, 'Inscription à la cantine et activités périscolaires ', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1104, 60, 14, 1, 'SVA');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1105, 'Inscription toutes petites sections', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1105, 'Inscription toutes petites sections', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1105, 90, 14, 1, 'SVA');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1106, 'Travaux ERP', 'Y', 1, 11, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1106, 'Travaux ERP', 'Y', 1, 11);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1106, 60, 14, 1, 'SVA');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (12, '12. Formulaires', 1, 'blue_style_big', 'Y');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1201, 'Appel téléphonique', 'Y', 1, 12, NULL, NULL);
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (12, '12. Formulaires', 1, '#0000FF', 'Y');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1201, 'Appel téléphonique', 'Y', 1, 12);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1201, 21, 14, 1, 'NORMAL');
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll',1202, 'Demande intervention voirie', 'Y', 1, 12, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id) VALUES ('letterbox_coll',1202, 'Demande intervention voirie', 'Y', 1, 12);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2, process_mode) VALUES (1202, 21, 14, 1, 'NORMAL');
 select setval('doctypes_first_level_id_seq', (select max(doctypes_first_level_id)+1 from doctypes_first_level), false);
 select setval('doctypes_second_level_id_seq', (select max(doctypes_second_level_id)+1 from doctypes_second_level), false);
@@ -1003,6 +1004,8 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
 VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
+VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 TRUNCATE TABLE docservers;
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
@@ -1033,7 +1036,8 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'attachments_version_coll', 103, 'NANTERRE', 103);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
-
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Fast internal disc bay for archive transfer', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/archive_transfer/', NULL, NULL, NULL, '2017-01-13 14:47:49.197164', NULL, 'archive_transfer_coll', 10, 'NANTERRE', 2);
 ------------
 --SUPERADMIN USER
 ------------
@@ -1094,6 +1098,9 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SEND_SEDA ', 'Courrier envoyé au système d''archivage', 'Y', 'N', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ACK_SEDA ', 'Accusé de reception reçu', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('REPLY_SEDA', 'Courrier archivé', 'Y', 'N', 'fm-letter-status-acla', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('RETRN', 'Retrouné', 'Y', 'N', '', 'apps', 'N', 'N');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NO_RETRN', 'Pas de retour', 'Y', 'N', '', 'apps', 'N', 'N');
+
 ------------
 --STATUS IMAGES-
 ------------
@@ -1178,7 +1185,9 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (500, '', 'Transférer au système d''archivage', 'SEND_SEDA', 'N', 'N', 'Y', 'export_seda', 'Y', 'export_seda', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (501, '', 'Valider la réception du courrier par le système d''archivage', 'ACK_SEDA', 'N', 'N', 'Y', 'ack_seda', 'Y', 'apps', 'N', NULL);
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'N', 'Y', 'reply_seda', 'Y', 'apps', 'N', NULL);
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'del_seda', 'Y', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (503, '', 'Supprimer courrier', 'DEL', 'N', 'N', 'Y', 'purge_letter', 'Y', 'apps', 'N', NULL);
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id, category_id) VALUES (504, '', 'Remise à zero du courrier', 'END', 'N', 'N', 'Y', 'reset_letter', 'Y', 'apps', 'N', NULL);
+
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 --ACTIONS_GROUPBASKETS
@@ -1275,8 +1284,10 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (4, '', 'ELU', 'DdeAvisBasket', 'N', 'N', 'Y');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (500, '', 'ARCHIVISTE', 'ToArcBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (501, '', 'ARCHIVISTE', 'SentArcBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (502, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (501, '', 'ARCHIVISTE', 'ToArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (502, '', 'ARCHIVISTE', 'SentArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (503, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (504, '', 'ARCHIVISTE', 'AckArcBasket', 'Y', 'N', 'N');
 ------------
 --GROUPBASKET_REDIRECT
 ------------
@@ -1480,67 +1491,63 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
-<p> </p>
-<p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
-<p> </p>
-<p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des nouveaux courriers présents dans cette bannette :</font></p>
-<p> </p>
-<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici la liste des nouveaux courriers pr&eacute###sents dans cette bannette :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
 <tbody>
 <tr>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Référence</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origine</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Emetteur</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Objet</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Liens</strong></font></td>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Origine</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Emetteur</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Type</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
 </tr>
 <tr>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
-<td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
-</td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
-<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
-<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.res_id]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.typist]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.subject]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.type_label]</td>
+<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+</table>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p><font face="verdana,geneva" size="2">Bonjour [recipient.firstname] [recipient.lastname], [recipient.text]</font></p>
+VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
 <p>&nbsp###</p>
-<p><font face="verdana,geneva" size="2"> </font></p>
-<p>&nbsp###</p>
-<p><font face="verdana,geneva" size="2">Voici la liste des notes pour les courriers suivants :</font></p>
-<p>&nbsp###</p>
-<table style="width: 982px### height: 77px###" border="1" cellspacing="3" cellpadding="3" frame="box">
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici les nouvelles annotations sur les courriers suivants :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
 <tbody>
 <tr>
-<td><strong>Reference</strong></td>
-<td><strong>Num</strong></td>
-<td><strong>Date</strong></td>
-<td><strong>Objet</strong></td>
-<td><strong>Note</strong></td>
-<td><strong>Ajout&eacute### par</strong></td>
-<td><strong>Contact</strong></td>
-<td><strong>Liens</strong></td>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Num</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Note</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Ajout&eacute### par</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Contact</th>
+<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
 </tr>
 <tr>
-<td>[notes.identifier]</td>
-<td>[notes.# ###frm=0000]</td>
-<td>[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
-<td>[notes.subject]</td>
-<td>[notes.note_text]</td>
-<td>[notes.user_id]</td>
-<td>[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
-<td><a href="[notes.linktodetail]" name="detail">d&eacute###tail</a> <a href="[notes.linktodoc]" name="doc">doc</a></td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.identifier]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.# ###frm=0000]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.subject]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.note_text]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.user_id]</td>
+<td style="border: 1px solid #ddd### padding: 8px###">[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
+<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
+</table>
+<p>&nbsp###</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (9, 'Demande - Voirie', 'Demande - Voirie', '<h2>Demande Intervention VOIRIE</h2>
 <hr />
 <table style="border: 1pt solid #000000### width: 597px### background-color: #f0f0f0### height: 172px###" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp###</caption>
@@ -1691,21 +1698,23 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --NOTIFICATIONS
 ------------
 TRUNCATE TABLE notifications;
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template)
-VALUES (1, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', 'http://localhost/maarch_entreprise');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (2, 'RET2', '2ie alerte sur courriers en retard', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (3, 'RET1', '1ère alerte sur courriers en retard', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (4, 'BASKETS', 'Notification de bannettes', '', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (5, 'ANC', 'Nouvelle annotation sur courrier en copie', 'noteadd', 'EMAIL', 8, '', 'copy_list', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (6, 'AND', 'Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
-VALUES (7, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties)
+VALUES (1, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (2, 'RET2', 'Courriers en retard de traitement', 'alert2', 'EMAIL', 5, 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (3, 'RET1', 'Courriers arrivant à échéance', 'alert1', 'EMAIL', 6, 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (4, 'BASKETS', 'Notification de bannettes', 'baskets', 'EMAIL', 7, 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (5, 'ANC', 'Nouvelle annotation sur courrier en copie', 'noteadd', 'EMAIL', 8, 'copy_list', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (6, 'AND', 'Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
+VALUES (7, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (template_id, notification_id, description, is_enabled, event_id, notification_mode, diffusion_type, diffusion_properties) SELECT template_id, 'QUOTA', 'Alerte lorsque le quota est dépassé', 'Y', 'user_quota', 'EMAIL', 'user', 'superadmin' FROM templates WHERE template_label = 'Quota d''utilisateur';
+
 Select setval('notifications_seq', (select max(notification_sid)+1 from notifications), false);
 
 ------------

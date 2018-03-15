@@ -11,7 +11,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["groups-administrationView"],
+    templateUrl: "../../../../Views/groups-administration.component.html",
     providers: [NotificationService]
 })
 export class GroupsAdministrationComponent implements OnInit {
@@ -127,7 +127,7 @@ export class GroupsAdministrationComponent implements OnInit {
     }
 }
 @Component({
-    templateUrl: angularGlobals["groups-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/groups-administration-redirect-modal.component.html"
 })
 export class GroupsAdministrationRedirectModalComponent {
     lang: any = LANG;

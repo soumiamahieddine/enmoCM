@@ -152,7 +152,7 @@ class EntityController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 33);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);

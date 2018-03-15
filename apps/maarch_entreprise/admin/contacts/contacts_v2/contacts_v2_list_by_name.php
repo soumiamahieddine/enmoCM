@@ -49,15 +49,17 @@ foreach ($args as $key => $value) {
 }
 echo "<ul id=\"autocomplete_contacts_ul\">";
 //STEP 1 : search with lastname (physical contact)
-    $query = "SELECT contact_type, society, lastname, firstname, function, contact_id, is_corporate_person, society_short FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND enabled = 'Y' ";
+    $query = "SELECT contact_id, contact_type, society, lastname, firstname, function, contact_id, is_corporate_person, society_short FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND enabled = 'Y' ";
     $query.= "AND (LOWER(translate(lastname || ' ' || firstname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
     $query.= "LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
     $query.= "OR (LOWER(translate(firstname || ' ' || lastname,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
     $query.= "LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
     $query.= "OR (LOWER(translate(function,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
     $query.= "LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
+    $query.= "OR (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))";
+    $query.= "LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')))";
     $query.= "ORDER BY lastname,firstname ASC";
-    $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
+    $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
     $stmt = $db->query($query, $arrayPDO);
     $nb_step1 = $stmt->rowCount();
     
@@ -71,23 +73,36 @@ echo "<ul id=\"autocomplete_contacts_ul\">";
 
         $res = $stmt->fetchObject();
 
+        $isSociety = false;
         if(!empty($res->society)){
-            $arr_contact_info = array($res->firstname,$res->lastname,'('.$res->society.')');
+            if($res->firstname === '' && $res->lastname === ''){
+                $arr_contact_info = array($res->firstname,$res->lastname,$res->society);
+                $isSociety = true;               
+            } else {
+                $arr_contact_info = array($res->firstname,$res->lastname,'('.$res->society.')');
+                $contact_info = implode(' ', $arr_contact_info);
+            }
         }else{
             $arr_contact_info = array($res->firstname,$res->lastname);
+            $contact_info = implode(' ', $arr_contact_info);
         }
-        $contact_info = implode(' ', $arr_contact_info);
 
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
 
-        echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
+        if($isSociety){
+            echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
+                . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
+            ."</li>";
+        } else {
+            echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
                 . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
             ."</li>";
+        }
     }
 
     //STEP 2 : search with society(physical contact)
-    $query = "SELECT contact_id,firstname,lastname,society FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society,lastname,firstname ASC";
+    /*$query = "SELECT contact_id,firstname,lastname,society FROM contacts_v2 WHERE is_corporate_person = 'N' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society,lastname,firstname ASC";
     $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
     $stmt = $db->query($query, $arrayPDO);
     $nb_step3 = $stmt->rowCount();
@@ -115,11 +130,11 @@ echo "<ul id=\"autocomplete_contacts_ul\">";
         echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-user fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='personne physique'></i> "
                 . '<span style="display:table-cell;vertical-align:middle;">' . str_replace($args, $args_bold, $contact_info) . '</span>'
             ."</li>";
-    }
+    }*/
     ///////////////////////
 
     //STEP 3 : search with society(corporate contact)
-    $query = "SELECT contact_id, society FROM contacts_v2 WHERE is_corporate_person = 'Y' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society ASC";
+    /*$query = "SELECT contact_id, society FROM contacts_v2 WHERE is_corporate_person = 'Y' AND enabled = 'Y' AND (LOWER(translate(society,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) OR LOWER(translate(society_short,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) LIKE LOWER(translate(?,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))) ORDER BY society ASC";
     $arrayPDO = array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%');
     $stmt = $db->query($query, $arrayPDO);
     $nb_step4 = $stmt->rowCount();
@@ -139,7 +154,7 @@ echo "<ul id=\"autocomplete_contacts_ul\">";
         echo "<li id='".$res->contact_id."' style='font-size:12px;background-color:$color;'><i class='fa fa-building fa-1x' style='padding:5px;display:table-cell;vertical-align:middle;' title='structure'></i> "
                 . '<span style="display:table-cell;vertical-align:middle;">'. str_replace($args, $args_bold, $res->society) .'</span>'
             ."</li>";
-    }
+    }*/
     ///////////////////////
 
     //STEP 4 : search with other informations (physical contact)

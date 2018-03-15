@@ -108,7 +108,15 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 
 //Initialize
-$app->post('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
+$app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
+
+//Actions
+$app->get('/actions', \Action\controllers\ActionController::class . ':get');
+$app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
+$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getById');
+$app->post('/actions', \Action\controllers\ActionController::class . ':create');
+$app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
+$app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Administration
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
@@ -227,6 +235,7 @@ $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::cla
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
 $app->get('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':getByUserWithEntityDest');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
+$app->put('/listTemplates/types/roles', \Entity\controllers\ListTemplateController::class . ':updateTypes');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -248,14 +257,6 @@ $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryControl
 
 //HistoryBatch
 $app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryBatchController::class . ':get');//TODO No date
-
-//actions
-$app->get('/actions', \Action\controllers\ActionController::class . ':get');
-$app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
-$app->get('/actions/{id}', \Action\controllers\ActionController::class . ':getById');
-$app->post('/actions', \Action\controllers\ActionController::class . ':create');
-$app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
-$app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
@@ -298,6 +299,7 @@ $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::clas
 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
+$app->get('/contact/checkCommunication/{contactId}', \Contact\controllers\ContactController::class . ':getCheckCommunication');
 
 //Templates
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');

@@ -12,8 +12,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["historyBatch-administrationView"],
-    styleUrls: [],
+    templateUrl: "../../../../Views/historyBatch-administration.component.html",
     providers: [NotificationService]
 })
 

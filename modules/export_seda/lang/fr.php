@@ -1,7 +1,10 @@
 <?php
 
-if (!defined("_EXPORTSEDA_COMMENT"))
+if (!defined("_EXPORT_SEDA_COMMENT"))
     define("_EXPORT_SEDA_COMMENT", "Export");
+if (!defined("_EXPORT_SEDA_LIST"))
+    define("_EXPORT_SEDA_LIST", "Liste des courriers à archiver");
+
 
 if (!defined("_EXPORT_SEDA"))
     define("_EXPORT_SEDA","Transferer vos courriers");
@@ -20,6 +23,15 @@ if (!defined("_EXPORT_SEDA_VIEW"))
 
 if (!defined("_INFORMATION_MESSAGE"))
     define("_INFORMATION_MESSAGE", "Information bordereau");
+
+if (!defined("_PACKAGE_TITLE"))
+    define("_PACKAGE_TITLE", "Titre du paquet");
+
+if (!defined("_GENERATE_MESSAGE"))
+    define("_GENERATE_MESSAGE", "Générer bordereau");
+
+if (!defined("_MESSAGE_TITLE_EMPTY"))
+    define("_MESSAGE_TITLE_EMPTY", "Titre du paquet vide");
 
 if (!defined("_MESSAGE_IDENTIFIER"))
     define("_MESSAGE_IDENTIFIER", "Identifiant bordereau");
@@ -80,14 +92,26 @@ if (!defined("_RECEIVED_MESSAGE"))
 if (!defined("_ERROR_MESSAGE"))
     define("_ERROR_MESSAGE", "Bordereau non-reçu");
 
-if (!defined("_TRANSFERRING_AGENCY_SIREN_COMPULSORY"))
-    define("_TRANSFERRING_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service versant obligatoire");
+if (!defined("_DIRECTORY_MESSAGE_REQUIRED"))
+    define("_DIRECTORY_MESSAGE_REQUIRED", "Répertoire des messages non configuré");
 
-if (!defined("_ARCHIVAL_AGENCY_SIREN_COMPULSORY"))
-    define("_ARCHIVAL_AGENCY_SIREN_COMPULSORY", "Numéro SIREN service d'archive obligatoire");
+if (!defined("_TRANSFERRING_AGENCY_SIREN_REQUIRED"))
+    define("_TRANSFERRING_AGENCY_SIREN_REQUIRED", "Numéro SIREN service versant obligatoire");
+
+if (!defined("_ARCHIVAL_AGENCY_SIREN_REQUIRED"))
+    define("_ARCHIVAL_AGENCY_SIREN_REQUIRED", "Numéro SIREN service d'archive obligatoire");
+
+if (!defined("_ARCHIVAL_AGREEMENT_REQUIRED"))
+    define("_ARCHIVAL_AGREEMENT_REQUIRED", "Convention d'archivage obligatoire");
 
 if (!defined("_VALIDATE_MANUAL_DELIVERY"))
     define("_VALIDATE_MANUAL_DELIVERY", "Valider l'envoi manuel du bordereau");
+
+if (!defined("_NO_LETTER_PURGE"))
+    define("_NO_LETTER_PURGE", "Aucun document à supprimer");
+
+if (!defined("_PURGE"))
+    define("_PURGE", "document(s) supprimé(s)");
 
 if (!defined("_ERROR_MESSAGE_ALREADY_SENT"))
     define("_ERROR_MESSAGE_ALREADY_SENT", "L'archivage d'un courrier sélectionné est déjà en cours, vous ne pouvez pas archiver deux fois le même courrier. Veuillez le désélectionner pour continuer. Numéro de courrier en cours d'archivage : ");
@@ -124,3 +148,21 @@ if (!defined("_LETTER_NO_ARCHIVED"))
 
 if (!defined("_ERROR_LETTER_ARCHIVED"))
     define("_ERROR_LETTER_ARCHIVED", "Vous ne pouvez pas remettre à zéro un courrier archivé. Numéro du courrier : ");
+
+if (!defined("_ERROR_ORIGINATOR_EMPTY"))
+    define("_ERROR_ORIGINATOR_EMPTY", "Au moins un producteur doit être renseigné");
+
+if (!defined("_ERROR_FILE_NOT_EXIST"))
+    define("_ERROR_FILE_NOT_EXIST", "Tous les documents doivent être présent dans les zones de stockage");
+
+if (!defined("_ERROR_REPLY_NOT_EXIST"))
+    define("_ERROR_REPLY_NOT_EXIST", "La réponse au transfert doit être présente pour effectuer une action. Numéro du courrier : ");
+
+if (!defined("_ERROR_EXTENSION_CERTIFICATE"))
+    define("_ERROR_EXTENSION_CERTIFICATE", "Le certificat n'est pas dans le bon format (.crt ou .pem)");
+
+if (!defined("_ERROR_UNKNOW_CERTIFICATE"))
+    define("_ERROR_UNKNOW_CERTIFICATE", "Erreur avec le certificat SSL ou TLS.");
+
+if (!defined("_UNKNOWN_TARGET"))
+    define("_UNKNOWN_TARGET", "Cible inconnue");

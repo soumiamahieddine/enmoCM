@@ -4,11 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { startWith } from 'rxjs/operators/startWith';
-import { map } from 'rxjs/operators/map';
-
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
@@ -17,7 +12,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["update-status-administrationView"],
+    templateUrl: "../../../../Views/update-status-administration.component.html",
     providers: [NotificationService]
 })
 export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {

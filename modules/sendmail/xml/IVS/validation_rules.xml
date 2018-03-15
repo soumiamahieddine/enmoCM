@@ -1,7 +1,7 @@
 <validationRules>
 	<validationRule name="sendmail_ajax_content" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="id" type="integer" />
+		<parameter name="id" type="base64" />
 		<parameter name="identifier" type="integer" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
@@ -27,6 +27,9 @@
 		<parameter name="templateMail" type="integer" />
 		<parameter name="selectSignatures" type="string" />
 		<parameter name="action" type="string" />
+		<parameter name="formContent" type="string" />
+		<parameter name="main_exchange_doc" type="string" />
+		<parameter name="contactAddress" type="integer" />
 	</validationRule>
 
 	<validationRule name="mail_form" extends="standardForm" mode="error">
@@ -34,8 +37,9 @@
 		<parameter name="identifier" type="integer" />
 		<parameter name="origin" type="identifier" />
 		<parameter name="coll_id" type="collection_list" />
-		<parameter name="id" type="integer" />
+		<parameter name="id" type="base64" />
 		<parameter name="size" type="size" />
+		<parameter name="formContent" type="string" />
 	</validationRule>
 
 	<validationRule name="sendmail" extends="standardForm" mode="error">
@@ -52,5 +56,3 @@
 	</validationRule>
 
 </validationRules>
-
-

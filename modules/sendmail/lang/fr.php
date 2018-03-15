@@ -28,7 +28,7 @@ if (!defined("_EMAIL_LIST"))
 if (!defined("_EMAIL_LIST_DESC"))
     define("_EMAIL_LIST_DESC", "Liste des courriels");
 if (!defined("_SENDED_EMAILS"))
-    define("_SENDED_EMAILS", "Courriels");
+    define("_SENDED_EMAILS", "Eléments envoyés");
  
 //STATUS
 if (!defined("_EMAIL_DRAFT"))
@@ -82,6 +82,20 @@ if (!defined("_EMAIL_NOT_EXIST"))
 //ADD
 if (!defined("_NEW_EMAIL"))
     define("_NEW_EMAIL","Nouveau message");
+if (!defined("_NEW_NUMERIC_PACKAGE"))
+    define("_NEW_NUMERIC_PACKAGE","Nouveau pli numérique");
+if (!defined("_NUMERIC_PACKAGE_ADDED"))
+    define("_NUMERIC_PACKAGE_ADDED","Pli numérique ajouté");
+if (!defined("_NUMERIC_PACKAGE_IMPORTED"))
+    define("_NUMERIC_PACKAGE_IMPORTED","Pli numérique importé");
+if (!defined("_NUMERIC_PACKAGE_SENT"))
+    define("_NUMERIC_PACKAGE_SENT","Plis numériques envoyés");
+if (!defined("_NUMERIC_PACKAGE"))
+    define("_NUMERIC_PACKAGE","Pli numérique");
+if (!defined("_NO_COMMUNICATION_MODE"))
+    define("_NO_COMMUNICATION_MODE","Aucun moyen de communication");
+if (!defined("_NOTHING"))
+    define("_NOTHING","Aucun");
 if (!defined("_CREATE_EMAIL"))
     define("_CREATE_EMAIL", "Créer");
 if (!defined("_EMAIL_ADDED"))
@@ -127,7 +141,7 @@ if (!defined("_EMAIL_REMOVED"))
 
 
 if (!defined("_Label_ADD_TEMPLATE_MAIL"))
-    define("_Label_ADD_TEMPLATE_MAIL", "Modèle : ");
+    define("_Label_ADD_TEMPLATE_MAIL", "Modèle d'accompagnement : ");
 if (!defined("_ADD_TEMPLATE_MAIL"))
     define("_ADD_TEMPLATE_MAIL", "Sélectionnez le modèle désiré");
 
@@ -139,3 +153,37 @@ if (!defined("_USE_MAIL_SERVICES_DESC"))
     define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
 if (!defined("_INCORRECT_SENDER"))
     define("_INCORRECT_SENDER", "Expéditeur inccorect");
+if (!defined("_OPERATION_DATE"))
+    define("_OPERATION_DATE", "Date de prise en charge");
+if (!defined("_RECEPTION_DATE"))
+    define("_RECEPTION_DATE", "Date de réception");
+
+if (!defined("_SENDS_FAIL"))
+    define("_SENDS_FAIL", "L'envoi a échoué");
+if (!defined("_WRONG_FILE_TYPE_M2M"))
+    define("_WRONG_FILE_TYPE_M2M", "Seuls les fichiers ZIP sont acceptés");
+if (!defined("_ERROR_RECEIVE_FAIL"))
+    define("_ERROR_RECEIVE_FAIL", "Erreur lors de l'envoi du zip.");
+
+if (!defined("_ERROR_CONTACT_UNKNOW"))
+    define("_ERROR_CONTACT_UNKNOW", "Contact inconnu.");
+if (!defined("_NO_RECIPIENT"))
+    define("_NO_RECIPIENT", "Aucun destinataire");
+if (!defined("_NO_SENDER"))
+    define("_NO_SENDER", "Aucun expéditeur");
+if (!defined("_SIMPLE_DOWNLOAD"))
+    define("_SIMPLE_DOWNLOAD", "Télécharger");
+if (!defined("_MORE_INFORMATIONS"))
+    define("_MORE_INFORMATIONS", "Informations sur le transfert");
+if (!defined("_REPLY_RESPONSE_SENT"))
+    define("_REPLY_RESPONSE_SENT", "Accusé de prise en charge envoyé le");
+if (!defined("_M2M_ARCHIVETRANSFER"))
+    define("_M2M_ARCHIVETRANSFER", "Pli numérique");
+if (!defined("_M2M_ARCHIVETRANSFERREPLYSENT"))
+    define("_M2M_ARCHIVETRANSFERREPLYSENT", "Réponse envoyée");
+if (!defined("_M2M_ACTION_DONE"))
+    define("_M2M_ACTION_DONE", "actionné par");
+if (!defined("_M2M_ENTITY_DESTINATION"))
+    define("_M2M_ENTITY_DESTINATION", "Le courrier est dans le service");
+if (!defined("_M2M_FOLLOWUP_REQUEST"))
+    define("_M2M_FOLLOWUP_REQUEST", "Suivi de la demande");

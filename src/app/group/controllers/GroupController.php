@@ -49,7 +49,7 @@ class GroupController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['group_id']) && preg_match("/^[\w-]*$/", $data['group_id']) && (strlen($data['group_id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['group_id']) && preg_match("/^[\w-]*$/", $data['group_id']) && (strlen($data['group_id']) < 33);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['group_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['security']['where_clause']);
         if (!$check) {
