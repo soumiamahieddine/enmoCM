@@ -23,6 +23,18 @@
                 </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>Role(s) disponible(s)</h3>
+                <a mat-list-item *ngFor="let role of currentEntity.roles; let i = index">
+                    <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                        <mat-slide-toggle [(ngModel)]="role.available" [checked]="role.available" color="primary" [ngStyle]="{'opacity': role.available ? '' : '0.5'}" (change)="toggleRole(role)"></mat-slide-toggle>
+                    </mat-icon>
+                    <p mat-line>
+                        {{role.label}}
+                    </p>
+                </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
             <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -204,7 +216,7 @@
                                 </mat-form-field>
                                 <mat-list>
                                     <span *ngFor="let role of currentEntity.roles; let i = index">
-                                        <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary"><mat-slide-toggle [checked]="role.available" color="primary" [ngStyle]="{'opacity': role.available ? '' : '0.5'}">{{role.label}}</mat-slide-toggle></h3>
+                                        <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary">{{role.label}}</h3>
                                         <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
                                             <div style="min-height:30px;">
                                                 <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="{{lang.move}}"

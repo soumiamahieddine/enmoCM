@@ -611,6 +611,15 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 });
         }
     }
+
+    toggleRole(role:any) {
+        this.http.put(this.coreUrl + "rest/listTemplates/types/roles",{"roles":this.currentEntity.roles,"typeId":"entity_id"})
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.entityUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
 }
 @Component({
     templateUrl: "../../../../Views/entities-administration-redirect-modal.component.html"
