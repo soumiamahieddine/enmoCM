@@ -291,14 +291,13 @@ class ListTemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-
         $roles = '';
         foreach ($data['roles'] as $role) {
             if ($role['available'] === true) {
                 if ($role['id'] == 'cc') {
                     $role['id'] = 'copy';
                 }
-                
+
                 if (!empty($roles)) {
                     $roles .= ' ';
                 }
@@ -311,6 +310,17 @@ class ListTemplateController
             'where' => ['difflist_type_id = ?'],
             'data'  => [$data['typeId']]
         ]);
+        if (empty($roles)) {
+            ListTemplateModel::delete([
+                'where' => ['object_type = ?'],
+                'data'  => [$data['typeId']]
+            ]);
+        } else {
+            ListTemplateModel::delete([
+                'where' => ['object_type = ?', 'item_mode not in (?)'],
+                'data'  => [$data['typeId'], explode(' ', $roles)]
+            ]);
+        }
 
         return $response->withJson(['success' => 'success']);
     }

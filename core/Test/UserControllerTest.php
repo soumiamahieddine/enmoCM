@@ -28,7 +28,7 @@ class UserControllerTest extends TestCase
 
 
         $this->assertInternalType('array', $responseBody->users);
-        $this->assertNotEmpty('array', $responseBody->users);
+        $this->assertNotEmpty($responseBody->users);
     }
 
     public function testCreate()
