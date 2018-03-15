@@ -81,6 +81,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     suspendUser(user: any) {
         if (user.inDiffListDest == 'Y') {
+            user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
@@ -168,6 +169,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     deleteUser(user: any) {
         if (user.inDiffListDest == 'Y') {
+            user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
