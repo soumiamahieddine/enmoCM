@@ -18,9 +18,9 @@ class AdapterMaarchCourrier{
 
         $messageObject = json_decode($message->data);
 
-        $docserver     = \Docserver\models\DocserverModel::getById(['docserver_id' => $message->docserver_id]);
+        $docserver     = \Docserver\models\DocserverModel::getById(['id' => $message->docserver_id]);
         $docserverType = \Docserver\models\DocserverTypeModel::getById(
-            ['docserver_type_id' => $docserver[0]['docserver_type_id']]
+            ['id' => $docserver[0]['docserver_type_id']]
         );
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message->path);
