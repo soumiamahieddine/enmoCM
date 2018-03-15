@@ -105,7 +105,7 @@ if (!empty($tab)) {
                     $tab[$i][$j]["show"]      = false;
                 }
                 if ($tab[$i][$j][$value]=="account_id") {
-                    $userInfo = \User\models\UserModel::getById(['id' => $tab[$i][$j]["value"]]);
+                    $userInfo = \User\models\UserModel::getByUserId(['userId' => $tab[$i][$j]["value"]]);
                     $tab[$i][$j]["value"]       = $userInfo['firstname'] . " " . $userInfo['lastname'] . " (".$sender_org_name.")";
                     $tab[$i][$j]["label"]       = _SENDER;
                     $tab[$i][$j]["size"]        = "20";

@@ -153,13 +153,13 @@ while ($state <> 'END') {
                 $messageExchange = $smtp->fetchObject();
 
                 $docserver     = \Docserver\models\DocserverModel::getById(['id' => $messageExchange->docserver_id]);
-                $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver[0]['docserver_type_id']]);
+                $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
                 $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange->path);
-                $filePath      = $docserver[0]['path_template'] . $pathDirectory . $messageExchange->filename;
+                $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange->filename;
                 $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
                     'filePath' => $filePath,
-                    'mode'     => $docserverType[0]['fingerprint_mode'],
+                    'mode'     => $docserverType['fingerprint_mode'],
                 ]);
 
                 if ($fingerprint['fingerprint'] != $messageExchange->fingerprint) {

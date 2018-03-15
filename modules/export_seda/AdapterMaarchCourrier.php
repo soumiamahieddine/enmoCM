@@ -2,8 +2,8 @@
 
 require_once __DIR__. DIRECTORY_SEPARATOR. 'RequestSeda.php';
 
-class AdapterMaarchCourrier{
-
+class AdapterMaarchCourrier
+{
     private $db;
     public function __construct()
     {
@@ -20,14 +20,14 @@ class AdapterMaarchCourrier{
 
         $docserver     = \Docserver\models\DocserverModel::getById(['id' => $message->docserver_id]);
         $docserverType = \Docserver\models\DocserverTypeModel::getById(
-            ['id' => $docserver[0]['docserver_type_id']]
+            ['id' => $docserver['docserver_type_id']]
         );
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message->path);
-        $filePath      = $docserver[0]['path_template'] . $pathDirectory . $message->filename;
+        $filePath      = $docserver['path_template'] . $pathDirectory . $message->filename;
         $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
-            'filePath'              => $filePath,
-            'mode'                  => $docserverType[0]['fingerprint_mode'],
+            'filePath' => $filePath,
+            'mode'     => $docserverType['fingerprint_mode'],
         ]);
 
         if ($fingerprint['fingerprint'] != $message->fingerprint) {

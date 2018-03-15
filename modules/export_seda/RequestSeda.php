@@ -476,7 +476,7 @@ class RequestSeda
             ];
 
             $ds          =  new docservers_controler();
-            $storeResult = $ds->storeResourceOnDocserver('archive_transfer_coll', $aFileInfo);
+            $storeResult = $ds->storeResourceOnDocserver('archive_transfer_coll', $aFileInfo['fileInfos']);
             if(!empty($storeResult['error'])){
                 var_dump($storeResult['error']);
             }
@@ -486,12 +486,12 @@ class RequestSeda
             $docserver     = \Docserver\models\DocserverModel::getById(['id' => $docserver_id]);
 
             $docserverType = \Docserver\models\DocserverTypeModel::getById(
-                ['id' => $docserver[0]['docserver_type_id']]
+                ['id' => $docserver['docserver_type_id']]
             );
 
             $fingerprint = \SrcCore\controllers\StoreController::getFingerPrint([
-                'filePath'              => $filePath,
-                'mode'                  => $docserverType[0]['fingerprint_mode'],
+                'filePath' => $filePath,
+                'mode'     => $docserverType['fingerprint_mode'],
             ]);
 
         }

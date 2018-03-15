@@ -589,13 +589,13 @@ switch ($mode) {
         $messageExchangeData = $RequestSeda->getMessageByIdentifierAndResId(['message_id' => $_GET['id'], 'res_id_master' => $_GET['identifier']]);
 
         $docserver     = \Docserver\models\DocserverModel::getById(['id' => $messageExchangeData->docserver_id]);
-        $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver[0]['docserver_type_id']]);
+        $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchangeData->path);
-        $filePath      = $docserver[0]['path_template'] . $pathDirectory . $messageExchangeData->filename;
+        $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchangeData->filename;
         $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
             'filePath' => $filePath,
-            'mode'     => $docserverType[0]['fingerprint_mode'],
+            'mode'     => $docserverType['fingerprint_mode'],
         ]);
 
         if ($fingerprint['fingerprint'] != $messageExchangeData->fingerprint) {
