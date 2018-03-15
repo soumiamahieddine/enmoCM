@@ -14,8 +14,6 @@
 
 namespace SrcCore\models;
 
-use User\models\UserModel;
-
 class SecurityModel
 {
     public static function getPasswordHash($password)
