@@ -585,6 +585,15 @@ class UserControllerTest extends TestCase
         $checkPassword = \SrcCore\models\SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'superadmin']);
 
         $this->assertSame(true, $checkPassword);
+
+        \SrcCore\models\DatabaseModel::update([
+            'table'     => 'users',
+            'set'       => [
+                'change_password'   => 'N'
+            ],
+            'where'     => ['user_id = ?'],
+            'data'      => [$GLOBALS['userId']]
+        ]);
     }
 
     public function testUpdateProfile()
@@ -615,6 +624,35 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('superadmin', $responseBody->user_id);
         $this->assertSame('Wonder', $responseBody->firstname);
+        $this->assertSame('User', $responseBody->lastname);
+        $this->assertSame('dev@maarch.org', $responseBody->mail);
+        $this->assertSame('SU', $responseBody->initials);
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'firstname' => 'Super',
+            'lastname'  => 'Admin',
+            'mail'      => 'dev@maarch.org',
+            'initials'  => 'SU'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getProfile($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('superadmin', $responseBody->user_id);
+        $this->assertSame('Super', $responseBody->firstname);
+        $this->assertSame('Admin', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
     }
