@@ -383,5 +383,12 @@ export const LANG_EN = {
     "addFirstLevel"                     : "Add first level",
     "addSecondLevel"                    : "Add second level",
     "addDoctype"                        : "Add document type",
+    "passwordUpdated"                   : "Password updated",
+    "emailSignatureAdded"               : "Email signature added",
+    "emailSignatureUpdated"             : "Email signature updated",
+    "emailSignatureDeleted"             : "Email signature deleted",
+    "signatureAdded"                    : "Signature added",
+    "signatureUpdated"                  : "Signature updated",
+    "signatureDeleted"                  : "Signature deleted",
 
 };

@@ -408,4 +408,11 @@ export const LANG_FR = {
     "addFirstLevel"                     : "Ajouter une chemise",
     "addSecondLevel"                    : "Ajouter une sous-chemise",
     "addDoctype"                        : "Ajouter un type de document",
+    "passwordUpdated"                   : "Mot de passe modifié",
+    "emailSignatureAdded"               : "Signature de mail ajoutée",
+    "emailSignatureUpdated"             : "Signature de mail modifiée",
+    "emailSignatureDeleted"             : "Signature de mail supprimée",
+    "signatureAdded"                    : "Signature ajoutée",
+    "signatureUpdated"                  : "Signature mise à jour",
+    "signatureDeleted"                  : "Signature supprimée",
 };
