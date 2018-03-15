@@ -69,6 +69,17 @@ export class SignatureBookComponent implements OnInit {
 
 
     constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
+        
+        $j("head style").remove();
+        if ($j("link[href='merged_css.php']").length == 0) {
+            var head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'merged_css.php';
+            link.type = 'text/css';
+            link.media = 'screen';
+            head.insertBefore(link,head.children[5])
+        }
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction(),
