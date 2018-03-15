@@ -193,7 +193,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function resetPassword(array $aArgs = [])
+    public static function resetPassword(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -201,7 +201,8 @@ class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'  => SecurityModel::getPasswordHash('maarch')
+                'password'          => SecurityModel::getPasswordHash('maarch'),
+                'change_password'   => 'Y',
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
