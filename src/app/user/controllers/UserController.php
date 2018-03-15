@@ -533,18 +533,12 @@ class UserController
 
     public function deleteCurrentUserEmailSignature(Request $request, Response $response, array $aArgs)
     {
-        $r = UserModel::deleteEmailSignature([
+        UserModel::deleteEmailSignature([
             'id'        => $aArgs['id'],
             'userId'    => $GLOBALS['userId']
         ]);
 
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Delete Error']);
-        }
-
-        return $response->withJson([
-            'emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])
-        ]);
+        return $response->withJson(['emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])]);
     }
 
     public function addGroup(Request $request, Response $response, array $aArgs)
@@ -592,7 +586,6 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
             'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
@@ -657,7 +650,6 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
             'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }

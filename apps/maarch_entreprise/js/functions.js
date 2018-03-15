@@ -1813,7 +1813,7 @@ function checkCommunication(contactId){
     }
 
     $j.ajax({
-        url      : '../../rest/contact/checkCommunication/'+contactId,
+        url      : '../../rest/contacts/' +contactId+ '/communication',
         type     : 'get',
         data: {
         },

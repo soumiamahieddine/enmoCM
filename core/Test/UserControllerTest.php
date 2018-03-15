@@ -15,6 +15,22 @@ class UserControllerTest extends TestCase
     private static $id = null;
 
 
+    public function testGet()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->get($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+
+        $this->assertInternalType('array', $responseBody->users);
+        $this->assertNotEmpty('array', $responseBody->users);
+    }
+
     public function testCreate()
     {
         $userController = new \User\controllers\UserController();
@@ -96,6 +112,261 @@ class UserControllerTest extends TestCase
         $this->assertSame(null, $responseBody->thumbprint);
     }
 
+    public function testAddGroup()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'groupId'   => 'AGENT',
+            'role'      => 'Douche'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertInternalType('array', $responseBody->baskets);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
+        $this->assertSame('Douche', $responseBody->groups[0]->role);
+    }
+
+    public function testUpdateGroup()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'role'      => 'role updated'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'groupId' => 'AGENT']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
+        $this->assertSame('role updated', $responseBody->groups[0]->role);
+    }
+
+    public function testDeleteGroup()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->deleteGroup($request, new \Slim\Http\Response(), ['id' => self::$id, 'groupId' => 'AGENT']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertEmpty($responseBody->groups);
+        $this->assertInternalType('array', $responseBody->baskets);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertEmpty($responseBody->groups);
+    }
+
+    public function testAddEntity()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'entityId'  => 'DGS',
+            'role'      => 'Warrior'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertInternalType('array', $responseBody->allEntities);
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'entityId'  => 'FIN',
+            'role'      => 'Hunter'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertInternalType('array', $responseBody->allEntities);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertSame('DGS', $responseBody->entities[0]->entity_id);
+        $this->assertSame('Warrior', $responseBody->entities[0]->user_role);
+        $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
+        $this->assertSame('FIN', $responseBody->entities[1]->entity_id);
+        $this->assertSame('Hunter', $responseBody->entities[1]->user_role);
+        $this->assertSame('N', $responseBody->entities[1]->primary_entity);
+    }
+
+    public function testUpdateEntity()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'user_role'      => 'Rogue'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertSame('DGS', $responseBody->entities[0]->entity_id);
+        $this->assertSame('Rogue', $responseBody->entities[0]->user_role);
+        $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
+    }
+
+    public function testUpdatePrimaryEntity()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->updatePrimaryEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertSame('FIN', $responseBody->entities[0]->entity_id);
+        $this->assertSame('Hunter', $responseBody->entities[0]->user_role);
+        $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
+        $this->assertSame('DGS', $responseBody->entities[1]->entity_id);
+        $this->assertSame('Rogue', $responseBody->entities[1]->user_role);
+        $this->assertSame('N', $responseBody->entities[1]->primary_entity);
+    }
+
+    public function testDeleteEntity()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertInternalType('array', $responseBody->allEntities);
+
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertEmpty($responseBody->entities);
+        $this->assertInternalType('array', $responseBody->allEntities);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertEmpty($responseBody->entities);
+    }
+
+    public function testUpdateStatus()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'status'    => 'ABS'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateStatus($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('ABS', $responseBody->user->status);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(self::$id, $responseBody->id);
+        $this->assertSame('ABS', $responseBody->status);
+    }
+
     public function testRead()
     {
         $userController = new \User\controllers\UserController();
@@ -109,7 +380,7 @@ class UserControllerTest extends TestCase
             'param_value_int'       => 0
         ];
         $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+        $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
 
         // READ in case of deactivated user_quota
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -129,7 +400,7 @@ class UserControllerTest extends TestCase
             'param_value_int'       => 20
         ];
         $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+        $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
 
         // READ in case of enabled user_quotat
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -217,7 +488,7 @@ class UserControllerTest extends TestCase
             'param_value_int'       => 0
         ];
         $fullRequest    = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response       = $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
+        $parameterController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'user_quota']);
     }
 
     public function testDelete()
@@ -257,4 +528,94 @@ class UserControllerTest extends TestCase
         ]);
     }
 
+    public function testPasswordManagement()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE PASSWORD
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'currentPassword'   => 'superadmin',
+            'newPassword'       => 'hcraam',
+            'reNewPassword'     => 'hcraam'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateCurrentUserPassword($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        $checkPassword = \SrcCore\models\SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'hcraam']);
+
+        $this->assertSame(true, $checkPassword);
+
+        //  RESET PASSWORD
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $user = \User\models\UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+        $response     = $userController->resetPassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        $checkPassword = \SrcCore\models\SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'maarch']);
+
+        $this->assertSame(true, $checkPassword);
+
+        //  UPDATE PASSWORD
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'currentPassword'   => 'maarch',
+            'newPassword'       => 'superadmin',
+            'reNewPassword'     => 'superadmin'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateCurrentUserPassword($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        $checkPassword = \SrcCore\models\SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'superadmin']);
+
+        $this->assertSame(true, $checkPassword);
+    }
+
+    public function testUpdateProfile()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'firstname' => 'Wonder',
+            'lastname'  => 'User',
+            'mail'      => 'dev@maarch.org',
+            'initials'  => 'SU'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getProfile($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('superadmin', $responseBody->user_id);
+        $this->assertSame('Wonder', $responseBody->firstname);
+        $this->assertSame('dev@maarch.org', $responseBody->mail);
+        $this->assertSame('SU', $responseBody->initials);
+    }
 }

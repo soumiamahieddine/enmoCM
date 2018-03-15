@@ -122,7 +122,7 @@ class ReceiveMessageExchangeController
         if (!empty($userBaskets)) {
             foreach ($userBaskets as $value) {
                 if ($value['basket_id'] == $aDefaultConfig['basketRedirection_afterUpload'][0]) {
-                    $userGroups = UserModel::getGroupsById(['userId' => $_SESSION['user']['UserId']]);
+                    $userGroups = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
                     foreach ($userGroups as $userGroupValue) {
                         if ($userGroupValue['primary_group'] == 'Y') {
                             $userPrimaryGroup = $userGroupValue['group_id'];
