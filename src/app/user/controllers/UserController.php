@@ -292,7 +292,7 @@ class UserController
             }
         }
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
@@ -306,7 +306,7 @@ class UserController
 
         BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
