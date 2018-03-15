@@ -65,6 +65,14 @@ export class ProfileComponent implements OnInit {
 
 
     constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
+        var head = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'merged_css.php';
+        link.type = 'text/css';
+        link.media = 'screen';
+        head.insertBefore(link,head.children[5])
+
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -123,6 +131,7 @@ export class ProfileComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
+        console.log(this.coreUrl);
         this.loading = true;
 
         this.http.get('../../rest/currentUser/profile')
