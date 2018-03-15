@@ -295,6 +295,10 @@ class ListTemplateController
         $roles = '';
         foreach ($data['roles'] as $role) {
             if ($role['available'] === true) {
+                if ($role['id'] == 'cc') {
+                    $role['id'] = 'copy';
+                }
+                
                 if (!empty($roles)) {
                     $roles .= ' ';
                 }
