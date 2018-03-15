@@ -30,6 +30,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     config                          : any       = {};
     userDestRedirect                : any       = {};
     userDestRedirectModels          : any[]     = [];
+    quota                           : any       = {};
 
     dataSource          = new MatTableDataSource(this.data);
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
@@ -62,6 +63,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
                 this.data = data['users'];
+                this.quota = data['quota'];
+                if (this.quota.actives > this.quota.userQuota) {
+                    this.notify.error(this.lang.quotaExceeded);
+                }
+
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
@@ -97,6 +103,10 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             .subscribe(() => {
                                                 user.inDiffListDest = 'N';
                                                 this.notify.success(this.lang.userSuspended);
+                                                if (this.quota.userQuota) {
+                                                    this.quota.inactives++;
+                                                    this.quota.actives--;
+                                                }
 
                                             }, (err) => {
                                                 user.enabled = 'Y';
@@ -122,6 +132,10 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(() => {
                         this.notify.success(this.lang.userSuspended);
+                        if (this.quota.userQuota) {
+                            this.quota.inactives++;
+                            this.quota.actives--;
+                        }
                     }, (err) => {
                         user.enabled = 'Y';
                         this.notify.error(err.error.errors);
@@ -138,6 +152,13 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(() => {
                     this.notify.success(this.lang.userAuthorized);
+                    if (this.quota.userQuota) {
+                        this.quota.inactives--;
+                        this.quota.actives++;
+                        if (this.quota.actives > this.quota.userQuota) {
+                            this.notify.error(this.lang.quotaExceeded);
+                        }
+                    }
                 }, (err) => {
                     user.enabled = 'N';
                     this.notify.error(err.error.errors);
@@ -174,6 +195,12 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                 this.dataSource.paginator = this.paginator;
                                                 this.dataSource.sort = this.sort;
 
+                                                if (this.quota.userQuota && user.enabled == 'Y') {
+                                                    this.quota.actives--;
+                                                } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                    this.quota.inactives--;
+                                                }
+
                                                 this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
                                             }, (err) => {
@@ -204,6 +231,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                         this.notify.success(this.lang.userDeleted);
+                        if (this.quota.userQuota && user.enabled == 'Y') {
+                            this.quota.actives--;
+                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                            this.quota.inactives--;
+                        }
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });

@@ -328,5 +328,9 @@ exports.LANG_EN = {
     "tooltipPriorityDelay": "Use this processing time instead of the one defined in the document type",
     "tooltipPriorityDefault": "Set this priority by default when saving a mail",
     "defaultPriority": "Default priority",
+    'quota': 'Quota',
+    'actives': 'Active(s)',
+    'inactives': 'Inactive(s)',
+    'quotaExceeded': 'Quota exceeded'
     "chooseColor": "Choose a color",
 };

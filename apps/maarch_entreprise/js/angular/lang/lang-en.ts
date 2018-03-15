@@ -375,5 +375,10 @@ export const LANG_EN = {
     "tooltipPriorityDefault"            : "Set this priority by default when saving a mail",
     "defaultPriority"                   : "Default priority",
     "chooseColor"                       : "Choose a color",
-    "wednesday"                         : "Wednesday"
+    "wednesday"                         : "Wednesday",
+    'quota'                             : 'Quota',
+    'actives'                           : 'Active(s)',
+    'inactives'                         : 'Inactive(s)',
+    'quotaExceeded'                     : 'Quota exceeded'
+
 };

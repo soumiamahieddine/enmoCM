@@ -42,6 +42,7 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         _this.config = {};
         _this.userDestRedirect = {};
         _this.userDestRedirectModels = [];
+        _this.quota = {};
         _this.dataSource = new material_1.MatTableDataSource(_this.data);
         _this.displayedColumns = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
         $j("link[href='merged_css.php']").remove();
@@ -65,6 +66,10 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe(function (data) {
             _this.data = data['users'];
+            _this.quota = data['quota'];
+            if (_this.quota.actives > _this.quota.userQuota) {
+                _this.notify.error(_this.lang.quotaExceeded);
+            }
             _this.loading = false;
             setTimeout(function () {
                 _this.dataSource = new material_1.MatTableDataSource(_this.data);
@@ -101,6 +106,10 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                                     .subscribe(function () {
                                     user.inDiffListDest = 'N';
                                     _this.notify.success(_this.lang.userSuspended);
+                                    if (_this.quota.userQuota) {
+                                        _this.quota.inactives++;
+                                        _this.quota.actives--;
+                                    }
                                 }, function (err) {
                                     user.enabled = 'Y';
                                     _this.notify.error(err.error.errors);
@@ -124,6 +133,10 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(function () {
                     _this.notify.success(_this.lang.userSuspended);
+                    if (_this.quota.userQuota) {
+                        _this.quota.inactives++;
+                        _this.quota.actives--;
+                    }
                 }, function (err) {
                     user.enabled = 'Y';
                     _this.notify.error(err.error.errors);
@@ -139,6 +152,13 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(function () {
                 _this.notify.success(_this.lang.userAuthorized);
+                if (_this.quota.userQuota) {
+                    _this.quota.inactives--;
+                    _this.quota.actives++;
+                    if (_this.quota.actives > _this.quota.userQuota) {
+                        _this.notify.error(_this.lang.quotaExceeded);
+                    }
+                }
             }, function (err) {
                 user.enabled = 'N';
                 _this.notify.error(err.error.errors);
@@ -175,6 +195,12 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                                     _this.dataSource = new material_1.MatTableDataSource(_this.data);
                                     _this.dataSource.paginator = _this.paginator;
                                     _this.dataSource.sort = _this.sort;
+                                    if (_this.quota.userQuota && user.enabled == 'Y') {
+                                        _this.quota.actives--;
+                                    }
+                                    else if (_this.quota.userQuota && user.enabled == 'N') {
+                                        _this.quota.inactives--;
+                                    }
                                     _this.notify.success(_this.lang.userDeleted + ' « ' + user.user_id + ' »');
                                 }, function (err) {
                                     _this.notify.error(err.error.errors);
@@ -203,6 +229,12 @@ var UsersAdministrationComponent = /** @class */ (function (_super) {
                     _this.dataSource.paginator = _this.paginator;
                     _this.dataSource.sort = _this.sort;
                     _this.notify.success(_this.lang.userDeleted);
+                    if (_this.quota.userQuota && user.enabled == 'Y') {
+                        _this.quota.actives--;
+                    }
+                    else if (_this.quota.userQuota && user.enabled == 'N') {
+                        _this.quota.inactives--;
+                    }
                 }, function (err) {
                     _this.notify.error(err.error.errors);
                 });

@@ -40,4 +40,8 @@
         <id>diffsignuser</id>
         <label>VISA courrier a signer par utilisateur</label>
     </event_type>
+    <event_type>
+        <id>user_quota</id>
+        <label>Quota</label>
+    </event_type>
 </root>

@@ -93,7 +93,11 @@ while ($state != 'END') {
                         $recipient = $recipients[$i];
                         $entity_id = $recipient->entity_id;
                         $logger->write('Recipient entity '.$entity_id, 'INFO');
-                        if ($recipient->enabled != 'Y' || $recipient->mail == '') {
+
+                        $db = new Database();
+                        $query = 'SELECT param_value_int FROM parameters WHERE id = ?';
+                        $stmt = $db -> query($query, array('user_quota'));
+                        if (($recipient->enabled == 'N' AND $stmt -> fetchColumn() == 0) || $recipient->mail == '') {
                             $logger->write($entity_id.' is disabled or mail is invalid, this notification will not be send', 'INFO');
                             unset($recipients[$i]);
                             continue;
@@ -109,7 +113,11 @@ while ($state != 'END') {
                         $recipient = $recipients[$i];
                         $user_id = $recipient->user_id;
                         $logger->write('Recipient '.$user_id, 'INFO');
-                        if ($recipient->enabled == 'N' || $recipient->status == 'DEL') {
+
+                        $db = new Database();
+                        $query = 'SELECT param_value_int FROM parameters WHERE id = ?';
+                        $stmt = $db -> query($query, array('user_quota'));
+                        if (($recipient->enabled == 'N' AND $stmt -> fetchColumn() == 0) || $recipient->status == 'DEL') {
                             $logger->write($user_id.' is disabled or deleted, this notification will not be send', 'INFO');
                             unset($recipients[$i]);
                             continue;

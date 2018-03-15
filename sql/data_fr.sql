@@ -1689,6 +1689,8 @@ INSERT INTO templates  (template_id, template_label, template_comment, template_
 <p>Le pr&eacute###sent accus&eacute### de r&eacute###ception atteste de la r&eacute###ception de votre demande. Il ne pr&eacute###juge pas de la conformit&eacute### de son contenu qui d&eacute###pend entre autres de l''&eacute###tude des pi&egrave###ces fournies.</p>
 <p>Si l''instruction de votre demande n&eacute###cessite des informations ou pi&egrave###ces compl&eacute###mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute###lai de production qui sera fix&eacute###.</p>
 <p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
+
+INSERT INTO templates (template_label, template_comment, template_content, template_type, template_style, template_target, template_attachment_type) VALUES ('Quota d''utilisateur', 'Modèle de notification pour le quota utilisateur', '<p>Quota utilisateur atteint</p>', 'HTML', 'ODT: rep_standard', 'notifications', 'all');
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 
@@ -1696,6 +1698,7 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --NOTIFICATIONS
 ------------
 TRUNCATE TABLE notifications;
+
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties)
 VALUES (1, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
@@ -1710,6 +1713,8 @@ INSERT INTO notifications (notification_sid, notification_id, description, event
 VALUES (6, 'AND', 'Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled)
 VALUES (7, 'RED', 'Redirection de courrier', '1', 'EMAIL', 7, 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (template_id, notification_id, description, is_enabled, event_id, notification_mode, diffusion_type, diffusion_properties) SELECT template_id, 'QUOTA', 'Alerte lorsque le quota est dépassé', 'Y', 'user_quota', 'EMAIL', 'user', 'superadmin' FROM templates WHERE template_label = 'Quota d''utilisateur';
+
 Select setval('notifications_seq', (select max(notification_sid)+1 from notifications), false);
 
 ------------
