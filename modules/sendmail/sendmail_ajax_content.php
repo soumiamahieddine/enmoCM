@@ -598,7 +598,7 @@ switch ($mode) {
             'mode'     => $docserverType['fingerprint_mode'],
         ]);
 
-        if ($fingerprint['fingerprint'] != $messageExchangeData->fingerprint) {
+        if ($fingerprint != $messageExchangeData->fingerprint) {
             echo _PB_WITH_FINGERPRINT_OF_DOCUMENT;
             exit;
         }

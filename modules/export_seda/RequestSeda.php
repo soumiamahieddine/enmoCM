@@ -544,7 +544,7 @@ class RequestSeda
             $queryParams[] = $docserver_id;
             $queryParams[] = $filepath;
             $queryParams[] = $filename;
-            $queryParams[] = $fingerprint['fingerprint'];
+            $queryParams[] = $fingerprint;
             $queryParams[] = $filesize;
 
             $res = $this->db->query($query, $queryParams);
