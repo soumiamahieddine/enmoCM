@@ -16,7 +16,6 @@
 require_once 'modules/sendmail/Controllers/ReceiveMessageExchangeController.php';
 require_once 'modules/export_seda/RequestSeda.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
-require_once "core/class/class_request.php";
 
 class SendMessageExchangeController
 {
@@ -133,7 +132,6 @@ class SendMessageExchangeController
         $mainDocument[0]['Title'] = '[CAPTUREM2M]'.$aArgs['object'];
 
         $sendMessage = new SendMessage();
-        $request = new request();
 
         foreach ($_SESSION['adresses']['to'] as $key => $value) {
             /******** GET ARCHIVAl INFORMATIONs **************/
@@ -168,7 +166,8 @@ class SendMessageExchangeController
                 'eventType' => 'UP',
                 'eventId'   => 'resup',
                 'info'       => _NUMERIC_PACKAGE_ADDED . _ON_DOC_NUM
-                . $aArgs['identifier'] . ' ('.$messageId.') : "' . $request->cut_string($mainDocument[0]['Title'], 254) .'"'
+                    . $aArgs['identifier'] . ' ('.$messageId.') : "' . \SrcCore\models\TextFormatModel::cutString(['string' => $mainDocument[0]['Title'], 'max' => 254]),
+                'userId' => $_SESSION['user']['UserId']
             ]);
 
             \History\controllers\HistoryController::add([
@@ -176,7 +175,8 @@ class SendMessageExchangeController
                 'recordId'  => $messageId,
                 'eventType' => 'ADD',
                 'eventId'   => 'messageexchangeadd',
-                'info'       => _NUMERIC_PACKAGE_ADDED . ' (' . $messageId . ')'
+                'info'       => _NUMERIC_PACKAGE_ADDED . ' (' . $messageId . ')',
+                'userId' => $_SESSION['user']['UserId']
             ]);
 
             /******** ENVOI *******/
@@ -501,7 +501,7 @@ class SendMessageExchangeController
         $oData->archivalAgreement->value              = ""; // TODO : ???
         
         $replyCode = "";
-        if(!empty($dataObject->ReplyCode)){
+        if (!empty($dataObject->ReplyCode)) {
             $replyCode = $dataObject->ReplyCode;
         }
 

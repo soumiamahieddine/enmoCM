@@ -14,7 +14,7 @@
  * @ingroup sendmail
  */
 
-require_once __DIR__. DIRECTORY_SEPARATOR .'MailModelAbstract.php';
+namespace Sendmail\Models;
 
 class MailModel extends MailModelAbstract
 {

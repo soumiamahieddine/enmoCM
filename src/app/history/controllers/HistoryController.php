@@ -42,21 +42,25 @@ class HistoryController
 
         LogsController::add($aArgs);
 
+        if (empty($aArgs['userId'])) {
+            $aArgs['userId'] = $GLOBALS['userId'];
+        }
+
         HistoryModel::create([
             'tableName' => $aArgs['tableName'],
             'recordId'  => $aArgs['recordId'],
             'eventType' => $aArgs['eventType'],
-            'userId'    => $GLOBALS['userId'],
+            'userId'    => $aArgs['userId'],
             'info'      => $aArgs['info'],
             'moduleId'  => $aArgs['moduleId'],
             'eventId'   => $aArgs['eventId'],
         ]);
 
-        NotificationsEventsController::fill_event_stack([
+        NotificationsEventsController::fillEventStack([
             "eventId"   => $aArgs['eventId'],
             "tableName" => $aArgs['tableName'],
             "recordId"  => $aArgs['recordId'],
-            "userId"    => $GLOBALS['userId'],
+            "userId"    => $aArgs['userId'],
             "info"      => $aArgs['info'],
         ]);
     }

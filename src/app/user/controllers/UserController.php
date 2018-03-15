@@ -145,7 +145,7 @@ class UserController
         if (!empty($userQuota['param_value_int'])) {
             $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
-                NotificationsEventsController::fill_event_stack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
             }
         }
 
@@ -178,7 +178,7 @@ class UserController
         if (!empty($userQuota['param_value_int']) && $user['enabled'] == 'N' && $data['enabled'] == 'Y') {
             $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
-                NotificationsEventsController::fill_event_stack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
             }
         }
 
@@ -299,7 +299,7 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            if($value['basketOwner'] != $user['user_id']){
+            if ($value['basketOwner'] != $user['user_id']) {
                 BasketModel::updateRedirectedBaskets([
                     'userId'      => $user['user_id'],
                     'basketOwner' => $value['basketOwner'],
@@ -404,7 +404,7 @@ class UserController
         $fileAccepted = false;
         if (count($xmlfile->FORMAT) > 0) {
             foreach ($xmlfile->FORMAT as $value) {
-                if(strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)){
+                if (strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)) {
                     $fileAccepted = true;
                     break;
                 }
@@ -413,7 +413,7 @@ class UserController
 
         if (!$fileAccepted || $type[0] != 'image') {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
-        } elseif ($size > 2000000){
+        } elseif ($size > 2000000) {
             return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 
@@ -844,9 +844,9 @@ class UserController
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        if(isset($data['color']) && $data['color'] == ''){
+        if (isset($data['color']) && $data['color'] == '') {
             UserModel::eraseBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]);
-        } else if (!empty($data['color'])) {
+        } elseif (!empty($data['color'])) {
             UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
         }
 

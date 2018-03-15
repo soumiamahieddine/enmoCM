@@ -19,8 +19,8 @@ require_once __DIR__. DIRECTORY_SEPARATOR .'../Zip.php';
 require_once __DIR__. DIRECTORY_SEPARATOR . '/AdapterWS.php';
 require_once __DIR__. DIRECTORY_SEPARATOR . '/AdapterEmail.php';
 
-class SendMessage {
-
+class SendMessage
+{
     private $db;
 
     public function __construct()
@@ -40,6 +40,7 @@ class SendMessage {
         } else {
             return false;
         }
+
         $res = $adapter->send($messageObject, $messageId, $type);
 
         return $res;
@@ -69,7 +70,7 @@ class SendMessage {
         return $filename;
     }
 
-    private function generateZip($messageObject,$tmpPath)
+    private function generateZip($messageObject, $tmpPath)
     {
         $zip = new ZipArchive();
         $filename = $tmpPath.$messageObject->MessageIdentifier->value. ".zip";
