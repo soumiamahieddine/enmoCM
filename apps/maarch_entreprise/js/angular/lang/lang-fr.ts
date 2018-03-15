@@ -262,6 +262,7 @@ export const LANG_FR = {
     "record"                            : "élément(s)",
     "records"                           : "résultats",
     "recordsPerPage"                    : "résultats par page",
+    "redirectBasket"                    : "Rediriger la bannette",
     "redirects"                         : "Redirections",
     "reinitPassword"                    : "Réinitialiser le mot de passe",
     "relatedUsers"                      : "Utilisateur(s) associé(s)",

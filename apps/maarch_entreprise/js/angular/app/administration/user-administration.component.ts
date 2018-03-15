@@ -221,7 +221,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/groups", groupReq)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
-                    this.user.allGroups = data.allGroups;
+                    //this.user.allGroups = data.allGroups;
                     this.user.baskets = data.baskets;
                     this.notify.success(this.lang.groupAdded);
                 }, (err) => {
@@ -231,7 +231,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id)
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
-                    this.user.allGroups = data.allGroups;
+                    //this.user.allGroups = data.allGroups;
+                    this.user.baskets = data.baskets;
                     this.notify.success(this.lang.groupDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -360,26 +361,35 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 
-    addBasketRedirection(i: number, basket: any) {
-        let r = false;
-        if (this.user.status != 'ABS') {
-            let r = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
-        }
+    addBasketRedirection(newUser:any, basket: any) {
 
-        if (r || this.user.status == 'ABS') {
-            this.userAbsenceModel.push({
-                "basketId": this.user.baskets[i].basket_id,
-                "basketName": this.user.baskets[i].basket_name,
-                "virtual": this.user.baskets[i].is_virtual,
-                "basketOwner": this.user.baskets[i].basket_owner,
-                "newUser": this.user.baskets[i].userToDisplay
-            });
-            this.activateAbsence();
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
+
+        if (r) {
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", [{"newUser" : newUser, "basketId":basket.basket_id, "basketOwner":this.user.user_id, "virtual": basket.is_virtual}])
+                .subscribe((data: any) => {
+                    this.userCtrl.setValue('');
+                    this.user.baskets = data["baskets"];
+                    this.notify.success(this.lang.basketUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
         }
     }
 
-    delBasketRedirection(i: number) {
-        this.user.baskets[i].userToDisplay = '';
+    delBasketRedirection(basket: any) {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
+
+        if (r) {
+            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+basket.basket_id)
+                .subscribe((data: any) => {
+                    this.userCtrl.setValue('');
+                    this.user.baskets = data["baskets"];
+                    this.notify.success(this.lang.basketUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 
     toggleBasket(basket: any) {

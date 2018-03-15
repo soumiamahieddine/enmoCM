@@ -125,7 +125,7 @@
                     </mat-tab>
                     <mat-tab *ngIf="!creationMode" label="Groupe(s)">
                         <mat-nav-list>
-                            <mat-list-item *ngFor="let group of user.allGroups">
+                            <mat-list-item *ngFor="let group of user.allGroups" disableRipple="true">
                                 <mat-slide-toggle id="{{group.group_id}}" color="primary" [checked]="group.disabled == true" (change)="toggleGroup(group)">{{group.group_desc}}</mat-slide-toggle>
                             </mat-list-item>
                         </mat-nav-list>
@@ -263,18 +263,15 @@
                 <h3 mat-subheader>{{lang.baskets}}</h3>
                 <mat-list-item *ngFor="let basket of user.baskets;let i = index">
                     
-                    <mat-icon mat-list-icon color="primary" *ngIf="basket.userToDisplay == '' && basket.enabled"><mat-slide-toggle matTooltip="activer / désactiver la bannette" color="primary" [(ngModel)]="basket.allowed" (change)="toggleBasket(basket)"></mat-slide-toggle>
+                    <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled"><mat-slide-toggle matTooltip="activer / désactiver la bannette" color="primary" [(ngModel)]="basket.allowed" (change)="toggleBasket(basket)" [disabled]="basket.userToDisplay != ''"></mat-slide-toggle>
                     </mat-icon>
-                    <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">{{basket.basket_name}}</h4>
+                    <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'warn': ''">{{basket.basket_name}}</h4>
                     <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
-                        <i style="cursor:pointer;" *ngIf="basket.userToDisplay != '' && basket.enabled" matTooltip="Supprimer la redirection" class="fa fa-times text-danger"
-                            aria-hidden="true" (click)="delBasketRedirection(i)"></i>
-                        <mat-form-field style="font-size:10px;" *ngIf="basket.allowed">
+                        <mat-form-field style="font-size:10px;" *ngIf="basket.userToDisplay == ''" floatLabel="never">
                             <input matTooltip="Rediriger la banette à une personne lors de l'activation de l'absence" matTooltipPosition="above" type="text"
-                                placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl"
-                                (change)="addBasketRedirection(i,basket)">
+                                placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id">
+                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id,basket)">
                                     <p mat-line matTooltip="{{ user.otherInfo }}">
                                         <span class="col-xm-1">
                                             <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
@@ -286,6 +283,12 @@
                                     </p>
                                 </mat-option>
                             </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input type="text" color="warn" matInput disabled value="Redirigé à {{basket.userToDisplay}}">
+                            <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer la redirection">
+                                <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
+                              </button>
                         </mat-form-field>
                     </p>
                 </mat-list-item>

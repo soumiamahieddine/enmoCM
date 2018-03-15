@@ -244,6 +244,7 @@ export const LANG_EN = {
     "record"                    : "element(s)",
     "records"                   : "result(s)",
     "recordsPerPage"            : "result per page",
+    "redirectBasket"            : "Redirect basket",
     "redirects"                 : "Redirections",
     "reinitPassword"            : "Reset password",
     "relatedUsers"              : "Related users",
