@@ -404,5 +404,8 @@ export const LANG_FR = {
     'quota'                             : 'Quota',
     'actives'                           : 'Actif(s)',
     'inactives'                         : 'Inactif(s)',
-    'quotaExceeded'                     : 'Quota dépassé'
+    'quotaExceeded'                     : 'Quota dépassé',
+    "addFirstLevel"                     : "Ajouter une chemise",
+    "addSecondLevel"                    : "Ajouter une sous-chemise",
+    "addDoctype"                        : "Ajouter un type de document",
 };

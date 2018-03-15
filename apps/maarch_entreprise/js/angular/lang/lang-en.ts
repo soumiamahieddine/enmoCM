@@ -379,6 +379,9 @@ export const LANG_EN = {
     'quota'                             : 'Quota',
     'actives'                           : 'Active(s)',
     'inactives'                         : 'Inactive(s)',
-    'quotaExceeded'                     : 'Quota exceeded'
+    'quotaExceeded'                     : 'Quota exceeded',
+    "addFirstLevel"                     : "Add first level",
+    "addSecondLevel"                    : "Add second level",
+    "addDoctype"                        : "Add document type",
 
 };

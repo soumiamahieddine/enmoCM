@@ -34,7 +34,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     models: any = false;
 
     loading: boolean = false;
-    creationMode: boolean = false;
+    creationMode: any = false;
     newSecondLevel: any = false;
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
@@ -335,10 +335,19 @@ export class DoctypesAdministrationComponent implements OnInit {
         }
     }
 
-    prepareDoctypeAdd() {
-        this.currentFirstLevel  = {};
-        this.currentSecondLevel = {};
-        this.currentType        = {};
+    prepareDoctypeAdd(mode: any) {
+        this.currentFirstLevel  = false;
+        this.currentSecondLevel = false;
+        this.currentType        = false;
+        if(mode == 'firstLevel'){
+            this.currentFirstLevel  = {};
+        }
+        if(mode == 'secondLevel'){
+            this.currentSecondLevel  = {};
+        }
+        if(mode == 'doctype'){
+            this.currentType  = {};
+        }
         $j('#jstree').jstree('deselect_all');
         this.http.get(this.coreUrl + "rest/administration/doctypes/new")
             .subscribe((data: any) => {
@@ -347,12 +356,14 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.secondLevels = data['secondLevel'];
                 this.processModes = data['processModes'];
                 this.models       = data['models'];
-                this.currentType.indexes = data['indexes'];
-                this.loadIndexesTable();
+                if(mode == 'doctype'){
+                    this.currentType.indexes = data['indexes'];
+                    this.loadIndexesTable();
+                }
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-        this.creationMode = true;
+        this.creationMode = mode;
     }
 
     selectIndexesUse(e: any, index: any) {

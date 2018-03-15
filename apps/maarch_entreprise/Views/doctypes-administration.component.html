@@ -18,10 +18,31 @@
             <mat-divider></mat-divider>
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.actions}}</h3>
-                <a mat-list-item (click)="prepareDoctypeAdd()">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
+                <a mat-list-item (click)="prepareDoctypeAdd('firstLevel')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
                     <p mat-line>
-                        {{lang.add}}
+                        {{lang.addFirstLevel}}
+                    </p>
+                </a>
+                <a mat-list-item (click)="prepareDoctypeAdd('secondLevel')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
+                    <p mat-line>
+                        {{lang.addSecondLevel}}
+                    </p>
+                </a>
+                <a mat-list-item (click)="prepareDoctypeAdd('doctype')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-file-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
+                    <p mat-line>
+                        {{lang.addDoctype}}
                     </p>
                 </a>
             </mat-nav-list>
@@ -47,7 +68,7 @@
 
             <mat-nav-list>
                 <mat-tab-group>
-                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel || creationMode">
+                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel || creationMode=='firstLevel'">
                         <form class="form-horizontal" #firstLevelForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -93,7 +114,7 @@
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel || creationMode">
+                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel || creationMode=='secondeLevel'">
                         <form class="form-horizontal" #secondLevelForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -139,7 +160,7 @@
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType || creationMode">
+                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType || creationMode=='doctype'">
                         <form class="form-horizontal" #typeForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
