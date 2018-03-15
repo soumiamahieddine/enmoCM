@@ -35,8 +35,8 @@ class TextFormatModel
     {
         $last_date = '';
 
-        if(!empty($date)) {
-            if(strpos($date, " ")) {
+        if (!empty($date)) {
+            if (strpos($date, " ")) {
                 $date_ex    = explode(" ", $date);
                 $the_date   = explode("-", $date_ex[0]);
                 $last_date  = $the_date[2]."-".$the_date[1]."-".$the_date[0];
@@ -54,7 +54,7 @@ class TextFormatModel
         ValidatorModel::notEmpty($aArgs, ['string']);
         ValidatorModel::stringType($aArgs, ['string', 'charset']);
 
-        if(empty($aArgs['charset'])){
+        if (empty($aArgs['charset'])) {
             $aArgs['charset'] = 'utf-8';
         }
 
@@ -104,5 +104,29 @@ class TextFormatModel
         }
 
         return $html;
+    }
+
+    /**
+    * Cuts a string at the maximum number of char to displayed
+    *
+    * @param     string string String value
+    * @param     max integer Maximum character number
+    */
+    public static function cutString(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['string']);
+        ValidatorModel::stringType($aArgs, ['string']);
+        ValidatorModel::intType($aArgs, ['max']);
+
+        $string = $aArgs['string'];
+        $max    = $aArgs['max'];
+        if (strlen($string) >= $max) {
+            $string = substr($string, 0, $max);
+            $espace = strrpos($string, " ");
+            $string = substr($string, 0, $espace)."...";
+            return $string;
+        } else {
+            return $string;
+        }
     }
 }

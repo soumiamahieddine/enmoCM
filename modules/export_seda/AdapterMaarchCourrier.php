@@ -30,7 +30,7 @@ class AdapterMaarchCourrier
             'mode'     => $docserverType['fingerprint_mode'],
         ]);
 
-        if ($fingerprint['fingerprint'] != $message->fingerprint) {
+        if ($fingerprint != $message->fingerprint) {
             echo _PB_WITH_FINGERPRINT_OF_DOCUMENT;
             exit;
         }

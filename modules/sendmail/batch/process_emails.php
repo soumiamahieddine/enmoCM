@@ -162,7 +162,7 @@ while ($state <> 'END') {
                     'mode'     => $docserverType['fingerprint_mode'],
                 ]);
 
-                if ($fingerprint['fingerprint'] != $messageExchange->fingerprint) {
+                if ($fingerprint != $messageExchange->fingerprint) {
                     $GLOBALS['logger']->write(_PB_WITH_FINGERPRINT_OF_DOCUMENT.'. ResId master : ' . $email->res_id, 'ERROR');
                 }
 
