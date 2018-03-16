@@ -60,11 +60,18 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                 </mat-table>
                 <div class="row">
-                    <div class="col-md-3 pull-right" style="padding-top:10px;">
+                    <div class="col-sm-6" style="padding-top:10px;">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="minDate" [matDatepicker]="picker" placeholder="Depuis" (dateChange)="refreshHistory($event)">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker startView="month" [startAt]="minDate"></mat-datepicker>
+                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()">
+                            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStart touchUi="true" [startAt]="startDate"></mat-datepicker>
+                        </mat-form-field>       
+                    </div>
+                    <div class="col-sm-6" style="padding-top:10px;">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()">
+                            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerEnd touchUi="true" [startAt]="endDate"></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>

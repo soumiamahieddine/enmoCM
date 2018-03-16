@@ -40,6 +40,11 @@ export class HistoryAdministrationComponent implements OnInit {
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
         $j("link[href='merged_css.php']").remove();
+
+        this.startDate.setHours(0,0,0,0);
+        this.startDate.setMonth(this.endDate.getMonth()-1);
+        this.endDate.setHours(23,59,59,59);
+
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
@@ -53,7 +58,7 @@ export class HistoryAdministrationComponent implements OnInit {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (Date.now() / 1000 - 999999).toString(), "endDate" : (Date.now() / 1000).toString()}})
+        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['histories'];
                 this.loading = false;
@@ -67,15 +72,21 @@ export class HistoryAdministrationComponent implements OnInit {
             });
     }
 
-    // refreshHistory(event: MatDatepickerInputEvent<Date>) {
-    //     this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
-    //         .subscribe((data: any) => {
-    //             this.data = data['histories'];
-    //             this.dataSource = new MatTableDataSource(this.data);
-    //             this.dataSource.paginator = this.paginator;
-    //             this.dataSource.sort = this.sort;
-    //         }, () => {
-    //             location.href = "index.php";
-    //         });
-    // }
+    refreshHistory() {
+        this.startDate.setHours(0,0,0,0);
+        this.endDate.setHours(23,59,59,59);
+        
+        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+            .subscribe((data: any) => {
+                this.data = data['histories'];
+                this.loading = false;
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
+            }, () => {
+                location.href = "index.php";
+            });
+    }
 }

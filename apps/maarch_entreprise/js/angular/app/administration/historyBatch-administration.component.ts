@@ -23,10 +23,10 @@ export class HistoryBatchAdministrationComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = false;
-    data: HistoryBatch[] = [];
-    CurrentYear: number = new Date().getFullYear();
-    currentMonth: number = new Date().getMonth() + 1;
-    minDate: Date = new Date();
+    data                            : any[]     = [];
+    
+    startDate                       : Date      = new Date();
+    endDate                         : Date      = new Date();
 
     displayedColumns = ['batch_id', 'event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
     dataSource = new MatTableDataSource(this.data);
@@ -40,6 +40,11 @@ export class HistoryBatchAdministrationComponent implements OnInit {
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
+
+        this.startDate.setHours(0,0,0,0);
+        this.startDate.setMonth(this.endDate.getMonth()-1);
+        this.endDate.setHours(23,59,59,59);
+
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
@@ -63,41 +68,35 @@ export class HistoryBatchAdministrationComponent implements OnInit {
         this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
 
-        this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
-
-        this.http.get(this.coreUrl + 'rest/administration/historyBatch/eventDate/' + this.minDate.toJSON())
+        this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
-                this.data = data.historyList;
+                this.data = data['batchHistories'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, (err) => {
-                console.log(err);
+            }, () => {
                 location.href = "index.php";
             });
     }
 
     refreshHistory() {
-        this.http.get(this.coreUrl + 'rest/administration/historyBatch/eventDate/' + this.minDate.toJSON())
+        this.startDate.setHours(0,0,0,0);
+        this.endDate.setHours(23,59,59,59);
+        
+        this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
-                this.data = data.historyList;
-                this.dataSource = new MatTableDataSource(this.data);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-            }, (err) => {
-                console.log(err);
+                this.data = data['batchHistories'];
+                this.loading = false;
+                setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }, 0);
+            }, () => {
                 location.href = "index.php";
             });
     }
-}
-export interface HistoryBatch {
-    batch_id: number;
-    event_date: Date;
-    total_processed: string;
-    total_errors: string;
-    info: string;
-    module_name: string;
 }
