@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -41,6 +41,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     dataSource = new MatTableDataSource(this.currentType.indexes);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('snav2') sidenav: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
@@ -87,6 +88,9 @@ export class DoctypesAdministrationComponent implements OnInit {
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
+                            if (this.sidenav.opened == false) {
+                                this.sidenav.open();
+                            }
                             this.loadDoctype(data, false);
 
                         }).on('move_node.jstree', (e: any, data: any) => {
@@ -347,6 +351,9 @@ export class DoctypesAdministrationComponent implements OnInit {
         }
         if(mode == 'doctype'){
             this.currentType  = {};
+        }
+        if (this.sidenav.opened == false) {
+            this.sidenav.open();
         }
         $j('#jstree').jstree('deselect_all');
         this.http.get(this.coreUrl + "rest/administration/doctypes/new")
