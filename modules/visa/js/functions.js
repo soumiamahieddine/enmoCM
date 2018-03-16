@@ -48,7 +48,7 @@ function addVisaUser(users) {
         
         //prototype
         document.getElementById("visaUserList").selectedIndex = 0;
-        Event.fire($("visaUserList"), "chosen:updated");
+        $j('#visaUserList').trigger("chosen:updated");
     } else {
         nb_visa = $j(".droptarget").length;
         next_visa = nb_visa + 1;
@@ -287,7 +287,7 @@ function loadVisaModelUsers() {
          
     //prototype
     document.getElementById("modelList").selectedIndex = 0;
-    Event.fire($("modelList"), "chosen:updated");
+    $j('#modelList').trigger("chosen:updated");
 }
 
 function initDragNDropVisa() {

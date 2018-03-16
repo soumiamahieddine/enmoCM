@@ -107,8 +107,33 @@ function add_thes(thesaurus_id,thesaurus_name){
 		}
 	}
     
-	Event.fire($("thesaurus"), "chosen:updated"); 
+	$j("#thesaurus").trigger("chosen:updated");
+
+	getInfoIcon();
+	
 	$('return_previsualise_thes').style.display='none';
+}
+
+function getInfoIcon() {
+	var i = 0;
+	$j("#thesaurus_chosen .search-choice").css("display","flex");
+	$j("#thesaurus option").each(function () {
+		console.log(this);
+		label = this.label;
+		info_link = new Element('a', {
+			"class": 'fa fa-info-circle',
+			id: 'thesaurus_chosen_'+i,
+			title : 'en savoir plus',
+			style : 'display: table-cell;vertical-align: middle;font-size: 15px;padding-left: 5px;',
+			rel: i
+		});
+		$j("#thesaurus_chosen .search-choice").eq(i).append(info_link);
+		$j("#thesaurus_chosen_"+i).click(function( event ) {
+			event.stopPropagation();
+			launch_thesaurus_tooltips(event.target, event.target, event.target.parentElement.textContent);
+		});
+		i++;
+    });	
 }
 
 function add_thes_by_autocomplete(thesaurus_id){
@@ -150,7 +175,8 @@ function add_thes_by_autocomplete(thesaurus_id){
 					}
 				}
 			    
-				Event.fire($("thesaurus"), "chosen:updated"); 
+				$j('#thesaurus').trigger("chosen:updated");
+				
 				$('return_previsualise_thes').style.display='none';
 			}
 		}
@@ -182,7 +208,7 @@ function add_thes_admin_assoc(thesaurus_id,thesaurus_name){
 		}
 	}
     
-	Event.fire($("thesaurus_name_associate"), "chosen:updated"); 
+	$j('#thesaurus_name_associate').trigger("chosen:updated");
 	$('return_previsualise_thes').style.display='none';
 }
 
@@ -453,7 +479,8 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 
 			content += '</ul>';
 			content += '<style>#thesaurus_list span:hover{font-weight:bold;cursor:pointer;}</style>';
-			document.getElementById("thesaurus_chosen_"+json.info.thesaurus_id).onclick=function(e){toolTipThes(e, content)}; 
+			toolTipThes(this, content);
+			//document.getElementById("thesaurus_chosen_"+json.info.thesaurus_id).onclick=function(e){toolTipThes(e, content)}; 
 			}
 	});
 

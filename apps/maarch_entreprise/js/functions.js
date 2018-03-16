@@ -3292,7 +3292,7 @@ function loadToolbarBadge(targetTab,path_manage_script){
 
 function resetSelect(id) {
     $j('#'+id).val("");
-    Event.fire($(id), "chosen:updated");
+    $j('#'+id).trigger("chosen:updated");
 }
 
 function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed){

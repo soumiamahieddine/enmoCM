@@ -350,7 +350,7 @@ function loadToolbarEntities(where)
         beforeSend: function() {
             //alert('beforesend');
             $j("#entity_id").html('<option value="">chargement en cours ...</option>');
-            Event.fire($('entity_id'), "chosen:updated");
+            $j("#entity_id").trigger("chosen:updated");
             //show loading image in toolbar
         },
         success: function(answer){

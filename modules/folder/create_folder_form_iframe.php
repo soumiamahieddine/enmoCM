@@ -19,31 +19,32 @@
 */
 
 /**
-* File : create_folder_form.php
-*
-* Form to create a folder
-*
-* @package  Folder
-* @version 1.0
-* @since 06/2007
-* @license GPL
-* @author  <dev@maarch.org>
-*/
+ * File : create_folder_form.php.
+ *
+ * Form to create a folder
+ *
+ * @version 1.0
+ *
+ * @since 06/2007
+ *
+ * @license GPL
+ * @author  <dev@maarch.org>
+ */
 $core_tools2 = new core_tools();
 $core_tools2->load_lang();
 $core_tools2->test_service('create_folder', 'folder');
 $core_tools2->load_html();
 $core_tools2->load_header('', true, true);
-if(isset($_SESSION['error'])) { ?>
+if (isset($_SESSION['error'])) {
+    ?>
     <div class="error" id="main_error_popup" onclick="$(this).hide();">
         <?php
-        echo functions::xssafe($_SESSION['error']);
-        ?>
+        echo functions::xssafe($_SESSION['error']); ?>
     </div>
 <?php
 }
- if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
-    ?>
+ if (isset($_SESSION['error']) && $_SESSION['error'] != '') {
+     ?>
     <script>
         var main_error = $('main_error_popup');
         if (main_error != null) {
@@ -52,9 +53,9 @@ if(isset($_SESSION['error'])) { ?>
         }
     </script>
     <?php
-    $_SESSION['error']='';
-}
-if($_SESSION['info'] == _FOLDER_ADDED){
+    $_SESSION['error'] = '';
+ }
+if ($_SESSION['info'] == _FOLDER_ADDED) {
     $_SESSION['info'] = '';
     echo "<script>var select = parent.document.getElementById('folder');"
     ."if('".$_SESSION['m_admin']['folder']['folder_parent']."' != 0){
@@ -63,10 +64,10 @@ if($_SESSION['info'] == _FOLDER_ADDED){
             var folderName = '".$_SESSION['m_admin']['folder']['folder_name']."';
         }
         "
-    . "var newOption = new Option (folderName, '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
-    . "newOption.setAttribute('parent','".$_SESSION['m_admin']['folder']['folder_parent']."');"
-    . "var oSelect = select.options;"
-    . "if('".$_SESSION['m_admin']['folder']['folder_parent']."' != 0){
+    ."var newOption = new Option (folderName, '".$_SESSION['m_admin']['folder']['folders_system_id']."');"
+    ."newOption.setAttribute('parent','".$_SESSION['m_admin']['folder']['folder_parent']."');"
+    .'var oSelect = select.options;'
+    ."if('".$_SESSION['m_admin']['folder']['folder_parent']."' != 0){
             for(var i = 0; i < oSelect.length; i++) {
                 if(oSelect[i].value === '".$_SESSION['m_admin']['folder']['folder_parent']."') {
                     var index = i+1;
@@ -78,24 +79,24 @@ if($_SESSION['info'] == _FOLDER_ADDED){
             select.options.add (newOption);
         }
         "
-    . "select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';";
-    echo "Event.fire(select, 'chosen:updated');";
+    ."select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';";
+    echo "$j(\"#folder\").trigger(\"chosen:updated\");";
     unset($_SESSION['m_admin']);
     echo "new Effect.BlindUp(parent.document.getElementById('create_folder_div'));";
-    echo "</script>";
+    echo '</script>';
 }
 $db = new Database();
 
-$stmt = $db->query("SELECT foldertype_id, foldertype_label FROM " .
-    $_SESSION['tablename']['fold_foldertypes'] . " order by foldertype_label");
+$stmt = $db->query('SELECT foldertype_id, foldertype_label FROM '.
+    $_SESSION['tablename']['fold_foldertypes'].' order by foldertype_label');
 
 $foldertypes = array();
 while ($res = $stmt->fetchObject()) {
     array_push(
         $foldertypes,
         array(
-        	'id' => $res->foldertype_id,
-        	'label' => $res->foldertype_label,
+            'id' => $res->foldertype_id,
+            'label' => $res->foldertype_label,
         )
     );
 }
@@ -104,50 +105,55 @@ $init = false;
 <div id="inner_content" style="padding:0px;">
     <div class="block">
         <form name="create_folder" id="create_folder" method="post" class="forms"
-              action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=manage_create_folder&iframe=true" >
+              action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=folder&page=manage_create_folder&iframe=true" >
             <input type="hidden" name="display"  value="true" />
             <input type="hidden" name="module"  value="folder" />
             <input type="hidden" name="page"  value="manage_create_folder" />
             <p>
-                <label for="foldertype"><?php echo _FOLDERTYPE;?> :</label>
+                <label for="foldertype"><?php echo _FOLDERTYPE; ?> :</label>
                 <select name="foldertype" id="foldertype"
-                        onchange="get_folder_index('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true' . '&module=folder&page=create_folder_get_folder_index'; ?>'
+                        onchange="get_folder_index('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true'.'&module=folder&page=create_folder_get_folder_index'; ?>'
                             , this.options[this.options.selectedIndex].value, 'folder_indexes');">
-                    <option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
+                    <option value=""><?php echo _CHOOSE_FOLDERTYPE; ?></option>
                     <?php
-                    for ($i = 0; $i < count($foldertypes); $i ++) { ?>
+                    for ($i = 0; $i < count($foldertypes); ++$i ) {
+                        ?>
                         <option value="<?php functions::xecho($foldertypes[$i]['id']); ?>"
                             <?php
                             if (isset($_SESSION['m_admin']['folder']['foldertype_id'])
                             && $_SESSION['m_admin']['folder']['foldertype_id'] == $foldertypes[$i]['id']) {
                                 echo 'selected="selected"';
-                            } else if($i == 0) {
+                            } elseif ($i == 0) {
                                 $init = true;
                                 echo 'selected="selected"';
-                            }
-                            ?>
+                            } ?>
                         >
                             <?php functions::xecho($foldertypes[$i]['label']); ?>
                         </option>
-                    <?php } ?>
+                    <?php
+                    } ?>
                 </select> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
             </p>
             <p>
-                <label for="folder_id"><?php echo _FOLDERID_LONG;?></label>
+                <label for="folder_id"><?php echo _FOLDERID_LONG; ?></label>
                 <input name="folder_id" id="folder_id"
-                       value="<?php if (isset($_SESSION['m_admin']['folder']['folder_id'])) { functions::xecho($_SESSION['m_admin']['folder']['folder_id']);}?>" />
+                       value="<?php if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
+                        functions::xecho($_SESSION['m_admin']['folder']['folder_id']);
+                    }?>" />
                 <i class="red_asterisk fa fa-asterisk mCyellow"></i>
             </p>
             <p>
-                <label for="folder_name"><?php echo _FOLDERNAME;?></label>
+                <label for="folder_name"><?php echo _FOLDERNAME; ?></label>
                 <input name="folder_name" id="folder_name"
-                       value="<?php if (isset($_SESSION['m_admin']['folder']['folder_name'])) { functions::xecho($_SESSION['m_admin']['folder']['folder_name']);} ?>" />
+                       value="<?php if (isset($_SESSION['m_admin']['folder']['folder_name'])) {
+                        functions::xecho($_SESSION['m_admin']['folder']['folder_name']);
+                    } ?>" />
                 <i class="red_asterisk fa fa-asterisk mCyellow"></i>
             </p>
             <div id="folder_indexes"></div>
             <div id="folder_dest_div">
                 <p>
-                    <label for="folder_dest"><?php echo _FOLDER_DESTINATION_QUESTION;?></label>
+                    <label for="folder_dest"><?php echo _FOLDER_DESTINATION_QUESTION; ?></label>
                     <input name="folder_dest" id="folder_dest" type="checkbox" style="margin-left: -0.1%"/>
                 </p>
             </div>
@@ -161,14 +167,15 @@ $init = false;
     <style type="text/css">p{padding: 5px;}</style>
     <?php
     if ((isset($_SESSION['m_admin']['folder']['foldertype_id'])
-            && ! empty($_SESSION['m_admin']['folder']['foldertype_id'] )) || $init)
-    { ?>
+            && !empty($_SESSION['m_admin']['folder']['foldertype_id'])) || $init) {
+        ?>
         <script type="text/javascript">
             var ft_list = $('foldertype');
             if (ft_list) {
-                get_folder_index('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true' . '&module=folder&page=create_folder_get_folder_index'; ?>'
+                get_folder_index('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true'.'&module=folder&page=create_folder_get_folder_index'; ?>'
                     , ft_list.options[ft_list.options.selectedIndex].value, 'folder_indexes');
             }
         </script>
-    <?php } ?>
+    <?php
+    } ?>
 </div>
