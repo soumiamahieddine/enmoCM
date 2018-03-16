@@ -51,7 +51,6 @@ class MergedJsAbstract
         readfile('node_modules/jquery.nicescroll/jquery.nicescroll.min.js'); //V2
         readfile('node_modules/tooltipster/dist/js/tooltipster.bundle.min.js'); //V2
         readfile('node_modules/jquery-typeahead/dist/jquery.typeahead.min.js'); //V2
-        readfile('node_modules/hammerjs/hammer.min.js'); //V2-  Angular Material
         readfile('apps/maarch_entreprise/js/chosen.jquery.min.js');
         readfile('node_modules/jstree-bootstrap-theme/dist/jstree.js'); //V2
         readfile('apps/maarch_entreprise/js/bootstrap-tree.js'); //DEPRECATED use jstree instead
