@@ -366,7 +366,7 @@ export const LANG_FR = {
     "secondLevelAttached"               : "Rattacher à la sous-chemise",
     "retentionFinalDisposition"         : "Sort final",
     "retentionRule"                     : "Règle de conservation",
-    "durationCurrentUse"                : "Durée d'utilité courante",
+    "durationCurrentUse"                : "Durée d'utilité courante (en j)",
     "processDelayDay"                   : "Délai de traitement (en jours)",
     "delay1"                            : "Délai relance 1 avant terme (en jours)",
     "delay2"                            : "Délai relance 2 après terme (en jours)",
