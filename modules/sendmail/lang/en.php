@@ -81,6 +81,20 @@ if (!defined("_EMAIL_NOT_EXIST"))
 //ADD
 if (!defined("_NEW_EMAIL"))
     define("_NEW_EMAIL","New mail");
+if (!defined("_NEW_NUMERIC_PACKAGE"))
+    define("_NEW_NUMERIC_PACKAGE","New numeric package");
+if (!defined("_NUMERIC_PACKAGE_ADDED"))
+    define("_NUMERIC_PACKAGE_ADDED","Numeric package added");
+if (!defined("_NUMERIC_PACKAGE_IMPORTED"))
+    define("_NUMERIC_PACKAGE_IMPORTED","Numeric package imported");
+if (!defined("_NUMERIC_PACKAGE_SENT"))
+    define("_NUMERIC_PACKAGE_SENT","Numeric package sent");
+if (!defined("_NUMERIC_PACKAGE"))
+    define("_NUMERIC_PACKAGE","Numeric package");
+if (!defined("_NO_COMMUNICATION_MODE"))
+    define("_NO_COMMUNICATION_MODE","No communication mode");
+if (!defined("_NOTHING"))
+    define("_NOTHING","Aucun");
 if (!defined("_CREATE_EMAIL"))
     define("_CREATE_EMAIL", "Create");
 if (!defined("_EMAIL_ADDED"))
@@ -137,3 +151,38 @@ if (!defined("_USE_MAIL_SERVICES_DESC"))
     define("_USE_MAIL_SERVICES_DESC", "Use emails services as sender");
 if (!defined("_INCORRECT_SENDER"))
     define("_INCORRECT_SENDER", "Incorrect sender");
+
+if (!defined("_OPERATION_DATE"))
+    define("_OPERATION_DATE", "Operation date");
+if (!defined("_RECEPTION_DATE"))
+    define("_RECEPTION_DATE", "Reception date");
+
+if (!defined("_SENDS_FAIL"))
+    define("_SENDS_FAIL", "Sends fail");
+if (!defined("_WRONG_FILE_TYPE_M2M"))
+    define("_WRONG_FILE_TYPE_M2M", "Only ZIP file allowed");
+if (!defined("_ERROR_RECEIVE_FAIL"))
+    define("_ERROR_RECEIVE_FAIL", "Error receive zip fail");
+
+if (!defined("_ERROR_CONTACT_UNKNOW"))
+    define("_ERROR_CONTACT_UNKNOW", "Contact unknow.");
+if (!defined("_NO_RECIPIENT"))
+    define("_NO_RECIPIENT", "No recipient");
+if (!defined("_NO_SENDER"))
+    define("_NO_SENDER", "No sender");
+if (!defined("_SIMPLE_DOWNLOAD"))
+    define("_SIMPLE_DOWNLOAD", "Download");
+if (!defined("_MORE_INFORMATIONS"))
+    define("_MORE_INFORMATIONS", "Informations about the transfer");
+if (!defined("_REPLY_RESPONSE_SENT"))
+    define("_REPLY_RESPONSE_SENT", "Reply sent on");
+if (!defined("_M2M_ARCHIVETRANSFER"))
+    define("_M2M_ARCHIVETRANSFER", "Archive transfer");
+if (!defined("_M2M_ARCHIVETRANSFERREPLYSENT"))
+    define("_M2M_ARCHIVETRANSFERREPLYSENT", "Archive transfer reply");
+if (!defined("_M2M_ACTION_DONE"))
+    define("_M2M_ACTION_DONE", "done by");
+if (!defined("_M2M_ENTITY_DESTINATION"))
+    define("_M2M_ENTITY_DESTINATION", "Mail is in the department");
+if (!defined("_M2M_FOLLOWUP_REQUEST"))
+    define("_M2M_FOLLOWUP_REQUEST", "Follow-up of the request");

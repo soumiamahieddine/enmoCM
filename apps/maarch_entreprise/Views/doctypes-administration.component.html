@@ -14,36 +14,46 @@
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
+            <menu-nav></menu-nav>
+            <mat-divider></mat-divider>
             <mat-nav-list>
-                <a mat-list-item href="index.php">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
+                <h3 mat-subheader>{{lang.actions}}</h3>
+                <a mat-list-item (click)="prepareDoctypeAdd('firstLevel')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
                     <p mat-line>
-                        {{lang.home}}
+                        {{lang.addFirstLevel}}
                     </p>
                 </a>
-                <a mat-list-item routerLink="/administration">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
+                <a mat-list-item (click)="prepareDoctypeAdd('secondLevel')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
                     <p mat-line>
-                        {{lang.back}}
+                        {{lang.addSecondLevel}}
+                    </p>
+                </a>
+                <a mat-list-item (click)="prepareDoctypeAdd('doctype')">
+                    <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
+                      <i class="fa fa-file-o"></i>
+                      <i class="fa fa-plus" style="position:absolute"></i>
+                    </mat-icon>
+                    <p mat-line>
+                        {{lang.addDoctype}}
                     </p>
                 </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.tools}}</h3>
-                <a mat-list-item (click)="prepareDoctypeAdd()">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
-                    <p mat-line>
-                        {{lang.add}}
-                    </p>
-                </a>
-            </mat-nav-list>
+            <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading">
+            <mat-card *ngIf="!loading" class="card-app-content">
 
                 <mat-form-field>
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.search}}">
@@ -58,7 +68,7 @@
 
             <mat-nav-list>
                 <mat-tab-group>
-                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel || creationMode">
+                    <mat-tab label="{{lang.firstLevelDoctype}}" *ngIf="currentFirstLevel || creationMode=='firstLevel'">
                         <form class="form-horizontal" #firstLevelForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -104,7 +114,7 @@
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel || creationMode">
+                    <mat-tab label="{{lang.secondLevelDoctype}}" *ngIf="currentSecondLevel || creationMode=='secondeLevel'">
                         <form class="form-horizontal" #secondLevelForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -150,7 +160,7 @@
                         </form>
                     </mat-tab>
 
-                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType || creationMode">
+                    <mat-tab label="{{lang.doctype}}" *ngIf="currentType || creationMode=='doctype'">
                         <form class="form-horizontal" #typeForm="ngForm" style="overflow:hidden;">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -184,7 +194,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.process_delay" required name="process_delay" id="process_delay" title="{{lang.processDelayDay}}"
-                                            type="number" placeholder="{{lang.processDelayDay}}">
+                                            type="number" placeholder="{{lang.processDelayDay}}" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -192,7 +202,7 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.delay1" required name="delay1" id="delay1" title="{{lang.delay1}}"
-                                            type="number" placeholder="{{lang.delay1}}">
+                                            type="number" placeholder="{{lang.delay1}}" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -200,14 +210,14 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="currentType.delay2" required name="delay2" id="delay2" title="{{lang.delay2}}"
-                                            type="number" placeholder="{{lang.delay2}}" maxlength="255">
+                                            type="number" placeholder="{{lang.delay2}}" maxlength="255" pattern="^[0-9]*$">
                                     </mat-form-field>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <mat-form-field>
-                                        <mat-select id="process_mode" name="process_mode" title="{{lang.processMode}}" placeholder="{{lang.processMode}}" [(ngModel)]="currentType.process_mode">
+                                        <mat-select id="process_mode" name="process_mode" title="{{lang.processMode}}" placeholder="{{lang.processMode}}" [(ngModel)]="currentType.process_mode" required>
                                             <mat-option *ngFor="let process of processModes.processing_modes" [value]="process">
                                                 {{process}}
                                             </mat-option>
@@ -259,7 +269,7 @@
                                         <div class="col-sm-6">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentType.duration_current_use" name="duration_current_use" id="duration_current_use" title="{{lang.durationCurrentUse}}"
-                                                    type="number" placeholder="{{lang.durationCurrentUse}}">
+                                                    type="number" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
                                             </mat-form-field>
                                         </div>
                                     </div>

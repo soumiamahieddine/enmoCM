@@ -22,6 +22,11 @@ use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
+use Notification\controllers\NotificationController;
+use Notification\controllers\NotificationsEventsController;
+use Notification\models\NotificationModel;
+use Notification\models\NotificationsEventsModel;
+use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -76,7 +81,15 @@ class UserController
             }
         }
 
-        return $response->withJson(['users' => $users]);
+        $quota = [];
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int'])) {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['N', 'OK','superadmin']]);
+            $quota = ['actives' => $activeUser[0]['count'], 'inactives' => $inactiveUser[0]['count'], 'userQuota' => $userQuota['param_value_int']];
+        }
+
+        return $response->withJson(['users' => $users, 'quota' => $quota]);
     }
 
     public function getDetailledById(Request $request, Response $response, array $aArgs)
@@ -93,7 +106,7 @@ class UserController
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'absenceUneeded' => true]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);
@@ -128,6 +141,14 @@ class UserController
             return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
         }
 
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int'])) {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
+                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+            }
+        }
+
         return $response->withJson(['user' => $newUser]);
     }
 
@@ -149,7 +170,17 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['enabled']]);
+
         UserModel::update(['id' => $aArgs['id'], 'user' => $data]);
+
+        $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
+        if (!empty($userQuota['param_value_int']) && $user['enabled'] == 'N' && $data['enabled'] == 'Y') {
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['enabled = ?', 'status = ?', 'user_id <> ?'], 'data' => ['Y', 'OK','superadmin']]);
+            if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
+                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+            }
+        }
 
         return $response->withJson(['success' => 'success']);
     }
@@ -268,7 +299,7 @@ class UserController
                 return $response->withStatus(400)->withJson(['errors' => 'User not found']);
             }
 
-            if($value['basketOwner'] != $user['user_id']){
+            if ($value['basketOwner'] != $user['user_id']) {
                 BasketModel::updateRedirectedBaskets([
                     'userId'      => $user['user_id'],
                     'basketOwner' => $value['basketOwner'],
@@ -292,7 +323,7 @@ class UserController
             }
         }
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
@@ -306,7 +337,7 @@ class UserController
 
         BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
-        return $response->withJson(['redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
@@ -373,7 +404,7 @@ class UserController
         $fileAccepted = false;
         if (count($xmlfile->FORMAT) > 0) {
             foreach ($xmlfile->FORMAT as $value) {
-                if(strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)){
+                if (strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)) {
                     $fileAccepted = true;
                     break;
                 }
@@ -382,7 +413,7 @@ class UserController
 
         if (!$fileAccepted || $type[0] != 'image') {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
-        } elseif ($size > 2000000){
+        } elseif ($size > 2000000) {
             return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED . ' (2 MB)']);
         }
 
@@ -502,18 +533,12 @@ class UserController
 
     public function deleteCurrentUserEmailSignature(Request $request, Response $response, array $aArgs)
     {
-        $r = UserModel::deleteEmailSignature([
+        UserModel::deleteEmailSignature([
             'id'        => $aArgs['id'],
             'userId'    => $GLOBALS['userId']
         ]);
 
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Delete Error']);
-        }
-
-        return $response->withJson([
-            'emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])
-        ]);
+        return $response->withJson(['emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])]);
     }
 
     public function addGroup(Request $request, Response $response, array $aArgs)
@@ -561,7 +586,6 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]),
             'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
@@ -626,7 +650,7 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'allGroups' => GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
 
@@ -820,9 +844,9 @@ class UserController
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        if(isset($data['color']) && $data['color'] == ''){
+        if (isset($data['color']) && $data['color'] == '') {
             UserModel::eraseBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]);
-        } else if (!empty($data['color'])) {
+        } elseif (!empty($data['color'])) {
             UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
         }
 

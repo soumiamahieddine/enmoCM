@@ -948,7 +948,6 @@ CREATE TABLE notifications
   event_id character varying(255) NOT NULL,
   notification_mode character varying(30) NOT NULL,
   template_id bigint,
-  rss_url_template text,
   diffusion_type character varying(50) NOT NULL,
   diffusion_properties text,
   attachfor_type character varying(50),
@@ -1253,6 +1252,7 @@ CREATE TABLE contact_addresses
   entity_id character varying(32) NOT NULL,
   is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
+  external_contact_id character varying(128),
   CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
 
@@ -1267,6 +1267,25 @@ CREATE TABLE saved_queries (
   last_modification_date timestamp without time zone,
   CONSTRAINT saved_queries_pkey PRIMARY KEY  (query_id)
 ) WITH (OIDS=FALSE);
+
+DROP SEQUENCE IF EXISTS contact_communication_id_seq CASCADE;
+CREATE SEQUENCE contact_communication_id_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+
+DROP TABLE IF EXISTS contact_communication;
+CREATE TABLE contact_communication
+(
+  id bigint NOT NULL DEFAULT nextval('contact_communication_id_seq'::regclass),
+  contact_id bigint NOT NULL,
+  type character varying(255) NOT NULL,
+  value character varying(255) NOT NULL,
+  CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
+) WITH (OIDS=FALSE);
+
 
 CREATE SEQUENCE doctypes_first_level_id_seq
   INCREMENT 1
@@ -1969,7 +1988,7 @@ CREATE TABLE sendmail
 (
   email_id serial NOT NULL,
   coll_id character varying(32) NOT NULL,
-  res_id bigint NOT NULL,
+  res_id bigint,
   user_id character varying(128) NOT NULL,
   to_list text DEFAULT NULL,
   cc_list text DEFAULT NULL,
@@ -1986,6 +2005,7 @@ CREATE TABLE sendmail
   creation_date timestamp without time zone NOT NULL,
   send_date timestamp without time zone DEFAULT NULL,
   sender_email character varying(255) DEFAULT NULL,
+  message_exchange_id text DEFAULT NULL,
   CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
  );
 
@@ -2379,7 +2399,7 @@ CREATE OR REPLACE VIEW view_contacts AS
 , c.user_id AS contact_user_id, c.entity_id AS contact_entity_id, c.creation_date, c.update_date, c.enabled AS contact_enabled, ca.id AS ca_id
 , ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy
 , ca.address_num, ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country
-, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled
+, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_contact_id
 , cp.label as contact_purpose_label, ct.label as contact_type_label
    FROM contacts_v2 c
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
@@ -2593,39 +2613,48 @@ CREATE FUNCTION order_alphanum(text) RETURNS text AS $$
 $$ LANGUAGE SQL;
 
 
-CREATE TABLE seda
+CREATE TABLE message_exchange
 (
-  "message_id" character varying(255) NOT NULL,
-  "schema" character varying(16),
-  "type" character varying(128) NOT NULL,
-  "status" character varying(128) NOT NULL,
+  message_id text NOT NULL,
+  schema text,
+  type text NOT NULL,
+  status text NOT NULL,
   
-  "date" timestamp NOT NULL,
-  "reference" character varying(255) NOT NULL,
+  date timestamp NOT NULL,
+  reference text NOT NULL,
   
-  "account_id" character varying(128),
-  "sender_org_identifier" character varying(255) NOT NULL,
-  "sender_org_name" character varying(255),
-  "recipient_org_identifier" character varying(255) NOT NULL,
-  "recipient_org_name" character varying(255),
+  account_id text,
+  sender_org_identifier text NOT NULL,
+  sender_org_name text,
+  recipient_org_identifier text NOT NULL,
+  recipient_org_name text,
 
-  "archival_agreement_reference" character varying(255),
-  "reply_code" character varying(255),
-  "operation_date" timestamp,
-  "reception_date" timestamp,
+  archival_agreement_reference text,
+  reply_code text,
+  operation_date timestamp,
+  reception_date timestamp,
   
-  "related_reference" character varying(255),
-  "request_reference" character varying(255),
-  "reply_reference" character varying(255),
-  "derogation" character(1),
+  related_reference text,
+  request_reference text,
+  reply_reference text,
+  derogation boolean,
   
-  "data_object_count" integer,
-  "size" numeric,
+  data_object_count integer,
+  size numeric,
   
-  "data" text,
+  data text,
   
-  "active" character(1),
-  "archived" character(1),
+  active boolean,
+  archived boolean,
+  
+  res_id_master numeric default NULL,
+
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL,
+  filename character varying(255) DEFAULT NULL,
+  fingerprint character varying(255) DEFAULT NULL,
+  filesize bigint,
+  file_path text default NULL,
 
   PRIMARY KEY ("message_id")
 )
@@ -2635,9 +2664,10 @@ WITH (
 
 CREATE TABLE unit_identifier
 (
-  "message_id" character varying(255) NOT NULL,
-  "tablename" character varying(255) NOT NULL,
-  "res_id" character varying(255) NOT NULL
+  message_id text NOT NULL,
+  tablename text NOT NULL,
+  res_id text NOT NULL,
+  disposition text default NULL
 );
 
 DROP TABLE IF EXISTS users_baskets;

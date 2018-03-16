@@ -178,7 +178,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function resetPassword(array $aArgs = [])
+    public static function resetPassword(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -186,7 +186,8 @@ class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'  => SecurityModel::getPasswordHash('maarch')
+                'password'          => SecurityModel::getPasswordHash('maarch'),
+                'change_password'   => 'Y',
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
@@ -427,26 +428,6 @@ class UserModelAbstract
         return $aReturn[0]['process_comment'];
     }
 
-    public static function getPrimaryGroupById(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-
-        $aGroup = DatabaseModel::select([
-            'select'    => ['usergroup_content.group_id', 'usergroups.group_desc'],
-            'table'     => ['usergroup_content, usergroups'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroup_content.primary_group = ?'],
-            'data'      => [$aArgs['userId'], 'Y']
-        ]);
-
-        if (empty($aGroup[0])) {
-            return [];
-        }
-
-        return $aGroup[0];
-    }
-
     public static function getPrimaryEntityByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
@@ -481,7 +462,7 @@ class UserModelAbstract
         return $aGroups;
     }
 
-    public static function getEntitiesById(array $aArgs = [])
+    public static function getEntitiesById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);

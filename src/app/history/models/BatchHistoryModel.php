@@ -8,13 +8,12 @@
 */
 
 /**
-* @brief HistoryBatch Model
+* @brief Batch History Model
 * @author dev@maarch.org
 */
 
 namespace History\models;
 
-class HistoryBatchModel extends HistoryBatchModelAbstract
+class BatchHistoryModel extends BatchHistoryModelAbstract
 {
-    // Do your stuff in this class
 }

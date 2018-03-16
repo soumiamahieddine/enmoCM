@@ -5,37 +5,19 @@
         </button>
         <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.reports}}</h1>
         <span style="flex: 1 1 auto;"></span>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
-        </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             [opened]="mobileQuery.matches ? false : true">
-            <mat-nav-list>
-                <a mat-list-item href="index.php">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>
-                    <p mat-line>
-                        {{lang.home}}
-                    </p>
-                </a>
-                <a mat-list-item routerLink="/administration">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-chevron-left"></mat-icon>
-                    <p mat-line>
-                        {{lang.back}}
-                    </p>
-                </a>
-            </mat-nav-list>
+            <menu-nav></menu-nav>
             <mat-divider></mat-divider>
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.tools}}</h3>
-            </mat-nav-list>
+            <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
-            <mat-card *ngIf="!loading">
+            <mat-card *ngIf="!loading" class="card-app-content">
                 <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
                     <mat-tab *ngFor="let group of groups" label="{{group.group_desc}">
                         <ng-template mat-tab-label>

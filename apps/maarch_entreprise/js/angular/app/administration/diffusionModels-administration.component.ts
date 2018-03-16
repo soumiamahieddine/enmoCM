@@ -11,7 +11,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["diffusionModels-administrationView"],
+    templateUrl: "../../../../Views/diffusionModels-administration.component.html",
     providers: [NotificationService]
 })
 export class DiffusionModelsAdministrationComponent implements OnInit {

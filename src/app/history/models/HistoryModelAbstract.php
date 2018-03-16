@@ -19,6 +19,24 @@ use SrcCore\models\DatabaseModel;
 
 class HistoryModelAbstract
 {
+    public static function get(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intVal($aArgs, ['limit']);
+
+        $aHistories = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['history'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy'],
+            'limit'     => $aArgs['limit']
+        ]);
+
+        return $aHistories;
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['tableName', 'recordId', 'eventType', 'userId', 'info', 'moduleId', 'eventId']);
@@ -40,20 +58,6 @@ class HistoryModelAbstract
         ]);
 
         return true;
-    }
-
-    public static function get(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['event_date']);
-
-        $aReturn = DatabaseModel::select([
-            'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'    => ['history'],
-            'where'    => ["event_date >= date '".$aArgs['event_date']."'","event_date < date '".$aArgs['event_date']."' + interval '1 month'"],
-            'order_by' => ['event_date DESC']
-        ]);
-
-        return $aReturn;
     }
 
     public static function getByUserId(array $aArgs)

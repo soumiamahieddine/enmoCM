@@ -12,7 +12,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["baskets-administrationView"],
+    templateUrl: "../../../../Views/baskets-administration.component.html",
     providers: [NotificationService]
 })
 export class BasketsAdministrationComponent implements OnInit {

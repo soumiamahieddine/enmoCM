@@ -65,4 +65,69 @@ class NoteModelAbstract
 
         return $nb;
     }
+
+    public static function create(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
+        ValidatorModel::intVal($aArgs, ['identifier']);
+
+        DatabaseModel::insert([
+            'table' => 'notes',
+            'columnsValues' => [
+                'identifier' => $aArgs['identifier'],
+                'tablename'  => $aArgs['tablename'],
+                'user_id'    => $aArgs['user_id'],
+                'date_note'  => 'CURRENT_TIMESTAMP',
+                'note_text'  => $aArgs['note_text'],
+                'coll_id'    => $aArgs['coll_id'],
+            ]
+        ]);
+
+        return true;
+    }
+
+    public static function getByResId(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        //get notes
+        $aReturn = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['notes', 'users', 'users_entities'],
+            'left_join' => ['notes.user_id = users.user_id', 'users.user_id = users_entities.user_id'],
+            'where'     => ['notes.identifier = ?', 'users_entities.primary_entity=\'Y\''],
+            'data'      => [$aArgs['resId']],
+            'order_by'  => empty($aArgs['orderBy']) ? ['date_note'] : $aArgs['orderBy']
+        ]);
+
+        $tmpNoteId = [];
+        foreach ($aReturn as $value) {
+            $tmpNoteId[] = $value['id'];
+        }
+        //get entities
+
+        if (!empty($tmpNoteId)) {
+            $tmpEntitiesRestriction = [];
+            $entities = DatabaseModel::select([
+                'select'   => ['note_id', 'item_id'],
+                'table'    => ['note_entities'],
+                'where'    => ['note_id in (?)'],
+                'data'     => [$tmpNoteId],
+                'order_by' => ['item_id']
+            ]);
+
+            foreach ($entities as $key => $value) {
+                $tmpEntitiesRestriction[$value['note_id']][] = $value['item_id'];
+            }
+        }
+
+        foreach ($aReturn as $key => $value) {
+            if (!empty($tmpEntitiesRestriction[$value['id']])) {
+                $aReturn[$key]['entities_restriction'] = implode(", ", $tmpEntitiesRestriction[$value['id']]);
+            }
+        }
+
+        return $aReturn;
+    }
 }

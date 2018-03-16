@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
-import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { ChangeDetectorRef, Component, OnInit, ViewChild }  from '@angular/core';
+import { HttpClient }                                       from '@angular/common/http';
+import { MediaMatcher }                                     from '@angular/cdk/layout';
+import { MatPaginator, MatTableDataSource, MatSort }        from '@angular/material';
+import { MatDatepickerInputEvent }                          from '@angular/material/datepicker';
+import { LANG }                                             from '../translate.component';
 
 declare function $j(selector: any): any;
 
@@ -12,34 +11,34 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["history-administrationView"],
-    styleUrls: [],
-    providers: [NotificationService]
+    templateUrl: "../../../../Views/history-administration.component.html"
 })
-
 export class HistoryAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    loading: boolean = false;
-    data: History[] = [];
-    CurrentYear: number = new Date().getFullYear();
-    currentMonth: number = new Date().getMonth() + 1;
-    minDate: Date = new Date();
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    displayedColumns = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
-    dataSource = new MatTableDataSource(this.data);
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+
+    data                            : any[]     = [];
+    startDate                       : Date      = new Date();
+    endDate                         : Date      = new Date();
+
+    dataSource          = new MatTableDataSource(this.data);
+    displayedColumns    = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -50,54 +49,33 @@ export class HistoryAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.history;
-        }
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
-        this.updateBreadcrumb(angularGlobals.applicationName);
-        $j('#inner_content').remove();
-
-        this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');
-        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
+        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (Date.now() / 1000 - 999999).toString(), "endDate" : (Date.now() / 1000).toString()}})
             .subscribe((data: any) => {
-                this.data = data.historyList;
+                this.data = data['histories'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, (err) => {
-                console.log(err);
+            }, () => {
                 location.href = "index.php";
             });
     }
 
-    refreshHistory(event: MatDatepickerInputEvent<Date>) {
-        this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
-            .subscribe((data: any) => {
-                this.data = data.historyList;
-                this.dataSource = new MatTableDataSource(this.data);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-            }, (err) => {
-                console.log(err);
-                location.href = "index.php";
-            });
-    }
-}
-export interface History {
-    event_date: Date;
-    event_type: string;
-    user_id: string;
-    table_name: number;
-    info: string;
-    remote_ip: string;
+    // refreshHistory(event: MatDatepickerInputEvent<Date>) {
+    //     this.http.get(this.coreUrl + 'rest/administration/history/eventDate/' + this.minDate.toJSON())
+    //         .subscribe((data: any) => {
+    //             this.data = data['histories'];
+    //             this.dataSource = new MatTableDataSource(this.data);
+    //             this.dataSource.paginator = this.paginator;
+    //             this.dataSource.sort = this.sort;
+    //         }, () => {
+    //             location.href = "index.php";
+    //         });
+    // }
 }

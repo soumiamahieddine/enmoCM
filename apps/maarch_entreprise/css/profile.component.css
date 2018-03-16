@@ -1,3 +1,11 @@
+h1 {
+    margin-top:-5px !important;
+}
+
+#toolBox {
+    margin-top:15px;
+}
+
 h2{
     background-color: #009DC5 !important;
     color: white !important;

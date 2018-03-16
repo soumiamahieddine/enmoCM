@@ -71,4 +71,13 @@ class ContactController
 
         return $response->withJson(['contactId' => $contactId, 'addressId' => $addressId]);
     }
+
+    public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
+    {
+        $contact = ContactModel::getCommunicationByContactId([
+            'contactId' => $aArgs['contactId']
+        ]);
+
+        return $response->withJson([$contact]);
+    }
 }

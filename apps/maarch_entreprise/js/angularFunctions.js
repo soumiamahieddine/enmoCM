@@ -1,88 +1,45 @@
 var angularGlobals = {};
+var alreadyLoaded = false;
 function triggerAngular(prodmode, locationToGo) {
-    var views = [
-        //'header',
-        'administration',
-        'users-administration',
-        'users-administration-redirect-modal',
-        'user-administration',
-        'groups-administration',
-        'groups-administration-redirect-modal',
-        'group-administration',
-        'baskets-administration',
-        'basket-administration',
-        'basket-administration-settings-modal',
-        'basket-administration-groupList-modal',
-        'doctypes-administration',
-        'doctypes-administration-redirect-modal',
-        'diffusionModels-administration',
-        'diffusionModel-administration',
-        'entities-administration',
-        'entities-administration-redirect-modal',
-        'entity-administration',
-        'status-administration',
-        'statuses-administration',
-        'actions-administration',
-        'action-administration',
-        'history-administration',
-        'historyBatch-administration',
-        'update-status-administration',
-        'profile',
-        'signature-book',
-        'parameter-administration',
-        'parameters-administration',
-        'priorities-administration',
-        'priority-administration',
-        'reports-administration',
-        'notifications-administration',
-        'notifications-schedule-administration',
-        'notification-administration'
-    ];
-
     $j.ajax({
         url      : '../../rest/initialize',
-        type     : 'POST',
+        type     : 'GET',
         dataType : 'json',
-        data: {
-            views  : views
-        },
         success: function(answer) {
-
             angularGlobals = answer;
-            $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
-            if (prodmode) {
 
-                var alreadyLoaded = false;
-                $j('script').each(function(i, element) {
-                    if (element.src == (answer.coreUrl + "apps/maarch_entreprise/js/angular/main.bundle.min.js")) {
-                        alreadyLoaded = true;
-                    }
-                });
-                if (!alreadyLoaded) {
-                    var head = document.getElementsByTagName('head')[0];
+            $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+
+            if (!alreadyLoaded) {
+                var head = document.getElementsByTagName('head')[0];
+
+                answer['scriptsToinject'].forEach(function(element, i) {
                     var script = document.createElement('script');
                     script.type = 'text/javascript';
-                    script.src = "js/angular/main.bundle.min.js";
+                    script.src = "../../dist/" + element;
 
-                    script.onreadystatechange = changeLocationToAngular(locationToGo);
-                    script.onload = changeLocationToAngular(locationToGo);
+                    if ((i + 1) === answer['scriptsToinject'].length) {
+                        script.onreadystatechange = changeLocationToAngular(locationToGo);
+                        script.onload = changeLocationToAngular(locationToGo);
+                    }
 
                     // Fire the loading
-                    head.appendChild(script);
-                    var meta = document.createElement('meta');
-                    meta.name = 'viewport';
-                    meta.content = "width=device-width, initial-scale=1.0";
-                    head.appendChild(meta);
-                } else {
-                    location.href = locationToGo;
-                }
-            } else {
-                System.import('js/angular/main.js').catch(function(err){ console.error(err); });
-                var head = document.getElementsByTagName('head')[0];
+                    if (i === 2) {
+                        setTimeout(function () {
+                            head.appendChild(script);
+                        }, 400);
+                    } else {
+                        head.appendChild(script);
+                    }
+                });
+
                 var meta = document.createElement('meta');
                 meta.name = 'viewport';
                 meta.content = "width=device-width, initial-scale=1.0";
                 head.appendChild(meta);
+
+                alreadyLoaded = true;
+            } else {
                 location.href = locationToGo;
             }
         }

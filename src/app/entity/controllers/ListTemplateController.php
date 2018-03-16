@@ -277,6 +277,54 @@ class ListTemplateController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function updateTypes(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['typeId']);
+        $check = $check && Validator::arrayType()->notEmpty()->validate($data['roles']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $roles = '';
+        foreach ($data['roles'] as $role) {
+            if ($role['available'] === true) {
+                if ($role['id'] == 'cc') {
+                    $role['id'] = 'copy';
+                }
+
+                if (!empty($roles)) {
+                    $roles .= ' ';
+                }
+                $roles .= $role['id'];
+            }
+        }
+
+        ListTemplateModel::updateTypes([
+            'set'   => ['difflist_type_roles' => $roles],
+            'where' => ['difflist_type_id = ?'],
+            'data'  => [$data['typeId']]
+        ]);
+        if (empty($roles)) {
+            ListTemplateModel::delete([
+                'where' => ['object_type = ?'],
+                'data'  => [$data['typeId']]
+            ]);
+        } else {
+            ListTemplateModel::delete([
+                'where' => ['object_type = ?', 'item_mode not in (?)'],
+                'data'  => [$data['typeId'], explode(' ', $roles)]
+            ]);
+        }
+
+        return $response->withJson(['success' => 'success']);
+    }
+
     private static function checkItems(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['items']);

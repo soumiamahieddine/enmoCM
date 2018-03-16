@@ -25,6 +25,7 @@
 
             "Core\\"          : "core/",
             "Convert\\"       : "modules/convert/",
+            "Sendmail\\"      : "modules/sendmail/",
             "Visa\\"          : "modules/visa/"
     	}
     },

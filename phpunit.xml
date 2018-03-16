@@ -8,6 +8,7 @@
             <file>core/Test/ContactControllerTest.php</file>
             <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/EntityControllerTest.php</file>
+            <file>core/Test/GroupControllerTest.php</file>
             <file>core/Test/ListTemplateControllerTest.php</file>
             <file>core/Test/NotificationControllerTest.php</file>
             <file>core/Test/NotificationScheduleControllerTest.php</file>

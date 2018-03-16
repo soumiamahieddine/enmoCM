@@ -1,17 +1,17 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ */
 
 /**
-* @brief Notifications Model
-* @author dev@maarch.org
-* @ingroup Module
-*/
+ * @brief Notifications Model
+ *
+ * @author dev@maarch.org
+ * @ingroup Module
+ */
 
 namespace Notification\models;
 
@@ -22,15 +22,15 @@ use SrcCore\models\DatabaseModel;
 use Status\models\StatusModel;
 use SrcCore\models\CoreConfigModel;
 
-class NotificationModelAbstract 
+class NotificationModelAbstract
 {
     public static function get(array $aArgs = [])
     {
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aNotifications = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['notifications']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['notifications'],
         ]);
 
         return $aNotifications;
@@ -41,10 +41,10 @@ class NotificationModelAbstract
         ValidatorModel::notEmpty($aArgs, ['notification_sid']);
 
         $aNotification = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['notifications'],
-            'where'     => ['notification_sid = ?'],
-            'data'      => [$aArgs['notification_sid']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['notifications'],
+            'where' => ['notification_sid = ?'],
+            'data' => [$aArgs['notification_sid']],
         ]);
 
         if (empty($aNotification[0])) {
@@ -59,10 +59,10 @@ class NotificationModelAbstract
         ValidatorModel::notEmpty($aArgs, ['notificationId']);
 
         $aNotification = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['notifications'],
-            'where'     => ['notification_id = ?'],
-            'data'      => [$aArgs['notificationId']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['notifications'],
+            'where' => ['notification_id = ?'],
+            'data' => [$aArgs['notificationId']],
         ]);
 
         if (empty($aNotification[0])) {
@@ -78,9 +78,9 @@ class NotificationModelAbstract
         ValidatorModel::intVal($aArgs, ['notification_sid']);
 
         DatabaseModel::delete([
-            'table'     => 'notifications',
-            'where'     => ['notification_sid = ?'],
-            'data'      => [$aArgs['notification_sid']],
+            'table' => 'notifications',
+            'where' => ['notification_sid = ?'],
+            'data' => [$aArgs['notification_sid']],
         ]);
 
         return true;
@@ -88,25 +88,24 @@ class NotificationModelAbstract
 
     public static function create(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type', 'diffusion_properties']);
+        ValidatorModel::notEmpty($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type']);
         ValidatorModel::intVal($aArgs, ['template_id']);
-        ValidatorModel::stringType($aArgs, ['notification_id','description','is_enabled','event_id','notification_mode',]);
+        ValidatorModel::stringType($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode']);
 
         DatabaseModel::insert([
-            'table'         => 'notifications',
+            'table' => 'notifications',
             'columnsValues' => [
-                'notification_id'       => $aArgs['notification_id'],
-                'description'           => $aArgs['description'],
-                'is_enabled'            => $aArgs['is_enabled'],
-                'event_id'              => $aArgs['event_id'],
-                'notification_mode'     => $aArgs['notification_mode'],
-                'template_id'           => $aArgs['template_id'],
-                'rss_url_template'      => $aArgs['rss_url_template'],
-                'diffusion_type'        => $aArgs['diffusion_type'],
-                'diffusion_properties'  => $aArgs['diffusion_properties'],
-                'attachfor_type'        => $aArgs['attachfor_type'],
-                'attachfor_properties'  => $aArgs['attachfor_properties']
-            ]
+                'notification_id' => $aArgs['notification_id'],
+                'description' => $aArgs['description'],
+                'is_enabled' => $aArgs['is_enabled'],
+                'event_id' => $aArgs['event_id'],
+                'notification_mode' => $aArgs['notification_mode'],
+                'template_id' => $aArgs['template_id'],
+                'diffusion_type' => $aArgs['diffusion_type'],
+                'diffusion_properties' => $aArgs['diffusion_properties'],
+                'attachfor_type' => $aArgs['attachfor_type'],
+                'attachfor_properties' => $aArgs['attachfor_properties'],
+            ],
         ]);
 
         return true;
@@ -123,9 +122,9 @@ class NotificationModelAbstract
 
         $aReturn = DatabaseModel::update([
             'table' => 'notifications',
-            'set'   => $aArgs,
+            'set' => $aArgs,
             'where' => ['notification_sid = ?'],
-            'data'  => [$notification_sid]
+            'data' => [$notification_sid],
         ]);
 
         return $aReturn;
@@ -134,25 +133,24 @@ class NotificationModelAbstract
     public static function getEvent()
     {
         $tabEvent_Type = DatabaseModel::select([
-            'select'    => ['id, label_action'],
-            'table'     => ['actions']
+            'select' => ['id, label_action'],
+            'table' => ['actions'],
         ]);
 
         //get event system
         $customId = CoreConfigModel::getCustomId();
 
-        if (file_exists('custom/' .$customId. 'modules/notifications/xml/event_type.xml')) {
-            $path = 'custom/' .$customId. 'modules/notifications/xml/event_type.xml';
+        if (file_exists('custom/'.$customId.'modules/notifications/xml/event_type.xml')) {
+            $path = 'custom/'.$customId.'modules/notifications/xml/event_type.xml';
         } else {
             $path = 'modules/notifications/xml/event_type.xml';
         }
         $xmlfile = simplexml_load_file($path);
         if ($xmlfile) {
             foreach ($xmlfile->event_type as $eventType) {
-
                 $tabEvent_Type[] = array(
-                    'id'          => (string) $eventType->id,
-                    'label_action'       => (string) $eventType->label,
+                    'id' => (string) $eventType->id,
+                    'label_action' => (string) $eventType->label,
                 );
             }
         }
@@ -163,12 +161,12 @@ class NotificationModelAbstract
     public static function getTemplate()
     {
         $tabTemplate = DatabaseModel::select([
-            'select'    => ['template_id, template_label'],
-            'table'     => ['templates'],
-            'where'     => ['template_target = ?'],
-            'data'      => ['notifications']
+            'select' => ['template_id, template_label'],
+            'table' => ['templates'],
+            'where' => ['template_target = ?'],
+            'data' => ['notifications'],
         ]);
-        
+
         return $tabTemplate;
     }
 
@@ -192,7 +190,7 @@ class NotificationModelAbstract
         //                 'table'     => [(string)$diffusionType->from],
         //                 'where'     => [(string)$diffusionType->where],
         //                 'data'      => [(string)$diffusionType->data]
-        //                 ]);  
+        //                 ]);
         //             }else{
         //                 $result = DatabaseModel::select([
         //                 'select'    => [(string)$diffusionType->select],
@@ -209,9 +207,6 @@ class NotificationModelAbstract
         //             'request'        => $result,
         //         );
 
-                
-
-
         //     }
         // }
         // $result = DatabaseModel::select([
@@ -221,8 +216,8 @@ class NotificationModelAbstract
         //     'data'  => ['Y']
         // ]);
         $tabDiffusion_Type[] = array(
-            'id'          => 'group',
-            'label'          => constant((string)'_GROUP'),
+            'id' => 'group',
+            'label' => 'Groupe',
             'add_attachment' => 'true',
             //'request'       => $result,
         );
@@ -233,8 +228,8 @@ class NotificationModelAbstract
         //     'data'  => ['Y']
         // ]);
         $tabDiffusion_Type[] = array(
-            'id'          => 'entity',
-            'label'          => constant((string)'_ENTITY'),
+            'id' => 'entity',
+            'label' => 'Entité',
             'add_attachment' => 'true',
             //'request'       => $result
         );
@@ -243,26 +238,26 @@ class NotificationModelAbstract
         //     'table'     => ['status']
         // ]);
         $tabDiffusion_Type[] = array(
-            'id'          => 'dest_entity',
-            'label'          => constant((string)'_DEST_ENTITY'),
+            'id' => 'dest_entity',
+            'label' => 'Service de l\'utilisateur destinataire',
             'add_attachment' => 'false',
             //'request'       => $result
         );
         $tabDiffusion_Type[] = array(
-            'id'          => 'dest_user',
-            'label'          => constant((string)'_DEST_USER'),
+            'id' => 'dest_user',
+            'label' => 'Liste de diffusion du document',
             'add_attachment' => 'false',
             //'request'       => $result
         );
         $tabDiffusion_Type[] = array(
-            'id'          => 'dest_user_visa',
-            'label'          => constant((string)'_DEST_USER_VISA'),
+            'id' => 'dest_user_visa',
+            'label' => 'Viseur actuel du document',
             'add_attachment' => 'true',
             //'request'       => $result
         );
         $tabDiffusion_Type[] = array(
-            'id'          => 'dest_user_sign',
-            'label'          => constant((string)'_DEST_USER_SIGN'),
+            'id' => 'dest_user_sign',
+            'label' => 'Signataire actuel du document',
             'add_attachment' => 'true',
             //'request'       => $result
         );
@@ -271,73 +266,71 @@ class NotificationModelAbstract
         //     'table'     => ['users']
         // ]);
         $tabDiffusion_Type[] = array(
-            'id'          => 'user',
-            'label'          => constant((string)'_USER'),
-            'add_attachment' => 'true',
-            //'request'       => $result
-        );
-        $result = [];
-        $tabDiffusion_Type[] = array(
-            'id'          => 'note_dest_user',
-            'label'          => constant((string)'_NOTE_DEST_USER'),
-            'add_attachment' => 'false',
-            //'request'       => $result
-        );
-        $tabDiffusion_Type[] = array(
-            'id'          => 'note_copy_list',
-            'label'          => constant((string)'_NOTE_COPY_LIST'),
-            'add_attachment' => 'false',
-            //'request'       => $result
-        );
-        $tabDiffusion_Type[] = array(
-            'id'          => 'contact',
-            'label'          => constant((string)'_CONTACT'),
+            'id' => 'user',
+            'label' => 'Utilisateur désigné',
             'add_attachment' => 'true',
             //'request'       => $result
         );
 
+        $tabDiffusion_Type[] = array(
+            'id' => 'copy_list',
+            'label' => 'Liste de diffusion du document',
+            'add_attachment' => 'false',
+            //'request'       => $result
+        );
+
+        $result = [];
+
+        $tabDiffusion_Type[] = array(
+            'id' => 'contact',
+            'label' => 'Contact du document',
+            'add_attachment' => 'true',
+            //'request'       => $result
+        );
 
         return $tabDiffusion_Type;
-
     }
 
     public static function getDiffusionTypeGroups()
     {
         $groups = GroupModel::get();
+
         return $groups;
     }
 
     public static function getDiffusionTypesUsers()
     {
         $users = DatabaseModel::select([
-            'select'    => ["user_id as id, concat(firstname,' ',lastname) as label"],
-            'table'     => ['users']
+            'select' => ["user_id as id, concat(firstname,' ',lastname) as label"],
+            'table' => ['users'],
         ]);
+
         return $users;
     }
 
     public static function getDiffusionTypeEntities()
     {
         $entities = EntityModel::get();
+
         return $entities;
     }
 
     public static function getDiffusionTypeStatus()
     {
         $status = StatusModel::get();
+
         return $status;
     }
 
     public static function getEnableNotifications(array $aArgs = [])
     {
         $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['notifications'],
-            'where'     => ['is_enabled = ?'],
-            'data'      => ['Y']
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table' => ['notifications'],
+            'where' => ['is_enabled = ?'],
+            'data' => ['Y'],
         ]);
 
         return $aReturn;
     }
-
 }

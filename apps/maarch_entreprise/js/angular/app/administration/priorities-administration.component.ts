@@ -10,7 +10,7 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: angularGlobals["priorities-administrationView"],
+    templateUrl: "../../../../Views/priorities-administration.component.html",
     providers: [NotificationService]
 })
 export class PrioritiesAdministrationComponent implements OnInit {

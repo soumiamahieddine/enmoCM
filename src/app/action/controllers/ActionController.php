@@ -34,59 +34,37 @@ class ActionController
     public function getById(Request $request, Response $response, $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
+
         $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
 
-        if(!empty($obj['action'])){
-            if ($obj['action']['is_folder_action'] == 'Y') {
-                $obj['action']['is_folder_action'] = true;
-            } else {
-                $obj['action']['is_folder_action'] = false;
-            }
+        if (!empty($obj['action'])) {
+            $obj['action']['is_folder_action'] = ($obj['action']['is_folder_action'] == 'Y');
+            $obj['action']['history'] = ($obj['action']['history'] == 'Y');
+            $obj['action']['is_system'] = ($obj['action']['is_system'] == 'Y');
+            $obj['action']['create_id'] = ($obj['action']['create_id'] == 'Y');
 
-            if ($obj['action']['history'] == 'Y') {
-                $obj['action']['history'] = true;
-            } else {
-                $obj['action']['history'] = false;
-            }
-
-            if ($obj['action']['is_system'] == 'Y') {
-                $obj['action']['is_system'] = true;
-            } else {
-                $obj['action']['is_system'] = false;
-            }
-
-            if ($obj['action']['create_id'] == 'Y') {
-                $obj['action']['create_id'] = true;
-            } else {
-                $obj['action']['create_id'] = false;
-            }
-
-            //array of id categoriesList
+            $actionCategories = [];
             foreach ($obj['action']['actionCategories'] as $key => $category) {
-                $arrActionCategories[] = $category['category_id'];
+                $actionCategories[] = $category['category_id'];
             }
-            $obj['action']['actionCategories'] = $arrActionCategories;
+            $obj['action']['actionCategories'] = $actionCategories;
 
             $obj['categoriesList'] = CoreConfigModel::getLettersBoxCategories();
-
-            //array of id categoriesList
-            foreach ($obj['categoriesList'] as $key => $category) {
-                $arrCategoriesList[] = $category['id'];
-            }
-
-            //array of id actionCategories
             if (empty($obj['action']['actionCategories'])) {
-                $obj['action']['actionCategories'] = $arrCategoriesList;
+                $categoriesList = [];
+                foreach ($obj['categoriesList'] as $key => $category) {
+                    $categoriesList[] = $category['id'];
+                }
+                $obj['action']['actionCategories'] = $categoriesList;
             }
-        
+
+
             $obj['statuses'] = StatusModel::get();
-            array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
+            array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_', 'label_status'=> _UNCHANGED]);
             $obj['action_pagesList'] = ActionModel::getAction_pages();
-            array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
+            array_unshift($obj['action_pagesList']['actionsPageList'], ['id' => '', 'label' => _NO_PAGE, 'name' => '', 'origin' => '']);
             $obj['keywordsList'] = ActionModel::getKeywords();
         }
   
@@ -100,86 +78,63 @@ class ActionController
         }
 
         $data = $request->getParams();
-        $data  = $this->manageValue($data);
+        $data = $this->manageValue($data);
         
         $errors = $this->control($data, 'create');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
     
-        ActionModel::create($data);
-
-        $obj = max(ActionModel::get());
+        $id = ActionModel::create($data);
 
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $obj['id'],
+            'recordId'  => $id,
             'eventType' => 'ADD',
             'eventId'   => 'actionadd',
-            'info'      => _ACTION_ADDED . ' : ' . $obj['label_action']
+            'info'      => _ACTION_ADDED . ' : ' . $data['label_action']
         ]);
 
-        return $response->withJson(
-            [
-            'action'  => $obj
-            ]
-        );
+        return $response->withJson(['actionId' => $id]);
     }
 
-    public function update(Request $request, Response $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $obj       = $request->getParams();
-        $obj['id'] = $aArgs['id'];
+        $data = $request->getParams();
+        $data['id'] = $aArgs['id'];
 
-        $obj    = $this->manageValue($obj);
-        $errors = $this->control($obj, 'update');
+        $data    = $this->manageValue($data);
+        $errors = $this->control($data, 'update');
       
         if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $return = ActionModel::update($obj);
-
-        if ($return) {
-            $id  = $aArgs['id'];
-            $obj = ActionModel::getById(['id' => $id]);
-        } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Problem during action update']);
-        }
+        ActionModel::update($data);
 
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $obj['id'],
+            'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
             'eventId'   => 'actionup',
-            'info'      => _ACTION_UPDATED. ' : ' . $obj['label_action']
+            'info'      => _ACTION_UPDATED. ' : ' . $data['label_action']
         ]);
 
-        return $response->withJson(
-            [
-            'action'  => $obj
-            ]
-        );
+        return $response->withJson(['success' => 'success']);
     }
 
-    public function delete(Request $request, Response $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
         $action = ActionModel::getById(['id' => $aArgs['id']]);
@@ -193,7 +148,7 @@ class ActionController
             'info'      => _ACTION_DELETED. ' : ' . $action['label_action']
         ]);
 
-        return $response->withJson(['action' => ActionModel::get()]);
+        return $response->withJson(['actions' => ActionModel::get()]);
     }
 
     protected function control($aArgs, $mode)

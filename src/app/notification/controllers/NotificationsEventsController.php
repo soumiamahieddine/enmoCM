@@ -20,7 +20,7 @@ use Notification\models\NotificationModel;
 
 class NotificationsEventsController
 {
-    public static function fill_event_stack(array $aArgs)
+    public static function fillEventStack(array $aArgs)
     {
         if ($aArgs['recordId'] == '') {
             return;
@@ -34,8 +34,8 @@ class NotificationsEventsController
         foreach ($aNotifications as $notification) {
             $event_ids = explode(',', $notification['event_id']);
 
-            if ($aArgs['eventId'] == $notification['event_id'] 
-                || self::wildcard_match(["pattern" => $notification['event_id'], "str" => $aArgs['eventId']]) 
+            if ($aArgs['eventId'] == $notification['event_id']
+                || self::wildcardMatch(["pattern" => $notification['event_id'], "str" => $aArgs['eventId']])
                 || in_array($aArgs['eventId'], $event_ids)) {
                 NotificationsEventsModel::create([
                     'notification_sid' => $notification['notification_sid'],
@@ -48,7 +48,7 @@ class NotificationsEventsController
         }
     }
 
-    public function wildcard_match(array $aArgs)
+    public function wildcardMatch(array $aArgs)
     {
         $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($aArgs['pattern'])) . '$/is';
         $result = preg_match($pattern, $aArgs['str']);

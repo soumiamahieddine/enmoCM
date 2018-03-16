@@ -63,11 +63,16 @@ class EntityController
             }
         }
 
+        $unneededRoles = ['visa', 'sign'];
         $entity['types'] = EntityModel::getTypes();
         $entity['roles'] = EntityModel::getRoles();
         $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
         $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($entity['roles'] as $key => $role) {
+            if (in_array($role['id'], $unneededRoles)) {
+                unset($entity['roles'][$key]);
+                continue;
+            }
             if (in_array($role['id'], $rolesForService)) {
                 $entity['roles'][$key]['available'] = true;
             } else {
@@ -152,7 +157,7 @@ class EntityController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['entity_id']) && preg_match("/^[\w-]*$/", $data['entity_id']) && (strlen($data['entity_id']) < 33);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);

@@ -131,6 +131,11 @@
             <default_category>incoming</default_category>
         </categories>
     </COLLECTION>
+    <COLLECTION>
+        <id>archive_transfer_coll</id>
+        <label>_ARCHVIE_TRANSFER_COLL</label>
+        <table>message_exchange</table>
+    </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>
         <usersban>true</usersban>
@@ -190,6 +195,9 @@
         <contact_addresses_del>true</contact_addresses_del>
         <contact_addresses_add>true</contact_addresses_add>
         <contact_addresses_up>true</contact_addresses_up>
+        <contact_communication_del>true</contact_communication_del>
+        <contact_communication_add>true</contact_communication_add>
+        <contact_communication_up>true</contact_communication_up>
     </HISTORY>
     <KEYWORDS>
         <id>ERR</id>

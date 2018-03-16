@@ -12,7 +12,7 @@ declare const angularGlobals : any;
 
 
 @Component({
-    templateUrl : angularGlobals["group-administrationView"],
+    templateUrl: "../../../../Views/group-administration.component.html",
     providers   : [NotificationService]
 })
 export class GroupAdministrationComponent implements OnInit {

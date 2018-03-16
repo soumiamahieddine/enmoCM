@@ -12,11 +12,13 @@ var animations_1 = require("@angular/platform-browser/animations");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/common/http");
 var app_material_module_1 = require("./app-material.module");
-//import { HeaderComponent }                      from './header.component';
+var header_component_1 = require("./header.component");
 var notification_service_1 = require("./notification.service");
 var app_component_1 = require("./app.component");
 var app_routing_module_1 = require("./app-routing.module");
-var administration_module_1 = require("./administration/administration.module");
+// import { AdministrationModule }                 from './administration/administration.module';
+var menu_component_1 = require("./menu/menu.component");
+var menu_nav_component_1 = require("./menu/menu-nav.component");
 var profile_component_1 = require("./profile.component");
 var signature_book_component_1 = require("./signature-book.component");
 var AppModule = /** @class */ (function () {
@@ -29,14 +31,16 @@ var AppModule = /** @class */ (function () {
                 animations_1.BrowserAnimationsModule,
                 forms_1.FormsModule,
                 http_1.HttpClientModule,
-                administration_module_1.AdministrationModule,
+                // AdministrationModule,
                 app_routing_module_1.AppRoutingModule,
                 app_material_module_1.AppMaterialModule
             ],
             declarations: [
-                //HeaderComponent,
+                header_component_1.HeaderComponent,
                 app_component_1.AppComponent,
                 profile_component_1.ProfileComponent,
+                menu_component_1.MenuComponent,
+                menu_nav_component_1.MenuNavComponent,
                 signature_book_component_1.SignatureBookComponent,
                 signature_book_component_1.SafeUrlPipe,
                 notification_service_1.CustomSnackbarComponent

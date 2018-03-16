@@ -14,7 +14,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["basket-administrationView"],
+    templateUrl: "../../../../Views/basket-administration.component.html",
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
@@ -155,7 +155,7 @@ export class BasketAdministrationComponent implements OnInit {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
                 .subscribe(() => {
                     this.notify.success(this.lang.basketAdded);
-                    this.router.navigate(["/administration/baskets"]);
+                    this.router.navigate(["/administration/baskets/" + this.basket.id]);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -184,6 +184,15 @@ export class BasketAdministrationComponent implements OnInit {
             }
         });
         this.addAction(group);
+    }
+
+    updateResultPage(group: any) {
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            .subscribe(() => {
+                this.notify.success(this.lang.basketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
     unlinkGroup(groupIndex: any) {
@@ -252,7 +261,7 @@ export class BasketAdministrationComponent implements OnInit {
 }
 
 @Component({
-    templateUrl: angularGlobals["basket-administration-settings-modalView"],
+    templateUrl: "../../../../Views/basket-administration-settings-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
@@ -334,9 +343,9 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         this.allEntities.forEach((entity: any) => {
             entity.state = { "opened": false, "selected": false };
             this.data.action.redirects.forEach((keyword: any) => {
-                if (entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') {
+                if ((entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'ENTITY')) {
                     entity.state = { "opened": true, "selected": true };
-                }
+                } 
             });
         });
 
@@ -454,9 +463,8 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     }
 }
 
-import { FormGroup, Validators } from '@angular/forms';
 @Component({
-    templateUrl: angularGlobals["basket-administration-groupList-modalView"],
+    templateUrl: "../../../../Views/basket-administration-groupList-modal.component.html",
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationGroupListModalComponent {

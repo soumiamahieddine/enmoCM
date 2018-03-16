@@ -30,11 +30,10 @@ var AppComponent = /** @class */ (function () {
             template: "<router-outlet></router-outlet>",
             encapsulation: core_1.ViewEncapsulation.None,
             styleUrls: [
-                '../../node_modules/bootstrap/dist/css/bootstrap.min.css',
-                'css/maarch-material.css',
-                'css/engine.css',
-                'css/jstree-custom.min.css',
-                '../../node_modules/ng2-dnd/bundles/style.css'
+                '../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+                '../../../css/maarch-material.css',
+                '../../../css/engine.css',
+                '../../../../../node_modules/ng2-dnd/bundles/style.css'
             ],
             viewProviders: [material_1.MatIconRegistry],
             providers: [

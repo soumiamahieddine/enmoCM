@@ -40,6 +40,9 @@ abstract class contacts_v2_Abstract extends Database
     {
         //  return the user information in sessions vars
         $func = new functions();
+        $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] =
+            $_REQUEST['is_external'];
+
         $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] =
         $_REQUEST['is_corporate'];
         $controlTarget = "SELECT id FROM contact_types WHERE contact_target = ? or contact_target = 'both' or contact_target is null";
@@ -99,6 +102,18 @@ abstract class contacts_v2_Abstract extends Database
             );
         } else {
             $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = '';
+        }
+        if ($_REQUEST['communication_type'] <> '') {
+            $_SESSION['m_admin']['communication']['TYPE'] = $func->wash(
+                $_REQUEST['communication_type'], 'no', _COMMUNICATION_TYPE . ' ', 'yes', 0, 32
+            );
+        } else {
+            $_SESSION['m_admin']['communication']['TYPE'] = '';
+        }
+        if (!empty($_SESSION['m_admin']['communication']['TYPE'])) {
+            $_SESSION['m_admin']['communication']['VALUE'] = $func->wash(
+                $_REQUEST['communication_value'], 'no', _COMMUNICATION_VALUE . ' ', 'yes', 0, 255
+            );
         }
 
         $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $func->wash(
@@ -274,13 +289,14 @@ abstract class contacts_v2_Abstract extends Database
                     $entity_id = $_SESSION['user']['primaryentity']['id'];
                 }
                 $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts_v2']
-                       . ' ( contact_type, lastname , firstname , society , society_short, function , '
-                       . 'other_data,'
-                       . " title, is_corporate_person, user_id, entity_id, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp)";
+                    . ' ( contact_type, lastname , firstname , society , society_short, function , '
+                    . 'other_data,'
+                    . " title, is_corporate_person, is_external_contact, user_id, entity_id, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp)";
 
                 $db->query($query, array($_SESSION['m_admin']['contact']['CONTACT_TYPE'], $_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME']
-                            , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION'], $_SESSION['m_admin']['contact']['OTHER_DATA']
-                            , $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['user']['UserId'], $entity_id));
+                , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION'], $_SESSION['m_admin']['contact']['OTHER_DATA']
+                , $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT']
+                , $_SESSION['user']['UserId'], $entity_id));
                 if($_SESSION['history']['contactadd'])
                 {
                     $stmt = $db->query("SELECT contact_id, creation_date FROM ".$_SESSION['tablename']['contacts_v2']
@@ -327,7 +343,27 @@ abstract class contacts_v2_Abstract extends Database
                     $res = $stmt->fetchObject();
                     $id = $res->contact_id;
                     $_SESSION['contact']['current_contact_id'] = $id;
-                
+
+                if (!empty($_SESSION['m_admin']['communication']['TYPE']) && !empty($_SESSION['m_admin']['communication']['VALUE'])) {
+                    $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_communication']
+                        . ' ( contact_id, type, value) VALUES (?, ?, ?)';
+
+                    $db->query($query, array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+
+                    if($_SESSION['history']['contact_communication_add'])
+                    {
+                        $stmt = $db->query("SELECT id FROM ".$_SESSION['tablename']['contact_communication']
+                            ." WHERE contact_id = ? and type = ? and value = ?"
+                            , array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+                        $res = $stmt->fetchObject();
+                        $id = $res->id;
+                        $msg =  _COMMUNICATION_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['communication']['TYPE'].' '.$_SESSION['m_admin']['communication']['VALUE']);
+                        require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['contact_communication'], $id,"ADD",'contacts_communication_add',$msg, $_SESSION['config']['databasetype']);
+                    }
+                }
+
                 $_SESSION['info'] = _CONTACT_ADDED;
                 header("location: ".$path_contacts);
                 exit;
@@ -335,11 +371,11 @@ abstract class contacts_v2_Abstract extends Database
             elseif($mode == "up")
             {
                 $query = "UPDATE ".$_SESSION['tablename']['contacts_v2']
-                    ." SET update_date = current_timestamp, contact_type = ?, lastname = ?, firstname = ?,society = ?,society_short = ?,function = ?, other_data = ?, title = ?, is_corporate_person = ?";
+                    ." SET update_date = current_timestamp, contact_type = ?, lastname = ?, firstname = ?,society = ?,society_short = ?,function = ?, other_data = ?, title = ?, is_corporate_person = ?, is_external_contact = ?";
                 $query .= " WHERE contact_id = ?";
                 $arrayPDO = array($_SESSION['m_admin']['contact']['CONTACT_TYPE'], $_SESSION['m_admin']['contact']['LASTNAME'], $_SESSION['m_admin']['contact']['FIRSTNAME']
-                    , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION']
-                    , $_SESSION['m_admin']['contact']['OTHER_DATA'], $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['m_admin']['contact']['ID']);
+                , $_SESSION['m_admin']['contact']['SOCIETY'], $_SESSION['m_admin']['contact']['SOCIETY_SHORT'], $_SESSION['m_admin']['contact']['FUNCTION']
+                , $_SESSION['m_admin']['contact']['OTHER_DATA'], $_SESSION['m_admin']['contact']['TITLE'], $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'], $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'],$_SESSION['m_admin']['contact']['ID']);
 
                 $db->query($query, $arrayPDO);
                 if($_SESSION['history']['contactup'])
@@ -356,6 +392,61 @@ abstract class contacts_v2_Abstract extends Database
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $_SESSION['m_admin']['contact']['ID'],"UP",'contacts_v2_up',$msg, $_SESSION['config']['databasetype']);
                 }
+
+                if (!empty($_SESSION['m_admin']['communication']['TYPE']) && !empty($_SESSION['m_admin']['communication']['VALUE'])) {
+                    $stmt = $db->query("SELECT id FROM " . $_SESSION['tablename']['contact_communication']
+                        . " WHERE contact_id = ? AND type = ? AND value = ?"
+                        , array($_SESSION['m_admin']['contact']['ID'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+                    $res = $stmt->fetchObject();
+
+                    if($res) {
+                        $query = 'UPDATE ' . $_SESSION['tablename']['contact_communication']
+                            . ' SET type = ?, value = ? WHERE contact_id = ?';
+
+                        $db->query($query, array($_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE'], $_SESSION['m_admin']['contact']['ID']));
+                        if ($_SESSION['history']['contact_communication_up']) {
+                            $stmt = $db->query("SELECT id FROM " . $_SESSION['tablename']['contact_communication']
+                                . " WHERE contact_id = ? AND type = ? AND value = ?"
+                                , array($_SESSION['m_admin']['contact']['ID'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+                            $res = $stmt->fetchObject();
+                            $id = $res->id;
+                            $msg = _COMMUNICATION_MODIFIED . ' : ' . functions::protect_string_db($_SESSION['m_admin']['communication']['TYPE'] . ' ' . $_SESSION['m_admin']['communication']['VALUE']);
+                            require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php');
+                            $hist = new history();
+                            $hist->add($_SESSION['tablename']['contact_communication'], $id, "UP", 'contacts_communication_up', $msg, $_SESSION['config']['databasetype']);
+                        }
+                    } else {
+                        $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_communication']
+                            . ' ( contact_id, type, value) VALUES (?, ?, ?)';
+
+                        $db->query($query, array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+
+                        if($_SESSION['history']['contact_communication_add'])
+                        {
+                            $stmt = $db->query("SELECT id FROM ".$_SESSION['tablename']['contact_communication']
+                                ." WHERE contact_id = ? and type = ? and value = ?"
+                                , array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+                            $res = $stmt->fetchObject();
+                            $id = $res->id;
+                            $msg =  _COMMUNICATION_ADDED.' : '.functions::protect_string_db($_SESSION['m_admin']['communication']['TYPE'].' '.$_SESSION['m_admin']['communication']['VALUE']);
+                            require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                            $hist = new history();
+                            $hist->add($_SESSION['tablename']['contact_communication'], $id,"ADD",'contacts_communication_add',$msg, $_SESSION['config']['databasetype']);
+                        }
+                    }
+                } else if (empty($_SESSION['m_admin']['communication']['TYPE']) && empty($_SESSION['m_admin']['communication']['VALUE'])) {
+                    $query = 'DELETE FROM ' . $_SESSION['tablename']['contact_communication']
+                        . ' WHERE contact_id = ?';
+
+                    $db->query($query, array($_SESSION['m_admin']['contact']['ID']));
+                    if ($_SESSION['history']['contact_communication_add']) {
+                        $msg = _COMMUNICATION_DELETED;
+                        require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_history.php');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['contact_communication'], '', "DEL", 'contacts_communication_del', $msg, $_SESSION['config']['databasetype']);
+                    }
+                }
+
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _CONTACT_MODIFIED;
                 if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == "yes") {
@@ -412,6 +503,7 @@ abstract class contacts_v2_Abstract extends Database
                 $_SESSION['m_admin']['contact']['FUNCTION']            = functions::show_string($line->function);
                 $_SESSION['m_admin']['contact']['OTHER_DATA']          = functions::show_string($line->other_data);
                 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = functions::show_string($line->is_corporate_person);
+                $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] = functions::show_string($line->is_external_contact);
                 $_SESSION['m_admin']['contact']['CONTACT_TYPE']        = $line->contact_type;
                 $_SESSION['m_admin']['contact']['OWNER']               = $line->user_id;
                 if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
@@ -421,11 +513,23 @@ abstract class contacts_v2_Abstract extends Database
                     $res = $stmt->fetchObject();
                     $_SESSION['m_admin']['contact']['OWNER'] = $res->lastname.', '.$res->firstname.' ('.$_SESSION['m_admin']['contact']['OWNER'].')';
                 }
+
+                $query = "SELECT * FROM ".$_SESSION['tablename']['contact_communication']." WHERE contact_id = ?";
+
+                $stmt = $db->query($query, array($id));
+
+                $_SESSION['m_admin']['communication'] = array();
+                $line = $stmt->fetchObject();
+                $_SESSION['m_admin']['communication']['ID']              = $line->id;
+                $_SESSION['m_admin']['communication']['CONTACT_ID']      = $line->contact_id;
+                $_SESSION['m_admin']['communication']['TYPE']            = functions::show_string($line->type);
+                $_SESSION['m_admin']['communication']['VALUE']           = functions::show_string($line->value);
             }
         }
         else if($mode == 'add' && !isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']))
         {
             $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = 'Y';
+            $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] = 'N';
         }
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
         $business = new business_app_tools();
@@ -462,7 +566,7 @@ abstract class contacts_v2_Abstract extends Database
             echo '</h2>';
         }
         ?>
-        <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;width:100% !important;"> 
+        <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;width:100% !important;">
             <?php
             if($state == false)
             {
@@ -501,13 +605,23 @@ abstract class contacts_v2_Abstract extends Database
                 <table id="frmcontact_table">
                     <tr>
                         <td>&nbsp;</td>
-                        <td class="indexing_field" style="text-align:center">
-                            <span id="span_corporate">
-                                <input type="radio" class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$j('#corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>                        
-                            </span>
-                            <span id="span_no_corporate">
-                                <input type="radio" class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$j('#corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
-                            </span>
+                        <td class="indexing_field">
+                            <input type="radio"  class="check" name="is_external" value="N" <?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_external_contact( false, '<?php functions::xecho($display_value);?>')" id="external_no"><span onclick="$('external_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_INTERNAL_CONTACT;?></span>
+                            <input type="radio"  class="check" name="is_external"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'Y'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_external_contact( true, '<?php functions::xecho($display_value);?>')" id="external_yes"><span onclick="$('external_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_EXTERNAL_CONTACT;?></span>
+                        </td>
+                        <td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr id="search_directory" style="display:<?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'N'){ echo 'none';}else{ functions::xecho($display_value);}?>">
+                        <td><label for="searchDirectory"><?php echo _SEARCH_DIRECTORY;?> : </label></td>
+                        <td class="indexing_field"><input name="searchDirectory" type="text" onkeyup="this.value=this.value.toUpperCase()" id="lastname" value=""/></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="indexing_field">
+                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');setContactType('corporate', '<?php echo ($can_add_contact);?>')" id="corpo_yes"><span onclick="$('corpo_yes').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_CORPORATE_PERSON;?></span>
+                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');setContactType('no_corporate', '<?php echo ($can_add_contact);?>')" id="corpo_no"><span onclick="$('corpo_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _INDIVIDUAL;?></span>
                         </td>
                         <td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td>
                         <td>&nbsp;</td>
@@ -599,6 +713,27 @@ abstract class contacts_v2_Abstract extends Database
                         <td class="indexing_field"><textarea name="comp_data" id="comp_data"><?php if($mode<>'add' && isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){functions::xecho($func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA'])); }?></textarea></td>
                         <td>&nbsp;</td>
                     </tr>
+                        <tr id="communication_type_tr" >
+                            <td><?php echo _COMMUNICATION_TYPE;?> :</td>
+                            <td class="indexing_field">
+                                <select name="communication_type" id="communication_type">
+                                    <option value=""><?php echo _CHOOSE_COMMUNICATION_TYPES;?></option>
+                                    <?php if ($_SESSION['m_admin']['communication']['TYPE'] == "email") { ?>
+                                        <option value="email" selected="selected"><?php echo _EMAIL;?></option>
+                                    <?php } else { ?>
+                                        <option value="email"><?php echo _EMAIL;?></option>
+                                    <?php }
+                                    if ($_SESSION['m_admin']['communication']['TYPE'] == "url") { ?>
+                                        <option value="url" selected="selected"><?php echo _URL;?></option>
+                                    <?php } else { ?>
+                                        <option value="url"><?php echo _URL;?></option>
+                                    <?php } ?>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo _COMMUNICATION_VALUE;?> :</td>
+                            <td class="indexing_field"><input name="communication_value" type="text"  id="communication_value" value="<?php if(isset($_SESSION['m_admin']['communication']['VALUE'])){ functions::xecho($func->show_str($_SESSION['m_admin']['communication']['VALUE'])); }?>"/></td>
+                        </tr>
                 </table>
                         <input name="mode" type="hidden" value="<?php echo $mode;?>" />
                         <br/>
@@ -817,12 +952,14 @@ abstract class contacts_v2_Abstract extends Database
                     $res = $stmt->fetchObject();
                     $db->query("DELETE FROM " . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?", array($id));
                     $db->query("DELETE FROM " . $_SESSION['tablename']['contact_addresses'] . " WHERE contact_id = ?", array($id));
+                    $db->query("DELETE FROM " . $_SESSION['tablename']['contact_communication'] . " WHERE contact_id = ?", array($id));
                     if($_SESSION['history']['contactdel'])
                     {
                         require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                         $hist = new history();
                         $hist->add($_SESSION['tablename']['contacts_v2'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
                         $hist->add($_SESSION['tablename']['contact_addresses'], $id,"DEL","contact_addresses_del", _ADDRESS_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+                        $hist->add($_SESSION['tablename']['contact_communication'], $id,"DEL","contact_communication_del",_COMMUNICATION_DELETED." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
                     }
                     $_SESSION['info'] = _CONTACT_DELETED;
                 }
@@ -1009,6 +1146,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['IS_PRIVATE']         = functions::show_string($line->is_private);
                     $_SESSION['m_admin']['address']['SALUTATION_HEADER']  = functions::show_string($line->salutation_header);
                     $_SESSION['m_admin']['address']['SALUTATION_FOOTER']  = functions::show_string($line->salutation_footer);
+                    $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = functions::show_string($line->external_contact_id);
                 } else {
                     unset($_SESSION['address_up_error']);
                 }
@@ -1329,6 +1467,10 @@ abstract class contacts_v2_Abstract extends Database
                             <td><textarea style="margin-left:0px;" class="<?php echo $fieldAddressClass;?>" name="comp_data" id="comp_data"><?php if(isset($_SESSION['m_admin']['address']['OTHER_DATA'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['OTHER_DATA'])); }?></textarea></td>
                         </tr>
                         <tr>
+                            <td><label for="external_contact_id"><?php echo _EXTERNAL_CONTACT_ID;?> :</label></td>
+                            <td><input style="margin-left:0px;" class="<?php echo $fieldAddressClass;?>" name="external_contact_id" id="external_contact_id"  type="text" value="<?php if(isset($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']));} ?>" /></td>
+                        </tr>
+                        <tr>
                             <td><?php echo _IS_PRIVATE;?>&nbsp;: </td>
                             <td>
                                 <input class="<?php echo $fieldAddressClass;?>" type="radio"  class="check" name="is_private" value="Y" <?php if($_SESSION['m_admin']['address']['IS_PRIVATE'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
@@ -1440,10 +1582,10 @@ abstract class contacts_v2_Abstract extends Database
         $db = new Database();
         // add ou modify users in the database
         $this->addressinfo($mode);
-        $order = $_SESSION['m_admin']['address']['order'];
+        $order       = $_SESSION['m_admin']['address']['order'];
         $order_field = $_SESSION['m_admin']['address']['order_field'];
-        $what = $_SESSION['m_admin']['address']['what'];
-        $start = $_SESSION['m_admin']['address']['start'];
+        $what        = $_SESSION['m_admin']['address']['what'];
+        $start       = $_SESSION['m_admin']['address']['start'];
 
         $path_contacts = $_SESSION['config']['businessappurl']
                        . 'index.php?page=contacts_v2_up&order='
@@ -1550,15 +1692,15 @@ abstract class contacts_v2_Abstract extends Database
                         . 'phone , email , address_num, address_street, '
                         . 'address_complement, address_town, '
                         . 'address_postal_code, address_country, other_data,'
-                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (?, ?, 
-                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer, external_contact_id) VALUES (?, ?, 
+                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 $arrayPDO = array($_SESSION['contact']['current_contact_id'], $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['m_admin']['address']['DEPARTEMENT'],
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['FIRSTNAME'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
                     $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['OTHER_DATA'],
                     $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['WEBSITE'], $_SESSION['m_admin']['address']['OCCUPANCY'],
-                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER']);
+                    $_SESSION['user']['UserId'], $entity_id, $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']);
 
                 $db->query($query, $arrayPDO);
                 if($_SESSION['history']['addressadd'])
@@ -1612,7 +1754,8 @@ abstract class contacts_v2_Abstract extends Database
                         , other_data = ?
                         , is_private = ?
                         , salutation_header = ?
-                        , salutation_footer = ?";
+                        , salutation_footer = ?
+                        , external_contact_id = ?";
 
                 $query .=" WHERE id = ?";
 
@@ -1620,7 +1763,7 @@ abstract class contacts_v2_Abstract extends Database
                     $_SESSION['m_admin']['address']['LASTNAME'], $_SESSION['m_admin']['address']['TITLE'], $_SESSION['m_admin']['address']['FUNCTION'], $_SESSION['m_admin']['address']['PHONE'],
                     $_SESSION['m_admin']['address']['MAIL'], $_SESSION['m_admin']['address']['OCCUPANCY'], $_SESSION['m_admin']['address']['ADD_NUM'], $_SESSION['m_admin']['address']['ADD_STREET'], $_SESSION['m_admin']['address']['ADD_COMP'],
                     $_SESSION['m_admin']['address']['ADD_TOWN'], $_SESSION['m_admin']['address']['ADD_CP'], $_SESSION['m_admin']['address']['ADD_COUNTRY'], $_SESSION['m_admin']['address']['WEBSITE'], 
-                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'],
+                    $_SESSION['m_admin']['address']['OTHER_DATA'], $_SESSION['m_admin']['address']['IS_PRIVATE'], $_SESSION['m_admin']['address']['SALUTATION_HEADER'], $_SESSION['m_admin']['address']['SALUTATION_FOOTER'], $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] ,
                     $_SESSION['m_admin']['address']['ID']);
 
 
@@ -1669,6 +1812,13 @@ abstract class contacts_v2_Abstract extends Database
             $_REQUEST['new_id'], 'no', _CONTACT_PURPOSE . ' ', 'yes', 0, 255
         );
 
+        if ($_REQUEST['external_contact_id'] <> '') {
+            $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = $func->wash(
+                $_REQUEST['external_contact_id'], 'no', _EXTERNAL_CONTACT_ID . ' ', 'yes', 0, 255
+            );
+        } else {
+            $_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'] = '';
+        }
 
         if ($_REQUEST['departement'] <> '') {
             $_SESSION['m_admin']['address']['DEPARTEMENT'] = $func->wash(
@@ -2219,6 +2369,13 @@ abstract class contacts_v2_Abstract extends Database
                         <td width="45%" class="indexing_field" align="left"><textarea disabled class="readonly" name="comp_data"   id="comp_data"><?php if(isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){functions::xecho($func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA'])); }?></textarea></td>
                         <td width="5%">&nbsp;</td>
                     </tr>
+                    <?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'Y'){?>
+                        <tr>
+                            <td width="50%"><label><?php echo _COMMUNICATION_TYPE;?></label>: </td>
+                            <td width="45%" class="indexing_field" align="left"><textarea disabled name="is_external_contact_id" id="is_external_contact_id"><?php if(isset($_SESSION['m_admin']['communication']['VALUE'])){functions::xecho($func->show_str($_SESSION['m_admin']['communication']['VALUE'])); }?></textarea></td>
+                            <td width="5%">&nbsp;</td>
+                        </tr>
+                    <?php } ?>
                 </table>
             </div>
         </form>
@@ -2332,6 +2489,11 @@ abstract class contacts_v2_Abstract extends Database
                         <td><label for="comp_data"><?php echo _COMP_DATA;?>&nbsp;:<label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" ><textarea class="contact_field_margin readonly" disabled name="comp_data" id="comp_data"><?php if(isset($_SESSION['m_admin']['address']['OTHER_DATA'])){functions::xecho($func->show_str($_SESSION['m_admin']['address']['OTHER_DATA'])); }?></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="external_contact_id"><?php echo _EXTERNAL_CONTACT_ID;?> :<label></td>
+                        <td>&nbsp;</td>
+                        <td class="indexing_field"><input class="contact_field_margin readonly" disabled name="external_contact_id" id="external_contact_id"  type="text" value="<?php if(isset($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID'])){ functions::xecho($func->show_str($_SESSION['m_admin']['address']['EXTERNAL_CONTACT_ID']));} ?>" /></td>
                     </tr>
                     <tr>
                         <td><?php echo _IS_PRIVATE;?>&nbsp;: </td>

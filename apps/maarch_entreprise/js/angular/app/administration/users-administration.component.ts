@@ -12,8 +12,8 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: angularGlobals["users-administrationView"],
-    styleUrls: ['css/users-administration.component.css'],
+    templateUrl: "../../../../Views/users-administration.component.html",
+    styleUrls: ['../../../../css/users-administration.component.css'],
     providers: [NotificationService]
 })
 export class UsersAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -30,6 +30,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     config                          : any       = {};
     userDestRedirect                : any       = {};
     userDestRedirectModels          : any[]     = [];
+    quota                           : any       = {};
 
     dataSource          = new MatTableDataSource(this.data);
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
@@ -62,6 +63,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
         this.http.get(this.coreUrl + 'rest/users')
             .subscribe((data: any) => {
                 this.data = data['users'];
+                this.quota = data['quota'];
+                if (this.quota.actives > this.quota.userQuota) {
+                    this.notify.error(this.lang.quotaExceeded);
+                }
+
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
@@ -75,6 +81,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     suspendUser(user: any) {
         if (user.inDiffListDest == 'Y') {
+            user.mode = 'up';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
@@ -97,6 +104,10 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                             .subscribe(() => {
                                                 user.inDiffListDest = 'N';
                                                 this.notify.success(this.lang.userSuspended);
+                                                if (this.quota.userQuota) {
+                                                    this.quota.inactives++;
+                                                    this.quota.actives--;
+                                                }
 
                                             }, (err) => {
                                                 user.enabled = 'Y';
@@ -122,6 +133,10 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                 this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                     .subscribe(() => {
                         this.notify.success(this.lang.userSuspended);
+                        if (this.quota.userQuota) {
+                            this.quota.inactives++;
+                            this.quota.actives--;
+                        }
                     }, (err) => {
                         user.enabled = 'Y';
                         this.notify.error(err.error.errors);
@@ -138,6 +153,13 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
             this.http.put(this.coreUrl + 'rest/users/' + user.id, user)
                 .subscribe(() => {
                     this.notify.success(this.lang.userAuthorized);
+                    if (this.quota.userQuota) {
+                        this.quota.inactives--;
+                        this.quota.actives++;
+                        if (this.quota.actives > this.quota.userQuota) {
+                            this.notify.error(this.lang.quotaExceeded);
+                        }
+                    }
                 }, (err) => {
                     user.enabled = 'N';
                     this.notify.error(err.error.errors);
@@ -147,6 +169,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     deleteUser(user: any) {
         if (user.inDiffListDest == 'Y') {
+            user.mode = 'del';
             this.userDestRedirect = user;
             this.http.get(this.coreUrl + 'rest/listTemplates/entityDest/itemId/' + user.user_id)
                 .subscribe((data: any) => {
@@ -173,6 +196,12 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                                                 this.dataSource = new MatTableDataSource(this.data);
                                                 this.dataSource.paginator = this.paginator;
                                                 this.dataSource.sort = this.sort;
+
+                                                if (this.quota.userQuota && user.enabled == 'Y') {
+                                                    this.quota.actives--;
+                                                } else if (this.quota.userQuota && user.enabled == 'N') {
+                                                    this.quota.inactives--;
+                                                }
 
                                                 this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
@@ -204,6 +233,11 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                         this.notify.success(this.lang.userDeleted);
+                        if (this.quota.userQuota && user.enabled == 'Y') {
+                            this.quota.actives--;
+                        } else if (this.quota.userQuota && user.enabled == 'N') {
+                            this.quota.inactives--;
+                        }
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -212,7 +246,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 }
 @Component({
-    templateUrl: angularGlobals["users-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/users-administration-redirect-modal.component.html"
 })
 export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;

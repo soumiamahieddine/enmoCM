@@ -10,7 +10,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["reports-administrationView"],
+    templateUrl: "../../../../Views/reports-administration.component.html",
     providers: [NotificationService]
 })
 export class ReportsAdministrationComponent implements OnInit {

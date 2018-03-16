@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <event_type>
-        <id>usersup</id>
-        <label>Modification d'un utilisateur</label>
-    </event_type>
-    <event_type>
-        <id>users%</id>
-        <label>Actions sur utilisateur</label>
-    </event_type>
-    <event_type>
-        <id>alert1</id>
-        <label>Alerte courrier 1</label>
-    </event_type>
-    <event_type>
-        <id>alert2</id>
-        <label>Relance courrier 2 avant échéance</label>
+        <id>baskets</id>
+        <label>Workflow bannettes</label>
     </event_type>
     <event_type>
         <id>noteadd</id>
         <label>Ajout de notes</label>
+    </event_type>
+    <event_type>
+        <id>alert1</id>
+        <label>Relance courrier avant échéance</label>
+    </event_type>
+    <event_type>
+        <id>alert2</id>
+        <label>Relance courrier après échéance</label>
     </event_type>
     <event_type>
         <id>diffdest%</id>
@@ -29,8 +25,12 @@
         <label>Courrier en copie</label>
     </event_type>
     <event_type>
-        <id>stepWF%</id>
-        <label>Etape Workflow</label>
+        <id>usersup</id>
+        <label>Modification d'un utilisateur</label>
+    </event_type>
+    <event_type>
+        <id>users%</id>
+        <label>Actions sur utilisateur</label>
     </event_type>
     <event_type>
         <id>diffvisauser</id>
@@ -39,5 +39,9 @@
     <event_type>
         <id>diffsignuser</id>
         <label>VISA courrier a signer par utilisateur</label>
+    </event_type>
+    <event_type>
+        <id>user_quota</id>
+        <label>Quota</label>
     </event_type>
 </root>

@@ -11,6 +11,19 @@ var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv
          });
  };
 
+ var addDestUser = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
+     new Ajax.Autocompleter(
+         idField,
+         idList,
+         theUrlToListScript,
+         {
+             paramName: paramNameSrv,
+             minChars: minCharsSrv,
+             tokens: ',',
+             afterUpdateElement:extractDestUser
+         });
+ };
+
 function addTemplateToEmail(templateMails, path){
 
     new Ajax.Request(path,
@@ -128,11 +141,38 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
     }
 }
 
+function updateDestUser(path, action, adress, target, array_index) {
+     
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters: { url : path,
+                      'for': action,
+                      contactAddress: adress,
+                      field: target,
+                      index: array_index
+                    },
+        onLoading: function(answer) {
+            $('loading_' + target).style.display='inline';
+        },
+        onSuccess: function(answer) {
+            eval("response = "+answer.responseText);
+            if(response.status == 0){
+                $(target).innerHTML = response.content;
+                if (action == 'add') {$('user').value = '';}
+            } else {
+                alert(response.error);
+                eval(response.exec_js);
+            }
+        }
+    });
+}
+
 function validEmailForm(path, form_id) {
 
     var attachments = $j("#joined_files input.check");
 
-    if (attachments.length > 0 && path.includes("for=send")) {
+    if (attachments.length > 0 && (path.includes("for=send") || path.includes("formContent=messageExchange"))) {
         var hasOneChecked = false;
         for (var i = 0; i < attachments.length; i++) {
             if (attachments[i].checked == true) {
@@ -142,11 +182,21 @@ function validEmailForm(path, form_id) {
         }
 
         if (!hasOneChecked) {
-            var cfm = confirm('Aucune pièce jointe sélectionnée. Voulez-vous quand même envoyer le mail ?');
-            if (!cfm) {
+            if(path.includes("formContent=messageExchange")){
+                alert('Aucune pièce jointe sélectionnée');
                 return;
+            } else if(path.includes("for=send")){
+                var cfm = confirm('Aucune pièce jointe sélectionnée. Voulez-vous quand même envoyer le mail ?');
+                if (!cfm) {
+                    return;
+                }
             }
         }
+    }
+
+    if (typeof($j('input[name=main_exchange_doc]:checked', '#formEmail').val()) === 'undefined' && path.includes("formContent=messageExchange")) {
+        alert('Aucun document principal sélectionné');
+        return;
     }
 
     tinyMCE.triggerSave();
@@ -207,6 +257,11 @@ function validEmailFormForSendToContact(path, form_id, path2, status) {
 function extractEmailAdress(field, item) {
     var fullAdress = item.innerHTML;
     field.value = fullAdress.match(/\(([^)]+)\)/)[1];
+}
+
+function extractDestUser(field, item) {
+    $j('#user').val(item.id);
+    $j('#valid').click();
 }
 
 function validateEmail(email) { 

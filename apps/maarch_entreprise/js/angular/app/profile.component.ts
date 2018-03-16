@@ -5,16 +5,14 @@ import { NotificationService } from './notification.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 
 declare var tinymce : any;
 declare var angularGlobals : any;
 
 
 @Component({
-    templateUrl : angularGlobals.profileView,
-    styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css'],
+    templateUrl : "../../../Views/profile.component.html",
+    styleUrls   : ['../../../css/profile.component.css'],
     providers   : [NotificationService]
 })
 export class ProfileComponent implements OnInit {
@@ -65,6 +63,15 @@ export class ProfileComponent implements OnInit {
 
 
     constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
+        if ($j("link[href='merged_css.php']").length == 0) {
+            var head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'merged_css.php';
+            link.type = 'text/css';
+            link.media = 'screen';
+            head.insertBefore(link,head.children[5])
+        }
         window['angularProfileComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -125,7 +132,7 @@ export class ProfileComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/currentUser/profile')
+        this.http.get('../../rest/currentUser/profile')
             .subscribe((data : any) => {
                 this.user = data;
 
@@ -171,7 +178,7 @@ export class ProfileComponent implements OnInit {
             this.signatureModel.base64 = "";
             this.signatureModel.base64ForJs = "";
 
-            errorNotification("Taille maximum de fichier dépassée (2 MB)");
+            this.notify.error("Taille maximum de fichier dépassée (2 MB)");
         }
     }
 
@@ -320,9 +327,9 @@ export class ProfileComponent implements OnInit {
                     newPassword             : "",
                     reNewPassword           : "",
                 };
-                successNotification(data.success);
+                this.notify.success(this.lang.passwordUpdated);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -332,7 +339,7 @@ export class ProfileComponent implements OnInit {
         this.http.post(this.coreUrl + 'rest/currentUser/emailSignature', this.mailSignatureModel)
             .subscribe((data : any) => {
                 if (data.errors) {
-                    errorNotification(data.errors);
+                    this.notify.error(data.errors);
                 } else {
                     this.user.emailSignatures = data.emailSignatures;
                     this.mailSignatureModel     = {
@@ -341,7 +348,7 @@ export class ProfileComponent implements OnInit {
                         title                   : "",
                     };
                     tinymce.get('emailSignature').setContent("");
-                    successNotification(data.success);
+                    this.notify.success(this.lang.emailSignatureAdded);
                 }
             });
     }
@@ -353,11 +360,11 @@ export class ProfileComponent implements OnInit {
         this.http.put(this.coreUrl + 'rest/currentUser/emailSignature/' + id, this.mailSignatureModel)
             .subscribe((data : any) => {
                 if (data.errors) {
-                    errorNotification(data.errors);
+                    this.notify.error(data.errors);
                 } else {
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].title = data.emailSignature.title;
                     this.user.emailSignatures[this.mailSignatureModel.selected - 1].html_body = data.emailSignature.html_body;
-                    successNotification(data.success);
+                    this.notify.success(this.lang.emailSignatureUpdated);
                 }
             });
     }
@@ -371,7 +378,7 @@ export class ProfileComponent implements OnInit {
             this.http.delete(this.coreUrl + 'rest/currentUser/emailSignature/' + id)
                 .subscribe((data : any) => {
                     if (data.errors) {
-                        errorNotification(data.errors);
+                        this.notify.error(data.errors);
                     } else {
                         this.user.emailSignatures = data.emailSignatures;
                         this.mailSignatureModel     = {
@@ -380,7 +387,7 @@ export class ProfileComponent implements OnInit {
                             title                   : "",
                         };
                         tinymce.get('emailSignature').setContent("");
-                        successNotification(data.success);
+                        this.notify.success(this.lang.emailSignatureDeleted);
                     }
                 });
         }
@@ -398,9 +405,9 @@ export class ProfileComponent implements OnInit {
                     size                    : 0,
                     label                   : "",
                 };
-                successNotification(data.success);
+                this.notify.success(this.lang.signatureAdded);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -412,9 +419,9 @@ export class ProfileComponent implements OnInit {
                 this.user.signatures[this.selectedSignature].signature_label = data.signature.signature_label;
                 this.selectedSignature = -1;
                 this.selectedSignatureLabel = "";
-                successNotification(data.success);
+                this.notify.success(this.lang.signatureUpdated);
             }, (err) => {
-                errorNotification(err.error.errors);
+                this.notify.error(err.error.errors);
             });
     }
 
@@ -425,9 +432,9 @@ export class ProfileComponent implements OnInit {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)
                 .subscribe((data : any) => {
                     this.user.signatures = data.signatures;
-                    successNotification(data.success);
+                    this.notify.success(this.lang.signatureDeleted);
                 }, (err) => {
-                    errorNotification(err.error.errors);
+                    this.notify.error(err.error.errors);
                 });
         }
     }

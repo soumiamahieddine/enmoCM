@@ -12,7 +12,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["actions-administrationView"],
+    templateUrl: "../../../../Views/actions-administration.component.html",
     providers: [NotificationService]
 })
 
@@ -84,7 +84,7 @@ export class ActionsAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
                 .subscribe((data: any) => {
-                    this.actions = data.action;
+                    this.actions = data.actions;
                     this.dataSource = new MatTableDataSource(this.actions);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;

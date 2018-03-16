@@ -1,22 +1,10 @@
 <?php
-/*
-*   Copyright 2008-2015 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /****************************************************************************/
 /*                                                                          */
@@ -30,17 +18,12 @@
 * @brief Maarch index page : every php page is loaded with this page
 *
 * @file
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni <dev@maarch.org>
-* @author  Loic Vinet  <dev@maarch.org>
-* @date $date$
-* @version $Revision$
+* @author <dev@maarch.org>
 * @ingroup apps
 */
 include_once '../../core/class/class_functions.php';
 include_once '../../core/class/class_db_pdo.php';
 include_once '../../core/init.php';
-include_once 'apps/maarch_entreprise/define.php';
 
 if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
@@ -372,20 +355,11 @@ if (file_exists($path)) {
     </div>
     </div>
 </body>
-<?php
-if (PROD_MODE) {
-?>
-<!--    <script src="js/angular/main.bundle.min.js"></script>-->
-<?php
-} else {
-    ?>
-    <script src="../../node_modules/systemjs/dist/system.src.js"></script>
-    <script src="js/angular/systemjs.config.js"></script>
-<!--    <script>-->
-<!--        System.import('js/angular/main.js').catch(function(err){ console.error(err); });-->
-<!--    </script>-->
     <?php
-}
-?>
-
+    if ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
+        ?>
+        <script>triggerAngular(true, '#/administration')</script>
+    <?php
+    }
+    ?>
 </html>

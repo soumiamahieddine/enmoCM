@@ -336,16 +336,27 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $paramsTab['listCss'] = $css;                                                       //CSS
         $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
           
-        $add = array(
+        $addMail = array(
                 "script"        =>  "showEmailForm('".$_SESSION['config']['businessappurl']  
                                         . "index.php?display=true&module=sendmail&page=sendmail_ajax_content"
-                                        . "&mode=add&identifier=".$identifier."&origin=".$origin
+                                        . "&mode=add&identifier=".$identifier."&origin=".$origin."&formContent=email"
                                         . $parameters."')",
                 "icon"          =>  'envelope',
                 "tooltip"       =>  _NEW_EMAIL,
                 "alwaysVisible" =>  true
                 );
-        array_push($paramsTab['tools'],$add);   
+
+        $addExchangeMessage = array(
+                "script"        =>  "showEmailForm('".$_SESSION['config']['businessappurl']  
+                                        . "index.php?display=true&module=sendmail&page=sendmail_ajax_content"
+                                        . "&mode=add&identifier=".$identifier."&origin=".$origin."&formContent=messageExchange"
+                                        . $parameters."')",
+                "icon"          =>  'exchange',
+                "tooltip"       =>  _NEW_NUMERIC_PACKAGE,
+                "alwaysVisible" =>  true
+                );
+
+        array_push($paramsTab['tools'], $addMail, $addExchangeMessage);   
         
         //Action icons array
         $paramsTab['actionIcons'] = array();      
@@ -388,6 +399,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $content .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
         // $debug = $list->debug();
 
+    /********* MESSAGE EXCHANGE PART ***************/
+    include_once "modules/sendmail/messageExchangeList.php";
+
         
-    echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
+    echo "{status : " . $status . ", content : '" . addslashes($debug.$content.$contentMessageExchange) . "', error : '" . addslashes($error) . "'}";
 }

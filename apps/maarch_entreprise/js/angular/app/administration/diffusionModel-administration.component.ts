@@ -14,7 +14,7 @@ declare const angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["diffusionModel-administrationView"],
+    templateUrl: "../../../../Views/diffusionModel-administration.component.html",
     providers: [NotificationService]
 })
 export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {

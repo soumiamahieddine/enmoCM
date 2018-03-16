@@ -78,3 +78,5 @@ define('_FOLDERS_LIST', 'folders list');
 define('_DOCTYPE_UPDATED', 'Document type updated');
 define('_DOCTYPE_ADDED', 'Document type added');
 define('_DOCTYPE_DELETED', 'Document type deleted');
+
+define('_QUOTA_EXCEEDED', 'Quota exceeded');

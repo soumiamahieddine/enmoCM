@@ -153,7 +153,7 @@ var BasketAdministrationComponent = /** @class */ (function () {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
                 .subscribe(function () {
                 _this.notify.success(_this.lang.basketAdded);
-                _this.router.navigate(["/administration/baskets"]);
+                _this.router.navigate(["/administration/baskets/" + _this.basket.id]);
             }, function (err) {
                 _this.notify.error(err.error.errors);
             });
@@ -182,6 +182,15 @@ var BasketAdministrationComponent = /** @class */ (function () {
             }
         });
         this.addAction(group);
+    };
+    BasketAdministrationComponent.prototype.updateResultPage = function (group) {
+        var _this = this;
+        this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
+            .subscribe(function () {
+            _this.notify.success(_this.lang.basketUpdated);
+        }, function (err) {
+            _this.notify.error(err.error.errors);
+        });
     };
     BasketAdministrationComponent.prototype.unlinkGroup = function (groupIndex) {
         var _this = this;
@@ -347,7 +356,7 @@ var BasketAdministrationSettingsModalComponent = /** @class */ (function (_super
         this.allEntities.forEach(function (entity) {
             entity.state = { "opened": false, "selected": false };
             _this.data.action.redirects.forEach(function (keyword) {
-                if (entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') {
+                if ((entity.id == keyword.keyword && keyword.redirect_mode == 'ENTITY') || (entity.id == keyword.entity_id && keyword.redirect_mode == 'ENTITY')) {
                     entity.state = { "opened": true, "selected": true };
                 }
             });

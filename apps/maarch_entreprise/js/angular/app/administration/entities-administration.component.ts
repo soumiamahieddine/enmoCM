@@ -14,7 +14,7 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: angularGlobals["entities-administrationView"],
+    templateUrl: "../../../../Views/entities-administration.component.html",
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -32,7 +32,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
     loading: boolean = false;
     creationMode: boolean = false;
-    idCircuitVisa:number;
+    idCircuitVisa: number;
 
     displayedColumns = ['firstname', 'lastname'];
     dataSource = new MatTableDataSource(this.currentEntity.users);
@@ -55,18 +55,11 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Entités";
-        }
-    }
-
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -370,7 +363,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.isDraggable = true;
         $j('#jstree').jstree('deselect_all');
         for (let i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].allowed == true) {
+            if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
                 $j('#jstree').jstree('select_node', this.entities[i]);
                 break;
             }
@@ -429,14 +422,26 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     prepareEntityAdd() {
         this.creationMode = true;
         this.isDraggable = false;
-        this.currentEntity = { "entity_type": this.entityTypeList[0].id };
-        $j('#jstree').jstree('deselect_all');
-        for (let i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].allowed == true) {
-                $j('#jstree').jstree('select_node', this.entities[i]);
-                break;
+        console.log(this.currentEntity.entity_id);
+        if (this.currentEntity.entity_id) {
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].entity_id == this.currentEntity.entity_id) {
+                    this.currentEntity = { "entity_type": this.entityTypeList[0].id };
+                    this.currentEntity.parent_entity_id = this.entities[i].entity_id;
+                    break;
+                }
+            }
+        } else {
+            this.currentEntity = { "entity_type": this.entityTypeList[0].id };
+            $j('#jstree').jstree('deselect_all');
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].allowed == true) {
+                    $j('#jstree').jstree('select_node', this.entities[i]);
+                    break;
+                }
             }
         }
+
     }
 
 
@@ -564,7 +569,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
     removeDiffListVisa(template: any, i: number): any {
         this.currentEntity.visaTemplate.splice(i, 1);
-        
+
         if (this.currentEntity.visaTemplate.length > 0) {
             var newDiffList = {
                 "object_id": this.currentEntity.entity_id,
@@ -573,7 +578,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 "description": this.currentEntity.entity_id,
                 "items": Array()
             }
-    
+
             this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
                 if (i == (this.currentEntity.visaTemplate.length - 1)) {
@@ -588,7 +593,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     "sequence": listModel.sequence
                 });
             });
-    
+
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
@@ -596,7 +601,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
-        }else{
+        } else {
             this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = null;
@@ -606,9 +611,18 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 });
         }
     }
+
+    toggleRole(role:any) {
+        this.http.put(this.coreUrl + "rest/listTemplates/types/roles",{"roles":this.currentEntity.roles,"typeId":"entity_id"})
+            .subscribe((data: any) => {
+                this.notify.success(this.lang.entityUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
 }
 @Component({
-    templateUrl: angularGlobals["entities-administration-redirect-modalView"],
+    templateUrl: "../../../../Views/entities-administration-redirect-modal.component.html"
 })
 export class EntitiesAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
