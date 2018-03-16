@@ -223,10 +223,17 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+
         $groups = GroupBasketModel::get(['where' => ['basket_id = ?'], 'data' => [$aArgs['id']], 'orderBy' => ['group_id']]);
         $allActions = ActionModel::get();
 
         foreach ($groups as $key => $group) {
+            foreach ($allGroups as $value) {
+                if ($value['group_id'] == $group['group_id']) {
+                    $groups[$key]['group_desc'] = $value['group_desc'];
+                }
+            }
             $actionsForGroup = $allActions;
             $actions = BasketModel::getActionsForGroupById([
                 'id'        => $aArgs['id'],
@@ -287,7 +294,6 @@ class BasketController
             $groups[$key]['groupActions'] = $actionsForGroup;
         }
 
-        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
         if ($aArgs['id'] == 'IndexingBasket') {
             $basketPages = BasketModel::getBasketPages();
         } else {

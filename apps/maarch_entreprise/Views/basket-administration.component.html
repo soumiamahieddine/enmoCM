@@ -88,10 +88,10 @@
                             </div>
                         </form>
                     </mat-tab>
-                    <mat-tab *ngFor="let group of basketGroups;let i = index" label="{{group.group_id}}">
+                    <mat-tab *ngFor="let group of basketGroups;let i = index" label="{{group.group_desc}}">
                         <ng-template mat-tab-label>
-                            <span>{{group.group_id}}</span>
-                            <mat-icon color="warn" class="fa fa-unlink" matTooltip="dissocier le groupe de la bannette" (click)="unlinkGroup(i)"></mat-icon>
+                            <span>{{group.group_desc}}</span>
+                            <mat-icon color="warn" class="fa fa-unlink" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
                         <div class="col-md-6">
                             <mat-form-field style="margin-top:5px;">
