@@ -342,7 +342,7 @@ export const LANG_EN = {
     "secondLevelAttached"               : "Attach to subfolder",
     "retentionFinalDisposition"         : "Sort final",
     "retentionRule"                     : "Retention rules",
-    "durationCurrentUse"                : "Duration current use",
+    "durationCurrentUse"                : "Duration current use (in d)",
     "processDelayDay"                   : "Process delay (in days)",
     "delay1"                            : "Reminder period 1 before term (in days)",
     "delay2"                            : "Reminder period 2 after term (in days)",
