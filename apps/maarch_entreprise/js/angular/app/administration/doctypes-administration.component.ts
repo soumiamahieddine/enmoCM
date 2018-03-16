@@ -358,6 +358,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.models       = data['models'];
                 if(mode == 'doctype'){
                     this.currentType.indexes = data['indexes'];
+                    this.currentType.is_generated = 'N';
                     this.loadIndexesTable();
                 }
             }, (err) => {

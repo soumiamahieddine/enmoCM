@@ -48,6 +48,11 @@ class DoctypeController
         $doctypeExt = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
         $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
 
+        if (empty($template)) {
+            $template["template_id"] = null;
+            $template["is_generated"] = 'N';
+        }
+
         $indexes  = DoctypeIndexesModel::getAllIndexes();
         $indexesSelected = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
         foreach ($indexes as $key => $value) {
