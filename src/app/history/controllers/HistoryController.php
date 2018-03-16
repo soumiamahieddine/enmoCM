@@ -34,20 +34,25 @@ class HistoryController
 
         $data = $request->getQueryParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['startDate']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['endDate']);
+        $check = Validator::floatVal()->notEmpty()->validate($data['startDate']);
+        $check = $check && Validator::floatVal()->notEmpty()->validate($data['endDate']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+
+        $maxRequestSize = 10000;
 
         $histories = HistoryModel::get([
             'select'    => ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'],
             'where'     => ['event_date > ?', 'event_date < ?'],
             'data'      => [date('Y-m-d H:i:s', $data['startDate']), date('Y-m-d H:i:s', $data['endDate'])],
-            'limit'     => 20000
+            'orderBy'   => ['event_date DESC'],
+            'limit'     => $maxRequestSize
         ]);
 
-        return $response->withJson(['histories' => $histories]);
+        $limitExceeded = (count($histories) == $maxRequestSize);
+
+        return $response->withJson(['histories' => $histories, 'limitExceeded' => $limitExceeded]);
     }
 
     public static function add(array $aArgs)

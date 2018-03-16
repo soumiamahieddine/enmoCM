@@ -141,6 +141,9 @@ $app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::cla
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
+//BatchHistories
+$app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
+
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 $app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
@@ -190,6 +193,10 @@ $app->delete('/groups/{id}', \Group\controllers\GroupController::class . ':delet
 $app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':getDetailledById');
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
+
+//Histories
+$app->get('/histories', \History\controllers\HistoryController::class . ':get');
+$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
@@ -246,15 +253,6 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 //Templates
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
-//Visa
-$app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
-$app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
-$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
-$app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
-$app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
-$app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
-
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
@@ -277,6 +275,15 @@ $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::cl
 $app->delete('/users/{id}/redirectedBaskets/{basketId}', \User\controllers\UserController::class . ':deleteRedirectedBaskets');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 
+//Visa
+$app->get('/{basketId}/signatureBook/resList', \Visa\Controllers\VisaController::class . ':getResList');
+$app->get('/{basketId}/signatureBook/resList/details', \Visa\Controllers\VisaController::class . ':getDetailledResList');
+$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Visa\Controllers\VisaController::class . ':getSignatureBook');
+$app->get('/signatureBook/{resId}/attachments', \Visa\Controllers\VisaController::class . ':getAttachmentsById');
+$app->get('/signatureBook/{resId}/incomingMailAttachments', \Visa\Controllers\VisaController::class . ':getIncomingMailAndAttachmentsById');
+$app->put('/{collId}/{resId}/unsign', \Visa\Controllers\VisaController::class . ':unsignFile');
+$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
+
 //CurrentUser
 $app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');
 $app->put('/currentUser/profile', \User\controllers\UserController::class . ':updateProfile');
@@ -285,13 +292,6 @@ $app->post('/currentUser/emailSignature', \User\controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateBasketPreference');
-
-//History
-$app->get('/histories', \History\controllers\HistoryController::class . ':get');
-$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-
-//HistoryBatch
-$app->get('/administration/historyBatch/eventDate/{date}', \History\controllers\HistoryBatchController::class . ':get');//TODO No date
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
