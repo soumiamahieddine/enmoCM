@@ -14,6 +14,7 @@
 
 namespace History\controllers;
 
+use Respect\Validation\Validator;
 use SrcCore\controllers\LogsController;
 use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
@@ -25,6 +26,30 @@ use User\models\UserModel;
 
 class HistoryController
 {
+    public function get(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['startDate']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['endDate']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $histories = HistoryModel::get([
+            'select'    => ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'],
+            'where'     => ['event_date > ?', 'event_date < ?'],
+            'data'      => [date('Y-m-d H:i:s', $data['startDate']), date('Y-m-d H:i:s', $data['endDate'])],
+            'limit'     => 20000
+        ]);
+
+        return $response->withJson(['histories' => $histories]);
+    }
+
     public static function add(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['tableName', 'recordId', 'eventType', 'info', 'eventId']);
@@ -75,18 +100,5 @@ class HistoryController
         $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
-    }
-
-    public function get(Request $request, Response $response, array $aArgs)
-    {
-        if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $historyList                     = HistoryModel::get(['event_date' => $aArgs['date']]);
-        $historyListFilters['users']     = HistoryModel::getFilter(['select' => 'user_id', 'event_date' => $aArgs['date']]);
-        $historyListFilters['eventType'] = HistoryModel::getFilter(['select' => 'event_type', 'event_date' => $aArgs['date']]);
-
-        return $response->withJson(['filters' => $historyListFilters, 'historyList' => $historyList]);
     }
 }

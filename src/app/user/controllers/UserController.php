@@ -106,7 +106,7 @@ class UserController
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
-        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id']]);
+        $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
 
         return $response->withJson($user);

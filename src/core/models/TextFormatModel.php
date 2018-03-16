@@ -106,12 +106,6 @@ class TextFormatModel
         return $html;
     }
 
-    /**
-    * Cuts a string at the maximum number of char to displayed
-    *
-    * @param     string string String value
-    * @param     max integer Maximum character number
-    */
     public static function cutString(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['string']);

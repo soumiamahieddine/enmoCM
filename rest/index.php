@@ -287,7 +287,7 @@ $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserControlle
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateBasketPreference');
 
 //History
-$app->get('/administration/history/eventDate/{date}', \History\controllers\HistoryController::class . ':get'); //TODO No date
+$app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //HistoryBatch
