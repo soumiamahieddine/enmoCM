@@ -77,6 +77,7 @@ abstract class PrioritiesAbstract extends Database
 
     protected function  updateSession() {
         $_SESSION['mail_priorities']            = [];
+        $_SESSION['mail_priorities_id']         = [];
         $_SESSION['mail_priorities_attribute']  = [];
         $_SESSION['mail_priorities_wdays']      = [];
         $_SESSION['mail_priorities_color']      = [];
@@ -86,6 +87,7 @@ abstract class PrioritiesAbstract extends Database
         $i = 0;
         foreach ($priorities as $priority) {
             $_SESSION['mail_priorities'][$i] = $priority['label'];
+            $_SESSION['mail_priorities_id'][$i] = $priority['id'];
             $_SESSION['mail_priorities_attribute'][$i] = ($priority['delays'] == null ? 'false' : $priority['delays']);
             $_SESSION['mail_priorities_wdays'][$i] = ($priority['working_days'] ? 'true' : 'false');
             $_SESSION['mail_priorities_color'][$i] = $priority['color'];

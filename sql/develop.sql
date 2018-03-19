@@ -134,6 +134,10 @@ ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT '
 
 /*PERFS ON VIEW*/
 DROP VIEW IF EXISTS res_view_letterbox;
+
+/* Alter table here because view depends on it*/
+ALTER TABLE res_letterbox ALTER COLUMN priority TYPE character varying(16);
+
 CREATE OR REPLACE VIEW res_view_letterbox AS 
  SELECT r.tablename,
     r.is_multi_docservers,

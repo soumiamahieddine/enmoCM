@@ -1695,6 +1695,12 @@ INSERT INTO templates (template_label, template_comment, template_content, templ
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 
+/* PRIORITIES */
+TRUNCATE TABLE priorities;
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio11111', 'Normal', '#009dc5', TRUE, null, TRUE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio22222', 'Urgent', '#ffa500', TRUE, 8, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio33333', 'Très urgent', '#ff0000', TRUE, 4, FALSE);
+
 ------------
 --NOTIFICATIONS
 ------------
