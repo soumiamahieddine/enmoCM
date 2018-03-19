@@ -1072,7 +1072,7 @@ abstract class lists_Abstract extends Database
                             return "false";
                     } else {
                         if($resultTheLine[$i]['column']=='subject'){
-                            return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                            return preg_replace('/\s+/', ' ', $resultTheLine[$i]['value']);
                         } else {
                             return $resultTheLine[$i]['value'];
                         }
