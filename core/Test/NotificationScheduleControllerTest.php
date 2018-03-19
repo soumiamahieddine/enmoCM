@@ -215,5 +215,7 @@ class NotificationScheduleControllerTest extends TestCase
         $responseBody = json_decode((string) $response->getBody());
 
         $this->assertSame(true, $responseBody);
+
+        unlink('modules/notifications/batch/scripts/notification_USERS.sh');
     }
 }
