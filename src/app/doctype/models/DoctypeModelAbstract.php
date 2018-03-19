@@ -24,6 +24,8 @@ class DoctypeModelAbstract
         $firstLevel = DatabaseModel::select([
             'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'    => ['doctypes'],
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
             'order_by' => ['description asc']
         ]);
 
