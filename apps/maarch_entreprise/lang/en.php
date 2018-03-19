@@ -965,6 +965,7 @@ if (!defined('_REACTIVATE')) {
 }
 
 /************** Documents types : Lists + Forms **************/
+
 if (!defined('_DOCTYPES_LIST')) {
     define('_DOCTYPES_LIST', 'Document types list');
 }
@@ -2139,6 +2140,7 @@ if (!defined('_QUERY_NAME')) {
 if (!defined('_QUERY_SAVED')) {
     define('_QUERY_SAVED', 'Saved search');
 }
+
 if (!defined('_LOAD_QUERY')) {
     define('_LOAD_QUERY', 'Load the search');
 }
