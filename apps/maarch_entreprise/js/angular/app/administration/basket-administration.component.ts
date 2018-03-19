@@ -265,12 +265,15 @@ export class BasketAdministrationComponent implements OnInit {
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
-    lang: any = LANG;
-    allEntities: any[] = [];
-    statuses: any;
+
+    lang        : any   = LANG;
+    allEntities : any[] = [];
+    statuses    : any;
+
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
         super(http, ['users']);
     }
+
     ngOnInit(): void {
         this.http.get(this.coreUrl + "rest/entities")
             .subscribe((entities: any) => {
@@ -333,7 +336,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 });
             }, () => {
                 location.href = "index.php";
-            })
+            });
         this.http.get(this.coreUrl + 'rest/statuses')
             .subscribe((data: any) => {
                 this.statuses = data.statuses;

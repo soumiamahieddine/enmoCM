@@ -13,13 +13,6 @@
                     [(ngModel)]="data.action.used_in_basketlist">{{lang.usedInBasketlist}}</mat-checkbox>
             </div>
         </div>
-        <mat-form-field style="margin-top:5px;">
-            <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPages}}" [(ngModel)]="data.group.result_page">
-                <mat-option *ngFor="let page of data.pages" [value]="page.id">
-                    {{page.label}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
         <mat-tab-group>
             <mat-tab *ngIf="data.action.keyword == 'redirect'||data.action.keyword == 'indexing'">
                 <ng-template mat-tab-label *ngIf="data.action.keyword == 'redirect'">
