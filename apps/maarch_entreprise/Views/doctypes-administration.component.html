@@ -269,7 +269,8 @@
                                         <div class="col-sm-6">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentType.duration_current_use" name="duration_current_use" id="duration_current_use" title="{{lang.durationCurrentUse}}"
-                                                    type="number" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
+                                                    type="text" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
+                                                    <!-- pattern without required attribute must be type text -->
                                             </mat-form-field>
                                         </div>
                                     </div>
