@@ -1,37 +1,16 @@
 <?php
-/*
-*   Copyright 2008-2013 Maarch
+/**
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
+
 *
-*   This file is part of Maarch Framework.
+* @brief   validate_mail
 *
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+* @author  dev <dev@maarch.org>
+* @ingroup apps
 */
 
-/**
- * @brief   Action : Document validation
- *
- * Open a modal box to displays the validation form, make the form checks
- * and loads the result in database. Used by the core (manage_action.php page).
- *
- * @file
- *
- * @author Claire Figueras <dev@maarch.org>
- * @date $date$
- *
- * @version $Revision$
- * @ingroup apps
- */
 /**
  * $confirm  bool false.
  */
@@ -62,7 +41,7 @@ $_ENV['date_pattern'] = '/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/';
 
 function check_category($coll_id, $res_id)
 {
-     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
     $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
 
@@ -95,11 +74,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 {
     $displayValue = 'table-row';
     //DECLARATIONS
-     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
-     require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
-     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php';
+    require_once 'modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php';
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
 
     //INSTANTIATE
     $sec = new security();
@@ -133,9 +112,9 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $docLockerPath = $_SESSION['config']['businessappurl'].'/actions/docLocker.php';
 
     if (is_file($docLockerCustomPath)) {
-        require_once$docLockerCustomPath;
+        require_once $docLockerCustomPath;
     } elseif (is_file($docLockerPath)) {
-        require_once$docLockerPath;
+        require_once $docLockerPath;
     } else {
         exit("can't find docLocker.php");
     }
@@ -176,8 +155,8 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     if ($core_tools->is_module_loaded('entities')) {
         //DECLARATIONS
-        require_once'modules/entities/class/class_manage_entities.php';
-         require_once('modules/entities/class/class_manage_listdiff.php');
+        require_once 'modules/entities/class/class_manage_entities.php';
+        require_once 'modules/entities/class/class_manage_listdiff.php';
 
         //INSTANTIATE
         $allEntitiesTree = array();
@@ -250,7 +229,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         if ($res->is_private == 'Y') {
             $addContact .= '('._CONFIDENTIAL_ADDRESS.')';
         } else {
-             require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_contacts_v2.php');
+            require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_contacts_v2.php';
             $contact = new contacts_v2();
             $addContact .= '- '.$contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).' : ';
             if (!empty($res->lastname) || !empty($res->firstname)) {
@@ -324,6 +303,24 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<input type="hidden" id="check_days_before" value="'.$_SESSION['check_days_before'].'" />';
 
     $frm_str .= '<div  style="display:block">';
+
+    //INDEXING MODELS
+    $query = 'SELECT * FROM indexingmodels order by label ASC';
+    $stmt = $db->query($query, array());
+
+    $frm_str .= '<div style="display:table;width:100%;">';
+    $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
+    $frm_str .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel();"><option value="none"></option>';
+    while ($resIndexingModels = $stmt->fetchObject()) {
+        $frm_str .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
+    }
+    $frm_str .= '</select>';
+    $frm_str .= '</div>';
+    $frm_str .= '<div style="display:table-cell;text-align:right;vertical-align:middle;width: 12%;">';
+    $frm_str .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a style="cursor:pointer;"><i class="fa fa-trash fa-2x" onclick="delIndexingModel();"></i></a>';
+    $frm_str .= '</div>';
+    $frm_str .= '</div>';
+    $frm_str .= '<script>$j("#indexing_models_select").chosen({width: "100%", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});</script>';
 
     $frm_str .= '<hr width="90%" align="center"/>';
 
@@ -421,23 +418,23 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     /*** Doctype ***/
     $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
-    $frm_str .= '<td class="indexing_label"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></td>';
+    $frm_str .= '<td class="indexing_label"><label for="type_id" class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</label><label for="type_id" class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</label></td>';
     $frm_str .= '<td>&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');changePriorityForSve(this.options[this.selectedIndex].value,\''
         .$_SESSION['config']['businessappurl'].'index.php?display=true'
         .'&dir=indexing_searching&page=priority_for_sve\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\')'.$func_load_listdiff_by_type.'">';
     $frm_str .= '<option value="">'._CHOOSE_TYPE.'</option>';
     if ($_SESSION['features']['show_types_tree'] == 'true') {
-        for ($i = 0; $i < count($doctypes); ++$i ) {
+        for ($i = 0; $i < count($doctypes); ++$i) {
             $frm_str .= '<optgroup value="" class="' //doctype_level1
                     .$doctypes[$i]['style'].'" label="'
                     .functions::xssafe($doctypes[$i]['label']).'" >';
-            for ($j = 0; $j < count($doctypes[$i]['level2']); ++$j ) {
+            for ($j = 0; $j < count($doctypes[$i]['level2']); ++$j) {
                 $frm_str .= '<optgroup value="" class="' //doctype_level2
                         .$doctypes[$i]['level2'][$j]['style'].'" label="&nbsp;&nbsp;'
                         .functions::xssafe($doctypes[$i]['level2'][$j]['label']).'" >';
                 for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
-                    ++$k 
+                    ++$k
                 ) {
                     if (!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'], $hidden_doctypes)) {
                         $frm_str .= '<option data-object_type="type_id" value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
@@ -817,7 +814,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $countAllEntities = count($allEntitiesTree);
 
         $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label><label for="department" '.'class="form_title" id="label_dep_owner" style="display:none;" >'._DEPARTMENT_OWNER.'</label></td>';
+        $frm_str .= '<td class="indexing_label"><label for="destination" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="destination" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label><label for="destination" '.'class="form_title" id="label_dep_owner" style="display:none;" >'._DEPARTMENT_OWNER.'</label></td>';
         $frm_str .= '<td>&nbsp;</td>';
         $frm_str .= '<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');'.$func_load_listdiff_by_entity.'">';
         $frm_str .= '<option value="">'._CHOOSE_DEPARTMENT.'</option>';
@@ -930,7 +927,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         } else {
             $frm_str .= '<option value="">'._CHOOSE_CURRENT_STATUS.')</option>';
         }
-        for ($i = 0; $i < count($statuses); ++$i ) {
+        for ($i = 0; $i < count($statuses); ++$i) {
             $frm_str .= '<option value="'.functions::xssafe($statuses[$i]['ID']).'" ';
             if ($statuses[$i]['ID'] == 'NEW') {
                 $frm_str .= 'selected="selected"';
@@ -1024,7 +1021,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
 
         $frm_str .= '<tr id="thesaurus_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td colspan="3" style="width:100%;">'._THESAURUS.'</td>';
+        $frm_str .= '<td colspan="3" style="width:100%;"><label for="thesaurus" class="form_title" >'._THESAURUS.'</label></td>';
         $frm_str .= '</tr>';
 
         $frm_str .= '<tr id="thesaurus_tr" style="display:'.$display_value.';">';
@@ -1545,9 +1542,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     }
 
     //INSTANTIATE require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
-    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_resource.php');
-    require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php';
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_resource.php';
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php';
 
     //INSTANTIATE
     $db = new Database();
@@ -1748,8 +1745,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $query_res .= ', folders_system_id = NULL';
         }
 
-        if ($folder_id != $old_folder_id && $_SESSION['history']['folderup'])  {
-            require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+        if ($folder_id != $old_folder_id && $_SESSION['history']['folderup']) {
+            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php';
 
             $hist = new history();
 
@@ -1782,8 +1779,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $db->query($query_ext.' where res_id = ?', $arrayPDOext);
 
     if ($core->is_module_loaded('entities') && $_SESSION['ListDiffFromRedirect'] == false) {
-        if ($load_list_diff)  {
-            require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+        if ($load_list_diff) {
+            require_once 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php';
 
             $diff_list = new diffusion_list();
 
@@ -1857,10 +1854,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $db->query('UPDATE '.$table_ext.' SET alt_identifier = ? where res_id = ?', array($myChrono, $res_id));
             }
         }
-    
-    } elseif ($cat_id ==  'attachment') {
-        require('modules/attachments/add_attachments.php');                     //      NCH01
-        require('modules/attachments/remove_letterbox.php');
+    } elseif ($cat_id == 'attachment') {
+        require 'modules/attachments/add_attachments.php';                     //      NCH01
+        require 'modules/attachments/remove_letterbox.php';
     }
 
     //$_SESSION['indexing'] = array();
