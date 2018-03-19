@@ -125,12 +125,14 @@ export class BasketAdministrationComponent implements OnInit {
                 this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id, { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
                     .subscribe((data: any) => {
                         //this.basketGroups.push(data);
+                        this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
                     }, (err) => {
+                        this.dialogRef = null;
+                        this.openSettings(group, action);
                         this.notify.error(err.error.errors);
                     });
             }
-            this.dialogRef = null;
         });
     }
 
