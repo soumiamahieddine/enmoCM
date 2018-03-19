@@ -91,7 +91,7 @@
                     <mat-tab *ngFor="let group of basketGroups;let i = index" label="{{group.group_desc}}">
                         <ng-template mat-tab-label>
                             <span>{{group.group_desc}}</span>
-                            <mat-icon color="warn" class="fa fa-unlink" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
+                            <mat-icon color="warn" class="fa fa-close" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
                         <div class="col-md-6">
                             <mat-form-field style="margin-top:5px;">
