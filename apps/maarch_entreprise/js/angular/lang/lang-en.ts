@@ -373,6 +373,8 @@ export const LANG_EN = {
     "toolTipDeleteDoctype"              : "If mails are attached to this type of document, a reassignment screen will be displayed.",
     "cantMoveDoctype"                   : "The document type can only be moved in a sub-folder",
     "noDoctypeSelected"                 : "No document type selected",
+    "cantMoveFirstLevel"                : "Sub-folder can only be moved in folder",
+    "noFirstLevelSelected"              : "No sub-folder selected",
     "tooltipPriorityDelay"              : "Use this processing time instead of the one defined in the document type",
     "tooltipPriorityDefault"            : "Set this priority by default when saving a mail",
     "defaultPriority"                   : "Default priority",

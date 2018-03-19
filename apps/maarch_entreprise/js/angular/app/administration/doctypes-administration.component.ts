@@ -36,6 +36,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     loading: boolean = false;
     creationMode: any = false;
     newSecondLevel: any = false;
+    newFirstLevel: any = false;
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
     dataSource = new MatTableDataSource(this.currentType.indexes);
@@ -72,8 +73,35 @@ export class DoctypesAdministrationComponent implements OnInit {
                                 'name': 'proton',
                                 'responsive': true
                             },
+                            'multiple': false,
                             'data': this.doctypes,
-                            "check_callback": true
+                            "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
+                                if (operation == 'move_node') {
+                                    if(typeof more.ref == "undefined"){
+                                        return true;
+                                    }
+                                    if(!isNaN(parseFloat(node.id)) && isFinite(node.id) && more.ref.id.indexOf("secondlevel_")==0){
+                                        // Doctype in secondLevel
+                                        return true;
+                                    } else if(node.id.indexOf("secondlevel_")==0 && more.ref.id.indexOf("firstlevel_")==0){
+                                        // SecondLevel in FirstLevel
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        "dnd": {
+                            is_draggable: function (nodes: any) {
+                                this.secondLevelSelected = nodes[0].id.replace("secondlevel_", "");
+                                if((!isNaN(parseFloat(this.secondLevelSelected)) && isFinite(this.secondLevelSelected)) ||
+                                    (!isNaN(parseFloat(nodes[0].id)) && isFinite(nodes[0].id))){
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            }
                         },
                         "plugins": ["search", "dnd", "contextmenu"],
                     });
@@ -131,7 +159,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                                     this.saveType();
                                 }
                             } else {
-                                alert(this.lang.cantMoveDoctype)
+                                alert(this.lang.cantMoveDoctype);
                             }
                         } else {
                             alert(this.lang.noDoctypeSelected);
@@ -147,9 +175,27 @@ export class DoctypesAdministrationComponent implements OnInit {
             this.currentFirstLevel  = false;
             this.currentType        = false;
             this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.node.original.doctypes_second_level_id )
-                .subscribe((data: any) => {
-                    this.currentSecondLevel = data['secondLevel'];
-                    this.firstLevels        = data['firstLevel'];
+                .subscribe((dataValue: any) => {
+                    this.currentSecondLevel = dataValue['secondLevel'];
+                    this.firstLevels        = dataValue['firstLevel'];
+
+                    if(move){
+                        if(this.currentSecondLevel){
+                            this.newFirstLevel = data.parent.replace("firstlevel_", "");
+                            // Is integer
+                            if(!isNaN(parseFloat(this.newFirstLevel)) && isFinite(this.newFirstLevel)){
+                                if (this.currentSecondLevel.doctypes_first_level_id != this.newFirstLevel) {
+                                    this.currentSecondLevel.doctypes_first_level_id = this.newFirstLevel;
+                                    this.saveSecondLevel();
+                                }
+                            } else {
+                                alert(this.lang.cantMoveFirstLevel);
+                            }
+                        } else {
+                            alert(this.lang.noFirstLevelSelected);
+                        }
+                    }
+
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
