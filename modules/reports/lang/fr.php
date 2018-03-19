@@ -103,17 +103,19 @@ if (!defined('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC')) {
 if (!defined('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE')) {
     define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE', 'Délai moyen de traitement par type de courrier');
 }
-/****************************************************************************************************************************/
-
-if (!defined('_FOLDER')) {
-    define('_FOLDER', 'Dossiers');
+if (!defined('_FILESTAT_LIST_DESC')) {
+    define('_FILESTAT_LIST_DESC', 'Afficher la liste des 10 derniers fichiers statistiques disponibles.');
 }
-if (!defined('_ENTITIES')) {
-    define('_ENTITIES', 'Entités');
+if (!defined('_FILESTAT_DESC')) {
+    define('_FILESTAT_DESC', 'Ces fichiers sont générés via la <b>tâche plannifiée</b> présente dans le module <b>life_cycle</b>.<br/>Seul les <b>10 derniers fichiers</b> sont affichés.');
+}
+if (!defined('_NO_STAT_FILES_AVAILABLE')) {
+    define('_NO_STAT_FILES_AVAILABLE', 'Aucun fichier de statistique disponible dans le dossier: ');
 }
 if (!defined('_MAARCH_APPLICATION')) {
     define('_MAARCH_APPLICATION', 'Application Maarch');
 }
+
 if (!defined('_GROUP')) {
     define('_GROUP', 'Groupes');
 }
