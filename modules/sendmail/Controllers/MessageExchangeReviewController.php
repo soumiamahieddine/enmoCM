@@ -17,8 +17,8 @@ namespace Sendmail\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Core\Models\ResModel;
-use Core\Models\ActionsModel;
+use Resource\models\ResModel;
+use Action\models\ActionModel;
 
 require_once __DIR__. '/../../export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/RequestSeda.php';
@@ -48,7 +48,7 @@ class MessageExchangeReviewController
     {
         $messageExchangeData = self::canSendMessageExchangeReview(['res_id' => $aArgs['res_id']]);
         if ($messageExchangeData) {
-            $actionInfo = ActionsModel::getById(['id' => $aArgs['action_id']]);
+            $actionInfo = ActionModel::getById(['id' => $aArgs['action_id']]);
             $reviewObject = new \stdClass();
             $reviewObject->Comment = array();
             $reviewObject->Comment[0] = new \stdClass();
