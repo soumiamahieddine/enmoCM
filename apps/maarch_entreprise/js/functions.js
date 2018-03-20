@@ -10,13 +10,6 @@ function capitalizeFirstLetter(theString)
 
 function whatIsTheDivStatus(theDiv, divStatus)
 {
-    /*if ($(theDiv).style.display == 'none') {
-        $(divStatus).innerHTML = '<i class="fa fa-minus-square-o"></i>';
-    } else {
-        $(divStatus).innerHTML = '<i class="fa fa-plus-square-o"></i>';
-    }
-    $j.ajax
-    */    
     if ($j('#'+theDiv).css('display') == 'none') {
         $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
     } else {
@@ -27,17 +20,10 @@ function whatIsTheDivStatus(theDiv, divStatus)
 
 function resetInlineDisplay(theDiv)
 {
-    /*setTimeout(function() {
-        if ($(theDiv).style.display == '')
-            $(theDiv).style.display = 'inline';
-    }, 250);*/
-    
     setTimeout(function() {
         if ($(theDiv).style.display == '')
             $(theDiv).style.display = 'inline';
     }, 250);
-
-
 }
 
 function changeSignatureForProfil(selected, mailSignaturesJS)
@@ -84,14 +70,7 @@ function deleteSignature(mailSignaturesJS)
     }
 }
 
-/*if ($j('#'+theDiv).css('display') == 'none') {
-        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
-    } else {
-        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
-    }*/
-
 function addNewRowPriority(buttonRow) {
-    console.log("PRIORITE")
     var index = buttonRow.rowIndex;
     var indexDiff = index - $("priorityAddField").rowIndex;
 
@@ -104,20 +83,6 @@ function addNewRowPriority(buttonRow) {
                             "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
                             "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
     }
-    /*
-    console.log("PRIORITE")
-    var index = buttonRow.rowIndex;
-    var indexDiff = index - $("priorityAddField").rowIndex;
-
-    if ($j('#priorityAddField').css('display') == "none") {
-        $j('#priorityAddField').css('display') = "";
-        $j("#minusButton").css('display') = "";
-    } else {
-        var newRow = $("prioritiesTable").insertRow(index);
-        newRow.innerHTML = "<td align='left'><input name='label_new" + indexDiff + "' id='label_new" + indexDiff + "' placeholder='Nom priorité' size='18'> <input style='background:none;border:none;width:45px;' name='color_new" + indexDiff + "' id='color_new" + indexDiff + "' type='color' value=''></td>" +
-                            "<td align='left'><input name='priority_new" + indexDiff + "' id='priority_new" + indexDiff + "' size='6' value='*'></td>" +
-                            "<td align='left'><select name='working_new" + indexDiff + "' id='working_new" + indexDiff + "'><option value='true'>Jours ouvrés</option><option value='false' >Jours calendaires</option></select></td>";
-    }*/
 
 }
 
@@ -216,24 +181,24 @@ var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minC
         });
 };
 
-    /**
-    * List used for autocompletion
-    *
-    */
-    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    $j('#'+new_value).val(li.id); 
-                }
-            });
-    };
+/**
+* List used for autocompletion and set id in hidden input
+*
+*/
+var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                $j('#'+new_value).val(li.id);
+            }
+        });
+};
 
 var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
 {
@@ -254,43 +219,43 @@ var initList_hidden_input2 = function (idField, idList, theUrlToListScript, para
         });
 };
 
+var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            afterUpdateElement: function (text, li){
+                var str = li.id;
+                var res = str.split(",");
+                $j("#"+new_value).value = res[0];
+                $j("#"+actual_value).value = res[1];
+                $j('#country').value = 'FRANCE';
+            }
+        });
+};
 
-    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                afterUpdateElement: function (text, li){
-                    var str = li.id;
-                    var res = str.split(",");
-                    $j("#"+new_value).value = res[0];
-                    $j("#"+actual_value).value = res[1];
-                    $j('#country').value = 'FRANCE';
-                }
-            });
-    };
+var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+{
+    new Ajax.Autocompleter(
+        idField,
+        idList,
+        theUrlToListScript,
+        {
+            paramName: paramNameSrv,
+            minChars: minCharsSrv,
+            callback: function (element, entry){
+                return entry + "&"+previous_name+"=" + $j("#"+previous_field).val(); 
+            },
+            afterUpdateElement: function (text, li){
+                $j("#"+new_value).value = li.id;
+            }
+        });
+};
 
-    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
-    {
-        new Ajax.Autocompleter(
-            idField,
-            idList,
-            theUrlToListScript,
-            {
-                paramName: paramNameSrv,
-                minChars: minCharsSrv,
-                callback: function (element, entry){
-                    return entry + "&"+previous_name+"=" + $j("#"+previous_field).val(); 
-                },
-                afterUpdateElement: function (text, li){
-                    $j("#"+new_value).value = li.id;
-                }
-            });
-    };
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -978,15 +943,15 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     }
 
     if (iframe_container_id != ''){
-		var iframe_container = document.getElementById(iframe_container_id);
-		Element.insert(iframe_container.contentWindow.document.body,layer);
-		Element.insert(iframe_container.contentWindow.document.body,fenetre);
-	}
-	else {
-		
-		Element.insert(document.body,layer);
-		Element.insert(document.body,fenetre);
-	}
+        var iframe_container = document.getElementById(iframe_container_id);
+        Element.insert(iframe_container.contentWindow.document.body,layer);
+        Element.insert(iframe_container.contentWindow.document.body,fenetre);
+    }
+    else {
+        
+        Element.insert(document.body,layer);
+        Element.insert(document.body,fenetre);
+    }
 
     if( mode_frm == 'fullscreen')
     {
@@ -1040,7 +1005,7 @@ function test_form()
  */
 function destroyModal(id_mod){
     if ($j('#divList')) {
-        $j('#divList').css('display','block');
+        $j('#divList').css("display", "block");
     }
     if(id_mod == undefined || id_mod=='')
     {
@@ -1058,6 +1023,7 @@ function destroyModal(id_mod){
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_mod)[0]);
     document.getElementsByTagName('body')[0].removeChild($j("#" + id_layer)[0]);
     $j("input[type='button']").prop("disabled", false).css("opacity", "1");
+    $j('body',window.top.window.document).css("overflow","auto");
 
     // FIX IE 11
     if($j('#leftPanelShowDocumentIframe')){
@@ -1066,7 +1032,6 @@ function destroyModal(id_mod){
     if($j('#rightPanelShowDocumentIframe')){
        $j('#rightPanelShowDocumentIframe').show(); 
     }
-
 }
 
 /**
@@ -1234,7 +1199,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
             onSuccess: function(answer){
                 eval('response='+answer.responseText);
                 if(response.status == 0 ) { //form values checked
-						        var hist = '';
+                                var hist = '';
                     if(chosen_action_id == 'end_action') {
                         hist = 'Y';
                     }else{
@@ -1243,7 +1208,6 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 
                     if(response.manage_form_now == false) {
                         pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"',  '"+hist+"');");
-
                         if(chosen_action_id == 'end_action') {
                             end_actions();
                         } else {
@@ -1498,7 +1462,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                         actions_status.action_push(response.action_status);
                     }
                     window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
-                }	else if(response.status == 4) {// Confirm asked to the user (for visa)
+                }   else if(response.status == 4) {// Confirm asked to the user (for visa)
                     var modal_txt='<div class=h2_title>'+response.error+'</div>';
                     modal_txt += '<p class="buttons">';
                     modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\')"/>';
@@ -1553,7 +1517,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                               coll_id : id_coll,
                               module : modulename,
                               form_values : values_new_form,
-			      			  hist : hist
+                              hist : hist
                               },
                 onCreate: function(answer) {
                     //show loading image in toolbar
@@ -1598,7 +1562,6 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                             page_result_final = response.page_result;
                             close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);                            
                         }
-
                     }
                     else //  Form Params errors
                     {
@@ -1631,7 +1594,6 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                 new_status : status
             },
             success: function(answer) {
-
                 // setTimeout(function(){
                     if(answer.status == 0 ) {
                         actions_status.values = [];
@@ -1779,8 +1741,6 @@ function print_r(x, max, sep, l) {
  **/
 function unlock(path_script, id, coll) // A FAIRE
 {
-
-    Console.log("TEST UNLOCK");
     if(path_script && res_id && coll_id)
     {
         new Ajax.Request(path_script,
@@ -1881,7 +1841,6 @@ function show_admin_contacts( is_corporate, display)
     {
         if(title)
         {
-           // title.style.display = "none";
             title.css('display', 'none');
         }
         if(lastname)
@@ -1909,35 +1868,29 @@ function show_admin_contacts( is_corporate, display)
     {
         if(title)
         {
-          //  title.style.display = display_value;
             title.css('display', display_value);
         }
         if(lastname)
         {
-           // lastname.style.display = display_value;
             lastname.css('display', display_value);
         }
         if(firstname)
         {
-            //firstname.style.display = display_value;
             firstname.css('display', display_value);
 
         }
         if(function_p)
         {
-            //function_p.style.display = display_value;
             function_p.css('display', display_value);
 
         }
         if(lastname_mandatory)
         {
-           // lastname_mandatory.style.display = 'inline';
             lastname_mandatory.css('display', 'inline');
 
         }
         if(society_mandatory)
         {
-            //society_mandatory.style.display = 'none';
             society_mandatory.css('display', 'none');
         }
     }
@@ -2045,7 +1998,6 @@ function valid_userlogs(url)
 {
     var user_div = $('user_id');
     var user_id_val = '';
-    console.log("TEST USERLOGS")
     if(user_div)
     {
         user_id_val = user_div.value;
@@ -2060,7 +2012,6 @@ function valid_userlogs(url)
                 user : user_id_val
                         },
                 onSuccess: function(answer){
-            	//alert(answer.responseText);
                 var div_to_fill = $('result_userlogsstat');
                 if(div_to_fill)
                 {
@@ -2637,9 +2588,9 @@ function previsualiseAdminRead(e, json){
     if (divWidth > 0) {
         leftPosition = mouseX - (divWidth + 40);
     }
-	if(leftPosition < 0){
-		leftPosition = - leftPosition;
-	}
+    if(leftPosition < 0){
+        leftPosition = - leftPosition;
+    }
     var divHeight = $('return_previsualise').getHeight();
     if (divHeight > 0) {
         topPosition = mouseY - (divHeight - 2);
@@ -2744,11 +2695,11 @@ var globalEval =  function(script){
 
 //
 function evalMyScripts(targetId) {
-	var myScripts = document.getElementById(targetId).getElementsByTagName('script');
-	for (var i=0; i<myScripts.length; i++) {
+    var myScripts = document.getElementById(targetId).getElementsByTagName('script');
+    for (var i=0; i<myScripts.length; i++) {
         // alert(myScripts[i].innerHTML);
-		globalEval(myScripts[i].innerHTML);
-	}
+        globalEval(myScripts[i].innerHTML);
+    }
 }
 
 /*
@@ -3211,7 +3162,7 @@ function linkDuplicate(id_form) {
     }
 }
 
-function loadTab(resId,collId,titleTab,pathScriptTab,module){ //JQUERY DONE
+function loadTab(resId,collId,titleTab,pathScriptTab,module){
     if(document.getElementById('show_tab').getAttribute('module') == module){
         document.getElementById('show_tab').style.display='none';
         if(document.getElementById(module+'_tab') != undefined ){
@@ -3349,6 +3300,7 @@ function titleWithTooltipsterClass(className){
         $j('.'+className).tooltipster({delay :0});
     });
 }
+
 /** Advanced Search **/
 
 /**
@@ -3514,6 +3466,7 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             if(elem_comp=='option_signatory_name' || elem_comp=='option_visa_user'){
                 loadAutocompletionScript(elem_comp);
             }
+            
             label.parentNode.selectedIndex = 0;
             label.style.display = 'none';
         }
@@ -3829,4 +3782,21 @@ function change3(id){
         }
         ouvre3(id);
     }
+}
+
+function print_current_result_list(path){
+    alert("Cela imprimera la liste actuellement affichée");
+    var mywindow = window.open('', 'my div', 'height=400,width=600');
+    mywindow.document.write('<html><head><title>MAARCH</title>');
+    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>');
+    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/css/font-maarch.css" type="text/css" media="all"/>');
+    mywindow.document.write('<link rel="stylesheet" href="'+path+'/merged_css.php" type="text/css" media="all"/>');
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<style>.check,#checkUncheck{display:none;}</style>');
+    mywindow.document.write($j('<div/>').append($j('#extended_list').clone()).html());
+    mywindow.document.write('</body></html>');
+    mywindow.document.close();
+    mywindow.focus();
+    setTimeout(function(){mywindow.print();},500);
+    window.onfocus = function () { setTimeout(function () { mywindow.close(); }, 500); }
 }
