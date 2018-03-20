@@ -14,13 +14,13 @@ $_SESSION['process_mode'] = $sve_type;
 if (!empty($_SESSION['process_mode_priority'])) {
 	foreach ($_SESSION['process_mode_priority'] as $key => $value){
 	    if($sve_type == $key){
-			echo "{status : 0, value : ".$value."}";
+			echo "{status : 0, value : '".$value."'}";
 			exit;
 		}elseif($sve_type == $key){
-			echo "{status : 0, value : ".$value."}";
+			echo "{status : 0, value : '".$value."'}";
 			exit;
 		}elseif($sve_type == $key){
-			echo "{status : 1, value : ".$value."}";
+			echo "{status : 1, value : '".$value."'}";
 			exit;
 		}
 	}

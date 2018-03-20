@@ -138,20 +138,16 @@ function changePriorityForSve(doctype_id, path_script){
                       address_id : path_script
                     },
             onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-                if(response.status == 0 )
-                {
+                eval("response = "+answer.responseText);
+                if(response.status == 0) {
+                    $j("#priority").val(response.value);
                     $j("#priority").trigger("chosen:updated");
 
-                }else if(response.status == 1 ){
+                } else if(response.status == 1) {
+                    $j("#priority").val(response.value);
                     $j("#priority").trigger("chosen:updated");
-                }
-                else
-                {
-                    if(console)
-                    {
-                        console.log('Erreur Ajax');
-                    }
+                } else {
+                    console.log('Erreur Ajax');
                 }
             },
             onFailure: function(){ alert('Something went wrong...'); }
