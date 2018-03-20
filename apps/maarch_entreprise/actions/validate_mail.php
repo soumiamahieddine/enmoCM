@@ -1327,7 +1327,8 @@ function check_form($form_id, $values)
  **/
 function process_category_check($cat_id, $values)
 {
-    //DECLARATIONS require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
+    //DECLARATIONS
+    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php';
 
     //INSTANTIATE
     $db = new Database();
@@ -1855,8 +1856,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
         }
     } elseif ($cat_id == 'attachment') {
-        require 'modules/attachments/add_attachments.php';                     //      NCH01
-        require 'modules/attachments/remove_letterbox.php';
+        require'modules/attachments/add_attachments.php';                     //      NCH01
+        require'modules/attachments/remove_letterbox.php';
     }
 
     //$_SESSION['indexing'] = array();
