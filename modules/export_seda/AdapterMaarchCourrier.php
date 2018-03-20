@@ -14,7 +14,7 @@ class AdapterMaarchCourrier
     {
         $res = []; // [0] = url, [1] = header, [2] = cookie, [3] = data
 
-        $message = $this->db->getMessageByIdentifier($messageId);
+        $message = $this->db->getMessageByReference($messageId);
 
         $messageObject = json_decode($message->data);
 

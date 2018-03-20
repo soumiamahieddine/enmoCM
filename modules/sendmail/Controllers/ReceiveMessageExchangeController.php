@@ -31,6 +31,7 @@ use Contact\models\ContactModel;
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
 require_once 'modules/export_seda/RequestSeda.php';
+require_once 'modules/sendmail/Controllers/SendMessageExchangeController.php';
 
 class ReceiveMessageExchangeController
 {
@@ -460,7 +461,7 @@ class ReceiveMessageExchangeController
         $acknowledgementObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $_SESSION['user']['UserId'];
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_AckSent';
-        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
+        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
 
         $acknowledgementObject->DataObjectPackage = new \stdClass();
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata = new \stdClass();
@@ -499,7 +500,7 @@ class ReceiveMessageExchangeController
         $filePath = $sendMessage->generateMessageFile($replyObject, "ArchiveTransferReply", $_SESSION['config']['tmppath']);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
-        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
+        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
 
@@ -546,7 +547,7 @@ class ReceiveMessageExchangeController
             $messageExchange = $RequestSeda->getMessageByReference($dataObject->MessageRequestIdentifier->value);
         }
 
-        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => $data['type']]);
+        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => $data['type']]);
 
         return $response->withJson([
             "messageId" => $messageId

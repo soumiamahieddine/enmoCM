@@ -305,4 +305,8 @@ $app->get('/administration/notifications/new', \Notification\controllers\Notific
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
 
+$app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
+$app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
+$app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
+
 $app->run();
