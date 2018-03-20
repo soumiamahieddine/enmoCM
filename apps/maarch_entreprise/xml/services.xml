@@ -5,9 +5,11 @@
     <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
     <name>_ADMIN</name>
     <comment>_ADMIN</comment>
+    <servicepage>/administration</servicepage>
     <servicetype>menu</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>
+    <angular>true</angular>
   </SERVICE>
   <SERVICE>
     <id>adv_search_mlb</id>

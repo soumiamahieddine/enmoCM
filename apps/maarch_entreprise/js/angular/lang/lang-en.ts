@@ -394,5 +394,8 @@ export const LANG_EN = {
     "signatureAdded"                    : "Signature added",
     "signatureUpdated"                  : "Signature updated",
     "signatureDeleted"                  : "Signature deleted",
+    "saveNumericPackage"                : "Save numeric package",
+    "noNumericPackageSelected"          : "No numeric package selected",
+     "numericPackageImported"           : "Numeric package imported",
 
 };

@@ -357,6 +357,7 @@ class core_tools extends functions
         $xmlconfig = simplexml_load_file($path);
         foreach ($xmlconfig->MENU as $MENU2) {
             $_SESSION['menu'][$k]['id'] = (string) $MENU2->id;
+            $_SESSION['menu'][$k]['angular'] = empty((string) $MENU2->angular) ? 'false' : (string) $MENU2->angular;
             if (isset($_SESSION['menu'][$k]['id'])
                 && isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id']])
                 && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id']] == true
@@ -368,8 +369,11 @@ class core_tools extends functions
                     $libmenu = constant($libmenu);
                 }
                 $_SESSION['menu'][$k]['libconst'] = $libmenu;
-                $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl']
-                    .(string) $MENU2->url;
+                if($_SESSION['menu'][$k]['angular'] == 'true'){
+                    $_SESSION['menu'][$k]['url'] = (string) $MENU2->url;
+                } else {
+                    $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'] .(string) $MENU2->url;
+                }
                 if (trim((string) $MENU2->target) != '') {
                     $tmp = preg_replace(
                         '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -421,6 +425,7 @@ class core_tools extends functions
                 $xmlconfig = simplexml_load_file($menuPath);
                 foreach ($xmlconfig->MENU as $MENU) {
                     $_SESSION['menu'][$k]['id'] = (string) $MENU->id;
+                    $_SESSION['menu'][$k]['angular'] = empty((string) $MENU->angular) ? 'false' : (string) $MENU->angular;
                     if (isset(
                         $_SESSION['user']['services'][$_SESSION['menu'][$k]['id']]
                     )
@@ -433,8 +438,12 @@ class core_tools extends functions
                             $libmenu = constant($libmenu);
                         }
                         $_SESSION['menu'][$k]['libconst'] = $libmenu;
-                        $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl']
-                            .(string) $MENU->url;
+                        if($_SESSION['menu'][$k]['angular'] == 'true'){
+                            $_SESSION['menu'][$k]['url'] = (string) $MENU->url;
+                        } else {
+                            $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'] .(string) $MENU->url;
+                        }
+                        
                         if (trim((string) $MENU->target) != '') {
                             $tmp = preg_replace(
                                 '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -480,12 +489,8 @@ class core_tools extends functions
         // Browses the menu items
         for ($i = 0; $i < count($menu); ++$i) {
             if ($menu[$i]['show'] == true) {
-                if ($menu[$i]['id'] == 'admin') {
-                    if (PROD_MODE) {
-                        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(true, \'#/administration\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
-                    } else {
-                        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(false, \'#/administration\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
-                    }
+                if ($menu[$i]['angular'] == 'true') {
+                    echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(\'#'.$menu[$i]['url'].'\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;">';
                     echo "<i class='{$menu[$i]['style']} fa-2x'></i></span><span>{$menu[$i]['libconst']}</span></span></a></li>";
                 } else {
                     $tmp = $menu[$i]['url'];
@@ -512,11 +517,7 @@ class core_tools extends functions
 
         // Menu items always displayed
         if ($myProfil) {
-            if (PROD_MODE) {
-                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(true, \'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
-            } else {
-                echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(false, \'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
-            }
+            echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';"><a onClick="triggerAngular(\'#/profile\')" style="cursor: pointer"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
         }
         if ($logout) {
             echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
@@ -553,6 +554,7 @@ class core_tools extends functions
         $xmlconfig = simplexml_load_file($path);
         foreach ($xmlconfig->MENU as $MENU2) {
             $_SESSION['quicklaunch'][$k]['id'] = (string) $MENU2->id;
+            $_SESSION['quicklaunch'][$k]['angular'] = empty((string) $MENU2->angular) ? 'false' : (string) $MENU2->angular;
             if (isset($_SESSION['quicklaunch'][$k]['id'])
                 && isset($_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']])
                 && $_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']] == true
@@ -564,8 +566,13 @@ class core_tools extends functions
                     $libmenu = constant($libmenu);
                 }
                 $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
-                $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl']
-                    .(string) $MENU2->url;
+
+                if($_SESSION['quicklaunch'][$k]['angular'] == 'true'){
+                    $_SESSION['quicklaunch'][$k]['url'] = (string) $MENU2->url;
+                } else {
+                    $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU2->url;
+                }
+                
                 if (trim((string) $MENU2->target) != '') {
                     $tmp = preg_replace(
                         '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -617,6 +624,7 @@ class core_tools extends functions
                 $xmlconfig = simplexml_load_file($menuPath);
                 foreach ($xmlconfig->MENU as $MENU) {
                     $_SESSION['quicklaunch'][$k]['id'] = (string) $MENU->id;
+                    $_SESSION['quicklaunch'][$k]['angular'] = empty((string) $MENU->angular) ? 'false' : (string) $MENU->angular;
                     if (isset(
                         $_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']]
                     )
@@ -629,8 +637,11 @@ class core_tools extends functions
                             $libmenu = constant($libmenu);
                         }
                         $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
-                        $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl']
-                            .(string) $MENU->url;
+                        if($_SESSION['quicklaunch'][$k]['angular'] == 'true'){
+                            $_SESSION['quicklaunch'][$k]['url'] = (string) $MENU->url;
+                        } else {
+                            $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU->url;
+                        }
                         if (trim((string) $MENU->target) != '') {
                             $tmp = preg_replace(
                                 '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -671,12 +682,8 @@ class core_tools extends functions
         echo '<div style="width: 85%;margin: auto;">';
         for ($i = 0; $i < count($arrTmpQuicklaunch); ++$i) {
             if ($arrTmpQuicklaunch[$i]['show'] == true) {
-                if ($arrTmpQuicklaunch[$i]['id'] == 'admin') {
-                    if (PROD_MODE) {
-                        echo '<a onClick="triggerAngular(true, \'#/administration\')" style="display: inline-block;width: 45%;float:left;cursor: pointer">';
-                    } else {
-                        echo '<a onClick="triggerAngular(false, \'#/administration\')" style="display: inline-block;width: 45%;float:left;cursor: pointer">';
-                    }
+                if ($arrTmpQuicklaunch[$i]['angular'] == 'true') {
+                    echo '<a onClick="triggerAngular(\'#'.$arrTmpQuicklaunch[$i]['url'].'\')" style="display: inline-block;width: 45%;float:left;cursor: pointer">';
                 } else {
                     $tmp = $arrTmpQuicklaunch[$i]['url'];
                     if (preg_match('/php$/', $tmp)) {
@@ -721,11 +728,8 @@ class core_tools extends functions
         echo '<div style="clear:both;"></div>';
         // quicklaunch items always displayed
         echo '<div style="width: 85%;margin: auto;">';
-        if (PROD_MODE) {
-            echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(true, \'#/profile\')">';
-        } else {
-            echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(false, \'#/profile\')">';
-        }
+        
+        echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(\'#/profile\')">';
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
             .'<i class="fa fa-user fa-2x mCdarkGrey"></i></span>';

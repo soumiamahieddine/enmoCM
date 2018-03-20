@@ -419,4 +419,7 @@ export const LANG_FR = {
     "signatureAdded"                    : "Signature ajoutée",
     "signatureUpdated"                  : "Signature mise à jour",
     "signatureDeleted"                  : "Signature supprimée",
+    "saveNumericPackage"                : "Enregistrer un pli numérique",
+    "noNumericPackageSelected"          : "Aucun pli numérique séléctionné",
+    "numericPackageImported"            : "Pli numérique correctement importé",
 };

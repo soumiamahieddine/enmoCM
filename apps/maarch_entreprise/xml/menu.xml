@@ -3,8 +3,9 @@
     <MENU>
         <id>admin</id>
         <libconst>_ADMIN</libconst>
-        <url>index.php?page=admin</url>
+        <url>/administration</url>
         <style>fa fa-cogs</style>
+        <angular>true</angular>
     </MENU>
     <MENU>
         <id>my_contacts_menu</id>

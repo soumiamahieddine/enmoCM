@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 
 declare function $j(selector: any) : any;
@@ -9,11 +10,13 @@ declare var angularGlobals : any;
 
 @Component({
     templateUrl : "../../../Views/save-numeric-package.component.html",
-    // styleUrls   : ['../../node_modules/bootstrap/dist/css/bootstrap.min.css', 'css/profile.component.css']
+    styleUrls   : ['../../../css/profile.component.css'],
+    providers   : [NotificationService]
 })
 export class SaveNumericPackageComponent implements OnInit {
 
     coreUrl                     : string;
+    lang                        : any       = LANG;
 
     numericPackage              : any       = {
         base64                  : "",
@@ -27,7 +30,7 @@ export class SaveNumericPackageComponent implements OnInit {
     loading                     : boolean   = false;
 
 
-    constructor(public http: Http, private zone: NgZone, private notify: NotificationService) {
+    constructor(public http: HttpClient, private zone: NgZone, private notify: NotificationService) {
         window['angularSaveNumericPackageComponent'] = {
             componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
         };
@@ -49,7 +52,7 @@ export class SaveNumericPackageComponent implements OnInit {
 
     updateBreadcrumb(applicationName: string) {
         if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > Enregistrer un pli numérique";
+            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " + this.lang.saveNumericPackage;
         }
     }
 
@@ -107,7 +110,7 @@ export class SaveNumericPackageComponent implements OnInit {
                             extension               : "",
                         };
                         $j("#numericPackageFilePath").val(null);
-                        this.notify.success('Pli numérique correctement importé');
+                        this.notify.success(this.lang.numericPackageImported);
 
                         if(data.basketRedirection != null){
                             window.location.href = data.basketRedirection;
@@ -122,7 +125,7 @@ export class SaveNumericPackageComponent implements OnInit {
             this.numericPackage.base64      = "";
             this.numericPackage.extension   = "";
 
-            this.notify.error("Aucun pli numérique séléctionné");
+            this.notify.error(this.lang.noNumericPackageSelected);
         }
     }
 

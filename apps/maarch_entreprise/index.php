@@ -64,7 +64,7 @@ if (isset($_SESSION['config']['corepath'])) {
 
 $core->load_lang();
 
-if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {    
+if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {
     $_REQUEST['dir'] = str_replace("\\", "", $_REQUEST['dir']);
     $_REQUEST['dir'] = str_replace("/", "", $_REQUEST['dir']);
     $_REQUEST['dir'] = str_replace("..", "", $_REQUEST['dir']);
@@ -124,9 +124,9 @@ if (!$valid) {
             $_POST[$name] = $value;
         }
     }
-    //process error for ajax request 
+    //process error for ajax request
     if (
-        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) 
+        array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER)
         && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
     ) {
         echo $error;
@@ -140,7 +140,7 @@ if (!$valid) {
 }
 
 if (
-    isset($_SESSION['user']['UserId']) 
+    isset($_SESSION['user']['UserId'])
     && isset($_GET['page'])
     && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
     && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout'
@@ -160,8 +160,8 @@ if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
 }
 
 if (
-    !isset($_SESSION['user']['UserId']) 
-    && $_REQUEST['page'] <> 'login' 
+    !isset($_SESSION['user']['UserId'])
+    && $_REQUEST['page'] <> 'login'
     && $_REQUEST['page'] <> 'log'
 ) {
     $_SESSION['HTTP_REFERER'] = Url::requestUri();
@@ -174,8 +174,8 @@ if (
 }
 
 if (isset($_REQUEST['display'])) {
-     $core->insert_page();
-     exit();
+    $core->insert_page();
+    exit();
 }
 
 if (isset($_GET['show'])) {
@@ -197,8 +197,7 @@ $core->load_header();
 $time = $core->get_session_time_expire();
 
 //reset orders in previous basket list
-if(empty($_SESSION['current_basket'])){
-    
+if (empty($_SESSION['current_basket'])) {
     $_SESSION['save_list']['start'] = "";
     $_SESSION['save_list']['lines'] = "";
     $_SESSION['save_list']['order'] = "";
@@ -213,28 +212,27 @@ if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cook
     header('location: index.php?display=true&page=logout&logout=true');
 }
 
-if (isset($_GET['body_loaded'])){
-?>
-<body style="background:#f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
-    echo $_SESSION['config']['businessappurl'];
-    ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
+if (isset($_GET['body_loaded'])) {
+    ?>
+<body style="background:#f2f2f2;" onload="session_expirate(<?php echo $time; ?>, '<?php 
+    echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
     <div id ="maarch_content" style="display:block;">
 <?php
-}
-else{
-?>
-<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$j('#maarch_body').css('background','f2f2f2');$j('#maarch_body').css('backgroundImage','');$j('#maarch_body').css('backgroundUrl', '');$j('#maarch_content').css('display','block');session_expirate(<?php echo $time;?>, '<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
+
+} else {
+    ?>
+<body style="background: url('static.php?filename=loading_big.gif') no-repeat fixed center;" onload="$j('#maarch_body').css('background','f2f2f2');$j('#maarch_body').css('backgroundImage','');$j('#maarch_body').css('backgroundUrl', '');$j('#maarch_content').css('display','block');session_expirate(<?php echo $time; ?>, '<?php
+    echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
     <div id ="maarch_content" style="display:none;">
 <?php
+
 }
     //do it only once
     if (empty($_SESSION['clientSideCookies'])) {
         ?>
         <script type="text/javascript">
 
-                var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>' + 'index.php?display=true&page=setProxyCookies';
+                var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"]; ?>' + 'index.php?display=true&page=setProxyCookies';
 
                 $j.ajax(
                 {
@@ -251,9 +249,11 @@ else{
                 });
         </script>
         <?php
+
     }
 
-if (!isset($_REQUEST['display'])) { ?>
+if (!isset($_REQUEST['display'])) {
+    ?>
     <script>
         var element = document;
         element.addEventListener('click', function() {
@@ -261,13 +261,14 @@ if (!isset($_REQUEST['display'])) { ?>
             window.chronoExpiration=window.setTimeout('redirect_to_url(\'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=logout&logout=true\')', '<?php echo $_SESSION['config']['cookietime']; ?>'*60*1000);
         });
     </script>
-<?php }
+<?php 
+}
 
 $path = $_SESSION['config']['corepath'] . 'custom/'
       . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/template/header.html';
 
 if (file_exists($path)) {
-    include_once('custom/' . $_SESSION['custom_override_id'] 
+    include_once('custom/' . $_SESSION['custom_override_id']
         . '/apps/maarch_entreprise/template/header.html');
 } else {
     include_once('apps/maarch_entreprise/template/header.html');
@@ -278,29 +279,29 @@ if (file_exists($path)) {
         <div id="content">
             <div class="error" id="main_error" onclick="this.hide();"></div>
             <?php
-            if(isset($_SESSION['error'])) {
+            if (isset($_SESSION['error'])) {
                 ?>
                 <div class="error" id="main_error_popup" onclick="this.hide();">
                     <?php
-                    echo functions::xssafe($_SESSION['error']);
-                    ?>
+                    echo functions::xssafe($_SESSION['error']); ?>
                 </div>
                 <?php
+
             }
 
-            if(isset($_SESSION['info'])) {
+            if (isset($_SESSION['info'])) {
                 ?>
                 <div class="info" id="main_info" onclick="this.hide();">
                     <?php
-                    echo functions::xssafe($_SESSION['info']);
-                    ?>
+                    echo functions::xssafe($_SESSION['info']); ?>
                 </div>
                 <?php
+
             }
             ?>
 
             <?php
-            if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
+            if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 ?>
                 <script>
                     var main_error = $j('#main_error_popup');
@@ -310,9 +311,10 @@ if (file_exists($path)) {
                     }
                 </script>
                 <?php
+
             }
 
-            if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
+            if (isset($_SESSION['info']) && $_SESSION['info'] <> '') {
                 ?>
                 <script>
                     var main_info = $j('#main_info');
@@ -322,6 +324,7 @@ if (file_exists($path)) {
                     }
                 </script>
                 <?php
+
             }
 
             echo '<div id="return_previsualise_thes" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: fixed; top: 0; left: 0; z-index: 99999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';<input type="hidden" id="identifierDetailFrame" value="" /></div>';
@@ -333,7 +336,7 @@ if (file_exists($path)) {
                 include
                     'modules/basket/advert_missing.php';
             } else {
-              $core->insert_page();
+                $core->insert_page();
             }
             ?>
             <my-app></my-app>
@@ -358,8 +361,9 @@ if (file_exists($path)) {
     <?php
     if ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?>
-        <script>triggerAngular(true, '#/administration')</script>
+        <script>triggerAngular('#/administration')</script>
     <?php
+
     }
     ?>
 </html>
