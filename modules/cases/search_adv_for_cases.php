@@ -236,7 +236,7 @@ foreach (array_keys($_SESSION['mail_priorities']) as $priority)    {
     array_push(
         $arrTmp,
         array(
-        	'VALUE' => $priority,
+        	'VALUE' => $_SESSION['mail_priorities_id'][$priority],
         	'LABEL' => $_SESSION['mail_priorities'][$priority]
         )
     );

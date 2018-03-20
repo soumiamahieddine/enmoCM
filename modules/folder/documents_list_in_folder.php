@@ -174,7 +174,13 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
                 }
                 if($tab[$i][$j][$value]=="priority")
                 {
-                    $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                    $fakeId = null;
+                    foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                        if ($prioValue == $tab[$i][$j]["value"]) {
+                            $fakeId = $key;
+                        }
+                    }
+                    $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$fakeId];
                     $tab[$i][$j]["label"]=_PRIORITY;
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]["label_align"]="left";
@@ -307,10 +313,10 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
             }
         }
     }
- //Clé de la liste
+ //Clï¿½ de la liste
 $listKey = 'res_id';
 
-//Initialiser le tableau de paramètres
+//Initialiser le tableau de paramï¿½tres
 $paramsTab = array();
 // $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
@@ -322,7 +328,7 @@ $paramsTab['divListId'] = 'div_sublist_'.$_SESSION['folderId'];                 
 $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
 $paramsTab['bool_showSmallToolbar'] = true;                                         //
 $paramsTab['linesToShow'] = 10;                                                     //
-// $paramsTab['bool_checkBox'] = true;                                                 //Affichage Case à cocher
+// $paramsTab['bool_checkBox'] = true;                                                 //Affichage Case ï¿½ cocher
 // $paramsTab['collId'] = $_SESSION['collId'];                                         //ID de la collection
 // $paramsTab['tableName'] = $sec->retrieve_view_from_coll_id($_SESSION['collId']);    //Nom de la table
 // $paramsTab['formId']= 'formSubList';                                                //

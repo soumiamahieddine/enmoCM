@@ -603,8 +603,15 @@ if($mode == 'normal') {
 
                 if($tab[$i][$j][$value]=="priority")
                 {
-                    $priority = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["value"]       = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                    $fakeId = null;
+                    foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                        if ($prioValue == $tab[$i][$j]["value"]) {
+                            $fakeId = $key;
+                        }
+                    }
+
+                    $priority = $fakeId;
+                    $tab[$i][$j]["value"]       = $_SESSION['mail_priorities'][$fakeId];
                     $tab[$i][$j]["label"]       = _PRIORITY;
                     $tab[$i][$j]["size"]        = "10";
                     $tab[$i][$j]["label_align"] = "left";

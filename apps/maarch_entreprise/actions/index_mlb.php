@@ -441,7 +441,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'\');">';
     $frmStr .= '<option value="">'._CHOOSE_PRIORITY.'</option>';
     for ($i = 0; $i < count($_SESSION['mail_priorities']); ++$i) {
-        $frmStr .= '<option value="'.functions::xssafe($i).'" ';
+        $frmStr .= '<option value="'.functions::xssafe($_SESSION['mail_priorities_id'][$i]).'" ';
         if ($_SESSION['default_mail_priority'] == $i) {
             $frmStr .= 'selected="selected"';
         }

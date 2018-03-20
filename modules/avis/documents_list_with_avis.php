@@ -308,8 +308,13 @@ for ($i=0;$i<$tabI;$i++) {
                 $tab[$i][$j]["order"]='category_id';
             }
             if ($tab[$i][$j][$value]=="priority") {
-
-                $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                $fakeId = null;
+                foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                    if ($prioValue == $tab[$i][$j]["value"]) {
+                        $fakeId = $key;
+                    }
+                }
+                $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$fakeId];
                 $tab[$i][$j]["label"]=_PRIORITY;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -424,14 +429,13 @@ for ($i=0;$i<$tabI;$i++) {
             }
             if ($tab[$i][$j][$value]=="status") {   
                 //couleurs des priorités
-                if ($tab[$i][8]["value"]=='0') {
-
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
-                } else if ($tab[$i][8]["value"]=='1') {
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
-                } else {
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
+                $fakeId = null;
+                foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                    if ($prioValue == $tab[$i][8]["value"]) {
+                        $fakeId = $key;
+                    }
                 }
+                $style="style='color:".$_SESSION['mail_priorities_color'][$fakeId].";'";
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);

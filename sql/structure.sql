@@ -1552,7 +1552,7 @@ CREATE TABLE res_letterbox
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
   is_ingoing character(1) DEFAULT NULL::bpchar,
-  priority smallint,
+  priority character varying(16),
   arbatch_id bigint DEFAULT NULL,
   policy_id character varying(32) DEFAULT NULL::character varying,
   cycle_id character varying(32) DEFAULT NULL::character varying,

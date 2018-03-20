@@ -1697,9 +1697,10 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 
 /* PRIORITIES */
 TRUNCATE TABLE priorities;
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio11111', 'Normal', '#009dc5', TRUE, null, TRUE);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio22222', 'Urgent', '#ffa500', TRUE, 8, FALSE);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('prio33333', 'Très urgent', '#ff0000', TRUE, 4, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1391nbvc', 'Très urgent', '#ff0000', TRUE, 4, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1313nbvc', 'SVA/SVR', '#ffa500', TRUE, null, FALSE);
 
 ------------
 --NOTIFICATIONS

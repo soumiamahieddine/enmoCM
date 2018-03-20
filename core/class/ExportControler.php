@@ -362,7 +362,12 @@ class ExportFunctions
 
             $result = $stmt->fetchObject();
 
-            $link_label = $_SESSION['mail_priorities'][$result->priority];
+            foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                if ($prioValue == $result->priority) {
+                    $fakeId = $key;
+                }
+            }
+            $link_label = $_SESSION['mail_priorities'][$fakeId];
 
             $line_value->get_priority = $link_label;
         }

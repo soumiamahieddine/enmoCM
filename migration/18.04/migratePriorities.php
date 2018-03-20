@@ -42,7 +42,7 @@ if (file_exists($path)) {
     }
 }
 
-foreach ($priorities as $priority) {
+foreach ($priorities as $key => $priority) {
     if ($priority['default_priority'] == 'true') {
         \Priority\models\PriorityModel::resetDefaultPriority();
     }
@@ -53,4 +53,22 @@ foreach ($priorities as $priority) {
         'where' => ['priority = ?'],
         'data'  => [$priority['id']]
     ]);
+
+    $priorities[$key]['priorityId'] = $id;
+}
+
+$i = 0;
+foreach ($loadedXml->process_modes->process_mode as $processMode) {
+    foreach ($priorities as $priority) {
+        if ($priority['id'] == $processMode->process_mode_priority) {
+            $loadedXml->process_modes->process_mode[$i]->process_mode_priority = $priority['priorityId'];
+        }
+    }
+    ++$i;
+}
+
+$res = $loadedXml->asXML();
+$fp = fopen($path, "w+");
+if ($fp) {
+    fwrite($fp,$res);
 }

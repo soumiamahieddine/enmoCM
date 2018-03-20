@@ -54,11 +54,16 @@ if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
     exit();
 } else {
     $priorityId = $_REQUEST['priority_id'];
-    if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
-        $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
+    foreach ($_SESSION['mail_priorities_id'] as $key => $value) {
+        if ($value == $priorityId) {
+            $fakeId = $key;
+        }
+    }
+    if ($_SESSION['mail_priorities_attribute'][$fakeId] <> 'false') {
+        $priorityDelay = $_SESSION['mail_priorities_attribute'][$fakeId];
     }
     $wdays = 'workingDay';
-    if (isset($_SESSION['mail_priorities_wdays'][$priorityId]) && $_SESSION['mail_priorities_wdays'][$priorityId] == 'false') {
+    if (isset($_SESSION['mail_priorities_wdays'][$fakeId]) && $_SESSION['mail_priorities_wdays'][$fakeId] == 'false') {
         $wdays = 'calendar';
     }
 }

@@ -505,7 +505,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                       .'\');">';
     $frm_str .= '<option value="">'._CHOOSE_PRIORITY.'</option>';
     for ($i = 0; $i < count($_SESSION['mail_priorities']); ++$i) {
-        $frm_str .= '<option value="'.functions::xssafe($i).'" ';
+        $frm_str .= '<option value="'.functions::xssafe($_SESSION['mail_priorities_id'][$i]).'" ';
         if (isset($data['type_id']) && $data['priority'] == $i) {
             $frm_str .= 'selected="selected"';
         } elseif ($data['priority'] == '' && $_SESSION['default_mail_priority'] == $i) {

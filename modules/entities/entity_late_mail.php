@@ -104,7 +104,7 @@ $content .='<div id="params">';
             foreach(array_keys($_SESSION['mail_priorities']) as $priority)
             {
                 $content.="<option";
-                $content.=" value='".$priority."'>";
+                $content.=" value='".$_SESSION['mail_priorities_id'][$priority]."'>";
                 $content.=$_SESSION['mail_priorities'][$priority]."</option>"; 
             }
             $content.='</select>';

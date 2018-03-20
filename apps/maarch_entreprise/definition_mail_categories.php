@@ -78,8 +78,8 @@ $_ENV['categories']['incoming'] = array();
 $_ENV['categories']['incoming']['img_cat'] = '<i class="fa fa-arrow-right fa-2x"></i>';
 $_ENV['categories']['incoming']['other_cases'] = array();
 $_ENV['categories']['incoming']['priority'] = array(
-    'type_form' => 'integer',
-    'type_field' => 'integer',
+    'type_form' => 'string',
+    'type_field' => 'string',
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
@@ -943,10 +943,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                             }
                         } elseif ($field == 'priority') {
                             foreach (array_keys($_SESSION['mail_priorities']) as $prio) {
-                                array_push($data[$field]['select'], array(
-                                                'ID' => $prio,
-                                                'LABEL' => $_SESSION['mail_priorities'][$prio],
-                                            ));
+                                $data[$field]['select'][] = [
+                                    'ID'    => $_SESSION['mail_priorities_id'][$prio],
+                                    'LABEL' => $_SESSION['mail_priorities'][$prio],
+                                ];
                             }
                         }
                     }
@@ -1106,7 +1106,12 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             }
             // special cases :
             if ($arr[$i] == 'priority') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line->{$arr[$i]}];
+                foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                    if ($prioValue == $line->priority) {
+                        $fakeId = $key;
+                    }
+                }
+                $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$fakeId];
             } elseif ($arr[$i] == 'destination') {
                 $stmt2 = $db->query('SELECT entity_label FROM '.$_SESSION['tablename']['ent_entities'].' WHERE entity_id = ?', array($line->{$arr[$i]}));
                 if ($stmt2->rowCount() == 1) {
