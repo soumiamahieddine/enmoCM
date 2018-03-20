@@ -290,34 +290,24 @@ if ($mode == 'list') {
                     ?>
                     <p>
                         <span id="templateEditTr">
-                        <label><?php echo _EDIT_TEMPLATE;?> :</label>
+                            <label><?php echo _EDIT_TEMPLATE;?> :</label>
                   
                                 <?php
-                                $strAction .= 'showAppletLauncher(\''
-                                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                                    . '&module=content_management&page=applet_modal_launcher&objectType='
-                                    . $objectType
-                                    . '&objectId='
-                                    . $objectId
-                                    . '&objectTable='
-                                    . $objectTable
-                                    . '\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';editingDoc(\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';';
+                                $strAction .= 'showAppletLauncher(this,\''.$objectId.'\',\''.$objectTable.'\',\''.$objectType.'\',\'template\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';editingDoc(\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';';
                                 ?>
                                 <a href="#" onClick="<?php functions::xecho($strAction);?>">
                                 
                                     <i class="fa fa-pencil fa-2x"></i>
                                 <?php echo _EDIT_TEMPLATE;?>
-                            </a>   
+                            </a>
                         </span>
                         <?php if ($mode == 'up') {?>
                         <a href="#" onclick="$j('#addTemplateFile').click();$('template_style_icon').setStyle({color: '#009DC5'})" style="margin-left:15px">
-
                             <i id="template_style_icon" class="fa fa-paperclip fa-2x"></i> Importer un fichier
                         </a>
                         <input class="button" name="addTemplate" id="addTemplate" onclick="$j('#addTemplateFile').click();" style="display:none;margin-left:15px" value="+" type="button"/>
                         <input id="addTemplateFile" type="file" onchange="addTemplateBase(this);" style="display:none;" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessing‌​ml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml‌​.slideshow,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet"/>
-                        <?php } ?>  
-
+                        <?php } ?>   
                     </p>
                 </div>
                 <div id="txt_div" name="txt_div">
