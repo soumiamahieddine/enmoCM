@@ -2711,3 +2711,16 @@ CREATE TABLE convert_stack
   CONSTRAINT convert_stack_pkey PRIMARY KEY (coll_id, res_id, convert_format)
 )
 WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS indexingmodels;
+CREATE TABLE indexingmodels
+(
+  id serial NOT NULL,
+  label character varying(255) NOT NULL,
+  fields_content text NOT NULL,
+  CONSTRAINT indexingmodels_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
