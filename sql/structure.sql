@@ -1189,6 +1189,7 @@ CREATE TABLE contacts_v2
   contact_id bigint NOT NULL DEFAULT nextval('contact_v2_id_seq'::regclass),
   contact_type bigint NOT NULL,
   is_corporate_person character(1) DEFAULT 'Y'::bpchar,
+  is_external_contact character(1) DEFAULT 'N'::bpchar,
   society character varying(255),
   society_short character varying(32),
   firstname character varying(255),

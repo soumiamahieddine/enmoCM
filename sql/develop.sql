@@ -678,6 +678,10 @@ ALTER TABLE message_exchange ADD res_id_master numeric default NULL;
 ALTER TABLE contact_addresses DROP COLUMN  IF EXISTS  external_contact_id;
 ALTER TABLE contact_addresses ADD COLUMN external_contact_id character varying(128);
 
+/** ADD NEW COLUMN IS CONTACTS_V2 **/
+ALTER TABLE contacts_v2 DROP COLUMN IF EXISTS is_external_contact;
+ALTER TABLE contacts_v2 ADD COLUMN is_external_contact character(1) DEFAULT 'N';
+
 DROP SEQUENCE IF EXISTS contact_communication_id_seq CASCADE;
 CREATE SEQUENCE contact_communication_id_seq
 INCREMENT 1
