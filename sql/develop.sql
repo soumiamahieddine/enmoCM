@@ -637,22 +637,21 @@ UPDATE doctypes_second_level SET css_style = '#008000' WHERE css_style = 'green_
 UPDATE doctypes_second_level SET css_style = '#800080' WHERE css_style = 'violet_style';
 UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'default_style';
 
-DROP TABLE IF EXISTS users_baskets_preferences;
-CREATE TABLE users_baskets_preferences
-(
-  id serial NOT NULL,
-  user_serial_id integer NOT NULL,
-  group_serial_id integer NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  display boolean NOT NULL,
-  color character varying(16),
-  CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
-  CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
-)
-WITH (OIDS=FALSE);
-
 DO $$ BEGIN
   IF (SELECT count(TABLE_NAME)  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'user_baskets_secondary') = 1 THEN
+    DROP TABLE IF EXISTS users_baskets_preferences;
+    CREATE TABLE users_baskets_preferences
+    (
+      id serial NOT NULL,
+      user_serial_id integer NOT NULL,
+      group_serial_id integer NOT NULL,
+      basket_id character varying(32) NOT NULL,
+      display boolean NOT NULL,
+      color character varying(16),
+      CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
+      CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
+    )
+    WITH (OIDS=FALSE);
     INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
     SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
     WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
