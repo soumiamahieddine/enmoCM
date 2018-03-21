@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angula
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
+import { ConfirmModalComponent } from '../confirmModal.component';
 import { NotificationService } from '../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -19,25 +20,25 @@ declare var angularGlobals: any;
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
 
-    private _mobileQueryListener    : () => void;
-    mobileQuery                     : MediaQueryList;
-    dialogRef                       : MatDialogRef<any>;
+    private _mobileQueryListener: () => void;
+    mobileQuery: MediaQueryList;
+    dialogRef: MatDialogRef<any>;
 
-    coreUrl                         : string;
-    lang                            : any       = LANG;
-    loading                         : boolean   = false;
+    coreUrl: string;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    entities                        : any[]     = [];
-    listTemplateRoles               : any[]     = [];
-    entityTypeList                  : any[]     = [];
-    currentEntity                   : any       = {};
-    isDraggable                     : boolean   = true;
-    creationMode                    : boolean   = false;
-    idCircuitVisa                   : number;
-    config                          : any       = {};
+    entities: any[] = [];
+    listTemplateRoles: any[] = [];
+    entityTypeList: any[] = [];
+    currentEntity: any = {};
+    isDraggable: boolean = true;
+    creationMode: boolean = false;
+    idCircuitVisa: number;
+    config: any = {};
 
-    dataSource          = new MatTableDataSource(this.currentEntity.users);
-    displayedColumns    = ['firstname', 'lastname'];
+    dataSource = new MatTableDataSource(this.currentEntity.users);
+    displayedColumns = ['firstname', 'lastname'];
 
 
     @ViewChild('snav2') sidenav: MatSidenav;
@@ -192,7 +193,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         var inListModel = false;
         var newElemListModel: any = {};
 
-        this.currentEntity.roles.forEach((role: any) => {
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -476,7 +477,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.listTemplate.dest = [template];
         }
 
-        this.currentEntity.roles.forEach((role: any) => {
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -494,6 +495,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
+                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        .subscribe((data: any) => {
+                            this.listTemplateRoles = data['roles'];
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                     this.notify.success(this.lang.entityUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -502,6 +509,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
+                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        .subscribe((data: any) => {
+                            this.listTemplateRoles = data['roles'];
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                     this.notify.success(this.lang.entityUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -549,7 +562,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "description": this.currentEntity.entity_id,
             "items": Array()
         };
-        this.currentEntity.roles.forEach((role: any) => {
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -566,6 +579,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
             .subscribe((data: any) => {
                 this.currentEntity.listTemplate.id = data.id;
+                this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                    .subscribe((data: any) => {
+                        this.listTemplateRoles = data['roles'];
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -616,16 +635,46 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         }
     }
 
-    toggleRole(role:any) {
-        this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", {"roles" : this.listTemplateRoles})
-            .subscribe(() => {
-                if (this.currentEntity.listTemplate) {
-                    this.currentEntity.listTemplate[role.id] = [];
+    toggleRole(role: any) {
+        console.log(role);
+        if (role.usedIn.length > 0) {
+            this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(',') + '</b><br/>'+this.lang.roleUsedInTemplateInfo2 } };
+            let dialogRef = this.dialog.open(ConfirmModalComponent, this.config);
+            dialogRef.afterClosed().subscribe(result => {
+                if (result === "ok") {
+                    role.available = !role.available;
+                    this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+                        .subscribe(() => {
+                            role.usedIn = [];
+                            if (this.currentEntity.listTemplate) {
+                                this.currentEntity.listTemplate[role.id] = [];
+                            }
+                            this.notify.success(this.lang.entityUpdated);
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                 }
-                this.notify.success(this.lang.entityUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
             });
+        } else {
+            role.available = !role.available;
+            this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+                .subscribe(() => {
+                    if (this.currentEntity.listTemplate) {
+                        this.currentEntity.listTemplate[role.id] = [];
+                        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                            .subscribe((data: any) => {
+                                this.listTemplateRoles = data['roles'];
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }
+                    this.notify.success(this.lang.entityUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+
+
     }
 }
 @Component({

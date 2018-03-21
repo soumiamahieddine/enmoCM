@@ -6,6 +6,7 @@ import { HttpClientModule }                     from '@angular/common/http';
 import { AppMaterialModule }                    from './app-material.module';
 
 import { CustomSnackbarComponent }              from './notification.service';
+import { ConfirmModalComponent }                from './confirmModal.component';
 
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
@@ -31,10 +32,12 @@ import { SaveNumericPackageComponent }  from './save-numeric-package.component';
         SaveNumericPackageComponent,
         SignatureBookComponent,
         SafeUrlPipe,
-        CustomSnackbarComponent
+        CustomSnackbarComponent,
+        ConfirmModalComponent
     ],
     entryComponents: [
-        CustomSnackbarComponent
+        CustomSnackbarComponent,
+        ConfirmModalComponent
     ],
     bootstrap: [AppComponent]
 })

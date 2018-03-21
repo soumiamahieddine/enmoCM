@@ -10,7 +10,7 @@
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true">
+            [opened]="mobileQuery.matches ? false : true" style="width:300px;">
             <menu-nav></menu-nav>
             <mat-divider></mat-divider>
             <mat-nav-list>
@@ -24,13 +24,13 @@
             </mat-nav-list>
             <mat-divider></mat-divider>
             <mat-nav-list>
-                <h3 mat-subheader>Role(s) supplémentaire(s)</h3>
+                <h3 mat-subheader>{{lang.additionalRoles}}</h3>
                 <ng-container *ngFor="let role of listTemplateRoles">
                     <a mat-list-item disableRipple="true" *ngIf="role.id != 'dest' && role.id != 'cc'">
                         <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
-                            <mat-slide-toggle [(ngModel)]="role.available" [checked]="role.available" color="primary" [ngStyle]="{'opacity': role.available ? '' : '0.5'}" (change)="toggleRole(role)" [disabled]="role.id == 'dest'"></mat-slide-toggle>
+                            <mat-slide-toggle [checked]="role.available" color="primary" (click)="toggleRole(role);false"></mat-slide-toggle>
                         </mat-icon>
-                        <p mat-line>
+                        <p mat-line [ngStyle]="{'opacity': role.available ? '' : '0.5'}" (click)="toggleRole(role);false">
                             {{role.label}}
                         </p>
                     </a>
@@ -216,8 +216,8 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <mat-list>
-                                    <span *ngFor="let role of currentEntity.roles; let i = index">
+                                <mat-list *ngIf="currentEntity.entity_id">
+                                    <span *ngFor="let role of listTemplateRoles; let i = index">
                                         <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary">{{role.label}}</h3>
                                         <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
                                             <div style="min-height:30px;">
