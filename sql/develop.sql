@@ -328,8 +328,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 
 ALTER TABLE baskets DROP COLUMN IF EXISTS color;
 ALTER TABLE baskets ADD color character varying(16);
-ALTER TABLE entities DROP COLUMN IF EXISTS entity_full_name;
-ALTER TABLE entities ADD entity_full_name text;
 
 /*SIGNATURE BOOK*/
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_signature_book;
