@@ -26,6 +26,7 @@ class CoreController
     {
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
+        $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['scriptsToinject'] = [];
 
