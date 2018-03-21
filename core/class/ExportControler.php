@@ -358,6 +358,30 @@ class ExportFunctions
         $this->object_export->{$this->pos}->get_contact_civility = $_SESSION['mail_titles'][$result->title];
     }
 
+    public function get_contact_function($libelle, $res_id)
+    {
+        $db = new Database();
+
+        $query = 'SELECT c.function FROM mlb_coll_ext r LEFT JOIN contacts_v2 c ON c.contact_id = r.dest_contact_id WHERE r.res_id = ?';
+        $stmt = $db->query($query, array($res_id));
+        $result = $stmt->fetchObject();
+
+        $this->object_export->{$this->pos}->get_contact_function = $result->function;
+    }
+
+    public function get_entity_initiator_short_label($libelle)
+    {
+        require_once 'modules/entities/class/class_manage_entities.php';
+        $db = new Database();
+        $entities = new entity();
+
+        $query = 'SELECT initiator FROM res_letterbox r WHERE r.res_id = ?';
+        $stmt = $db->query($query, array($res_id));
+        $result = $stmt->fetchObject();
+
+        $this->object_export->{$this->pos}->get_entity_initiator_short_label = $entities->getentityshortlabel($result->initiator);
+    }
+
     public function get_entity_dest_short_label($libelle, $res_id)
     {
         require_once 'modules/entities/class/class_manage_entities.php';
@@ -410,5 +434,16 @@ class ExportFunctions
         $result = $stmt->fetchObject();
 
         $this->object_export->{$this->pos}->get_parent_folder = $result->folder_name;
+    }
+
+    public function get_category_label($libelle, $res_id)
+    {
+        $db = new Database();
+
+        $query = 'SELECT category_id FROM mlb_coll_ext WHERE res_id = ?';
+        $stmt = $db->query($query, array($res_id));
+        $result = $stmt->fetchObject();
+
+        $this->object_export->{$this->pos}->get_category_label = $_SESSION['coll_categories']['letterbox_coll'][$result->category_id];
     }
 }

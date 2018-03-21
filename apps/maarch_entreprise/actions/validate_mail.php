@@ -101,11 +101,12 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $data = get_general_data($coll_id, $res_id, 'minimal');
     $_SESSION['category_id'] = $data['category_id']['value'];
     $view = $sec->retrieve_view_from_coll_id($coll_id);
-    $stmt = $db->query('SELECT alt_identifier, creation_date FROM '.$view.' WHERE res_id = ?', array($res_id));
+    $stmt = $db->query('SELECT initiator, alt_identifier, creation_date FROM '.$view.' WHERE res_id = ?', array($res_id));
     $resChrono = $stmt->fetchObject();
     $chrono_number = explode('/', $resChrono->alt_identifier);
     $chrono_number = $chrono_number[1];
     $creation_date = functions::format_date_db($resChrono->creation_date, false);
+    $initiator = $resChrono->initiator;
 
     //LAUNCH DOCLOCKER
     $docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
@@ -795,6 +796,35 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $frm_str .= '/></td>';
     $frm_str .= '</tr>';
+
+    /*** Initiator ***/
+    $frm_str .= '<tr id="initiator_tr" style="display:'.$displayValue.';">';
+    $frm_str .= '<td><label for="intitiator" class="form_title" >'
+            ._INITIATOR.'</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field">'
+            .'<select name="initiator" id="initiator">';
+    if ($initiator) {
+        $frm_str .= '<optgroup label="Service initiateur actuel">';
+        $frm_str .= '<option value="'.$initiator.'">'.$ent->getentitylabel($initiator).'</option>';
+        $frm_str .= '</optgroup>';
+    }
+    $frm_str .= '<optgroup label="Autre(s) service(s) disponible">';
+    foreach ($_SESSION['user']['entities'] as $entity) {
+        $frm_str .= '<option value="'.$entity['ENTITY_ID'].'"';
+        if ($_SESSION['user']['primaryentity']['id'] == $entity['ENTITY_ID'] && (empty($initiator) || $initiator == null)) {
+            $frm_str .= ' selected="selected" ';
+        }
+        $frm_str .= '>'.$entity['ENTITY_LABEL'].'</option>';
+    }
+    $frm_str .= '</optgroup>';
+    $frm_str .= '</select>'
+            .'</td>';
+    $frm_str .= '<td><span class="red_asterisk" '
+            .'id="initiator_mandatory" style="display:inline;"><i class="fa fa-star"></i>'
+            .'</span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+    $frm_str .= '<script>$j("#initiator").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
     /*** Subject ***/
     $frm_str .= '<tr id="subject_tr" style="display:'.$display_value.';">';
@@ -1770,6 +1800,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
     }
 
+    //store the initiator entity
+    $initiator = get_value_fields($values, 'initiator');
+    if (!empty($initiator)) {
+        $query_res .= ', initiator = ?';
+        $arrayPDOres = array_merge($arrayPDOres, array($initiator));
+    } else {
+        if (isset($_SESSION['user']['primaryentity']['id'])) {
+            $query_res .= ', initiator = ?';
+            $arrayPDOres = array_merge($arrayPDOres, array($_SESSION['user']['primaryentity']['id']));
+        }
+    }
+
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));
 
@@ -1856,8 +1898,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
         }
     } elseif ($cat_id == 'attachment') {
-        require'modules/attachments/add_attachments.php';                     //      NCH01
-        require'modules/attachments/remove_letterbox.php';
+        require 'modules/attachments/add_attachments.php';                     //      NCH01
+        require 'modules/attachments/remove_letterbox.php';
     }
 
     //$_SESSION['indexing'] = array();

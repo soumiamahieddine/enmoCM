@@ -71,6 +71,14 @@
                 <CALL>get_parent_folder</CALL>
             </FUNCTION>
             <FUNCTION>
+                <LIBELLE>Catégorie</LIBELLE>
+                <CALL>get_category_label</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Service versant</LIBELLE>
+                <CALL>get_entity_initiator_short_label</CALL>
+            </FUNCTION>
+            <FUNCTION>
                 <LIBELLE>Service destinataire</LIBELLE>
                 <CALL>get_entity_dest_short_label</CALL>
             </FUNCTION>
@@ -83,12 +91,12 @@
                 <CALL>get_contact_civility</CALL>
             </FUNCTION>
             <FUNCTION>
-                <LIBELLE>Mots clés</LIBELLE>
-                <CALL>get_tags</CALL>
+                <LIBELLE>Fonction du contact</LIBELLE>
+                <CALL>get_contact_function</CALL>
             </FUNCTION>
             <FUNCTION>
-                <LIBELLE>Nature de la réponse</LIBELLE>
-                <CALL>get_answer_nature</CALL>
+                <LIBELLE>Mots clés</LIBELLE>
+                <CALL>get_tags</CALL>
             </FUNCTION>
             <FUNCTION>
                 <LIBELLE>Signataire</LIBELLE>
