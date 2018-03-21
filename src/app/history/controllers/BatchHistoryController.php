@@ -39,7 +39,7 @@ class BatchHistoryController
         $maxRequestSize = 10000;
 
         $batchHistories = BatchHistoryModel::get([
-            'select'    => ['event_date', 'module_name', 'batch_id', 'total_processed', 'total_errors', 'info'],
+            'select'    => ['event_date', 'module_name', 'total_processed', 'total_errors', 'info'],
             'where'     => ['event_date > ?', 'event_date < ?'],
             'data'      => [date('Y-m-d H:i:s', $data['startDate']), date('Y-m-d H:i:s', $data['endDate'])],
             'orderBy'   => ['event_date DESC'],

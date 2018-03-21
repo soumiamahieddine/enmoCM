@@ -32,10 +32,6 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
-                    <ng-container matColumnDef="batch_id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.id}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">{{element.batch_id}}</mat-cell>
-                    </ng-container>
                     <ng-container matColumnDef="event_date">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.date}}</mat-header-cell>
                         <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>

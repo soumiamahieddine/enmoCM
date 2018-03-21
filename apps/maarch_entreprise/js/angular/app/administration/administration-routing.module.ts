@@ -25,7 +25,7 @@ import { NotificationsAdministrationComponent }         from './notifications-ad
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
-import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
+import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 
  
@@ -65,7 +65,7 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
             { path: 'administration/notifications/schedule', component: NotificationsScheduleAdministrationComponent },
             { path: 'administration/notifications/:identifier', component: NotificationAdministrationComponent },
             { path: 'administration/history', component: HistoryAdministrationComponent },
-            { path: 'administration/historyBatch', component: HistoryBatchAdministrationComponent },
+            { path: 'administration/historyBatch', component: BatchHistoryAdministrationComponent },
             { path: 'administration/update-status', component: UpdateStatusAdministrationComponent },
         ]),
     ],

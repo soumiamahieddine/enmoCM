@@ -29,7 +29,7 @@ import { PrioritiesAdministrationComponent }            from './priorities-admin
 import { PriorityAdministrationComponent }              from './priority-administration.component';
 import { ReportsAdministrationComponent }               from './reports-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
-import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
+import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
 import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
@@ -66,7 +66,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         PriorityAdministrationComponent,
         ReportsAdministrationComponent,
         HistoryAdministrationComponent,
-        HistoryBatchAdministrationComponent,
+        BatchHistoryAdministrationComponent,
         UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
         NotificationsScheduleAdministrationComponent,
