@@ -180,7 +180,7 @@ if (!defined('_ENCRYPTED')) {
 }
 
 if (!defined('_ADD_VISA_ROLE')) {
-    define('_ADD_VISA_ROLE', 'Add visa user / signatory user');
+    define('_ADD_VISA_ROLE', 'Add visa user');
 }
 
 if (!defined('_ADD_VISA_MODEL')) {

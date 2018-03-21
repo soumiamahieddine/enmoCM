@@ -201,7 +201,7 @@ if (!defined('_SIGN_USER')) {
 }
 
 if (!defined('_ADD_VISA_ROLE')) {
-    define('_ADD_VISA_ROLE', 'Ajouter un viseur / signataire');
+    define('_ADD_VISA_ROLE', 'Ajouter un viseur');
 }
 
 if (!defined('_ADD_VISA_MODEL')) {
