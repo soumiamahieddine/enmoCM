@@ -396,6 +396,9 @@ export const LANG_EN = {
     "signatureDeleted"                  : "Signature deleted",
     "saveNumericPackage"                : "Save numeric package",
     "noNumericPackageSelected"          : "No numeric package selected",
-     "numericPackageImported"           : "Numeric package imported",
+    "numericPackageImported"            : "Numeric package imported",
+    "enterValue"                        : "You must enter a value",
+    "patternId"                         : "Value must contain only alphanumeric, dot, underscore or dash",
+    "alreadyExist"                      : "Identifiant already exists",
 
 };

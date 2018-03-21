@@ -422,4 +422,7 @@ export const LANG_FR = {
     "saveNumericPackage"                : "Enregistrer un pli numérique",
     "noNumericPackageSelected"          : "Aucun pli numérique séléctionné",
     "numericPackageImported"            : "Pli numérique correctement importé",
+    "enterValue"                        : "Vous devez entrer une valeur",
+    "patternId"                         : "La valeur doit contenir uniquement des alphanumériques, points, underscores ou tirets",
+    "alreadyExist"                      : "L'identifiant existe déjà",
 };
