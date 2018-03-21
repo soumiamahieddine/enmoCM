@@ -186,7 +186,7 @@ export class BasketAdministrationComponent implements OnInit {
     updateResultPage(group: any) {
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
-                this.notify.success(this.lang.basketUpdated);
+                this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -236,7 +236,7 @@ export class BasketAdministrationComponent implements OnInit {
     addAction(group: any) {
         this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
-                this.notify.success(this.lang.basketUpdated);
+                this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -249,7 +249,7 @@ export class BasketAdministrationComponent implements OnInit {
             action.checked = false;
             this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + group.group_id, { 'result_page': group.result_page, 'groupActions': group.groupActions })
             .subscribe(() => {
-                this.notify.success(this.lang.basketUpdated);
+                this.notify.success(this.lang.actionsGroupBasketUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
