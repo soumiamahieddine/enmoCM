@@ -1,12 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef } from '@angular/material';
 
 declare function $j(selector: any): any;
-
 declare var angularGlobals: any;
 
 
@@ -15,25 +14,28 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class DiffusionModelsAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    dialogRef: MatDialogRef<any>;
-    private _mobileQueryListener: () => void;
-    config: any = {};
-    coreUrl: string;
-    lang: any = LANG;
 
-    listTemplates: any[] = [];
-    listTemplatesForAssign: any[] = [];
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    loading: boolean = false;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    displayedColumns = ['title', 'description', 'object_type', 'actions'];
-    dataSource = new MatTableDataSource(this.listTemplates);
+    config                          : any       = {};
+    listTemplates                   : any[]     = [];
+    listTemplatesForAssign          : any[]     = [];
+
+    displayedColumns    = ['title', 'description', 'object_type', 'actions'];
+    dataSource          = new MatTableDataSource(this.listTemplates);
+
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
@@ -48,16 +50,8 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Groupes";
-        }
-    }
-
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.http.get(this.coreUrl + "rest/listTemplates")
@@ -83,7 +77,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/listTemplates/" + listTemplate['id'])
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     setTimeout(() => {
                         var i = 0;
                         this.listTemplates.forEach((template: any) => {

@@ -16,25 +16,28 @@ declare const angularGlobals : any;
     providers   : [NotificationService]
 })
 export class GroupAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl                     : string;
-    lang                        : any       = LANG;
 
-    creationMode                : boolean;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    group                       : any       = {
-        security                : {}
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+
+    group                           : any       = {
+        security                    : {}
     };
-    loading                     : boolean   = false;
+    creationMode                    : boolean;
 
-    displayedColumns = ['firstname', 'lastname'];
-    dataSource      : any;
+    displayedColumns    = ['firstname', 'lastname'];
+    dataSource          : any;
+
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
@@ -47,16 +50,6 @@ export class GroupAdministrationComponent implements OnInit {
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
-    
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.groupCreation;
-        } else {
-            breadCrumb += this.lang.groupModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
@@ -67,12 +60,10 @@ export class GroupAdministrationComponent implements OnInit {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
                 this.loading = false;
-                this.updateBreadcrumb(angularGlobals.applicationName);
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/groups/" + params['id'] + "/details")
                     .subscribe((data : any) => {
-                        this.updateBreadcrumb(angularGlobals.applicationName);
                         this.group = data['group'];
                         this.loading = false;
                         setTimeout(() => {
@@ -99,7 +90,7 @@ export class GroupAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] , {"description" : this.group['group_desc'], "security" : this.group['security']})
-                .subscribe((data : any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.groupUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -110,7 +101,7 @@ export class GroupAdministrationComponent implements OnInit {
 
     updateService(service: any) {
         this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
-            .subscribe((data : any) => {
+            .subscribe(() => {
                 this.notify.success(this.lang.groupUpdated);
             }, (err) => {
                 service.checked = !service.checked;

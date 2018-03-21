@@ -13,17 +13,18 @@ declare const angularGlobals: any;
     templateUrl: "../../../../Views/administration.component.html"
 })
 export class AdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    organisationServices: any[] = [];
-    productionServices: any[] = [];
-    classementServices: any[] = [];
-    supervisionServices: any[] = [];
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    loading: boolean = false;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+
+    organisationServices            : any[]     = [];
+    productionServices              : any[]     = [];
+    classementServices              : any[]     = [];
+    supervisionServices             : any[]     = [];
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private router: Router) {
@@ -46,15 +47,8 @@ export class AdministrationComponent implements OnInit {
         }
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > Administration";
-        }
-    }
-
     ngOnInit(): void {
         this.prepareAdministration();
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;

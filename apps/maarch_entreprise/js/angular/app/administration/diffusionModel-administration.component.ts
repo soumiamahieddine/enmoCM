@@ -18,25 +18,29 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    creationMode: boolean;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    diffusionModel: any = {};
-    loading: boolean = false;
-    idCircuit: number;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    itemTypeList:any = [];
-    displayedColumns = ['firstname', 'lastname'];
-    dataSource: any;
+    diffusionModel                  : any       = {};
+    idCircuit                       : number;
+    itemTypeList                    : any       = [];
+    creationMode                    : boolean;
+
+
+    displayedColumns    = ['firstname', 'lastname'];
+    dataSource          : any;
+
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
@@ -47,18 +51,9 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
+
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/groups\"' style='cursor: pointer'>" + this.lang.groups + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.groupCreation;
-        } else {
-            breadCrumb += this.lang.groupModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
     }
 
     ngOnInit(): void {
@@ -70,13 +65,11 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
                 this.loading = false;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.itemTypeList =[{"id":"VISA_CIRCUIT", "label": this.lang.visa},{"id":"AVIS_CIRCUIT", "label": this.lang.avis}]
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/listTemplates/" + params['id'])
                     .subscribe((data: any) => {
-                        this.updateBreadcrumb(angularGlobals.applicationName);
                         this.diffusionModel = data['listTemplate'];
                         if (this.diffusionModel.diffusionList[0]) {
                             this.idCircuit = this.diffusionModel.diffusionList[0].id;
@@ -102,7 +95,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
             "title": this.diffusionModel.title,
             "description": this.diffusionModel.description,
             "items": Array()
-        }
+        };
         
         if (this.diffusionModel.object_type == 'VISA_CIRCUIT') {
             var itemMode = 'sign';
@@ -167,7 +160,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
             "title": this.diffusionModel.title,
             "description": this.diffusionModel.description,
             "items": Array()
-        }
+        };
         this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
 
@@ -208,7 +201,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                 "title": this.diffusionModel.title,
                 "description": this.diffusionModel.description,
                 "items": Array()
-            }
+            };
 
             this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
@@ -238,7 +231,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                 });
         } else {
             this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuit)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.idCircuit = null;
                     this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
