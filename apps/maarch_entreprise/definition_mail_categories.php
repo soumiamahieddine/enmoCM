@@ -279,8 +279,8 @@ $_ENV['categories']['outgoing'] = array();
 $_ENV['categories']['outgoing']['img_cat'] = '<i class="fa fa-arrow-left fa-2x"></i>';
 $_ENV['categories']['outgoing']['other_cases'] = array();
 $_ENV['categories']['outgoing']['priority'] = array(
-    'type_form' => 'integer',
-    'type_field' => 'integer',
+    'type_form' => 'string',
+    'type_field' => 'string',
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
@@ -401,8 +401,8 @@ $_ENV['categories']['internal'] = array();
 $_ENV['categories']['internal']['img_cat'] = '<i class="fa fa-arrow-down fa-2x"></i>';
 $_ENV['categories']['internal']['other_cases'] = array();
 $_ENV['categories']['internal']['priority'] = array(
-    'type_form' => 'integer',
-    'type_field' => 'integer',
+    'type_form' => 'string',
+    'type_field' => 'string',
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
