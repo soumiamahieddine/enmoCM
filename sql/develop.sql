@@ -9,6 +9,7 @@
 DROP VIEW IF EXISTS view_postindexing;
 DROP VIEW IF EXISTS res_view_attachments;
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS view_contacts;
 DROP TABLE IF EXISTS ar_batch;
 
 DROP SEQUENCE IF EXISTS priorities_seq CASCADE;
@@ -384,7 +385,10 @@ DROP TABLE IF EXISTS groupbasket_difflist_roles;
 /*LISTMODELS*/
 ALTER TABLE listmodels DROP COLUMN IF EXISTS listmodel_type;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS coll_id;
-ALTER TABLE listmodels ADD  COLUMN IF NOT EXISTS id serial NOT NULL;
+
+ALTER TABLE listmodels DROP COLUMN IF EXISTS id;
+ALTER TABLE listmodels ADD id serial NOT NULL;
+
 UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
 
 
@@ -704,7 +708,6 @@ CREATE TABLE contact_communication
   CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
-DROP VIEW IF EXISTS view_contacts;
 CREATE OR REPLACE VIEW view_contacts AS 
  SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
 , c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data
