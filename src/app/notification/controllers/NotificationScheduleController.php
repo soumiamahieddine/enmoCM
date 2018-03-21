@@ -32,7 +32,7 @@ class NotificationScheduleController
         }
 
         return $response->withJson([
-            'crontab' => NotificationScheduleModel::getCrontab(),
+            'crontab'                => NotificationScheduleModel::getCrontab(),
             'authorizedNotification' => self::getAuthorizedNotifications(),
         ]);
     }
@@ -49,7 +49,7 @@ class NotificationScheduleController
             return $response->withStatus(500)->withJson(['errors' => 'Problem with crontab']);
         }
 
-        foreach ($data as $id => $cronValue) {
+        foreach ($data as $cronValue) {
             foreach ($cronValue as $key => $value) {
                 if (($key == 'cmd' || $key == 'state') && !Validator::notEmpty()->validate($value)) {
                     $errors[] = $key.' is empty';
@@ -101,10 +101,10 @@ class NotificationScheduleController
 
     protected static function checkCrontab($crontabToSave)
     {
-        $customId = CoreConfigModel::getCustomId();
+        $customId          = CoreConfigModel::getCustomId();
         $crontabBeforeSave = NotificationScheduleModel::getCrontab();
-        $corePath = str_replace('custom/'.$customId.'/src/app/notification/controllers', '', __DIR__);
-        $corePath = str_replace('src/app/notification/controllers', '', $corePath);
+        $corePath          = str_replace('custom/'.$customId.'/src/app/notification/controllers', '', __DIR__);
+        $corePath          = str_replace('src/app/notification/controllers', '', $corePath);
         foreach ($crontabToSave as $id => $cronValue) {
             if ($cronValue['state'] != 'hidden' && $crontabBeforeSave[$id]['state'] == 'hidden') {
                 $returnValue = false;
@@ -154,7 +154,7 @@ class NotificationScheduleController
         }
 
         $notification_sid = $data['notification_sid'];
-        $notification_id = $data['notification_id'];
+        $notification_id  = $data['notification_id'];
 
         NotificationScheduleModel::createScriptNotification(['notification_sid' => $notification_sid, 'notification_id' => $notification_id]);
 

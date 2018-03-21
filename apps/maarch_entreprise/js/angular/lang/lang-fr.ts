@@ -222,7 +222,7 @@ export const LANG_FR = {
     "notificationModification"     : "Modification de la notification",  
     "notifications"                : "Notification(s)",
     "notificationSchedule"         : "Planifier les notifications",
-    "NotificationScheduleInfo"     : "Pour Rappel,\n\nformat de la crontab : [minute]  [heure]  [jour dans le mois]  [mois]  [jour de la semaine]",
+    "NotificationScheduleInfo"     : "Pour rappel,\n\nformat de la crontab : [minute]  [heure]  [jour dans le mois]  [mois]  [jour de la semaine]",
     "notificationScheduleUpdated"  : "Tâche(s) planifié(s) mise à jour",
     "notificationsSchedule"        : "Planification des notifications",
     "NotificationToEnable"         : "Activer",

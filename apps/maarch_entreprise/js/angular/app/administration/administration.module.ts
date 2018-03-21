@@ -32,7 +32,6 @@ import { HistoryAdministrationComponent }               from './history-administ
 import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
-import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 
 @NgModule({
@@ -69,7 +68,6 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BatchHistoryAdministrationComponent,
         UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
-        NotificationsScheduleAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
         EntitiesAdministrationRedirectModalComponent,

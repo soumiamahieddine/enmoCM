@@ -79,9 +79,6 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             position='end' [opened]="mobileQuery.matches ? false : false">
-            <div class="alert alert-info" role="alert" style="margin:15px;">
-                {{lang.NotificationScheduleInfo}}
-            </div>
             <mat-list>
                 <h3 mat-subheader>{{lang.notificationSchedule}}</h3>
                 <form class="form-horizontal" #notifForm="ngForm" style="overflow:hidden;">
@@ -149,6 +146,9 @@
                 </form>
             </mat-list>
             <mat-divider></mat-divider>
+            <div class="alert alert-info" role="alert" style="margin:15px;">
+                {{lang.NotificationScheduleInfo}}
+            </div>
             <mat-list>
                 <h3 mat-subheader>{{lang.activeCron}}</h3>
                 <mat-chip-list #chipList class="mat-chip-list-stacked">
