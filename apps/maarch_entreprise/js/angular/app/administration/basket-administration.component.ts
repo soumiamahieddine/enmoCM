@@ -2,14 +2,12 @@ import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild } from '@angula
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
-
 declare var angularGlobals: any;
 
 
@@ -18,32 +16,34 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class BasketAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
-    dialogRef: MatDialogRef<any>;
-    config: any = {};
 
-    id: string;
-    creationMode: boolean;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    basket: any = {};
-    basketGroups: any[] = [];
-    allGroups: any[] = [];
-    basketIdAvailable: boolean;
-    actionsList: any[] = [];
-    resultPages: any[] = [];
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    loading: boolean = false;
+    config                          : any       = {};
+    id                              : string;
+    basket                          : any       = {};
+    basketGroups                    : any[]     = [];
+    allGroups                       : any[]     = [];
+    basketIdAvailable               : boolean;
+    actionsList                     : any[]     = [];
+    resultPages                     : any[]     = [];
+    creationMode                    : boolean;
 
-    displayedColumns = ['label_action', 'actions'];
-    dataSource: any;
+    displayedColumns    = ['label_action', 'actions'];
+    dataSource          : any;
+
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
@@ -123,8 +123,7 @@ export class BasketAdministrationComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
                 this.http.put(this.coreUrl + "rest/baskets/" + this.id + "/groups/" + result.group.group_id, { 'result_page': result.group.result_page, 'groupActions': result.group.groupActions })
-                    .subscribe((data: any) => {
-                        //this.basketGroups.push(data);
+                    .subscribe(() => {
                         this.dialogRef = null;
                         this.notify.success(this.lang.basketUpdated);
                     }, (err) => {
@@ -179,11 +178,7 @@ export class BasketAdministrationComponent implements OnInit {
 
     setDefaultAction(group: any, action: any) {
         group.groupActions.forEach((tmpAction: any) => {
-            if (action.id == tmpAction.id) {
-                tmpAction.default_action_list = true;
-            } else {
-                tmpAction.default_action_list = false;
-            }
+            tmpAction.default_action_list = (action.id == tmpAction.id);
         });
         this.addAction(group);
     }
@@ -279,7 +274,7 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     ngOnInit(): void {
         this.http.get(this.coreUrl + "rest/entities")
             .subscribe((entities: any) => {
-                var keywordEntities = [{
+                let keywordEntities = [{
                     id: 'ALL_ENTITIES',
                     keyword: 'ALL_ENTITIES',
                     parent: '#',
@@ -381,12 +376,12 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {
-                            var index = this.data.action.redirects.indexOf(redirect);
+                            let index = this.data.action.redirects.indexOf(redirect);
                             this.data.action.redirects.splice(index, 1);
                         }
                     } else {
                         if (redirect.entity_id == data.node.id) {
-                            var index = this.data.action.redirects.indexOf(redirect);
+                            let index = this.data.action.redirects.indexOf(redirect);
                             this.data.action.redirects.splice(index, 1);
                         }
                     }
@@ -442,12 +437,12 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {
-                            var index = this.data.action.redirects.indexOf(redirect);
+                            let index = this.data.action.redirects.indexOf(redirect);
                             this.data.action.redirects.splice(index, 1);
                         }
                     } else {
                         if (redirect.entity_id == data.node.id) {
-                            var index = this.data.action.redirects.indexOf(redirect);
+                            let index = this.data.action.redirects.indexOf(redirect);
                             this.data.action.redirects.splice(index, 1);
                         }
                     }
@@ -473,12 +468,15 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     styles: [".mat-dialog-content{height: 65vh;}"]
 })
 export class BasketAdministrationGroupListModalComponent {
-    lang: any = LANG;
-    coreUrl: string;
-    actionAll: any = [];
-    newBasketGroup: any = {};
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) { }
+    coreUrl         : string;
+    lang            : any       = LANG;
+    actionAll       : any       = [];
+    newBasketGroup  : any       = {};
+
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) {
+    }
+
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
         this.http.get(this.coreUrl + "rest/actions")
@@ -494,14 +492,14 @@ export class BasketAdministrationGroupListModalComponent {
                     this.actionAll.push(tmpAction);
                 });
 
-            }, (err) => {
+            }, () => {
                 location.href = "index.php";
             });
 
         this.data.groups.forEach((tmpGroup: any) => {
             this.data.linkedGroups.forEach((tmpLinkedGroup: any) => {
                 if (tmpGroup.group_id == tmpLinkedGroup.group_id) {
-                    var index = this.data.groups.indexOf(tmpGroup);
+                    let index = this.data.groups.indexOf(tmpGroup);
                     this.data.groups.splice(index, 1);
                 }
             });
@@ -519,6 +517,7 @@ export class BasketAdministrationGroupListModalComponent {
             this.newBasketGroup = JSON.parse(JSON.stringify(this.data.linkedGroups[this.data.linkedGroups.length-1]));
         }
         this.newBasketGroup.group_id = group.group_id;
+        this.newBasketGroup.group_desc = group.group_desc;
         this.dialogRef.close(this.newBasketGroup);
     }
 }
