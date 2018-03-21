@@ -7,7 +7,6 @@ import { NotificationService } from '../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
 
 declare function $j(selector: any) : any;
-
 declare const angularGlobals : any;
 
 
@@ -47,13 +46,13 @@ export class GroupAdministrationComponent implements OnInit {
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
     }
+
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.route.params.subscribe(params => {
@@ -102,7 +101,7 @@ export class GroupAdministrationComponent implements OnInit {
     updateService(service: any) {
         this.http.put(this.coreUrl + "rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
             .subscribe(() => {
-                this.notify.success(this.lang.groupUpdated);
+                this.notify.success(this.lang.groupServicesUpdated);
             }, (err) => {
                 service.checked = !service.checked;
                 this.notify.error(err.error.errors);
