@@ -628,7 +628,7 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['maarch_entreprise']['xml_versionbase'] = 'none';
         }
         $checkBase = new Database();
-        $query = "SELECT param_value_int, param_value_string FROM " . PARAM_TABLE
+        $query = "SELECT param_value_string FROM " . PARAM_TABLE
                . " WHERE id = 'database_version'";
 
         $stmt = $checkBase->query($query); //Find value in parameters table on database
@@ -636,10 +636,8 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['maarch_entreprise']['database_version'] = "none";
         } else {
             $vbg = $stmt->fetchObject();
-            $_SESSION['maarch_entreprise']
-                ['database_version'] = $vbg->param_value_int;
-            $_SESSION['maarch_entreprise']
-                ['database_version_minor'] = $vbg->param_value_string;
+            $_SESSION['maarch_entreprise']['database_version'] = $vbg->param_value_string;
+            $_SESSION['maarch_entreprise']['database_version_minor'] = $vbg->param_value_string;
         }
         //If this two parameters is not find, this is the end of this function
         if ($_SESSION['maarch_entreprise']['xml_versionbase'] <> 'none' ) {
