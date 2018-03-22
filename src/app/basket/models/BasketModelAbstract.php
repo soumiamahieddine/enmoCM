@@ -569,5 +569,4 @@ class BasketModelAbstract
 
         return $aAction[0]['id_action'];
     }
-
 }

@@ -22,7 +22,7 @@ use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
-use Basket\models\BasketsModel;
+use Basket\models\BasketModel;
 use Resource\models\ResModel;
 use Note\models\NoteModel;
 use History\controllers\HistoryController;
@@ -90,21 +90,19 @@ class ReceiveMessageExchangeController
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Contact sélectionné ou créé';
 
         /************** MLB COLL EXT **************/
-        $return = self::saveExtensionTable(["contact" => $contactReturn, "resId" => $resLetterboxReturn[0]]);
+        $return = self::saveExtensionTable(["contact" => $contactReturn, "resId" => $resLetterboxReturn]);
 
         if (!empty($return['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $return['errors']]);
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Message enregistré';
         /************** NOTES *****************/
-        $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn[0]]);
-
+        $notesReturn = self::saveNotes(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn]);
         if (!empty($notesReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $notesReturn['errors']]);
         }
-
         /************** RES ATTACHMENT *****************/
-        $resAttachmentReturn = self::saveResAttachment(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn[0], "defaultConfig" => $aDefaultConfig]);
+        $resAttachmentReturn = self::saveResAttachment(["dataObject" => $sDataObject, "resId" => $resLetterboxReturn, "defaultConfig" => $aDefaultConfig]);
 
         if (!empty($resAttachmentReturn['errors'])) {
             return $response->withStatus(400)->withJson(["errors" => $resAttachmentReturn['errors']]);
@@ -112,14 +110,14 @@ class ReceiveMessageExchangeController
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
-            'recordId'  => $resLetterboxReturn[0],
+            'recordId'  => $resLetterboxReturn,
             'eventType' => 'ADD',
             'eventId'   => 'resadd',
-            'info'       => _NUMERIC_PACKAGE_IMPORTED
+            'info'      => _NUMERIC_PACKAGE_IMPORTED
         ]);
 
         $basketRedirection = null;
-        $userBaskets = BasketsModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $userBaskets = BasketModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
         if (!empty($userBaskets)) {
             foreach ($userBaskets as $value) {
                 if ($value['basket_id'] == $aDefaultConfig['basketRedirection_afterUpload'][0]) {
@@ -130,8 +128,8 @@ class ReceiveMessageExchangeController
                             break;
                         }
                     }
-                    $defaultAction = BasketsModel::getDefaultActionIdByBasketId(['basketId' => $value['basket_id'], 'groupId' => $userPrimaryGroup]);
-                    $basketRedirection = 'index.php?page=view_baskets&module=basket&baskets=' . $value['basket_id'] . '&resId=' . $resLetterboxReturn[0] . '&defaultAction=' . $defaultAction;
+                    $defaultAction = BasketModel::getDefaultActionIdByBasketId(['basketId' => $value['basket_id'], 'groupId' => $userPrimaryGroup]);
+                    $basketRedirection = 'index.php?page=view_baskets&module=basket&baskets=' . $value['basket_id'] . '&resId=' . $resLetterboxReturn . '&defaultAction=' . $defaultAction;
                     break;
                 }
             }
@@ -141,10 +139,10 @@ class ReceiveMessageExchangeController
             $basketRedirection = 'index.php';
         }
 
-        self::sendReply(['dataObject' => $sDataObject, 'Comment' => self::$aComments, 'replyCode' => '000 : OK', 'res_id_master' => $resLetterboxReturn[0]]);
+        self::sendReply(['dataObject' => $sDataObject, 'Comment' => self::$aComments, 'replyCode' => '000 : OK', 'res_id_master' => $resLetterboxReturn]);
 
         return $response->withJson([
-            "resId"             => $resLetterboxReturn[0],
+            "resId"             => $resLetterboxReturn,
             'basketRedirection' => $basketRedirection
         ]);
     }
@@ -264,8 +262,7 @@ class ReceiveMessageExchangeController
             "status"      => $defaultConfig['status']
         ];
 
-        $resId         = StoreController::storeResource($allDatas);
-        return $resId;
+        return StoreController::storeResource($allDatas);
     }
 
     protected static function saveContact($aArgs = [])
@@ -327,14 +324,8 @@ class ReceiveMessageExchangeController
         array_push($dataValue, ['column' => 'address_id',      'value' => $contact['addressId'], 'type' => 'integer']);
         array_push($dataValue, ['column' => 'admission_date',  'value' => 'CURRENT_TIMESTAMP',   'type' => 'date']);
 
-        $allDatas = [
-            "resId"    => $aArgs['resId'],
-            "data"     => $dataValue,
-            "table"    => "mlb_coll_ext",
-            "resTable" => "res_letterbox"
-        ];
-
-        $return = ResModel::createExt($allDatas);
+        $formatedData = StoreController::prepareExtStorage(['resId' => $aArgs['resId'], 'data' => $dataValue]);
+        $return       = ResModel::createExt($formatedData);
 
         return $return;
     }
@@ -355,7 +346,7 @@ class ReceiveMessageExchangeController
 
             HistoryController::add([
                 'tableName' => 'notes',
-                'recordId'  => $aArgs['identifier'],
+                'recordId'  => $aArgs['resId'],
                 'eventType' => 'ADD',
                 'eventId'   => 'noteadd',
                 'info'       => _NOTES_ADDED

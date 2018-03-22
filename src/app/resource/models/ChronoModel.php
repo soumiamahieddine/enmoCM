@@ -12,7 +12,7 @@
  * @author dev@maarch.org
  */
 
-namespace SrcCore\models;
+namespace Resource\models;
 
 use Parameter\models\ParameterModel;
 
@@ -46,31 +46,31 @@ class ChronoModel
                 if ($value['type'] == 'date') {
                     if ($value['value'] == 'year') {
                         $elements[$key]['value'] = date('Y');
-                    } else if ($value['value'] == 'month') {
+                    } elseif ($value['value'] == 'month') {
                         $elements[$key]['value'] = date('m');
-                    } else if ($value['value'] == 'day') {
+                    } elseif ($value['value'] == 'day') {
                         $elements[$key]['value'] = date('d');
-                    } else if ($value['value'] == 'full_date') {
+                    } elseif ($value['value'] == 'full_date') {
                         $elements[$key]['value'] = date('dmY');
                     }
                 } elseif ($value['type'] == 'maarch_var') {
                     if ($value['value'] == "entity_id") {
                         $elements[$key]['value'] = $aArgs['entityId'];
-                    } else if ($value['value'] == 'type_id') {
+                    } elseif ($value['value'] == 'type_id') {
                         $elements[$key]['value'] = $aArgs['typeId'];
                     }
                 } elseif ($value['TYPE'] == 'maarch_functions') {
                     if ($value['value'] == 'chr_global') {
                         $elements[$key]['value'] = ChronoModel::getChronoGlobal();
-                    } else if ($value['value'] == 'chr_by_entity') {
+                    } elseif ($value['value'] == 'chr_by_entity') {
                         $elements[$key]['value'] = ChronoModel::getChronoEntity($aArgs['entityId']);
-                    } else if ($value['value'] == 'chr_by_category') {
+                    } elseif ($value['value'] == 'chr_by_category') {
                         $elements[$key]['value'] = ChronoModel::getChronoCategory($aArgs['id']);
-                    } else if ($value['value'] == 'category_char') {
+                    } elseif ($value['value'] == 'category_char') {
                         $elements[$key]['value'] = ChronoModel::getChronoCategoryChar($aArgs['id']);
-                    } else if ($value['value'] == 'chr_by_folder') {
+                    } elseif ($value['value'] == 'chr_by_folder') {
                         $elements[$key]['value'] = ChronoModel::getChronoFolder($aArgs['folderId']);
-                    } else if ($value['value'] == 'chr_by_res_id') {
+                    } elseif ($value['value'] == 'chr_by_res_id') {
                         $elements[$key]['value'] = $aArgs['resId'];
                     }
                 }
@@ -161,7 +161,7 @@ class ChronoModel
     {
         if ($categoryId == 'incoming') {
             return 'A';
-        } else if ($categoryId == 'outgoing') {
+        } elseif ($categoryId == 'outgoing') {
             return 'D';
         } else {
             return '';
