@@ -65,22 +65,22 @@
                                     (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
                             <div class="col-md-4 col-xs-4 text-center">
-                                <mat-slide-toggle color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
+                                <mat-slide-toggle [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
                                     &nbsp;
-                                    <mat-icon color="primary" [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.5'}" style="width: auto;" class="fa fa-search fa-2x"></mat-icon>
+                                    <mat-icon color="primary" style="width: auto;" class="fa fa-search fa-2x"></mat-icon>
                                 </mat-slide-toggle>
 
                             </div>
                             <div class="col-md-4 col-xs-4 text-center">
-                                <mat-slide-toggle color="primary" matTooltip="{{lang.isFolderBasket}}" name="isFolderBasket" [(ngModel)]="basket.isFolderBasket">
+                                <mat-slide-toggle [ngStyle]="{'opacity': basket.isFolderBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isFolderBasket}}" name="isFolderBasket" [(ngModel)]="basket.isFolderBasket">
                                     &nbsp;
-                                    <mat-icon [ngStyle]="{'opacity': basket.isFolderBasket ? '' : '0.5'}" style="width: auto;" class="fa fa-folder fa-2x"></mat-icon>
+                                    <mat-icon style="width: auto;" class="fa fa-folder fa-2x"></mat-icon>
                                 </mat-slide-toggle>
                             </div>
                             <div class="col-md-4 col-xs-4 text-center">
-                                <mat-slide-toggle color="primary" matTooltip="{{lang.basketNotification}}" name="flagNotif" [(ngModel)]="basket.flagNotif">
+                                <mat-slide-toggle [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.3'}" color="primary" matTooltip="{{lang.basketNotification}}" name="flagNotif" [(ngModel)]="basket.flagNotif">
                                     &nbsp;
-                                    <mat-icon [ngStyle]="{'opacity': basket.flagNotif ? '' : '0.5'}" style="width: auto;" class="fa fa-bell fa-2x"></mat-icon>
+                                    <mat-icon style="width: auto;" class="fa fa-bell fa-2x"></mat-icon>
                                 </mat-slide-toggle>
                             </div>
                             <div class="col-md-12 text-center" style="padding:10px;">
