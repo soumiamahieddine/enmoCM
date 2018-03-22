@@ -377,6 +377,22 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 
+    reassignBasketRedirection(newUser:any, basket: any) {
+
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
+
+        if (r) {
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", [{"newUser" : newUser, "basketId":basket.basket_id, "basketOwner":basket.basket_owner, "virtual": basket.is_virtual}])
+                .subscribe((data: any) => {
+                    this.userCtrl.setValue('');
+                    this.user.baskets = data["baskets"];
+                    this.notify.success(this.lang.basketUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
     delBasketRedirection(basket: any) {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
 
