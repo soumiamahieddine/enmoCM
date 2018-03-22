@@ -42,8 +42,8 @@ class DoctypeExtModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2', 'process_mode']);
-        ValidatorModel::intVal($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2']);
+        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_mode']);
+        ValidatorModel::intVal($aArgs, ['type_id']);
 
         DatabaseModel::insert([
             'table'         => 'mlb_doctype_ext',
@@ -55,8 +55,8 @@ class DoctypeExtModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2', 'process_mode']);
-        ValidatorModel::intVal($aArgs, ['type_id', 'process_delay', 'delay1', 'delay2']);
+        ValidatorModel::notEmpty($aArgs, ['type_id', 'process_mode']);
+        ValidatorModel::intVal($aArgs, ['type_id']);
         
         DatabaseModel::update([
             'table'     => 'mlb_doctype_ext',
