@@ -25,18 +25,11 @@ class ReportModelAbstract
         ValidatorModel::notEmpty($aArgs, ['groupId']);
         ValidatorModel::stringType($aArgs, ['groupId']);
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/modules/reports/xml/reports.xml")) {
-            $path = "custom/{$customId}/modules/reports/xml/reports.xml";
-        } else {
-            $path = 'modules/reports/xml/reports.xml';
-        }
-
         $reports = [];
 
-        $xmlfile = simplexml_load_file($path);
-        if ($xmlfile) {
-            foreach ($xmlfile->REPORT as $value) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/reports/xml/reports.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->REPORT as $value) {
                 if ((string)$value->ENABLED == "true") {
                     $reports[] = [
                         'id'                => (string)$value->ID,

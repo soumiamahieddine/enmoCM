@@ -77,20 +77,11 @@ class SecurityModel
         ValidatorModel::notEmpty($args, ['userId']);
         ValidatorModel::stringType($args, ['userId']);
 
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
         $cookieTime = 0;
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                $cookieTime = (string)$loadedXml->CONFIG->CookieTime;
-            }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+        if ($loadedXml) {
+            $cookieTime = (string)$loadedXml->CONFIG->CookieTime;
         }
 
         $user = DatabaseModel::select([

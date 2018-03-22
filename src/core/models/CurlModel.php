@@ -69,17 +69,10 @@ class CurlModel
         ValidatorModel::notEmpty($aArgs, ['curlCallId']);
         ValidatorModel::stringType($aArgs, ['curlCallId']);
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/curlCall.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/curlCall.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/curlCall.xml';
-        }
-
         $curlConfig = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
 
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/curlCall.xml']);
+        if ($loadedXml) {
             $curlConfig['user']     = (string)$loadedXml->user;
             $curlConfig['password'] = (string)$loadedXml->password;
             foreach ($loadedXml->call as $call) {

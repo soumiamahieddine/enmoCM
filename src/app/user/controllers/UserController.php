@@ -397,19 +397,11 @@ class UserController
         $type     = explode('/', $mimeType);
         $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/extensions.xml';
-        }
-
-        $xmlfile  = simplexml_load_file($path);
-
         $fileAccepted = false;
-        if (count($xmlfile->FORMAT) > 0) {
-            foreach ($xmlfile->FORMAT as $value) {
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml && count($loadedXml->FORMAT) > 0) {
+            foreach ($loadedXml->FORMAT as $value) {
                 if (strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)) {
                     $fileAccepted = true;
                     break;

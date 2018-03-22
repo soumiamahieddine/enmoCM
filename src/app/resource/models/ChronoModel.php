@@ -10,14 +10,11 @@
 /**
  * @brief Chrono Model
  * @author dev@maarch.org
- * @ingroup core
  */
 
 namespace SrcCore\models;
 
 use Parameter\models\ParameterModel;
-use SrcCore\models\CoreConfigModel;
-use SrcCore\models\ValidatorModel;
 
 class ChronoModel
 {
@@ -27,17 +24,10 @@ class ChronoModel
         ValidatorModel::stringType($aArgs, ['id', 'entityId']);
         ValidatorModel::intVal($aArgs, ['typeId', 'resId']);
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/chrono.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/chrono.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/chrono.xml';
-        }
-
         $elements = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
 
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/chrono.xml']);
+        if ($loadedXml) {
             foreach ($loadedXml->CHRONO as $chrono) {
                 if ($chrono->id == $aArgs['id']) {
                     $separator = (string)$chrono->separator;

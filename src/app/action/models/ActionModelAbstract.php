@@ -150,21 +150,12 @@ class ActionModelAbstract
 
     public static function getAction_pages()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists('custom/' .$customId. '/core/xml/actions_pages.xml')) {
-            $path = 'custom/' .$customId. '/core/xml/actions_pages.xml';
-        } else {
-            $path = 'core/xml/actions_pages.xml';
-        }
-
         $tabActions_pages              = [];
         $tabActions_pages['modules'][] = 'Apps';
 
-        $xmlfile = simplexml_load_file($path);
-        
-        if (count($xmlfile) > 0) {
-            foreach ($xmlfile->ACTIONPAGE as $actionPage) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'core/xml/actions_pages.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->ACTIONPAGE as $actionPage) {
                 if (!defined((string) $actionPage->LABEL)) {
                     $label = $actionPage->LABEL;
                 } else {
@@ -201,6 +192,7 @@ class ActionModelAbstract
         
         $tabActions_pages['modules'] = array_unique($tabActions_pages['modules']);
         sort($tabActions_pages['modules']);
+
         return $tabActions_pages;
     }
 
