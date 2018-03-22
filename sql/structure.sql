@@ -348,6 +348,7 @@ CREATE TABLE res_attachments
   tnl_path character varying(255) DEFAULT NULL::character varying,
   tnl_filename character varying(255) DEFAULT NULL::character varying,
   in_signature_book boolean DEFAULT FALSE,
+  signatory_user_serial_id int,
   convert_result character varying(10) DEFAULT NULL::character varying,
   convert_attempts integer DEFAULT NULL::integer,
   fulltext_result character varying(10) DEFAULT NULL::character varying,
@@ -2523,6 +2524,7 @@ CREATE TABLE res_version_attachments
   res_id_master bigint,
   attachment_id_master bigint,
   in_signature_book boolean DEFAULT FALSE,
+  signatory_user_serial_id int,
   convert_result character varying(10) DEFAULT NULL::character varying,
   convert_attempts integer DEFAULT NULL::integer,
   fulltext_result character varying(10) DEFAULT NULL::character varying,
@@ -2559,7 +2561,7 @@ CREATE VIEW res_view_attachments AS
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
   envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
@@ -2568,7 +2570,7 @@ CREATE VIEW res_view_attachments AS
   filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
   scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
   envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;
 
 -- thesaurus
