@@ -59,7 +59,6 @@ export class AdministrationComponent implements OnInit {
                 this.productionServices = data.administrations.production;
                 this.classementServices = data.administrations.classement;
                 this.supervisionServices = data.administrations.supervision;
-
                 this.loading = false;
             });
     }
