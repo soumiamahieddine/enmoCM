@@ -20,25 +20,25 @@ declare var angularGlobals: any;
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    dialogRef: MatDialogRef<any>;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    coreUrl: string;
-    lang: any = LANG;
-    loading: boolean = false;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    entities: any[] = [];
-    listTemplateRoles: any[] = [];
-    entityTypeList: any[] = [];
-    currentEntity: any = {};
-    isDraggable: boolean = true;
-    creationMode: boolean = false;
-    idCircuitVisa: number;
-    config: any = {};
+    entities                        : any[]     = [];
+    listTemplateRoles               : any[]     = [];
+    entityTypeList                  : any[]     = [];
+    currentEntity                   : any       = {};
+    isDraggable                     : boolean   = true;
+    creationMode                    : boolean   = false;
+    idCircuitVisa                   : number;
+    config                          : any       = {};
 
-    dataSource = new MatTableDataSource(this.currentEntity.users);
-    displayedColumns = ['firstname', 'lastname'];
+    dataSource          = new MatTableDataSource(this.currentEntity.users);
+    displayedColumns    = ['firstname', 'lastname'];
 
 
     @ViewChild('snav2') sidenav: MatSidenav;
@@ -257,7 +257,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.entityUpdated);
+                        this.notify.success(this.lang.diffusionModelUpdated);
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -265,7 +265,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.entityUpdated);
+                        this.notify.success(this.lang.diffusionModelUpdated);
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -311,7 +311,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -320,7 +320,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -501,7 +501,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -515,12 +515,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
     }
+
     updateDiffListVisa(template: any): any {
         var newDiffList = {
             "object_id": this.currentEntity.entity_id,
@@ -547,12 +548,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
             .subscribe((data: any) => {
                 this.idCircuitVisa = data.id;
-                this.notify.success(this.lang.entityUpdated);
+                this.notify.success(this.lang.diffusionModelUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
 
     }
+
     removeDiffList(i: number, role: string): any {
         this.currentEntity.listTemplate[role].splice(i, 1);
         var newDiffList = {
@@ -585,11 +587,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
-                this.notify.success(this.lang.entityUpdated);
+                this.notify.success(this.lang.diffusionModelUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
+
     removeDiffListVisa(template: any, i: number): any {
         this.currentEntity.visaTemplate.splice(i, 1);
 
@@ -620,7 +623,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -628,7 +631,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
                 .subscribe(() => {
                     this.idCircuitVisa = null;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -649,7 +652,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             if (this.currentEntity.listTemplate) {
                                 this.currentEntity.listTemplate[role.id] = [];
                             }
-                            this.notify.success(this.lang.entityUpdated);
+                            this.notify.success(this.lang.listTemplatesRolesUpdated);
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -668,7 +671,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                                 this.notify.error(err.error.errors);
                             });
                     }
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.listTemplatesRolesUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
