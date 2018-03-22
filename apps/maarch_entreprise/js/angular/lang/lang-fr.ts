@@ -170,7 +170,7 @@ export const LANG_FR = {
     "keywordHelp"                       : "Aide sur les mots-clés",
     "keywordHelpDesc_1"                 : "Identifiant de l'utilisateur connecté",
     "keywordHelpDesc_10"                : "Sous-entités immédiates (n-1) des entités données en argument",
-    "keywordHelpDesc_11"                : "Exemple dans la définition de la sécurité d'un groupe (where clause) : accès sur les ressources concernant le service d'appartenance principal de l'utilisateur connecté, ou les sous-services de ce service",
+    "keywordHelpDesc_11"                : "Exemple de périmètre documentaire : accès aux ressources concernant le service principal de l'utilisateur connecté, ou les sous-services de ce service",
     "keywordHelpDesc_2"                 : "Courriel de l'utilisateur connecté",
     "keywordHelpDesc_3"                 : "Toutes les entités rattachées à l'utilisateur connecté. N'inclut pas les sous-entités",
     "keywordHelpDesc_4"                 : "Entité primaire de l'utilisateur connecté",

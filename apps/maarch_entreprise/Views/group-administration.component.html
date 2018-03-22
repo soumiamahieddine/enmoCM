@@ -131,7 +131,11 @@
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.keywordHelp}}</h3>
             </mat-nav-list>
-            <mat-list role="list" style="width: 300px;padding: 5px;">
+            <mat-list role="list" style="width: 400px;padding: 5px;">
+                <p style="font-size:10px;">{{lang.keywordHelpDesc_11}}</p>
+                <div style="border:1px black solid; padding:3px;font-size:10px;">
+                    <b>DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])</b>
+                </div>
                 <h4 mat-line style="font-weight:bold;font-size:10px;">@user :</h4>
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_1}}</p>
                 <h4 mat-line style="font-weight:bold;font-size:10px;">@email :</h4>
@@ -152,10 +156,6 @@
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_9}}</p>
                 <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',..., 'entity_id'] :</h4>
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_10}}</p>
-                <p style="font-size:10px;">{{lang.keywordHelpDesc_11}}</p>
-                <div style="border:1px black solid; padding:3px;font-size:10px;">
-                    <b>where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))</b>
-                </div>
             </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
