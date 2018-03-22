@@ -253,6 +253,7 @@ export const LANG_FR = {
     "parameterUpdated"                  : "Paramètre modifié",
     "phoneNumber"                       : "Numéro de téléphone",
     "previous"                          : "Précédent",
+    "primary"                           : "Primaire",
     "primaryEntity"                     : "Entité primaire",
     "priorities"                        : "Priorité(s)",
     "priorityAdded"                     : "Priorité ajoutée",

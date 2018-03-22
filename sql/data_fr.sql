@@ -1758,3 +1758,12 @@ INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_i
 SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
 WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
 ORDER BY users.id;
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'EvisBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'RESPONSABLE' AND users.user_id = 'ddaull';
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'ValidationBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'DIRECTEUR' AND users.user_id = 'rrenaud';
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'ValidationBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'DIRECTEUR' AND users.user_id = 'eerina';

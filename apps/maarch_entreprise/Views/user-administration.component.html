@@ -256,7 +256,10 @@
                             <mat-icon class="fa fa-arrow-up"></mat-icon>
                         </button>
                     </mat-icon>
-                    <h4 mat-line [ngStyle]="{'font-weight': userEntity.primary_entity == 'Y' ? 'bold' : 'normal'}" matTooltip="{{userEntity.entity_label}}">{{userEntity.entity_label}}</h4>
+                    <h4 mat-line [ngStyle]="{'font-weight': userEntity.primary_entity == 'Y' ? 'bold' : 'normal'}" matTooltip="{{userEntity.entity_label}}">
+                        {{userEntity.entity_label}}
+                        <span *ngIf="userEntity.primary_entity == 'Y'" class="label label-primary" style="font-weight:normal">{{lang.primary}}</span>
+                    </h4>
                     <p mat-line>
                         <mat-form-field style="font-size:10px;">
                             <input matInput type="text" id="role" name="role" title="{{lang.role}}" placeholder="{{lang.role}}" [(ngModel)]="userEntity.user_role"
