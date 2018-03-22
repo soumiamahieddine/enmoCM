@@ -6,13 +6,12 @@ import { ConfirmModalComponent } from '../confirmModal.component';
 import { NotificationService } from '../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-
+import { SortPipe }  from '../../plugins/sorting.pipe';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
-
 
 @Component({
     templateUrl: "../../../../Views/entities-administration.component.html",
@@ -99,10 +98,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             'data': this.entities,
                             "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
                                 if (operation == 'move_node') {
-                                    if (!node_parent.original.allowed) {
-                                        return false
-                                    } else
+                                    if (node_parent.id =='#') {
+                                        return false;
+                                    } else if (!node_parent.original.allowed) {
+                                        return false;
+                                    } else {
                                         return true;
+                                    }       
                                 }
                             }
                         },
@@ -333,14 +335,15 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.parent_entity_id = '';
         }
 
-        if (this.creationMode) {
+        if (this.creationMode) { 
             this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
                 .subscribe((data: any) => {
+                    this.currentEntity.listTemplate = [];
                     this.entities = data['entities'];
+                    this.creationMode = false;
                     $j('#jstree').jstree(true).settings.core.data = this.entities;
                     $j('#jstree').jstree("refresh");
                     this.notify.success(this.lang.entityAdded);
-                    this.creationMode = false;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -376,6 +379,11 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 break;
             }
         }
+    }
+
+    selectParentEntity(entity_id:any) {
+        $j('#jstree').jstree('deselect_all');
+        $j('#jstree').jstree('select_node', entity_id);
     }
 
     removeEntity() {

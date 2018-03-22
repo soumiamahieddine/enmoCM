@@ -62,12 +62,26 @@
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <mat-form-field>
-                                        <input matInput [(ngModel)]="currentEntity.parent_entity_id" required name="parent_entity_id" id="parent_entity_id" title="{{lang.isLinkedTo}}" type="text"
-                                            placeholder="{{lang.isLinkedTo}}" maxlength="32" disabled>
+                                        <mat-select id="parent_entity_id" name="parent_entity_id" title="{{lang.isLinkedTo}}" placeholder="{{lang.isLinkedTo}}" [(ngModel)]="currentEntity.parent_entity_id"
+                                            (change)="selectParentEntity(currentEntity.parent_entity_id)" *ngIf="creationMode">
+                                            <mat-option value="">
+                                            </mat-option>
+                                            <mat-option *ngFor="let entity of entities | sortBy : 'entity_label'" [value]="entity.entity_id">
+                                                {{entity.entity_label}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-select id="parent_entity_id" name="parent_entity_id" title="{{lang.isLinkedTo}}" placeholder="{{lang.isLinkedTo}}" [(ngModel)]="currentEntity.parent_entity_id"
+                                            *ngIf="!creationMode">
+                                            <mat-option value="">
+                                            </mat-option>
+                                            <mat-option *ngFor="let entity of entities | sortBy : 'entity_label'" [value]="entity.entity_id">
+                                                {{entity.entity_label}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                     <mat-form-field>
-                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type" maxlength="32"
-                                            required>
+                                        <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
+                                            maxlength="32" required>
                                             <mat-option *ngFor="let entity_type of entityTypeList" [value]="entity_type.id">
                                                 {{entity_type.label}}
                                             </mat-option>
@@ -144,12 +158,14 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <mat-form-field>
-                                                <input matInput [(ngModel)]="currentEntity.city" name="city" id="city" title="{{lang.city}}" type="text" placeholder="{{lang.city}}" maxlength="255">
+                                                <input matInput [(ngModel)]="currentEntity.city" name="city" id="city" title="{{lang.city}}" type="text" placeholder="{{lang.city}}"
+                                                    maxlength="255">
                                             </mat-form-field>
                                         </div>
                                         <div class="col-sm-4">
                                             <mat-form-field>
-                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}" maxlength="255">
+                                                <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
+                                                    maxlength="255">
                                             </mat-form-field>
                                         </div>
                                     </div>
@@ -200,8 +216,7 @@
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12">
                                 <mat-form-field>
-                                    <input #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput [matAutocomplete]="auto"
-                                        [formControl]="elementCtrl">
+                                    <input #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput [matAutocomplete]="auto" [formControl]="elementCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElemListModel(elem)">
                                             <p mat-line>
@@ -260,8 +275,8 @@
                                 </mat-form-field>
                                 <mat-list>
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
-                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}" dnd-sortable
-                                            [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
+                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}"
+                                            dnd-sortable [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
                                             <mat-icon color="primary" [class]="template.item_mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
                                             <p mat-line>{{template.idToDisplay}}
                                                 <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>

@@ -3,6 +3,8 @@ import { CommonModule }                         from '@angular/common';
 import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 
+import { SortPipe }                             from '../../plugins/sorting.pipe';
+
 import { MenuComponent }                        from '../menu/menu.component';
 import { MenuNavComponent }                     from '../menu/menu-nav.component';
 import { AppMaterialModule }                    from '../app-material.module';
@@ -76,7 +78,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketAdministrationGroupListModalComponent,
         DoctypesAdministrationRedirectModalComponent,
         DiffusionModelsAdministrationComponent,
-        DiffusionModelAdministrationComponent
+        DiffusionModelAdministrationComponent,
+        SortPipe
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
