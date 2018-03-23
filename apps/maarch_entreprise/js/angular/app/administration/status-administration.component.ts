@@ -7,15 +7,14 @@ import { NotificationService } from '../notification.service';
 import { FormControl, Validators} from '@angular/forms';
 
 declare function $j(selector: any): any;
-
 declare var angularGlobals: any;
 
 @Component({
     templateUrl: "../../../../Views/status-administration.component.html",
-    // styleUrls: ['css/status-administration.component.css'],
     providers: [NotificationService]
 })
 export class StatusAdministrationComponent implements OnInit {
+
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
@@ -41,8 +40,7 @@ export class StatusAdministrationComponent implements OnInit {
 
     getErrorMessage() {
         return this.statusId.hasError('required') ? this.lang.enterValue :
-            this.statusId.hasError('pattern') ? this.lang.patternId :
-                '';
+            this.statusId.hasError('pattern') ? this.lang.patternId : '';
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
@@ -57,18 +55,16 @@ export class StatusAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
-
-        this.prepareStatus();
+        this.loading = true;
 
         this.route.params.subscribe((params) => {
             if (typeof params['identifier'] == "undefined") {
                 this.http.get(this.coreUrl + 'rest/administration/statuses/new')
                     .subscribe((data) => {
                         this.status.img_filename = "fm-letter";
-                        this.status.can_be_searched = true
-                        this.status.can_be_modified = true
+                        this.status.can_be_searched = true;
+                        this.status.can_be_modified = true;
                         this.statusImages = data['statusImages'];
                         this.creationMode = true;
                         this.loading = false;
@@ -81,25 +77,7 @@ export class StatusAdministrationComponent implements OnInit {
                 this.statusIdAvailable = true;
                 this.loading = false;
             }
-
-            this.updateBreadcrumb(angularGlobals.applicationName);
         });
-    }
-
-    prepareStatus() {
-        $j('#inner_content').remove();
-    }
-
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > " +
-            "<a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " +
-            "<a onclick='location.hash = \"/administration/statuses\"' style='cursor: pointer'>" + this.lang.statuses + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.statusCreation;
-        } else {
-            breadCrumb += this.lang.statusModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
     }
 
     getStatusInfos(statusIdentifier: string) {
@@ -146,7 +124,7 @@ export class StatusAdministrationComponent implements OnInit {
     submitStatus() {
         if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/statuses', this.status)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.statusAdded);
                     this.router.navigate(['administration/statuses']);
                 }, (err) => {
@@ -155,7 +133,7 @@ export class StatusAdministrationComponent implements OnInit {
         } else if (this.creationMode == false) {
 
             this.http.put(this.coreUrl + 'rest/statuses/' + this.statusIdentifier, this.status)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.notify.success(this.lang.statusUpdated);
                     this.router.navigate(['administration/statuses']);
                 }, (err) => {
@@ -163,5 +141,4 @@ export class StatusAdministrationComponent implements OnInit {
                 });
         }
     }
-
 }

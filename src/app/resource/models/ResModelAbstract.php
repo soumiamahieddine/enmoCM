@@ -215,10 +215,11 @@ class ResModelAbstract
 
 
     // In Progress
-//    public static function getProcessLimitDate(array $aArgs)
+//    public static function getStoreProcessLimitDate(array $aArgs)
 //    {
 //        ValidatorModel::notEmpty($aArgs, ['resId']);
 //        ValidatorModel::intVal($aArgs, ['resId']);
+//        ValidatorModel::stringType($aArgs, ['admissionDate']);
 //
 //
 //
@@ -262,6 +263,7 @@ class ResModelAbstract
 //
 //        $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['creation_date', 'type_id']]);
 //
+//        $processDelay = 30;
 //        if (!empty($document['type_id'])) {
 //            $doctypeExt = DatabaseModel::select([
 //                'select'    => ['process_delay'],
@@ -271,6 +273,16 @@ class ResModelAbstract
 //            ]);
 //            $processDelay = $doctypeExt[0]['process_delay'];
 //        }
+//
+//        $defaultDate = $document['creation_date'];
+//        if (empty($document['creation_date'])) {
+//            $document['creation_date'] = date('c');
+//        }
+//
+//        $date = new \DateTime($document['creation_date']);
+//        $date->add(new \DateInterval("P{$processDelay}D"));
+//
+//        return $date->format('Y-m-d H:i:s');
 //
 //
 //

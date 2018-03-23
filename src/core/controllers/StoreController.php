@@ -385,6 +385,9 @@ class StoreController
             if ($value['column'] == 'category_id') {
                 $categoryId = $value['value'];
             }
+            if ($value['column'] == 'admission_date') {
+                $admissionDate = $value['value'];
+            }
         }
 
         if (!$processLimitDateFound) {
