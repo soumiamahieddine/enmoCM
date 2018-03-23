@@ -19,6 +19,7 @@ use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class CoreController
 {
@@ -46,6 +47,14 @@ class CoreController
         }
 
         return $response->withJson($aInit);
+    }
+
+    public static function getHeaderInformations(Request $request, Response $response)
+    {
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+
+        return $response->withJson($user);
     }
 
     public static function getAdministration(Request $request, Response $response)

@@ -109,6 +109,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 //Initialize
 $app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
+$app->get('/headerInformations', \SrcCore\controllers\CoreController::class . ':getHeaderInformations');
 
 //Actions
 $app->get('/actions', \Action\controllers\ActionController::class . ':get');
