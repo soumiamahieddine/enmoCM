@@ -82,10 +82,20 @@ export class DoctypesAdministrationComponent implements OnInit {
                                     }
                                     if(!isNaN(parseFloat(node.id)) && isFinite(node.id) && more.ref.id.indexOf("secondlevel_")==0){
                                         // Doctype in secondLevel
-                                        return true;
+                                        if(more.ref.children.indexOf(node.id) >-1){
+                                            // same secondLevel
+                                            return false;
+                                        } else {
+                                            return true;
+                                        }
                                     } else if(node.id.indexOf("secondlevel_")==0 && more.ref.id.indexOf("firstlevel_")==0){
                                         // SecondLevel in FirstLevel
-                                        return true;
+                                        if(more.ref.children.indexOf(node.id) >-1){
+                                            // same FirstLevel
+                                            return false;
+                                        } else {
+                                            return true;
+                                        }
                                     } else {
                                         return false;
                                     }
