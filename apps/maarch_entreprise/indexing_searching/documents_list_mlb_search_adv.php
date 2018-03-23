@@ -603,8 +603,15 @@ if($mode == 'normal') {
 
                 if($tab[$i][$j][$value]=="priority")
                 {
-                    $priority = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["value"]       = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                    $fakeId = null;
+                    foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                        if ($prioValue == $tab[$i][$j]["value"]) {
+                            $fakeId = $key;
+                        }
+                    }
+
+                    $priority = $fakeId;
+                    $tab[$i][$j]["value"]       = $_SESSION['mail_priorities'][$fakeId];
                     $tab[$i][$j]["label"]       = _PRIORITY;
                     $tab[$i][$j]["size"]        = "10";
                     $tab[$i][$j]["label_align"] = "left";
@@ -866,18 +873,25 @@ if ($nbTab > 0) {
         if($exportTool) { 
             $export = array(
                     "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-                    "icon"          =>  'cloud-download',
+                    "icon"          =>  'file-excel-o',
                     "tooltip"       =>  _EXPORT_LIST,
                     "disabledRules" =>  $nbTab." == 0"
                     );
             array_push($paramsTab['tools'],$export);   
+            $export2 = array(
+                "script"        =>  "print_current_result_list('".$_SESSION['config']['businessappurl']."');",
+                "icon"          =>  'print',
+                "tooltip"       =>  _PRINT_LIST,
+                "disabledRules" =>  $nbTab." == 0"
+                );
+            array_push($paramsTab['tools'],$export2);   
         }
 		
 		if($printTool && $core_tools->test_service('print_doc_details_from_list', 'apps', false)) { 
             $print = array(
                     "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-                    "icon"          =>  'print',
-                    "tooltip"       =>  _PRINT_LIST,
+                    "icon"          =>  'link',
+                    "tooltip"       =>  _PRINT_DOC_FROM_LIST,
                     "disabledRules" =>  $nbTab." == 0"
                     );
             array_push($paramsTab['tools'], $print);   

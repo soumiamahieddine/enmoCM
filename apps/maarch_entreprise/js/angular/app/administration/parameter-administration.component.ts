@@ -6,7 +6,6 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 
 declare function $j(selector: any): any;
-
 declare var angularGlobals: any;
 
 
@@ -15,16 +14,18 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ParameterAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    type: string;
-    parameter: any = {};
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    creationMode: boolean;
-    loading: boolean = false;
+    parameter                       : any       = {};
+    type                            : string;
+    creationMode                    : boolean;
+
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
@@ -37,32 +38,19 @@ export class ParameterAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/parameters\"' style='cursor: pointer'>" + this.lang.parameters + "</a> > ";
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.parameterCreation;
-        } else {
-            breadCrumb += this.lang.parameterModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
-                this.updateBreadcrumb(angularGlobals.applicationName);
                 this.loading = false;
             } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + "rest/parameters/" + params['id'])
                     .subscribe((data: any) => {
                         this.parameter = data.parameter;
-                        this.updateBreadcrumb(angularGlobals.applicationName);
 
                         if (typeof (this.parameter.param_value_int) == "number") {
                             this.type = "int";
@@ -96,7 +84,7 @@ export class ParameterAdministrationComponent implements OnInit {
 
         if (this.creationMode == true) {
             this.http.post(this.coreUrl + 'rest/parameters', this.parameter)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.router.navigate(['administration/parameters']);
                     this.notify.success(this.lang.parameterAdded);
                 }, (err) => {
@@ -104,7 +92,7 @@ export class ParameterAdministrationComponent implements OnInit {
                 });
         } else if (this.creationMode == false) {
             this.http.put(this.coreUrl + 'rest/parameters/' + this.parameter.id, this.parameter)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.router.navigate(['administration/parameters']);
                     this.notify.success(this.lang.parameterUpdated);
                 }, (err) => {

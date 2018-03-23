@@ -58,4 +58,14 @@
 	   <system_service>false</system_service>
 	   <enabled>true</enabled>
 	</SERVICE>
+
+	<SERVICE>
+	   <id>use_date_in_signBlock</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+	   <name>_USE_DATE_IN_SIGNBLOCK</name>
+	   <comment>_USE_DATE_IN_SIGNBLOCK_DESC</comment>
+	   <servicepage></servicepage>
+	   <servicetype>use</servicetype>
+	   <system_service>false</system_service>
+	   <enabled>true</enabled>
+	</SERVICE>
 </root>

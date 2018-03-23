@@ -7,8 +7,7 @@
  */
 
 /**
- * @brief Service Model
- *
+ * @brief Service Model Abstract
  * @author dev@maarch.org
  */
 
@@ -43,15 +42,9 @@ class ServiceModelAbstract
             }
         }
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MODULES as $mod) {
+        foreach ($loadedXml->MODULES as $mod) {
             $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
@@ -132,18 +125,10 @@ class ServiceModelAbstract
 
     public static function getModulesAdministrationServicesByXML()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
         $modulesServices = [];
 
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MODULES as $mod) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+        foreach ($loadedXml->MODULES as $mod) {
             $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
@@ -168,23 +153,15 @@ class ServiceModelAbstract
         return $modulesServices;
     }
 
-    public static function getModulesAdministrationServicesByUserServices(array $aArgs = [])
+    public static function getModulesAdministrationServicesByUserServices(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userServices']);
         ValidatorModel::arrayType($aArgs, ['userServices']);
 
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
         $modulesServices = [];
 
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MODULES as $mod) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+        foreach ($loadedXml->MODULES as $mod) {
             $module = (string) $mod->moduleid;
             $xmlModuleFile = ServiceModel::getLoadedXml(['location' => $module]);
 
@@ -211,18 +188,10 @@ class ServiceModelAbstract
 
     public static function getApplicationAdministrationMenuByXML()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/menu.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/menu.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/menu.xml';
-        }
-
         $modulesServices = [];
 
-        $xmlfile = simplexml_load_file($path);
-        foreach ($xmlfile->MENU as $value) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/menu.xml']);
+        foreach ($loadedXml->MENU as $value) {
             $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
             $modulesServices['menuList'][] = [
@@ -233,6 +202,8 @@ class ServiceModelAbstract
                 'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
             ];
         }
+
+        $customId = CoreConfigModel::getCustomId();
         if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
             $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
         } else {

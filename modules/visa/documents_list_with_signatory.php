@@ -116,8 +116,11 @@ $where = implode(' and ', $where_tab);
 
 //Order
 $order = $order_field = '';
-$order = $list->getOrder();
-$order_field = $list->getOrderField();
+$arr_order = explode(',',$_SESSION['current_basket']['basket_res_order']);
+if (count($arr_order) == 1 ) {
+    $order = $list->getOrder();
+    $order_field = $list->getOrderField();
+}
 if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'alt_identifier') {
         $orderstr = "order by order_alphanum(alt_identifier)"." ".$order;
@@ -133,10 +136,19 @@ if (!empty($order_field) && !empty($order)) {
     }
     $_SESSION['last_order_basket'] = $orderstr;
 } else {
-    $list->setOrder();
-    $list->setOrderField('modification_date');
-    $orderstr = "order by modification_date desc";
-    $_SESSION['last_order_basket'] = $orderstr;
+    if(!empty($_SESSION['current_basket']['basket_res_order'])) {
+        if (count($arr_order) == 1 ) {
+            $list->setOrder();
+            $list->setOrderField($arr_order[0]);
+        }
+        $orderstr = 'order by '.$_SESSION['current_basket']['basket_res_order'];
+        $_SESSION['last_order_basket'] = $orderstr;
+    } else {
+        $list->setOrder();
+        $list->setOrderField('res_id');
+        $orderstr = "order by res_id desc";
+        $_SESSION['last_order_basket'] = $orderstr;
+    }
 }
 
 //Request
@@ -309,7 +321,13 @@ for ($i=0;$i<$tabI;$i++) {
             }
             if ($tab[$i][$j][$value]=="priority") {
 
-                $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
+                $fakeId = null;
+                foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                    if ($prioValue == $tab[$i][$j]["value"]) {
+                        $fakeId = $key;
+                    }
+                }
+                $tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$fakeId];
                 $tab[$i][$j]["label"]=_PRIORITY;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -420,13 +438,13 @@ for ($i=0;$i<$tabI;$i++) {
             }
             if ($tab[$i][$j][$value]=="status") {   
                 //couleurs des priorités
-                if ($tab[$i][8]["value"]=='0') {
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
-                } else if ($tab[$i][8]["value"]=='1') {
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
-                } else {
-                    $style="style='color:".$_SESSION['mail_priorities_color'][$tab[$i][8]["value"]].";'";
+                $fakeId = null;
+                foreach ($_SESSION['mail_priorities_id'] as $key => $prioValue) {
+                    if ($prioValue == $tab[$i][8]["value"]) {
+                        $fakeId = $key;
+                    }
                 }
+                $style="style='color:".$_SESSION['mail_priorities_color'][$fakeId].";'";
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'], $extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $img_class = substr($res_status['IMG_SRC'], 0, 2);
@@ -580,20 +598,27 @@ if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
     array_push($paramsTab['tools'], $save); 
 }
 $export = array(
-        "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-        "icon"          =>  'cloud-download',
-        "tooltip"       =>  _EXPORT_LIST,
-        "disabledRules" =>  count($tab)." == 0"
-        );
-array_push($paramsTab['tools'], $export);
-if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
-    $print = array(
-        "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-        "icon"          =>  'print',
-        "tooltip"       =>  _PRINT_LIST,
-        "disabledRules" =>  count($tab)." == 0"
+    "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
+    "icon"          =>  'file-excel-o',
+    "tooltip"       =>  _EXPORT_LIST,
+    "disabledRules" =>  count($tab)." == 0"
     );
-    array_push($paramsTab['tools'], $print);   
+array_push($paramsTab['tools'], $export);
+$export2 = array(
+"script"        =>  "print_current_result_list('".$_SESSION['config']['businessappurl']."');",
+"icon"          =>  'print',
+"tooltip"       =>  _PRINT_LIST,
+"disabledRules" =>  count($tab)." == 0"
+);
+array_push($paramsTab['tools'],$export2);  
+if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
+$print = array(
+            "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
+            "icon"          =>  'link',
+            "tooltip"       =>  _PRINT_DOC_FROM_LIST,
+            "disabledRules" =>  count($tab)." == 0"
+        );
+array_push($paramsTab['tools'], $print);   
 }
 
 //Afficher la liste

@@ -48,6 +48,11 @@ class DoctypeController
         $doctypeExt = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
         $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
 
+        if (empty($template)) {
+            $template["template_id"] = null;
+            $template["is_generated"] = 'N';
+        }
+
         $indexes  = DoctypeIndexesModel::getAllIndexes();
         $indexesSelected = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
         foreach ($indexes as $key => $value) {
@@ -84,6 +89,9 @@ class DoctypeController
         $errors = DoctypeController::control($data, 'create');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
+        if (empty($data['duration_current_use'])) {
+            $data['duration_current_use'] = null;
         }
 
         $data = DoctypeController::manageValue($data);
@@ -160,6 +168,9 @@ class DoctypeController
         $errors = DoctypeController::control($data, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
+        }
+        if (empty($data['duration_current_use'])) {
+            $data['duration_current_use'] = null;
         }
         $data = DoctypeController::manageValue($data);
         $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
@@ -351,20 +362,22 @@ class DoctypeController
             !Validator::intVal()->validate($aArgs['doctypes_second_level_id'])) {
             $errors[]= 'Invalid doctypes_second_level_id value';
         }
-        if (!Validator::notEmpty()->validate($aArgs['process_delay']) ||
-            !Validator::intVal()->validate($aArgs['process_delay']) ||
-            $aArgs['process_delay'] < 0) {
+        if (!Validator::notEmpty()->validate($aArgs['process_delay']) &&
+            (!Validator::intVal()->validate($aArgs['process_delay']) || $aArgs['process_delay'] < 0)) {
             $errors[]= 'Invalid process_delay value';
         }
-        if (!Validator::notEmpty()->validate($aArgs['delay1']) ||
-            !Validator::intVal()->validate($aArgs['delay1']) ||
-            $aArgs['delay1'] < 0) {
+        if (!Validator::notEmpty()->validate($aArgs['delay1']) &&
+            (!Validator::intVal()->validate($aArgs['delay1']) || $aArgs['delay1'] < 0)) {
             $errors[]= 'Invalid delay1 value';
         }
-        if (!Validator::notEmpty()->validate($aArgs['delay2']) ||
-            !Validator::intVal()->validate($aArgs['delay2']) ||
-            $aArgs['delay2'] < 0) {
+        if (!Validator::notEmpty()->validate($aArgs['delay2']) &&
+            (!Validator::intVal()->validate($aArgs['delay2']) || $aArgs['delay2'] < 0)) {
             $errors[]= 'Invalid delay2 value';
+        }
+        if (Validator::notEmpty()->validate($aArgs['duration_current_use']) &&
+            (!Validator::intVal()->validate($aArgs['duration_current_use']) ||
+            $aArgs['duration_current_use'] < 0)) {
+            $errors[]= 'Invalid duration_current_use value';
         }
 
         return $errors;

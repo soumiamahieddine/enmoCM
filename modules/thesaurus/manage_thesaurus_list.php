@@ -19,16 +19,18 @@
 */
 
 /**
-* Module : Thesaurus
-* 
-* This module is used to store ressources with any keywords
-* V: 1.0
-*
-* @file
-* @author Loic Vinet
-* @date $date$
-* @version $Revision$
-*/
+ * Module : Thesaurus.
+ *
+ * This module is used to store ressources with any keywords
+ * V: 1.0
+ *
+ * @file
+ *
+ * @author Loic Vinet
+ * @date $date$
+ *
+ * @version $Revision$
+ */
 
 /* Affichage */
 if ($mode == 'list') {
@@ -75,103 +77,102 @@ if ($mode == 'list') {
     };
 </script>';
 } elseif ($mode == 'up' || $mode == 'add') {
-    //var_dump($_SESSION['m_admin']['thesaurus'])
-    ?><h1><i class="fa fa-bookmark-o fa-2x"> </i>
+    //var_dump($_SESSION['m_admin']['thesaurus'])?><h1><i class="fa fa-bookmark-o fa-2x"> </i>
         <?php
         if ($mode == 'up') {
             echo _MODIFY_THESAURUS;
         } elseif ($mode == 'add') {
             echo _ADD_THESAURUS;
-        }?>
+        } ?>
     </h1>
     <div id="inner_content" class="clearfix" align="center">
         <br />
     <?php
     if ($state == false) {
-        echo '<br /><br /><br /><br />' . _THIS_EVENT . ' ' . _IS_UNKNOWN
-        . '<br /><br /><br /><br />';
-    } else { ?>
+        echo '<br /><br /><br /><br />'._THIS_EVENT.' '._IS_UNKNOWN
+        .'<br /><br /><br /><br />';
+    } else {
+        ?>
     <form name="frmevent" id="frmevent" method="post" action="<?php
-            echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&amp;module=thesaurus&amp;page=manage_thesaurus_list_controller&amp;mode='
-            . $mode;?>" class="forms addforms" style="width:100%;">
+            echo $_SESSION['config']['businessappurl'].'index.php?display=true'
+            .'&amp;module=thesaurus&amp;page=manage_thesaurus_list_controller&amp;mode='
+            .$mode; ?>" class="forms addforms" style="width:100%;">
     <div class="block" style="width:50%;height:300px;float:left;">
         <div style="width:450px;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="thesaurus" />
             <input type="hidden" name="page" value="manage_thesaurus_list_controler" />
-            <input type="hidden" name="mode" value="<?php functions::xecho($mode);?>" />
+            <input type="hidden" name="mode" value="<?php functions::xecho($mode); ?>" />
 
-            <input type="hidden" name="thesaurus_id" id="thesaurus_id" value="<?php functions::xecho($_SESSION['m_admin']['thesaurus']['thesaurus_id']);?>" />
+            <input type="hidden" name="thesaurus_id" id="thesaurus_id" value="<?php functions::xecho($_SESSION['m_admin']['thesaurus']['thesaurus_id']); ?>" />
 
             <input type="hidden" name="order" id="order" value="<?php
-                functions::xecho($_REQUEST['order']);?>" />
+                functions::xecho($_REQUEST['order']); ?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
-                functions::xecho($_REQUEST['order_field']);?>" />
+                functions::xecho($_REQUEST['order_field']); ?>" />
             <input type="hidden" name="what" id="what" value="<?php
-                functions::xecho($_REQUEST['what']);?>" />
+                functions::xecho($_REQUEST['what']); ?>" />
             <input type="hidden" name="start" id="start" value="<?php
-                functions::xecho($_REQUEST['start']);?>" />
+                functions::xecho($_REQUEST['start']); ?>" />
 
             <p>
-                <label for="thesaurus_parent_id" style="width:110px;"><?php echo _THESAURUS_PARENT_ID;?> : </label>
+                <label for="thesaurus_parent_id" style="width:110px;"><?php echo _THESAURUS_PARENT_ID; ?> : </label>
                 <?php
-                require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
-                            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                            . 'class_modules_tools.php';
-                $thesaurus = new thesaurus();
-                //$allThesaurusTree= array();
-                //$allThesaurusTree = $thesaurus->getShortThesaurusTreeAdvanced($allThesaurusTree);    
+                require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'
+                            .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+                            .'class_modules_tools.php';
+        $thesaurus = new thesaurus();
+        //$allThesaurusTree= array();
+        //$allThesaurusTree = $thesaurus->getShortThesaurusTreeAdvanced($allThesaurusTree);
 
-                //$countAllThesaurus = count($allThesaurusTree);
-                $thesaurus_parent_id = $thesaurus->getThesIdByLabel($_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']);
-                ?>
+        //$countAllThesaurus = count($allThesaurusTree);
+        $thesaurus_parent_id = $thesaurus->getThesIdByLabel($_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']); ?>
                  <input type="hidden" id="thesaurus_parent_id" value="<?php echo $thesaurus_parent_id; ?>" name="thesaurus_parent_id" style="width:260px;" onchange="load_specific_thesaurus(this.value);" />
                 <input type="text" readonly="readonly" class="readonly" id="thesaurus_parent_label" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']
-                    );?>" name="thesaurus_parent_label" style="width:270px;" /> <i onclick="lauch_thesaurus_list_admin(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i> <i onclick="document.getElementById('thesaurus_parent_id').value = '';document.getElementById('thesaurus_parent_label').value = '';" class="fa fa-eraser" title="<?php echo _RESET; ?>" aria-hidden="true" style="cursor:pointer;"></i>
+                    ); ?>" name="thesaurus_parent_label" style="width:270px;" /> <i onclick="lauch_thesaurus_list_admin(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i> <i onclick="document.getElementById('thesaurus_parent_id').value = '';document.getElementById('thesaurus_parent_label').value = '';" class="fa fa-eraser" title="<?php echo _RESET; ?>" aria-hidden="true" style="cursor:pointer;"></i>
                 <!--<input name="thesaurus_parent_id" type="text"  id="thesaurus_parent_id" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_parent_id']
-                    );?>"/>-->
+                    ); ?>"/>-->
             </p>
 
             <p>
-                <label for="thesaurus_name" style="width:110px;"><?php echo _THESAURUS_NAME;?> : </label>
+                <label for="thesaurus_name" style="width:110px;"><?php echo _THESAURUS_NAME; ?> : </label>
                 <input name="thesaurus_name" type="text"  style="width:300px;" id="thesaurus_name" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['thesaurus_name']
-                    );?>"/>
+                    ); ?>"/>
             </p>
                 <p>
-                <label for="used_for" style="width:110px;"><?php echo _USED_FOR;?> : </label>
+                <label for="used_for" style="width:110px;"><?php echo _USED_FOR; ?> : </label>
                 <input name="used_for" type="text"  style="width:300px;" id="used_for" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['thesaurus']['used_for']
-                    );?>"/>
+                    ); ?>"/>
             </p>
             <p>
-                <label for="thesaurus_description" style="width:110px;"><?php echo _DESC;?> : </label>
+                <label for="thesaurus_description" style="width:110px;"><?php echo _DESC; ?> : </label>
                 <textarea name="thesaurus_description" id="thesaurus_description" style="width:100%;height:150px;"><?php echo $_SESSION['m_admin']['thesaurus']['thesaurus_description']; ?></textarea>
             </p>
 
             <p class="buttons">
                 <?php
-                if ($mode == 'up') { ?>
+                if ($mode == 'up') {
+                    ?>
                     <input class="button" type="submit" name="thesaurus_submit" value=
-                    "<?php echo _MODIFY;?>" />
+                    "<?php echo _MODIFY; ?>" />
                     <?php
-                } elseif ($mode == 'add') { ?>
+                } elseif ($mode == 'add') {
+                    ?>
                     <input type="submit" class="button"  name="thesaurus_submit" value=
-                    "<?php echo _ADD;?>" />
+                    "<?php echo _ADD; ?>" />
                     <?php
-                }
-                ?>
+                } ?>
                 <input type="button" class="button"  name="cancel" value="<?php
-                 echo _CANCEL;?>" onclick="javascript:window.location.href='<?php
-                 echo $_SESSION['config']['businessappurl'];
-                 ?>index.php?page=manage_thesaurus_list_controller&amp;mode=list&amp;module=thesaurus'"/>
+                 echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+                 echo $_SESSION['config']['businessappurl']; ?>index.php?page=manage_thesaurus_list_controller&amp;mode=list&amp;module=thesaurus'"/>
             </p>
             </div>
         </div>
@@ -183,36 +184,32 @@ if ($mode == 'list') {
         <div class="block" style="width:20%;height:300px;float:right;">
             <h2><?php echo _THESAURUS_NAME_ASSOCIATE; ?></h2>
             <?php
-            require_once 'modules' . DIRECTORY_SEPARATOR . 'thesaurus'
-                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                        . 'class_modules_tools.php';
-            $thesaurus = new thesaurus();
+            require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'
+                        .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+                        .'class_modules_tools.php';
+        $thesaurus = new thesaurus();
 
-            $thesaurus_name_associate = explode('/', $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate']);
-
-            ?>
+        $thesaurus_name_associate = explode(',', $_SESSION['m_admin']['thesaurus']['thesaurus_name_associate']); ?>
             <select multiple="multiple" id="thesaurus_name_associate" name="thesaurus_name_associate[]" data-placeholder=" ">
             <?php
-                if(!empty($thesaurus_name_associate[0])){
+                if (!empty($thesaurus_name_associate[0])) {
                     foreach ($thesaurus_name_associate as $key => $value) {
                         $thesaurus_name_associate_id = $thesaurus->getThesIdByLabel($value);
-                        echo '<option title="'.functions::show_string($value).'" data-object_type="thesaurus_id" id="thesaurus_'.$thesaurus_name_associate_id.'"  value="' . $thesaurus_name_associate_id . '"';
-                            echo ' selected="selected"'; 
-                        echo '>' 
-                            .  functions::show_string($value) 
-                            . '</option>';
-
+                        echo '<option title="'.functions::show_string($value).'" data-object_type="thesaurus_id" id="thesaurus_'.$thesaurus_name_associate_id.'"  value="'.$thesaurus_name_associate_id.'"';
+                        echo ' selected="selected"';
+                        echo '>'
+                            .functions::show_string($value)
+                            .'</option>';
                     }
                 } ?>
             </select> <i onclick="lauch_thesaurus_list_admin_assoc(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i>
         </div>
         </form >
-        <style type="text/css">#thesaurus_name_associate_chosen .chosen-drop{display:none;}.search-choice{padding: 5px !important;}</style>
+        <style type="text/css">#thesaurus_name_associate_chosen .chosen-drop{display:none;}</style>
         <script type="text/javascript">
-        $j("#tag_userform").chosen({width: "95%", disable_search_threshold: 10});
+        $j("#thesaurus_name_associate").chosen({width: "95%", disable_search_threshold: 10});
         </script>
         <script type="text/javascript">document.getElementById("thesaurus_parent_id").onchange();</script>
     <?php
-    }
-    ?></div><?php
+    } ?></div><?php
 }

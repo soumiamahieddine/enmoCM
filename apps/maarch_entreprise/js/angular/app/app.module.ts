@@ -6,6 +6,7 @@ import { HttpClientModule }                     from '@angular/common/http';
 import { AppMaterialModule }                    from './app-material.module';
 
 import { CustomSnackbarComponent }              from './notification.service';
+import { ConfirmModalComponent }                from './confirmModal.component';
 
 import { AppComponent }                         from './app.component';
 import { AppRoutingModule }                     from './app-routing.module';
@@ -13,7 +14,7 @@ import { AdministrationModule }                 from './administration/administr
 
 import { ProfileComponent }                     from './profile.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
-import { SaveNumericPackageComponent }  from './save-numeric-package.component';
+import { SaveNumericPackageComponent }          from './save-numeric-package.component';
 
 @NgModule({
     imports: [
@@ -31,10 +32,12 @@ import { SaveNumericPackageComponent }  from './save-numeric-package.component';
         SaveNumericPackageComponent,
         SignatureBookComponent,
         SafeUrlPipe,
-        CustomSnackbarComponent
+        CustomSnackbarComponent,
+        ConfirmModalComponent
     ],
     entryComponents: [
-        CustomSnackbarComponent
+        CustomSnackbarComponent,
+        ConfirmModalComponent
     ],
     bootstrap: [AppComponent]
 })

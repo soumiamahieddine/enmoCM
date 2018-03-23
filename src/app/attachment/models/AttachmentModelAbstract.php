@@ -81,25 +81,20 @@ class AttachmentModelAbstract
 
     public static function getAttachmentsTypesByXML()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/entreprise.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/entreprise.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/entreprise.xml';
-        }
-
-        $xmlfile = simplexml_load_file($path);
         $attachmentTypes = [];
-        $attachmentTypesXML = $xmlfile->attachment_types;
-        if (count($attachmentTypesXML) > 0) {
-            foreach ($attachmentTypesXML->type as $value) {
-                $label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-                $attachmentTypes[(string) $value->id] = [
-                    'label' => $label,
-                    'icon' => (string)$value['icon'],
-                    'sign' => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false
-                ];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+        if ($loadedXml) {
+            $attachmentTypesXML = $loadedXml->attachment_types;
+            if (count($attachmentTypesXML) > 0) {
+                foreach ($attachmentTypesXML->type as $value) {
+                    $label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
+                    $attachmentTypes[(string) $value->id] = [
+                        'label' => $label,
+                        'icon' => (string)$value['icon'],
+                        'sign' => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false
+                    ];
+                }
             }
         }
 

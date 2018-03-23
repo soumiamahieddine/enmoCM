@@ -340,25 +340,16 @@ class EntityModelAbstract
 
     public static function getTypes()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/modules/entities/xml/typentity.xml")) {
-            $path = "custom/{$customId}/modules/entities/xml/typentity.xml";
-        } else {
-            $path = 'modules/entities/xml/typentity.xml';
-        }
-
         $types = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                foreach ($loadedXml->TYPE as $value) {
-                    $types[] = [
-                        'id'        => (string)$value->id,
-                        'label'     => (string)$value->label,
-                        'typelevel' => (string)$value->typelevel
-                    ];
-                }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/entities/xml/typentity.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->TYPE as $value) {
+                $types[] = [
+                    'id'        => (string)$value->id,
+                    'label'     => (string)$value->label,
+                    'typelevel' => (string)$value->typelevel
+                ];
             }
         }
 
@@ -367,24 +358,15 @@ class EntityModelAbstract
 
     public static function getRoles()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/modules/entities/xml/roles.xml")) {
-            $path = "custom/{$customId}/modules/entities/xml/roles.xml";
-        } else {
-            $path = 'modules/entities/xml/roles.xml';
-        }
-
         $roles = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                foreach ($loadedXml->ROLES->ROLE as $value) {
-                    $roles[] = [
-                        'id'        => (string)$value->id,
-                        'label'     => constant((string)$value->label),
-                    ];
-                }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/entities/xml/roles.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->ROLES->ROLE as $value) {
+                $roles[] = [
+                    'id'        => (string)$value->id,
+                    'label'     => constant((string)$value->label),
+                ];
             }
         }
 

@@ -20,7 +20,7 @@ use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
-use SrcCore\models\ChronoModel;
+use Resource\models\ChronoModel;
 use SrcCore\models\ValidatorModel;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
@@ -210,18 +210,18 @@ class StoreController
                 if (empty($value['value'])) {
                     $aArgs['data'][$key]['value'] = '0';
                 }
-            } else if (strtolower($value['type']) == 'string') {
+            } elseif (strtolower($value['type']) == 'string') {
                 $aArgs['data'][$key]['value'] = str_replace(';', '', $value['value']);
                 $aArgs['data'][$key]['value'] = str_replace('--', '', $value['value']);
             }
 
             if ($value['column'] == 'status') {
                 $statusFound = true;
-            } else if ($value['column'] == 'typist') {
+            } elseif ($value['column'] == 'typist') {
                 $typistFound = true;
-            } else if ($value['column'] == 'type_id') {
+            } elseif ($value['column'] == 'type_id') {
                 $typeIdFound = true;
-            } else if ($value['column'] == 'custom_t10') {
+            } elseif ($value['column'] == 'custom_t10') {
                 $theString = str_replace('>', '', $value['value']);
                 $mail = explode("<", $theString);
                 $user =  UserModel::getByEmail(['mail' => $mail[count($mail) -1], 'select' => ['user_id']]);
@@ -289,13 +289,12 @@ class StoreController
                         $aArgs['data'][$key]['value'] = $userEntity;
                     }
                     $destinationFound = true;
-                } else if ($value['column'] == 'initiator') {
+                } elseif ($value['column'] == 'initiator') {
                     if (empty($value['value'])) {
                         $aArgs['data'][$key]['value'] = $userEntity;
                     }
                     $initiatorFound = true;
                 }
-
             }
             if (!$destinationFound) {
                 $aArgs['data'][] = [

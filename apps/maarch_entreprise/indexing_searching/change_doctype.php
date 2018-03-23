@@ -74,15 +74,15 @@ if (isset($_REQUEST['admission_date'])
     $admissionDate = $_REQUEST['admission_date'];
 }
 
-if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
-    echo "{status : 1, error_txt : '".addslashes(_PRIORITY . ' ' . _IS_EMPTY)."'}";
-    exit();
-} else {
-    $priorityId = $_SESSION['process_mode_priority'][$_SESSION['process_mode']];
-    $_SESSION['process_mode'] = NULL;
-    if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
-        $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
+$priorityId = $_SESSION['process_mode_priority'][$_SESSION['process_mode']];
+$_SESSION['process_mode'] = NULL;
+foreach ($_SESSION['mail_priorities_id'] as $key => $value) {
+    if ($value == $priorityId) {
+        $fakeId = $key;
     }
+}
+if ($_SESSION['mail_priorities_attribute'][$fakeId] <> 'false') {
+    $priorityDelay = $_SESSION['mail_priorities_attribute'][$fakeId];
 }
 
 // Process limit date calcul

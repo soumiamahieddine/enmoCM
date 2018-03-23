@@ -4,11 +4,12 @@
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
 
+*
 * @brief   merged_css
+*
 * @author  dev <dev@maarch.org>
 * @ingroup apps
 */
-
 require_once '../../core/init.php';
 
 function compress($buffer)
@@ -20,45 +21,43 @@ function compress($buffer)
         array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $buffer
     );
     $buffer = preg_replace('! ?([:}{,;]) ?!', '$1', $buffer);
+
     return $buffer;
 }
 
-$date = mktime(0, 0, 0, date("m") + 2, date("d"), date("Y"));
-$date = date("D, d M Y H:i:s", $date);
+$date = mktime(0, 0, 0, date('m') + 2, date('d'), date('Y'));
+$date = date('D, d M Y H:i:s', $date);
 $time = 30 * 12 * 60 * 60;
-header("Pragma: public");
-header("Cache-Control: no-cache, must-revalidate");
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+header('Pragma: public');
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 //header("Expires: ".$date." GMT");
 //header("Cache-Control: max-age=".$time.", must-revalidate");
 header('Content-type: text/css; charset=utf-8');
 
-ob_start("compress");
+ob_start('compress');
 
-require 'apps/' . $_SESSION['config']['app_id'] . '/css/styles.css';
+require 'apps/'.$_SESSION['config']['app_id'].'/css/styles.css';
 
 foreach (array_keys($_SESSION['modules_loaded']) as $value) {
     if (file_exists(
-        $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-        . DIRECTORY_SEPARATOR . $_SESSION['modules_loaded'][$value]['name']
-        . DIRECTORY_SEPARATOR . "css" . DIRECTORY_SEPARATOR . "module.css"
+        $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
+        .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'
+        .DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name']
+        .DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'module.css'
     ) || file_exists(
-        $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR
-        . $_SESSION['modules_loaded'][$value]['name'] . DIRECTORY_SEPARATOR
-        . "css" . DIRECTORY_SEPARATOR . "module.css"
+        $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR
+        .$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR
+        .'css'.DIRECTORY_SEPARATOR.'module.css'
     )
     ) {
-        include 'modules/' . $_SESSION['modules_loaded'][$value]['name']
-            . '/css/module.css';
+        include 'modules/'.$_SESSION['modules_loaded'][$value]['name']
+            .'/css/module.css';
     }
 }
 
-require_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
-require_once 'apps/' . $_SESSION['config']['app_id'] . '/css/bootstrapTree.css';
-
-//Views
-readfile('apps/maarch_entreprise/css/administration.component.css');
+require_once 'apps/'.$_SESSION['config']['app_id'].'/css/doctype_levels.css';
+require_once 'apps/'.$_SESSION['config']['app_id'].'/css/bootstrapTree.css';
 
 //Dependencies
 readfile('node_modules/tooltipster/dist/css/tooltipster.bundle.min.css');

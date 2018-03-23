@@ -107,7 +107,7 @@ class UserController
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
-        $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id']]);
+        $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
 
         return $response->withJson($user);
     }
@@ -323,7 +323,10 @@ class UserController
             }
         }
 
-        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson([
+            'baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+        ]);
     }
 
     public function deleteRedirectedBaskets(Request $request, Response $response, array $aArgs)
@@ -337,7 +340,10 @@ class UserController
 
         BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
-        return $response->withJson(['baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])]);
+        return $response->withJson([
+            'baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+        ]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
@@ -391,19 +397,11 @@ class UserController
         $type     = explode('/', $mimeType);
         $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/extensions.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/extensions.xml';
-        }
-
-        $xmlfile  = simplexml_load_file($path);
-
         $fileAccepted = false;
-        if (count($xmlfile->FORMAT) > 0) {
-            foreach ($xmlfile->FORMAT as $value) {
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml && count($loadedXml->FORMAT) > 0) {
+            foreach ($loadedXml->FORMAT as $value) {
                 if (strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)) {
                     $fileAccepted = true;
                     break;

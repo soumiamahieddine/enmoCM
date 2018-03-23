@@ -9,6 +9,7 @@
 DROP VIEW IF EXISTS view_postindexing;
 DROP VIEW IF EXISTS res_view_attachments;
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS view_contacts;
 DROP TABLE IF EXISTS ar_batch;
 
 DROP SEQUENCE IF EXISTS priorities_seq CASCADE;
@@ -134,6 +135,10 @@ ALTER TABLE entities ADD COLUMN archival_agency character varying(255) DEFAULT '
 
 /*PERFS ON VIEW*/
 DROP VIEW IF EXISTS res_view_letterbox;
+
+/* Alter table here because view depends on it*/
+ALTER TABLE res_letterbox ALTER COLUMN priority TYPE character varying(16);
+
 CREATE OR REPLACE VIEW res_view_letterbox AS 
  SELECT r.tablename,
     r.is_multi_docservers,
@@ -321,6 +326,8 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
      LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
+ALTER TABLE baskets DROP COLUMN IF EXISTS color;
+ALTER TABLE baskets ADD color character varying(16);
 
 /*SIGNATURE BOOK*/
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS in_signature_book;
@@ -335,6 +342,7 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS signatory;
 ALTER TABLE listinstance ADD signatory boolean default false;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS requested_signature;
 ALTER TABLE listinstance ADD requested_signature boolean default false;
+
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
     creation_date, fulltext_result, ocr_result, author, author_name, identifier, source,
@@ -375,8 +383,24 @@ DROP TABLE IF EXISTS groupbasket_difflist_roles;
 /*LISTMODELS*/
 ALTER TABLE listmodels DROP COLUMN IF EXISTS listmodel_type;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS coll_id;
-ALTER TABLE listmodels ADD  COLUMN IF NOT EXISTS id serial NOT NULL;
+
+ALTER TABLE listmodels DROP COLUMN IF EXISTS id;
+ALTER TABLE listmodels ADD id serial NOT NULL;
+
 UPDATE listmodels SET title = description WHERE title = '' OR title ISNULL;
+
+
+DROP TABLE IF EXISTS indexingmodels;
+CREATE TABLE indexingmodels
+(
+  id serial NOT NULL,
+  label character varying(255) NOT NULL,
+  fields_content text NOT NULL,
+  CONSTRAINT indexingmodels_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
 
 -- ************************************************************************* --
 --                               CONVERT                             --
@@ -611,22 +635,21 @@ UPDATE doctypes_second_level SET css_style = '#008000' WHERE css_style = 'green_
 UPDATE doctypes_second_level SET css_style = '#800080' WHERE css_style = 'violet_style';
 UPDATE doctypes_second_level SET css_style = '#000000' WHERE css_style = 'default_style';
 
-DROP TABLE IF EXISTS users_baskets_preferences;
-CREATE TABLE users_baskets_preferences
-(
-  id serial NOT NULL,
-  user_serial_id integer NOT NULL,
-  group_serial_id integer NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  display boolean NOT NULL,
-  color character varying(16),
-  CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
-  CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
-)
-WITH (OIDS=FALSE);
-
 DO $$ BEGIN
   IF (SELECT count(TABLE_NAME)  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'user_baskets_secondary') = 1 THEN
+    DROP TABLE IF EXISTS users_baskets_preferences;
+    CREATE TABLE users_baskets_preferences
+    (
+      id serial NOT NULL,
+      user_serial_id integer NOT NULL,
+      group_serial_id integer NOT NULL,
+      basket_id character varying(32) NOT NULL,
+      display boolean NOT NULL,
+      color character varying(16),
+      CONSTRAINT users_baskets_preferences_pkey PRIMARY KEY (id),
+      CONSTRAINT users_baskets_preferences_key UNIQUE (user_serial_id, group_serial_id, basket_id)
+    )
+    WITH (OIDS=FALSE);
     INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
     SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
     WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
@@ -660,6 +683,10 @@ ALTER TABLE message_exchange ADD res_id_master numeric default NULL;
 ALTER TABLE contact_addresses DROP COLUMN  IF EXISTS  external_contact_id;
 ALTER TABLE contact_addresses ADD COLUMN external_contact_id character varying(128);
 
+/** ADD NEW COLUMN IS CONTACTS_V2 **/
+ALTER TABLE contacts_v2 DROP COLUMN IF EXISTS is_external_contact;
+ALTER TABLE contacts_v2 ADD COLUMN is_external_contact character(1) DEFAULT 'N';
+
 DROP SEQUENCE IF EXISTS contact_communication_id_seq CASCADE;
 CREATE SEQUENCE contact_communication_id_seq
 INCREMENT 1
@@ -678,7 +705,6 @@ CREATE TABLE contact_communication
   CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
-DROP VIEW IF EXISTS view_contacts;
 CREATE OR REPLACE VIEW view_contacts AS 
  SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
 , c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data
@@ -725,3 +751,5 @@ UPDATE notifications SET event_id = 'baskets' WHERE notification_id = 'BASKETS';
 
 DELETE FROM parameters where id = 'user_quota';
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
+DELETE FROM parameters where id = 'database_version';
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.1', NULL, NULL);

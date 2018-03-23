@@ -46,27 +46,17 @@ class LogsController
     {
         $loggingMethods = [];
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/logging_method.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/logging_method.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/logging_method.xml';
-        }
-
-        if (file_exists($path)) {
-            $xmlConfig = simplexml_load_file($path);
-
-            if ($xmlConfig) {
-                foreach ($xmlConfig->METHOD as $METHOD) {
-                    $loggingMethods[] = [
-                        'ID'               => (string)$METHOD->ID,
-                        'ACTIVATED'        => (boolean)$METHOD->ENABLED,
-                        'LOGGER_NAME_TECH' => (string)$METHOD->LOGGER_NAME_TECH,
-                        'LOGGER_NAME_FUNC' => (string)$METHOD->LOGGER_NAME_FUNC,
-                        'LOG_FORMAT'       => (string)$METHOD->APPLI_LOG_FORMAT,
-                        'CODE_METIER'      => (string)$METHOD->CODE_METIER
-                    ];
-                }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/logging_method.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->METHOD as $METHOD) {
+                $loggingMethods[] = [
+                    'ID'               => (string)$METHOD->ID,
+                    'ACTIVATED'        => (boolean)$METHOD->ENABLED,
+                    'LOGGER_NAME_TECH' => (string)$METHOD->LOGGER_NAME_TECH,
+                    'LOGGER_NAME_FUNC' => (string)$METHOD->LOGGER_NAME_FUNC,
+                    'LOG_FORMAT'       => (string)$METHOD->APPLI_LOG_FORMAT,
+                    'CODE_METIER'      => (string)$METHOD->CODE_METIER
+                ];
             }
         } else {
             $loggingMethods[0]['ID']               = 'database';

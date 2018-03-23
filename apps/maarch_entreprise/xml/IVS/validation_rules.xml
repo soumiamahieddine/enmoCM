@@ -402,7 +402,7 @@
       <parameter name="type_id" type="integer" />
       <parameter name="admission_date" type="datefr" />
       <parameter name="id_action" type="identifier" />
-      <parameter name="priority_id" type="integer" />
+      <parameter name="priority_id" type="string" />
       <parameter name="dir" type="identifier" />
       <parameter name="res_id" type="identifier" />
       <parameter name="coll_id" type="collection_list" />
@@ -450,7 +450,7 @@
       <parameter name="destinataire_chosen" type="identifier" />
       <parameter name="destinataire_available" type="identifier" />
       <parameter name="project" type="string" />
-      <parameter name="priority" type="integer" />
+      <parameter name="priority" type="string" />
       <parameter name="doc_custom_t1" type="string" />
       <parameter name="doc_custom_t2" type="string" />
       <parameter name="doc_custom_t3" type="string" />
@@ -646,7 +646,7 @@
 
     <validationRule name="update_process_date" extends="standardForm" mode="error">  
       <parameter name="admission_date" type="datefr" />
-      <parameter name="priority_id" type="integer" />
+      <parameter name="priority_id" type="string" />
       <parameter name="type_id" type="integer" />
       <parameter name="dir" type="identifier" />
     </validationRule>

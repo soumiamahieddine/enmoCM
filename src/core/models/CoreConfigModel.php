@@ -16,8 +16,6 @@
 namespace SrcCore\models;
 
 //This model is not customizable
-use SrcCore\models\ValidatorModel;
-
 class CoreConfigModel
 {
     public static function getCustomId()
@@ -52,19 +50,10 @@ class CoreConfigModel
 
     public static function getApplicationName()
     {
-        $customId = CoreConfigModel::getCustomId();
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                return (string)$loadedXml->CONFIG->applicationname;
-            }
+        if ($loadedXml) {
+            return (string)$loadedXml->CONFIG->applicationname;
         }
 
         return 'Maarch Courrier';
@@ -73,21 +62,13 @@ class CoreConfigModel
     public static function getLanguage()
     {
         $availableLanguages = ['en', 'fr'];
-        $customId = CoreConfigModel::getCustomId();
 
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                $lang = (string)$loadedXml->CONFIG->lang;
-                if (in_array($lang, $availableLanguages)) {
-                    return $lang;
-                }
+        if ($loadedXml) {
+            $lang = (string)$loadedXml->CONFIG->lang;
+            if (in_array($lang, $availableLanguages)) {
+                return $lang;
             }
         }
 
@@ -104,24 +85,15 @@ class CoreConfigModel
 
     public static function getLoggingMethod()
     {
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/login_method.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/login_method.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/login_method.xml';
-        }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/login_method.xml']);
 
         $loggingMethod = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                foreach ($loadedXml->METHOD as $value) {
-                    if (!empty((string)$value->ENABLED)) {
-                        $loggingMethod['id']        = (string)$value->ID;
-                        $loggingMethod['name']      = (string)$value->NAME;
-                        $loggingMethod['script']    = (string)$value->SCRIPT;
-                    }
+        if ($loadedXml) {
+            foreach ($loadedXml->METHOD as $value) {
+                if (!empty((string)$value->ENABLED)) {
+                    $loggingMethod['id']        = (string)$value->ID;
+                    $loggingMethod['name']      = (string)$value->NAME;
+                    $loggingMethod['script']    = (string)$value->SCRIPT;
                 }
             }
         }
@@ -163,25 +135,18 @@ class CoreConfigModel
 
     public static function getLettersBoxCategories()
     {
-        $customId = CoreConfigModel::getCustomId();
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
-        if (file_exists('custom/' .$customId. '/apps/maarch_entreprise/xml/config.xml')) {
-            $path = 'custom/' .$customId. '/apps/maarch_entreprise/xml/config.xml';
-        } else {
-            $path = 'apps/maarch_entreprise/xml/config.xml';
-        }
-
-        $xmlfile         = simplexml_load_file($path);
         $categoriesTypes = [];
-        $categories      = $xmlfile->COLLECTION->categories;
+        $categories      = $loadedXml->COLLECTION->categories;
         if (count($categories) > 0) {
             foreach ($categories->category as $category) {
                 $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
 
                 if ($category->id == (string)$categories->default_category) {
-                    $categoriesTmp['default_category']=true;
+                    $categoriesTmp['default_category'] = true;
                 } else {
-                    $categoriesTmp['default_category']=false;
+                    $categoriesTmp['default_category'] = false;
                 }
                 $categoriesTypes[] = $categoriesTmp;
             }
@@ -189,5 +154,25 @@ class CoreConfigModel
 
         return $categoriesTypes;
     }
-    
+
+    public static function getXmlLoaded(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        $customId = CoreConfigModel::getCustomId();
+
+        if (file_exists("custom/{$customId}/{$aArgs['path']}")) {
+            $path = "custom/{$customId}/{$aArgs['path']}";
+        } else {
+            $path = $aArgs['path'];
+        }
+
+        $xmlfile = null;
+        if (file_exists($path)) {
+            $xmlfile = simplexml_load_file($path);
+        }
+
+        return $xmlfile;
+    }
 }

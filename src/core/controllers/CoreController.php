@@ -26,6 +26,7 @@ class CoreController
     {
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
+        $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['scriptsToinject'] = [];
 
@@ -50,12 +51,12 @@ class CoreController
     public static function getAdministration(Request $request, Response $response)
     {
         if ($GLOBALS['userId'] == 'superadmin') {
-            $administration = [];
-            $administrationMenu = ServiceModel::getApplicationAdministrationMenuByXML();
-            $administrationApplication = ServiceModel::getApplicationAdministrationServicesByXML();
-            $administrationModule = ServiceModel::getModulesAdministrationServicesByXML();
+            $administration                    = [];
+            $administrationMenu                = ServiceModel::getApplicationAdministrationMenuByXML();
+            $administrationApplication         = ServiceModel::getApplicationAdministrationServicesByXML();
+            $administrationModule              = ServiceModel::getModulesAdministrationServicesByXML();
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-            $administration = array_merge_recursive($administration, $administrationMenu);
+            $administration                    = array_merge_recursive($administration, $administrationMenu);
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
         }

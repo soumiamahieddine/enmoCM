@@ -3,6 +3,8 @@ import { CommonModule }                         from '@angular/common';
 import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 
+import { SortPipe }                             from '../../plugins/sorting.pipe';
+
 import { MenuComponent }                        from '../menu/menu.component';
 import { MenuNavComponent }                     from '../menu/menu-nav.component';
 import { AppMaterialModule }                    from '../app-material.module';
@@ -29,10 +31,9 @@ import { PrioritiesAdministrationComponent }            from './priorities-admin
 import { PriorityAdministrationComponent }              from './priority-administration.component';
 import { ReportsAdministrationComponent }               from './reports-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
-import { HistoryBatchAdministrationComponent }          from './historyBatch-administration.component';
+import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
-import { NotificationsScheduleAdministrationComponent } from './notifications-schedule-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 
 @NgModule({
@@ -66,10 +67,9 @@ import { NotificationAdministrationComponent }          from './notification-adm
         PriorityAdministrationComponent,
         ReportsAdministrationComponent,
         HistoryAdministrationComponent,
-        HistoryBatchAdministrationComponent,
+        BatchHistoryAdministrationComponent,
         UpdateStatusAdministrationComponent,
         NotificationsAdministrationComponent,
-        NotificationsScheduleAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
         EntitiesAdministrationRedirectModalComponent,
@@ -78,7 +78,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
         BasketAdministrationGroupListModalComponent,
         DoctypesAdministrationRedirectModalComponent,
         DiffusionModelsAdministrationComponent,
-        DiffusionModelAdministrationComponent
+        DiffusionModelAdministrationComponent,
+        SortPipe
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

@@ -115,35 +115,6 @@ if (!empty($res_id)) {
         $countNote++;
     }
 
-
-
-    $stmt = $dbDatasource->query("SELECT * FROM listinstance WHERE res_id = ? AND difflist_type = ?  ORDER BY sequence ASC", [$doc['res_id'], 'VISA_CIRCUIT']);
-    $datasources['visa']= [];
-    $countVisa = 1;
-    while ($visa = $stmt->fetchObject()) {
-        $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$visa->item_id]);
-        $visaContact = $stmt2->fetchObject();
-        $stmt3 = $dbDatasource->query("SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id", [$visa->item_id, 'Y']);
-        $visaEntity = $stmt3->fetchObject();
-        if ($visaContact) {
-            if ($visa->item_mode == 'sign') {
-                $datasources['visa'][0]['firstnameSign'] = $visaContact->firstname;
-                $datasources['visa'][0]['lastnameSign'] = $visaContact->lastname;
-                $datasources['visa'][0]['entitySign'] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
-            } else {
-                $datasources['visa'][0]['firstname' . $countVisa] = $visaContact->firstname;
-                $datasources['visa'][0]['lastname' . $countVisa] = $visaContact->lastname;
-                $datasources['visa'][0]['entity' . $countVisa] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
-                $countVisa++;
-            }
-        }
-
-    }
-
-
-
-
-    //sleep(10);
     // Attachments
     $datasources['attachments'] = array();
     $myAttachment['chrono'] = $chronoAttachment;
@@ -176,6 +147,7 @@ if (!empty($res_id)) {
     $datasources['visa']= [];
     $countVisa = 1;
     while ($visa = $stmt->fetchObject()) {
+        $process_date = new DateTime($visa->process_date);
         $stmt2 = $dbDatasource->query("SELECT * FROM users WHERE user_id = ? ", [$visa->item_id]);
         $visaContact = $stmt2->fetchObject();
         $stmt3 = $dbDatasource->query("SELECT en.entity_id, en.entity_label FROM entities en, users_entities ue WHERE ue.user_id = ? AND primary_entity = ? AND ue.entity_id = en.entity_id", [$visa->item_id, 'Y']);
@@ -185,14 +157,15 @@ if (!empty($res_id)) {
                 $datasources['visa'][0]['firstnameSign'] = $visaContact->firstname;
                 $datasources['visa'][0]['lastnameSign'] = $visaContact->lastname;
                 $datasources['visa'][0]['entitySign'] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
+                $datasources['visa'][0]['dateSign'] = $process_date->format('d/m/Y');
             } else {
                 $datasources['visa'][0]['firstname' . $countVisa] = $visaContact->firstname;
                 $datasources['visa'][0]['lastname' . $countVisa] = $visaContact->lastname;
                 $datasources['visa'][0]['entity' . $countVisa] = str_replace($visaEntity->entity_id . ': ', '', $visaEntity->entity_label);
+                $datasources['visa'][0]['date' . $countVisa] = $process_date->format('d/m/Y');
                 $countVisa++;
             }
         }
-
     }
 
     //AVIS CICUIT
@@ -225,10 +198,10 @@ if (!empty($res_id)) {
 
     // Transmissions
     $datasources['transmissions'] = [];
-    if (isset($_SESSION['transmissionContacts'])) {
+    if (isset($_SESSION['transmissionContacts']) && count($_SESSION['transmissionContacts']) > 0) {
 
-        if (isset($_SESSION['upfileTransmissionNumber']) && $_SESSION['transmissionContacts'][$_SESSION['upfileTransmissionNumber']]) {
-            $curNb = $_SESSION['upfileTransmissionNumber'];
+        if (isset($_SESSION['attachmentInfo']['attachNum']) && $_SESSION['transmissionContacts'][$_SESSION['attachmentInfo']['attachNum']]) {
+            $curNb = $_SESSION['attachmentInfo']['attachNum'];
             foreach ($_SESSION['transmissionContacts'][$curNb] as $key => $value) {
                 if ($key == 'title')
                     $datasources['transmissions'][0]['currentContact_' . $key] = $contacts->get_civility_contact($value);
@@ -237,13 +210,16 @@ if (!empty($res_id)) {
             }
         }
 
-        for ($nb = 1; $_SESSION['transmissionContacts'][$nb]; $nb++) {
-            foreach ($_SESSION['transmissionContacts'][$nb] as $key => $value) {
-                if ($key == 'title')
+        $nb = 0;
+        foreach ($_SESSION['transmissionContacts'] as $it => $transmission) {
+            foreach ($transmission as $key => $value) {
+                if ($key == 'title') {
                     $datasources['transmissions'][0][$key . $nb] = $contacts->get_civility_contact($value);
-                else
+                } else {
                     $datasources['transmissions'][0][$key . $nb] = $value;
+                }    
             }
+            $nb++;
         }
     }
 }

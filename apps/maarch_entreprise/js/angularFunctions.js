@@ -1,6 +1,6 @@
 var angularGlobals = {};
 var alreadyLoaded = false;
-function triggerAngular(prodmode, locationToGo) {
+function triggerAngular(locationToGo) {
     $j.ajax({
         url      : '../../rest/initialize',
         type     : 'GET',
@@ -92,7 +92,7 @@ function unlockDocument(resId) {
     });
 }
 
-function islockForSignatureBook(resId, basketId, groupId, prodmode) {
+function islockForSignatureBook(resId, basketId, groupId) {
     $j.ajax({
         url: 'index.php?display=true&dir=actions&page=docLocker',
         type : 'POST',
@@ -107,11 +107,7 @@ function islockForSignatureBook(resId, basketId, groupId, prodmode) {
             if (response.lock) {
                 alert("Courrier verrouillé par " + response.lockBy);
             } else {
-                if (prodmode) {
-                    triggerAngular(true, "#/groups/" + groupId + "/baskets/" + basketId + "/signatureBook/" + resId);
-                } else {
-                    triggerAngular(false, "#/groups/" + groupId + "/baskets/" + basketId + "/signatureBook/" + resId);
-                }
+                triggerAngular("#/groups/" + groupId + "/baskets/" + basketId + "/signatureBook/" + resId);
             }
         }
     });

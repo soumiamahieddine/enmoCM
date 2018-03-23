@@ -77,7 +77,7 @@ class SendMessageExchangeController
         /**************** GET ATTACHMENTS INFOS ***************/
         $AttachmentsInfo = [];
         if (!empty($aArgs['join_attachment'])) {
-            $AttachmentsInfo = \Attachment\models\AttachmentsModel::getOnView(['where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
+            $AttachmentsInfo = \Attachment\models\AttachmentModel::getOnView(['select' => ['*'], 'where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
             foreach ($AttachmentsInfo as $key => $value) {
                 $AttachmentsInfo[$key]['Title']                                  = $value['title'];
                 $AttachmentsInfo[$key]['OriginatingAgencyArchiveUnitIdentifier'] = $value['identifier'];
@@ -87,7 +87,7 @@ class SendMessageExchangeController
         }
         $AttVersionInfo = [];
         if (!empty($aArgs['join_version_attachment'])) {
-            $AttVersionInfo = \Attachment\models\AttachmentsModel::getOnView(['where' => ['res_id_version in (?)'], 'data' => [$aArgs['join_version_attachment']]]);
+            $AttVersionInfo = \Attachment\models\AttachmentModel::getOnView(['select' => ['*'], 'where' => ['res_id_version in (?)'], 'data' => [$aArgs['join_version_attachment']]]);
             foreach ($AttVersionInfo as $key => $value) {
                 $AttVersionInfo[$key]['res_id']                                 = $value['res_id_version'];
                 $AttVersionInfo[$key]['Title']                                  = $value['title'];

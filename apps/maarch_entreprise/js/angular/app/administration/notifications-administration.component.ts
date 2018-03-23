@@ -113,31 +113,31 @@ export class NotificationsAdministrationComponent implements OnInit {
 
         this.months = [
             {label:this.lang.eachMonth,value:'*'},
-            {label:this.lang.january,value:"0"},
-            {label:this.lang.february,value:"1"},
-            {label:this.lang.march,value:"2"},
-            {label:this.lang.april,value:"3"},
-            {label:this.lang.may,value:"4"},
-            {label:this.lang.june,value:"5"},
-            {label:this.lang.july,value:"6"},
-            {label:this.lang.august,value:"7"},
-            {label:this.lang.september,value:"8"},
-            {label:this.lang.october,value:"9"},
-            {label:this.lang.november,value:"10"},
-            {label:this.lang.december,value:"11"}
+            {label:this.lang.january,value:"1"},
+            {label:this.lang.february,value:"2"},
+            {label:this.lang.march,value:"3"},
+            {label:this.lang.april,value:"4"},
+            {label:this.lang.may,value:"5"},
+            {label:this.lang.june,value:"6"},
+            {label:this.lang.july,value:"7"},
+            {label:this.lang.august,value:"8"},
+            {label:this.lang.september,value:"9"},
+            {label:this.lang.october,value:"10"},
+            {label:this.lang.november,value:"11"},
+            {label:this.lang.december,value:"12"}
         ]
 
         this.dom = [{label:this.lang.notUsed,value:'*'}];
 
         this.dow = [
             {label:this.lang.eachDay,value:'*'},
-            {label:this.lang.monday,value:"0"},
-            {label:this.lang.thuesday,value:"1"},
-            {label:this.lang.wednesday,value:"2"},
-            {label:this.lang.thursday,value:"3"},
-            {label:this.lang.friday,value:"4"},
-            {label:this.lang.saturday,value:"5"},
-            {label:this.lang.sunday,value:"6"}
+            {label:this.lang.monday,value:"1"},
+            {label:this.lang.thuesday,value:"2"},
+            {label:this.lang.wednesday,value:"3"},
+            {label:this.lang.thursday,value:"4"},
+            {label:this.lang.friday,value:"5"},
+            {label:this.lang.saturday,value:"6"},
+            {label:this.lang.sunday,value:"7"}
         ];
 
         this.newCron = {
@@ -157,7 +157,7 @@ export class NotificationsAdministrationComponent implements OnInit {
             this.minutes.push({label:i,value:String(i)});
         }
 
-        for (var i = 0; i <= 31; i++) {
+        for (var i = 1; i <= 31; i++) {
             this.dom.push({label:i,value:String(i)});
         }
 

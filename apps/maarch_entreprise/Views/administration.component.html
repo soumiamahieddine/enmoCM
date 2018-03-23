@@ -20,44 +20,44 @@
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
                 <div class="row adminArea">
-                    <div class="col-md-6 adminArea_1">
+                    <div class="col-md-6 adminArea_1" *ngIf="organisationServices">
                         <div style="font-size: 20px;
                         font-weight: bolder;
-                        opacity: 0.09;
+                        opacity: 0.2;
                         text-align: center">ORGANISATION</div>
-                        <button style="white-space:inherit;height: 130px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices"
+                        <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>
                     </div>
 
-                    <div class="col-md-6 adminArea_2">
+                    <div class="col-md-6 adminArea_2" *ngIf="productionServices">
                         <div style="font-size: 20px;
                         font-weight: bolder;
-                        opacity: 0.09;
+                        opacity: 0.2;
                         text-align: center">PRODUCTION</div>
-                        <button style="white-space:inherit;height: 130px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices"
+                        <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>
                     </div>
-                    <div class="col-md-6 adminArea_3">
+                    <div class="col-md-6 adminArea_3" *ngIf="classementServices">
                         <div style="font-size: 20px;
                         font-weight: bolder;
-                        opacity: 0.09;
+                        opacity: 0.2;
                         text-align: center">CLASSEMENT</div>
-                        <button style="white-space:inherit;height: 130px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices"
+                        <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>
                     </div>
 
-                    <div class="col-md-6 adminArea_4">
+                    <div class="col-md-6 adminArea_4" *ngIf="supervisionServices">
                         <div style="font-size: 20px;
                         font-weight: bolder;
-                        opacity: 0.09;
+                        opacity: 0.2;
                         text-align: center">SUPERVISION</div>
-                        <button style="white-space:inherit;height: 130px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices"
+                        <button style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
                             <br/>{{modService.name}}</button>

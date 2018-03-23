@@ -2,50 +2,52 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angula
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
+import { ConfirmModalComponent } from '../confirmModal.component';
 import { NotificationService } from '../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-
+import { SortPipe }  from '../../plugins/sorting.pipe';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
 
-
 @Component({
     templateUrl: "../../../../Views/entities-administration.component.html",
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    dialogRef: MatDialogRef<any>;
-    coreUrl: string;
-    lang: any = LANG;
-    isDraggable: boolean = true;
 
-    entities: any[] = [];
-    entityTypeList: any[];
-    currentEntity: any = {};
-    config: any = {};
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    loading: boolean = false;
-    creationMode: boolean = false;
-    idCircuitVisa: number;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    displayedColumns = ['firstname', 'lastname'];
-    dataSource = new MatTableDataSource(this.currentEntity.users);
+    entities                        : any[]     = [];
+    listTemplateRoles               : any[]     = [];
+    entityTypeList                  : any[]     = [];
+    currentEntity                   : any       = {};
+    isDraggable                     : boolean   = true;
+    creationMode                    : boolean   = false;
+    idCircuitVisa                   : number;
+    config                          : any       = {};
+
+    dataSource          = new MatTableDataSource(this.currentEntity.users);
+    displayedColumns    = ['firstname', 'lastname'];
+
+
     @ViewChild('snav2') sidenav: MatSidenav;
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
-
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         super(http, ['usersAndEntities', 'visaUsers']);
@@ -69,10 +71,18 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+            .subscribe((data: any) => {
+                this.listTemplateRoles = data['roles'];
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
 
         this.http.get(this.coreUrl + "rest/entities")
             .subscribe((data: any) => {
                 this.entities = data['entities'];
+                this.loading = false;
+
                 setTimeout(() => {
                     $j('#jstree').jstree({
                         "checkbox": {
@@ -88,17 +98,20 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             'data': this.entities,
                             "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
                                 if (operation == 'move_node') {
-                                    if (!node_parent.original.allowed) {
-                                        return false
-                                    } else
+                                    if (node_parent.id =='#') {
+                                        return false;
+                                    } else if (!node_parent.original.allowed) {
+                                        return false;
+                                    } else {
                                         return true;
+                                    }       
                                 }
                             }
                         },
                         "dnd": {
                             is_draggable: function (nodes: any) {
-                                var i = 0,
-                                    j = nodes.length;
+                                var i = 0;
+                                var j = nodes.length;
                                 for (; i < j; i++) {
                                     if (!nodes[i].original.allowed) {
                                         return false;
@@ -150,7 +163,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         $j('#jstree').jstree('select_node', data.data.nodes[0]);
                     });
                 }, 0);
-                this.loading = false;
             }, () => {
                 location.href = "index.php";
             });
@@ -179,11 +191,11 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
-        }
+        };
         var inListModel = false;
         var newElemListModel: any = {};
 
-        this.currentEntity.roles.forEach((role: any) => {
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -247,7 +259,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.entityUpdated);
+                        this.notify.success(this.lang.diffusionModelUpdated);
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -255,7 +267,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                     .subscribe((data: any) => {
                         this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.entityUpdated);
+                        this.notify.success(this.lang.diffusionModelUpdated);
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -271,9 +283,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
-        }
-        var itemMode = '';
-
+        };
         var newElemListModel = {
             "id": '',
             "item_type": 'user_id',
@@ -303,7 +313,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -312,7 +322,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
                     this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -325,14 +335,15 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.parent_entity_id = '';
         }
 
-        if (this.creationMode) {
+        if (this.creationMode) { 
             this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
                 .subscribe((data: any) => {
+                    this.currentEntity.listTemplate = [];
                     this.entities = data['entities'];
+                    this.creationMode = false;
                     $j('#jstree').jstree(true).settings.core.data = this.entities;
                     $j('#jstree').jstree("refresh");
                     this.notify.success(this.lang.entityAdded);
-                    this.creationMode = false;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -351,7 +362,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
     moveEntity() {
         this.http.put(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -368,6 +379,11 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 break;
             }
         }
+    }
+
+    selectParentEntity(entity_id:any) {
+        $j('#jstree').jstree('deselect_all');
+        $j('#jstree').jstree('select_node', entity_id);
     }
 
     removeEntity() {
@@ -422,7 +438,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     prepareEntityAdd() {
         this.creationMode = true;
         this.isDraggable = false;
-        console.log(this.currentEntity.entity_id);
         if (this.currentEntity.entity_id) {
             for (let i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].entity_id == this.currentEntity.entity_id) {
@@ -441,9 +456,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 }
             }
         }
-
     }
-
 
     updateStatus(entity: any, method: string) {
         this.http.put(this.coreUrl + "rest/entities/" + entity['entity_id'] + "/status", { "method": method })
@@ -461,7 +474,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
-        }
+        };
 
         if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
             this.currentEntity.listTemplate.dest.forEach((listModel: any) => {
@@ -472,7 +485,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.listTemplate.dest = [template];
         }
 
-        this.currentEntity.roles.forEach((role: any) => {
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -490,7 +503,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        .subscribe((data: any) => {
+                            this.listTemplateRoles = data['roles'];
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -498,12 +517,19 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        .subscribe((data: any) => {
+                            this.listTemplateRoles = data['roles'];
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
     }
+
     updateDiffListVisa(template: any): any {
         var newDiffList = {
             "object_id": this.currentEntity.entity_id,
@@ -511,7 +537,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
-        }
+        };
         this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
             if (i == (this.currentEntity.visaTemplate.length - 1)) {
@@ -530,12 +556,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
             .subscribe((data: any) => {
                 this.idCircuitVisa = data.id;
-                this.notify.success(this.lang.entityUpdated);
+                this.notify.success(this.lang.diffusionModelUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
 
     }
+
     removeDiffList(i: number, role: string): any {
         this.currentEntity.listTemplate[role].splice(i, 1);
         var newDiffList = {
@@ -544,8 +571,8 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
-        }
-        this.currentEntity.roles.forEach((role: any) => {
+        };
+        this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
@@ -562,11 +589,18 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
             .subscribe((data: any) => {
                 this.currentEntity.listTemplate.id = data.id;
-                this.notify.success(this.lang.entityUpdated);
+                this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                    .subscribe((data: any) => {
+                        this.listTemplateRoles = data['roles'];
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+                this.notify.success(this.lang.diffusionModelUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
+
     removeDiffListVisa(template: any, i: number): any {
         this.currentEntity.visaTemplate.splice(i, 1);
 
@@ -577,7 +611,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 "title": this.currentEntity.entity_id,
                 "description": this.currentEntity.entity_id,
                 "items": Array()
-            }
+            };
 
             this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
@@ -597,28 +631,61 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
             this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.idCircuitVisa = null;
-                    this.notify.success(this.lang.entityUpdated);
+                    this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
     }
 
-    toggleRole(role:any) {
-        this.http.put(this.coreUrl + "rest/listTemplates/types/roles",{"roles":this.currentEntity.roles,"typeId":"entity_id"})
-            .subscribe((data: any) => {
-                this.notify.success(this.lang.entityUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
+    toggleRole(role: any) {
+        console.log(role);
+        if (role.usedIn.length > 0) {
+            this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(',') + '</b><br/>'+this.lang.roleUsedInTemplateInfo2 } };
+            let dialogRef = this.dialog.open(ConfirmModalComponent, this.config);
+            dialogRef.afterClosed().subscribe(result => {
+                if (result === "ok") {
+                    role.available = !role.available;
+                    this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+                        .subscribe(() => {
+                            role.usedIn = [];
+                            if (this.currentEntity.listTemplate) {
+                                this.currentEntity.listTemplate[role.id] = [];
+                            }
+                            this.notify.success(this.lang.listTemplatesRolesUpdated);
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                }
             });
+        } else {
+            role.available = !role.available;
+            this.http.put(this.coreUrl + "rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
+                .subscribe(() => {
+                    if (this.currentEntity.listTemplate) {
+                        this.currentEntity.listTemplate[role.id] = [];
+                        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                            .subscribe((data: any) => {
+                                this.listTemplateRoles = data['roles'];
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }
+                    this.notify.success(this.lang.listTemplatesRolesUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+
+
     }
 }
 @Component({

@@ -113,19 +113,19 @@
     <process_modes>
         <process_mode>
             <label>NORMAL</label>
-            <process_mode_priority>2</process_mode_priority>
+            <process_mode_priority>poiuytre1357nbvc</process_mode_priority>
         </process_mode>
         <process_mode>
             <label>SVA</label>
-            <process_mode_priority>3</process_mode_priority>
+            <process_mode_priority>poiuytre1313nbvc</process_mode_priority>
         </process_mode>
         <process_mode>
             <label>SVR</label>
-            <process_mode_priority>3</process_mode_priority>
+            <process_mode_priority>poiuytre1313nbvc</process_mode_priority>
         </process_mode>
     </process_modes>
     <priorities>
-        <!-- Tag working_days "true" = Jours ouvrés // "false" = Jours calendaires -->
+        <!-- Ces balises ne sont plus utilisées et seront supprimées dans la prochaine version  -->
         <priority color="#ff0000" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
         <priority color="#ffa500" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
         <priority color="#009dc5" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->

@@ -25,9 +25,8 @@ function addAvisUser(users) {
                 + '</span>'
                 + '</div>');
 
-        //prototype
         document.getElementById("avisUserList").selectedIndex = 0;
-        Event.fire($("avisUserList"), "chosen:updated");
+        $j("#avisUserList").trigger("chosen:updated");
     } else {
         nb_avis = $j(".droptarget").length;
         next_avis = nb_avis + 1;
@@ -197,7 +196,7 @@ function loadAvisModelUsers() {
 
     //prototype
     document.getElementById("modelList").selectedIndex = 0;
-    Event.fire($("modelList"), "chosen:updated");
+    $j("#modelList").trigger("chosen:updated");
 }
 
 function initDragNDropAvis() {

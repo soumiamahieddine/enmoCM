@@ -22,8 +22,7 @@ function add_this_tags(action_script, ui_script)
                             {
                                 $j('#tag_userform').append($j('<option>', { value : response.value, selected : true }).text(content)); 
                                 //alert('mot clé ajouté');
-                                console.log($j('#tag_userform option'));
-                                Event.fire($("tag_userform"), "chosen:updated");
+								$j("#tag_userform").trigger("chosen:updated");
                             } else
                             {
                                 if (console)

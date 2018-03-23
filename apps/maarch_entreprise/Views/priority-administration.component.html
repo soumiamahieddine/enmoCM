@@ -25,13 +25,13 @@
             <mat-card *ngIf="!loading" class="card-app-content">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
                     <div class="form-group">
-                        <div class="col-md-11 col-xs-11">
+                        <div class="col-md-1 col-xs-1" style="padding-top:10px;">
+                            <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}">{{lang.default}}</mat-checkbox>
+                        </div>
+                        <div class="col-md-10 col-xs-10">
                             <mat-form-field>
                                 <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
                                     maxlength="128" required>
-                                    <span matSuffix>
-                                        <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}"></mat-checkbox>
-                                    </span>
                             </mat-form-field>
                         </div>
                         <div class="col-md-1 col-xs-1">

@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -36,11 +36,13 @@ export class DoctypesAdministrationComponent implements OnInit {
     loading: boolean = false;
     creationMode: any = false;
     newSecondLevel: any = false;
+    newFirstLevel: any = false;
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
     dataSource = new MatTableDataSource(this.currentType.indexes);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('snav2') sidenav: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
@@ -71,8 +73,35 @@ export class DoctypesAdministrationComponent implements OnInit {
                                 'name': 'proton',
                                 'responsive': true
                             },
+                            'multiple': false,
                             'data': this.doctypes,
-                            "check_callback": true
+                            "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
+                                if (operation == 'move_node') {
+                                    if(typeof more.ref == "undefined"){
+                                        return true;
+                                    }
+                                    if(!isNaN(parseFloat(node.id)) && isFinite(node.id) && more.ref.id.indexOf("secondlevel_")==0){
+                                        // Doctype in secondLevel
+                                        return true;
+                                    } else if(node.id.indexOf("secondlevel_")==0 && more.ref.id.indexOf("firstlevel_")==0){
+                                        // SecondLevel in FirstLevel
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        "dnd": {
+                            is_draggable: function (nodes: any) {
+                                this.secondLevelSelected = nodes[0].id.replace("secondlevel_", "");
+                                if((!isNaN(parseFloat(this.secondLevelSelected)) && isFinite(this.secondLevelSelected)) ||
+                                    (!isNaN(parseFloat(nodes[0].id)) && isFinite(nodes[0].id))){
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            }
                         },
                         "plugins": ["search", "dnd", "contextmenu"],
                     });
@@ -87,6 +116,9 @@ export class DoctypesAdministrationComponent implements OnInit {
                     $j('#jstree')
                         // listen for event
                         .on('select_node.jstree', (e: any, data: any) => {
+                            if (this.sidenav.opened == false) {
+                                this.sidenav.open();
+                            }
                             this.loadDoctype(data, false);
 
                         }).on('move_node.jstree', (e: any, data: any) => {
@@ -127,7 +159,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                                     this.saveType();
                                 }
                             } else {
-                                alert(this.lang.cantMoveDoctype)
+                                alert(this.lang.cantMoveDoctype);
                             }
                         } else {
                             alert(this.lang.noDoctypeSelected);
@@ -143,9 +175,27 @@ export class DoctypesAdministrationComponent implements OnInit {
             this.currentFirstLevel  = false;
             this.currentType        = false;
             this.http.get(this.coreUrl + "rest/doctypes/secondLevel/" + data.node.original.doctypes_second_level_id )
-                .subscribe((data: any) => {
-                    this.currentSecondLevel = data['secondLevel'];
-                    this.firstLevels        = data['firstLevel'];
+                .subscribe((dataValue: any) => {
+                    this.currentSecondLevel = dataValue['secondLevel'];
+                    this.firstLevels        = dataValue['firstLevel'];
+
+                    if(move){
+                        if(this.currentSecondLevel){
+                            this.newFirstLevel = data.parent.replace("firstlevel_", "");
+                            // Is integer
+                            if(!isNaN(parseFloat(this.newFirstLevel)) && isFinite(this.newFirstLevel)){
+                                if (this.currentSecondLevel.doctypes_first_level_id != this.newFirstLevel) {
+                                    this.currentSecondLevel.doctypes_first_level_id = this.newFirstLevel;
+                                    this.saveSecondLevel();
+                                }
+                            } else {
+                                alert(this.lang.cantMoveFirstLevel);
+                            }
+                        } else {
+                            alert(this.lang.noFirstLevelSelected);
+                        }
+                    }
+
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -348,6 +398,9 @@ export class DoctypesAdministrationComponent implements OnInit {
         if(mode == 'doctype'){
             this.currentType  = {};
         }
+        if (this.sidenav.opened == false) {
+            this.sidenav.open();
+        }
         $j('#jstree').jstree('deselect_all');
         this.http.get(this.coreUrl + "rest/administration/doctypes/new")
             .subscribe((data: any) => {
@@ -358,6 +411,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.models       = data['models'];
                 if(mode == 'doctype'){
                     this.currentType.indexes = data['indexes'];
+                    this.currentType.is_generated = 'N';
                     this.loadIndexesTable();
                 }
             }, (err) => {

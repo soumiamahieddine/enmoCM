@@ -1072,7 +1072,7 @@ abstract class lists_Abstract extends Database
                             return "false";
                     } else {
                         if($resultTheLine[$i]['column']=='subject'){
-                            return str_replace(" ", "&nbsp;", $resultTheLine[$i]['value']);
+                            return preg_replace('/\s+/', ' ', $resultTheLine[$i]['value']);
                         } else {
                             return $resultTheLine[$i]['value'];
                         }
@@ -1425,11 +1425,7 @@ abstract class lists_Abstract extends Database
             }
             $sAction = \Action\models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
             if ($sAction == 'visa_mail') {
-                if (PROD_MODE) {
-                    $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', \'' .$_SESSION['current_basket']['group_id']. '\', true)"';
-                } else {
-                    $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', \'' .$_SESSION['current_basket']['group_id']. '\', false)"';
-                }
+                $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="islockForSignatureBook(\'' .$keyValue. '\', \'' .$_SESSION['current_basket']['id']. '\', \'' .$_SESSION['current_basket']['group_id']. '\')"';
             } else {
                 $return = 'onmouseover="this.style.cursor=\'pointer\';" onClick="validForm( \'page\', \''.$keyValue.'\', \''.$this->params['defaultAction'].'\');" ';
             }

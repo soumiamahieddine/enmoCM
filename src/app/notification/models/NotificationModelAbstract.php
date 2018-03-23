@@ -137,21 +137,13 @@ class NotificationModelAbstract
             'table' => ['actions'],
         ]);
 
-        //get event system
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists('custom/'.$customId.'modules/notifications/xml/event_type.xml')) {
-            $path = 'custom/'.$customId.'modules/notifications/xml/event_type.xml';
-        } else {
-            $path = 'modules/notifications/xml/event_type.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        if ($xmlfile) {
-            foreach ($xmlfile->event_type as $eventType) {
-                $tabEvent_Type[] = array(
-                    'id' => (string) $eventType->id,
-                    'label_action' => (string) $eventType->label,
-                );
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/notifications/xml/event_type.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->event_type as $eventType) {
+                $tabEvent_Type[] = [
+                    'id'            => (string) $eventType->id,
+                    'label_action'  => (string) $eventType->label
+                ];
             }
         }
 
@@ -172,123 +164,57 @@ class NotificationModelAbstract
 
     public static function getDiffusionType()
     {
-        // // $customId = CoreConfigModel::getCustomId();
+        $diffusionTypes = [];
 
-        // // if (file_exists('custom/' .$customId. 'modules/notifications/xml/event_type.xml')) {
-        // //     $path = 'custom/' .$customId. 'modules/notifications/xml/event_type.xml';
-        // // } else {
-        //     $path = 'modules/notifications/xml/diffusion_type.xml';
-        // // }
-        // $xmlfile = simplexml_load_file($path);
-        // if ($xmlfile) {
-        //     foreach ($xmlfile->diffusion_type as $diffusionType) {
-        //         $result = [];
-        //         if((string)$diffusionType->select){
-        //             if((string)$diffusionType->where){
-        //               $result = DatabaseModel::select([
-        //                 'select'    => [(string)$diffusionType->select],
-        //                 'table'     => [(string)$diffusionType->from],
-        //                 'where'     => [(string)$diffusionType->where],
-        //                 'data'      => [(string)$diffusionType->data]
-        //                 ]);
-        //             }else{
-        //                 $result = DatabaseModel::select([
-        //                 'select'    => [(string)$diffusionType->select],
-        //                 'table'     => [(string)$diffusionType->from],
-        //                 ]);
-        //             }
-        //         }
-
-        //         $tabDiffusion_Type[] = array(
-        //             'id'          => (string) $diffusionType->id,
-        //             'label'       => constant((string)$diffusionType->label),
-        //             'add_attachment'       => (string)$diffusionType->add_attachment,
-        //             'script'        => (string)$diffusionType->script,
-        //             'request'        => $result,
-        //         );
-
-        //     }
-        // }
-        // $result = DatabaseModel::select([
-        //     'select'    => ['group_id as id, group_desc as label'],
-        //     'table'     => ['usergroups'],
-        //     'where'     => ['enabled = ?'],
-        //     'data'  => ['Y']
-        // ]);
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'group',
             'label' => 'Groupe',
             'add_attachment' => 'true',
-            //'request'       => $result,
         );
-        // $result = DatabaseModel::select([
-        //     'select'    => ['entity_id as id, entity_label as label'],
-        //     'table'     => ['entities'],
-        //     'where'     => ['enabled = ?'],
-        //     'data'  => ['Y']
-        // ]);
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'entity',
             'label' => 'Entité',
             'add_attachment' => 'true',
-            //'request'       => $result
         );
-        // $result = DatabaseModel::select([
-        //     'select'    => ['id, label_status as label'],
-        //     'table'     => ['status']
-        // ]);
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'dest_entity',
             'label' => 'Service de l\'utilisateur destinataire',
             'add_attachment' => 'false',
-            //'request'       => $result
         );
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'dest_user',
             'label' => 'Liste de diffusion du document',
             'add_attachment' => 'false',
-            //'request'       => $result
         );
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'dest_user_visa',
             'label' => 'Viseur actuel du document',
             'add_attachment' => 'true',
-            //'request'       => $result
         );
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'dest_user_sign',
             'label' => 'Signataire actuel du document',
             'add_attachment' => 'true',
-            //'request'       => $result
         );
-        // $result = DatabaseModel::select([
-        //     'select'    => ["user_id as id, concat(firstname,' ',lastname) as label"],
-        //     'table'     => ['users']
-        // ]);
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'user',
             'label' => 'Utilisateur désigné',
             'add_attachment' => 'true',
-            //'request'       => $result
         );
 
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'copy_list',
             'label' => 'Liste de diffusion du document',
             'add_attachment' => 'false',
-            //'request'       => $result
         );
 
-        $result = [];
-
-        $tabDiffusion_Type[] = array(
+        $diffusionTypes[] = array(
             'id' => 'contact',
             'label' => 'Contact du document',
-            'add_attachment' => 'true',
-            //'request'       => $result
+            'add_attachment' => 'true'
         );
 
-        return $tabDiffusion_Type;
+        return $diffusionTypes;
     }
 
     public static function getDiffusionTypeGroups()

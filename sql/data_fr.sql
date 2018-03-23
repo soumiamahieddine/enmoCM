@@ -1139,7 +1139,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '17.06.2', 1706, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.1', NULL, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 ------------
 --DIFFLIST_TYPES
@@ -1695,6 +1695,13 @@ INSERT INTO templates (template_label, template_comment, template_content, templ
 ------------
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 
+/* PRIORITIES */
+TRUNCATE TABLE priorities;
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1391nbvc', 'Très urgent', '#ff0000', TRUE, 4, FALSE);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority) VALUES ('poiuytre1313nbvc', 'SVA/SVR', '#ffa500', TRUE, null, FALSE);
+
 ------------
 --NOTIFICATIONS
 ------------
@@ -1751,3 +1758,12 @@ INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_i
 SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
 WHERE usergroup_content.primary_group = 'Y' AND groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
 ORDER BY users.id;
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'EvisBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'RESPONSABLE' AND users.user_id = 'ddaull';
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'ValidationBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'DIRECTEUR' AND users.user_id = 'rrenaud';
+INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
+SELECT users.id, usergroups.id, 'ValidationBasket', TRUE FROM users, usergroups
+WHERE usergroups.group_id = 'DIRECTEUR' AND users.user_id = 'eerina';

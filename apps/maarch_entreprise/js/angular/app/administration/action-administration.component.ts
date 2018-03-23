@@ -15,6 +15,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class ActionAdministrationComponent implements OnInit {
+
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     lang: any = LANG;
@@ -39,26 +40,9 @@ export class ActionAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        var breadCrumb = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > <a onclick='location.hash = \"/administration/actions\"' style='cursor: pointer'>" + this.lang.actions + "</a> > ";
-
-        if (this.creationMode == true) {
-            breadCrumb += this.lang.actionCreation;
-        } else {
-            breadCrumb += this.lang.actionModification;
-        }
-        $j('#ariane')[0].innerHTML = breadCrumb;
-    }
-
-    prepareActions() {
-        $j('#inner_content').remove();
-    }
-
     ngOnInit(): void {
-        this.prepareActions();
-
-        this.loading = true;
         this.coreUrl = angularGlobals.coreUrl;
+        this.loading = true;
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
@@ -90,15 +74,12 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             }
         });
-
-        this.updateBreadcrumb(angularGlobals.applicationName);
-
     }
 
     onSubmit() {
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/actions', this.action)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.router.navigate(['/administration/actions']);
                     this.notify.success(this.lang.actionAdded);
 
@@ -107,7 +88,7 @@ export class ActionAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
-                .subscribe((data: any) => {
+                .subscribe(() => {
                     this.router.navigate(['/administration/actions']);
                     this.notify.success(this.lang.actionUpdated);
 

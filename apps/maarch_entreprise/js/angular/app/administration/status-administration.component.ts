@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { FormControl, Validators} from '@angular/forms';
 
 declare function $j(selector: any): any;
 
@@ -36,6 +37,13 @@ export class StatusAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
+    statusId = new FormControl('', [Validators.required, Validators.pattern(/^[\w.-]*$/)]);
+
+    getErrorMessage() {
+        return this.statusId.hasError('required') ? this.lang.enterValue :
+            this.statusId.hasError('pattern') ? this.lang.patternId :
+                '';
+    }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();

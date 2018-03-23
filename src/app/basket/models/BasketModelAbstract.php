@@ -531,25 +531,17 @@ class BasketModelAbstract
     {
         ValidatorModel::arrayType($aArgs, ['unneeded']);
 
-        $customId = CoreConfigModel::getCustomId();
-        if (file_exists("custom/{$customId}/modules/basket/xml/basketpage.xml")) {
-            $path = "custom/{$customId}/modules/basket/xml/basketpage.xml";
-        } else {
-            $path = 'modules/basket/xml/basketpage.xml';
-        }
-
         $basketPages = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                foreach ($loadedXml->BASKETPAGE as $value) {
-                    if (empty($aArgs['unneeded']) || !in_array((string)$value->ID, $aArgs['unneeded'])) {
-                        $basketPages[] = [
-                            'id'    => (string)$value->ID,
-                            'label' => constant((string)$value->LABEL),
-                            'name'  => (string)$value->NAME
-                        ];
-                    }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/basket/xml/basketpage.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->BASKETPAGE as $value) {
+                if (empty($aArgs['unneeded']) || !in_array((string)$value->ID, $aArgs['unneeded'])) {
+                    $basketPages[] = [
+                        'id'    => (string)$value->ID,
+                        'label' => constant((string)$value->LABEL),
+                        'name'  => (string)$value->NAME
+                    ];
                 }
             }
         }
@@ -577,5 +569,4 @@ class BasketModelAbstract
 
         return $aAction[0]['id_action'];
     }
-
 }

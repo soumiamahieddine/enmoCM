@@ -192,10 +192,10 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
             } 
             // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && is_numeric($_REQUEST['priority']) && $_REQUEST['priority']>=0)
+            elseif ($tab_id_fields[$j] == 'priority' && isset($_REQUEST['priority']))
             {
                 $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
-                $prio = $func->wash($_REQUEST['priority'],"num",_THE_PRIORITY,"no");
+                $prio = $func->wash($_REQUEST['priority'],"alphanum",_THE_PRIORITY,"no");
                 $where_request .= " priority = :priority ";
                 $arrayPDO = array_merge($arrayPDO, array(":priority" => $prio));
 

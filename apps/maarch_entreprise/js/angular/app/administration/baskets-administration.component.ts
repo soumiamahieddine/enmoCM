@@ -16,19 +16,22 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class BasketsAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    baskets: any[] = [];
-    basketsOrder: any[] = [];
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    loading: boolean = false;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+
+    baskets                         : any[]     = [];
+    basketsOrder                    : any[]     = [];
+
+    displayedColumns    = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
+    dataSource          : any;
+
+
     @ViewChild('snav2') sidenav: MatSidenav;
-
-    displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
-    dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -48,16 +51,8 @@ export class BasketsAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>Administration</a> > Bannettes";
-        }
-    }
-
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
-
         this.loading = true;
 
         this.http.get(this.coreUrl + "rest/baskets")

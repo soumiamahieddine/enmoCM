@@ -64,7 +64,7 @@
         </mat-sidenav-content>
 
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : true" class="col-md-4 col-sm-12">
+            position='end' [opened]="false" class="col-md-4 col-sm-12">
 
             <mat-nav-list>
                 <mat-tab-group>
@@ -269,7 +269,8 @@
                                         <div class="col-sm-6">
                                             <mat-form-field>
                                                 <input matInput [(ngModel)]="currentType.duration_current_use" name="duration_current_use" id="duration_current_use" title="{{lang.durationCurrentUse}}"
-                                                    type="number" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
+                                                    type="text" placeholder="{{lang.durationCurrentUse}}" pattern="^[0-9]*$">
+                                                    <!-- pattern without required attribute must be type text -->
                                             </mat-form-field>
                                         </div>
                                     </div>

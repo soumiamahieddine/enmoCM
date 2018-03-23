@@ -50,10 +50,10 @@ class NotificationScheduleModelAbstract
 
         HistoryController::add([
             'tableName' => 'notifications',
-            'recordId' => $GLOBALS['userId'],
+            'recordId'  => $GLOBALS['userId'],
             'eventType' => 'UP',
-            'eventId' => 'notificationadd',
-            'info' => _NOTIFICATION_SCHEDULE_UPDATED,
+            'eventId'   => 'notificationadd',
+            'info'      => _NOTIFICATION_SCHEDULE_UPDATED,
         ]);
 
         return true;
@@ -104,14 +104,14 @@ class NotificationScheduleModelAbstract
             $filename = explode('/', $cmd);
 
             $data[] = array(
-                'm' => $m,
-                'h' => $h,
-                'dom' => $dom,
-                'mon' => $mon,
-                'dow' => $dow,
-                'cmd' => $cmd,
+                'm'           => $m,
+                'h'           => $h,
+                'dom'         => $dom,
+                'mon'         => $mon,
+                'dow'         => $dow,
+                'cmd'         => $cmd,
                 'description' => end($filename),
-                'state' => $state,
+                'state'       => $state,
             );
         }
 
@@ -123,7 +123,6 @@ class NotificationScheduleModelAbstract
         ValidatorModel::notEmpty($aArgs, ['notification_sid', 'notification_id']);
         ValidatorModel::intVal($aArgs, ['notification_sid']);
 
-        $notification_sid = $aArgs['notification_sid'];
         $notification_id = $aArgs['notification_id'];
 
         //Creer le script sh pour les notifications
@@ -183,10 +182,10 @@ class NotificationScheduleModelAbstract
 
         HistoryController::add([
             'tableName' => 'notifications',
-            'recordId' => $notification_id,
+            'recordId'  => $notification_id,
             'eventType' => 'ADD',
-            'eventId' => 'notificationadd',
-            'info' => _NOTIFICATION_SCRIPT_ADDED,
+            'eventId'   => 'notificationadd',
+            'info'      => _NOTIFICATION_SCRIPT_ADDED,
         ]);
 
         return true;

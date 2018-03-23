@@ -24,6 +24,8 @@ class DoctypeModelAbstract
         $firstLevel = DatabaseModel::select([
             'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'    => ['doctypes'],
+            'where'    => ['enabled = ?'],
+            'data'     => ['Y'],
             'order_by' => ['description asc']
         ]);
 
@@ -114,25 +116,17 @@ class DoctypeModelAbstract
 
     public static function getProcessMode()
     {
-        $customId = CoreConfigModel::getCustomId();
+        $return['processing_modes']      = [];
+        $return['process_mode_priority'] = [];
 
-        if (file_exists('custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml')) {
-            $path = 'custom/' .$customId. '/apps/maarch_entreprise/xml/entreprise.xml';
-        } else {
-            $path = 'apps/maarch_entreprise/xml/entreprise.xml';
-        }
-
-        $xmlfile = simplexml_load_file($path);
-
-        $return['processing_modes']      = array();
-        $return['process_mode_priority'] = array();
-        $processingModes = $xmlfile->process_modes;
-
-        if (count($processingModes) > 0) {
-            foreach ($processingModes->process_mode as $process) {
-                $label                                   = (string) $process->label;
-                $return['processing_modes'][]      = $label;
-                $return['process_mode_priority'][] = (string) $process->process_mode_priority;
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+        if ($loadedXml) {
+            $processingModes = $loadedXml->process_modes;
+            if (count($processingModes) > 0) {
+                foreach ($processingModes->process_mode as $process) {
+                    $return['processing_modes'][]      = (string) $process->label;
+                    $return['process_mode_priority'][] = (string) $process->process_mode_priority;
+                }
             }
         }
 
