@@ -51,7 +51,6 @@
                 <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectChange)="initService()">
                     <mat-tab label="Informations">
                         <div *ngIf="user.status == 'ABS'" class="text-warning" style="position: absolute;opacity: 0.1;font-size: 120px;transform: rotate(324deg);-webkit-transform: rotate(324deg);margin-left: 35%;margin-top: 90px;">{{user.status}}</div>
-
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -64,7 +63,6 @@
                                         <mat-form-field>
                                             <input matInput *ngIf="creationMode" type="text" title="{{lang.id}}" name="user_id" [(ngModel)]="user.userId" placeholder="{{lang.id}}"
                                                 pattern="^[\w.@-]*$" required>
-
                                             <input matInput *ngIf="!creationMode" type="text" title="{{lang.id}}" value="{{user.user_id}}" placeholder="{{lang.id}}"
                                                 disabled>
                                         </mat-form-field>
@@ -121,7 +119,6 @@
                                 </div>
                             </div>
                         </form>
-
                     </mat-tab>
                     <mat-tab *ngIf="!creationMode" label="Groupe(s)">
                         <mat-nav-list>
@@ -174,12 +171,12 @@
                             <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
                                 <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
                                     {{lang.clickOn}}
-                                    <i class="fa fa-upload fa-2x"></i> (
-                                    < 2MB) </div>
+                                    <i class="fa fa-upload fa-2x"></i> ( < 2MB )
                                 </div>
-                                <div class="col-md-2" *ngIf="signatureModel.size">
-                                    <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
-                                </div>
+                            </div>
+                            <div class="col-md-2" *ngIf="signatureModel.size">
+                                <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
+                            </div>
                         </form>
                     </mat-tab>
                     <mat-tab *ngIf="!creationMode" label="Historique">
@@ -360,4 +357,4 @@
             </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
-    </div>
+</div>

@@ -432,9 +432,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
-                for (let i in this.user.baskets) {
-                    this.user.baskets[i].userToDisplay = '';
-                }
                 this.notify.success(this.lang.absOff);
             }, (err) => {
                 this.notify.error(err.error.errors);
