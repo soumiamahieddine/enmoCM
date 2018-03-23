@@ -78,6 +78,7 @@ $theme: mat-light-theme($primary, $accent, $warn);
 }
 
 .adminArea_1{
+  flex: 1;
   overflow: hidden;
   padding:20px;
 }
