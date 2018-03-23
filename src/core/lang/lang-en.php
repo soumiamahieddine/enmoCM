@@ -26,6 +26,8 @@ define('_BASKET_GROUP_MODIFICATION', 'Group updated for basket');
 define('_BASKET_GROUP_SUPPRESSION', 'Group deleted for basket');
 define('_BASKET_MODIFICATION', 'Basket modification');
 define('_BASKET_SUPPRESSION', 'Basket suppression');
+define('_BASKET_REDIRECTION', 'Basket redirection');
+define('_BASKET_REDIRECTION_SUPPRESSION', 'Basket redirection');
 define('_BASKETS_SORT_MODIFICATION', 'Baskets order modification');
 define('_BY_DEFAULT', 'by default');
 define('_DELETE_NOTIFICATIONS', 'Notification deleted');

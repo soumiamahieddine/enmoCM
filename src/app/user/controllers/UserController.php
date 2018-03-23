@@ -304,6 +304,13 @@ class UserController
                     'userAbs'     => $value['basketOwner'],
                     'newUser'     => $value['newUser']
                 ]);
+                HistoryController::add([
+                    'tableName'    => 'user_abs',
+                    'recordId'     => $GLOBALS['userId'],
+                    'eventType'    => 'UP',
+                    'eventId'      => 'basketRedirection',
+                    'info'         => _BASKET_REDIRECTION . "{$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                ]);
                 unset($data[$key]);
             }
         }
@@ -317,11 +324,19 @@ class UserController
                     'basketOwner'   => $value['basketOwner'],
                     'isVirtual'     => $value['virtual']
                 ]);
+
+                HistoryController::add([
+                    'tableName'    => 'user_abs',
+                    'recordId'     => $GLOBALS['userId'],
+                    'eventType'    => 'UP',
+                    'eventId'      => 'basketRedirection',
+                    'info'         => _BASKET_REDIRECTION . "{$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                ]);
             }
         }
 
         return $response->withJson([
-            'baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
             'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
@@ -337,8 +352,16 @@ class UserController
 
         BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
 
+        HistoryController::add([
+            'tableName'    => 'user_abs',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'basketRedirection',
+            'info'         => _BASKET_REDIRECTION_SUPPRESSION . "{$aArgs['basketId']} {$user['user_id']}"
+        ]);
+
         return $response->withJson([
-            'baskets' => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
             'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
