@@ -346,7 +346,7 @@ export const LANG_FR = {
     "updateStatus"                      : "Changement de statut de courrier",
     "updateStatusInformationsChrono"    : "En saisissant le NUMÉRO CHRONO du document, vous modifierez le statut du courrier. Le courrier sera disponible dans la bannette des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.",
     "updateStatusInformationsGed"       : "En saisissant l'IDENTIFIANT GED du document, vous modifierez le statut du courrier. Le courrier sera disponible dans la bannette des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.",
-    "uploadSignFile"                    : "Déposer une signature",
+    "uploadSignFile"                    : "Déposer une image sur ce cadre  ou cliquer pour parcourir vos fichiers (Formats JPG....)",
     "uploadSignFileInfo"                : "Cliquer pour ajouter une signature depuis votre poste",
     "usedInActionPage"                  : "Action sur la page d'action",
     "usedInBasketlist"                  : "Action sur la liste de résultat",
