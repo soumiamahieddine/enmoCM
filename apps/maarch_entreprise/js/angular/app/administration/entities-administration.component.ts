@@ -373,17 +373,23 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.creationMode = false;
         this.isDraggable = true;
         $j('#jstree').jstree('deselect_all');
-        for (let i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
-                $j('#jstree').jstree('select_node', this.entities[i]);
-                break;
+        if(this.currentEntity.parent_entity_id) {
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
+                    $j('#jstree').jstree('select_node', this.entities[i]);
+                    break;
+                }
             }
+        } else {
+            this.sidenav.close();
         }
     }
 
     selectParentEntity(entity_id:any) {
-        $j('#jstree').jstree('deselect_all');
-        $j('#jstree').jstree('select_node', entity_id);
+        if (this.creationMode) {
+            $j('#jstree').jstree('deselect_all');
+            $j('#jstree').jstree('select_node', entity_id);
+        }
     }
 
     removeEntity() {
@@ -398,13 +404,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             this.entities = data['entities'];
                             $j('#jstree').jstree(true).settings.core.data = this.entities;
                             $j('#jstree').jstree("refresh");
+                            this.sidenav.close();
                             this.notify.success(this.lang.entityDeleted);
-                            for (let i = 0; i < this.entities.length; i++) {
-                                if (this.entities[i].allowed == true) {
-                                    $j('#jstree').jstree('select_node', this.entities[i]);
-                                    break;
-                                }
-                            }
+                            
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -420,13 +422,8 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                         this.entities = data['entities'];
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
                         $j('#jstree').jstree("refresh");
+                        this.sidenav.close();
                         this.notify.success(this.lang.entityDeleted);
-                        for (let i = 0; i < this.entities.length; i++) {
-                            if (this.entities[i].allowed == true) {
-                                $j('#jstree').jstree('select_node', this.entities[i]);
-                                break;
-                            }
-                        }
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -449,12 +446,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         } else {
             this.currentEntity = { "entity_type": this.entityTypeList[0].id };
             $j('#jstree').jstree('deselect_all');
-            for (let i = 0; i < this.entities.length; i++) {
+            this.sidenav.open();
+            /*for (let i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].allowed == true) {
                     $j('#jstree').jstree('select_node', this.entities[i]);
                     break;
                 }
-            }
+            }*/
         }
     }
 
