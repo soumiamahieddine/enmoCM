@@ -18,17 +18,21 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
-    _search: string = '';
-    userId: string;
-    serialId: number;
-    creationMode: boolean;
 
-    user: any = {};
-    signatureModel: any = {
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+
+    serialId                        : number;
+    userId                          : string;
+    user                            : any       = {};
+    _search                         : string    = '';
+    creationMode                    : boolean;
+
+    signatureModel                  : any       = {
         base64: "",
         base64ForJs: "",
         name: "",
@@ -36,24 +40,24 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         size: 0,
         label: "",
     };
-    userAbsenceModel: any[] = [];
-    userList: any[] = [];
+    userAbsenceModel                : any[]     = [];
+    userList                        : any[]     = [];
+    selectedSignature               : number    = -1;
+    selectedSignatureLabel          : string    = "";
+    data                            : any[]     = [];
+    CurrentYear                     : number    = new Date().getFullYear();
+    currentMonth                    : number    = new Date().getMonth() + 1;
+    minDate                         : Date      = new Date();
 
-    selectedSignature: number = -1;
-    selectedSignatureLabel: string = "";
-    data: History[] = [];
-    CurrentYear: number = new Date().getFullYear();
-    currentMonth: number = new Date().getMonth() + 1;
-    minDate: Date = new Date();
-    loading: boolean = false;
+    displayedColumns    = ['event_date', 'event_type', 'info', 'remote_ip'];
+    dataSource          = new MatTableDataSource(this.data);
 
-    displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
-    dataSource = new MatTableDataSource(this.data);
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
@@ -378,7 +382,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     reassignBasketRedirection(newUser:any, basket: any) {
-
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
@@ -394,7 +397,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     delBasketRedirection(basket: any) {
-        let r = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
+        let r = confirm(this.lang.confirmAction);
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+basket.basket_id)
@@ -456,12 +459,4 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
-}
-export interface History {
-    event_date: Date;
-    event_type: string;
-    user_id: string;
-    table_name: number;
-    info: string;
-    remote_ip: string;
 }
