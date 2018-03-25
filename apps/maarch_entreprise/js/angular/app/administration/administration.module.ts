@@ -7,6 +7,7 @@ import { SortPipe }                             from '../../plugins/sorting.pipe
 
 import { MenuComponent }                        from '../menu/menu.component';
 import { MenuNavComponent }                     from '../menu/menu-nav.component';
+import { MenuTopComponent }                     from '../menu/menu-top.component';
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
@@ -48,6 +49,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
     declarations: [
         MenuComponent,
         MenuNavComponent,
+        MenuTopComponent,
         AdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,

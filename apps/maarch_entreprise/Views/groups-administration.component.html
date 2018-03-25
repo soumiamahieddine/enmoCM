@@ -7,6 +7,7 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{groups.length}} {{lang.groups}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <menu-top></menu-top>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"

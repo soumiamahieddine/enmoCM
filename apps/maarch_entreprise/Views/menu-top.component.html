@@ -1,0 +1,19 @@
+<button mat-button [matMenuTriggerFor]="menu">{{user.firstnameL | uppercase}}. {{user.lastname | uppercase}}</button>
+<mat-menu #menu="matMenu" class="headerMaarch">
+        <canvas class="header-bg" width="250" height="70" style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>
+        <i style="z-index:1;color:white;position: absolute;left: 85px;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;"></i>
+        <div class="content" style="padding-top:10px;color:white;max-height:250px;overflow-y:auto;overflow-x:hidden;">
+            <p class="text-center">{{user.firstname}} {{user.lastname | uppercase}}</p>
+            <mat-list>
+                <h3 mat-subheader>{{lang.groups}}</h3>
+                <mat-list-item *ngFor="let group of user.groups">
+                    <p mat-line style="color:white;opacity:0.5;"> {{group.group_desc}} </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>{{lang.entities}}</h3>
+                <!--<mat-list-item *ngFor="let entity of entities">
+                    <p mat-line style="color:white;opacity:0.5;"> {{entity.entity_label}} </p>
+                </mat-list-item>-->
+                </mat-list>                  
+        </div>
+</mat-menu>
