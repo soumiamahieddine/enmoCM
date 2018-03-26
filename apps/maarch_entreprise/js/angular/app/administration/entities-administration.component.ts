@@ -18,27 +18,27 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
+    
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+    dialogRef                       : MatDialogRef<any>;
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
-    dialogRef: MatDialogRef<any>;
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
 
-    coreUrl: string;
-    lang: any = LANG;
-    loading: boolean = false;
+    entities                        : any[]     = [];
+    listTemplateRoles               : any[]     = [];
+    entityTypeList                  : any[]     = [];
+    currentEntity                   : any       = {};
+    isDraggable                     : boolean   = true;
+    creationMode                    : boolean   = false;
+    listDiffModified                : boolean   = false;
+    idCircuitVisa                   : number;
+    config                          : any       = {};
 
-    entities: any[] = [];
-    listTemplateRoles: any[] = [];
-    entityTypeList: any[] = [];
-    currentEntity: any = {};
-    isDraggable: boolean = true;
-    creationMode: boolean = false;
-    listDiffModified: boolean = false;
-    idCircuitVisa: number = null;
-    config: any = {};
-
-    dataSource = new MatTableDataSource(this.currentEntity.users);
-    displayedColumns = ['firstname', 'lastname'];
+    dataSource          = new MatTableDataSource(this.currentEntity.users);
+    displayedColumns    = ['firstname', 'lastname'];
 
 
     @ViewChild('snav2') sidenav: MatSidenav;
