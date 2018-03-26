@@ -199,6 +199,7 @@ export const LANG_EN = {
     "newSignature"                      : "New signature",
     "no"                                : "No",
     "noAttachment"                      : "No attachment",
+    "noEntity"                          : "No entity",
     "noReplacement"                     : "No replacement",
     "notes"                             : "Notes",
     "notificationAdded"                 : "Notification added",

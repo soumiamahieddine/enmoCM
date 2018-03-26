@@ -214,6 +214,7 @@ export const LANG_FR = {
     "next"                              : "Suivant",
     "no"                                : "Non",
     "noAttachment"                      : "Sans pièce jointe",
+    "noEntity"                          : "Aucune entité",
     "noRecord"                          : "Aucun élément",
     "noReplacement"                     : "Aucun remplacement",
     "noResult"                          : "Aucun résultat",
