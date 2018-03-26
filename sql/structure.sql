@@ -2652,7 +2652,7 @@ CREATE TABLE message_exchange
   
   res_id_master numeric default NULL,
 
-  docserver_id character varying(32) NOT NULL,
+  docserver_id character varying(32) DEFAULT NULL,
   path character varying(255) DEFAULT NULL,
   filename character varying(255) DEFAULT NULL,
   fingerprint character varying(255) DEFAULT NULL,
