@@ -28,7 +28,8 @@ class Transfer{
         }
     }
 
-    public function transfer($target, $reference, $communicationType = 'url') {
+    public function transfer($target, $reference, $type = null)
+    {
         $adapter = '';
         $res['status'] = 0;
         $res['content'] = '';
@@ -43,7 +44,12 @@ class Transfer{
             return $res;
         }
 
-        $param = $adapter->getInformations($reference); // [0] = url, [1] = header, [2] = cookie, [3] = data
+        // [0] = url, [1] = header, [2] = cookie, [3] = data
+        if ($type) {
+            $param = $adapter->getInformations($reference, $type);
+        } else {
+            $param = $adapter->getInformations($reference);
+        }
 
         try {
             $curl = curl_init();
