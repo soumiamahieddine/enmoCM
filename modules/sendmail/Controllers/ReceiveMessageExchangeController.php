@@ -507,7 +507,7 @@ class ReceiveMessageExchangeController
         $sendMessage->send($replyObject, $messageId, 'ArchiveTransferReply');
     }
 
-    public function saveMessageExchangeReturn(RequestInterface $request, ResponseInterface $response)
+    public function saveMessageExchangeReturn(Request $request, Response $response)
     {
         if (empty($_SESSION['user']['UserId'])) {
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
