@@ -31,6 +31,8 @@ class CoreController
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+
         $aInit['scriptsToinject'] = [];
 
         $scriptsToInject =  scandir('dist');
