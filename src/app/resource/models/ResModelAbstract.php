@@ -14,6 +14,7 @@
 
 namespace Resource\models;
 
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
@@ -213,111 +214,70 @@ class ResModelAbstract
         return $aResources[0];
     }
 
+    public static function getStoredProcessLimitDate(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['admissionDate']);
 
-    // In Progress
-//    public static function getStoreProcessLimitDate(array $aArgs)
-//    {
-//        ValidatorModel::notEmpty($aArgs, ['resId']);
-//        ValidatorModel::intVal($aArgs, ['resId']);
-//        ValidatorModel::stringType($aArgs, ['admissionDate']);
-//
-//
-//
-//
-//        if (!empty($aArgs['table'])) {
-//            $table = $aArgs['table'];
-//        } else {
-//            $table = 'res_view_letterbox';
-//        }
-//        $aArgs['select'] = ['creation_date, admission_date, type_id'];
-//        $aReturn = static::select([
-//            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-//            'table'     => [$table],
-//            'where'     => ['res_id = ?'],
-//            'data'      => [$aArgs['resId']]
-//        ]);
-//        require_once('core/class/class_functions.php');
-//        $func = new \functions();
-//        if ($aReturn[0]['type_id'] <> '') {
-//            $typeId = $aReturn[0]['type_id'];
-//            $admissionDate = $aReturn[0]['admission_date'];
-//            $creationDate = $aReturn[0]['creation_date'];
-//            $aArgs['select'] = ['process_delay'];
-//            $aReturnT = static::select([
-//                'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-//                'table'     => ['mlb_doctype_ext'],
-//                'where'     => ['type_id = ?'],
-//                'data'      => [$aReturn[0]['type_id']]
-//            ]);
-//            $delay = $aReturnT[0]['process_delay'];
-//        }
-//        if ($admissionDate == '') {
-//            $dateToCompute = $creationDate;
-//        } else {
-//            $dateToCompute = $admissionDate;
-//        }
-//
-//
-//
-//
-//
-//        $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['creation_date', 'type_id']]);
-//
-//        $processDelay = 30;
-//        if (!empty($document['type_id'])) {
-//            $doctypeExt = DatabaseModel::select([
-//                'select'    => ['process_delay'],
-//                'table'     => ['mlb_doctype_ext'],
-//                'where'     => ['type_id = ?'],
-//                'data'      => [$document['type_id']]
-//            ]);
-//            $processDelay = $doctypeExt[0]['process_delay'];
-//        }
-//
-//        $defaultDate = $document['creation_date'];
-//        if (empty($document['creation_date'])) {
-//            $document['creation_date'] = date('c');
-//        }
-//
-//        $date = new \DateTime($document['creation_date']);
-//        $date->add(new \DateInterval("P{$processDelay}D"));
-//
-//        return $date->format('Y-m-d H:i:s');
-//
-//
-//
-//
-//        require_once('core/class/class_alert_engine.php');
-//        $alert_engine = new \alert_engine();
-//        if (isset($dateToCompute) && !empty($dateToCompute)) {
-//            $convertedDate = $alert_engine->dateFR2Time(
-//                str_replace(
-//                    "-",
-//                    "/",
-//                    $func->format_date_db(
-//                        $dateToCompute,
-//                        'true',
-//                        '',
-//                        'true'
-//                    )
-//                ),
-//                true
-//            );
-//
-//
-//            $date = $alert_engine->WhenOpenDay(
-//                $convertedDate,
-//                $delay,
-//                false,
-//                $aArgs['calendarType']
-//            );
-//        } else {
-//            $date = $alert_engine->date_max_treatment($delay, false);
-//        }
-//
-//        $processLimitDate = $func->dateformat($date, '-');
-//
-//        return $processLimitDate;
-//    }
+        $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['creation_date', 'type_id']]);
 
+        $processDelay = 30;
+        if (!empty($document['type_id'])) {
+            $doctypeExt = DatabaseModel::select([
+                'select'    => ['process_delay'],
+                'table'     => ['mlb_doctype_ext'],
+                'where'     => ['type_id = ?'],
+                'data'      => [$document['type_id']]
+            ]);
+            $processDelay = $doctypeExt[0]['process_delay'];
+        }
+
+        if (!empty($aArgs['admissionDate'])) {
+            $defaultDate = $aArgs['admissionDate'];
+        } elseif (!empty($document['creation_date'])) {
+            $defaultDate = $document['creation_date'];
+        } else {
+            $defaultDate = date('c');
+        }
+
+        $date = new \DateTime($defaultDate);
+
+        $calendarType = 'calendar';
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
+
+        if ($loadedXml && !empty((string)$loadedXml->FEATURES->type_calendar)) {
+            $calendarType = (string)$loadedXml->FEATURES->type_calendar;
+        }
+
+        if ($calendarType == 'workingDay') {
+            $hollidays = [
+                '01-01',
+                '01-05',
+                '08-05',
+                '14-07',
+                '15-08',
+                '01-11',
+                '11-11',
+                '25-12'
+            ];
+            $hollidays[] = date('d-m', easter_date() + 86400);
+
+            $processDelayUpdated = 1;
+            for ($i = 1; $i <= $processDelay; $i++) {
+                $tmpDate = new \DateTime($defaultDate);
+                $tmpDate->add(new \DateInterval("P{$i}D"));
+                if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
+                    ++$processDelay;
+                }
+                ++$processDelayUpdated;
+            }
+
+            $date->add(new \DateInterval("P{$processDelayUpdated}D"));
+        } else {
+            $date->add(new \DateInterval("P{$processDelay}D"));
+        }
+
+        return $date->format('Y-m-d H:i:s');
+    }
 }

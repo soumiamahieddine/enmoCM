@@ -373,6 +373,7 @@ class StoreController
         ValidatorModel::intVal($aArgs, ['resId']);
 
         $processLimitDateFound  = false;
+        $admissionDate          = null;
 
         foreach ($aArgs['data'] as $key => $value) {
             $aArgs['data'][$key]['column'] = strtolower($value['column']);
@@ -391,7 +392,7 @@ class StoreController
         }
 
         if (!$processLimitDateFound) {
-            $processLimitDate = ResExtModel::retrieveProcessLimitDate(['resId' => $aArgs['resId']]);
+            $processLimitDate = ResModel::getStoredProcessLimitDate(['resId' => $aArgs['resId'], 'admissionDate' => $admissionDate]);
 
             $aArgs['data'][] = [
                 'column'    => 'process_limit_date',
