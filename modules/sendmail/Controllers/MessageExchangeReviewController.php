@@ -31,10 +31,10 @@ class MessageExchangeReviewController
             return false;
         }
 
-        $resLetterboxData = ResModel::getById([
+        $resLetterboxData = ResModel::getOnView([
             'select'  => ['nature_id, reference_number', 'entity_label', 'res_id', 'identifier'],
-            'table'   => 'res_view_letterbox',
-            'resId'   => $aArgs['res_id'],
+            'where'   => ['res_id = ?'],
+            'data'    => [$aArgs['res_id']],
             'orderBy' => 'res_id']);
 
         if ($resLetterboxData[0]['nature_id'] == 'message_exchange' && substr($resLetterboxData[0]['reference_number'], 0, 16) == 'ArchiveTransfer_') {
