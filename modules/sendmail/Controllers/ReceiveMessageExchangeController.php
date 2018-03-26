@@ -49,13 +49,13 @@ class ReceiveMessageExchangeController
 
         $data = $request->getParams();
 
-        self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Réception du pli numérique';
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Réception du pli numérique');
         $tmpName = self::createFile(['base64' => $data['base64'], 'extension' => $data['extension'], 'size' => $data['size']]);
         if (!empty($tmpName['errors'])) {
             return $response->withStatus(400)->withJson($tmpName);
         }
-        self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Pli numérique déposé sur le serveur';
-        self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Validation du pli numérique';
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Pli numérique déposé sur le serveur');
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Validation du pli numérique');
         /********** EXTRACTION DU ZIP ET CONTROLE *******/
         $receiveMessage = new \ReceiveMessage();
         $res = $receiveMessage->receive($_SESSION['config']['tmppath'], $tmpName, 'ArchiveTransfer');
@@ -73,7 +73,7 @@ class ReceiveMessageExchangeController
         $aDefaultConfig = self::readXmlConfig();
 
         /*************** RES LETTERBOX **************/
-        self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Enregistrement du message';
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Enregistrement du message');
         $resLetterboxReturn = self::saveResLetterbox(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
 
         if (!empty($resLetterboxReturn['errors'])) {
@@ -81,7 +81,7 @@ class ReceiveMessageExchangeController
         }
 
         /*************** CONTACT **************/
-        self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Selection ou création du contact';
+        $this->addComment('['.date("d/m/Y H:i:s") . '] Selection ou création du contact');
         $contactReturn = self::saveContact(["dataObject" => $sDataObject, "defaultConfig" => $aDefaultConfig]);
 
         if ($contactReturn['returnCode'] <> 0) {
@@ -543,5 +543,12 @@ class ReceiveMessageExchangeController
         return $response->withJson([
             "messageId" => $messageId
         ]);
+    }
+
+    protected function addComment ($str) {
+        $comment = new \stdClass();
+        $comment->value = $str;
+
+        self::$aComments[] = $comment;
     }
 }
