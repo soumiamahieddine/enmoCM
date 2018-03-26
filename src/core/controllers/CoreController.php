@@ -29,6 +29,8 @@ class CoreController
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['lang'] = CoreConfigModel::getLanguage();
+        $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
         $aInit['scriptsToinject'] = [];
 
         $scriptsToInject =  scandir('dist');
@@ -47,14 +49,6 @@ class CoreController
         }
 
         return $response->withJson($aInit);
-    }
-
-    public static function getHeaderInformations(Request $request, Response $response)
-    {
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-        $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-
-        return $response->withJson($user);
     }
 
     public static function getAdministration(Request $request, Response $response)
