@@ -228,6 +228,8 @@ $app->post('/priorities', \Priority\controllers\PriorityController::class . ':cr
 $app->get('/priorities/{id}', \Priority\controllers\PriorityController::class . ':getById');
 $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . ':update');
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
+$app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
+$app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');

@@ -20,11 +20,14 @@ abstract class PriorityModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['priorities'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy']
         ]);
 
         return $aReturn;
@@ -88,6 +91,24 @@ abstract class PriorityModelAbstract
                 'working_days'      => $aArgs['working_days'],
                 'delays'            => $aArgs['delays'],
                 'default_priority'  => $aArgs['default_priority']
+            ],
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
+    public static function updateOrder(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['order']);
+
+        DatabaseModel::update([
+            'table'     => 'priorities',
+            'set'       => [
+                '"order"'  => $aArgs['order']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

@@ -57,6 +57,7 @@ define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
+define('_PRIORITY_SORT_MODIFICATION', 'Modification ordre priorités');
 define('_REPORT_MODIFICATION', 'Modification états et édition');
 define('_STATUS_ADDED', 'Statut ajouté');
 define('_STATUS_DELETED', 'Statut supprimé');

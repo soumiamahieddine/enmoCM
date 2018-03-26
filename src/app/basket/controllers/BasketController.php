@@ -180,11 +180,6 @@ class BasketController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $theBasket = BasketModel::getById(['id' => $aArgs['id'], 'select' => ['basket_order']]);
-        if (empty($theBasket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
-        }
-
         $data = $request->getParams();
 
         foreach ($data as $key => $basketToUpdate) {

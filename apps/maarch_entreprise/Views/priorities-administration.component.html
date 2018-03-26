@@ -22,6 +22,12 @@
                         {{lang.add}}
                     </p>
                 </a>
+                <a mat-list-item (click)="snav2.toggle()">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-list-ol"></mat-icon>
+                    <p mat-line>
+                        {{lang.basketsOrder}}
+                    </p>
+                </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
             <menu-app></menu-app>
@@ -93,11 +99,16 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
-
-            <mat-nav-list>
-                <h3 mat-subheader>Actions</h3>
-            </mat-nav-list>
+                     position='end' [opened]="mobileQuery.matches ? false : false">
+            <mat-list>
+                <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="prioritiesOrder">
+                    <mat-list-item disableRipple="true" *ngFor="let priority of prioritiesOrder;let i = index" title="deplacer" dnd-sortable
+                                   [sortableIndex]="i" (onDropSuccess)="updatePrioritiesOrder()">
+                        <mat-icon color="primary" mat-list-icon class="fa fa-inbox"></mat-icon>
+                        <p mat-line>{{i+1}} - {{priority.label}}</p>
+                    </mat-list-item>
+                </span>
+            </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

@@ -560,7 +560,7 @@ abstract class business_app_tools_Abstract extends Database
         $_SESSION['mail_priorities_color']      = [];
         $_SESSION['default_mail_priority']      = 0;
 
-        $priorities = \Priority\models\PriorityModel::get();
+        $priorities = \Priority\models\PriorityModel::get(['orderBy' => ['"order" NULLS LAST']]);
         $i = 0;
         foreach ($priorities as $priority) {
             $_SESSION['mail_priorities'][$i] = $priority['label'];
