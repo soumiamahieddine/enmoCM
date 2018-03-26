@@ -64,8 +64,9 @@
                                 <div class="col-sm-12">
                                     <mat-form-field>
                                         <mat-select id="parent_entity_id" name="parent_entity_id" title="{{lang.isLinkedTo}}" placeholder="{{lang.isLinkedTo}}" [(ngModel)]="currentEntity.parent_entity_id"
-                                            (change)="selectParentEntity(currentEntity.parent_entity_id)" required>
-                                            <mat-option *ngIf="entities.length == 0" value="">
+                                            (change)="selectParentEntity(currentEntity.parent_entity_id)">
+                                            <mat-option value="">
+                                                <i style="opacity:0.5;text-align:center;">- {{lang.noEntity}} -</i>
                                             </mat-option>
                                             <ng-container *ngFor="let entity of entities | sortBy : 'entity_label'">
                                                 <mat-option [value]="entity.entity_id" *ngIf="(!entity.state.disabled && entity.entity_id != currentEntity.entity_id) || currentEntity.parent_entity_id == entity.entity_id">
@@ -238,7 +239,7 @@
                                                     <p mat-line>{{template.labelToDisplay}}
                                                         <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                                     </p>
-                                                    <button *ngIf="role.id != 'dest'" matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffList(i,role.id)">
+                                                    <button matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffList(i,role.id)">
                                                         <mat-icon class="fa fa-remove"></mat-icon>
                                                     </button>
                                                 </mat-list-item>
@@ -247,15 +248,21 @@
                                     </span>
                                 </mat-list>
                             </div>
+                            <div class="form-group" *ngIf="currentEntity.entity_id">
+                                <div class="col-md-12 text-center" style="padding:10px;">
+                                    <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="!this.listDiffModified || (currentEntity.listTemplate.dest.length == 0 && currentEntity.listTemplate.cc.length > 0)">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.listDiffModified">{{lang.cancel}}</button>
+                                </div>
+                            </div>
                         </div>
                     </mat-tab>
                     <mat-tab label="{{lang.visa}}" *ngIf="!creationMode">
-                        <div class="row" style="margin:0px;">
+                        <div class="row" style="margin:0px;" id="visaCircuitContent">
                             <div class="col-md-12">
                                 <mat-form-field>
-                                    <input #autocompleteFilter type="text" placeholder="{{lang.addVisaSignUser}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                    <input #autocompleteFilter type="text"  placeholder="{{lang.addVisaSignUser}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let elem of filteredUsers | async" [value]="elem.id" (click)="addElemListModelVisa(elem)">
+                                        <mat-option *ngFor="let elem of filteredUsers | async" [value]="elem.id" (click)="addElemListModelVisa(elem);autocompleteFilter.isOpen=true">
                                             <p mat-line *ngIf="elem.type == 'user'">
                                                 <span class="col-xm-1">
                                                     <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
@@ -282,6 +289,12 @@
                                         </mat-list-item>
                                     </span>
                                 </mat-list>
+                            </div>
+                            <div class="form-group" *ngIf="currentEntity.entity_id">
+                                <div class="col-md-12 text-center" style="padding:10px;">
+                                    <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!this.listDiffModified || (currentEntity.listTemplate.dest.length == 0 && currentEntity.listTemplate.cc.length > 0)">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.listDiffModified">{{lang.cancel}}</button>
+                                </div>
                             </div>
                         </div>
                     </mat-tab>
