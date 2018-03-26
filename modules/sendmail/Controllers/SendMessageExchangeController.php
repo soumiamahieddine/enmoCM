@@ -235,7 +235,7 @@ class SendMessageExchangeController
         array_push($aReturn, $oBody);
 
         if (!empty($aArgs['notes'])) {
-            $notes     = \Note\models\NotesModel::getByResId([
+            $notes     = \Note\models\NoteModel::getByResId([
                 'select' => ['notes.id', 'notes.user_id', 'notes.date_note', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'],
                 'resId' => $aArgs['resId']
             ]);
