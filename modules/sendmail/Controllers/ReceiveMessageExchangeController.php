@@ -388,7 +388,7 @@ class ReceiveMessageExchangeController
                 array_push($dataValue, ['column' => 'coll_id',         'value' => 'letterbox_coll',                  'type' => 'string']);
 
                 array_push($dataValue, ['column' => 'doc_date',        'value' => $attachmentContent->CreatedDate,   'type' => 'date']);
-                array_push($dataValue, ['column' => 'title',           'value' => $attachmentContent->Title,         'type' => 'string']);
+                array_push($dataValue, ['column' => 'title',           'value' => $attachmentContent->Title[0],      'type' => 'string']);
 
                 $allDatas = [
                     "encodedFile" => $BinaryDataObjectInfo->Attachment->value,
