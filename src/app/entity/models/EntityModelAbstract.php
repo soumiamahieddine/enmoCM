@@ -195,8 +195,8 @@ class EntityModelAbstract
             'entityId' => $aArgs['entityId']
         ]);
 
-        if (!empty($aReturn[0]['parent_entity_id'])) {
-            $aReturn = self::getEntityRootById(['entityId' => $aReturn[0]['parent_entity_id']]);
+        if (!empty($aReturn['parent_entity_id'])) {
+            $aReturn = self::getEntityRootById(['entityId' => $aReturn['parent_entity_id']]);
         }
 
         return $aReturn;

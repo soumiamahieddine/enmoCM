@@ -404,8 +404,8 @@ class ContactModelAbstract
                     $currentContactId                     = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_v2_id_seq']);
                     $formatedDataContact['user_id']       = 'superadmin';
                     $formatedDataContact['entity_id']     = 'SUPERADMIN';
-                    $formatedDataContact['creation_date'] = 'current_timestamp';
-                    $formatedDataContact['id']            = $currentContactId;
+                    $formatedDataContact['creation_date'] = 'CURRENT_TIMESTAMP';
+                    $formatedDataContact['contact_id']    = $currentContactId;
 
                     DatabaseModel::insert([
                         'table'         => 'contacts_v2',
