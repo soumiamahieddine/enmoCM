@@ -393,8 +393,10 @@ class VisaController
             $resList[$key]['creation_date'] = date(DATE_ATOM, strtotime($resList[$key]['creation_date']));
             $resList[$key]['process_limit_date'] = (empty($resList[$key]['process_limit_date']) ? null : date(DATE_ATOM, strtotime($resList[$key]['process_limit_date'])));
             $resList[$key]['allSigned'] = ($resListForAttachments[$value['res_id']] === null ? false : $resListForAttachments[$value['res_id']]);
-            $resList[$key]['priorityColor'] = $priority['color'];
-            $resList[$key]['priorityLabel'] = $priority['label'];
+            if (!empty($priority)) {
+                $resList[$key]['priorityColor'] = $priority['color'];
+                $resList[$key]['priorityLabel'] = $priority['label'];
+            }
             unset($resList[$key]['priority'], $resList[$key]['contact_id'], $resList[$key]['address_id'], $resList[$key]['user_lastname'], $resList[$key]['user_firstname']);
         }
 

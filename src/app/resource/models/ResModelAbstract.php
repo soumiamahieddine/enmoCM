@@ -234,7 +234,11 @@ class ResModelAbstract
         }
 
         if (!empty($aArgs['admissionDate'])) {
-            $defaultDate = $aArgs['admissionDate'];
+            if (strtotime($aArgs['admissionDate']) === false) {
+                $defaultDate = date('c');
+            } else {
+                $defaultDate = $aArgs['admissionDate'];
+            }
         } elseif (!empty($document['creation_date'])) {
             $defaultDate = $document['creation_date'];
         } else {

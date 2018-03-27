@@ -23,7 +23,7 @@ CREATE TABLE priorities
   working_days boolean NOT NULL,
   delays integer,
   default_priority boolean NOT NULL DEFAULT FALSE,
-  order integer,
+  "order" integer,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
