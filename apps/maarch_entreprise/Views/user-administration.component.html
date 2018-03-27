@@ -274,7 +274,7 @@
                                 [disabled]="basket.userToDisplay != ''"></mat-slide-toggle>
                         </mat-icon>
                         <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
-                            <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>
+                            <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                         </h4>
                         <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
                             <mat-form-field *ngIf="basket.allowed" floatLabel="never">
