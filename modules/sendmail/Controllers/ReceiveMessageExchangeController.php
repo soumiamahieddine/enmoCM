@@ -288,7 +288,7 @@ class ReceiveMessageExchangeController
             $contact['contactId'] = $contactAlreadyCreated['contact_id'];
             $contact['addressId'] = $contactAlreadyCreated['ca_id'];
         } else {
-            $contact = ContactModel::CreateContactM2M($aDataContact, $transferringAgencyMetadata->Communication[0]->value);
+            $contact = ContactModel::CreateContactM2M(['data' => $aDataContact, 'contactCommunication' => $transferringAgencyMetadata->Communication[0]->value]);
         }
         $contactCommunicationExisted = ContactModel::getContactCommunication([
             "contactId" => $contact['contactId']
@@ -545,7 +545,8 @@ class ReceiveMessageExchangeController
         ]);
     }
 
-    protected function addComment ($str) {
+    protected function addComment($str)
+    {
         $comment = new \stdClass();
         $comment->value = $str;
 

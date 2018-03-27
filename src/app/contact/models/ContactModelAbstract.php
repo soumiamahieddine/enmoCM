@@ -14,7 +14,6 @@
 
 namespace Contact\models;
 
-
 use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -55,7 +54,8 @@ class ContactModelAbstract
         return $aReturn;
     }
 
-    public static function getContactFullLabel(array $aArgs = []){
+    public static function getContactFullLabel(array $aArgs = [])
+    {
         ValidatorModel::notEmpty($aArgs, ['addressId']);
         ValidatorModel::intVal($aArgs, ['addressId']);
 
@@ -71,7 +71,7 @@ class ContactModelAbstract
             $contactName = strtoupper($fullAddress['contact_lastname']) . ' ' . $fullAddress['contact_firstname'] . ' ';
             if (!empty($fullAddress['society'])) {
                 $contactName .= '(' . $fullAddress['society'] . ') ';
-            }                        
+            }
         }
         if (!empty($fullAddress['external_contact_id'])) {
             $contactName .= ' - <b>' . $fullAddress['external_contact_id'] . '</b> ';
@@ -91,7 +91,8 @@ class ContactModelAbstract
         return $contactName;
     }
 
-    public static function getContactCommunication(array $aArgs = []){
+    public static function getContactCommunication(array $aArgs = [])
+    {
         ValidatorModel::notEmpty($aArgs, ['contactId']);
         ValidatorModel::intVal($aArgs, ['contactId']);
 
@@ -102,15 +103,15 @@ class ContactModelAbstract
             'data'      => [$aArgs['contactId']],
         ]);
 
-        if(empty($aReturn)){
+        if (empty($aReturn)) {
             return "";
         } else {
             return $aReturn[0];
         }
-        
     }
 
-    public static function getContactIdByCommunicationValue(array $aArgs = []){
+    public static function getContactIdByCommunicationValue(array $aArgs = [])
+    {
         ValidatorModel::notEmpty($aArgs, ['communicationValue']);
 
         $aReturn = DatabaseModel::select([
@@ -120,15 +121,15 @@ class ContactModelAbstract
             'data'      => [$aArgs['communicationValue']],
         ]);
 
-        if(empty($aReturn)){
+        if (empty($aReturn)) {
             return "";
         } else {
             return $aReturn[0];
         }
-        
     }
 
-    public static function getAddressByExternalContactId(array $aArgs = []){
+    public static function getAddressByExternalContactId(array $aArgs = [])
+    {
         ValidatorModel::notEmpty($aArgs, ['externalContactId']);
         $aReturn = DatabaseModel::select([
             'select'    => ['*'],
@@ -137,15 +138,15 @@ class ContactModelAbstract
             'data'      => [$aArgs['externalContactId']],
         ]);
 
-        if(empty($aReturn)){
+        if (empty($aReturn)) {
             return "";
         } else {
             return $aReturn[0];
         }
-        
     }
 
-    public static function createContactCommunication(array $aArgs = []){
+    public static function createContactCommunication(array $aArgs = [])
+    {
         ValidatorModel::notEmpty($aArgs, ['contactId', 'type', 'value']);
         ValidatorModel::intVal($aArgs, ['contactId']);
 
@@ -159,7 +160,6 @@ class ContactModelAbstract
         ]);
 
         return $aReturn;
-        
     }
 
     public static function getLabelledContactWithAddress(array $aArgs)
@@ -346,36 +346,34 @@ class ContactModelAbstract
         return $aReturn[0];
     }
 
-    public static function CreateContactM2M($data, $contactCommunication){
-        $func               = new functions();
-        $data               = $func->object2array($data);
-        $db                 = new Database();
-        $queryContactFields = '(';
-        $queryContactValues = '(';
-        $queryAddressFields = '(';
-        $queryAddressValues = '(';
-        $currentContactId   = "0";
-        $currentAddressId   = "0";
+    public static function CreateContactM2M(array $aArgs = [])
+    {
+        ValidatorModel::notEmpty($aArgs, ['data', 'contactCommunication']);
 
-        $countData = count($data);
+        $currentContactId    = "0";
+        $currentAddressId    = "0";
+        $formatedDataContact = [];
+        $formatedDataAddress = [];
 
-        for ($i=0;$i<$countData;$i++) {
-
+        foreach ($aArgs['data'] as $key => $value) {
             // On regarde si le contact existe déjà
-            if (strtoupper($data[$i]['column']) == strtoupper('external_contact_id') && ($data[$i]['value'] <> "" || $data[$i]['value'] <> null)) {
+            if (strtoupper($value['column']) == strtoupper('external_contact_id') && ($value['value'] <> "" || $value['value'] <> null)) {
                 try {
+                    $res = DatabaseModel::select([
+                        'select' => ['contact_id', 'ca_id'],
+                        'table'  => ['view_contacts'],
+                        'where'  => ['external_contact_id = ?', 'enabled = ?'],
+                        'data'   => [$value['value'], 'Y'],
+                    ]);
 
-                    $stmt = $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE external_contact_id = '" . $data[$i]['value'] . "' and enabled = 'Y'");
-                    $res = $stmt->fetchObject();
-
-                    if ($res->ca_id <> "") {
-                        $contact_exists = true;
-                        $currentContactId = $res->contact_id;
-                        $currentAddressId = $res->ca_id;
+                    $res = $res[0];
+                    if (!empty($res['ca_id'])) {
+                        $contact_exists   = true;
+                        $currentContactId = $res['contact_id'];
+                        $currentAddressId = $res['ca_id'];
                     } else {
                         $contact_exists = false;
                     }
-
                 } catch (Exception $e) {
                     $returnResArray = array(
                         'returnCode'  => (int) -1,
@@ -383,51 +381,37 @@ class ContactModelAbstract
                         'addressId'   => '',
                         'contactInfo' => '',
                         'error'       => 'unknown error: ' . $e->getMessage(),
-                    );  
+                    );
                     return $returnResArray;
                 }
             }
 
-            $data[$i]['column'] = strtolower($data[$i]['column']);
+            $aArgs['data'][$key]['column'] = strtolower($value['column']);
 
-            if ($data[$i]['table'] == "contacts_v2") {
-                //COLUMN
-                $queryContactFields .= $data[$i]['column'] . ',';
-                //VALUE
-                if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
-                    $queryContactValues .= "'" . $data[$i]['value'] . "',";
-                } else {
-                    $queryContactValues .= $data[$i]['value'] . ",";
-                }
-            } else if ($data[$i]['table'] == "contact_addresses") {
-                //COLUMN
-                $queryAddressFields .= $data[$i]['column'] . ',';
-                //VALUE
-                if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
-                    $queryAddressValues .= "'" . $data[$i]['value'] . "',";
-                } else {
-                    $queryAddressValues .= $data[$i]['value'] . ",";
-                }
+            if ($value['table'] == "contacts_v2") {
+                $formatedDataContact[$value['column']] = $value['value'];
+            } elseif ($value['table'] == "contact_addresses") {
+                $formatedDataAddress[$value['column']] = $value['value'];
             }
         }
 
-        $queryContactFields .= "user_id, entity_id, creation_date)";
-        $queryContactValues .= "'superadmin', 'SUPERADMIN', current_timestamp)";
-
-        // Si le contact existe pas, on le créé
+        // Si le contact n'existe pas, on le créé
         if (!$contact_exists) {
-
-            $contactInfo = self::getContactIdByCommunicationValue(['communicationValue' => $contactCommunication]);
-            if(!empty($contactInfo)){
+            $contactInfo = self::getContactIdByCommunicationValue(['communicationValue' => $aArgs['contactCommunication']]);
+            if (!empty($contactInfo)) {
                 $currentContactId = $contactInfo['contact_id'];
             } else {
                 try {
-                    $queryContact = " INSERT INTO contacts_v2 " . $queryContactFields
-                       . ' values ' . $queryContactValues ;
+                    $currentContactId                     = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_v2_id_seq']);
+                    $formatedDataContact['user_id']       = 'superadmin';
+                    $formatedDataContact['entity_id']     = 'SUPERADMIN';
+                    $formatedDataContact['creation_date'] = 'current_timestamp';
+                    $formatedDataContact['id']            = $currentContactId;
 
-                    $db->query($queryContact);
-
-                    $currentContactId = $db->lastInsertId('contact_v2_id_seq');
+                    DatabaseModel::insert([
+                        'table'         => 'contacts_v2',
+                        'columnsValues' => $formatedDataContact
+                    ]);
                 } catch (Exception $e) {
                     $returnResArray = array(
                         'returnCode'  => (int) -1,
@@ -441,14 +425,16 @@ class ContactModelAbstract
                 }
             }
             try {
-                $queryAddressFields .= "contact_id, user_id, entity_id)";
-                $queryAddressValues .=  $currentContactId . ", 'superadmin', 'SUPERADMIN')";
+                $currentAddressId                  = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_addresses_id_seq']);
+                $formatedDataAddress['user_id']    = 'superadmin';
+                $formatedDataAddress['entity_id']  = 'SUPERADMIN';
+                $formatedDataAddress['contact_id'] = $currentContactId;
+                $formatedDataAddress['id']         = $currentAddressId;
 
-                $queryAddress = " INSERT INTO contact_addresses " . $queryAddressFields
-                       . ' values ' . $queryAddressValues ;
-
-                $db->query($queryAddress);
-                $currentAddressId = $db->lastInsertId('contact_addresses_id_seq');
+                DatabaseModel::insert([
+                        'table'         => 'contact_addresses',
+                        'columnsValues' => $formatedDataAddress
+                    ]);
             } catch (Exception $e) {
                 $returnResArray = array(
                     'returnCode'  => (int) -1,
@@ -464,23 +450,21 @@ class ContactModelAbstract
                 'returnCode'  => (int) 0,
                 'contactId'   => $currentContactId,
                 'addressId'   => $currentAddressId,
-                'contactInfo' => 'contact created and attached to doc ... '.$queryContactValues,
+                'contactInfo' => 'contact created and attached to doc ... ',
                 'error'       => '',
             );
             
             return $returnResArray;
-
-        }else{
+        } else {
             $returnResArray = array(
                 'returnCode'  => (int) 0,
                 'contactId'   => $currentContactId,
                 'addressId'   => $currentAddressId,
-                'contactInfo' => 'contact already exist, attached to doc ... '.$queryContactValues,
+                'contactInfo' => 'contact already exist, attached to doc ... ',
                 'error'       => '',
             );
             
             return $returnResArray;
         }
     }
-
 }
