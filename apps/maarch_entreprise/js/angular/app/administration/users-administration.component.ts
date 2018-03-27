@@ -246,7 +246,8 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     }
 }
 @Component({
-    templateUrl: "../../../../Views/users-administration-redirect-modal.component.html"
+    templateUrl: "../../../../Views/users-administration-redirect-modal.component.html",
+    styles: [".mat-dialog-content{height:260px;max-height: 65vh;}"]
 })
 export class UsersAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
