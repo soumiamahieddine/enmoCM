@@ -39,6 +39,88 @@ class ContactModelAbstract
         return $aContact[0];
     }
 
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['firstname', 'lastname', 'contactType', 'isCorporatePerson', 'userId', 'entityId']);
+        ValidatorModel::intVal($aArgs, ['contactType']);
+        ValidatorModel::stringType($aArgs, [
+            'firstname', 'lastname', 'isCorporatePerson', 'society',
+            'societyShort', 'title', 'function', 'otherData', 'userId', 'entityId'
+        ]);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_v2_id_seq']);
+
+        DatabaseModel::insert([
+            'table'         => 'contacts_v2',
+            'columnsValues' => [
+                'contact_id'            => $nextSequenceId,
+                'contact_type'          => $aArgs['contactType'],
+                'is_corporate_person'   => $aArgs['isCorporatePerson'],
+                'society'               => $aArgs['society'],
+                'society_short'         => $aArgs['societyShort'],
+                'firstname'             => $aArgs['firstname'],
+                'lastname'              => $aArgs['lastname'],
+                'title'                 => $aArgs['title'],
+                'function'              => $aArgs['function'],
+                'other_data'            => $aArgs['otherData'],
+                'user_id'               => $aArgs['userId'],
+                'entity_id'             => $aArgs['entityId'],
+                'creation_date'         => 'CURRENT_TIMESTAMP',
+                'enabled'               => 'Y'
+
+            ]
+        ]);
+
+        return $nextSequenceId;
+    }
+
+    public static function createAddress(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contactId', 'contactPurposeId', 'userId', 'entityId', 'isPrivate', 'email']);
+        ValidatorModel::intVal($aArgs, ['contactId', 'contactPurposeId']);
+        ValidatorModel::stringType($aArgs, [
+            'departement', 'addressFirstname', 'addressLastname', 'addressTitle', 'addressFunction', 'occupancy', 'addressNum', 'addressStreet', 'addressComplement',
+            'addressTown', 'addressZip', 'addressCountry', 'phone', 'email', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
+            'userId', 'entityId', 'isPrivate'
+        ]);
+
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_addresses_id_seq']);
+
+        DatabaseModel::insert([
+            'table'         => 'contact_addresses',
+            'columnsValues' => [
+                'id'                    => $nextSequenceId,
+                'contact_id'            => $aArgs['contactId'],
+                'contact_purpose_id'    => $aArgs['contactPurposeId'],
+                'departement'           => $aArgs['departement'],
+                'firstname'             => $aArgs['addressFirstname'],
+                'lastname'              => $aArgs['addressLastname'],
+                'title'                 => $aArgs['addressTitle'],
+                'function'              => $aArgs['addressFunction'],
+                'occupancy'             => $aArgs['occupancy'],
+                'address_num'           => $aArgs['addressNum'],
+                'address_street'        => $aArgs['addressStreet'],
+                'address_complement'    => $aArgs['addressComplement'],
+                'address_town'          => $aArgs['addressTown'],
+                'address_postal_code'   => $aArgs['addressZip'],
+                'address_country'       => $aArgs['addressCountry'],
+                'phone'                 => $aArgs['phone'],
+                'email'                 => $aArgs['email'],
+                'website'               => $aArgs['website'],
+                'salutation_header'     => $aArgs['salutationHeader'],
+                'salutation_footer'     => $aArgs['salutationFooter'],
+                'other_data'            => $aArgs['otherData'],
+                'user_id'               => $aArgs['userId'],
+                'entity_id'             => $aArgs['entityId'],
+                'is_private'            => $aArgs['isPrivate'],
+                'enabled'               => 'Y'
+
+            ]
+        ]);
+
+        return $nextSequenceId;
+    }
+
     public static function getFullAddressById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['addressId']);
@@ -229,89 +311,6 @@ class ContactModelAbstract
         }
     }
 
-
-    public static function create(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['firstname', 'lastname', 'contactType', 'isCorporatePerson', 'userId', 'entityId']);
-        ValidatorModel::intVal($aArgs, ['contactType']);
-        ValidatorModel::stringType($aArgs, [
-            'firstname', 'lastname', 'isCorporatePerson', 'society',
-            'societyShort', 'title', 'function', 'otherData', 'userId', 'entityId'
-        ]);
-
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_v2_id_seq']);
-
-        DatabaseModel::insert([
-            'table'         => 'contacts_v2',
-            'columnsValues' => [
-                'contact_id'            => $nextSequenceId,
-                'contact_type'          => $aArgs['contactType'],
-                'is_corporate_person'   => $aArgs['isCorporatePerson'],
-                'society'               => $aArgs['society'],
-                'society_short'         => $aArgs['societyShort'],
-                'firstname'             => $aArgs['firstname'],
-                'lastname'              => $aArgs['lastname'],
-                'title'                 => $aArgs['title'],
-                'function'              => $aArgs['function'],
-                'other_data'            => $aArgs['otherData'],
-                'user_id'               => $aArgs['userId'],
-                'entity_id'             => $aArgs['entityId'],
-                'creation_date'         => 'CURRENT_TIMESTAMP',
-                'enabled'               => 'Y'
-
-            ]
-        ]);
-
-        return $nextSequenceId;
-    }
-
-    public static function createAddress(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contactId', 'contactPurposeId', 'userId', 'entityId', 'isPrivate', 'email']);
-        ValidatorModel::intVal($aArgs, ['contactId', 'contactPurposeId']);
-        ValidatorModel::stringType($aArgs, [
-            'departement', 'addressFirstname', 'addressLastname', 'addressTitle', 'addressFunction', 'occupancy', 'addressNum', 'addressStreet', 'addressComplement',
-            'addressTown', 'addressZip', 'addressCountry', 'phone', 'email', 'website', 'salutationHeader', 'salutationFooter', 'addressOtherData',
-            'userId', 'entityId', 'isPrivate'
-        ]);
-
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contact_addresses_id_seq']);
-
-        DatabaseModel::insert([
-            'table'         => 'contact_addresses',
-            'columnsValues' => [
-                'id'                    => $nextSequenceId,
-                'contact_id'            => $aArgs['contactId'],
-                'contact_purpose_id'    => $aArgs['contactPurposeId'],
-                'departement'           => $aArgs['departement'],
-                'firstname'             => $aArgs['addressFirstname'],
-                'lastname'              => $aArgs['addressLastname'],
-                'title'                 => $aArgs['addressTitle'],
-                'function'              => $aArgs['addressFunction'],
-                'occupancy'             => $aArgs['occupancy'],
-                'address_num'           => $aArgs['addressNum'],
-                'address_street'        => $aArgs['addressStreet'],
-                'address_complement'    => $aArgs['addressComplement'],
-                'address_town'          => $aArgs['addressTown'],
-                'address_postal_code'   => $aArgs['addressZip'],
-                'address_country'       => $aArgs['addressCountry'],
-                'phone'                 => $aArgs['phone'],
-                'email'                 => $aArgs['email'],
-                'website'               => $aArgs['website'],
-                'salutation_header'     => $aArgs['salutationHeader'],
-                'salutation_footer'     => $aArgs['salutationFooter'],
-                'other_data'            => $aArgs['otherData'],
-                'user_id'               => $aArgs['userId'],
-                'entity_id'             => $aArgs['entityId'],
-                'is_private'            => $aArgs['isPrivate'],
-                'enabled'               => 'Y'
-
-            ]
-        ]);
-
-        return $nextSequenceId;
-    }
-
     public static function getByAddressId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['addressId']);
@@ -374,14 +373,14 @@ class ContactModelAbstract
                     } else {
                         $contact_exists = false;
                     }
-                } catch (Exception $e) {
-                    $returnResArray = array(
+                } catch (\Exception $e) {
+                    $returnResArray = [
                         'returnCode'  => (int) -1,
                         'contactId'   => '',
                         'addressId'   => '',
                         'contactInfo' => '',
-                        'error'       => 'unknown error: ' . $e->getMessage(),
-                    );
+                        'error'       => 'unknown error: ' . $e->getMessage()
+                    ];
                     return $returnResArray;
                 }
             }
@@ -412,7 +411,7 @@ class ContactModelAbstract
                         'table'         => 'contacts_v2',
                         'columnsValues' => $formatedDataContact
                     ]);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $returnResArray = array(
                         'returnCode'  => (int) -1,
                         'contactId'   => 'ERROR',
@@ -435,7 +434,7 @@ class ContactModelAbstract
                         'table'         => 'contact_addresses',
                         'columnsValues' => $formatedDataAddress
                     ]);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $returnResArray = array(
                     'returnCode'  => (int) -1,
                     'contactId'   => $currentContactId,

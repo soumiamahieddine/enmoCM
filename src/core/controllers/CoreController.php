@@ -21,6 +21,8 @@ use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use User\models\UserModel;
 
+require_once 'core/class/Url.php';
+
 class CoreController
 {
     public function initialize(Request $request, Response $response)
