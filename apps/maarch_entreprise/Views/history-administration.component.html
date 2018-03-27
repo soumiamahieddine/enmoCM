@@ -61,7 +61,7 @@
                 <div class="row">
                     <div class="col-sm-6" style="padding-top:10px;">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()">
+                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()" (focus)="pickerStart.open()">
                             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                             <mat-datepicker #pickerStart touchUi="true" [startAt]="startDate"></mat-datepicker>
                         </mat-form-field>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-sm-6" style="padding-top:10px;">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()">
+                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()" (focus)="pickerEnd.open()">
                             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                             <mat-datepicker #pickerEnd touchUi="true" [startAt]="endDate"></mat-datepicker>
                         </mat-form-field>
