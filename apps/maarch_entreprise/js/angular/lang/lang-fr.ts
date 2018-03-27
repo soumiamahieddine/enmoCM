@@ -184,6 +184,7 @@ export const LANG_FR = {
     "last"                              : "dernier",
     "lastname"                          : "Nom",
     "life_cycle"                        : "Cycle de vie",
+    "limitDataReached"                  : "Vous avez atteint la limite d'affichage (<b>50000 entrées</b>), veuillez affiner votre <b>plage de dates</b>",
     "linkGroup"                         : "Associer un groupe",
     "listTemplatesRolesUpdated"         : "Rôles modifiés",
     "logout"                            : "Se déconnecter",

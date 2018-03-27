@@ -21,6 +21,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
+                <div class="alert alert-warning" role="alert" [innerHTML]="lang.limitDataReached" *ngIf="data.length == 50000"></div>
                 <div class="row">
                     <div class="col-md-6 col-xs-6">
                         <mat-form-field>

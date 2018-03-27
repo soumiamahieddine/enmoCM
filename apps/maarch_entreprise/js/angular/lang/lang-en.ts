@@ -170,6 +170,7 @@ export const LANG_EN = {
     "label"                             : "Label",
     "lastname"                          : "Lastname",
     "life_cycle"                        : "Life cycle",
+    "limitDataReached"                  : "You have reached max display datas (<b>50000 datas</b>), refine your <b>date range</b>",
     "linkGroup"                         : "Link a group",
     "listTemplatesRolesUpdated"         : "Roles updated",
     "logout"                            : "Logout",
