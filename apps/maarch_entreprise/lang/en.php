@@ -93,7 +93,7 @@ if (!defined('_VIEW_HISTORY_BATCH')) {
     define('_VIEW_HISTORY_BATCH', 'Batch history');
 }
 if (!defined('_VIEW_HISTORY_DESC')) {
-    define('_VIEW_HISTORY_DESC', 'Read the events history linked to the utilisation of Maarch GED.');
+    define('_VIEW_HISTORY_DESC', 'Read the events history linked to the utilisation of Maarch.');
 }
 if (!defined('_VIEW_FULL_HISTORY_DESC')) {
     define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the utilisation of Maarch GED.');
