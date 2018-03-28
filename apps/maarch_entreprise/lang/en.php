@@ -4927,7 +4927,7 @@ if (!defined('_ADMIN_UPDATE_CONTROL')) {
     define('_ADMIN_UPDATE_CONTROL', 'Verify update');
 }
 if (!defined('_ADMIN_UPDATE_CONTROL_DESC')) {
-    define('_ADMIN_UPDATE_CONTROL_DESC', 'Verify update');
+    define('_ADMIN_UPDATE_CONTROL_DESC', 'Check new tags of Maarch Courrier and update application in latest tag.');
 }
 if (!defined('_YOUR_VERSION')) {
     define('_YOUR_VERSION', 'Your version');
