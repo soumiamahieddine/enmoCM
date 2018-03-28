@@ -69,7 +69,7 @@ if (!defined('_MANAGE_ENTITIES')) {
     define('_MANAGE_ENTITIES', 'Manage the departments');
 }
 if (!defined('_MANAGE_ENTITIES_DESC')) {
-    define('_MANAGE_ENTITIES_DESC', 'Administer the departments, ...');
+    define('_MANAGE_ENTITIES_DESC', 'Manage your organization (poles,services, etc.). Also diffusion models and visa circuit linked to services.');
 }
 if (!defined('_ENTITY_MISSING')) {
     define('_ENTITY_MISSING', "This department doesn't exist");
