@@ -3,8 +3,8 @@
 require_once __DIR__. DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Transfer.php';
 require_once __DIR__. DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'RequestSeda.php';
 
-class AdapterWS{
-
+class AdapterWS
+{
     private $db;
     public function __construct()
     {

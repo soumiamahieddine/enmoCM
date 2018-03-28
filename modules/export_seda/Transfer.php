@@ -2,8 +2,10 @@
 
 require_once __DIR__ . '/AdapterMaarchRM.php';
 require_once __DIR__ . '/AdapterMaarchCourrier.php';
-class Transfer{
-    public function __construct(){
+class Transfer
+{
+    public function __construct()
+    {
         $getXml = false;
         $path = '';
         if (file_exists(
@@ -17,7 +19,7 @@ class Transfer{
                 . DIRECTORY_SEPARATOR . 'export_seda'. DIRECTORY_SEPARATOR . 'xml'
                 . DIRECTORY_SEPARATOR . 'config.xml';
             $getXml = true;
-        } else if (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'export_seda'.  DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'config.xml')) {
+        } elseif (file_exists($_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'export_seda'.  DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'config.xml')) {
             $path = $_SESSION['config']['corepath'] . 'modules' . DIRECTORY_SEPARATOR . 'export_seda'
                 . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'config.xml';
             $getXml = true;
@@ -60,7 +62,7 @@ class Transfer{
             curl_setopt($curl, CURLOPT_HTTPHEADER, $param[1]);
             curl_setopt($curl, CURLOPT_COOKIE, $param[2]);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $param[3]);
-            curl_setopt($curl, CURLOPT_FAILONERROR, true);
+            curl_setopt($curl, CURLOPT_FAILONERROR, false);
 
             if (empty($this->xml->CONFIG->certificateSSL)) {
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -92,14 +94,13 @@ class Transfer{
             $exec = curl_exec($curl);
             $data = json_decode($exec);
 
-            if (!$data) {
+            if (!$data || !empty($data->errors)) {
                 $res['status'] = 1;
                 if (curl_error($curl)) {
                     $res['content'] = curl_error($curl);
                 } else {
-                    $res['content'] = $exec;
+                    $res['content'] = $data->errors;
                 }
-
             } else {
                 $res['content'] = $data;
             }
