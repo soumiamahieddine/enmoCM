@@ -391,15 +391,5 @@ class BasketControllerTest extends TestCase
 
         $this->assertInternalType('array', $responseBody->baskets);
         $this->assertSame(self::$id, $responseBody->baskets[0]->basket_id);
-
-	// Errors
-        $aArgs = self::$baskets;
-
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => 'GAZGAZ']);
-        $responseBody   = json_decode((string)$response->getBody());
-
-        $this->assertSame('Basket not found', $responseBody->errors);
     }
 }
