@@ -121,20 +121,21 @@
                             </div>
                         </form>
                     </mat-tab>
-                    <mat-tab *ngIf="!creationMode" label="Groupe(s)">
+                    <mat-tab *ngIf="!creationMode" label="{{lang.groups}}">
                         <mat-nav-list>
                             <mat-list-item *ngFor="let group of user.allGroups" disableRipple="true">
                                 <mat-slide-toggle id="{{group.group_id}}" color="primary" [checked]="group.disabled == true" (change)="toggleGroup(group)">{{group.group_desc}}</mat-slide-toggle>
                             </mat-list-item>
                         </mat-nav-list>
                     </mat-tab>
-                    <mat-tab *ngIf="!creationMode" label="Entité(s)">
+                    <mat-tab *ngIf="!creationMode" label="{{lang.entities}}">
                         <mat-form-field>
-                            <input matInput id="jstree_search" type="text" placeholder="Rechercher une entité">
+                            <input matInput id="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                            <mat-hint>{{lang.linkEntityToUserInfo}}</mat-hint>
                         </mat-form-field>
                         <div id="jstree"></div>
                     </mat-tab>
-                    <mat-tab *ngIf="!creationMode" label="Signature(s)">
+                    <mat-tab *ngIf="!creationMode" label="{{lang.signatures}}">
                         <div dnd-droppable matTooltip="{{lang.uploadSignFileInfo}}" (click)="clickOnUploader('uploadSignFile')" [class.dndFileHighlighted]="highlightMe"
                             (dragover)="highlightMe=true" (dragleave)="highlightMe=false" (onDropSuccess)="test($event);highlightMe=false;"
                             class="dndFile">
