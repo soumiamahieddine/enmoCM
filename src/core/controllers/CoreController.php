@@ -39,14 +39,14 @@ class CoreController
 
         $scriptsToInject =  scandir('dist');
         foreach ($scriptsToInject as $key => $value) {
-            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false) {
+            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
                 if (strstr($value, '.js.map') === false) {
                     $aInit['scriptsToinject'][] = $value;
                 }
             }
         }
 
-        if (!empty($aInit['scriptsToinject'][2]) && strstr($aInit['scriptsToinject'][2], 'vendor.') !== false) {
+        if (!empty($aInit['scriptsToinject'][3]) && strstr($aInit['scriptsToinject'][3], 'vendor.') !== false) {
             $tmp = $aInit['scriptsToinject'][1];
             $aInit['scriptsToinject'][1] = $aInit['scriptsToinject'][2];
             $aInit['scriptsToinject'][2] = $tmp;

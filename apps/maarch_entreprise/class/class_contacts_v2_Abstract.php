@@ -470,7 +470,8 @@ abstract class contacts_v2_Abstract extends Database
     public function formcontact($mode,$id = "", $admin = true, $iframe = false)
     {
         $db = new Database();
-        $displayValue = 'table-row';
+        $display_value = 'table-row';
+
         $func = new functions();
         $state = true;
         if(!isset($_SESSION['m_admin']['contact']))
@@ -1094,7 +1095,7 @@ abstract class contacts_v2_Abstract extends Database
     public function formaddress($mode,$id = "", $admin = true, $iframe = "")
     {
         $db = new Database();
-        $displayValue = 'table-row';
+        $display_value = 'table-row';
         $func = new functions();
         $state = true;
         if(!isset($_SESSION['m_admin']['address']) && !isset($_SESSION['m_admin']['contact']))
