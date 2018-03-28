@@ -604,7 +604,7 @@ abstract class contacts_v2_Abstract extends Database
                     <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
                     <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
                 <table id="frmcontact_table">
-                    <tr>
+<!--                     <tr>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
                             <input type="radio"  class="check" name="is_external" value="N" <?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_external_contact( false, '<?php functions::xecho($display_value);?>')" id="external_no"><span onclick="$('external_no').click();" onmouseover="this.style.cursor='pointer';"><?php echo _IS_INTERNAL_CONTACT;?></span>
@@ -617,7 +617,7 @@ abstract class contacts_v2_Abstract extends Database
                         <td><label for="searchDirectory"><?php echo _SEARCH_DIRECTORY;?> : </label></td>
                         <td class="indexing_field"><input name="searchDirectory" type="text" onkeyup="this.value=this.value.toUpperCase()" id="lastname" value=""/></td>
                         <td>&nbsp;</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
@@ -2370,7 +2370,7 @@ abstract class contacts_v2_Abstract extends Database
                         <td width="45%" class="indexing_field" align="left"><textarea disabled class="readonly" name="comp_data"   id="comp_data"><?php if(isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){functions::xecho($func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA'])); }?></textarea></td>
                         <td width="5%">&nbsp;</td>
                     </tr>
-                    <?php if($_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] == 'Y'){?>
+                    <?php if(!empty($_SESSION['m_admin']['communication']['VALUE'])){?>
                         <tr>
                             <td width="50%"><label><?php echo _COMMUNICATION_TYPE;?></label>: </td>
                             <td width="45%" class="indexing_field" align="left"><textarea disabled name="is_external_contact_id" id="is_external_contact_id"><?php if(isset($_SESSION['m_admin']['communication']['VALUE'])){functions::xecho($func->show_str($_SESSION['m_admin']['communication']['VALUE'])); }?></textarea></td>
