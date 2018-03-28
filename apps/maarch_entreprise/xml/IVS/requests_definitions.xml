@@ -10,30 +10,6 @@
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="index" />
 
     <!-- Admin user  -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_users_update" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="users_management_controler"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="check_group"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="manage_group"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_usergroups_ids" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="remove_group"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_usergroups_ids" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="set_primary_group"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_list_by_name"/>
@@ -42,11 +18,6 @@
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
       <parameter name="admin" value="users"/>
       <parameter name="page" value="users_list_by_name_search"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="user_update" >
-      <parameter name="admin" value="users"/>
-      <parameter name="page" value="user_modif"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
 
@@ -275,82 +246,6 @@
       <parameter name="page" value="docservers_management_controler"/>
       <parameter name="display" value="true"/>
       <parameter name="id"/>
-    </requestDefinition>
-
-    <!-- Admin groups -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="val_integer" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="add_grant"/>
-      <parameter name="display" value="true"/>
-      <parameter name="val"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="check_access"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="groups_list_by_name"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition> 
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_form_values" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="manage_access"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="security" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="remove_access"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_groups" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="usergroups_management_controler"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
-      <parameter name="admin" value="groups"/>
-      <parameter name="page" value="usergroups_management_controler"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition> 
-
-    <!-- Admin history -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_history" >
-      <parameter name="admin" value="history"/>
-      <parameter name="page" value="history"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_history_batch" >
-      <parameter name="admin" value="history_batch"/>
-      <parameter name="page" value="history_batch"/>
-    </requestDefinition>
-
-    <!-- Admin parameters -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_parameters" >
-      <parameter name="admin" value="parameter"/>
-      <parameter name="page" value="admin_parameter_save"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
-      <parameter name="admin" value="parameter"/>
-      <parameter name="page" value="admin_parameter"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
-
-    <!-- Admin reopen -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_reopen" >
-      <parameter name="admin" value="reopen_mail"/>
-      <parameter name="page" value="reopen_mail_db"/>
-      <parameter name="display" value="true"/>
     </requestDefinition>
 
     <!-- indexing_searching  -->
