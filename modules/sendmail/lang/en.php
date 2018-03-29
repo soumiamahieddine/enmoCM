@@ -178,8 +178,8 @@ if (!defined("_REPLY_RESPONSE_SENT"))
     define("_REPLY_RESPONSE_SENT", "Reply sent on");
 if (!defined("_M2M_ARCHIVETRANSFER"))
     define("_M2M_ARCHIVETRANSFER", "Archive transfer");
-if (!defined("_M2M_ARCHIVETRANSFERREPLYSENT"))
-    define("_M2M_ARCHIVETRANSFERREPLYSENT", "Archive transfer reply");
+if (!defined("_M2M_ARCHIVETRANSFERREPLY"))
+    define("_M2M_ARCHIVETRANSFERREPLY", "Archive transfer reply");
 if (!defined("_M2M_ACTION_DONE"))
     define("_M2M_ACTION_DONE", "done by");
 if (!defined("_M2M_ENTITY_DESTINATION"))

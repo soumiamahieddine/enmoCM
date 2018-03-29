@@ -1334,8 +1334,6 @@ if ($mode == 'add') {
             if (!empty($emailArray['receptionDate'])) {
                 $content .='<br><hr style="margin-top:2px;" />';
                 $content .= '<b>'._RECEPTION_DATE.' : </b>' . $emailArray['receptionDate'].'<br><br>';
-            }
-            if (!empty($emailArray['operationDate'])) {
                 $content .= '<div onclick="new Effect.toggle(\'operationCommentsDiv\', \'blind\', {delay:0.2});" onmouseover="this.style.cursor=\'pointer\';">
                                 <span id="divStatus_operationComments" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'._MORE_INFORMATIONS.'
                             </div>';
@@ -1343,6 +1341,8 @@ if ($mode == 'add') {
                 foreach ($emailArray['operationComments'] as $value) {
                     $content .= $value->value.'<br>';
                 }
+            }
+            if (!empty($emailArray['operationDate'])) {
                 $content .= '</div><br>';
                 $content .= '<b>'._OPERATION_DATE.' : </b>' . $emailArray['operationDate'].'<br><br>';
             }
@@ -1366,7 +1366,7 @@ if ($mode == 'add') {
             $content .= '<b>'._REPLY_RESPONSE_SENT.' : </b>' . $emailArray['creationDate'].'<br><br>';
 
             foreach ($emailArray['operationComments'] as $value) {
-                $content .= $value.'<br>';
+                $content .= $value->value.'<br>';
             }
 
             //Buttons
