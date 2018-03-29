@@ -166,3 +166,6 @@ if (!defined("_ERROR_UNKNOW_CERTIFICATE"))
 
 if (!defined("_UNKNOWN_TARGET"))
     define("_UNKNOWN_TARGET", "Cible inconnue");
+
+if (!defined("_ERROR_MESSAGE_NOT_PRESENT"))
+    define("_ERROR_MESSAGE_NOT_PRESENT", "Le bordereau de transfert n'est pas present.");
