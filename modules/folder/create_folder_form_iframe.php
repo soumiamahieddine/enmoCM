@@ -79,8 +79,9 @@ if ($_SESSION['info'] == _FOLDER_ADDED) {
             select.options.add (newOption);
         }
         "
-    ."select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';";
-    echo "$j(\"#folder\").trigger(\"chosen:updated\");";
+    ."select.value = '".$_SESSION['m_admin']['folder']['folders_system_id']."';
+    ";
+    echo "parent.triggerChosen();";
     unset($_SESSION['m_admin']);
     echo "new Effect.BlindUp(parent.document.getElementById('create_folder_div'));";
     echo '</script>';
