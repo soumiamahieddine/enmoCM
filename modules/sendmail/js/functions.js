@@ -199,6 +199,8 @@ function validEmailForm(path, form_id) {
         return;
     }
 
+    $j("input#valid.button").prop("disabled", true).css("opacity", "0.5");
+
     tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
@@ -212,6 +214,7 @@ function validEmailForm(path, form_id) {
                 eval(response.exec_js);
                window.parent.destroyModal('form_email');
             } else {
+                $j("input#valid.button").prop("disabled", false).css("opacity", "1");
                 alert(response.error);
                 eval(response.exec_js);
             }
