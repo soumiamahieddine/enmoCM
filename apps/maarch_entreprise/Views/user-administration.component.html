@@ -11,7 +11,7 @@
         </h1>
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
-        <button mat-icon-button (click)="snav2.toggle()" *ngIf="!creationMode">
+        <button mat-icon-button (click)="this.sidenav.toggle()" *ngIf="!creationMode">
             <mat-icon class="fa fa-gear fa-2x"></mat-icon>
         </button>
     </mat-toolbar>

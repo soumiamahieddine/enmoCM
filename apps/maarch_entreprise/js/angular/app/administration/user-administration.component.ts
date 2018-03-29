@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -25,7 +25,8 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
-
+    dialogRef                       : MatDialogRef<any>;
+    config                          : any       = {};
     serialId                        : number;
     userId                          : string;
     user                            : any       = {};
@@ -61,7 +62,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
+    @ViewChild('snav2') sidenav: MatSidenav;
+
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog) {
         super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -290,11 +293,40 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     deleteEntity(entityId: any) {
-        this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+
+        //first check confidential state
+        this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
-                this.user.entities = data.entities;
-                this.user.allEntities = data.allEntities;
-                this.notify.success(this.lang.entityDeleted);
+                console.log(data);
+                if (data['isDeletable']) {
+                    this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+                        .subscribe((data: any) => {
+                            this.user.entities = data.entities;
+                            this.user.allEntities = data.allEntities;
+                            this.notify.success(this.lang.entityDeleted);
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                } else {
+                    this.config = { data: {  } };
+                    this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
+                    this.dialogRef.afterClosed().subscribe((result: string) => {
+                        if (result) {
+                            let mode = 'del';
+                            mode = 'reaffect';
+                            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId, {body : {"mode":"","newUser":""}})
+                            .subscribe((data: any) => {
+                                this.user.entities = data.entities;
+                                this.user.allEntities = data.allEntities;
+                                this.notify.success(this.lang.entityDeleted);
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                        }
+                    this.dialogRef = null;
+                    });
+                }
+               
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -458,5 +490,17 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                     this.notify.error(err.error.errors);
                 });
         }
+    }
+}
+
+@Component({
+    templateUrl: "../../../../Views/user-administration-redirect-modal.component.html",
+    styles: [".mat-dialog-content{height:260px;max-height: 65vh;}"]
+})
+export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
+    lang: any = LANG;
+
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
+        super(http, ['users']);
     }
 }
