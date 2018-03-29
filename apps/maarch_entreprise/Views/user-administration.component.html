@@ -352,6 +352,9 @@
                                 <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="basket.userToDisplay =''" matTooltip="Réassigner">
                                     <mat-icon color="primary" class="fa fa-edit"></mat-icon>
                                 </button>
+                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer l'assignation'">
+                                    <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
+                                </button>
                             </mat-form-field>
                         </p>
                     </mat-list-item>

@@ -400,7 +400,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+basket.basket_id)
+            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+ basket.basket_id, {body : {"basketOwner":basket.basket_owner}})
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
