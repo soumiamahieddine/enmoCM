@@ -22,6 +22,7 @@ use Action\models\ActionModel;
 
 require_once __DIR__.'/../../export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/RequestSeda.php';
+require_once 'modules/export_seda/Controllers/SendMessage.php';
 
 class MessageExchangeReviewController
 {
