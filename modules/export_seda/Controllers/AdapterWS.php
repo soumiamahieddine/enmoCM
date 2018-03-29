@@ -19,10 +19,10 @@ class AdapterWS
         $res = $transfer->transfer('maarchcourrier', $message->reference, $type);
 
         if ($res['status'] == 1) {
-            $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'E');
+            $this->db->updateStatusMessage($message->reference, 'E');
             return $res;
         }
 
-        $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'S');
+        $this->db->updateStatusMessage($message->reference, 'S');
     }
 }
