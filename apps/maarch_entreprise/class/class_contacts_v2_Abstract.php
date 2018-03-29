@@ -40,8 +40,7 @@ abstract class contacts_v2_Abstract extends Database
     {
         //  return the user information in sessions vars
         $func = new functions();
-        $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] =
-            $_REQUEST['is_external'];
+        $_SESSION['m_admin']['contact']['IS_EXTERNAL_CONTACT'] = 'N';
 
         $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] =
         $_REQUEST['is_corporate'];
@@ -114,6 +113,8 @@ abstract class contacts_v2_Abstract extends Database
             $_SESSION['m_admin']['communication']['VALUE'] = $func->wash(
                 $_REQUEST['communication_value'], 'no', _COMMUNICATION_VALUE . ' ', 'yes', 0, 255
             );
+        } else {
+            $_SESSION['m_admin']['communication']['VALUE'] = '';
         }
 
         $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $func->wash(
@@ -395,8 +396,8 @@ abstract class contacts_v2_Abstract extends Database
 
                 if (!empty($_SESSION['m_admin']['communication']['TYPE']) && !empty($_SESSION['m_admin']['communication']['VALUE'])) {
                     $stmt = $db->query("SELECT id FROM " . $_SESSION['tablename']['contact_communication']
-                        . " WHERE contact_id = ? AND type = ? AND value = ?"
-                        , array($_SESSION['m_admin']['contact']['ID'], $_SESSION['m_admin']['communication']['TYPE'], $_SESSION['m_admin']['communication']['VALUE']));
+                        . " WHERE contact_id = ?"
+                        , array($_SESSION['m_admin']['contact']['ID']));
                     $res = $stmt->fetchObject();
 
                     if($res) {
