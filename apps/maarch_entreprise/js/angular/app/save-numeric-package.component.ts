@@ -116,7 +116,9 @@ export class SaveNumericPackageComponent implements OnInit {
                             window.location.href = data.basketRedirection;
                             // action_send_first_request('index.php?display=true&page=manage_action&module=core', 'page',  22, '', 'res_letterbox', 'basket', 'letterbox_coll');
                         }
-                    }
+                    } 
+                }, (err) => {
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.numericPackage.name        = "";
