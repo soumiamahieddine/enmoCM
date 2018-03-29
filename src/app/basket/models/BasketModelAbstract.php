@@ -385,6 +385,7 @@ class BasketModelAbstract
         ]);
 
         foreach ($aBaskets as $key => $value) {
+            $aBaskets[$key]['basketOwnerId'] = UserModel::getByUserId(['select' => ['id'], 'userId' => $value['user_abs']])['id'];
             $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $value['user_abs']]);
         }
 
