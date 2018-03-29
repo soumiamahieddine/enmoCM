@@ -23,6 +23,7 @@ use Action\models\ActionModel;
 require_once __DIR__.'/../../export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/RequestSeda.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
+require_once 'modules/sendmail/Controllers/SendMessageExchangeController.php';
 
 class MessageExchangeReviewController
 {
@@ -86,7 +87,7 @@ class MessageExchangeReviewController
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_NotificationSent';
             $reviewObject->TransferringAgency = $reviewObject->OriginatingAgency;
-            $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $reviewObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveModificationNotification', 'file_path' => $filePath]);
+            $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $reviewObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveModificationNotification', 'file_path' => $filePath]);
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
 
@@ -136,7 +137,7 @@ class MessageExchangeReviewController
             $RequestSeda->updateOperationDateMessage(['operation_date' => $dataObject->Date, 'message_id' => $messageExchange->message_id]);
         }
 
-        $messageId = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => 'ArchiveModificationNotification']);
+        $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => 'ArchiveModificationNotification']);
 
         return $response->withJson([
             'messageId' => $messageId,
