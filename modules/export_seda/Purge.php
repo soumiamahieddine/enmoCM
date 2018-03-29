@@ -80,22 +80,11 @@ Class Purge{
 
     private function purgeResource($resId)
     {
-        $action = new \Resource\controllers\ResController();
-        $data = [];
-
-        array_push($data, array(
-            'column' => 'status',
-            'value' => 'DEL',
-            'type' => 'string'
-        ));
-
         $aArgs = [
-            'table' => 'res_letterbox',
-            'res_id'=> $resId,
-            'data'  => $data
+            'resId'         => $resId,
         ];
 
-        $response = $action->updateResource($aArgs);
+        $response = \Resource\models\ResModel::delete($aArgs);
 
         return $response;
     }
