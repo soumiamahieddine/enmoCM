@@ -16,6 +16,7 @@ namespace User\controllers;
 
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -24,6 +25,7 @@ use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
 use Parameter\models\ParameterModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -336,7 +338,7 @@ class UserController
         }
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
             'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
@@ -348,9 +350,20 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['basketOwner']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
 
-        BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
+        if ($data['basketOwner'] != $user['user_id']) {
+            BasketModel::deleteBasketRedirection(['userId' => $data['basketOwner'], 'basketId' => $aArgs['basketId']]);
+        } else {
+            BasketModel::deleteBasketRedirection(['userId' => $user['user_id'], 'basketId' => $aArgs['basketId']]);
+        }
 
         HistoryController::add([
             'tableName'    => 'user_abs',
@@ -361,7 +374,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id']]),
+            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
             'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
         ]);
     }
@@ -769,6 +782,69 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+
+        $data = $request->getParams();
+        if (!empty($data['mode'])) {
+            if ($data['mode'] == 'reaffect') {
+                ListTemplateModel::update([
+                    'set'   => ['item_id' => $data['newUser']],
+                    'where' => ['object_id = ?', 'item_id = ?'],
+                    'data'  => [$aArgs['entityId'], $user['user_id']]
+                ]);
+                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
+                $resIdsToReplace = [];
+                foreach ($listInstances as $listInstance) {
+                    $resIdsToReplace[] = $listInstance['res_id'];
+                }
+                if (!empty($resIdsToReplace)) {
+                    ListInstanceModel::update([
+                        'set'   => ['item_id' => $data['newUser']],
+                        'where' => ['res_id in (?)', 'item_id = ?'],
+                        'data'  => [$resIdsToReplace, $user['user_id']]
+                    ]);
+                }
+            } else {
+                ListTemplateModel::delete([
+                    'where' => ['object_id = ?', 'item_id = ?'],
+                    'data'  => [$aArgs['entityId'], $user['user_id']]
+                ]);
+
+                $resIds = ResModel::getOnView([
+                    'select'    => ['res_id'],
+                    'where'     => ['confidentiality = ?', 'destination = ?', 'closing_date is null'],
+                    'data'      => ['Y', $aArgs['entityId']]
+                ]);
+                foreach ($resIds as $resId) {
+                    $listInstanceId = ListInstanceModel::get([
+                        'select'    => ['listinstance_id'],
+                        'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?'],
+                        'data'      => [$resId, $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
+                    ]);
+
+                    if (!empty($listInstanceId)) {
+                        ListInstanceModel::update([
+                            'set'   => ['process_date' => null],
+                            'where' => ['res_id = ?', 'difflist_type = ?', 'listinstance_id = ?'],
+                            'data'  => [$resId, 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
+                        ]);
+                    }
+                }
+
+                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id', 'listinstance.difflist_type'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
+                $resIdsToReplace = [];
+                foreach ($listInstances as $listInstance) {
+                    $resIdsToReplace[] = $listInstance['res_id'];
+                }
+                if (!empty($resIdsToReplace)) {
+                    ListInstanceModel::update([
+                        'set'   => ['process_comment' => '[DEL] supprimé - changement d\'entité', 'process_date' => 'CURRENT_TIMESTAMP'],
+                        'where' => ['res_id in (?)', 'item_id = ?'],
+                        'data'  => [$resIdsToReplace, $user['user_id']]
+                    ]);
+                }
+            }
+        }
+
         $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
         UserEntityModel::deleteUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
@@ -789,6 +865,29 @@ class UserController
             'entities'      => UserModel::getEntitiesById(['userId' => $user['user_id']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']])
         ]);
+    }
+
+    public function isEntityDeletable(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+        if (empty(EntityModel::getById(['entityId' => $aArgs['entityId']]))) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        }
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+
+        $listInstances = ListInstanceModel::getWithConfidentiality(['select' => [1], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
+
+        $listTemplates = ListTemplateModel::get(['select' => [1], 'where' => ['object_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$aArgs['entityId'], 'user_id', $user['user_id']]]);
+
+        if (empty($listInstances) && empty($listTemplates)) {
+            return $response->withJson(['isDeletable' => true]);
+        } else {
+            return $response->withJson(['isDeletable' => false]);
+        }
     }
 
     public function updateBasketsDisplay(Request $request, Response $response, array $aArgs)

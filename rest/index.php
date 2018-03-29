@@ -270,6 +270,7 @@ $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::c
 $app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
 $app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');
+$app->get('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':isEntityDeletable');
 $app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
 $app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
