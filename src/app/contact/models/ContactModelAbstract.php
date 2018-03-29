@@ -237,7 +237,7 @@ class ContactModelAbstract
             'columnsValues' => [
                 'contact_id' => $aArgs['contactId'],
                 'type'       => $aArgs['type'],
-                'value'      => $aArgs['value']
+                'value'      => trim(trim($aArgs['value']), '/')
             ]
         ]);
 
