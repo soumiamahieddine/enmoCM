@@ -71,6 +71,7 @@ define('_USER_ENTITY_CREATION', 'Entity added for user');
 define('_USER_ENTITY_MODIFICATION', 'Entity updated for user');
 define('_USER_ENTITY_SUPPRESSION', 'Entity deleted for user');
 define('_VISA_USER', 'For visa');
+define('_WRONG_FILE_TYPE', 'This type of file is not allowed');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'List of documents with recommendation');

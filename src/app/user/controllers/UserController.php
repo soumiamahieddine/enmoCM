@@ -311,7 +311,7 @@ class UserController
                     'recordId'     => $GLOBALS['userId'],
                     'eventType'    => 'UP',
                     'eventId'      => 'basketRedirection',
-                    'info'         => _BASKET_REDIRECTION . "{$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                    'info'         => _BASKET_REDIRECTION . " {$value['basketId']} {$user['user_id']} => {$value['newUser']}"
                 ]);
                 unset($data[$key]);
             }
@@ -332,7 +332,7 @@ class UserController
                     'recordId'     => $GLOBALS['userId'],
                     'eventType'    => 'UP',
                     'eventId'      => 'basketRedirection',
-                    'info'         => _BASKET_REDIRECTION . "{$value['basketId']} {$user['user_id']} => {$value['newUser']}"
+                    'info'         => _BASKET_REDIRECTION . " {$value['basketId']} {$user['user_id']} => {$value['newUser']}"
                 ]);
             }
         }
@@ -370,7 +370,7 @@ class UserController
             'recordId'     => $GLOBALS['userId'],
             'eventType'    => 'UP',
             'eventId'      => 'basketRedirection',
-            'info'         => _BASKET_REDIRECTION_SUPPRESSION . "{$aArgs['basketId']} {$user['user_id']}"
+            'info'         => _BASKET_REDIRECTION_SUPPRESSION . " {$aArgs['basketId']} {$user['user_id']}"
         ]);
 
         return $response->withJson([
