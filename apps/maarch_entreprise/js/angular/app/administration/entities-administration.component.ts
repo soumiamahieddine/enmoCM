@@ -15,6 +15,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "../../../../Views/entities-administration.component.html",
+    styleUrls: ['../../../../css/entities-administration.component.css'],
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {

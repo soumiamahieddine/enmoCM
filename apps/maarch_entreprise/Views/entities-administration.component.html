@@ -48,6 +48,8 @@
 
                 <mat-form-field>
                     <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                    <mat-hint *ngIf="!creationMode">{{lang.entityTreeInfo}}</mat-hint>
+                    <mat-hint *ngIf="creationMode">{{lang.entityTreeInfoCreation}}</mat-hint>
                 </mat-form-field>
                 <div id="jstree"></div>
 
@@ -215,8 +217,8 @@
                                     <input #autocompleteFilter type="text" placeholder="{{lang.addUserOrEntity}}" matInput [matAutocomplete]="auto" [formControl]="elementCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let elem of filteredElements | async" [value]="elem.id" (click)="addElemListModel(elem)">
-                                            <p mat-line>
-                                                <span class="col-xm-1">
+                                            <p mat-line style="margin:0;">
+                                                <span class="col-xm-1" style="padding-right:5px;">
                                                     <mat-icon color="primary" [class]="elem.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
                                                 </span>
                                                 <span class="col-xm-11">
@@ -232,10 +234,10 @@
                                         <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary">{{role.label}}</h3>
                                         <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
                                             <div style="min-height:30px;">
-                                                <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index" title="{{lang.move}}"
+                                                <mat-list-item class="roleDiffList" disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index"
                                                     dnd-sortable (onDropSuccess)="updateDiffList(template,role.id)" [sortableIndex]="i"
                                                     [dragEnabled]="role.id != 'dest' && template.item_type != 'entity_id'">
-                                                    <mat-icon color="primary" mat-list-icon [class]="template.item_type == 'entity_id' ? 'fa fa-sitemap' : 'fa fa-user'"></mat-icon>
+                                                    <mat-icon color="primary" mat-list-icon [class]="template.item_type == 'entity_id' ? 'fa fa-sitemap' : 'fa fa-user'" [title]="role.id != 'dest' && template.item_type != 'entity_id' ? lang.move : lang.noMove"></mat-icon>
                                                     <p mat-line>{{template.labelToDisplay}}
                                                         <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                                     </p>
@@ -263,8 +265,8 @@
                                     <input #autocompleteFilter type="text"  placeholder="{{lang.addVisaSignUser}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
                                     <mat-autocomplete #auto="matAutocomplete">
                                         <mat-option *ngFor="let elem of filteredUsers | async" [value]="elem.id" (click)="addElemListModelVisa(elem);autocompleteFilter.isOpen=true">
-                                            <p mat-line *ngIf="elem.type == 'user'">
-                                                <span class="col-xm-1">
+                                            <p mat-line *ngIf="elem.type == 'user'" style="margin:0;">
+                                                <span class="col-xm-1" style="padding-right:5px;">
                                                     <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
                                                 </span>
                                                 <span class="col-xm-11">
