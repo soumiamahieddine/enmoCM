@@ -76,6 +76,7 @@ if (isset($_REQUEST['admission_date'])
 
 $priorityId = $_SESSION['process_mode_priority'][$_SESSION['process_mode']];
 $_SESSION['process_mode'] = NULL;
+$priorityWDay = $_SESSION['mail_priorities_wdays'][$priorityId] == 'true' ? 'workingDay' : 'calendar';
 foreach ($_SESSION['mail_priorities_id'] as $key => $value) {
     if ($value == $priorityId) {
         $fakeId = $key;
@@ -265,7 +266,7 @@ if (isset($delay) && $delay > 0) {
     $alert_engine = new alert_engine();
     if (isset($admissionDate) && !empty($admissionDate)) {
         $convertedDate = $alert_engine->dateFR2Time(str_replace("-", "/", $admissionDate));
-        $date = $alert_engine->WhenOpenDay($convertedDate, $delay);
+        $date = $alert_engine->WhenOpenDay($convertedDate, $delay, false, $priorityWDay);
         //$date = $alert_engine->date_max_treatment($delay, false);
     } else {
         $date = $alert_engine->date_max_treatment($delay, false);
