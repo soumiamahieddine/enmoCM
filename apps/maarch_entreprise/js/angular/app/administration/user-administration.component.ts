@@ -54,6 +54,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     dataSource          = new MatTableDataSource(this.data);
 
 
+    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -62,7 +63,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.dataSource.filter = filterValue;
     }
 
-    @ViewChild('snav2') sidenav: MatSidenav;
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog) {
         super(http, ['users']);
@@ -246,6 +246,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
+
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data: any) => {
@@ -256,10 +257,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     addEntity(entiyId: any) {
-
-        var entity = {
-            "entityId": entiyId,
-            "role": ''
+        let entity = {
+            "entityId"  : entiyId,
+            "role"      : ''
         };
 
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
@@ -270,12 +270,11 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-
     }
 
     updateEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -398,7 +397,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     addBasketRedirection(newUser:any, basket: any) {
-
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {

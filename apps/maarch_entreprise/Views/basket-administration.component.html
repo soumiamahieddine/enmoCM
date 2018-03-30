@@ -105,11 +105,11 @@
                             <h5>Action(s) choisie(s)</h5>
                             <mat-chip-list #chipList class="mat-chip-list-stacked">
                                 <span *ngFor="let action of group.groupActions">
-                                    <mat-chip color="primary" (click)="openSettings(group,action)" [ngStyle]="{'font-weight': action.default_action_list == true ? 'bold' : ''}"
+                                    <mat-chip color="primary" (click)="openSettings(group,action)" matTooltip="id : {{action.id}}" [ngStyle]="{'font-weight': action.default_action_list == true ? 'bold' : ''}"
                                         style="cursor:pointer;margin:5px;border-radius:0px;display:flex;" *ngIf="action.checked == true"
                                         selectable="true" removable="true" (remove)="unlinkAction(group,action)">
                                         &nbsp;
-                                        <span matTooltip="id : {{action.id}}">{{action.label_action}}</span>&nbsp;
+                                        <span>{{action.label_action}}</span>&nbsp;
                                         <small *ngIf="action.default_action_list == true">({{lang.default}})</small>
                                         <span style="flex: 1 1 auto;"></span>
                                         <button mat-raised-button [disabled]="action.default_action_list" (click)="$event.stopPropagation();setDefaultAction(group,action)">définir par défaut</button>
@@ -134,13 +134,13 @@
                                         <mat-table #table [dataSource]="dataSource" matSort matSortActive="label_action" matSortDirection="asc">
                                             <ng-container matColumnDef="label_action">
                                                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                                <mat-cell *matCellDef="let element" style="flex:6;">
-                                                    <mat-checkbox color="primary" [disabled]="element.default_action_list==true" (change)="addAction(group)" [(ngModel)]="element.checked"><span matTooltip="id : {{element.id}}">{{element.label_action}}</span></mat-checkbox>
+                                                <mat-cell *matCellDef="let element" style="flex:6;" matTooltip="id : {{element.id}}">
+                                                    <mat-checkbox color="primary" [disabled]="element.default_action_list==true" (change)="addAction(group)" [(ngModel)]="element.checked"><span>{{element.label_action}}</span></mat-checkbox>
                                                 </mat-cell>
                                             </ng-container>
                                             <ng-container matColumnDef="actions">
                                                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                                                <mat-cell *matCellDef="let element" style="text-align:right">
+                                                <mat-cell *matCellDef="let element" style="text-align:right" matTooltip="id : {{element.id}}">
                                                     <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="!element.checked">
                                                         <mat-icon class="fa fa-bars"></mat-icon>
                                                     </button>
