@@ -108,7 +108,7 @@ if(is_array($indexes)){
 }
 
 $opt_indexes = '';
-$displayValue = 'table-row';
+$display_value = 'table-row';
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {

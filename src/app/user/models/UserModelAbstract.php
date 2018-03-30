@@ -20,6 +20,8 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 
+require_once 'core/class/Url.php';
+
 class UserModelAbstract
 {
     public static function get(array $aArgs)

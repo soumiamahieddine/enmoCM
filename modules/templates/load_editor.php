@@ -1,4 +1,4 @@
-<?php  
+<?php 
 
 /*
 *   Copyright 2008-2015 Maarch
@@ -32,7 +32,7 @@
 
         language : "fr_FR",
         language_url: "tools/tinymce/langs/fr_FR.js",
-        height : "300",
+        height : "<?php echo $height; ?>",
         plugins: [
                  "advlist autolink link lists charmap print preview hr",
                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",

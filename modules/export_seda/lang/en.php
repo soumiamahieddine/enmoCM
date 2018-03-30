@@ -155,3 +155,6 @@ if (!defined("_ERROR_UNKNOW_CERTIFICATE"))
 
 if (!defined("_UNKNOWN_TARGET"))
     define("_UNKNOWN_TARGET", "Unknown target");
+
+if (!defined("_ERROR_MESSAGE_NOT_PRESENT"))
+    define("_ERROR_MESSAGE_NOT_PRESENT", "Message not here.");

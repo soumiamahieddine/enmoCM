@@ -7,6 +7,7 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{priorities.length}} {{lang.priorities}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <menu-top></menu-top>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
@@ -19,6 +20,12 @@
                     <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                     <p mat-line>
                         {{lang.add}}
+                    </p>
+                </a>
+                <a mat-list-item (click)="snav2.toggle()">
+                    <mat-icon color="primary" mat-list-icon class="fa fa-list-ol"></mat-icon>
+                    <p mat-line>
+                        {{lang.prioritiesOrder}}
                     </p>
                 </a>
             </mat-nav-list>
@@ -92,11 +99,16 @@
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : false">
-
-            <mat-nav-list>
-                <h3 mat-subheader>Actions</h3>
-            </mat-nav-list>
+                     position='end' [opened]="mobileQuery.matches ? false : false">
+            <mat-list>
+                <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="prioritiesOrder">
+                    <mat-list-item disableRipple="true" *ngFor="let priority of prioritiesOrder;let i = index" title="deplacer" dnd-sortable
+                                   [sortableIndex]="i" (onDropSuccess)="updatePrioritiesOrder()">
+                        <mat-icon color="primary" mat-list-icon class="fa fa-inbox"></mat-icon>
+                        <p mat-line>{{i+1}} - {{priority.label}}</p>
+                    </mat-list-item>
+                </span>
+            </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

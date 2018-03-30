@@ -111,7 +111,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['config']['cookietime']          = (string) $config->CookieTime;
             $_SESSION['config']['ldap']                = (string) $config->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
-            $_SESSION['config']['usePDO']              = (string) $config->usePDO;
             $_SESSION['config']['usePHPIDS']           = (string) $config->usePHPIDS;
             if (isset($config->showfooter)) {
                 $_SESSION['config']['showfooter'] = (string) $config->showfooter;
@@ -561,7 +560,7 @@ abstract class business_app_tools_Abstract extends Database
         $_SESSION['mail_priorities_color']      = [];
         $_SESSION['default_mail_priority']      = 0;
 
-        $priorities = \Priority\models\PriorityModel::get();
+        $priorities = \Priority\models\PriorityModel::get(['orderBy' => ['"order" NULLS LAST']]);
         $i = 0;
         foreach ($priorities as $priority) {
             $_SESSION['mail_priorities'][$i] = $priority['label'];

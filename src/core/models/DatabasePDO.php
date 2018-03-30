@@ -22,13 +22,18 @@ class DatabasePDO
     private static $preparedQueries = [];
 
 
-    public function __construct()
+    public function __construct(array $args = [])
     {
         if (!empty(self::$pdo)) {
             return;
         }
 
-        $customId = CoreConfigModel::getCustomId();
+        if (!empty($args['customId'])) {
+            $customId = $args['customId'];
+        } else {
+            $customId = CoreConfigModel::getCustomId();
+        }
+
         if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
             $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
         } else {
@@ -165,6 +170,12 @@ class DatabasePDO
         }
 
         return ['where' => $where, 'limit' => $limit];
+    }
+
+    public static function reset()
+    {
+        self::$pdo = null;
+        self::$preparedQueries = [];
     }
 
     public function getType()

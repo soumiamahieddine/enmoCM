@@ -428,7 +428,7 @@
     <servicepage>index.php?page=update_control&amp;admin=update_control</servicepage>
     <servicetype>admin</servicetype>
     <category>supervision</category>
-    <system_service>true</system_service>
+    <system_service>false</system_service>
     <style>fa fa-refresh</style>
     <enabled>true</enabled>
   </SERVICE>

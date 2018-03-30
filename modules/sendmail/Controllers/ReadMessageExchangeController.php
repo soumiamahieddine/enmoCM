@@ -32,11 +32,10 @@ class ReadMessageExchangeController
         $unitIdentifierData         = $RequestSeda->getUnitIdentifierByMessageId($aArgs['id']);
         $aDataForm['reference']     = $messageExchangeData->reference;
         $messageReview              = $RequestSeda->getMessagesByReferenceByDate($aDataForm['reference'].'_Notification');
-        if (!empty($messageReview)) {
-            foreach ($messageReview as $value) {
-                $oMessageReview = json_decode($value['data']);
-                $aDataForm['messageReview'][] = $oMessageReview->Comment[0]->value;
-            }
+
+        while ($res = $messageReview->fetchObject()) {
+            $oMessageReview = json_decode($res->data);
+            $aDataForm['messageReview'][] = $oMessageReview->Comment[0]->value;
         }
         
         $request                    = new request();
@@ -45,10 +44,12 @@ class ReadMessageExchangeController
         $aDataForm['operationDate'] = $request->dateformat($messageExchangeData->operation_date);
         $aDataForm['type']          = $messageExchangeData->type;
 
-        if (!empty($aDataForm['operationDate'])) {
+        if (!empty($aDataForm['receptionDate'])) {
             $reference = $aDataForm['reference'].'_Reply';
-        } elseif ($aDataForm['type'] == 'ArchiveTransferReplySent') {
+            $aDataForm['type'] = 'ArchiveTransfer';
+        } elseif ($aDataForm['type'] == 'ArchiveTransferReply') {
             $reference = $aDataForm['reference'];
+            $aDataForm['type'] = 'ArchiveTransferReplySent';
         }
 
         if (!empty($reference)) {

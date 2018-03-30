@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
@@ -18,17 +18,22 @@ declare const angularGlobals: any;
     providers: [NotificationService]
 })
 export class UserAdministrationComponent extends AutoCompletePlugin implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
-    _search: string = '';
-    userId: string;
-    serialId: number;
-    creationMode: boolean;
 
-    user: any = {};
-    signatureModel: any = {
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
+
+    coreUrl                         : string;
+    lang                            : any       = LANG;
+    loading                         : boolean   = false;
+    dialogRef                       : MatDialogRef<any>;
+    config                          : any       = {};
+    serialId                        : number;
+    userId                          : string;
+    user                            : any       = {};
+    _search                         : string    = '';
+    creationMode                    : boolean;
+
+    signatureModel                  : any       = {
         base64: "",
         base64ForJs: "",
         name: "",
@@ -36,28 +41,30 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         size: 0,
         label: "",
     };
-    userAbsenceModel: any[] = [];
-    userList: any[] = [];
+    userAbsenceModel                : any[]     = [];
+    userList                        : any[]     = [];
+    selectedSignature               : number    = -1;
+    selectedSignatureLabel          : string    = "";
+    data                            : any[]     = [];
+    CurrentYear                     : number    = new Date().getFullYear();
+    currentMonth                    : number    = new Date().getMonth() + 1;
+    minDate                         : Date      = new Date();
 
-    selectedSignature: number = -1;
-    selectedSignatureLabel: string = "";
-    data: History[] = [];
-    CurrentYear: number = new Date().getFullYear();
-    currentMonth: number = new Date().getMonth() + 1;
-    minDate: Date = new Date();
-    loading: boolean = false;
+    displayedColumns    = ['event_date', 'event_type', 'info', 'remote_ip'];
+    dataSource          = new MatTableDataSource(this.data);
 
-    displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
-    dataSource = new MatTableDataSource(this.data);
+
+    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
     }
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
+
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog) {
         super(http, ['users']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -239,6 +246,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
+
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data: any) => {
@@ -249,10 +257,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     addEntity(entiyId: any) {
-
-        var entity = {
-            "entityId": entiyId,
-            "role": ''
+        let entity = {
+            "entityId"  : entiyId,
+            "role"      : ''
         };
 
         this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/entities", entity)
@@ -263,12 +270,11 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-
     }
 
     updateEntity(entity: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entity.entity_id, entity)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 this.notify.success(this.lang.entityUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -286,11 +292,40 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     deleteEntity(entityId: any) {
-        this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+
+        //first check confidential state
+        this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
-                this.user.entities = data.entities;
-                this.user.allEntities = data.allEntities;
-                this.notify.success(this.lang.entityDeleted);
+                console.log(data);
+                if (data['isDeletable']) {
+                    this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
+                        .subscribe((data: any) => {
+                            this.user.entities = data.entities;
+                            this.user.allEntities = data.allEntities;
+                            this.notify.success(this.lang.entityDeleted);
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                } else {
+                    this.config = { data: {  } };
+                    this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
+                    this.dialogRef.afterClosed().subscribe((result: string) => {
+                        if (result) {
+                            let mode = 'del';
+                            mode = 'reaffect';
+                            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId, {body : {"mode":"","newUser":""}})
+                            .subscribe((data: any) => {
+                                this.user.entities = data.entities;
+                                this.user.allEntities = data.allEntities;
+                                this.notify.success(this.lang.entityDeleted);
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                        }
+                    this.dialogRef = null;
+                    });
+                }
+               
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -362,7 +397,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     addBasketRedirection(newUser:any, basket: any) {
-
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
@@ -378,7 +412,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     reassignBasketRedirection(newUser:any, basket: any) {
-
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
@@ -394,10 +427,10 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     delBasketRedirection(basket: any) {
-        let r = confirm(this.lang.confirmAction + ' ' + this.lang.activateAbs);
+        let r = confirm(this.lang.confirmAction);
 
         if (r) {
-            this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+basket.basket_id)
+            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets/"+ basket.basket_id, {body : {"basketOwner":basket.basket_owner}})
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
@@ -432,9 +465,6 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/status", { "status": "OK" })
             .subscribe((data: any) => {
                 this.user.status = data.user.status;
-                for (let i in this.user.baskets) {
-                    this.user.baskets[i].userToDisplay = '';
-                }
                 this.notify.success(this.lang.absOff);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -460,11 +490,15 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 }
-export interface History {
-    event_date: Date;
-    event_type: string;
-    user_id: string;
-    table_name: number;
-    info: string;
-    remote_ip: string;
+
+@Component({
+    templateUrl: "../../../../Views/user-administration-redirect-modal.component.html",
+    styles: [".mat-dialog-content{height:260px;max-height: 65vh;}"]
+})
+export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
+    lang: any = LANG;
+
+    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
+        super(http, ['users']);
+    }
 }

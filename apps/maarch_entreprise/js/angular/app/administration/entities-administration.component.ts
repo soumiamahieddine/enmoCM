@@ -6,7 +6,7 @@ import { ConfirmModalComponent } from '../confirmModal.component';
 import { NotificationService } from '../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { SortPipe }  from '../../plugins/sorting.pipe';
+import { SortPipe } from '../../plugins/sorting.pipe';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
@@ -18,7 +18,7 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
-
+    
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
@@ -33,6 +33,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     currentEntity                   : any       = {};
     isDraggable                     : boolean   = true;
     creationMode                    : boolean   = false;
+    listDiffModified                : boolean   = false;
     idCircuitVisa                   : number;
     config                          : any       = {};
 
@@ -98,13 +99,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             'data': this.entities,
                             "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
                                 if (operation == 'move_node') {
-                                    if (node_parent.id =='#') {
+                                    if (node_parent.id == '#') {
                                         return false;
                                     } else if (!node_parent.original.allowed) {
                                         return false;
                                     } else {
                                         return true;
-                                    }       
+                                    }
                                 }
                             }
                         },
@@ -169,6 +170,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     loadEntity(entity_id: any) {
+        this.listDiffModified = false;
         this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
@@ -184,14 +186,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     addElemListModel(element: any) {
-        /* create listDiff struct */
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "entity_id",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        };
+        this.listDiffModified = true;
         var inListModel = false;
         var newElemListModel: any = {};
 
@@ -199,14 +194,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             if (role.available == true) {
                 if (this.currentEntity.listTemplate[role.id]) {
                     this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
-                        /* insert current diff list */
-                        newDiffList.items.push({
-                            "item_type": listModel.item_type,
-                            "item_mode": role.id,
-                            "item_id": listModel.item_id,
-                            "sequence": listModel.sequence
-                        });
-
                         if (listModel.item_id == element.id) {
                             inListModel = true;
                         }
@@ -225,12 +212,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     "sequence": 0
                 };
                 this.currentEntity.listTemplate.dest.unshift(newElemListModel);
-                newDiffList.items.push({
-                    "item_type": "user_id",
-                    "item_mode": "dest",
-                    "item_id": newElemListModel.item_id,
-                    "sequence": newElemListModel.sequence
-                });
+
             } else {
                 var itemType = '';
                 if (element.type == 'user') {
@@ -248,42 +230,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     "sequence": 0
                 };
                 this.currentEntity.listTemplate.cc.unshift(newElemListModel);
-                newDiffList.items.push({
-                    "item_type": newElemListModel.item_type,
-                    "item_mode": "cc",
-                    "item_id": newElemListModel.item_id,
-                    "sequence": 0
-                });
-            }
-            if (this.currentEntity.listTemplate.id) {
-                this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
-                    .subscribe((data: any) => {
-                        this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.diffusionModelUpdated);
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
-            } else {
-                this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
-                    .subscribe((data: any) => {
-                        this.currentEntity.listTemplate.id = data.id;
-                        this.notify.success(this.lang.diffusionModelUpdated);
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
             }
         }
         this.elementCtrl.setValue('');
     }
 
     addElemListModelVisa(element: any) {
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "VISA_CIRCUIT",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        };
+        this.listDiffModified = true;
         var newElemListModel = {
             "id": '',
             "item_type": 'user_id',
@@ -294,38 +247,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             "descriptionToDisplay": element.otherInfo
         };
 
-        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
-            listModel.sequence = i;
-            listModel.item_mode = "visa";
-            newDiffList.items.push({
-                "id": listModel.id,
-                "item_id": listModel.item_id,
-                "item_type": "user_id",
-                "item_mode": listModel.item_mode,
-                "sequence": listModel.sequence
-            });
-        });
-
-        newDiffList.items.push(newElemListModel);
-
-        if (this.currentEntity.visaTemplate.length > 0) {
-            this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
-                .subscribe((data: any) => {
-                    this.idCircuitVisa = data.id;
-                    this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else {
-            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
-                .subscribe((data: any) => {
-                    this.idCircuitVisa = data.id;
-                    this.currentEntity.visaTemplate.push(newElemListModel);
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+        this.currentEntity.visaTemplate.push(newElemListModel);
+        if (this.currentEntity.visaTemplate.length > 1) {
+            this.currentEntity.visaTemplate[this.currentEntity.visaTemplate.length-2].item_mode = 'visa';
         }
         this.userCtrl.setValue('');
     }
@@ -335,7 +259,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.parent_entity_id = '';
         }
 
-        if (this.creationMode) { 
+        if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate = [];
@@ -373,17 +297,23 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.creationMode = false;
         this.isDraggable = true;
         $j('#jstree').jstree('deselect_all');
-        for (let i = 0; i < this.entities.length; i++) {
-            if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
-                $j('#jstree').jstree('select_node', this.entities[i]);
-                break;
+        if (this.currentEntity.parent_entity_id) {
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].entity_id == this.currentEntity.parent_entity_id) {
+                    $j('#jstree').jstree('select_node', this.entities[i]);
+                    break;
+                }
             }
+        } else {
+            this.sidenav.close();
         }
     }
 
-    selectParentEntity(entity_id:any) {
-        $j('#jstree').jstree('deselect_all');
-        $j('#jstree').jstree('select_node', entity_id);
+    selectParentEntity(entity_id: any) {
+        if (this.creationMode) {
+            $j('#jstree').jstree('deselect_all');
+            $j('#jstree').jstree('select_node', entity_id);
+        }
     }
 
     removeEntity() {
@@ -391,20 +321,30 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.config = { data: { entity: this.currentEntity } };
             this.dialogRef = this.dialog.open(EntitiesAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: any) => {
-                console.log(result);
                 if (result) {
+                    if (this.currentEntity.listTemplate.id) {
+                        this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+                        .subscribe((data: any) => {
+                            this.currentEntity.listTemplate.id = data.id;
+                            this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                                .subscribe((data: any) => {
+                                    this.listTemplateRoles = data['roles'];
+                                }, (err) => {
+                                    this.notify.error(err.error.errors);
+                                });
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                    }
+                    
                     this.http.put(this.coreUrl + "rest/entities/" + result.entity_id + "/reassign/" + result.redirectEntity, {})
                         .subscribe((data: any) => {
                             this.entities = data['entities'];
                             $j('#jstree').jstree(true).settings.core.data = this.entities;
                             $j('#jstree').jstree("refresh");
+                            this.sidenav.close();
                             this.notify.success(this.lang.entityDeleted);
-                            for (let i = 0; i < this.entities.length; i++) {
-                                if (this.entities[i].allowed == true) {
-                                    $j('#jstree').jstree('select_node', this.entities[i]);
-                                    break;
-                                }
-                            }
+
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -415,18 +355,28 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + this.currentEntity.entity_label + ' »');
 
             if (r) {
+                if (this.currentEntity.listTemplate.id) {
+                    this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+                    .subscribe((data: any) => {
+                        this.currentEntity.listTemplate.id = data.id;
+                        this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                            .subscribe((data: any) => {
+                                this.listTemplateRoles = data['roles'];
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+                }
+                
                 this.http.delete(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id)
                     .subscribe((data: any) => {
                         this.entities = data['entities'];
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
                         $j('#jstree').jstree("refresh");
+                        this.sidenav.close();
                         this.notify.success(this.lang.entityDeleted);
-                        for (let i = 0; i < this.entities.length; i++) {
-                            if (this.entities[i].allowed == true) {
-                                $j('#jstree').jstree('select_node', this.entities[i]);
-                                break;
-                            }
-                        }
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
@@ -449,12 +399,13 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         } else {
             this.currentEntity = { "entity_type": this.entityTypeList[0].id };
             $j('#jstree').jstree('deselect_all');
-            for (let i = 0; i < this.entities.length; i++) {
+            this.sidenav.open();
+            /*for (let i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].allowed == true) {
                     $j('#jstree').jstree('select_node', this.entities[i]);
                     break;
                 }
-            }
+            }*/
         }
     }
 
@@ -468,14 +419,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     updateDiffList(template: any, role: any): any {
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "entity_id",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        };
-
+        this.listDiffModified = true;
         if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
             this.currentEntity.listTemplate.dest.forEach((listModel: any) => {
                 if (listModel.item_id != template.item_id) {
@@ -484,6 +428,17 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             });
             this.currentEntity.listTemplate.dest = [template];
         }
+    }
+
+    saveDiffList() {
+        this.listDiffModified = false;
+        var newDiffList = {
+            "object_id": this.currentEntity.entity_id,
+            "object_type": "entity_id",
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "items": Array()
+        };
 
         this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
@@ -499,7 +454,22 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 }
             }
         });
-        if (this.currentEntity.listTemplate.id) {
+
+        if (newDiffList.items.length == 0) {
+            this.http.delete(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id)
+                .subscribe((data: any) => {
+                    this.currentEntity.listTemplate.id = null;
+                    this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
+                        .subscribe((data: any) => {
+                            this.listTemplateRoles = data['roles'];
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
+                    this.notify.success(this.lang.diffusionModelDeleted);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else if (this.currentEntity.listTemplate.id) {
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
@@ -531,13 +501,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     updateDiffListVisa(template: any): any {
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "VISA_CIRCUIT",
-            "title": this.currentEntity.entity_id,
-            "description": this.currentEntity.entity_id,
-            "items": Array()
-        };
+        this.listDiffModified = true;
         this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
             if (i == (this.currentEntity.visaTemplate.length - 1)) {
@@ -545,74 +509,19 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             } else {
                 listModel.item_mode = "visa";
             }
-            newDiffList.items.push({
-                "id": listModel.id,
-                "item_id": listModel.item_id,
-                "item_type": "user_id",
-                "item_mode": listModel.item_mode,
-                "sequence": listModel.sequence
-            });
         });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
-            .subscribe((data: any) => {
-                this.idCircuitVisa = data.id;
-                this.notify.success(this.lang.diffusionModelUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-
     }
 
-    removeDiffList(i: number, role: string): any {
-        this.currentEntity.listTemplate[role].splice(i, 1);
+    saveDiffListVisa() {
+        this.listDiffModified = false;
         var newDiffList = {
             "object_id": this.currentEntity.entity_id,
-            "object_type": "entity_id",
+            "object_type": "VISA_CIRCUIT",
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "items": Array()
         };
-        this.listTemplateRoles.forEach((role: any) => {
-            if (role.available == true) {
-                if (this.currentEntity.listTemplate[role.id]) {
-                    this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
-                        newDiffList.items.push({
-                            "item_id": listModel.item_id,
-                            "item_type": listModel.item_type,
-                            "item_mode": role.id,
-                            "sequence": listModel.sequence
-                        });
-                    });
-                }
-            }
-        });
-        this.http.put(this.coreUrl + "rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
-            .subscribe((data: any) => {
-                this.currentEntity.listTemplate.id = data.id;
-                this.http.get(this.coreUrl + "rest/listTemplates/types/entity_id/roles")
-                    .subscribe((data: any) => {
-                        this.listTemplateRoles = data['roles'];
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
-                this.notify.success(this.lang.diffusionModelUpdated);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
-    }
-
-    removeDiffListVisa(template: any, i: number): any {
-        this.currentEntity.visaTemplate.splice(i, 1);
-
-        if (this.currentEntity.visaTemplate.length > 0) {
-            var newDiffList = {
-                "object_id": this.currentEntity.entity_id,
-                "object_type": "VISA_CIRCUIT",
-                "title": this.currentEntity.entity_id,
-                "description": this.currentEntity.entity_id,
-                "items": Array()
-            };
-
+        if (this.idCircuitVisa == null) {
             this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
                 if (i == (this.currentEntity.visaTemplate.length - 1)) {
@@ -621,13 +530,36 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     listModel.item_mode = "visa";
                 }
                 newDiffList.items.push({
+                    "id": listModel.id,
                     "item_id": listModel.item_id,
                     "item_type": "user_id",
                     "item_mode": listModel.item_mode,
                     "sequence": listModel.sequence
                 });
             });
-
+            this.http.post(this.coreUrl + "rest/listTemplates", newDiffList)
+                .subscribe((data: any) => {
+                    this.idCircuitVisa = data.id;
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else if (this.currentEntity.visaTemplate.length > 0) {
+            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+                listModel.sequence = i;
+                if (i == (this.currentEntity.visaTemplate.length - 1)) {
+                    listModel.item_mode = "sign";
+                } else {
+                    listModel.item_mode = "visa";
+                }
+                newDiffList.items.push({
+                    "id": listModel.id,
+                    "item_id": listModel.item_id,
+                    "item_type": "user_id",
+                    "item_mode": listModel.item_mode,
+                    "sequence": listModel.sequence
+                });
+            });
             this.http.put(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa, newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuitVisa = data.id;
@@ -637,19 +569,40 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                 });
         } else {
             this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
-                .subscribe(() => {
-                    this.idCircuitVisa = null;
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+            .subscribe(() => {
+                this.idCircuitVisa = null;
+                this.notify.success(this.lang.diffusionModelDeleted);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+        }
+    }
+
+    removeDiffList(i: number, role: string): any {
+        this.listDiffModified = true;
+        this.currentEntity.listTemplate[role].splice(i, 1);
+    }
+
+    removeDiffListVisa(template: any, i: number): any {
+        this.listDiffModified = true;
+        this.currentEntity.visaTemplate.splice(i, 1);
+
+        if (this.currentEntity.visaTemplate.length > 0) {
+            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+                listModel.sequence = i;
+                if (i == (this.currentEntity.visaTemplate.length - 1)) {
+                    listModel.item_mode = "sign";
+                } else {
+                    listModel.item_mode = "visa";
+                }
+            });
         }
     }
 
     toggleRole(role: any) {
         console.log(role);
         if (role.usedIn.length > 0) {
-            this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(',') + '</b><br/>'+this.lang.roleUsedInTemplateInfo2 } };
+            this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } };
             let dialogRef = this.dialog.open(ConfirmModalComponent, this.config);
             dialogRef.afterClosed().subscribe(result => {
                 if (result === "ok") {

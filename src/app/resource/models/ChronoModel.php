@@ -27,6 +27,7 @@ class ChronoModel
         ValidatorModel::intVal($aArgs, ['typeId', 'resId']);
 
         $elements = [];
+        $chronoNumber = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/chrono.xml']);
         if ($loadedXml) {
@@ -43,48 +44,44 @@ class ChronoModel
             }
         }
 
-        foreach ($elements as $key => $value) {
+        foreach ($elements as $value) {
             if (!empty($value['type'])) {
                 if ($value['type'] == 'date') {
                     if ($value['value'] == 'year') {
-                        $elements[$key]['value'] = date('Y');
+                        $value['value'] = date('Y');
                     } elseif ($value['value'] == 'month') {
-                        $elements[$key]['value'] = date('m');
+                        $value['value'] = date('m');
                     } elseif ($value['value'] == 'day') {
-                        $elements[$key]['value'] = date('d');
+                        $value['value'] = date('d');
                     } elseif ($value['value'] == 'full_date') {
-                        $elements[$key]['value'] = date('dmY');
+                        $value['value'] = date('dmY');
                     }
                 } elseif ($value['type'] == 'maarch_var') {
                     if ($value['value'] == "entity_id") {
-                        $elements[$key]['value'] = $aArgs['entityId'];
+                        $value['value'] = $aArgs['entityId'];
                     } elseif ($value['value'] == 'type_id') {
-                        $elements[$key]['value'] = $aArgs['typeId'];
+                        $value['value'] = $aArgs['typeId'];
                     }
-                } elseif ($value['TYPE'] == 'maarch_functions') {
+                } elseif ($value['type'] == 'maarch_functions') {
                     if ($value['value'] == 'chr_global') {
-                        $elements[$key]['value'] = ChronoModel::getChronoGlobal();
+                        $value['value'] = ChronoModel::getChronoGlobal();
                     } elseif ($value['value'] == 'chr_by_entity') {
-                        $elements[$key]['value'] = ChronoModel::getChronoEntity($aArgs['entityId']);
+                        $value['value'] = ChronoModel::getChronoEntity($aArgs['entityId']);
                     } elseif ($value['value'] == 'chr_by_category') {
-                        $elements[$key]['value'] = ChronoModel::getChronoCategory($aArgs['id']);
+                        $value['value'] = ChronoModel::getChronoCategory($aArgs['id']);
                     } elseif ($value['value'] == 'category_char') {
-                        $elements[$key]['value'] = ChronoModel::getChronoCategoryChar($aArgs['id']);
+                        $value['value'] = ChronoModel::getChronoCategoryChar($aArgs['id']);
                     } elseif ($value['value'] == 'chr_by_folder') {
-                        $elements[$key]['value'] = ChronoModel::getChronoFolder($aArgs['folderId']);
+                        $value['value'] = ChronoModel::getChronoFolder($aArgs['folderId']);
                     } elseif ($value['value'] == 'chr_by_res_id') {
-                        $elements[$key]['value'] = $aArgs['resId'];
+                        $value['value'] = $aArgs['resId'];
                     }
                 }
             }
+            $chronoNumber[] = $value['value'];
         }
 
-        if (empty($separator)) {
-            $separator = '/';
-        }
-        $chrono = $separator . implode($separator, $elements);
-
-        return $chrono;
+        return implode('', $chronoNumber);
     }
 
     public static function getChronoGlobal()

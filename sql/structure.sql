@@ -111,8 +111,8 @@ CREATE TABLE doctypes
   doctypes_second_level_id integer,
   primary_retention  character varying(50) DEFAULT NULL,
   secondary_retention  character varying(50) DEFAULT NULL,
-  retention_final_disposition character varying(255) NOT NULL DEFAULT 'destruction'::character varying,
-  retention_rule character varying(15) NOT NULL DEFAULT 'P10Y'::character varying,
+  retention_final_disposition character varying(255) DEFAULT NULL,
+  retention_rule character varying(15) DEFAULT NULL,
   duration_current_use integer,
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
@@ -1981,6 +1981,7 @@ CREATE TABLE priorities
   working_days boolean NOT NULL,
   delays integer,
   default_priority boolean NOT NULL DEFAULT FALSE,
+  "order" integer,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -2652,7 +2653,7 @@ CREATE TABLE message_exchange
   
   res_id_master numeric default NULL,
 
-  docserver_id character varying(32) NOT NULL,
+  docserver_id character varying(32) DEFAULT NULL,
   path character varying(255) DEFAULT NULL,
   filename character varying(255) DEFAULT NULL,
   fingerprint character varying(255) DEFAULT NULL,

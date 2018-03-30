@@ -40,7 +40,7 @@ class HistoryController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $maxRequestSize = 10000;
+        $maxRequestSize = 50000;
 
         $histories = HistoryModel::get([
             'select'    => ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'],

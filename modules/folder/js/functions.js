@@ -190,3 +190,7 @@ function tabClick (TabId){
     $j('#frame-'+TabId).css('display','block');
 
 }
+
+function triggerChosen(){
+	$j('#folder').trigger('chosen:updated');
+}

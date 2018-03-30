@@ -228,6 +228,8 @@ $app->post('/priorities', \Priority\controllers\PriorityController::class . ':cr
 $app->get('/priorities/{id}', \Priority\controllers\PriorityController::class . ':getById');
 $app->put('/priorities/{id}', \Priority\controllers\PriorityController::class . ':update');
 $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class . ':delete');
+$app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
+$app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
@@ -268,6 +270,7 @@ $app->delete('/users/{id}/groups/{groupId}', \User\controllers\UserController::c
 $app->post('/users/{id}/entities', \User\controllers\UserController::class . ':addEntity');
 $app->put('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':updateEntity');
 $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\UserController::class . ':updatePrimaryEntity');
+$app->get('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':isEntityDeletable');
 $app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
 $app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');

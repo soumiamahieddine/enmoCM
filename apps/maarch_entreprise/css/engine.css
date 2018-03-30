@@ -306,3 +306,7 @@ h1.admin-app-name {
 .card-app-content {
     min-height: 100%;
 }
+
+.headerMaarch.mat-menu-panel {
+    background: #135f7f !important;
+}

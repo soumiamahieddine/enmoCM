@@ -45,7 +45,7 @@ $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], 'letterb
 $indexes = $type->get_indexes($_REQUEST['type_id'], 'letterbox_coll');
 
 $opt_indexes = '';
-$displayValue = 'table-row';
+$display_value = 'table-row';
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {

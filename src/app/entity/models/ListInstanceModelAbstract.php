@@ -22,13 +22,16 @@ class ListInstanceModelAbstract
     public static function get(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aListInstances = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['listinstance'],
             'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy'],
+            'limit'     => $aArgs['limit']
         ]);
 
         return $aListInstances;
@@ -59,7 +62,7 @@ class ListInstanceModelAbstract
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        DatabaseModel::delete([
+        DatabaseModel::update([
             'table' => 'listinstance',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
@@ -89,5 +92,21 @@ class ListInstanceModelAbstract
         }
 
         return $aListinstance[0];
+    }
+
+    public static function getWithConfidentiality(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entityId', 'userId']);
+        ValidatorModel::stringType($aArgs, ['entityId', 'userId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aListInstances = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['listinstance, res_letterbox, mlb_coll_ext'],
+            'where'     => ['listinstance.res_id = res_letterbox.res_id', 'mlb_coll_ext.res_id = res_letterbox.res_id', 'confidentiality = ?', 'destination = ?', 'item_id = ?', 'closing_date is null'],
+            'data'      => ['Y', $aArgs['entityId'], $aArgs['userId']]
+        ]);
+
+        return $aListInstances;
     }
 }

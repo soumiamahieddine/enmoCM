@@ -447,6 +447,12 @@ else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['
                     $_POST['table'],
                     $arr_res[$i],'ACTION#'.$id_action, $id_action,
                     $what, $_SESSION['config']['databasetype'], $_POST['module']);
+
+                // SEND MESSAGE EXCHANGE REVIEW M2M
+                require_once "modules/sendmail/Controllers/MessageExchangeReviewController.php";
+                \Sendmail\Controllers\MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $arr_res[$i], 'action_id' => $id_action]);
+
+                
             }
         }
     }

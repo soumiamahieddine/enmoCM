@@ -19,6 +19,9 @@ use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
+
+require_once 'core/class/Url.php';
 
 class CoreController
 {
@@ -28,18 +31,22 @@ class CoreController
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = CoreConfigModel::getApplicationName();
         $aInit['lang'] = CoreConfigModel::getLanguage();
+        $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
+        $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+
         $aInit['scriptsToinject'] = [];
 
         $scriptsToInject =  scandir('dist');
         foreach ($scriptsToInject as $key => $value) {
-            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false) {
+            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
                 if (strstr($value, '.js.map') === false) {
                     $aInit['scriptsToinject'][] = $value;
                 }
             }
         }
 
-        if (!empty($aInit['scriptsToinject'][2]) && strstr($aInit['scriptsToinject'][2], 'vendor.') !== false) {
+        if (!empty($aInit['scriptsToinject'][3]) && strstr($aInit['scriptsToinject'][3], 'vendor.') !== false) {
             $tmp = $aInit['scriptsToinject'][1];
             $aInit['scriptsToinject'][1] = $aInit['scriptsToinject'][2];
             $aInit['scriptsToinject'][2] = $tmp;

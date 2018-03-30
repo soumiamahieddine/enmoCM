@@ -1188,7 +1188,7 @@ if ($stmt->rowCount() == 0) {
     ?>
 </div>
 <?php 
-    $technicalInfo_frame = '<div class="detailsDisplayDiv" id="uniqueDetailsDiv">';
+    $technicalInfo_frame = '<div class="detailsDisplayDiv" id="uniqueDetailsDiv" style="display:none;">';
     $technicalInfo_frame .= '<iframe src="" name="uniqueDetailsIframe" width="100%" align="left" scrolling="yes" frameborder="0" id="uniqueDetailsIframe" style="height:100%;"></iframe>';
     $technicalInfo_frame .= '</div>';
     echo $technicalInfo_frame; ?>     

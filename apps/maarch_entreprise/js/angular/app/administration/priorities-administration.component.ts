@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import {MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -23,8 +23,10 @@ export class PrioritiesAdministrationComponent implements OnInit {
     loading         : boolean   = false;
 
     priorities      : any[]     = [];
+    prioritiesOrder : any[]     = [];
     dataSource      : any;
     displayedColumns            = ['label', 'delays', 'working_days', 'default_priority', 'actions'];
+
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -53,6 +55,12 @@ export class PrioritiesAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.priorities = data["priorities"];
                 this.loading = false;
+                this.http.get(this.coreUrl + "rest/sortedPriorities")
+                    .subscribe((data: any) => {
+                        this.prioritiesOrder = data['priotities'];
+                    }, () => {
+                        location.href = "index.php";
+                    });
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.priorities);
                     this.dataSource.paginator = this.paginator;
@@ -78,5 +86,15 @@ export class PrioritiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 })
         }
+    }
+
+    updatePrioritiesOrder() {
+        this.http.put(this.coreUrl + "rest/sortedPriorities", this.prioritiesOrder)
+            .subscribe((data: any) => {
+                this.prioritiesOrder = data['priorities'];
+                this.notify.success(this.lang.modificationSaved);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 }

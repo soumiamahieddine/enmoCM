@@ -116,4 +116,49 @@ class PriorityController
 
         return $response->withJson(['priorities' => PriorityModel::get()]);
     }
+
+    public function getSorted(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $priorities = PriorityModel::get([
+            'select'    => ['id', 'label', '"order"'],
+            'orderBy'   => ['"order" NULLS LAST']
+        ]);
+
+        return $response->withJson(['priotities' => $priorities]);
+    }
+
+    public function updateSort(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        foreach ($data as $key => $priorityToUpdate) {
+            if ($key != $priorityToUpdate['order']) {
+                PriorityModel::updateOrder(['id' => $priorityToUpdate['id'], 'order' => $key]);
+            }
+        }
+
+        HistoryController::add([
+            'tableName' => 'priorities',
+            'recordId'  => $GLOBALS['userId'],
+            'eventType' => 'UP',
+            'info'      => _PRIORITY_SORT_MODIFICATION,
+            'moduleId'  => 'priority',
+            'eventId'   => 'priorityModification',
+        ]);
+
+        $priorities = PriorityModel::get([
+            'select'    => ['id', 'label', '"order"'],
+            'orderBy'   => ['"order" NULLS LAST']
+        ]);
+
+        return $response->withJson(['priorities' => $priorities]);
+    }
 }

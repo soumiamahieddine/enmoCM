@@ -19,7 +19,7 @@
     <SERVICE>
         <id>manage_entities</id>
         <name>_LISTMODELS</name>
-        <comment>_MANAGE_LISTMODELS</comment>
+        <comment>_MANAGE_LISTMODELS_DESC</comment>
         <servicepage>/administration/diffusionModels</servicepage>
         <category>organisation</category>
         <servicetype>admin</servicetype>

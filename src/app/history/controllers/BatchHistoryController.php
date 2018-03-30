@@ -36,7 +36,7 @@ class BatchHistoryController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $maxRequestSize = 10000;
+        $maxRequestSize = 50000;
 
         $batchHistories = BatchHistoryModel::get([
             'select'    => ['event_date', 'module_name', 'total_processed', 'total_errors', 'info'],

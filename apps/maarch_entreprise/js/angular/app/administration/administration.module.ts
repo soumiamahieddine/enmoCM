@@ -7,13 +7,14 @@ import { SortPipe }                             from '../../plugins/sorting.pipe
 
 import { MenuComponent }                        from '../menu/menu.component';
 import { MenuNavComponent }                     from '../menu/menu-nav.component';
+import { MenuTopComponent }                     from '../menu/menu-top.component';
 import { AppMaterialModule }                    from '../app-material.module';
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }                      from './administration.component';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }      from './users-administration.component';
 import { GroupsAdministrationComponent, GroupsAdministrationRedirectModalComponent }    from './groups-administration.component';
-import { UserAdministrationComponent }                  from './user-administration.component';
+import { UserAdministrationComponent, UserAdministrationRedirectModalComponent }                  from './user-administration.component';
 import { GroupAdministrationComponent }                 from './group-administration.component';
 import { BasketsAdministrationComponent }               from './baskets-administration.component';
 import { BasketAdministrationComponent, BasketAdministrationSettingsModalComponent, BasketAdministrationGroupListModalComponent }                from './basket-administration.component';
@@ -48,6 +49,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
     declarations: [
         MenuComponent,
         MenuNavComponent,
+        MenuTopComponent,
         AdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,
@@ -72,6 +74,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
         NotificationsAdministrationComponent,
         NotificationAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
+        UserAdministrationRedirectModalComponent,
         EntitiesAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,
@@ -83,6 +86,7 @@ import { NotificationAdministrationComponent }          from './notification-adm
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
+        UserAdministrationRedirectModalComponent,
         EntitiesAdministrationRedirectModalComponent,
         GroupsAdministrationRedirectModalComponent,
         BasketAdministrationSettingsModalComponent,

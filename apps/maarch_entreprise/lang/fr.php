@@ -88,7 +88,7 @@ if (!defined('_VIEW_HISTORY_BATCH')) {
     define('_VIEW_HISTORY_BATCH', 'Historique des batchs');
 }
 if (!defined('_VIEW_HISTORY_DESC')) {
-    define('_VIEW_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de la GED Maarch.");
+    define('_VIEW_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de Maarch Courrier.");
 }
 if (!defined('_VIEW_FULL_HISTORY_DESC')) {
     define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
@@ -5063,7 +5063,7 @@ if (!defined('_ADMIN_UPDATE_CONTROL')) {
     define('_ADMIN_UPDATE_CONTROL', 'Vérification mise à jour');
 }
 if (!defined('_ADMIN_UPDATE_CONTROL_DESC')) {
-    define('_ADMIN_UPDATE_CONTROL_DESC', 'Vérification mise à jour');
+    define('_ADMIN_UPDATE_CONTROL_DESC', 'Voir les nouveaux tags de Maarch Courrier et mettre à jour l\'application au dernier tag si besoin.');
 }
 if (!defined('_YOUR_VERSION')) {
     define('_YOUR_VERSION', 'Votre version actuelle');

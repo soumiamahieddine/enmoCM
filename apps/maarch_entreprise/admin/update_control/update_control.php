@@ -18,7 +18,7 @@
  */
 core_tools::load_lang();
 $core_tools = new core_tools();
-//$core_tools->test_admin('admin_update_control', 'apps');
+$core_tools->test_admin('admin_update_control', 'apps');
 
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {

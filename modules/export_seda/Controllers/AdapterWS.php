@@ -3,8 +3,8 @@
 require_once __DIR__. DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Transfer.php';
 require_once __DIR__. DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'RequestSeda.php';
 
-class AdapterWS{
-
+class AdapterWS
+{
     private $db;
     public function __construct()
     {
@@ -19,10 +19,10 @@ class AdapterWS{
         $res = $transfer->transfer('maarchcourrier', $message->reference, $type);
 
         if ($res['status'] == 1) {
-            $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'E');
+            $this->db->updateStatusMessage($message->reference, 'E');
             return $res;
         }
 
-        $this->db->updateStatusMessage($messageObject->MessageIdentifier->value, 'S');
+        $this->db->updateStatusMessage($message->reference, 'S');
     }
 }

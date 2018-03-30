@@ -7,6 +7,7 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{data.length}} {{lang.entries}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <menu-top></menu-top>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
@@ -20,6 +21,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
+                <div class="alert alert-warning" role="alert" [innerHTML]="lang.limitDataReached" *ngIf="data.length == 50000"></div>
                 <div class="row">
                     <div class="col-md-6 col-xs-6">
                         <mat-form-field>
@@ -58,14 +60,14 @@
                 <div class="row">
                     <div class="col-sm-6" style="padding-top:10px;">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()">
+                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()" (focus)="pickerStart.open()">
                             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                             <mat-datepicker #pickerStart touchUi="true" [startAt]="startDate"></mat-datepicker>
                         </mat-form-field>       
                     </div>
                     <div class="col-sm-6" style="padding-top:10px;">
                         <mat-form-field>
-                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()">
+                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()" (focus)="pickerEnd.open()">
                             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                             <mat-datepicker #pickerEnd touchUi="true" [startAt]="endDate"></mat-datepicker>
                         </mat-form-field>
