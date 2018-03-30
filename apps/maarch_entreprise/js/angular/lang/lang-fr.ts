@@ -264,6 +264,7 @@ export const LANG_FR = {
     "priorityDeleted"                   : "Priorité supprimée",
     "priorityModification"              : "Modification d'une priorité",
     "priorityUpdated"                   : "Priorité modifiée",
+    "prioritiesOrder"                   : "Gérer l'ordre des priorités",
     "privileges"                        : "Privilèges",
     "processAction"                     : "Action(s) de traitement",
     "processDelay"                      : "Délai de traitement",
@@ -440,5 +441,5 @@ export const LANG_FR = {
     "numericPackageImported"            : "Pli numérique correctement importé",
     "enterValue"                        : "Vous devez entrer une valeur",
     "patternId"                         : "La valeur doit contenir uniquement des alphanumériques, points, underscores ou tirets",
-    "alreadyExist"                      : "L'identifiant existe déjà",
+    "alreadyExist"                      : "L'identifiant existe déjà"
 };
