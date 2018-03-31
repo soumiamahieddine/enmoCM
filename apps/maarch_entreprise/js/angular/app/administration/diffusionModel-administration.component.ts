@@ -103,6 +103,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
             this.diffusionModel.diffusionList[this.diffusionModel.diffusionList.length-2].item_mode = item_mode2;
         }
         this.userCtrl.setValue('');
+        $j('.autocompleteSearch').blur();
     }
 
     updateDiffListVisa(template: any): any {
