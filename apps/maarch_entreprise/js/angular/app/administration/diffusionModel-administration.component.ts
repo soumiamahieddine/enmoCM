@@ -14,6 +14,7 @@ declare const angularGlobals: any;
 
 @Component({
     templateUrl: "../../../../Views/diffusionModel-administration.component.html",
+    styleUrls: ['../../../../css/diffusionModel-administration.component.css'],
     providers: [NotificationService]
 })
 export class DiffusionModelAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -129,10 +130,14 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
         if (this.diffusionModel.diffusionList.length > 0) {
             this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (i == (this.diffusionModel.diffusionList.length - 1)) {
-                    listModel.item_mode = "sign";
+                if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
+                    listModel.item_mode = "avis";
                 } else {
-                    listModel.item_mode = "visa";
+                    if (i == (this.diffusionModel.diffusionList.length - 1)) {
+                        listModel.item_mode = "sign";
+                    } else {
+                        listModel.item_mode = "visa";
+                    }
                 }
             });
         }
@@ -146,6 +151,7 @@ export class DiffusionModelAdministrationComponent extends AutoCompletePlugin im
                     this.idCircuit = this.diffusionModel.diffusionList[0].id;
                 }
                 this.loading = false;
+                this.listDiffModified = false;
 
             }, () => {
                 location.href = "index.php";
