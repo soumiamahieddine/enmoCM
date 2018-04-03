@@ -3465,6 +3465,9 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD')) {
 if (!defined('_STANDARD_LOGIN')) {
     define('_STANDARD_LOGIN', "Maarch's authentication");
 }
+if (!defined('_SERVICE_REST_LOGIN')) {
+    define('_SERVICE_REST_LOGIN', "Service rest authentication");
+}
 if (!defined('_CAS_LOGIN')) {
     define('_CAS_LOGIN', 'CAS authentication');
 }

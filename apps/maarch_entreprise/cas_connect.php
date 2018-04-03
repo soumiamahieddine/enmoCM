@@ -109,7 +109,7 @@ $trace = new history();
 if ($restMode) {
     $security = new security();
     $_SESSION['error'] = '';
-    $res  = $security->login($userId, $loginArray['password']);
+    $res  = $security->login($userId, $loginArray['password'], 'restMode');
 
     $_SESSION['user'] = $res['user'];
     if (!empty($res['error'])) {

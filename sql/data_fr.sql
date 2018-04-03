@@ -26,6 +26,10 @@ INSERT INTO usergroups (group_id, group_desc, enabled) VALUES ('ELU', 'Elu', 'Y'
 DELETE FROM usergroups WHERE group_id = 'ARCHIVISTE';
 DELETE FROM usergroups_services WHERE group_id = 'ARCHIVISTE';
 INSERT INTO usergroups (group_id, group_desc, enabled) VALUES ('ARCHIVISTE', 'Archiviste', 'Y');
+DELETE FROM usergroups WHERE group_id = 'MAARCHTOGEC';
+DELETE FROM usergroups_services WHERE group_id = 'MAARCHTOGEC';
+INSERT INTO usergroups (group_id, group_desc, enabled) VALUES ('MAARCHTOGEC', 'Maarch To GEC', 'Y');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'index_mlb');
@@ -662,6 +666,8 @@ DELETE FROM users WHERE user_id = 'ggrand';
 DELETE FROM users_entities WHERE user_id = 'ggrand';
 INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) VALUES ('ggrand', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Georges', 'GRAND', 'info@maarch.org', 'Y', 'N', 'OK', 'standard');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ggrand', 'COR', '', 'Y');
+DELETE FROM users WHERE user_id = 'cchaplin';
+INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'info@maarch.org', 'Y', 'N', 'OK', 'restMode');
 
 -- Create USERGROUP_CONTENT
 TRUNCATE TABLE usergroup_content;
@@ -713,6 +719,8 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'ADMINISTRATEUR', 'N','');
 DELETE FROM usergroup_content WHERE user_id = 'ggrand';
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ggrand', 'ARCHIVISTE', 'Y','');
+DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('cchaplin', 'MAARCHTOGEC', 'Y','');
 
 -- Create ENTITIES and LISTMODELS
 TRUNCATE TABLE entities;
@@ -982,6 +990,8 @@ DELETE FROM security WHERE group_id = 'ELU';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ELU', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_entities])', 'Les courriers de mes services et sous-services','N','N','N', 0, NULL, NULL, 'DOC');
 DELETE FROM security WHERE group_id = 'ARCHIVISTE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
+DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier','N','N','N', 0, NULL, NULL, 'DOC');
 
 -- Donnees manuelles
 ------------

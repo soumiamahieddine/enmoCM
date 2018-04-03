@@ -120,8 +120,11 @@ class security extends Database
                     );
                 } else {
                     $comp = " and STATUS <> 'DEL' "
-                          . "and (loginmode in ('standard', 'sso', 'cas'))";
-                    $params = [];
+                          . "and loginmode in (:loginmode1)";
+                    $params = ['loginmode1' => ['standard', 'sso', 'cas']];
+                    if ($method == 'restMode') {
+                        array_push($params['loginmode1'], 'restMode');
+                    }
                 }
             }
         } else {

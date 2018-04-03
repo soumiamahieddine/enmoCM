@@ -12,6 +12,12 @@
         <SCRIPT>standard_connect.php</SCRIPT>
         <ENABLED>true</ENABLED>
     </METHOD>
+    <METHOD>
+        <ID>restMode</ID>
+        <NAME>_SERVICE_REST_LOGIN</NAME>
+        <SCRIPT>standard_connect.php</SCRIPT>
+        <ENABLED>true</ENABLED>
+    </METHOD>
     <!--<METHOD>
         <ID>sso</ID>
         <NAME>_SSO_LOGIN</NAME>
