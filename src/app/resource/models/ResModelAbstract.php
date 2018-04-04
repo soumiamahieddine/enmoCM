@@ -30,9 +30,10 @@ class ResModelAbstract
             'table'     => ['res_view_letterbox'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'order_by'  => $aArgs['orderBy'],
+            'limit'     => $aArgs['limit']
         ]);
-
+        
         return $aResources;
     }
 

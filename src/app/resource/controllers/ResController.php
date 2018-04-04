@@ -28,6 +28,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
+use Docserver\models\ResDocserverModel;
 
 class ResController
 {
@@ -222,12 +223,28 @@ class ResController
 
         $check = Validator::stringType()->notEmpty()->validate($data['clause']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
+
+        if(!empty($data['withFile'])){
+            $withFile = $data['withFile'] === 'true'? true: false;
+            $check = $check && Validator::boolType()->validate($withFile);
+        }
+
+        if(!empty($data['orderBy'])){
+            $check = $check && Validator::stringType()->validate($data['orderBy']);
+            $orderBy = explode(',',$data['orderBy']);
+        }
+
+        if(!empty($data['limit'])){
+            $limit = (int) $data['limit'];
+            $check = $check && Validator::intType()->validate($limit);
+        }
+
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-
         $select = explode(',', $data['select']);
-        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+        
+        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'orderBy' => $orderBy, 'limit' => $limit, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
         }
 
@@ -240,7 +257,20 @@ class ResController
             $where[] = "({$groupsClause})";
         }
 
-        $resources = ResModel::getOnView(['select' => $select, 'where' => $where]);
+        if($data['withFile'] === true){
+            $select[] = 'res_id';            
+        }
+
+        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $orderBy, 'limit' => $limit]);
+        if($withFile === true){
+            foreach($resources as &$res){
+                $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_view_letterbox', 'adrTable' => 'null']);
+                $file = file_get_contents($path);
+                $base64Content = base64_encode($file);
+                $res['fileBase64Content'] = $base64Content;
+            };            
+        }
+        unset($res);
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
     }
