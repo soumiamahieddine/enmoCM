@@ -1147,11 +1147,11 @@ if (isset($_POST['add']) && $_POST['add']) {
 
         //EXTRAS JS FOR TABS
         if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
-            $js .= 'eleframe1 =  parent.document.getElementsByName(\'attachments_iframe\');';
+            $js .= 'eleframe1 =  parent.document.getElementsByName(\'uniqueDetailsIframe\');';
             $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=show_attachments_details_tab&load';
             $js .= '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp&fromDetail=attachments&collId=letterbox_coll&resId='.$_SESSION['doc_id'];
         } elseif (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response') {
-            $js .= 'eleframe1 =  parent.document.getElementsByName(\'responses_iframe\');';
+            $js .= 'eleframe1 =  parent.document.getElementsByName(\'uniqueDetailsIframe\');';
             $js .= 'eleframe1[0].src = \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=show_attachments_details_tab&load';
             $js .= '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp&fromDetail=response&collId=letterbox_coll&resId='.$_SESSION['doc_id'];
         } else {
@@ -1205,8 +1205,7 @@ if (isset($_REQUEST['id'])) {
             'adr_x',
             false
         );
-
-        $_SESSION['upfile'][0]['fileNameOnTmp'] = str_replace($viewResourceArr->tmp_path.DIRECTORY_SEPARATOR, '', $viewResourceArr->file_path);
+        $_SESSION['upfile'][0]['fileNameOnTmp'] = str_replace($viewResourceArr['tmp_path'].DIRECTORY_SEPARATOR, '', $viewResourceArr['file_path']);
     }
 } else {
     //INITIALIZE ADD MODE
@@ -1438,7 +1437,11 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     if ($mode == 'edit' && ($infoAttach->status != 'TMP' || ($infoAttach->status == 'TMP' && $infoAttach->relation > 1))) {
         $content .= '<p>';
         $content .= '<label>'._CREATE_NEW_ATTACHMENT_VERSION.'</label>';
-        $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="$j(\'#edit\').css(\'visibility\',\'hidden\');$j(\'#editModel\').css(\'display\',\'inline-block\');"/>'._YES;
+        $content .= '<input type="radio" name="new_version" id="new_version_yes" value="yes" onclick="';
+        if (!in_array($infoAttach->format, ['pdf', 'jpg', 'jpeg', 'png'])) {
+            $content .= '$j(\'#edit\').css(\'visibility\',\'hidden\');';
+        }
+        $content .= '$j(\'#editModel\').css(\'display\',\'inline-block\');"/>'._YES;
         $content .= '&nbsp;&nbsp;';
         $content .= '<input type="radio" name="new_version" id="new_version_no" checked value="no" onclick="$j(\'#edit\').css(\'visibility\',\'visible\');"/>'._NO;
         $content .= '</p>';
