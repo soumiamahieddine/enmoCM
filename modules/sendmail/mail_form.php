@@ -297,6 +297,7 @@ if ($mode == 'add') {
             $onclickfunction = 'updateAdress';
             $elementToDel    = $adress_mail;
             $idToDel         = 0;
+            $modeUrl         = 'adress';
         }
         $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput"><div id="loading_to" style="display:none;"></div><div class="email_element" id="0_'.$adress_mail.'">'.
         $adress_mail.'&nbsp;<div class="email_delete_button" id="'.$idToDel.'" onclick="'.$onclickfunction.'(\''.$path_to_script
