@@ -20,9 +20,9 @@
     "jquery.nicescroll": "~3.6.8",
     "jstree-bootstrap-theme": "^1.0.1",
     "photoswipe": "^4.1.2",
-    "tinymce": "^4.7.9",
+    "tinymce": "^4.7.10",
     "tooltipster": "^4.2.6",
-    "zone.js": "^0.8.24"
+    "zone.js": "^0.8.25"
   },
   "devDependencies": {
     "@angular/animations": "^5.2.9",
@@ -41,7 +41,7 @@
     "@angular/router": "^5.2.9",
     "@types/datatables.net": "^1.10.9",
     "@types/jquery": "^2.0.49",
-    "@types/node": "^7.0.58",
+    "@types/node": "^7.0.59",
     "hammerjs": "^2.0.8",
     "ng2-dnd": "^5.0.2",
     "node-sass": "^4.8.3",
