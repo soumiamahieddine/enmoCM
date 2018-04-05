@@ -75,7 +75,7 @@ echo "<ul id=\"autocomplete_contacts_ul\">";
 
         $isSociety = false;
         if(!empty($res->society)){
-            if($res->firstname === '' && $res->lastname === ''){
+            if($res->firstname == null && $res->lastname == null){
                 $arr_contact_info = array($res->firstname,$res->lastname,$res->society);
                 $isSociety = true;               
             } else {
