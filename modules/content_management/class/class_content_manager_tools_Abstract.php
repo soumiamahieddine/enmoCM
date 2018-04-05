@@ -363,6 +363,13 @@ abstract class content_management_tools_Abstract
 
         $jnlp_name = $uid_applet_name.'.jnlp';
 
+        $loadedXml = \SrcCore\models\CoreConfigModel::getXmlLoaded(['path' => 'modules/content_management/xml/config.xml']);
+
+        $jar_path = $jar_url;
+        if ($loadedXml && !empty((string) $loadedXml->CONFIG[0]->jar_path)) {
+            $jar_path = (string) $loadedXml->CONFIG[0]->jar_path;
+        }
+
         if ($_SESSION['config']['debug']) {
             $inF = fopen(
                 $_SESSION['config']['tmppath'] . 'log_jnlp_' . $_SESSION['user']['UserId'] . '.log',
@@ -380,6 +387,7 @@ abstract class content_management_tools_Abstract
             }
             fwrite($inF, '|||||||||||||||||SERVER DETAILS END FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
             fwrite($inF, "jar_url : " . $jar_url . PHP_EOL);
+            fwrite($inF, "jar_path : " . $jar_path . PHP_EOL);
             fwrite($inF, "jnlp_name : " . $jnlp_name . PHP_EOL);
             fwrite($inF, "maarchcm_url : " . $maarchcm_url . PHP_EOL);
             fwrite($inF, "objectType : " . $objectType . PHP_EOL);
@@ -448,7 +456,7 @@ abstract class content_management_tools_Abstract
 
         $jar_balise=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/maarchCM.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/maarchCM.jar';
         $jar_balise->appendChild($jar_attribute);
         $jar_attribute = $docXML->createAttribute('main');
         $jar_attribute->value = 'true';
@@ -457,32 +465,32 @@ abstract class content_management_tools_Abstract
         //begin ext libs
         $jar_balise_1=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-4.5.2.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/httpclient-4.5.2.jar';
         $jar_balise_1->appendChild($jar_attribute);
 
         $jar_balise_2=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-cache-4.5.2.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/httpclient-cache-4.5.2.jar';
         $jar_balise_2->appendChild($jar_attribute);
 
         $jar_balise_3=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpclient-win-4.5.2.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/httpclient-win-4.5.2.jar';
         $jar_balise_3->appendChild($jar_attribute);
 
         $jar_balise_4=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/httpcore-4.4.4.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/httpcore-4.4.4.jar';
         $jar_balise_4->appendChild($jar_attribute);
 
         $jar_balise_5=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/plugin.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/plugin.jar';
         $jar_balise_5->appendChild($jar_attribute);
 
         $jar_balise_6=$docXML->createElement("jar");
         $jar_attribute = $docXML->createAttribute('href');
-        $jar_attribute->value = $jar_url.'/modules/content_management/dist/lib/commons-logging-1.2.jar';
+        $jar_attribute->value = $jar_path.'/modules/content_management/dist/lib/commons-logging-1.2.jar';
         $jar_balise_6->appendChild($jar_attribute);
         //end ext libs
 
