@@ -55,9 +55,7 @@ class ResControllerTest extends TestCase
 
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-
         self::$id = $responseBody->resId;
-
         $this->assertInternalType('int', self::$id);
 
         //  READ
@@ -84,15 +82,13 @@ class ResControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'resId'         => self::$id,
+            'resId'         => [self::$id],
             'status'        => 'EVIS'
         ];
-
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $resController->updateStatus($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-
         $this->assertSame('success', $responseBody->success);
 
         //  READ
@@ -105,7 +101,7 @@ class ResControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'resId'         => self::$id
+            'resId'         => [self::$id]
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);

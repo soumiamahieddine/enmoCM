@@ -124,46 +124,19 @@ class ResController
             $data['historyMessage'] = _UPDATE_STATUS;
         }
 
-        $check = Validator::stringType()->notEmpty()->validate($data['chrono']) || Validator::intVal()->notEmpty()->validate($data['resId']) || Validator::stringType()->notEmpty()->validate($data['resId']);
+        $check = Validator::arrayType()->notEmpty()->validate($data['chrono']) || Validator::arrayType()->notEmpty()->validate($data['resId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['historyMessage']);
         
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-
-        if(strpos($data['resId'],',')!==false){
-            $resIds = explode(',', $data['resId']);
-            foreach($resIds as $resId){
-                if (!empty($data['chrono'])) {
-                    $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $data['chrono']]);
-                } else {
-                    $document = ResModel::getById(['resId' => $resId, 'select' => ['res_id']]);
-                }
-                if (empty($document)) {
-                    return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
-                }
-                if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
-                    return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-                }
-
-        
-                ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$resId]]);
-        
-                HistoryController::add([
-                    'tableName' => 'res_letterbox',
-                    'recordId'  => $document['res_id'],
-                    'eventType' => 'UP',
-                    'info'      => $data['historyMessage'],
-                    'moduleId'  => 'apps',
-                    'eventId'   => 'resup',
-                ]);
-            }
-        } else {
+        $identifiers = !empty($data['chrono'])? $data['chrono']: $data['resId'] ;
+        foreach($identifiers as $id){
             if (!empty($data['chrono'])) {
-                $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $data['chrono']]);
+                $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $id]);
             } else {
-                $document = ResModel::getById(['resId' => $data['resId'], 'select' => ['res_id']]);
+                $document = ResModel::getById(['resId' => $id, 'select' => ['res_id']]);
             }
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
@@ -172,8 +145,9 @@ class ResController
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 
+    
             ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
-
+    
             HistoryController::add([
                 'tableName' => 'res_letterbox',
                 'recordId'  => $document['res_id'],
@@ -182,10 +156,12 @@ class ResController
                 'moduleId'  => 'apps',
                 'eventId'   => 'resup',
             ]);
-        }       
+        }        
 
         return $response->withJson(['success' => 'success']);
     }
+
+    //EXTERNAL INFOS
 
     public function isLock(Request $request, Response $response, array $aArgs)
     {
