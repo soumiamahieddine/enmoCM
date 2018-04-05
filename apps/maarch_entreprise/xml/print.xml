@@ -120,6 +120,10 @@
                 <LIBELLE>Notes</LIBELLE>
                 <CALL>retrieve_notes</CALL>
             </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Circuit visa</LIBELLE>
+                <CALL>retrieve_VisaWorkflow</CALL>
+            </FUNCTION>
         </FUNCTIONS>
     </letterbox_coll>
 </ROOT>
