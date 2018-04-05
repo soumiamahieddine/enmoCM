@@ -171,6 +171,7 @@ class ResController
         if(empty($data['status'])){
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+
         $externalInfos = $data['externalInfos'];
         foreach($externalInfos as $mail){            
             $check = Validator::intType()->validate($mail['res_id']);
@@ -190,7 +191,7 @@ class ResController
             ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
             
         }
-        return $response->withJson(['success' => 'success']);
+        return $response->withJson(['errors' => '']);
     }
 
     public function isLock(Request $request, Response $response, array $aArgs)
