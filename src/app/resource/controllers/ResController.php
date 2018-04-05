@@ -162,6 +162,36 @@ class ResController
     }
 
     //EXTERNAL INFOS
+    public function updateExternalInfos(Request $request, Response $response){
+        $data = $request->getParams();
+        if(empty($data['externalInfos'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if(empty($data['status'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+        $externalInfos = $data['externalInfos'];
+        foreach($externalInfos as $mail){            
+            $check = Validator::intType()->validate($mail['res_id']);
+            $check = $check && Validator::StringType()->notEmpty()->validate($mail['external_id']);
+            $check = $check && Validator::StringType()->notEmpty()->validate($mail['external_link']);
+            if(!$check){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            }
+            
+            $document = ResModel::getById(['resId' => $mail['res_id'], 'select' => ['res_id']]);
+            if (empty($document)) {
+                return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
+            }
+            if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
+            ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+            
+        }
+        return $response->withJson(['success' => 'success']);
+    }
 
     public function isLock(Request $request, Response $response, array $aArgs)
     {

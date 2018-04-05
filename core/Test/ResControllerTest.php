@@ -117,6 +117,109 @@ class ResControllerTest extends TestCase
         $this->assertSame('COU', $res['status']);
     }
 
+    public function testUpdateExternalInfos(){
+        $resController = new \Resource\controllers\ResController();
+
+        //  UPDATE STATUS
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        
+        //ALL OK
+        $aArgs = [
+                'externalInfos' => [ 
+                    [
+                        'res_id'        => self::$id,
+                        'external_id'   => "BB981212IIYZ",
+                        'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                    ]
+                ],
+                'status'        => "GRCSENT"
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+        
+        // EXTERNAL INFOS EMPTY AND RES ID IS NOT INTEGER
+        $aArgs = [
+            'externalInfos' => [ 
+                    [
+                        'res_id'        => "res_id",
+                        'external_id'   => "",
+                        'external_link' => ""
+                    ]
+                ],
+            'status'        => "GRCSENT"
+
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+
+        // DOCUMENT DOES NOT EXIST
+        $aArgs = [
+            'externalInfos' => [
+                        [
+                            'res_id'        => 123456789,
+                            'external_id'   => "BB981212IIYZ",
+                            'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                        ]
+                    ],
+            'status'        => 'GRCSENT'
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame(_DOCUMENT_NOT_FOUND, $responseBody->errors);
+
+        //MISSING EXTERNAL INFO
+        $aArgs = [
+                'externalInfos' => [
+                    [
+                        'res_id'        => 123456789,
+                        'external_id'   => "BB981212IIYZ",
+                        'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                    ]
+                ],
+                'status'        => NULL
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+        
+        //MISSING STATUS
+        $aArgs = [
+            'externalInfos' => NULL,
+            'status'        => "GRCSENT"
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
+
     public function testDelete()
     {
         //  DELETE
