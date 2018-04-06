@@ -16,7 +16,7 @@ if (!defined('_ADMIN_TEMPLATE_ANSWER')) {
     define('_ADMIN_TEMPLATE_ANSWER', 'Administrer les modèles');
 }
 if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes (editeur de texte OFFICE ou LIBREOFFICE), les notifications et générations de courriers ainsi que l'envoi de courriels (HTML), les notes (TEXTE BRUT)");
+    define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
 }
 /*********************** Menu ***********************************/
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER')) {
