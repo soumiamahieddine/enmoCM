@@ -260,15 +260,13 @@ class ResController
 
         $check = Validator::stringType()->notEmpty()->validate($data['clause']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
-
         if(!empty($data['withFile'])){
-            $withFile = $data['withFile'] === 'true'? true: false;
             $check = $check && Validator::boolType()->validate($withFile);
         }
 
         if(!empty($data['orderBy'])){
-            $check = $check && Validator::stringType()->validate($data['orderBy']);
-            $orderBy = explode(',',$data['orderBy']);
+            $check = $check && Validator::arrayType()->notEmpty()->validate($data['orderBy']);
+            $orderBy = $data['orderBy'];
         }
 
         if(!empty($data['limit'])){
