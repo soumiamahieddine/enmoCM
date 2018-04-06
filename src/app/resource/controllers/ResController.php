@@ -191,7 +191,7 @@ class ResController
             ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
             
         }
-        return $response->withJson(['errors' => '']);
+        return $response->withJson(['success' => 'success']);
     }
 
     public function isLock(Request $request, Response $response, array $aArgs)
