@@ -425,5 +425,9 @@ export const LANG_EN = {
     "numericPackageImported"            : "Numeric package imported",
     "enterValue"                        : "You must enter a value",
     "patternId"                         : "Value must contain only alphanumeric, dot, underscore or dash",
-    "alreadyExist"                      : "Identifiant already exists"
+    "alreadyExist"                      : "Identifiant already exists",
+    "redirectedTo"                      : "Redirected to",
+    "redirectWhenAbscence"              : "Redirect the basket to a user when bascence activation",
+    "reassign"                          : "Réassigner",
+    "deleteAssignation"                 : "Delete assignation",
 };

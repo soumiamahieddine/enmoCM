@@ -279,8 +279,8 @@
                         </h4>
                         <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
                             <mat-form-field *ngIf="basket.allowed" floatLabel="never">
-                                <input matTooltip="Rediriger la banette à une personne lors de l'activation de l'absence" matTooltipPosition="above" type="text"
-                                    placeholder="Utilisateur de redirection" matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
+                                <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text"
+                                    placeholder="{{ lang.userToRedirect }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
                                 <mat-autocomplete #auto="matAutocomplete">
                                     <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id,basket)">
                                         <p mat-line matTooltip="{{ user.otherInfo }}">
@@ -312,7 +312,7 @@
                         </h4>
                         <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
                             <mat-form-field>
-                                <input type="text" color="warn" matInput disabled value="Redirigé à {{basket.userToDisplay}}">
+                                <input type="text" color="warn" matInput disabled value="{{lang.redirectedTo}} {{basket.userToDisplay}}">
                                 <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer la redirection">
                                     <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
                                 </button>
@@ -349,10 +349,10 @@
                             </mat-form-field>
                             <mat-form-field>
                                 <input type="text" color="warn" matInput disabled value="{{lang.assignBy}} {{basket.userToDisplay}}">
-                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="basket.userToDisplay =''" matTooltip="Réassigner">
+                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="basket.userToDisplay =''" matTooltip="{{lang.reassign}}">
                                     <mat-icon color="primary" class="fa fa-edit"></mat-icon>
                                 </button>
-                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer l'assignation'">
+                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="{{lang.deleteAssignation}}">
                                     <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
                                 </button>
                             </mat-form-field>
