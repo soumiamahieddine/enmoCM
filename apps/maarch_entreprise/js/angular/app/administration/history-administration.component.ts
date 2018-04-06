@@ -21,6 +21,7 @@ export class HistoryAdministrationComponent implements OnInit {
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
+    limitExceeded                   : boolean   = false;
 
     data                            : any[]     = [];
     startDate                       : Date      = new Date();
@@ -61,6 +62,7 @@ export class HistoryAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['histories'];
+                this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
@@ -79,6 +81,7 @@ export class HistoryAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['histories'];
+                this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
