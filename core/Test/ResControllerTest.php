@@ -163,7 +163,7 @@ class ResControllerTest extends TestCase
         
         $responseBody = json_decode((string) $response->getBody());
 
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Bad Request: invalid res_id', $responseBody->errors);
 
         // DOCUMENT DOES NOT EXIST
         $aArgs = [
@@ -185,11 +185,11 @@ class ResControllerTest extends TestCase
 
         $this->assertSame(_DOCUMENT_NOT_FOUND, $responseBody->errors);
 
-        //MISSING EXTERNAL INFO
+        //MISSING STATUS
         $aArgs = [
                 'externalInfos' => [
                     [
-                        'res_id'        => 123456789,
+                        'res_id'        => self::$id,
                         'external_id'   => "BB981212IIYZ",
                         'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
                     ]
@@ -205,7 +205,7 @@ class ResControllerTest extends TestCase
 
         $this->assertSame('Bad Request', $responseBody->errors);
         
-        //MISSING STATUS
+        //MISSING EXTERNAL INFOS
         $aArgs = [
             'externalInfos' => NULL,
             'status'        => "GRCSENT"
@@ -240,6 +240,71 @@ class ResControllerTest extends TestCase
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
         $this->assertSame(null, $res);
+    }
+
+    public function testGetList(){
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '1=1',
+            'withFile'      => true,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertNotNull($arr_res[0]->fileBase64Content);
+        $this->assertSame(100,$arr_res[0]->res_id);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '1=1',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame(null,$arr_res[0]->fileBase64Content);
+        $this->assertSame(100,$arr_res[0]->res_id);
+
+        $aArgs = [
+            'select'        => '',
+            'clause'        => '1=1',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame("Bad Request: select parameter not valid",$responseBody->errors);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame("Bad Request: clause parameter not valid",$responseBody->errors);
     }
 
 }

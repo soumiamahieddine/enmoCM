@@ -173,14 +173,19 @@ class ResController
         }
 
         $externalInfos = $data['externalInfos'];
-        foreach($externalInfos as $mail){            
-            $check = Validator::intType()->validate($mail['res_id']);
-            $check = $check && Validator::StringType()->notEmpty()->validate($mail['external_id']);
-            $check = $check && Validator::StringType()->notEmpty()->validate($mail['external_link']);
-            if(!$check){
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        foreach($externalInfos as $mail){
+            if(!Validator::intType()->validate($mail['res_id'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid res_id']);
             }
-            
+            if(!Validator::StringType()->notEmpty()->validate($mail['external_id'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid external_id for element : '.$mail['res_id']]);
+            }
+            if(!Validator::StringType()->notEmpty()->validate($mail['external_link'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request:  invalid external_link for element'.$mail['res_id']]);
+            }          
+        }
+
+        foreach($externalInfos as $mail){
             $document = ResModel::getById(['resId' => $mail['res_id'], 'select' => ['res_id']]);
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
@@ -189,8 +194,8 @@ class ResController
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
             ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
-            
-        }
+        }        
+
         return $response->withJson(['success' => 'success']);
     }
 
@@ -257,26 +262,31 @@ class ResController
     public function getList(Request $request, Response $response)
     {
         $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['clause']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
+        if(!Validator::stringType()->notEmpty()->validate($data['select'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: select parameter not valid']);
+        }
+        if(!Validator::stringType()->notEmpty()->validate($data['clause'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: clause parameter not valid']);
+        }
         if(!empty($data['withFile'])){
-            $check = $check && Validator::boolType()->validate($data['withFile']);
+            if(!Validator::boolType()->validate($data['withFile'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: withFile parameter is not a boolean']);
+            }            
         }
 
         if(!empty($data['orderBy'])){
-            $check = $check && Validator::arrayType()->notEmpty()->validate($data['orderBy']);
-            $orderBy = $data['orderBy'];
+            if(!Validator::arrayType()->notEmpty()->validate($data['orderBy'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: orderBy parameter not valid']);
+            }            
         }
 
         if(!empty($data['limit'])){
-            $limit = (int) $data['limit'];
-            $check = $check && Validator::intType()->validate($limit);
+            if(!Validator::intType()->validate($data['limit'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: limit parameter not valid']);
+            }
         }
-
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
+        $orderBy = $data['orderBy'];
+        $limit = $data['limit'];
         $select = explode(',', $data['select']);
         
         if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'orderBy' => $orderBy, 'limit' => $limit, 'userId' => $GLOBALS['userId']])) {
