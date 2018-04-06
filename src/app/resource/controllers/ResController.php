@@ -261,7 +261,7 @@ class ResController
         $check = Validator::stringType()->notEmpty()->validate($data['clause']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
         if(!empty($data['withFile'])){
-            $check = $check && Validator::boolType()->validate($withFile);
+            $check = $check && Validator::boolType()->validate($data['withFile']);
         }
 
         if(!empty($data['orderBy'])){
@@ -297,9 +297,9 @@ class ResController
         }
 
         $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $orderBy, 'limit' => $limit]);
-        if($withFile === true){
+        if($data['withFile'] === true){
             foreach($resources as &$res){
-                $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_view_letterbox', 'adrTable' => 'null']);
+                $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
                 $file = file_get_contents($path);
                 $base64Content = base64_encode($file);
                 $res['fileBase64Content'] = $base64Content;
