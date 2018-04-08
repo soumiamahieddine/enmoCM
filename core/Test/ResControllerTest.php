@@ -117,7 +117,8 @@ class ResControllerTest extends TestCase
         $this->assertSame('COU', $res['status']);
     }
 
-    public function testUpdateExternalInfos(){
+    public function testUpdateExternalInfos()
+    {
         $resController = new \Resource\controllers\ResController();
 
         //  UPDATE STATUS
@@ -126,7 +127,7 @@ class ResControllerTest extends TestCase
         
         //ALL OK
         $aArgs = [
-                'externalInfos' => [ 
+                'externalInfos' => [
                     [
                         'res_id'        => self::$id,
                         'external_id'   => "BB981212IIYZ",
@@ -146,7 +147,7 @@ class ResControllerTest extends TestCase
         
         // EXTERNAL INFOS EMPTY AND RES ID IS NOT INTEGER
         $aArgs = [
-            'externalInfos' => [ 
+            'externalInfos' => [
                     [
                         'res_id'        => "res_id",
                         'external_id'   => "",
@@ -194,7 +195,7 @@ class ResControllerTest extends TestCase
                         'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
                     ]
                 ],
-                'status'        => NULL
+                'status'        => null
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -207,7 +208,7 @@ class ResControllerTest extends TestCase
         
         //MISSING EXTERNAL INFOS
         $aArgs = [
-            'externalInfos' => NULL,
+            'externalInfos' => null,
             'status'        => "GRCSENT"
         ];
 
@@ -242,7 +243,8 @@ class ResControllerTest extends TestCase
         $this->assertSame(null, $res);
     }
 
-    public function testGetList(){
+    public function testGetList()
+    {
         $resController = new \Resource\controllers\ResController();
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -261,7 +263,7 @@ class ResControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
         $this->assertNotNull($arr_res[0]->fileBase64Content);
-        $this->assertSame(100,$arr_res[0]->res_id);
+        $this->assertInternalType('int', $arr_res[0]->res_id);
 
         $aArgs = [
             'select'        => 'res_id',
@@ -275,8 +277,8 @@ class ResControllerTest extends TestCase
         $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
-        $this->assertSame(null,$arr_res[0]->fileBase64Content);
-        $this->assertSame(100,$arr_res[0]->res_id);
+        $this->assertSame(null, $arr_res[0]->fileBase64Content);
+        $this->assertInternalType('int', $arr_res[0]->res_id);
 
         $aArgs = [
             'select'        => '',
@@ -290,7 +292,7 @@ class ResControllerTest extends TestCase
         $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
-        $this->assertSame("Bad Request: select parameter not valid",$responseBody->errors);
+        $this->assertSame("Bad Request: select parameter not valid", $responseBody->errors);
 
         $aArgs = [
             'select'        => 'res_id',
@@ -304,7 +306,6 @@ class ResControllerTest extends TestCase
         $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
-        $this->assertSame("Bad Request: clause parameter not valid",$responseBody->errors);
+        $this->assertSame("Bad Request: clause parameter not valid", $responseBody->errors);
     }
-
 }
