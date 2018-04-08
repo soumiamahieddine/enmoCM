@@ -713,6 +713,7 @@ CREATE TABLE contact_communication
   CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
+DROP VIEW IF EXISTS view_contacts;
 CREATE OR REPLACE VIEW view_contacts AS 
  SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
 , c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data
