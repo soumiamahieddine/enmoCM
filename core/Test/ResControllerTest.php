@@ -221,28 +221,6 @@ class ResControllerTest extends TestCase
         $this->assertSame('Bad Request', $responseBody->errors);
     }
 
-    public function testDelete()
-    {
-        //  DELETE
-        \Resource\models\ResModel::delete(['resId' => self::$id]);
-
-        //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
-        $this->assertInternalType('array', $res);
-        $this->assertSame('DEL', $res['status']);
-
-        //  REAL DELETE
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'res_letterbox',
-            'where' => ['res_id = ?'],
-            'data'  => [self::$id]
-        ]);
-
-        //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
-        $this->assertSame(null, $res);
-    }
-
     public function testGetList()
     {
         $resController = new \Resource\controllers\ResController();
@@ -307,5 +285,27 @@ class ResControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
         $this->assertSame("Bad Request: clause parameter not valid", $responseBody->errors);
+    }
+
+    public function testDelete()
+    {
+        //  DELETE
+        \Resource\models\ResModel::delete(['resId' => self::$id]);
+
+        //  READ
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $this->assertInternalType('array', $res);
+        $this->assertSame('DEL', $res['status']);
+
+        //  REAL DELETE
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'res_letterbox',
+            'where' => ['res_id = ?'],
+            'data'  => [self::$id]
+        ]);
+
+        //  READ
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $this->assertSame(null, $res);
     }
 }
