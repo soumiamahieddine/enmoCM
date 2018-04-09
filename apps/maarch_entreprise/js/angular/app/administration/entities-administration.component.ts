@@ -15,6 +15,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "../../../../Views/entities-administration.component.html",
+    styleUrls: ['../../../../css/entities-administration.component.css'],
     providers: [NotificationService]
 })
 export class EntitiesAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -32,6 +33,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     entityTypeList                  : any[]     = [];
     currentEntity                   : any       = {};
     isDraggable                     : boolean   = true;
+    newEntity                       : boolean   = false;
     creationMode                    : boolean   = false;
     listDiffModified                : boolean   = false;
     idCircuitVisa                   : number;
@@ -141,7 +143,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             if (this.creationMode == true) {
                                 this.currentEntity.parent_entity_id = data.node.id;
                             } else {
-                                this.loadEntity(data.node.id);
+                                if (this.newEntity == true) {
+                                    this.loadEntity(this.currentEntity.entity_id);
+                                    this.newEntity = false;
+                                } else {
+                                    this.loadEntity(data.node.id);
+                                }
                             }
 
                         }).on('deselect_node.jstree', (e: any, data: any) => {
@@ -233,6 +240,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             }
         }
         this.elementCtrl.setValue('');
+        $j('.autocompleteSearch').blur();
     }
 
     addElemListModelVisa(element: any) {
@@ -252,6 +260,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.visaTemplate[this.currentEntity.visaTemplate.length-2].item_mode = 'visa';
         }
         this.userCtrl.setValue('');
+        $j('.autocompleteSearch').blur();
     }
 
     saveEntity() {
@@ -265,8 +274,14 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     this.currentEntity.listTemplate = [];
                     this.entities = data['entities'];
                     this.creationMode = false;
+                    this.newEntity = true;
                     $j('#jstree').jstree(true).settings.core.data = this.entities;
-                    $j('#jstree').jstree("refresh");
+                    $j('#jstree').jstree(true).settings.select_node = this.currentEntity;
+                    $j('#jstree').jstree(true).refresh();
+                    $j('#jstree').on("refresh.jstree", (e:any) => {
+                        $j('#jstree').jstree('deselect_all');
+                        $j('#jstree').jstree('select_node', this.currentEntity.entity_id);
+                      });
                     this.notify.success(this.lang.entityAdded);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -336,6 +351,15 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                             this.notify.error(err.error.errors);
                         });
                     }
+
+                    if (this.idCircuitVisa) {
+                        this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                            .subscribe(() => {
+                                this.idCircuitVisa = null;
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }
                     
                     this.http.put(this.coreUrl + "rest/entities/" + result.entity_id + "/reassign/" + result.redirectEntity, {})
                         .subscribe((data: any) => {
@@ -368,6 +392,15 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });
+                }
+
+                if (this.idCircuitVisa) {
+                    this.http.delete(this.coreUrl + "rest/listTemplates/" + this.idCircuitVisa)
+                        .subscribe(() => {
+                            this.idCircuitVisa = null;
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                 }
                 
                 this.http.delete(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id)
@@ -600,7 +633,6 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     toggleRole(role: any) {
-        console.log(role);
         if (role.usedIn.length > 0) {
             this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } };
             let dialogRef = this.dialog.open(ConfirmModalComponent, this.config);

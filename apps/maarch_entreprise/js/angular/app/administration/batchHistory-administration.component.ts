@@ -21,6 +21,7 @@ export class BatchHistoryAdministrationComponent implements OnInit {
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
+    limitExceeded                   : boolean   = false;
 
     data                            : any[]     = [];
     
@@ -62,6 +63,7 @@ export class BatchHistoryAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['batchHistories'];
+                this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);
@@ -80,6 +82,7 @@ export class BatchHistoryAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['batchHistories'];
+                this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.data);

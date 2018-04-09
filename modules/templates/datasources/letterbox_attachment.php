@@ -212,7 +212,7 @@ if (!empty($res_id)) {
             }
         }
 
-        $nb = 0;
+        $nb = 1;
         foreach ($_SESSION['transmissionContacts'] as $it => $transmission) {
             foreach ($transmission as $key => $value) {
                 if ($key == 'title') {
@@ -225,6 +225,7 @@ if (!empty($res_id)) {
         }
     }
 }
+
 $img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand().'_barcode_attachment.png';
 
 require_once 'apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php';

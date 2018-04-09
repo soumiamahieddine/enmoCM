@@ -1619,6 +1619,8 @@ CREATE TABLE res_letterbox
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
   ocr_result character varying(10) DEFAULT NULL::character varying,
+  external_id character varying(255) DEFAULT NULL::character varying,
+  external_link character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);

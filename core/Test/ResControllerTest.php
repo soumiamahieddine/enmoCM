@@ -55,9 +55,7 @@ class ResControllerTest extends TestCase
 
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-
         self::$id = $responseBody->resId;
-
         $this->assertInternalType('int', self::$id);
 
         //  READ
@@ -84,15 +82,13 @@ class ResControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'resId'         => self::$id,
+            'resId'         => [self::$id],
             'status'        => 'EVIS'
         ];
-
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $resController->updateStatus($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-
         $this->assertSame('success', $responseBody->success);
 
         //  READ
@@ -105,7 +101,7 @@ class ResControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'resId'         => self::$id
+            'resId'         => [self::$id]
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -119,6 +115,176 @@ class ResControllerTest extends TestCase
         $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
         $this->assertInternalType('array', $res);
         $this->assertSame('COU', $res['status']);
+    }
+
+    public function testUpdateExternalInfos()
+    {
+        $resController = new \Resource\controllers\ResController();
+
+        //  UPDATE STATUS
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        
+        //ALL OK
+        $aArgs = [
+                'externalInfos' => [
+                    [
+                        'res_id'        => self::$id,
+                        'external_id'   => "BB981212IIYZ",
+                        'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                    ]
+                ],
+                'status'        => "GRCSENT"
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+        
+        // EXTERNAL INFOS EMPTY AND RES ID IS NOT INTEGER
+        $aArgs = [
+            'externalInfos' => [
+                    [
+                        'res_id'        => "res_id",
+                        'external_id'   => "",
+                        'external_link' => ""
+                    ]
+                ],
+            'status'        => "GRCSENT"
+
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request: invalid res_id', $responseBody->errors);
+
+        // DOCUMENT DOES NOT EXIST
+        $aArgs = [
+            'externalInfos' => [
+                        [
+                            'res_id'        => 123456789,
+                            'external_id'   => "BB981212IIYZ",
+                            'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                        ]
+                    ],
+            'status'        => 'GRCSENT'
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame(_DOCUMENT_NOT_FOUND, $responseBody->errors);
+
+        //MISSING STATUS
+        $aArgs = [
+                'externalInfos' => [
+                    [
+                        'res_id'        => self::$id,
+                        'external_id'   => "BB981212IIYZ",
+                        'external_link' => "https://publik.nancy.fr/res/BB981212BB65"
+                    ]
+                ],
+                'status'        => null
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+        
+        //MISSING EXTERNAL INFOS
+        $aArgs = [
+            'externalInfos' => null,
+            'status'        => "GRCSENT"
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response = $resController->updateExternalInfos($fullRequest, new \Slim\Http\Response());
+        
+        $responseBody = json_decode((string) $response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
+
+    public function testGetList()
+    {
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '1=1',
+            'withFile'      => true,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertNotNull($arr_res[0]->fileBase64Content);
+        $this->assertInternalType('int', $arr_res[0]->res_id);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '1=1',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame(null, $arr_res[0]->fileBase64Content);
+        $this->assertInternalType('int', $arr_res[0]->res_id);
+
+        $aArgs = [
+            'select'        => '',
+            'clause'        => '1=1',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame("Bad Request: select parameter not valid", $responseBody->errors);
+
+        $aArgs = [
+            'select'        => 'res_id',
+            'clause'        => '',
+            'withFile'      => false,
+            'orderBy'       => ['res_id'],
+            'limit'         => 1
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $arr_res = $responseBody->resources;
+        $this->assertSame("Bad Request: clause parameter not valid", $responseBody->errors);
     }
 
     public function testDelete()
@@ -142,5 +308,4 @@ class ResControllerTest extends TestCase
         $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
         $this->assertSame(null, $res);
     }
-
 }

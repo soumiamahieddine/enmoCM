@@ -6,6 +6,7 @@
         <file_prefix>cm</file_prefix>
         <loaded>true</loaded>
         <tmp_user_path>C:\maarch\tmp\</tmp_user_path>
+        <jar_path></jar_path> <!-- write open url until maarch root folder. Example : https://poc-maarch.fr/ . If empty, it use default url-->
     </CONFIG>
     <HISTORY>
         <cmadd>true</cmadd>

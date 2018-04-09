@@ -16,7 +16,7 @@ if (!defined('_ADMIN_TEMPLATE_ANSWER')) {
     define('_ADMIN_TEMPLATE_ANSWER', 'Manage the templates');
 }
 if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments (OFFICE or LIBREOFFICE), notifications and document generation and sendmail (HTML), notes (PLAIN TEXT)');
+    define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
 }
 
 /*********************** Menu ***********************************/

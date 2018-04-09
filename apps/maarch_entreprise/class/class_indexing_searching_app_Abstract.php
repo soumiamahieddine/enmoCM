@@ -460,13 +460,7 @@ abstract class indexing_searching_app_Abstract extends Database
                                              ),
                        "date courrier" => array*/
         //    $this->show_array($param);
-        if ($value['param']['autocompletion']) {
-            $idListByName = $key.'ListByName';
-            $autocompleteId = 'ac_'.$key;
-            $options_criteria_list .= '<option id="option_'.$key.'" value="'.$value['label'].'" data-load={"id":"'.$key.'","idList":"'.$idListByName.'","autocompleteId":"'.$autocompleteId.'","config":"'.$_SESSION['config']['businessappurl'].'"} > '.$value['label'].'</option>';
-        } else {
-            $options_criteria_list .= '<option id="option_'.$key.'" value="'.$value['label'].'"> '.$value['label'].'</option>';
-        }
+        $options_criteria_list = '<option id="default" value="">'._CHOOSE_PARAMETERS.'</option>';
 
         $json_tab = '';
         foreach ($param as $key => $value) {

@@ -52,9 +52,9 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
             "status": this.statusId
         };
         if (this.resId != "") {
-            body["resId"] = this.resId;
+            body["resId"] = [this.resId];
         } else if (this.chrono != "") {
-            body["chrono"] = this.chrono;
+            body["chrono"] = [this.chrono];
         }
 
         this.http.put(this.coreUrl + "rest/res/resource/status", body)

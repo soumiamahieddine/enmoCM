@@ -58,7 +58,7 @@ if ($restMode) {
     require_once 'core/class/class_security.php';
     $sec = new security();
     $_SESSION['error'] = '';
-    $res = $sec->login($userLogin['user'], $userLogin['password']);
+    $res = $sec->login($userLogin['user'], $userLogin['password'], 'restMode');
     //var_dump($res);
     $_SESSION['user'] = $res['user'];
     if (!empty($res['error'])) {

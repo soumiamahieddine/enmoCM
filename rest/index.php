@@ -243,6 +243,7 @@ $app->put('/res/resource/status', \Resource\controllers\ResController::class . '
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
+$app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');

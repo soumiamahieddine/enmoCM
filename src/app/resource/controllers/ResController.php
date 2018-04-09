@@ -28,6 +28,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserModel;
+use Docserver\models\ResDocserverModel;
 
 class ResController
 {
@@ -123,35 +124,77 @@ class ResController
             $data['historyMessage'] = _UPDATE_STATUS;
         }
 
-        $check = Validator::stringType()->notEmpty()->validate($data['chrono']) || Validator::intVal()->notEmpty()->validate($data['resId']);
+        $check = Validator::arrayType()->notEmpty()->validate($data['chrono']) || Validator::arrayType()->notEmpty()->validate($data['resId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['historyMessage']);
+        
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+        $identifiers = !empty($data['chrono'])? $data['chrono']: $data['resId'] ;
+        foreach($identifiers as $id){
+            if (!empty($data['chrono'])) {
+                $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $id]);
+            } else {
+                $document = ResModel::getById(['resId' => $id, 'select' => ['res_id']]);
+            }
+            if (empty($document)) {
+                return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
+            }
+            if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
 
-        if (!empty($data['chrono'])) {
-            $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $data['chrono']]);
-        } else {
-            $document = ResModel::getById(['resId' => $data['resId'], 'select' => ['res_id']]);
-        }
-        if (empty($document)) {
-            return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
-        }
-        if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+    
+            ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+    
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $document['res_id'],
+                'eventType' => 'UP',
+                'info'      => $data['historyMessage'],
+                'moduleId'  => 'apps',
+                'eventId'   => 'resup',
+            ]);
+        }        
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    //EXTERNAL INFOS
+    public function updateExternalInfos(Request $request, Response $response){
+        $data = $request->getParams();
+        if(empty($data['externalInfos'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+        if(empty($data['status'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
 
-        HistoryController::add([
-            'tableName' => 'res_letterbox',
-            'recordId'  => $document['res_id'],
-            'eventType' => 'UP',
-            'info'      => $data['historyMessage'],
-            'moduleId'  => 'apps',
-            'eventId'   => 'resup',
-        ]);
+        $externalInfos = $data['externalInfos'];
+        foreach($externalInfos as $mail){
+            if(!Validator::intType()->validate($mail['res_id'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid res_id']);
+            }
+            if(!Validator::StringType()->notEmpty()->validate($mail['external_id'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid external_id for element : '.$mail['res_id']]);
+            }
+            if(!Validator::StringType()->notEmpty()->validate($mail['external_link'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request:  invalid external_link for element'.$mail['res_id']]);
+            }          
+        }
+
+        foreach($externalInfos as $mail){
+            $document = ResModel::getById(['resId' => $mail['res_id'], 'select' => ['res_id']]);
+            if (empty($document)) {
+                return $response->withStatus(400)->withJson(['errors' => _DOCUMENT_NOT_FOUND]);
+            }
+            if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
+            ResModel::update(['set' => ['external_id' => $mail['external_id'] , 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+        }        
 
         return $response->withJson(['success' => 'success']);
     }
@@ -219,15 +262,34 @@ class ResController
     public function getList(Request $request, Response $response)
     {
         $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['clause']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['select']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if(!Validator::stringType()->notEmpty()->validate($data['select'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: select parameter not valid']);
+        }
+        if(!Validator::stringType()->notEmpty()->validate($data['clause'])){
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: clause parameter not valid']);
+        }
+        if(!empty($data['withFile'])){
+            if(!Validator::boolType()->validate($data['withFile'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: withFile parameter is not a boolean']);
+            }            
         }
 
+        if(!empty($data['orderBy'])){
+            if(!Validator::arrayType()->notEmpty()->validate($data['orderBy'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: orderBy parameter not valid']);
+            }            
+        }
+
+        if(!empty($data['limit'])){
+            if(!Validator::intType()->validate($data['limit'])){
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: limit parameter not valid']);
+            }
+        }
+        $orderBy = $data['orderBy'];
+        $limit = $data['limit'];
         $select = explode(',', $data['select']);
-        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {
+        
+        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'orderBy' => $orderBy, 'limit' => $limit, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
         }
 
@@ -240,7 +302,20 @@ class ResController
             $where[] = "({$groupsClause})";
         }
 
-        $resources = ResModel::getOnView(['select' => $select, 'where' => $where]);
+        if($data['withFile'] === true){
+            $select[] = 'res_id';            
+        }
+
+        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $orderBy, 'limit' => $limit]);
+        if($data['withFile'] === true){
+            foreach($resources as &$res){
+                $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
+                $file = file_get_contents($path);
+                $base64Content = base64_encode($file);
+                $res['fileBase64Content'] = $base64Content;
+            };            
+        }
+        unset($res);
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
     }

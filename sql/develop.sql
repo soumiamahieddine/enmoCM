@@ -140,6 +140,13 @@ DROP VIEW IF EXISTS res_view_letterbox;
 /* Alter table here because view depends on it*/
 ALTER TABLE res_letterbox ALTER COLUMN priority TYPE character varying(16);
 
+--ALTER TABLE for external infos webservice
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_id;
+ALTER TABLE res_letterbox ADD COLUMN external_id character varying(255);
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_link;
+ALTER TABLE res_letterbox ADD COLUMN external_link character varying(255);
+
 CREATE OR REPLACE VIEW res_view_letterbox AS 
  SELECT r.tablename,
     r.is_multi_docservers,
@@ -706,6 +713,7 @@ CREATE TABLE contact_communication
   CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
+DROP VIEW IF EXISTS view_contacts;
 CREATE OR REPLACE VIEW view_contacts AS 
  SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
 , c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data

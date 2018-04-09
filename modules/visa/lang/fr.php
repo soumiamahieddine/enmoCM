@@ -413,6 +413,10 @@ if (!defined('_USE_DATE_IN_SIGNBLOCK')) {
     define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
 }
 
+if (!defined('_REQUESTED_SIGNATURE')) {
+    define('_REQUESTED_SIGNATURE', 'Signature demandée');
+}
+
 if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
     define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
 }

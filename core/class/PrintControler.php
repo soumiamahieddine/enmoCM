@@ -471,18 +471,47 @@ class PrintControler extends PrintFunctions
 					
 					$pdf->MultiCell(182,5,utf8_decode($this->array_print[$cpt]['retrieve_copies']),1, 'L', false);
 				}
+
+                /**********************************************************************/
+                
+                //VISA WORKFLOW
+                if ($this->array_print[$cpt]['retrieve_VisaWorkflow'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+                
+                    $pdf->Cell(182,5,utf8_decode(strtoupper(_VISA_WORKFLOW)),0,1, 'C', false);
+                    
+                    $pdf->Cell(140,5,_ADMIN_USERS,1,0, 'C', false);
+                    $pdf->Cell(42,5,_PROCESS_DATE,1,1, 'C', false);
+                    $pdf->SetFont('Arial','',11);
+                    foreach ($this->array_print[$cpt]['retrieve_VisaWorkflow'] as $key => $value) {
+                        $signatory = '';
+                        if($value['signatory']){
+                            $signatory = ' ('._SIGNATORY.')';
+                        } else if ($value['requested_signature'] && empty($value['process_date'])) {
+                            $signatory = ' ('._REQUESTED_SIGNATURE.')';
+                        }
+                        $pdf->Cell(140,5,utf8_decode($key+1 . '. ' .$value['firstname']. ' ' . $value['lastname'] . $signatory),1,0, 'L', false);
+                        $pdf->Cell(42,5,functions::format_date_db($value['process_date'], true, '', true),1,1, 'C', false);
+                    }
+
+                }
 				
 				/**********************************************************************/
 				
-				//BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				//BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				
-				$pdf->SetFont('Arial','B',11);
-				
 				//NOTES
 				if ($this->array_print[$cpt]['retrieve_notes'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+                
 					$pdf->Cell(182,5,utf8_decode(_PRINT_NOTES),0,1, 'C', false);
 					
 					$pdf->SetFont('Arial','',11);
@@ -492,15 +521,15 @@ class PrintControler extends PrintFunctions
 				
 				/**********************************************************************/
                 
-                //BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				//BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				
-				$pdf->SetFont('Arial','B',11);
-				
 				//FREE NOTES
 				if ($this->array_print[$cpt]['free_notes'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+                
 					$pdf->Cell(182,5,utf8_decode(_PRINT_FREE_NOTES),0,1, 'C', false);
 					
 					$pdf->SetFont('Arial','',11);
@@ -804,4 +833,19 @@ class PrintFunctions
             $i++;
 		}
 	}
+
+    function retrieve_VisaWorkflow()
+    {
+        foreach($this->object_print as $line_value) {
+            $visaWorkflow = \SrcCore\models\DatabaseModel::select([
+                'select'   => ['u.firstname', 'u.lastname', 'l.process_date', 'l.process_comment', 'l.signatory', 'l.requested_signature'],
+                'table'    => ['listinstance l, users u'],
+                'where'    => ['l.res_id = ?', 'l.difflist_type = ?', 'u.user_id = l.item_id'],
+                'data'     => [$line_value->res_id, 'VISA_CIRCUIT'],
+                'order_by' => ['l.listinstance_id asc']
+                ]);
+
+            $line_value->retrieve_VisaWorkflow = $visaWorkflow;
+        }
+    }
 }

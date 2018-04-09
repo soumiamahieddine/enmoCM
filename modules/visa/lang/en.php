@@ -263,6 +263,10 @@ if (!defined('_USE_DATE_IN_SIGNBLOCK')) {
     define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
 }
 
+if (!defined('_REQUESTED_SIGNATURE')) {
+    define('_REQUESTED_SIGNATURE', 'Requested signature');
+}
+
 if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
     define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
 }

@@ -3515,6 +3515,9 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD')) {
 if (!defined('_STANDARD_LOGIN')) {
     define('_STANDARD_LOGIN', 'Authentification Maarch');
 }
+if (!defined('_SERVICE_REST_LOGIN')) {
+    define('_SERVICE_REST_LOGIN', 'Authentification via Webservice');
+}
 if (!defined('_CAS_LOGIN')) {
     define('_CAS_LOGIN', 'Authentification CAS');
 }
