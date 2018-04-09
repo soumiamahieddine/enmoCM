@@ -805,8 +805,8 @@ class UserController
                 }
             } else {
                 ListTemplateModel::delete([
-                    'where' => ['object_id = ?', 'item_id = ?'],
-                    'data'  => [$aArgs['entityId'], $user['user_id']]
+                    'where' => ['object_id = ?', 'item_id = ?', 'item_mode != ?'],
+                    'data'  => [$aArgs['entityId'], $user['user_id'], 'dest']
                 ]);
 
                 $resIds = ResModel::getOnView([
@@ -883,11 +883,7 @@ class UserController
 
         $listTemplates = ListTemplateModel::get(['select' => [1], 'where' => ['object_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$aArgs['entityId'], 'user_id', $user['user_id']]]);
 
-        if (empty($listInstances) && empty($listTemplates)) {
-            return $response->withJson(['isDeletable' => true]);
-        } else {
-            return $response->withJson(['isDeletable' => false]);
-        }
+        return $response->withJson(['hasConfidentialityInstances' => !empty($listInstances), 'hasListTemplates' => !empty($listTemplates)]);
     }
 
     public function updateBasketsDisplay(Request $request, Response $response, array $aArgs)

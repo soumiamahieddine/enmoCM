@@ -127,12 +127,12 @@ class ResController
         $check = Validator::arrayType()->notEmpty()->validate($data['chrono']) || Validator::arrayType()->notEmpty()->validate($data['resId']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['historyMessage']);
-        
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        $identifiers = !empty($data['chrono'])? $data['chrono']: $data['resId'] ;
-        foreach($identifiers as $id){
+
+        $identifiers = !empty($data['chrono']) ? $data['chrono'] : $data['resId'];
+        foreach ($identifiers as $id) {
             if (!empty($data['chrono'])) {
                 $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $id]);
             } else {
@@ -144,7 +144,6 @@ class ResController
             if (!ResController::hasRightByResId(['resId' => $document['res_id'], 'userId' => $GLOBALS['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
-
     
             ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
     

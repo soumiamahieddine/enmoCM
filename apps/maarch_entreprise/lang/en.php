@@ -5046,9 +5046,6 @@ if (!defined('_SAVE_POSITION')) {
 }
 
 /***** History *****/
-if (!defined('_UPDATE_STATUS')) {
-    define('_UPDATE_STATUS', 'Status update');
-}
 
 if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) {
     define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');

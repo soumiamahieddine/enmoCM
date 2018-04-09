@@ -64,6 +64,7 @@ define('_STATUS_DELETED', 'Statut supprimé');
 define('_STATUS_NOT_FOUND', 'Statut introuvable');
 define('_TO_CC', 'En copie');
 define('_TO_SIGN', 'Pour signature');
+define('_UPDATE_STATUS', 'Modification du statut');
 define('_USER_GROUP_CREATION', 'Groupe ajouté pour utilisateur');
 define('_USER_GROUP_MODIFICATION', 'Groupe modifié pour utilisateur');
 define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');

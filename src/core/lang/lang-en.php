@@ -64,6 +64,7 @@ define('_STATUS_DELETED', 'Statut deleted');
 define('_STATUS_NOT_FOUND', 'Status not found');
 define('_TO_CC', 'On copy');
 define('_TO_SIGN', 'For signature');
+define('_UPDATE_STATUS', 'Status update');
 define('_USER_GROUP_CREATION', 'Group added for user');
 define('_USER_GROUP_MODIFICATION', 'Group updated for user');
 define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
