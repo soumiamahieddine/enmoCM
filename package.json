@@ -22,7 +22,7 @@
     "photoswipe": "^4.1.2",
     "tinymce": "^4.7.10",
     "tooltipster": "^4.2.6",
-    "zone.js": "^0.8.25"
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@angular/animations": "^5.2.9",
