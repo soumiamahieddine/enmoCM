@@ -1,10 +1,9 @@
 <?php
 
-$maarchDirectory    = '/var/www/html/maarch_v2/';
-$indexFileDirectory = $maarchDirectory . 'addresses_ban/indexes/';
-$banDirectory       = $maarchDirectory . 'addresses_ban/BAN/';
+$indexFileDirectory = __DIR__ . '/indexes/';
+$banDirectory       = __DIR__ . '/BAN/';
 
-set_include_path($maarchDirectory . 'apps/maarch_entreprise/tools/' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__ . '/../apps/maarch_entreprise/tools/' . PATH_SEPARATOR . get_include_path());
 require_once('Zend/Search/Lucene.php');
 require("../core/class/class_functions.php");
 
@@ -61,8 +60,8 @@ require("../core/class/class_functions.php");
 
 
 
-set_include_path($maarchDirectory . 'apps/maarch_entreprise/tools/' . PATH_SEPARATOR . get_include_path());
-$_ENV['maarch_tools_path'] = $maarchDirectory . 'apps/maarch_entreprise/tools/';
+set_include_path(__DIR__ . '/../apps/maarch_entreprise/tools/' . PATH_SEPARATOR . get_include_path());
+$_ENV['maarch_tools_path'] = __DIR__ . '/../apps/maarch_entreprise/tools/';
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
     new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
 );
