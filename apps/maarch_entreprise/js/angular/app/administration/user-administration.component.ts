@@ -500,13 +500,13 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
 @Component({
     templateUrl: "../../../../Views/user-administration-redirect-modal.component.html",
-    styles: [".mat-dialog-content{max-height: 65vh;height:300px;width:600px;}"]
+    styles: [".mat-dialog-content{max-height: 65vh;width:600px;}"]
 })
 export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
 
     redirectUser: String = '';
-    processMode: String[] = ['','delete','reaffect'];
+    processMode: String = '';
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
         super(http, ['users']);
