@@ -177,6 +177,14 @@ $init = false;
                     , ft_list.options[ft_list.options.selectedIndex].value, 'folder_indexes');
             }
         </script>
+    <?php }
+    if(!empty($_GET['show_iframe']) && $_GET['show_iframe']=='false'){
+    ?>
+        <script>
+            new Effect.BlindUp(parent.document.getElementById('show_tab'));
+        </script>
     <?php
-    } ?>
+    }
+    ?>
+
 </div>
