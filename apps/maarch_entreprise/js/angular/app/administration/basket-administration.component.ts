@@ -323,6 +323,13 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                     icon: 'fa fa-hashtag',
                     allowed: true,
                     text: "Même niveau de mon entité primaire"
+                }, {
+                    id: 'ENTITIES_JUST_UP',
+                    keyword: 'ENTITIES_JUST_UP',
+                    parent: '#',
+                    icon: 'fa fa-hashtag',
+                    allowed: true,
+                    text: "Immédiatement supérieur à mon entité primaire"
                 }];
 
                 keywordEntities.forEach((keyword: any) => {
