@@ -68,13 +68,10 @@
                     <ng-container matColumnDef="working_days">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processType}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
-                            <span *ngIf="element.delays == null">
-                                <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
-                            </span>
-                            <span *ngIf="element.working_days && element.delays">
+                            <span *ngIf="element.working_days">
                                 {{lang.workingDays}}
                             </span>
-                            <span *ngIf="!element.working_days && element.delays">
+                            <span *ngIf="!element.working_days">
                                 {{lang.calDays}}
                             </span>
                         </mat-cell>

@@ -26,37 +26,22 @@
             <mat-card *ngIf="!loading" class="card-app-content">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #priorityForm="ngForm">
                     <div class="form-group">
-                        <div class="col-md-1 col-xs-1" style="padding-top:10px;">
-                            <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}">{{lang.default}}</mat-checkbox>
-                        </div>
-                        <div class="col-md-10 col-xs-10">
-                            <mat-form-field>
-                                <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
-                                    maxlength="128" required>
-                            </mat-form-field>
-                        </div>
                         <div class="col-md-1 col-xs-1">
                             <mat-form-field>
                                 <input matInput type="color" name="color" matTooltip="{{lang.chooseColor}}" [(ngModel)]="priority.color" required>
                             </mat-form-field>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
+                        <div class="col-md-11 col-xs-11">
                             <mat-form-field>
-                                <span matPrefix>
-                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;</span>
-                                <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
-                                    required pattern="^\d+$">
+                                <input matInput type="text" name="label" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="priority.label"
+                                    maxlength="128" required>
                             </mat-form-field>
                         </div>
+                    </div>
+                    <div class="form-group">
                         <div class="col-md-6">
-                            <mat-slider [disabled]="!priority.useDoctypeDelay" style="width:100%" name="delays" color="primary" max="60" min="0" thumb-label="true"
-                                [(ngModel)]="priority.delays"></mat-slider>
-                        </div>
-                        <div class="col-md-3">
                             <mat-form-field>
-                                <mat-select [disabled]="!priority.useDoctypeDelay" name="processType" placeholder="{{lang.processType}}" [(ngModel)]="priority.working_days">
+                                <mat-select name="processType" placeholder="{{lang.processType}}" [(ngModel)]="priority.working_days">
                                     <mat-option value="true">
                                         {{lang.workingDays}}
                                     </mat-option>
@@ -65,6 +50,19 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <span matPrefix>
+                                    <mat-checkbox color="primary" name="useDoctypeDelay" [(ngModel)]="priority.useDoctypeDelay" matTooltip="{{lang.tooltipPriorityDelay}}"></mat-checkbox>&nbsp;</span>
+                                <input matInput [disabled]="!priority.useDoctypeDelay" type="number" name="delays" placeholder="{{lang.processDelay}}" [(ngModel)]="priority.delays"
+                                    required pattern="^\d+$">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2 col-xs-1" style="padding-top:10px;">
+                            <mat-checkbox color="primary" name="default_priority" [(ngModel)]="priority.default_priority" matTooltip="{{lang.tooltipPriorityDefault}}">{{lang.defaultPriority}}</mat-checkbox>
                         </div>
                     </div>
                     <div class="form-group">
