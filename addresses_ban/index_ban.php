@@ -21,6 +21,7 @@ $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene f
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
     new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
 );
+$index->setMaxBufferedDocs(1000);
 
 foreach ($filesBan as $fileBan) {
     if (!in_array($fileBan, ['.', '..']) && ($handle = fopen($banDirectory . $fileBan, "r")) !== false) {
@@ -43,7 +44,7 @@ foreach ($filesBan as $fileBan) {
 
                 $index->addDocument($doc);
 
-                if ($row == 200) {
+                if ($row == 1000) {
                     break;
                 }
                 if (fmod($row, 100) == 0) {
