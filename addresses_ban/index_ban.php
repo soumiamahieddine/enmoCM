@@ -15,9 +15,7 @@ if (!is_dir($indexFileDirectory)) {
     }
 }
 $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene format to 2.3
-Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
-);
+Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
 $index->setMaxBufferedDocs(1000);
 
 foreach ($filesBan as $fileBan) {
@@ -31,8 +29,10 @@ foreach ($filesBan as $fileBan) {
             if (!empty($data[9])) {
                 $doc = new Zend_Search_Lucene_Document();
 
-                $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', \SrcCore\models\TextFormatModel::normalize(['string' => $data[0]])));
-                $doc->addField(Zend_Search_Lucene_Field::Text('streetName', \SrcCore\models\TextFormatModel::normalize(['string' => $data[1]])));
+                $doc->addField(Zend_Search_Lucene_Field::UnIndexed('id', \SrcCore\models\TextFormatModel::normalize(['string' => $data[0]])));
+                if (!empty($data[1])) {
+                    $doc->addField(Zend_Search_Lucene_Field::Text('streetName', \SrcCore\models\TextFormatModel::normalize(['string' => $data[1]])));
+                }
                 $doc->addField(Zend_Search_Lucene_Field::UnIndexed('streetNumber', $data[3] . ' ' . $data[4]));
                 $doc->addField(Zend_Search_Lucene_Field::Text('postalCode', $data[6]));
                 $doc->addField(Zend_Search_Lucene_Field::Text('afnorName', $data[9]));
@@ -44,7 +44,7 @@ foreach ($filesBan as $fileBan) {
                     break;
                 }
                 if (fmod($row, 100) == 0) {
-                    echo $row;
+                    echo "$row\n";
                 }
                 $row++;
             }
