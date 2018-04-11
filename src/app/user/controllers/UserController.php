@@ -133,6 +133,11 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'User already exists']);
         }
 
+        $logingModes = ['standard', 'restMode'];
+        if (!in_array($data['loginmode'], $logingModes)) {
+            $data['loginmode'] = 'standard';
+        }
+
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByUserId(['userId' => $data['userId']]);
