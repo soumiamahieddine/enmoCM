@@ -131,18 +131,21 @@ class AutoCompleteController
         \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
         \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 
-        $index = \Zend_Search_Lucene::open('addresses_ban/indexes');
+        $index = \Zend_Search_Lucene::open('ban/indexes');
+        \Zend_Search_Lucene::setResultSetLimit(10);
         $hits = $index->find($data['address']);
+
         $addresses = [];
         foreach($hits as $key => $hit){
             $addresses[] = [
-                $hit->id,
-                $hit->afnorName,
-                $hit->postalCode,
-                $hit->streetNumber
+                'banId'         => $hit->banId,
+                'number'        => $hit->streetNumber,
+                'afnorName'     => $hit->afnorName,
+                'postalCode'    => $hit->postalCode,
+                'city'          => $hit->city
             ];
         }
 
-        return $response->withJson(['count' => count($hits), 'addresses' => $addresses]);
+        return $response->withJson(['addresses' => $addresses]);
     }
 }
