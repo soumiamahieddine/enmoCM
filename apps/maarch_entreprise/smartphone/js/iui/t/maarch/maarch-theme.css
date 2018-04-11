@@ -5,12 +5,12 @@ body {
 
 li > a[selected], li > a:active {
     background-image: url(listArrowSel.png) !important;
-    background-color : #009DC5!important;
+    background-color : #135F7F!important;
 }
 
 li > a[selected="progress"] {
     background-image: url(../default/loading.gif) !important;
-    background-color : #009DC5!important;
+    background-color : #135F7F!important;
 }
 
 /************************************************************************************************/
@@ -46,7 +46,7 @@ body > .toolbar {
 .whiteButton {
     border: 1px solid white;
     color: #756666;
-    background-color: #FDD16C;
+    background-color: #F99830;
     cursor: pointer;
     width: 100%;
     padding: 0.2em 0.5em;
@@ -85,7 +85,7 @@ body > ul > li > a {
 /************************************************************************************************/
 
 body > .panel {
-    /*background: #deedf3;*/
+    /*background: #F2F2F2;*/
     background: #FFFFFF;
     /*background: #fefeee url(pinstripes.png);*/
     padding:0;
@@ -118,7 +118,7 @@ body > .panel {
 }
 
 .toolbar h1 {
- color: #009DC5;
+ color: #135F7F;
 }
 .backButtonImg {
   width: 50px;
@@ -222,9 +222,9 @@ body[orient="landscape"] > .footer > h1 {
 }
 
 span.bubble {
-    background-color: #FFC200;
+    background-color: #F99830;
     border-radius: 10px 10px 10px 10px;
-    color: #009DC5;
+    color: #135F7F;
     display: block;
     float: right;
     font-size: 12px;
@@ -233,7 +233,7 @@ span.bubble {
 }
 
 span.details_index {
-    background-color: #FFC200;
+    background-color: #F99830;
     color: #FFFFFF;
 }
 

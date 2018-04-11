@@ -47,7 +47,7 @@ background-position:top center;
 padding-top : 8px;
 padding-left : 5px;
 padding-right : 5px;
-background-color: #deedf3;
+background-color: #F2F2F2;
 }
 
 .block_end {
@@ -61,7 +61,7 @@ margin-right: 12px;*/
 
 .block .check
 {
-    background-color:  #deedf3;
+    background-color:  #F2F2F2;
 }
 
 
@@ -135,7 +135,7 @@ a, a:link, a:visited, a:hover {
 }
 
 a:hover {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 .bloc {
@@ -280,11 +280,11 @@ acronym, abbr {
 }
 
 .maarch, a.maarch {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 .maarch2, a.maarch2 {
-    color: #FFC200;
+    color: #F99830;
 }
 
 .oblig {
@@ -295,7 +295,7 @@ acronym, abbr {
 .no_doctypes {
     font-weight: bold;
     font-size: .9em;
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 .nota {
@@ -312,18 +312,18 @@ acronym, abbr {
 
 .tit {
     font-size: 1.4em;
-    color: #1B99C4;
+    color: #135F7F;
     padding-bottom: 1em;
 
 }
 
 #desc_box .tit, #user_box .tit, #ugc .tit {
-    /*color: #FFC200;*/
-    color: #1B99C4;
+    /*color: #F99830;*/
+    color: #135F7F;
 }
 
 .sstit {
-    color: #1B99C4;
+    color: #135F7F;
     font-size: 1em;
     font-weight: normal;
     padding-bottom: 1em;
@@ -341,7 +341,7 @@ acronym, abbr {
 a.next, a.change, a.suspend, a.delete, a.authorize, a.prev, a.up, a.down, a.view {
     padding-left: 20px;
     background: transparent url(static.php?filename=puce_prev.gif) 10px center no-repeat;
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 
@@ -407,7 +407,7 @@ a.authorize {
 .add span {
     padding: 4px 0 5px 4px;
     background-color: White;
-    border: 1px solid #FFC200;
+    border: 1px solid #F99830;
     border-left: none;
     border-right: none;
 }
@@ -421,7 +421,7 @@ a.authorize {
 
 .info {
     color: #FBEFCE;
-    color: #16ADEB;
+    color: #135F7F;
     font-weight: normal;
     font-weight: bold;
     text-align: center;
@@ -518,7 +518,7 @@ input.medium2 {
 }
 #newpage1, #newpage2 {
     text-align: center;
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 input.detail_box {
@@ -531,7 +531,7 @@ input.detail_box {
 }
 
 #frmletters a:hover, #frmletters a.on {
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 #frmletters fieldset {
@@ -708,18 +708,18 @@ width: 770px;
 
 }
 .listing th {
-    color: #16ADEB;
+    color: #135F7F;
 }
 .listingsmall th {
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 .listing2 th {
-    color: #16ADEB;
+    color: #135F7F;
 }
 
 .listing3 th {
-    color: #16ADEB;
+    color: #135F7F;
 }
 .listing th .add {
     font-weight: normal;
@@ -794,11 +794,11 @@ width: 770px;
 }
 
 .listing2 td {
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 .listing3 td {
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 .listingsmall td {
@@ -806,7 +806,7 @@ width: 770px;
 }
 
 .listing .col td {
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 .listing .white td {
     background-color: #FFFFFF;
@@ -821,7 +821,7 @@ width: 770px;
 }
 
 .listingsmall .col td {
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 td.picto, th.picto,  td.action {
@@ -978,7 +978,7 @@ th.ref {
     text-align: left;
 }
 .detail .col th {
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 .detail td.void {
@@ -992,7 +992,7 @@ th.ref {
     font-size: 1em;
     margin-left: 12px;
     padding-top: 1.4em;
-    color: #FFC200;
+    color: #F99830;
 }
 
 #titless2{
@@ -1065,7 +1065,7 @@ left: -100em;
 #head {
     padding-top: 1px;
     width: 100%;
-    background-color: #16ADEB;
+    background-color: #135F7F;
     height: 70px;
 }
 
@@ -1202,7 +1202,7 @@ left: -100em;
     padding: 0px;
     z-index: 10;
     margin: 0px;
-    border: 1px solid #16ADEB;
+    border: 1px solid #135F7F;
 }
 
 #menunav li {
@@ -1212,7 +1212,7 @@ left: -100em;
 
 #menunav li a {
     padding-right: 3px;
-    color: #0094D0;
+    color: #135F7F;
     display: block;
     position: relative;
 }
@@ -1239,104 +1239,7 @@ left: -100em;
 }
 
 #menunav li.on span {
-    background-image: url(static.php?filename=bg_menu_span_on.gif);
-}
-li#admin .menu_item {
-    background-image: url(static.php?filename=picto_menu_admin.gif);
-}
-li#admin.on .menu_item {
-    background-image: url(static.php?filename=picto_menu_admin_on.gif);
-}
-
-li#aide .menu_item {
-    background-image: url(static.php?filename=picto_menu_help.gif);
-}
-li#aide.on .menu_item  {
-    background-image: url(static.php?filename=picto_menu_help_on.gif);
-}
-
-li#add .menu_item {
-    background-image: url(static.php?filename=picto_menu_fileindex.gif);
-}
-li#add.on .menu_item{
-    background-image: url(static.php?filename=picto_menu_fileindex_on.gif);
-}
-
-li#post .menu_item {
-    background-image: url(static.php?filename=picto_menu_postindex.gif);
-}
-li#post.on .menu_item {
-    background-image: url(static.php?filename=picto_menu_postindex_on.gif);
-}
-
-li#browse .menu_item  {
-    background-image: url(static.php?filename=stats_menu_off.gif);
-}
-li#browse.on .menu_item {
-    background-image: url(static.php?filename=stats_menu_on.gif);
-}
-
-li#valid_mail .menu_item  {
-    background-image: url(static.php?filename=valid_menu_off.gif);
-}
-li#valid_mail.on .menu_item  {
-    background-image: url(static.php?filename=valid_menu_on.gif);
-}
-
-li#maarch_credits .menu_item  {
-    background-image: url(static.php?filename=picto_menu_help.gif);
-}
- li#maarch_credits.on .menu_item  {
-    background-image: url(static.php?filename=picto_menu_help_on.gif);
-}
-
-li#logout .menu_item  {
-    background-image: url(static.php?filename=logout_off.gif);
-}
-li#logout.on .menu_item {
-    background-image: url(static.php?filename=logout_on.gif);
-}
-
-li#manbask .menu_item  {
-    background-image: url(static.php?filename=manage_baskets_off.gif);
-}
-li#manbask.on .menu_item {
-    background-image: url(static.php?filename=manage_baskets_on.gif);
-}
-
-li#searching .menu_item {
-    background-image: url(static.php?filename=searching_off.gif);
-}
-li#searching.on .menu_item {
-    background-image: url(static.php?filename=searching_on.gif);
-}
-
-li#market_search .menu_item {
-    background-image: url(static.php?filename=search_proj_off.gif);
-}
-li#market_search.on .menu_item {
-    background-image: url(static.php?filename=search_proj_on.gif);
-}
-
-li#account .menu_item{
-    background-image: url(static.php?filename=account_off.gif);
-}
-li#account.on .menu_item {
-    background-image: url(static.php?filename=account_on.gif);
-}
-
-li#my_contacts .menu_item{
-    background-image: url(static.php?filename=my_contacts_off.gif);
-}
-li#my_contacts.on .menu_item {
-    background-image: url(static.php?filename=my_contacts_on.gif);
-}
-
-li#indexing .menu_item{
-    background-image: url(static.php?filename=indexing_off.gif);
-}
-li#indexing.on .menu_item{
-    background-image: url(static.php?filename=indexing_on.gif);
+    background: #135F7F;
 }
 
 #menunav li ol {
@@ -1357,7 +1260,7 @@ li#indexing.on .menu_item{
 }
 
 #menunav li ol li a, #menunav li.on ol li a {
-    color: #16ADEB;
+    color: #135F7F;
     display: inline;
 }
 
@@ -1429,7 +1332,7 @@ li#indexing.on .menu_item{
 }
 
 #content h1 {
-    color: #16ADEB;
+    color: #135F7F;
     font-style: italic;
     font-weight: bold;
     font-size: 1.3em;
@@ -1443,7 +1346,7 @@ li#indexing.on .menu_item{
     width: 80%;
 }
 #nav h1 {
-    color: #16ADEB;
+    color: #135F7F;
     font-style: italic;
     font-weight: bold;
     font-size: 1.5em;
@@ -1558,7 +1461,7 @@ vertical-align: middle;
 
 #infos_box #postpagin #count {
     font-size: 1.2em;
-    color: #16ADEB;
+    color: #135F7F;
     font-weight: bold;
     float: right;
 }
@@ -1686,7 +1589,7 @@ padding-left :15px;
 }
 
 #list .file .on a {
-    color: #1b99c4;
+    color: #135F7F;
 }
 
 #list .file .on li a {
@@ -1849,7 +1752,7 @@ padding-left :15px;
 }
 
 #summary a {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #summary a:hover {
@@ -1893,7 +1796,7 @@ padding-left :15px;
 }
 
 #statssummary a {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #statssummary a:hover {
@@ -1965,7 +1868,7 @@ margin-bottom: 3px;
 #calender .week .today {
     background-color: #dbf0fb;
     font-weight: bold;
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #calender .week .holiday {
@@ -1975,7 +1878,7 @@ color: #CCC;
 
 #calender .week .hoverEle {
     background-color: #dbf0fb;
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #basis #calender select {
@@ -2214,7 +2117,7 @@ height:auto;
 
 #guide_summary .tit a
 {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #guide_summary .tit a:hover
@@ -2232,7 +2135,7 @@ height:auto;
 
 #help_guide h2 a
 {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 #help_guide img {
@@ -2384,7 +2287,7 @@ margin-left: 10px;
 #folder_tree
 {
 
-    border: 1px solid #FFC200;
+    border: 1px solid #F99830;
     padding: 2px 5px 5px 2px;
     vertical-align:top;
 
@@ -2397,14 +2300,14 @@ text-align:right;
 
 #form1
 {
-    border: 1px solid #FFC200;
+    border: 1px solid #F99830;
     padding-top:10px;
     margin-bottom: 10px;
 
 }
 #form2
 {
-    border: 1px solid #FFC200;
+    border: 1px solid #F99830;
         padding-top:10px;
         text-align:left;
         padding-left: 5px;
@@ -2620,11 +2523,11 @@ input[type="checkbox"] , input[type="radio"]
 }
 
 .listing .col td  input[type="radio"]{
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 .listingsmall .col td  input[type="radio"]{
-    background-color: #DEEDF3;
+    background-color: #F2F2F2;
 }
 
 #folder_out_form
@@ -2676,7 +2579,7 @@ color: #333333;
 font-style: italic;
 font-weight: bold;
 letter-spacing: 0.1em;
-border: 1px solid #FFC200;
+border: 1px solid #F99830;
 position: absolute;
 padding: 0px;
 top: 0px;
@@ -2735,7 +2638,7 @@ background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
     margin-top: 15px;
     margin-left: 55px;
     display:block;
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 .welcome{
@@ -2744,7 +2647,7 @@ font-size: 14px;
 }
 
 .welcome_details{
-/*border: 1px solid #FFC200; */
+/*border: 1px solid #F99830; */
 margin-right:120px;
 padding-top:10px;
 font-size: 11px;
@@ -2757,7 +2660,7 @@ height:30px;
 }
 
 .header_menu{
-background-color: #1B91BA;
+background-color: #135F7F;
 height:23px;
 color:white;
 
@@ -2767,7 +2670,7 @@ text-align: right;
 border-bottom: 2px solid #FFFFFF;
 }
 .footer_menu{
-background-color: #1B91BA;
+background-color: #135F7F;
 height:15px;
 width:100%;
 font-weight: bold;
@@ -2807,7 +2710,7 @@ width:300px;
 .credits_bloc_img{
 padding:4px;
 background:white;
-border: 2px solid #16ADEB;
+border: 2px solid #135F7F;
 }
 
 .img_credits_maarch_box{
@@ -2841,7 +2744,7 @@ div.autocomplete ul li.selected {
 }
 
 div.autocomplete ul li {
-  /*background-color: #DEEDF3;*/
+  /*background-color: #F2F2F2;*/
   list-style-type:none;
   display: block;
   margin: 0;
@@ -2875,7 +2778,7 @@ div.autocomplete ul li span.informal {
 /* HR */
 hr{
   border: none;
-  background-color: #FFC200;
+  background-color: #F99830;
   height: 2px;
   width: 100%;
 }
@@ -2886,7 +2789,7 @@ hr{
 
 /* TIPS  */
 .newTipbox {
-    background-color: #deedf3;
+    background-color: #F2F2F2;
     margin: 0 auto 15px auto;
 }
 
@@ -2971,7 +2874,7 @@ hr{
     display: block;
     float: left;
      cursor: pointer;
-    /*background-color: #deedf3;*/
+    /*background-color: #F2F2F2;*/
 }
 .admin_item  div
 {
@@ -3070,13 +2973,13 @@ hr{
     margin-top: 10px;
     margin-bottom: 10px;
     height: 30px;
-    /*color: #1B91BA;*/
+    /*color: #135F7F;*/
     /*text-decoration: underline;*/
     font-weight: bold;
     font-size: 18px;
     /*background-color: #CFD3FF;*/
     text-align: center;
-    background-color: #deedf3;
+    background-color: #F2F2F2;
 }
 /*#admin_modules, #admin_apps
 {
@@ -3300,7 +3203,7 @@ div.autocomplete ul li.selected {
 }
 
 div.autocomplete ul li {
-  /*background-color: #DEEDF3;*/
+  /*background-color: #F2F2F2;*/
   list-style-type:none;
   display: block;
   margin: 0;

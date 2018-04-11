@@ -58,7 +58,7 @@
 	border: 2px solid #000;
 	display: none;
 	position: absolute;
-	background-color: #DEEDF3;
+	background-color: #F2F2F2;
 	left: 40%;
 	top: 40%;
 	text-align: center;
@@ -72,7 +72,7 @@
 	border: 2px solid #000;
 	display: none;
 	position: absolute;
-	background-color: #DEEDF3;
+	background-color: #F2F2F2;
 	left: 40%;
 	top: 10%;
 	text-align: center;
@@ -92,11 +92,11 @@
 }
 
 .unselectedId{
-	background-color:#DEEDF3;
+	background-color:#F2F2F2;
 }
 
 .selectedId{
-	background-color:#FDD16C;
+	background-color:#F99830;
 }
 
 
@@ -161,8 +161,8 @@
 }
 
 .droptarget.currentVis{
-    color : #009DC5;
-    border: solid 2px #009DC5;
+    color : #135F7F;
+    border: solid 2px #135F7F;
 }
 
 .visaUserInfo,.visaUserStatus,.visaUserConsigne,.visaUserAction{
@@ -294,7 +294,7 @@
 }
 
 .resListContentFrame:hover{
-    background-color: #FDD16C;
+    background-color: #F99830;
 }
 
 .resListContentFrame{
@@ -316,7 +316,7 @@
     top: 45%;
     padding: 5px;
     cursor: pointer;
-    background: #CEE9F1;
+    background: #F2F2F2;
     border-radius:40px;
 }
 .hideRightContent{
@@ -326,7 +326,7 @@
     top: 45%;
     padding: 5px;
     cursor: pointer;
-    background: #CEE9F1;
+    background: #F2F2F2;
     border-radius:40px;
 }
 
@@ -337,7 +337,7 @@
     top: 45%;
     padding: 5px;
     cursor: pointer;
-    background: #CEE9F1;
+    background: #F2F2F2;
     border-radius:40px;
 }
 
@@ -451,7 +451,7 @@
     margin-top: 2px;
     text-align: center;
     cursor: pointer;
-    background: #009DC5;
+    background: #135F7F;
     color: white;
     padding:10px;
     /*border-radius: 25px;*/
@@ -510,7 +510,7 @@
 }
 
 img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
-    border: solid 2px #009DC5;
+    border: solid 2px #135F7F;
     cursor:pointer;
 }
 
@@ -543,7 +543,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     border: solid 1px black;
     vertical-align: middle;
     font-weight: bold;
-    background: #009DC5;
+    background: #135F7F;
     color: white;
     text-transform : uppercase;
     white-space: nowrap;
@@ -590,7 +590,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     padding-right: 10px;
     padding-bottom: 7px;
     color:#666;
-    background-color: #deedf3;
+    background-color: #F2F2F2;
 }
 /*.titleSignatureBook span{
     display: inline-block;
@@ -626,7 +626,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     height:91vh;
     white-space: nowrap;
     overflow: hidden;
-    background-color: #CEE9F1;
+    background-color: #F2F2F2;
     margin-top: 5px;
 }
 
@@ -637,7 +637,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     cursor: pointer;
     width: 5%;
     vertical-align: middle;
-    background-color: #deedf3;
+    background-color: #F2F2F2;
 }
 
 .headerSignatureBook .activeTabSignatureBook i{
@@ -646,7 +646,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 #tabSignatureBook .item.activeTabSignatureBook{
-    /*background: #009DC5;
+    /*background: #135F7F;
     color:white;*/
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -657,7 +657,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .resListContentFrameSelected{
-    background-color: #FDD16C;
+    background-color: #F99830;
     
 }
 
@@ -666,14 +666,14 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
     -o-box-shadow: inset 0px 0px 5px 0px #656565;
     box-shadow: inset 0px 0px 5px 0px #656565;
-    background-color: #FDD16C;
+    background-color: #F99830;
 }
 .panelSelectedThumbnail{
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
     -o-box-shadow: inset 0px 0px 5px 0px #656565;
     box-shadow: inset 0px 0px 5px 0px #656565;
-    background-color: #FDD16C;
+    background-color: #F99830;
     color: #666 !important;
 }
 
@@ -785,7 +785,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     background-color: transparent;
     border-collapse: collapse;
     border-spacing: 0;
-    border-bottom: solid 1px #009DC5;
+    border-bottom: solid 1px #135F7F;
 }
 
 .ng-table td{
@@ -794,7 +794,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .ng-table th{
-    border-bottom: solid 1px #009DC5;
+    border-bottom: solid 1px #135F7F;
 }
 
 .ng-table-counts{
@@ -803,14 +803,14 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 
 .ng-table-pagination li{
     display: inline-block;
-    border: solid 1px #009DC5;
+    border: solid 1px #135F7F;
     padding: 5px;
     margin:5px;
     border-radius: 10px;
 }
 
 .ng-table-pagination li.active{
-    background : #009DC5;
+    background : #135F7F;
     color: white;
 }
 
@@ -819,7 +819,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 .ng-table-pagination li:hover{
-    background : #009DC5;
+    background : #135F7F;
     color: white;
 }
 
@@ -878,7 +878,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     transition: height 0.5s;
 }
 .pjSign:hover img:hover{
-    border: solid 2px #009DC5;
+    border: solid 2px #135F7F;
 }
 .pjSign:hover {
     width : 95%;
@@ -895,7 +895,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     cursor: pointer;
 }
 .panelRightListPj:hover{
-    color: #009DC5;
+    color: #135F7F;
 }
 
 .panelRightAddPj{

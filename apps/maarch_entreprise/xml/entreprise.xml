@@ -128,7 +128,7 @@
         <!-- Ces balises ne sont plus utilisées et seront supprimées dans la prochaine version  -->
         <priority color="#ff0000" with_delay="4" working_days="true">Très urgent</priority> <!-- 0 -->
         <priority color="#ffa500" with_delay="8" working_days="true">Urgent</priority> <!-- 1 -->
-        <priority color="#009dc5" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
+        <priority color="#135F7F" with_delay="false" working_days="true">Normal</priority> <!-- 2 -->
         <priority color="#ffa500" with_delay="false" working_days="true">SVA/SVR</priority> <!-- 3 -->
         <default_priority>2</default_priority>
     </priorities>

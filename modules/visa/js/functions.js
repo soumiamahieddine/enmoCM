@@ -22,7 +22,7 @@ function addVisaUser(users) {
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
                 +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
-                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
+                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;visibility:hidden;"></i>'
                 + signRequest      
             +'</span>'
             +'<span class="visaUserAction">'
@@ -61,7 +61,7 @@ function addVisaUser(users) {
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">'+users.entity_id+'</sup>'
                 +'<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/>'
-                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
+                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;visibility:hidden;"></i>'
                 + signRequest 
                 +'</span>'
             +'<span class="visaUserAction">'

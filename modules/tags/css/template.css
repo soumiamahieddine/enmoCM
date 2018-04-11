@@ -47,7 +47,7 @@ table {
 
 th {
 	border: 1px;
-	background-color : #16ADEB;
+	background-color : #135F7F;
 	text-align: center;
     padding: 5px 10px 6px 20px;
     vertical-align: middle;
@@ -70,7 +70,7 @@ a, a:link, a:visited, a:hover {
 }
 
 a:hover {
-    color: #1B99C4;
+    color: #135F7F;
 }
 
 

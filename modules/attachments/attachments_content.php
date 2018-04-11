@@ -1260,7 +1260,7 @@ $content .= '</h2>';
 //END HEADER
 
 //BEGIN FORM
-$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:35%;float:left;margin-left:-5px;background-color:#deedf3">';
+$content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:35%;float:left;margin-left:-5px;background-color:#F2F2F2">';
 $content .= '<div class="transmissionDiv" id="addAttach1">';
     $content .= '<hr style="width:85%;margin-left:0px">';
     $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
@@ -1323,7 +1323,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     //FILE
     if ($mode == 'add') {
         $content .= '<p>';
-        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#009DC5;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#009DC5\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
         $content .= '<select name="templateOffice[]" id="templateOffice" style="display:inline-block;" onchange="showEditButton(this);">';
         $content .= '<option value="">'._CHOOSE_MODEL.'</option>';
 
@@ -1496,7 +1496,7 @@ $content .= '<script>display_contact_card(\'visible\', \'contact_card_attach\');
 
 //IFRAME CREATE CONTACT
 if ($core->test_admin('my_contacts', 'apps', false)) {
-    $content .= '<div id="create_contact_div_attach" style="display:none;float:right;width:65%;background-color:#deedf3">';
+    $content .= '<div id="create_contact_div_attach" style="display:none;float:right;width:65%;background-color:#F2F2F2">';
     $content .= '<iframe width="100%" height="550" src="'.$_SESSION['config']['businessappurl']
                 .'index.php?display=false&dir=my_contacts&page=create_contact_iframe&fromAttachmentContact=Y&transmissionInput=0" name="contact_iframe_attach" id="contact_iframe_attach"'
                 .' scrolling="auto" frameborder="0" style="display:block;">'
@@ -1504,7 +1504,7 @@ if ($core->test_admin('my_contacts', 'apps', false)) {
     $content .= '</div>';
 }
 //IFRAME INFO CONTACT
-$content .= '<div id="info_contact_div_attach" style="display:none;float:right;width:65%;background-color:#deedf3">';
+$content .= '<div id="info_contact_div_attach" style="display:none;float:right;width:65%;background-color:#F2F2F2">';
     $content .= '<iframe width="100%" height="800" name="contact_card_attach_iframe" id="contact_card_attach_iframe"'
             .' scrolling="auto" frameborder="0" style="display:block;">'
             .'</iframe>';

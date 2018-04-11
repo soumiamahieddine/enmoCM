@@ -6,7 +6,7 @@
 	border: 2px solid #000;
 	display: none;
 	position: absolute;
-	background-color: #DEEDF3;
+	background-color: #F2F2F2;
 	left: 40%;
 	top: 10%;
 	text-align: center;
@@ -20,7 +20,7 @@
 	border: 2px solid #000;
 	display: none;
 	position: absolute;
-	background-color: #DEEDF3;
+	background-color: #F2F2F2;
 	left: 40%;
 	top: 10%;
 	text-align: center;
@@ -72,8 +72,8 @@
 }
 
 .droptarget.currentVis{
-    color : #009DC5;
-    border: solid 2px #009DC5;
+    color : #135F7F;
+    border: solid 2px #135F7F;
 }
 
 .avisUserInfo,.avisUserStatus,.avisUserConsigne,.avisUserAction{

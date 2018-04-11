@@ -246,7 +246,7 @@ export class SignatureBookComponent implements OnInit {
             } else {
                 this.rightContentWidth = "48%";
                 this.leftContentWidth = "48%";
-                $j("#hideLeftContent").css('background', '#CEE9F1');
+                $j("#hideLeftContent").css('background', '#F2F2F2');
             }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
