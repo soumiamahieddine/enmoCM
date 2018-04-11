@@ -105,15 +105,30 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <mat-form-field>
-                                        <input matInput type="text" id="fingerprint" name="fingerprint" title="{{lang.fingerprint}}" placeholder="{{lang.fingerprint}}"
-                                            [(ngModel)]="user.thumbprint">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-group">
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title style="color: rgba(0,0,0,0.54);">
+                                            {{lang.otherInformations}}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <mat-form-field>
+                                                <input matInput type="text" id="fingerprint" name="fingerprint" title="{{lang.fingerprint}}" placeholder="{{lang.fingerprint}}"
+                                                    [(ngModel)]="user.thumbprint">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <mat-checkbox color="primary" matTooltip="{{lang.webserviceAccountDesc}}" name="loginmode"
+                                            (change)="setUserModeLogin($event)" [checked]="user.loginmode == 'restMode'">
+                                                    {{lang.webserviceAccount}}
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            <div class="form-group" style="margin-top: 10px;">
                                 <div style="text-align:center;">
                                     <button mat-raised-button color="primary" *ngIf="creationMode" type="submit" [disabled]="!profileForm.form.valid">{{lang.save}}</button>
                                     <button mat-raised-button color="primary" *ngIf="!creationMode" type="submit" [disabled]="!profileForm.form.valid">{{lang.update}}</button>
@@ -173,12 +188,12 @@
                             <div [ngClass]="[signatureModel.size != '' ? 'col-md-10' : 'col-md-12']">
                                 <div class="upload-drop-zone" (click)="clickOnUploader('uploadSignFile')" style="cursor:pointer">
                                     {{lang.clickOn}}
-                                    <i class="fa fa-upload fa-2x"></i> ( < 2MB )
+                                    <i class="fa fa-upload fa-2x"></i> (
+                                    < 2MB ) </div>
                                 </div>
-                            </div>
-                            <div class="col-md-2" *ngIf="signatureModel.size">
-                                <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
-                            </div>
+                                <div class="col-md-2" *ngIf="signatureModel.size">
+                                    <img id="signaturePreview" src="{{signatureModel.base64ForJs}}" alt="Invalid image" style="width: 100%;">
+                                </div>
                         </form>
                     </mat-tab>
                     <mat-tab *ngIf="!creationMode" label="Historique">
@@ -230,8 +245,8 @@
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav *ngIf="!creationMode" #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;max-width:500px;">
+        <mat-sidenav *ngIf="!creationMode" #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;max-width:500px;">
             <mat-list>
                 <h3 mat-subheader>{{lang.groups}}</h3>
                 <mat-list-item *ngFor="let userGroup of user.groups">
@@ -279,8 +294,8 @@
                         </h4>
                         <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
                             <mat-form-field *ngIf="basket.allowed" floatLabel="never">
-                                <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text"
-                                    placeholder="{{ lang.userToRedirect }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
+                                <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.userToRedirect }}"
+                                    matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
                                 <mat-autocomplete #auto="matAutocomplete">
                                     <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id,basket)">
                                         <p mat-line matTooltip="{{ user.otherInfo }}">
@@ -331,8 +346,8 @@
                         </h4>
                         <p mat-line>
                             <mat-form-field *ngIf="basket.userToDisplay == ''" floatLabel="never">
-                                <input matTooltip="{{lang.redirectBasket}}" matTooltipPosition="above" type="text"
-                                    placeholder="{{lang.userToRedirect}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                <input matTooltip="{{lang.redirectBasket}}" matTooltipPosition="above" type="text" placeholder="{{lang.userToRedirect}}"
+                                    matInput [matAutocomplete]="auto" [formControl]="userCtrl">
                                 <mat-autocomplete #auto="matAutocomplete">
                                     <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="reassignBasketRedirection(user.id,basket)">
                                         <p mat-line matTooltip="{{ user.otherInfo }}">
@@ -362,4 +377,4 @@
             </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
-</div>
+    </div>

@@ -496,6 +496,14 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
+
+    setUserModeLogin(event:any) {
+        if (event.checked) {
+            this.user.loginmode = "restMode";
+        } else {
+            this.user.loginmode = "standard";
+        }
+    }
 }
 
 @Component({

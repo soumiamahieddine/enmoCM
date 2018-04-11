@@ -437,4 +437,6 @@ export const LANG_EN = {
     "redirectWhenAbscence"              : "Redirect the basket to a user when bascence activation",
     "reassign"                          : "Réassigner",
     "deleteAssignation"                 : "Delete assignation",
+    "webserviceAccount"                 : "Webservice account",
+    "webserviceAccountDesc"             : "If enabled, this account cannot be used to login in application (in graphic mode).",
 };

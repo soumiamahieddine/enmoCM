@@ -456,4 +456,6 @@ export const LANG_FR = {
     "redirectWhenAbscence"              : "Rediriger la banette à une personne lors de l'activation de l'absence",
     "reassign"                          : "Réassigner",
     "deleteAssignation"                 : "Supprimer l'assignation",
+    "webserviceAccount"                 : "Compte de webservice",
+    "webserviceAccountDesc"             : "Si activé, ce compte ne pourra pas être utilisé pour se connecter graphiquement à l'application.",
 };
