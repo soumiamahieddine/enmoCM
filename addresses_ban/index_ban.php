@@ -1,11 +1,8 @@
 <?php
 
+require '../vendor/autoload.php';
 $indexFileDirectory = __DIR__ . '/indexes/';
 $banDirectory       = __DIR__ . '/BAN/';
-
-set_include_path(__DIR__ . '/../apps/maarch_entreprise/tools/' . PATH_SEPARATOR . get_include_path());
-require_once('Zend/Search/Lucene.php');
-require("../core/class/class_functions.php");
 
 $filesBan = scandir($banDirectory);
 if (!is_dir($indexFileDirectory)) {
@@ -34,13 +31,12 @@ foreach ($filesBan as $fileBan) {
             if (!empty($data[9])) {
                 $doc = new Zend_Search_Lucene_Document();
 
-                $func = new functions();
-                $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', $func->normalize($data[0])));
-                $doc->addField(Zend_Search_Lucene_Field::Text('streetName', $func->normalize($data[1])));
+                $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', \SrcCore\models\TextFormatModel::normalize(['string' => $data[0]])));
+                $doc->addField(Zend_Search_Lucene_Field::Text('streetName', \SrcCore\models\TextFormatModel::normalize(['string' => $data[1]])));
                 $doc->addField(Zend_Search_Lucene_Field::UnIndexed('streetNumber', $data[3] . ' ' . $data[4]));
                 $doc->addField(Zend_Search_Lucene_Field::Text('postalCode', $data[6]));
                 $doc->addField(Zend_Search_Lucene_Field::Text('afnorName', $data[9]));
-                $doc->addField(Zend_Search_Lucene_Field::Text('city', $func->normalize($data[10])));
+                $doc->addField(Zend_Search_Lucene_Field::Text('city', \SrcCore\models\TextFormatModel::normalize(['string' => $data[10]])));
 
                 $index->addDocument($doc);
 
