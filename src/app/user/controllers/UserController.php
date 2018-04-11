@@ -186,7 +186,7 @@ class UserController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'delete' => true, 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -1004,6 +1004,9 @@ class UserController
                         $error['error'] = 'UserId out of perimeter';
                     }
                 }
+            } elseif ($aArgs['delete'] && $GLOBALS['userId'] == $user['user_id']) {
+                $error['status'] = 403;
+                $error['error'] = 'Can not delete yourself';
             }
         }
 

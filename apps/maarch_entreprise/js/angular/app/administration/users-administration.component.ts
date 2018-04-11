@@ -31,6 +31,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
     userDestRedirect                : any       = {};
     userDestRedirectModels          : any[]     = [];
     quota                           : any       = {};
+    user                            : any       = {};
 
     dataSource          = new MatTableDataSource(this.data);
     displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
@@ -58,6 +59,7 @@ export class UsersAdministrationComponent extends AutoCompletePlugin implements 
 
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
+        this.user = angularGlobals.user;
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/users')
