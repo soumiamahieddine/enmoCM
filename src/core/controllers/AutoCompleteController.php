@@ -131,7 +131,7 @@ class AutoCompleteController
         \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
         \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 
-        $index = \Zend_Search_Lucene::open('ban/indexes');
+        $index = \Zend_Search_Lucene::open('referential/ban/indexes');
         \Zend_Search_Lucene::setResultSetLimit(10);
         $hits = $index->find($data['address']);
 

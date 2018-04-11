@@ -1,6 +1,6 @@
 <?php
 
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 $indexFileDirectory = __DIR__ . '/indexes/';
 $banDirectory       = __DIR__ . '/src/';
 
@@ -14,7 +14,7 @@ if (!is_dir($indexFileDirectory)) {
         $index = Zend_Search_Lucene::open($indexFileDirectory);
     }
 }
-$index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene format to 2.3
+$index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3);
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
 $index->setMaxBufferedDocs(1000);
 

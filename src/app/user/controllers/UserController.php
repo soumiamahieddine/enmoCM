@@ -98,7 +98,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode']]);
         $user['signatures'] = UserModel::getSignaturesById(['id' => $aArgs['id']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
