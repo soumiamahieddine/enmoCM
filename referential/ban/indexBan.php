@@ -64,6 +64,7 @@ foreach ($filesBan as $fileBan) {
 }
 
 $index->commit();
+$index->optimize();
 
 /**
 * Check if a folder is empty
