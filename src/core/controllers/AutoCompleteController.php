@@ -146,6 +146,6 @@ class AutoCompleteController
             ];
         }
 
-        return $response->withJson(['addresses' => $addresses]);
+        return $response->withJson($addresses);
     }
 }
