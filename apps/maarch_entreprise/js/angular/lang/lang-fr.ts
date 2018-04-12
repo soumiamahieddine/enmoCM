@@ -184,6 +184,7 @@ export const LANG_FR = {
     "keywordHelpDesc_9"                 : "Toutes les entités (actives)",
     "keywordHelper"                     : "Afficher / Cacher l'aide sur les mots-clés",
     "prioritiesHelpDesc"                : "Glisser-déposer les priorités pour modifier l'ordre",
+    "basketHelpDesc"                    : "Glisser-déposer les bannettes pour modifier l'ordre",
     "label"                             : "Libellé",
     "last"                              : "dernier",
     "lastname"                          : "Nom",
