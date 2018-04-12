@@ -3689,6 +3689,5 @@ width:auto;
 }
 
 .typeahead__list {
-    width: auto !important;
     min-width: 150px !important;
 }

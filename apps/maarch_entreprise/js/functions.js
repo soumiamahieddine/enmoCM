@@ -10,6 +10,7 @@ function capitalizeFirstLetter(theString)
 
 function whatIsTheDivStatus(theDiv, divStatus)
 {
+    console.log($j('#'+theDiv).css('display'));
     if ($j('#'+theDiv).css('display') == 'none') {
         $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
     } else {
@@ -3799,4 +3800,37 @@ function print_current_result_list(path){
     mywindow.focus();
     setTimeout(function(){mywindow.print();},500);
     window.onfocus = function () { setTimeout(function () { mywindow.close(); }, 500); }
+}
+
+function toggleRefMaarch() {
+    if ($j('#refMaarch').is(":checked")) {
+        $j('#refSearch').show();
+        $j(".refMaarch input").addClass("readonly");
+        $j(".refMaarch input").prop("readonly", true);
+    } else {
+        $j('#refSearch').hide();
+        $j(".refMaarch input").removeClass("readonly");
+        $j(".refMaarch input").prop("readonly", false);
+    }
+    console.log('toto');
+}
+
+function setRefAdresse(item) {
+    $j("#ban_id").val(item.banId);
+    $j(".refMaarch #num").val(item.number);
+    $j(".refMaarch #street").val(item.afnorName);
+    $j(".refMaarch #cp").val(item.postalCode);
+    $j(".refMaarch #town").val(item.city);
+    $j(".refMaarch #country").val("FRANCE");
+}
+
+function toggleBlock(div, divIcon) {
+    $j('#'+div).slideToggle('slow');
+    if ($j('#'+divIcon+' i').hasClass('fa-minus-square-o')) {
+        $j('#'+divIcon+' i').removeClass('fa-minus-square-o');
+        $j('#'+divIcon+' i').addClass('fa-plus-square-o');
+    } else {
+        $j('#'+divIcon+' i').removeClass('fa-plus-square-o');
+        $j('#'+divIcon+' i').addClass('fa-minus-square-o');
+    }
 }
