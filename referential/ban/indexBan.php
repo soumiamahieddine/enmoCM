@@ -20,7 +20,7 @@ $index->setMaxBufferedDocs(1000);
 
 $row = 1;
 foreach ($filesBan as $fileBan) {
-    if (!in_array($fileBan, ['.', '..']) && ($handle = fopen($banDirectory . $fileBan, "r")) !== false) {
+    if (!in_array($fileBan, ['.', '..', '.gitkeep']) && ($handle = fopen($banDirectory . $fileBan, "r")) !== false) {
         echo "$fileBan\n";
         $duplicateAddresses = [];
         $currentCity = '';
@@ -62,6 +62,7 @@ foreach ($filesBan as $fileBan) {
         fclose($handle);
     }
 }
+echo date('c');
 
 $index->commit();
 $index->optimize();
