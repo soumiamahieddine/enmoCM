@@ -55,7 +55,7 @@
                             <input type="color" value="{{element.color}}" style="background:none;border:none;width:45px;" disabled> {{element.label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="delays">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processDelay}}</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processDelayDay}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>

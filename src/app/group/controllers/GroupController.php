@@ -58,7 +58,7 @@ class GroupController
 
         $existingGroup = GroupModel::getByGroupId(['groupId' => $data['group_id'], 'select' => ['1']]);
         if (!empty($existingGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
 
         if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {

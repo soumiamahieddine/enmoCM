@@ -69,7 +69,7 @@ class BasketController
 
         $existingBasket = BasketModel::getById(['id' => $data['id'], 'select' => ['1']]);
         if (!empty($existingBasket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
 
         if (!PreparedClauseController::isRequestValid(['clause' => $data['clause'], 'userId' => $GLOBALS['userId']])) {

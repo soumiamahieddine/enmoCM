@@ -130,7 +130,7 @@ class UserController
 
         $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['1']]);
         if (!empty($existingUser)) {
-            return $response->withStatus(400)->withJson(['errors' => 'User already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _ID . ' ' . _ALREADY_EXISTS]);
         }
 
         $logingModes = ['standard', 'restMode'];
