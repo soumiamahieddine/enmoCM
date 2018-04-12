@@ -18,7 +18,6 @@ use Basket\models\BasketModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
-use Entity\models\UserEntityModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
@@ -26,6 +25,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class EntityController
@@ -161,7 +161,6 @@ class EntityController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
-        
         if (!empty($data['email'])) {
             $check = $check && preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/", $data['email']);
         }
@@ -183,6 +182,25 @@ class EntityController
             'moduleId'  => 'entity',
             'eventId'   => 'entityCreation',
         ]);
+
+        if (empty($data['parent_entity_id']) && $GLOBALS['userId'] != 'superadmin') {
+            $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+            $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
+            $pEntity = 'N';
+            if (empty($primaryEntity)) {
+                $pEntity = 'Y';
+            }
+
+            UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => $data['entity_id'], 'role' => '', 'primaryEntity' => $pEntity]);
+            HistoryController::add([
+                'tableName' => 'users',
+                'recordId'  => $GLOBALS['userId'],
+                'eventType' => 'UP',
+                'info'      => _USER_ENTITY_CREATION . " : {$GLOBALS['userId']} {$data['entity_id']}",
+                'moduleId'  => 'user',
+                'eventId'   => 'userModification',
+            ]);
+        }
 
         return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
