@@ -40,7 +40,7 @@ foreach ($filesBan as $fileBan) {
                 if (empty($duplicateAddresses[$data[3] . $data[4] . $data[9] . $data[6]])) {
                     $doc = new Zend_Search_Lucene_Document();
 
-                    $doc->addField(Zend_Search_Lucene_Field::UnIndexed('banId', \SrcCore\models\TextFormatModel::normalize(['string' => $data[0]])));
+                    $doc->addField(Zend_Search_Lucene_Field::UnIndexed('banId', $data[0]));
                     if (!empty($data[1])) {
                         $doc->addField(Zend_Search_Lucene_Field::Text('streetName', \SrcCore\models\TextFormatModel::normalize(['string' => $data[1]])));
                     }
@@ -48,7 +48,7 @@ foreach ($filesBan as $fileBan) {
                     $doc->addField(Zend_Search_Lucene_Field::Text('streetNumber', $streetNumber));
                     $doc->addField(Zend_Search_Lucene_Field::Text('postalCode', $data[6]));
                     $doc->addField(Zend_Search_Lucene_Field::Text('afnorName', $data[9]));
-                    $doc->addField(Zend_Search_Lucene_Field::Text('city', \SrcCore\models\TextFormatModel::normalize(['string' => $data[10]])));
+                    $doc->addField(Zend_Search_Lucene_Field::Text('city', $data[10]));
 
                     $index->addDocument($doc);
                     $duplicateAddresses[$data[3] . $data[4] . $data[9] . $data[6]] = true;

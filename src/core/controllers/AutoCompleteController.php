@@ -142,7 +142,8 @@ class AutoCompleteController
                 'number'        => $hit->streetNumber,
                 'afnorName'     => $hit->afnorName,
                 'postalCode'    => $hit->postalCode,
-                'city'          => $hit->city
+                'city'          => $hit->city,
+                'address'       => "{$hit->streetNumber} {$hit->afnorName}, {$hit->city} ({$hit->postalCode})"
             ];
         }
 
