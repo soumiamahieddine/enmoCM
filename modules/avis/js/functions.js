@@ -201,7 +201,7 @@ function loadAvisModelUsers() {
 
 function initDragNDropAvis() {
     document.getElementById("avis_content").addEventListener("dragstart", function (event) {
-        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #135F7F33");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -220,7 +220,7 @@ function initDragNDropAvis() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("avis_content").addEventListener("dragend", function (event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
-        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border", "dashed 2px #135F7F33");
         event.target.style.opacity = "1";
     });
 

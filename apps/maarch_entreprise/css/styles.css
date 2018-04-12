@@ -1001,11 +1001,11 @@ width: 770px;
 }
 
 .listing td {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listingIndex td {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listing2 td {
@@ -1017,7 +1017,7 @@ width: 770px;
 }
 
 .listingsmall td {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listing .col td {
@@ -1033,11 +1033,11 @@ width: 770px;
 }
 
 .listing2 .col td {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listing3 .col td {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listingsmall .col td {
@@ -1198,7 +1198,7 @@ th.ref {
 }
 
 .detail th {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
     width: 110px;
     font-weight: normal;
     color: #666;
@@ -1292,8 +1292,8 @@ th.ref {
     padding-top: 0px;
     height: 70px;
     width: 236px;
-    background: url(static.php?filename=logo.svg) #f2f2f2;
-    background-size: 90%;
+    background: url(static.php?filename=logo_white.svg) #135F7F;
+    background-size: 80%;
     background-position: center;
     background-repeat: no-repeat;
     /*border-radius: 10px;*/
@@ -2629,11 +2629,11 @@ input[type="checkbox"] , input[type="radio"]
 }
 
 .listing td  input[type="radio"]{
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listingsmall td  input[type="radio"]{
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 .listing .col td  input[type="radio"]{
@@ -2847,7 +2847,7 @@ div.autocomplete ul {
 }
 
 div.autocomplete ul li.selected {
-    background-color: #93D1E4;
+    background-color: #135F7F33;
 }
 
 div.autocomplete ul li {
@@ -2912,7 +2912,7 @@ hr{
     position:                  relative;
     top:                       -8px;
     z-index:                   1000;
-    background:                #93D1E4;
+    background:                #135F7F33;
 }
 .protohud .open {
     background-color:          #f1f1f1;
@@ -3575,7 +3575,7 @@ a.actionList {
 }
 
 .mClightMediumBlue{
-    color: #93D1E4;
+    color: #135F7F33;
 }
 
 .mClightBlue{
