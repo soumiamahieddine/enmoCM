@@ -150,6 +150,99 @@
                         </mat-form-field>
                         <div id="jstree"></div>
                     </mat-tab>
+                    <mat-tab *ngIf="!creationMode" label="{{lang.baskets}}">
+                        <ng-container *ngFor="let basket of user.baskets;let i = index">
+                            <mat-list-item *ngIf="basket.group_id && basket.userToDisplay == ''">
+                                <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-70px;">
+                                    <mat-slide-toggle matTooltip="activer / désactiver la bannette" color="primary" [(ngModel)]="basket.allowed" (change)="toggleBasket(basket)"
+                                                      [disabled]="basket.userToDisplay != ''"></mat-slide-toggle>
+                                </mat-icon>
+                                <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
+                                    <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
+                                </h4>
+                                <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
+                                    <mat-form-field *ngIf="basket.allowed" floatLabel="never">
+                                        <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.userToRedirect }}"
+                                               matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id,basket)">
+                                <p mat-line matTooltip="{{ user.otherInfo }}">
+                                            <span class="col-xm-1">
+                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
+                                            </span>
+                                    <span class="col-xm-11">
+                                                {{ user.idToDisplay }}
+                                                <small>{{ user.otherInfo }}</small>
+                                            </span>
+                                </p>
+                                </mat-option>
+                                </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <input type="text" color="warn" matInput disabled value="">
+                                </mat-form-field>
+                                </p>
+                            </mat-list-item>
+                        </ng-container>
+                        <mat-divider></mat-divider>
+                        <h4>{{lang.basketsRedirected}}</h4>
+                        <ng-container *ngFor="let basket of user.baskets;let i = index">
+                            <mat-list-item *ngIf="basket.group_id && basket.userToDisplay != ''">
+                                <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-60px;" class="fa fa-paper-plane-o">
+                                </mat-icon>
+                                <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
+                                    <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>
+                                </h4>
+                                <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
+                                    <mat-form-field>
+                                        <input type="text" color="warn" matInput disabled value="{{lang.redirectedTo}} {{basket.userToDisplay}}">
+                                        <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer la redirection">
+                                            <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </p>
+                            </mat-list-item>
+                        </ng-container>
+                        <mat-divider></mat-divider>
+                        <h4>{{lang.basketsAssigned}}</h4>
+                        <ng-container *ngFor="let basket of user.baskets;let i = index">
+                            <mat-list-item *ngIf="!basket.group_id">
+                                <mat-icon mat-list-icon color="primary" style="margin-top:-60px;" class="fa fa-reply">
+                                </mat-icon>
+                                <h4 mat-line [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
+                                    <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>
+                                </h4>
+                                <p mat-line>
+                                    <mat-form-field *ngIf="basket.userToDisplay == ''" floatLabel="never">
+                                        <input matTooltip="{{lang.redirectBasket}}" matTooltipPosition="above" type="text" placeholder="{{lang.userToRedirect}}"
+                                               matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="reassignBasketRedirection(user.id,basket)">
+                                <p mat-line matTooltip="{{ user.otherInfo }}">
+                                            <span class="col-xm-1">
+                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
+                                            </span>
+                                    <span class="col-xm-11">
+                                                {{ user.idToDisplay }}
+                                                <small>{{ user.otherInfo }}</small>
+                                            </span>
+                                </p>
+                                </mat-option>
+                                </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <input type="text" color="warn" matInput disabled value="{{lang.assignBy}} {{basket.userToDisplay}}">
+                                    <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="basket.userToDisplay =''" matTooltip="{{lang.reassign}}">
+                                        <mat-icon color="primary" class="fa fa-edit"></mat-icon>
+                                    </button>
+                                    <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="{{lang.deleteAssignation}}">
+                                        <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                </p>
+                            </mat-list-item>
+                        </ng-container>
+                    </mat-tab>
                     <mat-tab *ngIf="!creationMode" label="{{lang.signatures}}">
                         <div dnd-droppable matTooltip="{{lang.uploadSignFileInfo}}" (click)="clickOnUploader('uploadSignFile')" [class.dndFileHighlighted]="highlightMe"
                             (dragover)="highlightMe=true" (dragleave)="highlightMe=false" (onDropSuccess)="test($event);highlightMe=false;"
@@ -281,99 +374,6 @@
                         </mat-form-field>
                     </p>
                 </mat-list-item>
-                <mat-divider></mat-divider>
-                <h3 mat-subheader>{{lang.baskets}}</h3>
-                <ng-container *ngFor="let basket of user.baskets;let i = index">
-                    <mat-list-item *ngIf="basket.group_id && basket.userToDisplay == ''">
-                        <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-70px;">
-                            <mat-slide-toggle matTooltip="activer / désactiver la bannette" color="primary" [(ngModel)]="basket.allowed" (change)="toggleBasket(basket)"
-                                [disabled]="basket.userToDisplay != ''"></mat-slide-toggle>
-                        </mat-icon>
-                        <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
-                            <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
-                        </h4>
-                        <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
-                            <mat-form-field *ngIf="basket.allowed" floatLabel="never">
-                                <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.userToRedirect }}"
-                                    matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id,basket)">
-                                        <p mat-line matTooltip="{{ user.otherInfo }}">
-                                            <span class="col-xm-1">
-                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                            </span>
-                                            <span class="col-xm-11">
-                                                {{ user.idToDisplay }}
-                                                <small>{{ user.otherInfo }}</small>
-                                            </span>
-                                        </p>
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input type="text" color="warn" matInput disabled value="">
-                            </mat-form-field>
-                        </p>
-                    </mat-list-item>
-                </ng-container>
-                <mat-divider></mat-divider>
-                <h3 mat-subheader>{{lang.basketsRedirected}}</h3>
-                <ng-container *ngFor="let basket of user.baskets;let i = index">
-                    <mat-list-item *ngIf="basket.group_id && basket.userToDisplay != ''">
-                        <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-60px;" class="fa fa-paper-plane-o">
-                        </mat-icon>
-                        <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
-                            <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>
-                        </h4>
-                        <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
-                            <mat-form-field>
-                                <input type="text" color="warn" matInput disabled value="{{lang.redirectedTo}} {{basket.userToDisplay}}">
-                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="Supprimer la redirection">
-                                    <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </p>
-                    </mat-list-item>
-                </ng-container>
-                <mat-divider></mat-divider>
-                <h3 mat-subheader>{{lang.basketsAssigned}}</h3>
-                <ng-container *ngFor="let basket of user.baskets;let i = index">
-                    <mat-list-item *ngIf="!basket.group_id">
-                        <mat-icon mat-list-icon color="primary" style="margin-top:-60px;" class="fa fa-reply">
-                        </mat-icon>
-                        <h4 mat-line [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
-                            <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>
-                        </h4>
-                        <p mat-line>
-                            <mat-form-field *ngIf="basket.userToDisplay == ''" floatLabel="never">
-                                <input matTooltip="{{lang.redirectBasket}}" matTooltipPosition="above" type="text" placeholder="{{lang.userToRedirect}}"
-                                    matInput [matAutocomplete]="auto" [formControl]="userCtrl">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="reassignBasketRedirection(user.id,basket)">
-                                        <p mat-line matTooltip="{{ user.otherInfo }}">
-                                            <span class="col-xm-1">
-                                                <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                            </span>
-                                            <span class="col-xm-11">
-                                                {{ user.idToDisplay }}
-                                                <small>{{ user.otherInfo }}</small>
-                                            </span>
-                                        </p>
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input type="text" color="warn" matInput disabled value="{{lang.assignBy}} {{basket.userToDisplay}}">
-                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="basket.userToDisplay =''" matTooltip="{{lang.reassign}}">
-                                    <mat-icon color="primary" class="fa fa-edit"></mat-icon>
-                                </button>
-                                <button mat-button color="warn" matSuffix mat-icon-button aria-label="Clear" (click)="delBasketRedirection(basket)" matTooltip="{{lang.deleteAssignation}}">
-                                    <mat-icon color="warn" class="fa fa-times text-danger"></mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </p>
-                    </mat-list-item>
-                </ng-container>
             </mat-list>
         </mat-sidenav>
     </mat-sidenav-container>
