@@ -1743,7 +1743,7 @@ function loadInfoContact(){
     return pathScript;
 }
 
-function loadIndexingModel() {
+function loadIndexingModel(actionId) {
     if ($j('#complementary_fields').css('display') == 'none') {
         new Effect.toggle('complementary_fields', 'blind', {delay:0.2});
         whatIsTheDivStatus('complementary_fields', 'divStatus_complementary_fields');
@@ -1759,7 +1759,7 @@ function loadIndexingModel() {
             dataType : 'JSON',
             data: {
                 mode : 'get',
-                id: $j('#indexing_models_select').val(),
+                id: $j('#indexing_models_select').val()
             },
             success : function(response){
                 if (response.status == 0) {
@@ -1769,9 +1769,14 @@ function loadIndexingModel() {
                         if ($j('#'+index).length) {
                             $j('#'+index).val(value);
                             $j('#category_id').change();
-                            
+
                             if ($j('#'+index).is('select') && index != 'thesaurus') {
-                                $j('#'+index).change();
+                                if (index == 'type_id') {
+                                    change_doctype(value, 'index.php?display=true&dir=indexing_searching&page=change_doctype', 'Type de document non valide',
+                                        actionId, 'index.php?display=true&page=get_content_js', 'table-row');
+                                } else {
+                                    $j('#'+index).change();
+                                }
                                 $j('#'+index).trigger("chosen:updated");
                             } else if (index == 'thesaurus') {
                                 $j.each(value, function( ind, thes ) {
@@ -1779,9 +1784,7 @@ function loadIndexingModel() {
                                 });
                             }
                         }
-                        
-                    });  
-
+                    });
                 }
             },
             error : function(error){

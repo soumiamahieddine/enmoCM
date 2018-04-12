@@ -225,7 +225,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= '<div style="display:table;width:100%;">';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel();"><option value="none"></option>';
+    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel(\'' .$actionId. '\');"><option value="none"></option>';
     while ($resIndexingModels = $stmt->fetchObject()) {
         $frmStr .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
     }
