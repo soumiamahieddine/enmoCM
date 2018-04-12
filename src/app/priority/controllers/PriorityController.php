@@ -36,7 +36,7 @@ class PriorityController
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
-        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null);
+        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null || $data['delays'] == 0);
         $check = $check && Validator::boolType()->validate($data['working_days']);
         $check = $check && Validator::boolType()->validate($data['default_priority']);
         if (!$check) {
