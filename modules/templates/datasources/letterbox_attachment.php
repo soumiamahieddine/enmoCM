@@ -65,27 +65,30 @@ if (!empty($res_id)) {
         // $datasources['contact'] = array();
         $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
         $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact['afnor']         = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
         $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
+        $myContact['title']         = $contacts->get_civility_contact($myContact['title']);
+        $datasources['contact'][]   = $myContact;
 
         // single Contact
     } elseif (isset($res_contact_id) && isset($res_address_id) && is_numeric($res_contact_id)) {
         $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($res_contact_id, $res_address_id));
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact                  = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact['afnor']         = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
         $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
+        $myContact['title']         = $contacts->get_civility_contact($myContact['title']);
+        $datasources['contact'][]   = $myContact;
     } elseif (!empty($res_contact_id) && !is_numeric($res_contact_id)) {
         $stmt = $dbDatasource->query('SELECT firstname, lastname, user_id, mail, phone, initials FROM users WHERE user_id = ?', [$res_contact_id]);
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact                = $stmt->fetch(PDO::FETCH_ASSOC);
         $datasources['contact'][] = $myContact;
     } else {
         $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($datasources['res_letterbox'][0]['contact_id'], $datasources['res_letterbox'][0]['address_id']));
-        $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact                  = $stmt->fetch(PDO::FETCH_ASSOC);
+        $myContact['afnor']         = \Contact\controllers\ContactController::formatContactAddressAfnor($myContact);
         $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-        $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
-        $datasources['contact'][] = $myContact;
+        $myContact['title']         = $contacts->get_civility_contact($myContact['title']);
+        $datasources['contact'][]   = $myContact;
     }
 
     if (isset($datasources['contact'][0]['title']) && $datasources['contact'][0]['title'] == '') {

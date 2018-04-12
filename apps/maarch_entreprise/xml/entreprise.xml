@@ -139,38 +139,52 @@
         <title>
             <id>title1</id>
             <label>Monsieur</label>
+            <abbreviation>M.</abbreviation>
         </title>
         <title>
             <id>title2</id>
             <label>Madame</label>
+            <abbreviation>Mme</abbreviation>
         </title>
         <title>
             <id>title3</id>
             <label>Mademoiselle</label>
+            <abbreviation>Mlle</abbreviation>
         </title>
         <title>
             <id>title4</id>
-            <label>Avocat</label>
+            <label>Maître</label>
+            <abbreviation>Me</abbreviation>
         </title>
         <title>
             <id>title5</id>
-            <label>Notaire</label>
+            <label>Monseigneur</label>
+            <abbreviation>Mgr</abbreviation>
         </title>
         <title>
             <id>title6</id>
-            <label>Mairie</label>
+            <label>Docteur</label>
+            <abbreviation>Dr</abbreviation>
         </title>
         <title>
             <id>title7</id>
-            <label>Ecole</label>
+            <label>Professeur</label>
+            <abbreviation>Pr</abbreviation>
         </title>
         <title>
             <id>title8</id>
-            <label>Madame et Monsieur</label>
+            <label>Mesdames</label>
+            <abbreviation>Mmes</abbreviation>
         </title>
         <title>
             <id>title9</id>
             <label>Messieurs</label>
+            <abbreviation>MM.</abbreviation>
+        </title>
+        <title>
+            <id>title10</id>
+            <label>Mesdemoiselles</label>
+            <abbreviation>Mlles</abbreviation>
         </title>
         <default_title/>
     </titles>
