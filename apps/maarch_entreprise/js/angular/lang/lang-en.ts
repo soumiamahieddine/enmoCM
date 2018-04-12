@@ -170,6 +170,7 @@ export const LANG_EN = {
     "keywordHelpDesc_8"                 : "All entities with de same type passed in argument",
     "keywordHelpDesc_9"                 : "All entities (enabled)",
     "keywordHelper"                     : "Hide / Display keyword help",
+    "basketHelpDesc"                    : "Drag and drop priorities to change the order",
     "label"                             : "Label",
     "lastname"                          : "Lastname",
     "life_cycle"                        : "Life cycle",
