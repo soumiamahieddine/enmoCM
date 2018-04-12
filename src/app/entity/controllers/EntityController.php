@@ -162,7 +162,7 @@ class EntityController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['short_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
         
-        if(!empty($data['email'])){
+        if (!empty($data['email'])) {
             $check = $check && preg_match("/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/", $data['email']);
         }
         if (!$check) {
@@ -212,6 +212,11 @@ class EntityController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['entity_type']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $fatherAndSons = EntityModel::getEntityChildren(['entityId' => $aArgs['id']]);
+        if (in_array($data['parent_entity_id'], $fatherAndSons)) {
+            return $response->withStatus(400)->withJson(['errors' => _CAN_NOT_MOVE_IN_CHILD_ENTITY]);
         }
 
         $neededData = [

@@ -73,6 +73,7 @@ define('_USER_ENTITY_MODIFICATION', 'Entité modifiée pour utilisateur');
 define('_USER_ENTITY_SUPPRESSION', 'Entité supprimée pour utilisateur');
 define('_VISA_USER', 'Pour visa');
 define('_WRONG_FILE_TYPE', 'Ce type de fichier n\'est pas permis');
+define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'L\'entité parente de doit pas être une entité fille');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des documents avec avis');
