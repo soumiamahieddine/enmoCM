@@ -1,22 +1,9 @@
 <?php
 
 require '../../vendor/autoload.php';
-$indexFileDirectory = __DIR__ . '/indexes/';
 $banDirectory       = __DIR__ . '/src/';
 
 $filesBan = scandir($banDirectory);
-if (!is_dir($indexFileDirectory)) {
-    $index = Zend_Search_Lucene::create($indexFileDirectory);
-} else {
-    if (isDirEmpty($indexFileDirectory)) {
-        $index = Zend_Search_Lucene::create($indexFileDirectory);
-    } else {
-        $index = Zend_Search_Lucene::open($indexFileDirectory);
-    }
-}
-$index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3);
-Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
-$index->setMaxBufferedDocs(1000);
 
 $row = 1;
 foreach ($filesBan as $fileBan) {
@@ -24,6 +11,28 @@ foreach ($filesBan as $fileBan) {
         echo "$fileBan\n";
         $duplicateAddresses = [];
         $currentCity = '';
+
+        // Create Folder by department
+        $folderName = str_replace("BAN_licence_gratuite_repartage_", "", $fileBan);
+        $folderName = str_replace(".csv", "", $folderName);
+        $folderName = __DIR__ . '/indexes/'.$folderName;
+        if (!is_dir($folderName)) {
+            mkdir($folderName);
+        }
+
+        // if (!is_dir($folderName)) {
+        //     $index = Zend_Search_Lucene::create($folderName);
+        // } else {
+            if (isDirEmpty($folderName)) {
+                $index = Zend_Search_Lucene::create($folderName);
+            } else {
+                $index = Zend_Search_Lucene::open($folderName);
+            }
+        // }
+        $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3);
+        Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+        $index->setMaxBufferedDocs(1000);
+
         $i = 1;
         while (($data = fgetcsv($handle, 0, ";")) !== false) {
             if ($i == 1) {
@@ -60,12 +69,11 @@ foreach ($filesBan as $fileBan) {
             $row++;
         }
         fclose($handle);
+        $index->commit();
+        $index->optimize();
     }
 }
 echo date('c');
-
-$index->commit();
-$index->optimize();
 
 /**
 * Check if a folder is empty

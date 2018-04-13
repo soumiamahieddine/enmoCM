@@ -82,7 +82,7 @@ class ContactController
         return $response->withJson([$contact]);
     }
 
-    public function formatContactAddressAfnor(array $aArgs)
+    public static function formatContactAddressAfnor(array $aArgs)
     {
         $formattedAddress = '';
 
@@ -125,12 +125,12 @@ class ContactController
         // $formattedAddress .= "\n";
 
         // Ligne 6
-        $formattedAddress .= substr($aArgs['address_postal_code'] . ' ' . $aArgs['address_town'], 0, 38) . "\n";
+        $formattedAddress .= substr($aArgs['address_postal_code'] . ' ' . $aArgs['address_town'], 0, 38);
 
         return $formattedAddress;
     }
 
-    public function controlLengthNameAfnor(array $aArgs)
+    public static function controlLengthNameAfnor(array $aArgs)
     {
         $aCivility = ContactController::getContactCivility();
         if (strlen($aArgs['title'] . ' ' . $aArgs['fullName']) > $aArgs['strMaxLength']) {
@@ -142,7 +142,7 @@ class ContactController
         return substr($aArgs['title'] . ' ' . $aArgs['fullName'], 0, $aArgs['strMaxLength']);
     }
 
-    public function getContactCivility()
+    public static function getContactCivility()
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
 
