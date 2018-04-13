@@ -1,4 +1,4 @@
-<button mat-button [matMenuTriggerFor]="menu">{{user.firstname.charAt(0) | uppercase}}. {{user.lastname | uppercase}}</button>
+<button mat-button [matMenuTriggerFor]="menu"><mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>{{user.firstname.charAt(0) | uppercase}}. {{user.lastname | uppercase}}</button>
 <mat-menu #menu="matMenu" class="headerMaarch">
     <canvas class="header-bg" width="250" height="70" style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>
     <i style="z-index:1;color:white;position: absolute;left: 85px;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;"></i>
@@ -14,6 +14,18 @@
             <mat-list-item *ngFor="let entity of user.entities">
                 <p mat-line style="color:white;opacity:0.5;"> {{entity.entity_label}} </p>
             </mat-list-item>
+
+            <h3 mat-subheader>{{lang.myMenu}}</h3>
+            <a mat-list-item routerLink="/profile">
+                <p mat-line style="color:white;opacity:0.5;">
+                    {{lang.myProfile}}
+                </p>
+            </a>
+            <a mat-list-item href="index.php?display=true&page=logout&logout=true">
+                <p mat-line style="color:white;opacity:0.5;">
+                    {{lang.logout}}
+                </p>
+            </a>
         </mat-list>
     </div>
 </mat-menu>
