@@ -9,6 +9,8 @@
 $core = new core_tools();
 $core->test_user();
 $db = new Database();
+
+require_once 'modules/attachments/Controllers/ReconciliationController.php';
 $reconciliationControler = new ReconciliationController();
 
 $letterboxTable = $_SESSION['tablename']['reconciliation']['letterbox'];
@@ -21,12 +23,16 @@ $childResId = $_SESSION['doc_id'];
 $formValues = $reconciliationControler -> get_values_in_array($_REQUEST['form_values']);
 $tabFormValues = array();
 
-foreach($formValues as $tmpTab){
-    if($tmpTab['ID'] == 'title' || $tmpTab['ID'] == 'chrono_number' || $tmpTab['ID'] == 'contactid' || $tmpTab['ID'] == 'addressid' || $tmpTab['ID'] == 'close_incoming_mail'){
-    	if($tmpTab['ID'] == 'chrono_number') // Check if the identifier is empty. if true, set it at 0
-		    if(empty($tmpTab['VALUE'])) $tmpTab ['VALUE'] = "0";
-        if(trim($tmpTab['VALUE']) != '') // Case of some empty value, that cause some errors
+foreach ($formValues as $tmpTab) {
+    if ($tmpTab['ID'] == 'title' || $tmpTab['ID'] == 'chrono_number' || $tmpTab['ID'] == 'contactid' || $tmpTab['ID'] == 'addressid' || $tmpTab['ID'] == 'close_incoming_mail') {
+        if ($tmpTab['ID'] == 'chrono_number') { // Check if the identifier is empty. if true, set it at 0
+            if (empty($tmpTab['VALUE'])) {
+                $tmpTab ['VALUE'] = "0";
+            }
+        }
+        if (trim($tmpTab['VALUE']) != '') { // Case of some empty value, that cause some errors
             $tabFormValues[$tmpTab['ID']] = $tmpTab['VALUE'];
+        }
     }
 }
 
@@ -36,15 +42,15 @@ $_SESSION['modules_loaded']['attachments']['reconciliation']['tabFormValues'] = 
 $queryChildInfos = \Resource\models\ResModel::getById(['resId' => $childResId]);
 
 $aArgs['data'] = array();
-foreach ($queryChildInfos as $key => $value){
-    if($value != ''
+foreach ($queryChildInfos as $key => $value) {
+    if ($value != ''
         && $key != 'modification_date'
         && $key != 'is_frozen'
         && $key != 'tablename'
         && $key != 'locker_user_id'
         && $key != 'locker_time'
         && $key != 'confidentiality') {
-        if(is_numeric($value)){
+        if (is_numeric($value)) {
             array_push(
                 $aArgs['data'],
                 array(
@@ -53,7 +59,7 @@ foreach ($queryChildInfos as $key => $value){
                     'type' => 'integer',
                 )
             );
-        }else{
+        } else {
             array_push(
                 $aArgs['data'],
                 array(
@@ -107,7 +113,7 @@ array_push(
 );
 
 // Same for chrono number
-if(isset($tabFormValues['chrono_number'])){
+if (isset($tabFormValues['chrono_number'])) {
     array_push(
         $aArgs['data'],
         array(
@@ -119,7 +125,7 @@ if(isset($tabFormValues['chrono_number'])){
 }
 
 // Same for recipient informations
-if(isset($tabFormValues['addressid'])){
+if (isset($tabFormValues['addressid'])) {
     array_push(
         $aArgs['data'],
         array(
@@ -129,7 +135,7 @@ if(isset($tabFormValues['addressid'])){
         )
     );
 }
-if(is_numeric($tabFormValues['contactid'])) { // usefull to avoid user contact id (e.g : bblier instead of 1)
+if (is_numeric($tabFormValues['contactid'])) { // usefull to avoid user contact id (e.g : bblier instead of 1)
     array_push(
         $aArgs['data'],
         array(
@@ -147,20 +153,26 @@ $aArgs['collIdMaster'] = 'letterbox_coll';
 $aArgs['table'] = 'res_attachments';
 
 //fileFormat
-for($i = 0; $i <= count($aArgs['data']); $i++){
-    if($aArgs['data'][$i]['column'] == 'format'){
-        if($aArgs['data'][$i]['value'] != NULL) $aArgs['fileFormat'] = $aArgs['data'][$i]['value'];
+for ($i = 0; $i <= count($aArgs['data']); $i++) {
+    if ($aArgs['data'][$i]['column'] == 'format') {
+        if ($aArgs['data'][$i]['value'] != null) {
+            $aArgs['fileFormat'] = $aArgs['data'][$i]['value'];
+        }
     }
-    if($aArgs['data'][$i]['column'] == 'creation_date'){
+    if ($aArgs['data'][$i]['column'] == 'creation_date') {
         $aArgs['data'][$i]['value'] = $db->current_datetime();
     }
-    if($aArgs['data'][$i]['column'] == 'path'){
-        if($aArgs['data'][$i]['value'] != NULL) $aArgs['path'] = $aArgs['data'][$i]['value'];
+    if ($aArgs['data'][$i]['column'] == 'path') {
+        if ($aArgs['data'][$i]['value'] != null) {
+            $aArgs['path'] = $aArgs['data'][$i]['value'];
+        }
     }
-    if($aArgs['data'][$i]['column'] == 'filename'){
-        if($aArgs['data'][$i]['value'] != NULL) $aArgs['filename'] = $aArgs['data'][$i]['value'];
+    if ($aArgs['data'][$i]['column'] == 'filename') {
+        if ($aArgs['data'][$i]['value'] != null) {
+            $aArgs['filename'] = $aArgs['data'][$i]['value'];
+        }
     }
-    if($aArgs['data'][$i]['column'] == 'docserver_id'){
+    if ($aArgs['data'][$i]['column'] == 'docserver_id') {
         // Retrieve the PATH TEMPLATE
         $docserverPath = \Docserver\models\DocserverModel::getById([
             'select'    => ['path_template'],
@@ -192,10 +204,10 @@ array_push(
 );
 
 // res_attachment insertion
-if(count($parentResId) == 1 ) {
+if (count($parentResId) == 1) {
     $aArgs['resIdMaster'] = $parentResId[0];
     $insertResAttach = $reconciliationControler -> storeAttachmentResource($aArgs);
-}else {
+} else {
     for ($i = 0; $i < count($parentResId); $i++) {
         $aArgs['resIdMaster'] = $parentResId[$i];
         $insertResAttach = $reconciliationControler->storeAttachmentResource($aArgs);
