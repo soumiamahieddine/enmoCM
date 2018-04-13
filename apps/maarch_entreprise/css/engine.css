@@ -310,3 +310,13 @@ h1.admin-app-name {
 .headerMaarch.mat-menu-panel {
     background: #135f7f !important;
 }
+
+.mat-column-default_priority {
+    display:flex;
+    justify-content:center;
+}
+
+.mat-column-working_days {
+    display:flex;
+    justify-content:right;
+}
