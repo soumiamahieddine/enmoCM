@@ -814,23 +814,23 @@ class UserController
                     'data'  => [$aArgs['entityId'], $user['user_id'], 'dest']
                 ]);
 
-                $resIds = ResModel::getOnView([
+                $ressources = ResModel::getOnView([
                     'select'    => ['res_id'],
                     'where'     => ['confidentiality = ?', 'destination = ?', 'closing_date is null'],
                     'data'      => ['Y', $aArgs['entityId']]
                 ]);
-                foreach ($resIds as $resId) {
+                foreach ($ressources as $ressource) {
                     $listInstanceId = ListInstanceModel::get([
                         'select'    => ['listinstance_id'],
                         'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?'],
-                        'data'      => [$resId, $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
+                        'data'      => [$ressource['res_id'], $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
                     ]);
 
                     if (!empty($listInstanceId)) {
                         ListInstanceModel::update([
                             'set'   => ['process_date' => null],
                             'where' => ['res_id = ?', 'difflist_type = ?', 'listinstance_id = ?'],
-                            'data'  => [$resId, 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
+                            'data'  => [$ressource['res_id'], 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
                         ]);
                     }
                 }
