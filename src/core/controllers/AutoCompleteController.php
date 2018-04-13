@@ -19,6 +19,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Entity\models\EntityModel;
+use SrcCore\models\TextFormatModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
 
@@ -123,17 +124,35 @@ class AutoCompleteController
         $data = $request->getQueryParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['address']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['department']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+        if (!is_dir('referential/ban/indexes/' . $data['department'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Department indexes do not exist']);
         }
 
         \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
         \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
         \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 
-        $index = \Zend_Search_Lucene::open('referential/ban/indexes');
-        \Zend_Search_Lucene::setResultSetLimit(10);
-        $hits = $index->find($data['address']);
+        $index = \Zend_Search_Lucene::open('referential/ban/indexes/' . $data['department']);
+        \Zend_Search_Lucene::setResultSetLimit(100);
+
+        $data['address'] = str_replace(['*', '~', '-', '\''], ' ', $data['address']);
+        $aAddress = explode(' ', $data['address']);
+        foreach ($aAddress as $key => $value) {
+            if (strlen($value) <= 2) {
+                unset($aAddress[$key]);
+                continue;
+            }
+            if (strlen($value) >= 3 && $value != 'rue' && $value != 'avenue' && $value != 'boulevard') {
+                $aAddress[$key] .= '*';
+            }
+        }
+        $data['address'] = implode(' ', $aAddress);
+
+        $hits = $index->find(TextFormatModel::normalize(['string' => $data['address']]));
 
         $addresses = [];
         foreach($hits as $key => $hit){
