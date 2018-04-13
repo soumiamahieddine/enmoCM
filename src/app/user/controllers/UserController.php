@@ -804,7 +804,7 @@ class UserController
                 if (!empty($resIdsToReplace)) {
                     ListInstanceModel::update([
                         'set'   => ['item_id' => $data['newUser']],
-                        'where' => ['res_id in (?)', 'item_id = ?'],
+                        'where' => ['res_id in (?)', 'item_id = ?', 'process_date is null'],
                         'data'  => [$resIdsToReplace, $user['user_id']]
                     ]);
                 }
@@ -822,7 +822,7 @@ class UserController
                 foreach ($ressources as $ressource) {
                     $listInstanceId = ListInstanceModel::get([
                         'select'    => ['listinstance_id'],
-                        'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?'],
+                        'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?', 'process_date is null'],
                         'data'      => [$ressource['res_id'], $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
                     ]);
 
