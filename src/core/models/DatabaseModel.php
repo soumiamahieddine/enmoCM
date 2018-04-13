@@ -200,8 +200,12 @@ class DatabaseModel
         $querySet  = [];
         $dataSet = [];
         foreach ($args['set'] as $key => $value) {
-            $querySet[] = "{$key} = ?";
-            $dataSet[] = $value;
+            if ($value == 'SYSDATE' || $value == 'CURRENT_TIMESTAMP') {
+                $querySet[] = "{$key} = {$value}";
+            } else {
+                $querySet[] = "{$key} = ?";
+                $dataSet[] = $value;
+            }
         }
         $args['data'] = array_merge($dataSet, $args['data']);
         $set = implode(', ', $querySet);
