@@ -122,7 +122,7 @@
                     <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
                             <label>Type : </label>
-                            <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#16ADEB;">{{signatureBook.lang.signed}}</sup></span>
+                            <span>{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}} <sup *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'" style="color:#135F7F;">{{signatureBook.lang.signed}}</sup></span>
                         </div>
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].title}}">
                             <label>{{signatureBook.lang.object}} : </label>
@@ -156,7 +156,7 @@
                             <div class="infoPj">
                                 <label>Version : </label>
                                 <span>{{signatureBook.attachments[rightSelectedThumbnail].relation}}</span>
-                                <i [ngStyle]="{'display': signatureBook.attachments[rightSelectedThumbnail].relation > 1 ? '' : 'none'}" style="color:#16ADEB" class="fa fa-chevron-circle-up" id="obsVersion" data-tooltip-content="#obsVersionTooltip" aria-hidden="true"></i>
+                                <i [ngStyle]="{'display': signatureBook.attachments[rightSelectedThumbnail].relation > 1 ? '' : 'none'}" style="color:#135F7F" class="fa fa-chevron-circle-up" id="obsVersion" data-tooltip-content="#obsVersionTooltip" aria-hidden="true"></i>
                             </div>
                             <div class="infoPj">
                                 <label>Format : </label>
@@ -249,7 +249,7 @@
                 <span>{{version.relation}}</span>&nbsp;
                 <span>{{signatureBook.lang.object}} : </span>
                 <span>{{version.title}}</span>&nbsp;
-                <a style="color:#16ADEB" title="{{signatureBook.lang.dlAttachment}}" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{version.resId}}" target="_blank">
+                <a style="color:#135F7F" title="{{signatureBook.lang.dlAttachment}}" href="index.php?display=true&module=attachments&page=view_attachment&res_id_master={{resId}}&id={{version.resId}}" target="_blank">
                     <i class="fa fa-download fa-2x"></i>
                 </a>
             </div>

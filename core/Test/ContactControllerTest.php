@@ -85,6 +85,18 @@ class ContactControllerTest extends TestCase
         $this->assertSame('Y', $contact['enabled']);
     }
 
+    public function testGetContactCommunicationByContactId()
+    {
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $contactController = new \Contact\controllers\ContactController();
+        $response          = $contactController->getCommunicationByContactId($request, new \Slim\Http\Response(), ['contactId' => (string)self::$id]);
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', $responseBody);
+    }
+
     public function testDelete()
     {
         //  DELETE
@@ -107,5 +119,16 @@ class ContactControllerTest extends TestCase
         $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
         $this->assertInternalType('array', $contact);
         $this->assertEmpty($contact);
+    }
+
+    public function testControlLengthNameAfnor()
+    {
+        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
+
+        $this->assertSame('Monsieur Prénom NOM', $name);
+
+        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title3', 'fullName' => 'Prénom NOM TROP LOOOOOOOOOOOOONG', 'strMaxLength' => 38]);
+
+        $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
     }
 }

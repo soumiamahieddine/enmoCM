@@ -74,12 +74,12 @@ include 'apps/'.$_SESSION['config']['app_id'].'/definition_mail_categories.php';
 function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
     //DECLARATIONS
-     require_once('core/class/class_security.php');
-     require_once('modules/basket/class/class_modules_tools.php');
-     require_once('core/class/class_request.php');
-     require_once('apps/'.$_SESSION['config']['app_id'].'/class/class_types.php');
-     require_once('apps/'.$_SESSION['config']['app_id'].'/class/class_indexing_searching_app.php');
-     require_once('apps/'.$_SESSION['config']['app_id'].'/class/class_chrono.php');
+    require_once 'core/class/class_security.php';
+    require_once 'modules/basket/class/class_modules_tools.php';
+    require_once 'core/class/class_request.php';
+    require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_types.php';
+    require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_indexing_searching_app.php';
+    require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_chrono.php';
 
     //INSTANTIATE
     $type = new types();
@@ -109,9 +109,9 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
     $docLockerPath = $_SESSION['config']['businessappurl'].'/actions/docLocker.php';
     if (is_file($docLockerCustomPath)) {
-        require_once$docLockerCustomPath;
+        require_once $docLockerCustomPath;
     } elseif (is_file($docLockerPath)) {
-        require_once$docLockerPath;
+        require_once $docLockerPath;
     } else {
         exit("can't find docLocker.php");
     }
@@ -148,7 +148,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         //print_r($indexes);
     }
     if ($core_tools->is_module_loaded('entities')) {
-         require_once('modules/entities/class/class_manage_listdiff.php');
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
         $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
@@ -202,13 +202,13 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     //_ID_TO_DISPLAY ?
     if (_ID_TO_DISPLAY == 'res_id') {
         //MODAL HEADER
-        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #135F7F;">';
         $frm_str .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._PROCESS._LETTER_NUM.$res_id.' : ';
         $frm_str .= '</h2>';
         $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
     } else {
         //MODAL HEADER
-        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+        $frm_str .= '<div style="margin:-10px;margin-bottom:10px;background-color: #135F7F;">';
         $frm_str .= '<h2 class="tit" title="'._LETTER_NUM.$res_id.'" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._PROCESS._DOCUMENT.' '.$chrono_number.' : ';
         $frm_str .= '</h2>';
         $frm_str .= '<div style="display:table-cell;vertical-align:middle;">';
@@ -797,7 +797,7 @@ function check_form($form_id, $values)
         }
 
         if (!empty($res_id) && !empty($coll_id) && !empty($folder_id)) {
-            require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
             $sec = new security();
             $table = $sec->retrieve_table_from_coll($coll_id);
             if (empty($table)) {
@@ -846,7 +846,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     if (empty($values_form) || count($arr_id) < 1 || empty($coll_id)) {
         return false;
     }
-    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
 
     $sec = new security();
     $db = new Database();
@@ -902,8 +902,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if (!empty($folder)) {
             $folder_id = $folder;
 
-            if ($folder_id != $old_folder_id && $_SESSION['history']['folderup'])  {
-                require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+            if ($folder_id != $old_folder_id && $_SESSION['history']['folderup']) {
+                require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php';
 
                 $hist = new history();
 
@@ -919,8 +919,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
     }
     //DIFFLIST
-    if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0)  {
-        require_once('modules/entities/class/class_manage_listdiff.php');
+    if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0) {
+        require_once 'modules/entities/class/class_manage_listdiff.php';
 
         $list = new diffusion_list();
 

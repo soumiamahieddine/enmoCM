@@ -19,53 +19,50 @@
 */
 
 /**
-* @brief  List of thesaurus for autocompletion
-*
-*
-* @file
-* @author Alex Orluc <dev@maarch.org>
-* @date $date$
-* @version $Revision$
-* @ingroup admin
-*/
-if(isset($_REQUEST['Input'])){
+ * @brief  List of thesaurus for autocompletion
+ *
+ *
+ * @file
+ *
+ * @author Alex Orluc <dev@maarch.org>
+ * @date $date$
+ *
+ * @version $Revision$
+ * @ingroup admin
+ */
+if (isset($_REQUEST['Input'])) {
     $_REQUEST['what'] = $_REQUEST['Input'];
 }
 
 $db = new Database();
 $stmt = $db->query(
-    "SELECT distinct thesaurus_name,thesaurus_name_associate,thesaurus_id FROM thesaurus WHERE lower(thesaurus_name) like lower(?) OR lower(thesaurus_name_associate) like lower(?) order by thesaurus_name",
-    array('%'.$_REQUEST['what'].'%','%'.$_REQUEST['what'].'%')
+    'SELECT distinct thesaurus_name,thesaurus_name_associate,thesaurus_id FROM thesaurus WHERE lower(thesaurus_name) like lower(?) OR lower(thesaurus_name_associate) like lower(?) order by thesaurus_name',
+    array('%'.$_REQUEST['what'].'%', '%'.$_REQUEST['what'].'%')
 );
 
 $listArray = array();
 echo "<ul>\n";
 $authViewList = 0;
 
-while($line = $stmt->fetchObject())
-{
+while ($line = $stmt->fetchObject()) {
     $default_thesarus_name = $line->thesaurus_name;
     $line->thesaurus_name = str_replace(strtolower($_REQUEST['what']), '<b>'.strtolower($_REQUEST['what']).'</b>', strtolower($line->thesaurus_name));
 
     $line->thesaurus_name_associate = str_replace($_REQUEST['what'], '<b>'.$_REQUEST['what'].'</b>', strtolower($line->thesaurus_name_associate));
 
-
-    if($authViewList >= 10)
-    {
+    if ($authViewList >= 10) {
         $flagAuthView = true;
     }
-    echo "<li onclick=\"add_thes_by_autocomplete('".$line->thesaurus_id."');\" id=\"".$line->thesaurus_id.",\"><span title='terme'>".$line->thesaurus_name."</span>";
+    echo "<li onclick=\"add_thes_by_autocomplete('".$line->thesaurus_id."');\" id=\"".$line->thesaurus_id.",\"><span title='terme'>".$line->thesaurus_name.'</span>';
 
-    if($line->thesaurus_name_associate != ""){
-        echo " <i title='terme(s) associé(s)' style='color: #009dc5;font-size:10px;'>(".$line->thesaurus_name_associate.")</i></li>\n";
+    if ($line->thesaurus_name_associate != '') {
+        echo " <i title='terme(s) associé(s)' style='color: #135F7F;font-size:10px;'>(".$line->thesaurus_name_associate.")</i></li>\n";
     }
 
-    if(isset($flagAuthView))
-    {
+    if (isset($flagAuthView)) {
         echo "<li>...</li>\n";
         break;
     }
-    $authViewList++;
-
+    ++$authViewList;
 }
-echo "</ul>";
+echo '</ul>';

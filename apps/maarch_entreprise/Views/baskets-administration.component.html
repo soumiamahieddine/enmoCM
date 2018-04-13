@@ -76,6 +76,7 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
             position='end' [opened]="mobileQuery.matches ? false : false">
+            <p style="font-size:15px;padding:5px"> {{lang.basketHelpDesc}} </p>
             <mat-list>
                 <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="basketsOrder">
                     <mat-list-item disableRipple="true" *ngFor="let basket of basketsOrder;let i = index" title="deplacer" dnd-sortable

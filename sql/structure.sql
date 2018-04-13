@@ -1255,6 +1255,7 @@ CREATE TABLE contact_addresses
   is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
   external_contact_id character varying(128),
+  ban_id character varying(128),
   CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
 

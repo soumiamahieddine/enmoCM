@@ -3466,7 +3466,7 @@ if (!defined('_STANDARD_LOGIN')) {
     define('_STANDARD_LOGIN', "Maarch's authentication");
 }
 if (!defined('_SERVICE_REST_LOGIN')) {
-    define('_SERVICE_REST_LOGIN', "Service rest authentication");
+    define('_SERVICE_REST_LOGIN', 'Service rest authentication');
 }
 if (!defined('_CAS_LOGIN')) {
     define('_CAS_LOGIN', 'CAS authentication');
@@ -5046,9 +5046,6 @@ if (!defined('_SAVE_POSITION')) {
 }
 
 /***** History *****/
-if (!defined('_UPDATE_STATUS')) {
-    define('_UPDATE_STATUS', 'Status update');
-}
 
 if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) {
     define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
@@ -5058,4 +5055,10 @@ if (!defined('_EDIT_DOCUMENT_IN_DETAIL')) {
 }
 if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC')) {
     define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
+}
+if (!defined('_REF_SEARCH')) {
+    define('_REF_SEARCH', 'Referential search');
+}
+if (!defined('_USE_REF')) {
+    define('_USE_REF', 'User national referential');
 }

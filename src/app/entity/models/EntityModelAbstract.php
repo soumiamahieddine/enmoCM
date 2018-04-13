@@ -365,7 +365,7 @@ class EntityModelAbstract
             foreach ($loadedXml->ROLES->ROLE as $value) {
                 $roles[] = [
                     'id'        => (string)$value->id,
-                    'label'     => constant((string)$value->label),
+                    'label'     => defined((string)$value->label) ? constant((string)$value->label) : (string)$value->label,
                 ];
             }
         }

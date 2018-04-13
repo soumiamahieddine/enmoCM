@@ -211,7 +211,7 @@ if ($mode == 'list') {
                         <?php 
                         echo '<label for="template_style">'._TEMPLATE_STYLE.' : ';
             if ($mode == 'add') {
-                echo '<i id="template_style_icon" class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" onclick="$j(\'#templateEditTr\').hide();$j(\'#addTemplateFile\').click();$(\'template_style_icon\').setStyle({color: \'#009DC5\'});$(\'template_style_icon2\').setStyle({color: \'#666\'});"></i> <i id="template_style_icon2" class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" onclick="$j(\'#templateEditTr\').show();$j(\'#template_style\').show();$j(\'#addTemplate\').hide();$(\'template_style_icon\').setStyle({color: \'#666\'});$(\'template_style_icon2\').setStyle({color: \'#009DC5\'});" style="color:#009DC5"></i>';
+                echo '<i id="template_style_icon" class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" onclick="$j(\'#templateEditTr\').hide();$j(\'#addTemplateFile\').click();$(\'template_style_icon\').setStyle({color: \'#135F7F\'});$(\'template_style_icon2\').setStyle({color: \'#666\'});"></i> <i id="template_style_icon2" class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" onclick="$j(\'#templateEditTr\').show();$j(\'#template_style\').show();$j(\'#addTemplate\').hide();$(\'template_style_icon\').setStyle({color: \'#666\'});$(\'template_style_icon2\').setStyle({color: \'#135F7F\'});" style="color:#135F7F"></i>';
             }
             echo '</label>';
             if ($mode == 'up') {
@@ -279,7 +279,7 @@ if ($mode == 'list') {
                         </span>
                         <?php if ($mode == 'up') {
                                     ?>
-                        <a href="#" onclick="$j('#addTemplateFile').click();$('template_style_icon').setStyle({color: '#009DC5'})" style="margin-left:15px">
+                        <a href="#" onclick="$j('#addTemplateFile').click();$('template_style_icon').setStyle({color: '#135F7F'})" style="margin-left:15px">
                             <i id="template_style_icon" class="fa fa-paperclip fa-2x"></i> Importer un fichier
                         </a>
                         <input class="button" name="addTemplate" id="addTemplate" onclick="$j('#addTemplateFile').click();" style="display:none;margin-left:15px" value="+" type="button"/>

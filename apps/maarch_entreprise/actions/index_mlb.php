@@ -167,7 +167,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<form name="index_file" method="post" id="index_file" action="#"'
             .' class="forms indexingform" style="text-align:left;width:100%;">';
     //MODAL HEADER
-    $frmStr .= '<div style="margin:-10px;margin-bottom:10px;background-color: #009DC5;">';
+    $frmStr .= '<div style="margin:-10px;margin-bottom:10px;background-color: #135F7F;">';
     $frmStr .= '<h2 class="tit" id="action_title" style="display:table-cell;vertical-align:middle;margin:0px;">'._INDEXING_MLB.' : ';
     $frmStr .= '</h2>';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
@@ -225,7 +225,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= '<div style="display:table;width:100%;">';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel();"><option value="none"></option>';
+    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel(\'' .$actionId. '\');"><option value="none"></option>';
     while ($resIndexingModels = $stmt->fetchObject()) {
         $frmStr .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
     }
@@ -588,11 +588,11 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="visibility:hidden;display:inline;" ></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field">';
 
-    //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+    //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#135F7F\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-    $frmStr .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
+    $frmStr .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
 
-    $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#009DC5\');"></i>';
+    $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
     $frmStr .= ' <i class="fa fa-tty" title="'._CONTACT_COMMUNICATION_DEFINE.'"style="visibility:hidden;display:inline;"" id="type_contact_communication_icon"></i>';
     $frmStr .= ' <span style="position:relative;"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
         .'id="contact" onblur="clear_error(\'frm_error_'.$actionId.'\');'
@@ -633,11 +633,11 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CONTACT).'\',loadInfoContact(),\'info_contact\');return false;" '
             .'style="visibility:hidden;" ></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field">';
-    //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#009DC5\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
+    //$frmStr .= '<i class="fa fa-user" title="'._INTERNAL2.'" style="cursor:pointer;" id="type_contact_internal_icon" onclick="$$(\'#type_contact_internal\')[0].click();$(\'type_contact_internal_icon\').setStyle({color: \'#135F7F\'});$(\'type_contact_external_icon\').setStyle({color: \'#666\'});$(\'type_multi_contact_external_icon\').setStyle({color: \'#666\'});"></i>';
 
-    $frmStr .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#009DC5\');$j(\'#type_contact_external_icon\').css(\'color\',\'#009DC5\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
+    $frmStr .= ' <i class="fa fa-user" title="'._SINGLE_CONTACT.'" style="cursor:pointer;" id="type_contact_external_icon" onclick="$j(\'#type_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#135F7F\');$j(\'#type_contact_external_icon\').css(\'color\',\'#135F7F\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#666\');"></i>';
 
-    $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#009DC5;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#009DC5\');"></i>';
+    $frmStr .= ' <i class="fa fa-users" title="'._MULTI_CONTACT.'" style="cursor:pointer;color:#135F7F;" id="type_multi_contact_external_icon" onclick="$j(\'#type_multi_contact_external\')[0].click();$j(\'#type_contact_internal_icon\').css(\'color\',\'#666\');$j(\'#type_contact_external_icon\').css(\'color\',\'#666\');$j(\'#type_multi_contact_external_icon\').css(\'color\',\'#135F7F\');"></i>';
 
     $frmStr .= '<span style="position:relative;"><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_'.$actionId.'\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frmStr .= '<div id="multiContactList" class="autocomplete" style="left:0px;width:100%;top:17px;"></div><div class="autocomplete autocompleteIndex" id="searching_autocomplete_multi" style="display: none;text-align:left;padding:5px;left:0px;width:100%;top:17px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> chargement ...</div></span>';

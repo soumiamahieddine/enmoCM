@@ -2,7 +2,7 @@
 
 /* menu */
 .whole-panel {
-    background: #009DC5;
+    background: #135F7F;
     border: 1px solid #000;
     height: 650px;
     min-width: 995px;
@@ -12,7 +12,7 @@
 }
 
 .detailsCasesButton {
-    background: #deedf3;
+    background: #F2F2F2;
     border: 1px solid #666;
     border-bottom: 0;
     cursor: pointer;
@@ -45,7 +45,7 @@
 }
 
 .tab-trig {
-    background: #deedf3;
+    background: #F2F2F2;
     border: 1px solid #666;
     border-bottom: 0;
     cursor: pointer;
@@ -67,7 +67,7 @@
 }
 
 .frame-trig {
-    background: #009DC5;
+    background: #135F7F;
     border: 1px solid #000;
     display: inline-block;
     height: 650px;

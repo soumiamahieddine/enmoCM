@@ -98,7 +98,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode']]);
         $user['signatures'] = UserModel::getSignaturesById(['id' => $aArgs['id']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
@@ -130,7 +130,12 @@ class UserController
 
         $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['1']]);
         if (!empty($existingUser)) {
-            return $response->withStatus(400)->withJson(['errors' => 'User already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _ID . ' ' . _ALREADY_EXISTS]);
+        }
+
+        $logingModes = ['standard', 'restMode'];
+        if (!in_array($data['loginmode'], $logingModes)) {
+            $data['loginmode'] = 'standard';
         }
 
         UserModel::create(['user' => $data]);
@@ -186,7 +191,7 @@ class UserController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'delete' => true, 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
@@ -799,33 +804,33 @@ class UserController
                 if (!empty($resIdsToReplace)) {
                     ListInstanceModel::update([
                         'set'   => ['item_id' => $data['newUser']],
-                        'where' => ['res_id in (?)', 'item_id = ?'],
+                        'where' => ['res_id in (?)', 'item_id = ?', 'process_date is null'],
                         'data'  => [$resIdsToReplace, $user['user_id']]
                     ]);
                 }
             } else {
                 ListTemplateModel::delete([
-                    'where' => ['object_id = ?', 'item_id = ?'],
-                    'data'  => [$aArgs['entityId'], $user['user_id']]
+                    'where' => ['object_id = ?', 'item_id = ?', 'item_mode != ?'],
+                    'data'  => [$aArgs['entityId'], $user['user_id'], 'dest']
                 ]);
 
-                $resIds = ResModel::getOnView([
+                $ressources = ResModel::getOnView([
                     'select'    => ['res_id'],
                     'where'     => ['confidentiality = ?', 'destination = ?', 'closing_date is null'],
                     'data'      => ['Y', $aArgs['entityId']]
                 ]);
-                foreach ($resIds as $resId) {
+                foreach ($ressources as $ressource) {
                     $listInstanceId = ListInstanceModel::get([
                         'select'    => ['listinstance_id'],
-                        'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?'],
-                        'data'      => [$resId, $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
+                        'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?', 'process_date is null'],
+                        'data'      => [$ressource['res_id'], $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
                     ]);
 
                     if (!empty($listInstanceId)) {
                         ListInstanceModel::update([
                             'set'   => ['process_date' => null],
                             'where' => ['res_id = ?', 'difflist_type = ?', 'listinstance_id = ?'],
-                            'data'  => [$resId, 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
+                            'data'  => [$ressource['res_id'], 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
                         ]);
                     }
                 }
@@ -883,11 +888,7 @@ class UserController
 
         $listTemplates = ListTemplateModel::get(['select' => [1], 'where' => ['object_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$aArgs['entityId'], 'user_id', $user['user_id']]]);
 
-        if (empty($listInstances) && empty($listTemplates)) {
-            return $response->withJson(['isDeletable' => true]);
-        } else {
-            return $response->withJson(['isDeletable' => false]);
-        }
+        return $response->withJson(['hasConfidentialityInstances' => !empty($listInstances), 'hasListTemplates' => !empty($listTemplates)]);
     }
 
     public function updateBasketsDisplay(Request $request, Response $response, array $aArgs)
@@ -1008,6 +1009,9 @@ class UserController
                         $error['error'] = 'UserId out of perimeter';
                     }
                 }
+            } elseif ($aArgs['delete'] && $GLOBALS['userId'] == $user['user_id']) {
+                $error['status'] = 403;
+                $error['error'] = 'Can not delete yourself';
             }
         }
 

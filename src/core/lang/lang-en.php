@@ -64,6 +64,7 @@ define('_STATUS_DELETED', 'Statut deleted');
 define('_STATUS_NOT_FOUND', 'Status not found');
 define('_TO_CC', 'On copy');
 define('_TO_SIGN', 'For signature');
+define('_UPDATE_STATUS', 'Status update');
 define('_USER_GROUP_CREATION', 'Group added for user');
 define('_USER_GROUP_MODIFICATION', 'Group updated for user');
 define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
@@ -72,6 +73,7 @@ define('_USER_ENTITY_MODIFICATION', 'Entity updated for user');
 define('_USER_ENTITY_SUPPRESSION', 'Entity deleted for user');
 define('_VISA_USER', 'For visa');
 define('_WRONG_FILE_TYPE', 'This type of file is not allowed');
+define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'Parent entity must not be a subentity');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'List of documents with recommendation');

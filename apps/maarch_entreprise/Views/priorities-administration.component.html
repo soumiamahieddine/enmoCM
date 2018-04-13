@@ -55,7 +55,7 @@
                             <input type="color" value="{{element.color}}" style="background:none;border:none;width:45px;" disabled> {{element.label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="delays">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processDelay}}</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processDelayDay}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
                             <span *ngIf="element.delays == null">
                                 <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
@@ -68,13 +68,10 @@
                     <ng-container matColumnDef="working_days">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.processType}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
-                            <span *ngIf="element.delays == null">
-                                <i style="opacity:0.5">{{lang.processDelayDoctype}}</i>
-                            </span>
-                            <span *ngIf="element.working_days && element.delays">
+                            <span *ngIf="element.working_days">
                                 {{lang.workingDays}}
                             </span>
-                            <span *ngIf="!element.working_days && element.delays">
+                            <span *ngIf="!element.working_days">
                                 {{lang.calDays}}
                             </span>
                         </mat-cell>
@@ -100,6 +97,7 @@
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
                      position='end' [opened]="mobileQuery.matches ? false : false">
+            <p style="font-size:15px;padding:5px"> {{lang.prioritiesHelpDesc}} </p>
             <mat-list>
                 <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="prioritiesOrder">
                     <mat-list-item disableRipple="true" *ngFor="let priority of prioritiesOrder;let i = index" title="deplacer" dnd-sortable

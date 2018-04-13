@@ -15,6 +15,7 @@
 namespace Contact\controllers;
 
 use Contact\models\ContactModel;
+use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -79,5 +80,85 @@ class ContactController
         ]);
 
         return $response->withJson([$contact]);
+    }
+
+    public function formatContactAddressAfnor(array $aArgs)
+    {
+        $formattedAddress = '';
+
+        // Entete pour societe
+        if ($aArgs['is_corporate_person'] == 'Y') {
+            // Ligne 1
+            $formattedAddress .= substr($aArgs['society'], 0, 38) . "\n";
+
+            // Ligne 2
+            $formattedAddress .= ContactController::controlLengthNameAfnor([
+                                    'title'        => $aArgs['title'],
+                                    'fullName'     => $aArgs['firstname'] . ' ' . $aArgs['lastname'],
+                                    'strMaxLength' => 38]) . "\n";
+
+            // Ligne 3
+            if (!empty($aArgs['address_complement'])) {
+                $formattedAddress .= substr($aArgs['address_complement'], 0, 38) . "\n";
+            }
+        } else {
+            // Ligne 1
+            $formattedAddress .= ContactController::controlLengthNameAfnor([
+                                    'title'        => $aArgs['contact_title'],
+                                    'fullName'     => $aArgs['contact_firstname'] . ' ' . $aArgs['contact_lastname'],
+                                    'strMaxLength' => 38]) . "\n";
+
+            // Ligne 2
+            if (!empty($aArgs['occupancy'])) {
+                $formattedAddress .= substr($aArgs['occupancy'], 0, 38) . "\n";
+            }
+
+            // Ligne 3
+            if (!empty($aArgs['address_complement'])) {
+                $formattedAddress .= substr($aArgs['address_complement'], 0, 38) . "\n";
+            }
+        }
+        // Ligne 4
+        $formattedAddress .= substr($aArgs['address_num'] . ' ' . $aArgs['address_street'], 0, 38) . "\n";
+
+        // Ligne 5
+        // $formattedAddress .= "\n";
+
+        // Ligne 6
+        $formattedAddress .= substr($aArgs['address_postal_code'] . ' ' . $aArgs['address_town'], 0, 38) . "\n";
+
+        return $formattedAddress;
+    }
+
+    public function controlLengthNameAfnor(array $aArgs)
+    {
+        $aCivility = ContactController::getContactCivility();
+        if (strlen($aArgs['title'] . ' ' . $aArgs['fullName']) > $aArgs['strMaxLength']) {
+            $aArgs['title'] = $aCivility[$aArgs['title']]['abbreviation'];
+        } else {
+            $aArgs['title'] = $aCivility[$aArgs['title']]['label'];
+        }
+
+        return substr($aArgs['title'] . ' ' . $aArgs['fullName'], 0, $aArgs['strMaxLength']);
+    }
+
+    public function getContactCivility()
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+
+        if ($loadedXml != false) {
+            $result = $loadedXml->xpath('/ROOT/titles');
+            $aCivility = [];
+            foreach ($result as $title) {
+                foreach ($title as $value) {
+                    $aCivility[(string) $value->id] = [
+                        'label'        => (string) $value->label,
+                        'abbreviation' => (string) $value->abbreviation,
+                    ];
+                }
+            }
+        }
+
+        return $aCivility;
     }
 }

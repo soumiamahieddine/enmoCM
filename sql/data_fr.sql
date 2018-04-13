@@ -1707,7 +1707,7 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 
 /* PRIORITIES */
 TRUNCATE TABLE priorities;
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE, 1);
+INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#135F7F', TRUE, null, TRUE, 1);
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE, 2);
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1391nbvc', 'Très urgent', '#ff0000', TRUE, 4, FALSE, 3);
 INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1313nbvc', 'SVA/SVR', '#ffa500', TRUE, null, FALSE, 4);

@@ -22,7 +22,7 @@ function addVisaUser(users) {
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> '+ $j("select#visaUserList option:selected").text() +' <sup class="nbRes">'+$j("select#visaUserList option:selected").parent().get( 0 ).label+'</sup>'
                 +'<input class="userId" type="hidden" value="' + $j("select#visaUserList option:selected").val() + '"/><input class="visaDate" type="hidden" value=""/>'
-                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
+                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;visibility:hidden;"></i>'
                 + signRequest      
             +'</span>'
             +'<span class="visaUserAction">'
@@ -61,7 +61,7 @@ function addVisaUser(users) {
                 +'<sup class="visaUserPos nbResZero">'+next_visa+'</sup>&nbsp;&nbsp;'
                 +'<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' + users.lastname + ' ' + users.firstname + ' <sup class="nbRes">'+users.entity_id+'</sup>'
                 +'<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="visaDate" type="hidden" value=""/>'
-                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#FDD16C;visibility:hidden;"></i>'
+                +'&nbsp;&nbsp; <i id="signedUser_'+next_visa+'" title="Personne signataire" class="visaUserSign fa fa-certificate" aria-hidden="true" style="color:#F99830;visibility:hidden;"></i>'
                 + signRequest 
                 +'</span>'
             +'<span class="visaUserAction">'
@@ -250,7 +250,7 @@ function loadVisaModelUsers() {
 
 function initDragNDropVisa() {
     document.getElementById("visa_content").addEventListener("dragstart", function(event) {
-        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #135F7F33");
         // The dataTransfer.setData() method sets the data type and the value of the dragged data
         event.dataTransfer.setData("Text", event.target.id);
 
@@ -269,7 +269,7 @@ function initDragNDropVisa() {
     // Output some text when finished dragging the p element and reset the opacity
     document.getElementById("visa_content").addEventListener("dragend", function(event) {
         //document.getElementById("demo").innerHTML = "Finished dragging the p element.";
-        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #93D1E4");
+        $j(".droptarget").not(".vised,.currentVis").css("border","dashed 2px #135F7F33");
         event.target.style.opacity = "1";
     });
 

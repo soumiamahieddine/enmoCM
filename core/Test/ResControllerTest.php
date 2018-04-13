@@ -269,8 +269,7 @@ class ResControllerTest extends TestCase
 
         $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-        $arr_res = $responseBody->resources;
-        $this->assertSame("Bad Request: select parameter not valid", $responseBody->errors);
+        $this->assertSame("Bad Request: select is not valid", $responseBody->errors);
 
         $aArgs = [
             'select'        => 'res_id',
@@ -283,8 +282,7 @@ class ResControllerTest extends TestCase
 
         $response     = $resController->getList($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
-        $arr_res = $responseBody->resources;
-        $this->assertSame("Bad Request: clause parameter not valid", $responseBody->errors);
+        $this->assertSame("Bad Request: clause is not valid", $responseBody->errors);
     }
 
     public function testDelete()

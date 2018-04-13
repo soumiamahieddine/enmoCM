@@ -691,6 +691,9 @@ ALTER TABLE message_exchange ADD res_id_master numeric default NULL;
 ALTER TABLE contact_addresses DROP COLUMN  IF EXISTS  external_contact_id;
 ALTER TABLE contact_addresses ADD COLUMN external_contact_id character varying(128);
 
+ALTER TABLE contact_addresses DROP COLUMN  IF EXISTS ban_id;
+ALTER TABLE contact_addresses ADD COLUMN ban_id character varying(128);
+
 /** ADD NEW COLUMN IS CONTACTS_V2 **/
 ALTER TABLE contacts_v2 DROP COLUMN IF EXISTS is_external_contact;
 ALTER TABLE contacts_v2 ADD COLUMN is_external_contact character(1) DEFAULT 'N';
@@ -721,7 +724,7 @@ CREATE OR REPLACE VIEW view_contacts AS
 , ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy
 , ca.address_num, ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country
 , ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_contact_id
-, cp.label as contact_purpose_label, ct.label as contact_type_label
+, ca.ban_id, cp.label as contact_purpose_label, ct.label as contact_type_label
    FROM contacts_v2 c
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
    LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id

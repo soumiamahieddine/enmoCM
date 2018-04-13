@@ -126,6 +126,7 @@ $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::cl
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
 $app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
 $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
+$app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');

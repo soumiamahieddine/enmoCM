@@ -58,11 +58,11 @@ class UserModelAbstract
         return $aUser[0];
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['user']);
         ValidatorModel::notEmpty($aArgs['user'], ['userId', 'firstname', 'lastname']);
-        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'changePassword']);
+        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'changePassword', 'loginmode']);
 
         DatabaseModel::insert([
             'table'         => 'users',
@@ -77,7 +77,7 @@ class UserModelAbstract
                 'enabled'           => 'Y',
                 'status'            => 'OK',
                 'change_password'   => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
-                'loginmode'         => 'standard',
+                'loginmode'         => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
                 'password'          => SecurityModel::getPasswordHash('maarch')
             ]
         ]);
@@ -90,7 +90,7 @@ class UserModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'user']);
         ValidatorModel::notEmpty($aArgs['user'], ['firstname', 'lastname']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled']);
+        ValidatorModel::stringType($aArgs['user'], ['firstname', 'lastname', 'mail', 'initials', 'thumbprint', 'phone', 'enabled', 'loginmode']);
 
         DatabaseModel::update([
             'table'     => 'users',
@@ -101,7 +101,8 @@ class UserModelAbstract
                 'phone'         => $aArgs['user']['phone'],
                 'initials'      => $aArgs['user']['initials'],
                 'enabled'       => $aArgs['user']['enabled'],
-                'thumbprint'    => $aArgs['user']['thumbprint']
+                'thumbprint'    => $aArgs['user']['thumbprint'],
+                'loginmode'     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

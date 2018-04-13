@@ -29,6 +29,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     config                          : any       = {};
     serialId                        : number;
     userId                          : string;
+    mode                            : string    = '';;
     user                            : any       = {};
     _search                         : string    = '';
     creationMode                    : boolean;
@@ -140,7 +141,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             $j('#jstree')
                 // listen for event
                 .on('select_node.jstree', (e: any, data: any) => {
-                    this.addEntity(data.node.id);
+                    if (this.mode == '') {
+                        this.addEntity(data.node.id);
+                    }  
                 }).on('deselect_node.jstree', (e: any, data: any) => {
                     this.deleteEntity(data.node.id);
                 })
@@ -297,7 +300,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         this.http.get(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
             .subscribe((data: any) => {
                 console.log(data);
-                if (data['isDeletable']) {
+                if (!data['hasConfidentialityInstances'] && !data['hasListTemplates']) {
                     this.http.delete(this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId)
                         .subscribe((data: any) => {
                             this.user.entities = data.entities;
@@ -307,13 +310,14 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                             this.notify.error(err.error.errors);
                         });
                 } else {
-                    this.config = { data: {  } };
+                    this.config = { data: { hasConfidentialityInstances:data['hasConfidentialityInstances'], hasListTemplates:data['hasListTemplates'] } };
                     this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
-                    this.dialogRef.afterClosed().subscribe((result: string) => {
+                    this.dialogRef.afterClosed().subscribe((result: any) => {
+                        console.log(result);
+                        this.mode = 'delete';
                         if (result) {
-                            let mode = 'del';
-                            mode = 'reaffect';
-                            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId, {body : {"mode":"","newUser":""}})
+                            this.mode = result.processMode;
+                            this.http.request('DELETE', this.coreUrl + "rest/users/" + this.serialId + "/entities/" + entityId, {body : {"mode":this.mode,"newUser":result.newUser}})
                             .subscribe((data: any) => {
                                 this.user.entities = data.entities;
                                 this.user.allEntities = data.allEntities;
@@ -321,6 +325,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                             }, (err) => {
                                 this.notify.error(err.error.errors);
                             });
+                        } else {
+                            $j('#jstree').jstree('select_node', entityId);
+                            this.mode = '';
                         }
                     this.dialogRef = null;
                     });
@@ -489,14 +496,25 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 });
         }
     }
+
+    setUserModeLogin(event:any) {
+        if (event.checked) {
+            this.user.loginmode = "restMode";
+        } else {
+            this.user.loginmode = "standard";
+        }
+    }
 }
 
 @Component({
     templateUrl: "../../../../Views/user-administration-redirect-modal.component.html",
-    styles: [".mat-dialog-content{height:260px;max-height: 65vh;}"]
+    styles: [".mat-dialog-content{max-height: 65vh;width:600px;}"]
 })
 export class UserAdministrationRedirectModalComponent extends AutoCompletePlugin {
     lang: any = LANG;
+
+    redirectUser: String = '';
+    processMode: String = '';
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UserAdministrationRedirectModalComponent>) {
         super(http, ['users']);

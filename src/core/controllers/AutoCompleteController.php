@@ -15,6 +15,7 @@
 namespace SrcCore\controllers;
 
 use Group\models\ServiceModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Entity\models\EntityModel;
@@ -115,5 +116,37 @@ class AutoCompleteController
         }
 
         return $response->withJson($data);
+    }
+
+    public static function getBanAddresses(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['address']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+        \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
+        \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+
+        $index = \Zend_Search_Lucene::open('referential/ban/indexes');
+        \Zend_Search_Lucene::setResultSetLimit(10);
+        $hits = $index->find($data['address']);
+
+        $addresses = [];
+        foreach($hits as $key => $hit){
+            $addresses[] = [
+                'banId'         => $hit->banId,
+                'number'        => $hit->streetNumber,
+                'afnorName'     => $hit->afnorName,
+                'postalCode'    => $hit->postalCode,
+                'city'          => $hit->city,
+                'address'       => "{$hit->streetNumber} {$hit->afnorName}, {$hit->city} ({$hit->postalCode})"
+            ];
+        }
+
+        return $response->withJson($addresses);
     }
 }

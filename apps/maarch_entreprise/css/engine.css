@@ -77,7 +77,7 @@ table tr:not(.filters) .mat-input-container {
 /* modal part */
 
 .modal-content {
-    background-color: #009DC5 !important;
+    background-color: #135F7F !important;
 }
 
 .modal-header h4 {
@@ -94,7 +94,7 @@ table tr:not(.filters) .mat-input-container {
 }
 
 .modal-body .list-group li {
-    /*border-color: #009DC5 !important;*/
+    /*border-color: #135F7F !important;*/
     font-weight: bold;
 }
 

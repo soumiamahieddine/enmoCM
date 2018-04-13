@@ -181,7 +181,7 @@ if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') 
     );
 }
 
-$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false);
+$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false); 
 
 //UPDATE DATAS (IF FIELDS CAN BE MODIFIED) OF DOC
 if (isset($_POST['submit_index_doc'])) {
@@ -696,7 +696,7 @@ if ($stmt->rowCount() == 0) {
         $toolBar .= '<input type="submit" class="button"  value="'._PUT_DOC_ON_VALIDATION.'" name="put_doc_on_validation" onclick="return(confirm(\''._REALLY_PUT_DOC_ON_VALIDATION.'\n\r\n\r\'));" /> ';
     }
 
-    if ($delete_doc) {
+    if ($core->test_service('delete_document_in_detail', 'apps', false)) {
         $toolBar .= '<input type="submit" class="button"  value="'._DELETE_DOC.'" name="delete_doc" onclick="return(confirm(\''._REALLY_DELETE.' '._THIS_DOC.' ?\n\r\n\r\'));" /> ';
     }
 

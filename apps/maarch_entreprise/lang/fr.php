@@ -2359,7 +2359,7 @@ if (!defined('_STREET')) {
     define('_STREET', 'Voie');
 }
 if (!defined('_COMPLEMENT')) {
-    define('_COMPLEMENT', 'Complément');
+    define('_COMPLEMENT', 'Tour, bâtiment, immeuble, résidence');
 }
 if (!defined('_TOWN')) {
     define('_TOWN', 'Ville');
@@ -2832,7 +2832,7 @@ if (!defined('_WEBSITE')) {
     define('_WEBSITE', 'Site internet');
 }
 if (!defined('_OCCUPANCY')) {
-    define('_OCCUPANCY', 'Etage, bureau, porte');
+    define('_OCCUPANCY', 'N° app, étage, escalier');
 }
 if (!defined('_ADDRESS_ADDED')) {
     define('_ADDRESS_ADDED', 'Adresse ajoutée');
@@ -5199,9 +5199,6 @@ if (!defined('_SAVE_POSITION')) {
 }
 
 /***** History *****/
-if (!defined('_UPDATE_STATUS')) {
-    define('_UPDATE_STATUS', 'Modification du statut');
-}
 
 if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) {
     define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
@@ -5211,4 +5208,12 @@ if (!defined('_EDIT_DOCUMENT_IN_DETAIL')) {
 }
 if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC')) {
     define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Modifier un document dans la fiche détaillée. Cela dépendra aussi du paramétrage du statut (Modification des index)');
+}
+
+if (!defined('_REF_SEARCH')) {
+    define('_REF_SEARCH', 'Rechercher dans le référentiel');
+}
+
+if (!defined('_USE_REF')) {
+    define('_USE_REF', 'Utiliser le référentiel national');
 }
