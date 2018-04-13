@@ -1392,29 +1392,53 @@ abstract class contacts_v2_Abstract extends Database
                                     <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()"/>
                                 </div>
                                 <div id="refSearch" style="display:none;">
-                                    <div class="typeahead__container">
-                                        <div class="typeahead__field" style="width: 100%">
-                                            <input placeholder="<?php echo _REF_SEARCH; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                    <div class="typeahead__container" style="width: 100%;display:inline-block;">
+                                        <div class="typeahead__field">
+                                        <span class="typeahead__query">
+                                        <input placeholder="<?php echo _REF_SEARCH.' du 01'; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                        </span>
+                                            
                                         </div>
                                     </div>
                                     <input name="ban_id" type="hidden" id="ban_id" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['BAN_ID'])); ?>"/>
+                                    <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
+                                        <?php for ($i = 1; $i < 10; ++$i) {
+                                        echo "<option value='0{$i}'>0{$i}</option>";
+                                    } ?>
+                                        <?php for ($i = 10; $i < 20; ++$i) {
+                                        echo "<option value='{$i}'>{$i}</option>";
+                                    }
+            echo "<option value='2A'>2A</option>";
+            echo "<option value='2B'>2B</option>"; ?>
+                                    
+                                        <?php for ($i = 21; $i < 96; ++$i) {
+                echo "<option value='{$i}'>{$i}</option>";
+            } ?>
+                                        <?php for ($i = 971; $i < 978; ++$i) {
+                echo "<option value='{$i}'>{$i}</option>";
+            }
+            echo "<option value='987'>987</option>"; ?>
+                                    </select>
+                                    <!--<script>$j("#numDep").chosen({width: "10%",disable_search_threshold: 10});</script>-->
                                 </div>    
                             </td>
                             <script>
                             $j("#searchAddress").typeahead({
                                 delay: '500',
                                 order: "asc",
+                                filter: false,
                                 dynamic: true,
                                 display: "address",
                                 templateValue: "{{address}}",
-                                emptyTemplate: "Aucune adresse n'existe avec {{query}}",
+                                emptyTemplate: "Aucune adresse n'existe avec <b>{{query}}</b>",
                                 source: {
                                     ajax: {
                                         type: "GET",
                                         dataType: "json",
                                         url: "../../rest/autocomplete/banAddresses",
                                         data: {
-                                            address: "{{query}}"
+                                            address: "{{query}}",
+                                            department: "01"
                                         }
                                     }
                                 },
@@ -1481,12 +1505,12 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                         </tr>
                         <?php if ($mode == 'add' || !empty($_SESSION['m_admin']['address']['BAN_ID'])) {
-                                        ?>
+                ?>
                             <script type="text/javascript">
                                 $j('#refMaarch').click();
                             </script>
                         <?php
-                                    } ?>
+            } ?>
                         <tr style="display:none;" id="rule_phone">
                             <td>&nbsp;</td>
                             <td align="right"><i><?php echo _FORMAT_PHONE; ?></i></td>
@@ -1520,11 +1544,11 @@ abstract class contacts_v2_Abstract extends Database
                             <td><?php echo _IS_PRIVATE; ?>&nbsp;: </td>
                             <td align="right">
                                 <input class="<?php echo $fieldAddressClass; ?>" type="radio"  class="check" name="is_private" value="Y" <?php if ($_SESSION['m_admin']['address']['IS_PRIVATE'] == 'Y') {
-                                        ?> checked="checked"<?php
-                                    } ?> /><?php echo _YES; ?>
+                ?> checked="checked"<?php
+            } ?> /><?php echo _YES; ?>
                                 <input type="radio"  class="check" name="is_private" value="N" <?php if ($_SESSION['m_admin']['address']['IS_PRIVATE'] == 'N' or $_SESSION['m_admin']['address']['IS_PRIVATE'] != 'Y') {
-                                        ?> checked="checked"<?php
-                                    } ?> /><?php echo _NO; ?>
+                ?> checked="checked"<?php
+            } ?> /><?php echo _NO; ?>
                                 <span class="blue_asterisk" style="visibility:hidden;">*</span>
                             </td>
                         </tr>
