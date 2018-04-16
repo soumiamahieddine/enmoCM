@@ -214,6 +214,7 @@ export const LANG_FR = {
     "move"                              : "Déplacer",
     "myMenu"                            : "Menu personnel",
     "myProfile"                         : "Mon profil",
+    "myProfileAccess"                   : "Accéder à mon profil",
     "newAction"                         : "Nouvelle action",
     "newElement"                        : "Nouvel élément",
     "newPsw"                            : "Nouveau mot de passe",

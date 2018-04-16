@@ -199,6 +199,7 @@ export const LANG_EN = {
     "move"                              : "Move",
     "myMenu"                            : "Personal menu",
     "myProfile"                         : "My profile",
+    "myProfileAccess"                   : "Access to my profile",
     "newAction"                         : "New action",
     "newElement"                        : "New element",
     "newPsw"                            : "New password",
