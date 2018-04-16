@@ -139,6 +139,11 @@ DROP VIEW IF EXISTS res_view_letterbox;
 
 /* Alter table here because view depends on it*/
 ALTER TABLE res_letterbox ALTER COLUMN priority TYPE character varying(16);
+ALTER TABLE res_attachments ALTER COLUMN priority TYPE character varying(16);
+ALTER TABLE res_x ALTER COLUMN priority TYPE character varying(16);
+ALTER TABLE res_version_attachments ALTER COLUMN priority TYPE character varying(16);
+ALTER TABLE res_version_letterbox ALTER COLUMN priority TYPE character varying(16);
+ALTER TABLE res_version_x ALTER COLUMN priority TYPE character varying(16);
 
 --ALTER TABLE for external infos webservice
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_id;
