@@ -173,6 +173,12 @@ class ContactController
         }
         if ($files = glob($banDirectory.'ban/indexes/'.'/*')) {
             $empty_files = false;
+            $arrayNumDep = array();
+            foreach ($files as $key => $value) {
+                array_push($arrayNumDep, basename($value));
+            }
+
+            return $arrayNumDep;
         }
 
         if (!$empty_folder && !$empty_files) {

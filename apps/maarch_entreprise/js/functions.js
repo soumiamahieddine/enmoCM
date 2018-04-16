@@ -3812,7 +3812,6 @@ function toggleRefMaarch() {
         $j(".refMaarch input").removeClass("readonly");
         $j(".refMaarch input").prop("readonly", false);
     }
-    console.log('toto');
 }
 
 function setRefAdresse(item) {

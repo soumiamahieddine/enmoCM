@@ -1389,7 +1389,7 @@ abstract class contacts_v2_Abstract extends Database
                         <tr>
                         <?php 
                             $contactController = new \Contact\controllers\ContactController();
-            if (!$contactController->avaiblaibleReferential()) {
+            if (!$numDepList = $contactController->avaiblaibleReferential()) {
                 $stateRef = 'disabled';
                 $stateRefInfo = _WARNING_REF;
                 $stateRefCss = 'opacity:0.5;';
@@ -1402,27 +1402,15 @@ abstract class contacts_v2_Abstract extends Database
                                 </div>
                                 <div id="refSearch" style="display:none;">
                                 <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
-                                        <?php for ($i = 1; $i < 10; ++$i) {
-                echo "<option value='0{$i}'>0{$i}</option>";
+                                    <?php foreach ($numDepList as $key => $value) {
+                echo "<option value='{$value}'>{$value}</option>";
             } ?>
-                                        <?php for ($i = 10; $i < 20; ++$i) {
-                echo "<option value='{$i}'>{$i}</option>";
-            }
-            echo "<option value='2A'>2A</option>";
-            echo "<option value='2B'>2B</option>"; ?>
-                                    
-                                        <?php for ($i = 21; $i < 96; ++$i) {
-                echo "<option value='{$i}'>{$i}</option>";
-            } ?>
-                                        <?php for ($i = 971; $i < 978; ++$i) {
-                echo "<option value='{$i}'>{$i}</option>";
-            }
-            echo "<option value='987'>987</option>"; ?>
+        
                                     </select>
                                     <div class="typeahead__container" style="width: 100%;display:inline-block;">
                                         <div class="typeahead__field">
                                         <span class="typeahead__query">
-                                        <input placeholder="<?php echo _REF_SEARCH.' du 01'; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                        <input placeholder="<?php echo _REF_SEARCH.' du '.$numDepList[0]; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
                                         </span>
                                             
                                         </div>
@@ -1450,7 +1438,7 @@ abstract class contacts_v2_Abstract extends Database
                                         url: "../../rest/autocomplete/banAddresses",
                                         data: {
                                             address: "{{query}}",
-                                            department: "01"
+                                            department: $j("#numDep").val()
                                         }
                                     }
                                 },
