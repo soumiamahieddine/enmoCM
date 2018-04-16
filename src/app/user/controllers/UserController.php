@@ -467,7 +467,7 @@ class UserController
         ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
-            return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' templates']);
+            return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' '._PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
         UserModel::createSignature([
