@@ -1315,6 +1315,7 @@ Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 fro
 TRUNCATE TABLE groupbasket_status;
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'VAL');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'NEW');
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'PJQUAL');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW');
 
