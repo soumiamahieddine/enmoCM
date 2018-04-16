@@ -85,7 +85,7 @@ class ListTemplateController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -148,7 +148,7 @@ class ListTemplateController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -211,7 +211,7 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -271,7 +271,6 @@ class ListTemplateController
                 'where' => ['item_id = ?', 'object_id = ?', 'object_type = ?', 'item_mode = ?'],
                 'data'  => [$data['user_id'], $listModel['object_id'], 'entity_id', 'dest']
             ]);
-
         }
 
         return $response->withJson(['success' => 'success']);

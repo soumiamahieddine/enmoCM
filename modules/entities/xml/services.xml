@@ -17,7 +17,7 @@
         <angular>true</angular>
     </SERVICE>
     <SERVICE>
-        <id>manage_entities</id>
+        <id>admin_listmodels</id>
         <name>_LISTMODELS</name>
         <comment>_MANAGE_LISTMODELS_DESC</comment>
         <servicepage>/administration/diffusionModels</servicepage>
