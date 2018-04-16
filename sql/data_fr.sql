@@ -907,6 +907,10 @@ DELETE FROM baskets WHERE basket_id = 'ReconcilBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ReconcilBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ReconcilBasket';
 INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('ReconcilBasket', 'Réponses à réconcilier', 'Réponses à réconcilier', 'status=''PJQUAL''', 'letterbox_coll', 'Y', 'N', 'Y',210);
+DELETE FROM baskets WHERE basket_id = 'NumericBasket';
+DELETE FROM actions_groupbaskets WHERE basket_id = 'NumericBasket';
+DELETE FROM groupbasket_redirect WHERE basket_id = 'NumericBasket';
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, is_folder_basket, enabled, basket_order) VALUES ('NumericBasket', 'Plis numériques à qualifier', 'Plis numériques à qualifier', 'status = ''NUMQUAL''', 'letterbox_coll', 'Y', 'N', 'Y',220);
 
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
@@ -962,6 +966,8 @@ DELETE FROM groupbasket WHERE basket_id = 'AckArcBasket';
 INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('ARCHIVISTE', 'AckArcBasket', 'list_with_attachments');
 DELETE FROM groupbasket WHERE basket_id = 'ReconcilBasket';
 INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'ReconcilBasket', 'list_with_attachments');
+DELETE FROM groupbasket WHERE basket_id = 'NumericBasket';
+INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', 'NumericBasket', 'list_with_attachments');
 
 
 -- Create Security
@@ -1070,13 +1076,18 @@ INSERT INTO contact_purposes (id, label) VALUES (3, 'Adresse principale');
 Select setval('contact_purposes_id_seq', (select max(id)+1 from contact_purposes), false);
 TRUNCATE TABLE contacts_v2;
 INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 100, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (2, 102, 'Y', 'Préfecture de Maarch Les Bains', '', '', '', '', '', 'Préfecture de Maarch Les Bains', 'bblier', 'VILLE', '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', 'Y');
 Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
 -- Default adresses
 TRUNCATE TABLE contact_addresses;
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI', 'title1', 'Président', '', '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', '', '', 'jeanlouis.ercolani@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim', 'SY', 'title1', 'Administrateur', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', 'karim.sy@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général', NULL, '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_contact_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', 'Le Préfet', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '06777', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', 'org_987654321_DGS_SF');
 Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
+-- Default contact_communication
+TRUNCATE TABLE contact_communication;
+INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'http://cchaplin:maarch@preview.maarchcourrier.com');
 ------------
 --STATUS-
 ------------
@@ -1112,6 +1123,7 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('RETRN', 'Retourné', 'Y', 'N', '', 'apps', 'N', 'N');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NO_RETRN', 'Pas de retour', 'Y', 'N', '', 'apps', 'N', 'N');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('PJQUAL', 'PJ à réconcilier', 'Y', 'N', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NUMQUAL', 'Plis à qualifier', 'Y', 'N', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
 ------------
 --STATUS IMAGES-
 ------------
@@ -1221,6 +1233,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (6, '', 'COURRIER', 'RetourCourrier', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'COURRIER', 'QualificationBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (505, '', 'COURRIER', 'ReconcilBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'COURRIER', 'NumericBasket', 'N', 'N', 'Y');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'RESP_COURRIER', 'ValidationBasket', 'Y', 'N', 'N');
@@ -1318,6 +1331,8 @@ INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUE
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'PJQUAL');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW');
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'NumericBasket', 18, 'VAL');
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'NumericBasket', 18, 'NEW');
 
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('AGENT', 'IndexingBasket', 112, 'END');
 INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('AGENT', 'IndexingBasket', 112, 'NEW');
