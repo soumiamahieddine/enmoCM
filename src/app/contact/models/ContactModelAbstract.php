@@ -188,6 +188,7 @@ class ContactModelAbstract
         if (empty($aReturn)) {
             return "";
         } else {
+            $aReturn[0]['value'] = trim(trim($aReturn[0]['value']), '/');
             return $aReturn[0];
         }
     }
