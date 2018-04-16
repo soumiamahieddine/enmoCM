@@ -87,9 +87,6 @@ if (!defined('_GENERAL')) {
 if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version de PHP (5.5 ou sup.)");
 }
-if (!defined('_MAARCH_DEPENDENCIES')) {
-    define('_MAARCH_DEPENDENCIES', "Dépendances Maarch");
-}
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
 }
@@ -426,24 +423,12 @@ if (!defined('_DEPENDENCIES_NOT_EXTRACTED')) {
     define('_DEPENDENCIES_NOT_EXTRACTED', "dépendances non extraites, récupérez les via la procédure wiki");
 }
 
-if (!defined('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD')) {
-    define('_DEPENDENCIES_CLICK_HERE_TO_DOWNLOAD', "Cliquez ici pour les déployer automatiquement (internet requis)");
-}
-
-if (!defined('_DEPENDENCIES_ON_WIKI')) {
-    define('_DEPENDENCIES_ON_WIKI', "Ou suivez la procédure sur notre wiki");
-}
-
 if (!defined('_CURL')) {
     define('_CURL', "librairie curl");
 }
 
 if (!defined('_ZIP_LIB')) {
     define('_ZIP_LIB', "librairie zip");
-}
-
-if (!defined('_INSTALL_ZIP_LIB_FIRST')) {
-    define('_INSTALL_ZIP_LIB_FIRST', "Installez la librairie zip pour déployer automatiquement les dépendances");
 }
 
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
