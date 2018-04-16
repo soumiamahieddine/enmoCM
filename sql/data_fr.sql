@@ -1083,7 +1083,7 @@ TRUNCATE TABLE contact_addresses;
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI', 'title1', 'Président', '', '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', '', '', 'jeanlouis.ercolani@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim', 'SY', 'title1', 'Administrateur', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', 'karim.sy@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général', NULL, '11', 'Boulevard du Sud-Est', '92000', 'NANTERRE', 'Nanterre', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_contact_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', 'Le Préfet', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '06777', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', 'org_987654321_DGS_SF');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_contact_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', 'Le Préfet', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '06777', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', 'org_123456789_CAB_SF');
 Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
 -- Default contact_communication
 TRUNCATE TABLE contact_communication;
@@ -1356,12 +1356,44 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9
 --FOLDERS
 ------------
 TRUNCATE TABLE folders;
+INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (23, 'COURRIERS', 1, 0, 'Courriers', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2012-03-02 18:31:27.487', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:31:27.487');
 Select setval('folders_system_id_seq', (select max(folders_system_id)+1 from folders), false);
 ------------
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
+ALTER SEQUENCE tag_id_seq RESTART WITH 1;
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SEMINAIRE', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('INNOVATION', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('MAARCH', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ENVIRONNEMENT', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('PARTENARIAT', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('JUMELAGE', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ECONOMIE', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('ASSOCIATIONS', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('RH', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('BUDGET', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('QUARTIERS', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('LITTORAL', 'letterbox_coll', 'COU');
+INSERT INTO tags (tag_label, coll_id, entity_id_owner) VALUES ('SPORT', 'letterbox_coll', 'COU');
 Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);
+
+TRUNCATE TABLE tags_entities;
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (1, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (2, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (3, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (4, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (5, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (6, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (7, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (8, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (9, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (10, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (11, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (12, 'COU');
+INSERT INTO tags_entities (tag_id, entity_id) VALUES (13, 'COU');
+
+------------
 ------------
 --TEMPLATES
 ------------
@@ -1721,6 +1753,7 @@ UPDATE entities SET business_id = 'org_987654321_Versant';
 UPDATE entities SET archival_agency = 'org_123456789_Archives';
 UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES';
 UPDATE entities SET business_id = 'org_987654321_DGS_SF' WHERE entity_id = 'COU';
+UPDATE entities SET business_id = 'org_123456789_CAB_SF' WHERE entity_id = 'CAB';
 
 UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
