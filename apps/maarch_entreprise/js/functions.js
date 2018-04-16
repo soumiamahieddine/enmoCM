@@ -3837,11 +3837,13 @@ function toggleBlock(div, divIcon) {
 
 
 function reloadTypeahead(elem){
+    $j(".typeahead__result").remove();
     $j("#searchAddress").val('');
     $j("#searchAddress").attr("placeholder", "Rechercher dans le référentiel du "+$j('#'+elem.id).val());
     $j("#searchAddress").typeahead({
         delay: '500',
         order: "asc",
+        maxItem: 10,
         filter: false,
         dynamic: true,
         display: "address",

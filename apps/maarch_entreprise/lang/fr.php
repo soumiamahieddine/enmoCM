@@ -5217,3 +5217,7 @@ if (!defined('_REF_SEARCH')) {
 if (!defined('_USE_REF')) {
     define('_USE_REF', 'Utiliser le référentiel national');
 }
+
+if (!defined('_WARNING_REF')) {
+    define('_WARNING_REF', '<b>Fichiers de reférérentiel manquant !</b><br/>Pour utiliser le référentiel national, veuillez contacter votre <a href="mailto:'.$_SESSION['config']['adminmail'].'">administrateur</a>');
+}

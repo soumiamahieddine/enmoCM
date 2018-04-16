@@ -1250,7 +1250,7 @@ abstract class contacts_v2_Abstract extends Database
                         ?>
                         <tr id="previous_address_tr" >
                             <td width="50%"></td>
-                            <td width="50%">
+                            <td width="50%" align="right">
                                 <?php 
                                 $stmt = $db->query('SELECT distinct address_num, address_street, address_complement, address_postal_code, address_town, address_country, website FROM contact_addresses WHERE contact_id = ?', array($_SESSION['m_admin']['contact']['ID']));
                         $nbRes = $stmt->rowCount();
@@ -1267,6 +1267,7 @@ abstract class contacts_v2_Abstract extends Database
                             $frm .= '</select>';
                             echo $frm;
                         } ?>  
+                            <span class="blue_asterisk" style="visibility:hidden;">*</span>
                             </td>
                         </tr> <?php
                     } ?>
@@ -1386,28 +1387,27 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                         </tr>
                         <tr>
+                        <?php 
+                            $contactController = new \Contact\controllers\ContactController();
+            if (!$contactController->avaiblaibleReferential()) {
+                $stateRef = 'disabled';
+                $stateRefInfo = _WARNING_REF;
+                $stateRefCss = 'opacity:0.5;';
+            } ?>
                             <td colspan="2" style="text-align:center;padding-bottom:10px;">
                                 <hr/>
-                                <div style="text-align:right;color:#135F7F;font-style:italic;">
-                                    <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()"/>
+                                <div style="color:red;<?php echo $stateRefCss; ?>"><?php echo $stateRefInfo; ?></div>
+                                <div style="text-align:right;color:#135F7F;font-style:italic;<?php echo $stateRefCss; ?>">
+                                    <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()" <?php echo $stateRef; ?>/>
                                 </div>
                                 <div id="refSearch" style="display:none;">
-                                    <div class="typeahead__container" style="width: 100%;display:inline-block;">
-                                        <div class="typeahead__field">
-                                        <span class="typeahead__query">
-                                        <input placeholder="<?php echo _REF_SEARCH.' du 01'; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
-                                        </span>
-                                            
-                                        </div>
-                                    </div>
-                                    <input name="ban_id" type="hidden" id="ban_id" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['BAN_ID'])); ?>"/>
-                                    <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
+                                <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
                                         <?php for ($i = 1; $i < 10; ++$i) {
-                                        echo "<option value='0{$i}'>0{$i}</option>";
-                                    } ?>
+                echo "<option value='0{$i}'>0{$i}</option>";
+            } ?>
                                         <?php for ($i = 10; $i < 20; ++$i) {
-                                        echo "<option value='{$i}'>{$i}</option>";
-                                    }
+                echo "<option value='{$i}'>{$i}</option>";
+            }
             echo "<option value='2A'>2A</option>";
             echo "<option value='2B'>2B</option>"; ?>
                                     
@@ -1419,7 +1419,18 @@ abstract class contacts_v2_Abstract extends Database
             }
             echo "<option value='987'>987</option>"; ?>
                                     </select>
-                                    <!--<script>$j("#numDep").chosen({width: "10%",disable_search_threshold: 10});</script>-->
+                                    <div class="typeahead__container" style="width: 100%;display:inline-block;">
+                                        <div class="typeahead__field">
+                                        <span class="typeahead__query">
+                                        <input placeholder="<?php echo _REF_SEARCH.' du 01'; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                        </span>
+                                            
+                                        </div>
+                                    </div>
+                                    <input name="ban_id" type="hidden" id="ban_id" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['BAN_ID'])); ?>"/>
+                                    
+                                    <script>$j("#numDep").chosen({width: "10%",disable_search_threshold: 10});</script>
+                                    <style>.typeahead__cancel-button{padding:4px 10px;}#numDep_chosen .chosen-drop{width:70px;}#numDep_chosen .chosen-single{border-radius : 5px 0 0 5px}#searchAddress{height:25px;min-height:inherit}</style>
                                 </div>    
                             </td>
                             <script>
@@ -1428,6 +1439,7 @@ abstract class contacts_v2_Abstract extends Database
                                 order: "asc",
                                 filter: false,
                                 dynamic: true,
+                                maxItem: 10,
                                 display: "address",
                                 templateValue: "{{address}}",
                                 emptyTemplate: "Aucune adresse n'existe avec <b>{{query}}</b>",
