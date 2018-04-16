@@ -32,6 +32,22 @@
                         </mat-paginator>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-6" style="padding-top:10px;">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()" (focus)="pickerStart.open()">
+                            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStart touchUi="true" [startAt]="startDate"></mat-datepicker>
+                        </mat-form-field>       
+                    </div>
+                    <div class="col-sm-6" style="padding-top:10px;">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()" (focus)="pickerEnd.open()">
+                            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerEnd touchUi="true" [startAt]="endDate"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
                     <ng-container matColumnDef="event_date">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.date}}</mat-header-cell>
@@ -55,23 +71,7 @@
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
-                <div class="row">
-                    <div class="col-sm-6" style="padding-top:10px;">
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="startDate" [max]="endDate" [matDatepicker]="pickerStart" placeholder="{{lang.since}}" (dateChange)="refreshHistory()" (focus)="pickerStart.open()">
-                            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerStart touchUi="true" [startAt]="startDate"></mat-datepicker>
-                        </mat-form-field>       
-                    </div>
-                    <div class="col-sm-6" style="padding-top:10px;">
-                        <mat-form-field>
-                            <input matInput [(ngModel)]="endDate" [min]="startDate" [matDatepicker]="pickerEnd" placeholder="{{lang.until}}" (dateChange)="refreshHistory()" (focus)="pickerEnd.open()">
-                            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerEnd touchUi="true" [startAt]="endDate"></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
+                </mat-table>                
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
