@@ -30,7 +30,7 @@ class NotificationModelAbstract
 
         $aNotifications = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['notifications'],
+            'table'  => ['notifications'],
         ]);
 
         return $aNotifications;
@@ -42,9 +42,9 @@ class NotificationModelAbstract
 
         $aNotification = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['notifications'],
-            'where' => ['notification_sid = ?'],
-            'data' => [$aArgs['notification_sid']],
+            'table'  => ['notifications'],
+            'where'  => ['notification_sid = ?'],
+            'data'   => [$aArgs['notification_sid']],
         ]);
 
         if (empty($aNotification[0])) {
@@ -60,9 +60,9 @@ class NotificationModelAbstract
 
         $aNotification = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['notifications'],
-            'where' => ['notification_id = ?'],
-            'data' => [$aArgs['notificationId']],
+            'table'  => ['notifications'],
+            'where'  => ['notification_id = ?'],
+            'data'   => [$aArgs['notificationId']],
         ]);
 
         if (empty($aNotification[0])) {
@@ -80,7 +80,7 @@ class NotificationModelAbstract
         DatabaseModel::delete([
             'table' => 'notifications',
             'where' => ['notification_sid = ?'],
-            'data' => [$aArgs['notification_sid']],
+            'data'  => [$aArgs['notification_sid']],
         ]);
 
         return true;
@@ -90,20 +90,20 @@ class NotificationModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type']);
         ValidatorModel::intVal($aArgs, ['template_id']);
-        ValidatorModel::stringType($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode']);
+        ValidatorModel::stringType($aArgs, ['notification_id', 'description', 'is_enabled', 'notification_mode']);
 
         DatabaseModel::insert([
             'table' => 'notifications',
             'columnsValues' => [
-                'notification_id' => $aArgs['notification_id'],
-                'description' => $aArgs['description'],
-                'is_enabled' => $aArgs['is_enabled'],
-                'event_id' => $aArgs['event_id'],
-                'notification_mode' => $aArgs['notification_mode'],
-                'template_id' => $aArgs['template_id'],
-                'diffusion_type' => $aArgs['diffusion_type'],
+                'notification_id'      => $aArgs['notification_id'],
+                'description'          => $aArgs['description'],
+                'is_enabled'           => $aArgs['is_enabled'],
+                'event_id'             => $aArgs['event_id'],
+                'notification_mode'    => $aArgs['notification_mode'],
+                'template_id'          => $aArgs['template_id'],
+                'diffusion_type'       => $aArgs['diffusion_type'],
                 'diffusion_properties' => $aArgs['diffusion_properties'],
-                'attachfor_type' => $aArgs['attachfor_type'],
+                'attachfor_type'       => $aArgs['attachfor_type'],
                 'attachfor_properties' => $aArgs['attachfor_properties'],
             ],
         ]);
@@ -122,9 +122,9 @@ class NotificationModelAbstract
 
         $aReturn = DatabaseModel::update([
             'table' => 'notifications',
-            'set' => $aArgs,
+            'set'   => $aArgs,
             'where' => ['notification_sid = ?'],
-            'data' => [$notification_sid],
+            'data'  => [$notification_sid],
         ]);
 
         return $aReturn;
@@ -134,15 +134,15 @@ class NotificationModelAbstract
     {
         $tabEvent_Type = DatabaseModel::select([
             'select' => ['id, label_action'],
-            'table' => ['actions'],
+            'table'  => ['actions'],
         ]);
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/notifications/xml/event_type.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->event_type as $eventType) {
                 $tabEvent_Type[] = [
-                    'id'            => (string) $eventType->id,
-                    'label_action'  => (string) $eventType->label
+                    'id'           => (string) $eventType->id,
+                    'label_action' => (string) $eventType->label
                 ];
             }
         }
@@ -154,9 +154,9 @@ class NotificationModelAbstract
     {
         $tabTemplate = DatabaseModel::select([
             'select' => ['template_id, template_label'],
-            'table' => ['templates'],
-            'where' => ['template_target = ?'],
-            'data' => ['notifications'],
+            'table'  => ['templates'],
+            'where'  => ['template_target = ?'],
+            'data'   => ['notifications'],
         ]);
 
         return $tabTemplate;
@@ -167,50 +167,50 @@ class NotificationModelAbstract
         $diffusionTypes = [];
 
         $diffusionTypes[] = array(
-            'id' => 'group',
-            'label' => 'Groupe',
+            'id'             => 'group',
+            'label'          => 'Groupe',
             'add_attachment' => 'true',
         );
         $diffusionTypes[] = array(
-            'id' => 'entity',
-            'label' => 'Entité',
+            'id'             => 'entity',
+            'label'          => 'Entité',
             'add_attachment' => 'true',
         );
         $diffusionTypes[] = array(
-            'id' => 'dest_entity',
-            'label' => 'Service de l\'utilisateur destinataire',
+            'id'             => 'dest_entity',
+            'label'          => 'Service de l\'utilisateur destinataire',
             'add_attachment' => 'false',
         );
         $diffusionTypes[] = array(
-            'id' => 'dest_user',
-            'label' => 'Liste de diffusion du document',
+            'id'             => 'dest_user',
+            'label'          => 'Liste de diffusion du document',
             'add_attachment' => 'false',
         );
         $diffusionTypes[] = array(
-            'id' => 'dest_user_visa',
-            'label' => 'Viseur actuel du document',
+            'id'             => 'dest_user_visa',
+            'label'          => 'Viseur actuel du document',
             'add_attachment' => 'true',
         );
         $diffusionTypes[] = array(
-            'id' => 'dest_user_sign',
-            'label' => 'Signataire actuel du document',
+            'id'             => 'dest_user_sign',
+            'label'          => 'Signataire actuel du document',
             'add_attachment' => 'true',
         );
         $diffusionTypes[] = array(
-            'id' => 'user',
-            'label' => 'Utilisateur désigné',
+            'id'             => 'user',
+            'label'          => 'Utilisateur désigné',
             'add_attachment' => 'true',
         );
 
         $diffusionTypes[] = array(
-            'id' => 'copy_list',
-            'label' => 'Liste de diffusion du document',
+            'id'             => 'copy_list',
+            'label'          => 'Liste de diffusion du document',
             'add_attachment' => 'false',
         );
 
         $diffusionTypes[] = array(
-            'id' => 'contact',
-            'label' => 'Contact du document',
+            'id'             => 'contact',
+            'label'          => 'Contact du document',
             'add_attachment' => 'true'
         );
 
@@ -228,7 +228,7 @@ class NotificationModelAbstract
     {
         $users = DatabaseModel::select([
             'select' => ["user_id as id, concat(firstname,' ',lastname) as label"],
-            'table' => ['users'],
+            'table'  => ['users'],
         ]);
 
         return $users;
@@ -252,9 +252,9 @@ class NotificationModelAbstract
     {
         $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table' => ['notifications'],
-            'where' => ['is_enabled = ?'],
-            'data' => ['Y'],
+            'table'  => ['notifications'],
+            'where'  => ['is_enabled = ?'],
+            'data'   => ['Y'],
         ]);
 
         return $aReturn;
