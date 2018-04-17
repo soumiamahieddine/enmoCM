@@ -245,7 +245,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
 
     addElemListModelVisa(element: any) {
         this.listDiffModified = true;
-        var newElemListModel = {
+        let newElemListModel = {
             "id": '',
             "item_type": 'user_id',
             "item_mode": "sign",
@@ -268,34 +268,41 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
             this.currentEntity.parent_entity_id = '';
         }
 
-        if (this.creationMode) {
-            this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
-                .subscribe((data: any) => {
-                    this.currentEntity.listTemplate = [];
-                    this.entities = data['entities'];
-                    this.creationMode = false;
-                    this.newEntity = true;
-                    $j('#jstree').jstree(true).settings.core.data = this.entities;
-                    $j('#jstree').jstree(true).settings.select_node = this.currentEntity;
-                    $j('#jstree').jstree(true).refresh();
-                    $j('#jstree').on("refresh.jstree", (e:any) => {
-                        $j('#jstree').jstree('deselect_all');
-                        $j('#jstree').jstree('select_node', this.currentEntity.entity_id);
-                      });
-                    this.notify.success(this.lang.entityAdded);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else {
-            this.http.put(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
-                .subscribe((data: any) => {
-                    this.entities = data['entities'];
-                    $j('#jstree').jstree(true).settings.core.data = this.entities;
-                    $j('#jstree').jstree("refresh");
-                    this.notify.success(this.lang.entityUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+        var r = true;
+        if (this.currentEntity.parent_entity_id == '') {
+            r = confirm(this.lang.entityWithoutParentMessage);
+        }
+
+        if (r) {
+            if (this.creationMode) {
+                this.http.post(this.coreUrl + "rest/entities", this.currentEntity)
+                    .subscribe((data: any) => {
+                        this.currentEntity.listTemplate = [];
+                        this.entities = data['entities'];
+                        this.creationMode = false;
+                        this.newEntity = true;
+                        $j('#jstree').jstree(true).settings.core.data = this.entities;
+                        $j('#jstree').jstree(true).settings.select_node = this.currentEntity;
+                        $j('#jstree').jstree(true).refresh();
+                        $j('#jstree').on("refresh.jstree", (e:any) => {
+                            $j('#jstree').jstree('deselect_all');
+                            $j('#jstree').jstree('select_node', this.currentEntity.entity_id);
+                          });
+                        this.notify.success(this.lang.entityAdded);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            } else {
+                this.http.put(this.coreUrl + "rest/entities/" + this.currentEntity.entity_id, this.currentEntity)
+                    .subscribe((data: any) => {
+                        this.entities = data['entities'];
+                        $j('#jstree').jstree(true).settings.core.data = this.entities;
+                        $j('#jstree').jstree("refresh");
+                        this.notify.success(this.lang.entityUpdated);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+            }
         }
     }
 

@@ -114,6 +114,7 @@ export const LANG_EN = {
     "entityType"                        : "Entity type",
     "entityUpdated"                     : "Entité updated",
     "entityReplacement"                 : "Entity replacement",
+    "entityWithoutParentMessage"        : "If you're not a member of this entity, you will automatically become part of it.",
     "export_seda"                       : "Seda export",
     "february"                          : "February",
     "fileplan"                          : "Fileplan",

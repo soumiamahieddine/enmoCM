@@ -2,10 +2,10 @@
 <ROOT>
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
-        <MaarchDirectory>/var/www/MaarchCourrier/</MaarchDirectory>
-        <MaarchUrl>http://localhost/maarch/</MaarchUrl>
+        <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
+        <MaarchUrl>http://localhost/MaarchCourrier/</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
-		<CustomId>cs_maarch_courrier</CustomId>
+		<CustomId></CustomId>
     </CONFIG>
     <COLLECTION>
         <Id>letterbox_coll</Id>
@@ -19,7 +19,7 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarchcourrier</databasename>
+        <databasename>MaarchCourrier</databasename>
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>

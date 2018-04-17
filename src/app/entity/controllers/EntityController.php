@@ -257,6 +257,28 @@ class EntityController
             'eventId'   => 'entityModification',
         ]);
 
+        if (empty($data['parent_entity_id']) && $GLOBALS['userId'] != 'superadmin') {
+            $hasEntity = UserEntityModel::get(['select' => [1], 'where' => ['user_id = ?', 'entity_id = ?'], 'data' => [$GLOBALS['userId'], $aArgs['id']]]);
+            if (empty($hasEntity)) {
+                $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+                $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']]);
+                $pEntity = 'N';
+                if (empty($primaryEntity)) {
+                    $pEntity = 'Y';
+                }
+
+                UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => $aArgs['id'], 'role' => '', 'primaryEntity' => $pEntity]);
+                HistoryController::add([
+                    'tableName' => 'users',
+                    'recordId'  => $GLOBALS['userId'],
+                    'eventType' => 'UP',
+                    'info'      => _USER_ENTITY_CREATION . " : {$GLOBALS['userId']} {$aArgs['id']}",
+                    'moduleId'  => 'user',
+                    'eventId'   => 'userModification',
+                ]);
+            }
+        }
+
         return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
     }
 
