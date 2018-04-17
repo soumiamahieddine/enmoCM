@@ -769,4 +769,4 @@ UPDATE notifications SET event_id = 'baskets' WHERE notification_id = 'BASKETS';
 DELETE FROM parameters where id = 'user_quota';
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 DELETE FROM parameters where id = 'database_version';
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.2', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.1', NULL, NULL);
