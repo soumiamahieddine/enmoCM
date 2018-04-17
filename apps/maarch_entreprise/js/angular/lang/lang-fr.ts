@@ -121,6 +121,7 @@ export const LANG_FR = {
     "entityType"                        : "Type d'entité",
     "entityUpdated"                     : "Entité modifiée",
     "entityReplacement"                 : "Remplacement de l'entité",
+    "entityWithoutParentMessage"        : "Si vous n'êtes pas directement membre de cette entité, vous le deviendrez automatiquement.",
     "entries"                           : "entrée(s)",
     "event"                             : "Événement",
     "export_seda"                       : "Export seda",
