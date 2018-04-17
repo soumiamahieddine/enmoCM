@@ -1750,11 +1750,11 @@ Select setval('templates_association_seq', (select max(system_id)+1 from templat
 -----
 -- Archive identifiers
 -----
-UPDATE entities SET business_id = 'org_987654321_Versant';
+UPDATE entities SET business_id = 'org_987654321_DGS_SF';
 UPDATE entities SET archival_agency = 'org_123456789_Archives';
-UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES';
-UPDATE entities SET business_id = 'org_987654321_DGS_SF' WHERE entity_id = 'COU';
-UPDATE entities SET business_id = 'org_123456789_CAB_SF' WHERE entity_id = 'CAB';
+UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES_V2';
+--UPDATE entities SET business_id = 'org_987654321_DGS_SF' WHERE entity_id = 'COU';
+--UPDATE entities SET business_id = 'org_123456789_CAB_SF' WHERE entity_id = 'CAB';
 
 UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
