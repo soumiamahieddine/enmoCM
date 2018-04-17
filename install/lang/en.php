@@ -264,7 +264,7 @@ if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
     define('_UNABLE_TO_CREATE_DATABASE', 'Unable to create database, try another name or check the script structure.sql');
 }
 if (!defined('_UNABLE_TO_CREATE_CUSTOM')) {
-    define('_UNABLE_TO_CREATE_CUSTOM', 'Unable to create custom, try another name for database or check custom folder');
+    define('_UNABLE_TO_CREATE_CUSTOM', 'Unable to create custom, try another name for database or check custom folder (permission problem ?)');
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', 'Unable to load dataset');

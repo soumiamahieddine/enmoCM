@@ -246,7 +246,7 @@ if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
     define('_UNABLE_TO_CREATE_DATABASE', 'Impossible de créer la base de données, essayer un autre nom ou vérifier le script structure.sql');
 }
 if (!defined('_UNABLE_TO_CREATE_CUSTOM')) {
-    define('_UNABLE_TO_CREATE_CUSTOM', 'Impossible de créer le custom, essayer un autre nom de base de données ou vérifier le répertoire custom');
+    define('_UNABLE_TO_CREATE_CUSTOM', 'Impossible de créer le custom, essayer un autre nom de base de données ou vérifier le répertoire custom (problème de permission ?)');
 }
 
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {

@@ -19,14 +19,16 @@
 */
 
 /**
-* @brief class of install tools
-*
-* @file
-* @author Arnaud Veber
-* @date $date$
-* @version $Revision$
-* @ingroup install
-*/
+ * @brief class of install tools
+ *
+ * @file
+ *
+ * @author Arnaud Veber
+ * @date $date$
+ *
+ * @version $Revision$
+ * @ingroup install
+ */
 ?>
 <script>
     function checkPassword(
@@ -45,7 +47,7 @@
 
             if (oneIsEmpty) {
                 $('#okAdminPass').css('display','none');
-                $('#koAdminPass').html('<?php echo _FILL_ALL_PASSWORD_FIELDS;?>');
+                $('#koAdminPass').html('<?php echo _FILL_ALL_PASSWORD_FIELDS; ?>');
                 return;
             }
 
@@ -53,7 +55,7 @@
 
             if (newSuperadminPass != newSuperadminPassTwo) {
                 $('#okAdminPass').css('display','none');
-                $('#koAdminPass').html('<?php echo _PASSWORDS_ARE_DIFFERENTS;?>');
+                $('#koAdminPass').html('<?php echo _PASSWORDS_ARE_DIFFERENTS; ?>');
                 return;
             }
 
@@ -66,19 +68,19 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('password');" style="cursor: pointer;">
-            <?php echo _PASSWORD;?>
+            <?php echo _PASSWORD; ?>
         </h2>
     </div>
     <div class="contentBlock" id="password">
         <p>
             <h6>
-                <?php echo _PASSWORD_EXP;?>
+                <?php echo _PASSWORD_EXP; ?>
             </h6>
             <form action="scripts/password.php" method="post" id="newAdminPassForm" name="newAdminPassForm">
                 <table>
                     <tr>
                         <td>
-                            <?php echo _NEW_ADMIN_PASS;?>
+                            <?php echo _NEW_ADMIN_PASS; ?>
                         </td>
                         <td>
                             :
@@ -89,13 +91,13 @@
                     </tr>
                     <tr>
                         <td>
-                            <?php echo _NEW_ADMIN_PASS_AGAIN;?>
+                            <?php echo _NEW_ADMIN_PASS_AGAIN; ?>
                         </td>
                         <td>
                             :
                         </td>
                         <td>
-                            <input type="password" name="newSuperadminPassTwo" id="newSuperadminPassTwo" onBlur="checkPassword($('#newSuperadminPass').val(), $(this).val());"/>
+                            <input type="password" name="newSuperadminPassTwo" id="newSuperadminPassTwo" onkeyup="checkPassword($('#newSuperadminPass').val(), $(this).val());"/>
                         </td>
                     </tr>
                     <tr>
@@ -116,12 +118,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">
-                        <?php echo _PREVIOUS_INSTALL;?>
+                        <?php echo _PREVIOUS_INSTALL; ?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="document.getElementById('newAdminPassForm').submit();" id="okAdminPass" style="display: none;">
-                        <?php echo _NEXT_INSTALL;?>
+                        <?php echo _NEXT_INSTALL; ?>
                     </a>
                 </div>
             </div>
