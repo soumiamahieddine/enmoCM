@@ -985,7 +985,7 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_inser
 DELETE FROM security WHERE group_id = 'DIRECTEUR';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('DIRECTEUR', 'letterbox_coll', '1=0', 'Tous les courriers','N','N','N', 25, NULL, NULL, 'DOC');
 DELETE FROM security WHERE group_id = 'ELU';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ELU', 'letterbox_coll', '??', 'A voir','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ELU', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
 DELETE FROM security WHERE group_id = 'ARCHIVISTE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
 DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
@@ -1162,7 +1162,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.2', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.1', NULL, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 ------------
 --DIFFLIST_TYPES
