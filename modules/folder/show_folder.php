@@ -117,7 +117,6 @@ if (isset($_POST['delete_folder'])) {
         } else {
         	$folderArray = array();
             $folderArray = $folderObject->get_folder_info();
-
             $_SESSION['current_folder_id'] = $folderArray['system_id'];
             $id = $_SESSION['current_folder_id'];
             $folderObject->modify_default_folder_in_db(
@@ -315,6 +314,10 @@ if (isset($_POST['delete_folder'])) {
                                     ?>
                                         <input type="text" name="<?php functions::xecho($key);?>" id="<?php functions::xecho($key);?>" value="<?php functions::xecho($folderArray['index'][$key]['show_value']);?>" size="40"  title="<?php functions::xecho($folderArray['index'][$key]['show_value']);?>" alt="<?php functions::xecho($folderArray['index'][$key]['show_value']);?>" readonly="readonly" class="readonly" />
                                         <?php
+                                    }
+                                    if($folderArray['index'][$key]['mandatory'] == 'Y'){?>
+                                        <span class="red_asterisk" id="indexes_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span>
+                                    <?php 
                                     }
                                 ?>
                                 </td>
