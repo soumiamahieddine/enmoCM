@@ -63,7 +63,7 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>process</ID>
-        <LABEL>_PROCESS</LABEL>
+        <LABEL>_PROCESS_ACTION</LABEL>
         <NAME>process</NAME>
         <DESC>_PROCESS_DESC</DESC>
         <ORIGIN>apps</ORIGIN>
