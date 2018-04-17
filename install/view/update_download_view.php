@@ -23,58 +23,51 @@ if ($_SESSION['user']['UserId'] <> 'superadmin') {
 
 //retrives tags
 $client = new \Gitlab\Client('https://labs.maarch.org/api/v4/');
-//$client->authenticate('aSecretToken', \Gitlab\Client::AUTH_URL_TOKEN);
-
-// $project = $client->api('projects')->show('12');
 
 $tags = $client->api('tags')->all('12');
 
 //retrieve current version
-$db             = new Database();
-$query          = "SELECT param_value_int, param_value_string FROM parameters WHERE id = 'database_version'";
-$stmt           = $db->query($query, []);
+$db = new Database();
+$query = "SELECT param_value_string FROM parameters WHERE id = 'database_version'";
+$stmt = $db->query($query, []);
 $currentVersion = $stmt->fetchObject();
 
-$versionBranch         = substr($currentVersion->param_value_int, 0, 2) . '.' . substr($currentVersion->param_value_int, 2);
-$currentVersionNumeric = preg_replace("/[^0-9,]/", "", $currentVersion->param_value_int);
-if (!empty($currentVersion->param_value_string)) {
-    $currentVersionTagNumeric = preg_replace("/[^0-9,]/", "", $currentVersion->param_value_string);
-}
+$currentVersionBranch = substr($currentVersion->param_value_string, 0, 5);
+$currentVersionBranchYear = substr($currentVersion->param_value_string, 0, 2);
+$currentVersionBranchMonth = substr($currentVersion->param_value_string, 3, 2);
+$currentVersionTag = substr($currentVersion->param_value_string, 6);
 
-$allCurrentTags        = [];
-$allNextTags           = [];
-$cptCurrentTags        = 0;
-$isAnyAvailableTag     = false;
+$allCurrentTags = [];
+$allNextTags = [];
+$cptCurrentTags = 0;
+$isAnyAvailableTag = false;
 $isAnyAvailableVersion = false;
 
-foreach ($tags as $key => $value) {
-    //echo $tags[$key]['name'] . ' ' . preg_replace("/[^0-9,]/", "", $tags[$key]['name']) . '<br />';
-    if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $tags[$key]['name'])) {
+foreach ($tags as $value) {
+    if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
         continue;
     }
-    $tagNumeric = preg_replace("/[^0-9,]/", "", $tags[$key]['name']);
-    $pos        = strpos($tagNumeric, $currentVersionNumeric);
+    $tag = substr($value['name'], 6);
+    $pos = strpos($value['name'], $currentVersionBranch);
     if ($pos === false) {
-        //echo 'tag not in currentVersion:';
-        $isAnyAvailableVersion = true;
-        $allNextTags[] = $tags[$key]['name'];
+        $year = substr($value['name'], 0, 2);
+        $month = substr($value['name'], 3, 2);
+        if (($year == $currentVersionBranchYear && $month > $currentVersionBranchMonth) || $year > $currentVersionBranchYear) {
+            $isAnyAvailableVersion = true;
+            $allNextTags[] = $value['name'];
+        }
     } else {
-        //echo 'tag in currentVersion:';
         $allCurrentTags[$cptCurrentTags] = [];
-        $allCurrentTags[$cptCurrentTags]['name'] = $tags[$key]['name'];
-        $allCurrentTags[$cptCurrentTags]['numeric'] = $tagNumeric;
-        if ($tagNumeric > $currentVersionTagNumeric) {
+        $allCurrentTags[$cptCurrentTags]['name'] = $value['name'];
+        if ($tag > $currentVersionTag) {
             $allCurrentTags[$cptCurrentTags]['enabled'] = true;
             $isAnyAvailableTag = true;
         } else {
             $allCurrentTags[$cptCurrentTags]['enabled'] = false;
         }
-        $cptCurrentTags++;
+        ++$cptCurrentTags;
     }
 }
-
-// require_once('install/class/Class_Install.php');
-// $Class_Install = new Install;
 
 ?>
 <script>
@@ -121,7 +114,7 @@ foreach ($tags as $key => $value) {
                             <td><?php echo _YOUR_VERSION;?></td>
                             <td>:</td>
                             <td>
-                                <?php echo '<b>' . $currentVersion->param_value_string . '</b> (' . _BRANCH_VERSION . ' : <b>' . $versionBranch . '</b>)';?>
+                                <?php echo '<b>' . $currentVersion->param_value_string . '</b>';?>
                             </td>
                         </tr>
                         <tr>
