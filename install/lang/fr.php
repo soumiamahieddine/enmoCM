@@ -14,7 +14,7 @@ if (!defined('_WELCOME_INSTALL')) {
 }
 
 if (!defined('_DESC_INSTALL')) {
-    define('_DESC_INSTALL', "Bienvenue dans l'assistant d'installation de Maarch ! <br />
+    define('_DESC_INSTALL', "Bienvenue dans l'assistant d'installation de Maarch Courrier ! <br />
                     <br />
                     Maarch est un logiciel libre très complet pour la Gestion et l'Organisation de l'Information Administrative (GOIA). Il permet de suivre les flux d'information administrative multicanal (courrier postal, courriel, formulaires, appels téléphoniques) et de les classer pour les retrouver de façon fiable dans le temps. </br> </br>Maarch Courrier propose des outils d'assistance à la rédaction et à la validation des courriers Départ. Maarch est distribué sous licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
                     <br />
@@ -57,11 +57,6 @@ if (!defined('_SET_CONFIG_KO')) {
     define('_SET_CONFIG_KO', "Aucune modification réalisée : un problème est survenu");
 }
 
-
-if (!defined('_OK_WITH_LICENCE')) {
-    define('_OK_WITH_LICENCE', "J'accepte les termes de la licence");
-}
-
 //PREREQUISITES
 if (!defined('_PREREQUISITES')) {
     define('_PREREQUISITES', "Pré-requis");
@@ -71,7 +66,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch Courrier nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Courrier/latest/fr/Install/Prerequis' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -85,13 +80,13 @@ if (!defined('_GENERAL')) {
     define('_GENERAL', "Général");
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', "Version de PHP (5.5 ou sup.)");
+    define('_PHP_VERSION', "Version de PHP (5.6 ou sup.)");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
-    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch");
+    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'écriture du répertoire racine de Maarch Courrier");
 }
 if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du répertoire racine de Maarch ne sont pas corrects");
+    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du répertoire racine de Maarch Courrier ne sont pas corrects");
 }
 if (!defined('_PGSQL')) {
     define('_PGSQL', "Librairie pgsql");
@@ -136,10 +131,10 @@ if (!defined('_ERROR_REPORTING')) {
         define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors=On");
+    define('_DISPLAY_ERRORS', "display_errors = On");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags=On");
+    define('_SHORT_OPEN_TAGS', "short_open_tags = On");
 }
 
 if (!defined('_MUST_FIX')) {
@@ -175,10 +170,10 @@ if (!defined('_DATABASE')) {
     define('_DATABASE', "Base de données");
 }
 if (!defined('_DATABASE_DESC')) {
-    define('_DATABASE_ADD_INF', "L'installeur Maarch va créer une nouvelle base de données pour vous. Entrez le nom de la base (ex:maarch_db)");
+    define('_DATABASE_ADD_INF', "L'installeur Maarch Courrier va créer une nouvelle base de données pour vous. Entrez le nom de la base (ex:maarch_db)");
 }
 if (!defined('_DATABASE_EXP')) {
-    define('_DATABASE_EXP', "Maarch utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utilisateur et le mot de passe de connexion.");
+    define('_DATABASE_EXP', "Maarch Courrier utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utilisateur et le mot de passe de connexion.");
 }
 
 if (!defined('_DATABASE_INFOS')) {
@@ -298,7 +293,7 @@ if (!defined('_RESUME')) {
 }
 
 if (!defined('_START_MEP_1_3')) {
-    define('_START_MEP_1_3', "Démarrer avec Maarch");
+    define('_START_MEP_1_3', "Démarrer avec Maarch Courrier");
 }
 
 //ERROR

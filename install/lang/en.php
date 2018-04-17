@@ -53,10 +53,6 @@ if (!defined('_SMTP_ERROR')) {
     define('_SMTP_ERROR', "Information : incorrect SMTP authentication");
 }
 
-if (!defined('_OK_WITH_LICENCE')) {
-    define('_OK_WITH_LICENCE', "I agree with the terms of the licence");
-}
-
 //PREREQUISITES
 if (!defined('_PREREQUISITES')) {
     define('_PREREQUISITES', "Prerequisites");
