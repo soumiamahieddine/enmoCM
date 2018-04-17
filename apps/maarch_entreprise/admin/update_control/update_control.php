@@ -56,7 +56,6 @@ $allCurrentTags = [];
 $allNextTags = [];
 $cptCurrentTags = 0;
 $isAnyAvailableTag = false;
-$isAnyAvailableVersion = false;
 
 foreach ($tags as $value) {
     if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
@@ -68,7 +67,6 @@ foreach ($tags as $value) {
         $year = substr($value['name'], 0, 2);
         $month = substr($value['name'], 3, 2);
         if (($year == $currentVersionBranchYear && $month > $currentVersionBranchMonth) || $year > $currentVersionBranchYear) {
-            $isAnyAvailableVersion = true;
             $allNextTags[] = $value['name'];
         }
     } else {
@@ -139,7 +137,7 @@ foreach ($tags as $value) {
             }
         }
 
-        if ($isAnyAvailableVersion) {
+        if (!empty($allNextTags)) {
             echo '<br><br><br><b>'._NEW_MAJOR_VERSION_AVAILABLE.'</b> : <br>';
             for ($j = 0; $j < count($allNextTags); ++$j) {
                 echo $allNextTags[$j].'<br />';
