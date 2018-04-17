@@ -142,7 +142,7 @@ class AutoCompleteController
         $data['address'] = str_replace(['*', '~', '-', '\''], ' ', $data['address']);
         $aAddress = explode(' ', $data['address']);
         foreach ($aAddress as $key => $value) {
-            if (strlen($value) <= 2) {
+            if (strlen($value) <= 2 && !is_numeric($value)) {
                 unset($aAddress[$key]);
                 continue;
             }
