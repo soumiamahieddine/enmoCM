@@ -840,19 +840,31 @@ abstract class foldertype_Abstract
     {
         $fields = array();
         $db = new Database();
-        $stmt = $db->query(
-        	"SELECT field_name FROM "
-        	. $_SESSION['tablename']['fold_foldertypes_indexes']
-        	. " WHERE  foldertype_id = ?", array($foldertypeId)
-        );
 
-        while ($res = $stmt->fetchObject()) {
-            array_push($fields, $res->field_name);
-        }
         if ($mode == 'minimal') {
+            $stmt = $db->query(
+                "SELECT field_name FROM "
+                . $_SESSION['tablename']['fold_foldertypes_indexes']
+                . " WHERE  foldertype_id = ?", array($foldertypeId)
+            );
+    
+            while ($res = $stmt->fetchObject()) {
+                array_push($fields, $res->field_name);
+            }
             return $fields;
-        }
+        } else {
+            $arr_mandatory = array();
+            $stmt = $db->query(
+                "SELECT field_name, mandatory FROM "
+                . $_SESSION['tablename']['fold_foldertypes_indexes']
+                . " WHERE  foldertype_id = ?", array($foldertypeId)
+            );
 
+            while ($res = $stmt->fetchObject()) {
+                array_push($fields, $res->field_name);
+                array_push($arr_mandatory, $res->mandatory);
+            }
+        }
         $indexes = array();
         if (file_exists(
         	$_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -968,6 +980,12 @@ abstract class foldertype_Abstract
                 }
             }
         }
+        ksort($indexes);
+        $keys = array_keys($indexes);
+        for($i=0;$i<count($indexes);$i++){
+            $indexes[$keys[$i]]['mandatory'] = $arr_mandatory[$i];
+
+        }
         return $indexes;
     }
 
@@ -1009,11 +1027,11 @@ abstract class foldertype_Abstract
         // Checks the manadatory indexes
         $indexes = $this->get_indexes($foldertypeId);
         $mandatoryIndexes = $this->get_mandatory_indexes($foldertypeId);
-
+        
         for ($i = 0; $i < count($mandatoryIndexes); $i ++) {
             if (empty($values[$mandatoryIndexes[$i]])) { // Pb 0
                 $_SESSION['error'] .= $indexes[$mandatoryIndexes[$i]]['label']
-                	. ' ' . _IS_EMPTY;
+                    . ' ' . _IS_EMPTY;
                 return false;
             }
         }

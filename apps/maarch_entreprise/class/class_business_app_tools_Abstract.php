@@ -635,7 +635,7 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['maarch_entreprise']['database_version'] = "none";
         } else {
             $vbg = $stmt->fetchObject();
-            $_SESSION['maarch_entreprise']['database_version'] = $vbg->param_value_string;
+            $_SESSION['maarch_entreprise']['database_version'] = substr($vbg->param_value_string, 0, 5);
             $_SESSION['maarch_entreprise']['database_version_minor'] = $vbg->param_value_string;
         }
         //If this two parameters is not find, this is the end of this function
