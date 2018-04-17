@@ -1087,7 +1087,7 @@ INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, 
 Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
 -- Default contact_communication
 TRUNCATE TABLE contact_communication;
-INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'http://cchaplin:maarch@demo.maarchcourrier.com');
+INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'https://cchaplin:maarch@demo.maarchcourrier.com');
 ------------
 --STATUS-
 ------------
