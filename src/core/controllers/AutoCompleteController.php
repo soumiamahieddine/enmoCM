@@ -158,6 +158,9 @@ class AutoCompleteController
             }
         }
         $data['address'] = implode(' ', $aAddress);
+        if (empty($data['address'])) {
+            return $response->withJson([]);
+        }
 
         $hits = $index->find(TextFormatModel::normalize(['string' => $data['address']]));
 
