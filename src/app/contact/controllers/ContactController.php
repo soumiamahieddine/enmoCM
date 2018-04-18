@@ -166,30 +166,33 @@ class ContactController
     {
         $customId = CoreConfigModel::getCustomId();
 
-        if (is_dir("custom/{$customId}/referential")) {
-            $banDirectory = "custom/{$customId}/referential/";
-        } else {
-            $banDirectory = 'referential/';
+        if (is_dir("custom/{$customId}/referential/ban/indexes")) {
+            $customFilesDepartments = scandir("custom/{$customId}/referential/ban/indexes");
+        }
+        if (is_dir("referential/ban/indexes")) {
+            $filesDepartments = scandir("referential/ban/indexes");
         }
 
-        $empty_folder = true;
-        $empty_files = true;
-
-        if (is_dir($banDirectory)) {
-            $empty_folder = false;
-        }
-        if ($files = glob($banDirectory.'ban/indexes/'.'/*')) {
-            $empty_files = false;
-            $arrayNumDep = array();
-            foreach ($files as $key => $value) {
-                array_push($arrayNumDep, basename($value));
+        $departments = [];
+        if (!empty($customFilesDepartments)) {
+            foreach ($customFilesDepartments as $value) {
+                if ($value != '.' && $value != '..') {
+                    $departments[] = $value;
+                }
             }
-
-            return $arrayNumDep;
+        }
+        if (!empty($filesDepartments)) {
+            foreach ($filesDepartments as $value) {
+                if ($value != '.' && $value != '..' && !in_array($value, $departments)) {
+                    $departments[] = $value;
+                }
+            }
         }
 
-        if (!$empty_folder && !$empty_files) {
-            return true;
+
+        if (!empty($departments)) {
+            sort($departments, SORT_NUMERIC);
+            return $departments;
         } else {
             return false;
         }
