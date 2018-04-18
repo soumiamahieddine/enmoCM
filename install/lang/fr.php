@@ -16,9 +16,14 @@ if (!defined('_WELCOME_INSTALL')) {
 if (!defined('_DESC_INSTALL')) {
     define('_DESC_INSTALL', "Bienvenue dans l'assistant d'installation de Maarch Courrier ! <br />
                     <br />
-                    Maarch est un logiciel libre très complet pour la Gestion et l'Organisation de l'Information Administrative (GOIA). Il permet de suivre les flux d'information administrative multicanal (courrier postal, courriel, formulaires, appels téléphoniques) et de les classer pour les retrouver de façon fiable dans le temps. </br> </br>Maarch Courrier propose des outils d'assistance à la rédaction et à la validation des courriers Départ. Maarch est distribué sous licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
+                    Cet assistant va vous guider pas à pas dans l'installation de Maarch Courrier notamment :<br />
+                    - Contrôle des pré-requis<br />
+                    - Création de la base de données<br />
+                    - Import d'un jeu de données<br />
+                    - Création des docservers<br />
+                    - Paramétrage des batchs
                     <br />
-                    Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Rendez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target=\"_blank\"> www.maarch.com</A> pour plus d'informations sur les services.");
+                    <br />Pour tout renseignements, rendez vous sur <A style='color: #800000; font-family:verdana;' href='https://community.maarch.org/' target=\"_blank\"> community.maarch.org</A> ou sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target=\"_blank\"> www.maarch.com</A>  ");
 }
 
 //LICENCE
