@@ -175,8 +175,8 @@ class ArchiveTransfer
                             $attachment,
                             null,
                             'attachment_'. $i. '_'. $j,
-                            "response_" . $attachment->res_id,
-                            $archiveUnitId
+                            "response_" . $attachment->res_id
+//                            $archiveUnitId
                         );
 
                         $messageObject->DataObjectPackage->BinaryDataObject[] = $this->getBinaryDataObject(
