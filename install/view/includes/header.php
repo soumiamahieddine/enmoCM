@@ -34,5 +34,5 @@
     </h2>
 </div>
 <div class="logo">
-    <img src="img/logo.png" height="70px" />
+    <img src="../apps/maarch_entreprise/img/logo.svg" height="70px" />
 </div>

@@ -1250,7 +1250,7 @@ abstract class contacts_v2_Abstract extends Database
                         ?>
                         <tr id="previous_address_tr" >
                             <td width="50%"></td>
-                            <td width="50%">
+                            <td width="50%" align="right">
                                 <?php 
                                 $stmt = $db->query('SELECT distinct address_num, address_street, address_complement, address_postal_code, address_town, address_country, website FROM contact_addresses WHERE contact_id = ?', array($_SESSION['m_admin']['contact']['ID']));
                         $nbRes = $stmt->rowCount();
@@ -1267,6 +1267,7 @@ abstract class contacts_v2_Abstract extends Database
                             $frm .= '</select>';
                             echo $frm;
                         } ?>  
+                            <span class="blue_asterisk" style="visibility:hidden;">*</span>
                             </td>
                         </tr> <?php
                     } ?>
@@ -1386,35 +1387,59 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                         </tr>
                         <tr>
+                        <?php 
+                            $contactController = new \Contact\controllers\ContactController();
+            if (!$numDepList = $contactController->availaibleReferential()) {
+                $stateRef = 'disabled';
+                $stateRefInfo = _WARNING_REF;
+                $stateRefCss = 'opacity:0.5;';
+            } ?>
                             <td colspan="2" style="text-align:center;padding-bottom:10px;">
                                 <hr/>
-                                <div style="text-align:right;color:#135F7F;font-style:italic;">
-                                    <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()"/>
+                                <div style="color:red;<?php echo $stateRefCss; ?>"><?php echo $stateRefInfo; ?></div>
+                                <div style="text-align:right;color:#135F7F;font-style:italic;<?php echo $stateRefCss; ?>">
+                                    <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()" <?php echo $stateRef; ?>/>
                                 </div>
                                 <div id="refSearch" style="display:none;">
-                                    <div class="typeahead__container">
-                                        <div class="typeahead__field" style="width: 100%">
-                                            <input placeholder="<?php echo _REF_SEARCH; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
+                                    <?php foreach ($numDepList as $key => $value) {
+                echo "<option value='{$value}'>{$value}</option>";
+            } ?>
+        
+                                    </select>
+                                    <div class="typeahead__container" style="width: 100%;display:inline-block;">
+                                        <div class="typeahead__field">
+                                        <span class="typeahead__query">
+                                        <input placeholder="<?php echo _REF_SEARCH.' du '.$numDepList[0]; ?>" style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="searchAddress" autocomplete="off" type="text" id="searchAddress" value=""/>
+                                        </span>
+                                            
                                         </div>
                                     </div>
                                     <input name="ban_id" type="hidden" id="ban_id" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['BAN_ID'])); ?>"/>
+                                    
+                                    <script>$j("#numDep").chosen({width: "10%",disable_search_threshold: 10});</script>
+                                    <style>.typeahead__cancel-button{padding:4px 10px;}#numDep_chosen .chosen-drop{width:70px;}#numDep_chosen .chosen-single{border-radius : 5px 0 0 5px}#searchAddress{height:25px;min-height:inherit;padding:4px}</style>
                                 </div>    
                             </td>
                             <script>
                             $j("#searchAddress").typeahead({
                                 delay: '500',
+                                minLength: 3,
                                 order: "asc",
+                                filter: false,
                                 dynamic: true,
+                                maxItem: 10,
                                 display: "address",
                                 templateValue: "{{address}}",
-                                emptyTemplate: "Aucune adresse n'existe avec {{query}}",
+                                emptyTemplate: "Aucune adresse n'existe avec <b>{{query}}</b>",
                                 source: {
                                     ajax: {
                                         type: "GET",
                                         dataType: "json",
                                         url: "../../rest/autocomplete/banAddresses",
                                         data: {
-                                            address: "{{query}}"
+                                            address: "{{query}}",
+                                            department: $j("#numDep").val()
                                         }
                                     }
                                 },
@@ -1481,12 +1506,12 @@ abstract class contacts_v2_Abstract extends Database
                             </td>
                         </tr>
                         <?php if ($mode == 'add' || !empty($_SESSION['m_admin']['address']['BAN_ID'])) {
-                                        ?>
+                ?>
                             <script type="text/javascript">
                                 $j('#refMaarch').click();
                             </script>
                         <?php
-                                    } ?>
+            } ?>
                         <tr style="display:none;" id="rule_phone">
                             <td>&nbsp;</td>
                             <td align="right"><i><?php echo _FORMAT_PHONE; ?></i></td>
@@ -1520,11 +1545,11 @@ abstract class contacts_v2_Abstract extends Database
                             <td><?php echo _IS_PRIVATE; ?>&nbsp;: </td>
                             <td align="right">
                                 <input class="<?php echo $fieldAddressClass; ?>" type="radio"  class="check" name="is_private" value="Y" <?php if ($_SESSION['m_admin']['address']['IS_PRIVATE'] == 'Y') {
-                                        ?> checked="checked"<?php
-                                    } ?> /><?php echo _YES; ?>
+                ?> checked="checked"<?php
+            } ?> /><?php echo _YES; ?>
                                 <input type="radio"  class="check" name="is_private" value="N" <?php if ($_SESSION['m_admin']['address']['IS_PRIVATE'] == 'N' or $_SESSION['m_admin']['address']['IS_PRIVATE'] != 'Y') {
-                                        ?> checked="checked"<?php
-                                    } ?> /><?php echo _NO; ?>
+                ?> checked="checked"<?php
+            } ?> /><?php echo _NO; ?>
                                 <span class="blue_asterisk" style="visibility:hidden;">*</span>
                             </td>
                         </tr>

@@ -822,19 +822,23 @@ abstract class folder_Abstract extends request
 				$hist = new history();
 				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", 'folderup', $_SESSION['error'], $_SESSION['config']['databasetype'],'folder');
 			}
-		}
-		$_SESSION['error_page'] = $_SESSION['error'];
-		$_SESSION['error']= '';
-		?>
-		<script  type="text/javascript">
+		} else {
+			$_SESSION['error_page'] = $_SESSION['error'];
+			$_SESSION['error']= ''; ?>
+			<script  type="text/javascript">
 			//window.opener.reload();
 			var error_div = $('main_error');
 			if(error_div)
 			{
 				error_div.innerHTML = '<?php echo addslashes($_SESSION['error_page']);?>';
+				$j('#main_error').show();
+				setTimeout(() => {
+					$j('#main_error').hide();
+				}, 5000);
 			}
 		</script>
 		<?php
+		}
 	}
 
 	public function closeFolder($folderId)

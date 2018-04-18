@@ -4,11 +4,11 @@
  * Copyright Maarch since 2008 under licence GPLv3.
  * See LICENCE.txt file at the root folder for more details.
  * This file is part of Maarch software.
- *
  */
 
 /**
  * @brief Contact Controller
+ *
  * @author dev@maarch.org
  */
 
@@ -76,73 +76,73 @@ class ContactController
     public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
     {
         $contact = ContactModel::getCommunicationByContactId([
-            'contactId' => $aArgs['contactId']
+            'contactId' => $aArgs['contactId'],
         ]);
 
         return $response->withJson([$contact]);
     }
 
-    public function formatContactAddressAfnor(array $aArgs)
+    public static function formatContactAddressAfnor(array $aArgs)
     {
         $formattedAddress = '';
 
         // Entete pour societe
         if ($aArgs['is_corporate_person'] == 'Y') {
             // Ligne 1
-            $formattedAddress .= substr($aArgs['society'], 0, 38) . "\n";
+            $formattedAddress .= substr($aArgs['society'], 0, 38)."\n";
 
             // Ligne 2
-            $formattedAddress .= ContactController::controlLengthNameAfnor([
-                                    'title'        => $aArgs['title'],
-                                    'fullName'     => $aArgs['firstname'] . ' ' . $aArgs['lastname'],
-                                    'strMaxLength' => 38]) . "\n";
+            $formattedAddress .= self::controlLengthNameAfnor([
+                                    'title' => $aArgs['title'],
+                                    'fullName' => $aArgs['firstname'].' '.$aArgs['lastname'],
+                                    'strMaxLength' => 38, ])."\n";
 
             // Ligne 3
             if (!empty($aArgs['address_complement'])) {
-                $formattedAddress .= substr($aArgs['address_complement'], 0, 38) . "\n";
+                $formattedAddress .= substr($aArgs['address_complement'], 0, 38)."\n";
             }
         } else {
             // Ligne 1
-            $formattedAddress .= ContactController::controlLengthNameAfnor([
-                                    'title'        => $aArgs['contact_title'],
-                                    'fullName'     => $aArgs['contact_firstname'] . ' ' . $aArgs['contact_lastname'],
-                                    'strMaxLength' => 38]) . "\n";
+            $formattedAddress .= self::controlLengthNameAfnor([
+                                    'title' => $aArgs['contact_title'],
+                                    'fullName' => $aArgs['contact_firstname'].' '.$aArgs['contact_lastname'],
+                                    'strMaxLength' => 38, ])."\n";
 
             // Ligne 2
             if (!empty($aArgs['occupancy'])) {
-                $formattedAddress .= substr($aArgs['occupancy'], 0, 38) . "\n";
+                $formattedAddress .= substr($aArgs['occupancy'], 0, 38)."\n";
             }
 
             // Ligne 3
             if (!empty($aArgs['address_complement'])) {
-                $formattedAddress .= substr($aArgs['address_complement'], 0, 38) . "\n";
+                $formattedAddress .= substr($aArgs['address_complement'], 0, 38)."\n";
             }
         }
         // Ligne 4
-        $formattedAddress .= substr($aArgs['address_num'] . ' ' . $aArgs['address_street'], 0, 38) . "\n";
+        $formattedAddress .= substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38)."\n";
 
         // Ligne 5
         // $formattedAddress .= "\n";
 
         // Ligne 6
-        $formattedAddress .= substr($aArgs['address_postal_code'] . ' ' . $aArgs['address_town'], 0, 38) . "\n";
+        $formattedAddress .= substr($aArgs['address_postal_code'].' '.$aArgs['address_town'], 0, 38);
 
         return $formattedAddress;
     }
 
-    public function controlLengthNameAfnor(array $aArgs)
+    public static function controlLengthNameAfnor(array $aArgs)
     {
-        $aCivility = ContactController::getContactCivility();
-        if (strlen($aArgs['title'] . ' ' . $aArgs['fullName']) > $aArgs['strMaxLength']) {
+        $aCivility = self::getContactCivility();
+        if (strlen($aArgs['title'].' '.$aArgs['fullName']) > $aArgs['strMaxLength']) {
             $aArgs['title'] = $aCivility[$aArgs['title']]['abbreviation'];
         } else {
             $aArgs['title'] = $aCivility[$aArgs['title']]['label'];
         }
 
-        return substr($aArgs['title'] . ' ' . $aArgs['fullName'], 0, $aArgs['strMaxLength']);
+        return substr($aArgs['title'].' '.$aArgs['fullName'], 0, $aArgs['strMaxLength']);
     }
 
-    public function getContactCivility()
+    public static function getContactCivility()
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
 
@@ -152,7 +152,7 @@ class ContactController
             foreach ($result as $title) {
                 foreach ($title as $value) {
                     $aCivility[(string) $value->id] = [
-                        'label'        => (string) $value->label,
+                        'label' => (string) $value->label,
                         'abbreviation' => (string) $value->abbreviation,
                     ];
                 }
@@ -160,5 +160,38 @@ class ContactController
         }
 
         return $aCivility;
+    }
+
+    public function availaibleReferential()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (is_dir("custom/{$customId}/referential")) {
+            $banDirectory = "custom/{$customId}/referential/";
+        } else {
+            $banDirectory = 'referential/';
+        }
+
+        $empty_folder = true;
+        $empty_files = true;
+
+        if (is_dir($banDirectory)) {
+            $empty_folder = false;
+        }
+        if ($files = glob($banDirectory.'ban/indexes/'.'/*')) {
+            $empty_files = false;
+            $arrayNumDep = array();
+            foreach ($files as $key => $value) {
+                array_push($arrayNumDep, basename($value));
+            }
+
+            return $arrayNumDep;
+        }
+
+        if (!$empty_folder && !$empty_files) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

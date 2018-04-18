@@ -247,7 +247,7 @@ if (!defined('_VALIDATION')) {
     define('_VALIDATION', 'Validation');
 }
 if (!defined('_REDIRECTION')) {
-    define('_REDIRECTION', 'Redirection');
+    define('_REDIRECTION', 'Rediriger');
 }
 if (!defined('_REDIRECTION_DESC')) {
     define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
@@ -1832,10 +1832,10 @@ if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Confirmation simple');
 }
 if (!defined('_SEND_FILE_WS')) {
-    define('_SEND_FILE_WS', 'Envoi du document via Web Service');
+    define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
 }
 if (!defined('_SEND_DATA_WS')) {
-    define('_SEND_DATA_WS', 'Envoi de données via Web Service');
+    define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
 }
 if (!defined('_SIMPLE_CONFIRM_DESC')) {
     define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effetuer.");
@@ -2220,6 +2220,9 @@ if (!defined('_FOUND_LOGS')) {
 }
 if (!defined('_PROCESS')) {
     define('_PROCESS', 'Traitement ');
+}
+if (!defined('_PROCESS_ACTION')) {
+    define('_PROCESS', 'Traiter ');
 }
 if (!defined('_PROCESS_DESC')) {
     define('_PROCESS_DESC', "Ouvre la page de traitement d'un document (les métas-données ne peuvent être modfiées depuis cette page).");
@@ -3477,7 +3480,7 @@ if (!defined('_NO_PAGE')) {
     define('_NO_PAGE', 'Aucune page');
 }
 if (!defined('_VALIDATE_QUALIF')) {
-    define('_VALIDATE_QUALIF', 'Validation/Qualification');
+    define('_VALIDATE_QUALIF', 'Valider/Qualifier');
 }
 if (!defined('_VALIDATE_QUALIF_DESC')) {
     define('_VALIDATE_QUALIF_DESC', "Ouvre la page de modification d'un document déjà enregistré (les métas-données peuvent être modifiées depuis cette page).");
@@ -4711,13 +4714,13 @@ if (!defined('_INTERRUPT_WORKFLOW_DESC')) {
     define('_INTERRUPT_WORKFLOW_DESC', "Met à jour la date du visa de l'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document ('process_date' de la table listinstance). Insère également un message d'interruption sur le viseur actuel ('process_comment' de la table listinstance).");
 }
 if (!defined('_REJECTION_WORKFLOW_REDACTOR')) {
-    define('_REJECTION_WORKFLOW_REDACTOR', 'Refus de visa - retour rédacteur');
+    define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
 }
 if (!defined('_REJECTION_WORKFLOW_REDACTOR_DESC')) {
     define('_REJECTION_WORKFLOW_REDACTOR_DESC', "Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document ('process_date' de la table listinstance).");
 }
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
-    define('_REJECTION_WORKFLOW_PREVIOUS', 'Refus de visa - retour au précédent viseur');
+    define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
 }
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) {
     define('_REJECTION_WORKFLOW_PREVIOUS_DESC', "Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document ('process_date' de la table listinstance).");
@@ -4738,10 +4741,10 @@ if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');
 }
 if (!defined('_REDIRECTION_VISA_SIGN')) {
-    define('_REDIRECTION_VISA_SIGN', 'Redirection pour signature');
+    define('_REDIRECTION_VISA_SIGN', 'Rediriger pour signature');
 }
 if (!defined('_SEND_TO_VISA')) {
-    define('_SEND_TO_VISA', 'Envoi pour visa');
+    define('_SEND_TO_VISA', 'Envoyer pour visa');
 }
 if (!defined('_SEND_TO_VISA_DESC')) {
     define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au document.');
@@ -5216,4 +5219,8 @@ if (!defined('_REF_SEARCH')) {
 
 if (!defined('_USE_REF')) {
     define('_USE_REF', 'Utiliser le référentiel national');
+}
+
+if (!defined('_WARNING_REF')) {
+    define('_WARNING_REF', '<b>Fichiers de reférérentiel manquant !</b><br/>Pour utiliser le référentiel national, veuillez contacter votre <a href="mailto:'.$_SESSION['config']['adminmail'].'">administrateur</a>');
 }

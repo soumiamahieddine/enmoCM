@@ -85,11 +85,15 @@ class ListTemplateController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        $data = $request->getParams();
+
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($data['object_id'], 'VISA_CIRCUIT_') && !strstr($data['object_id'], 'AVIS_CIRCUIT_')) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($data['object_id'], 'VISA_CIRCUIT_') || strstr($data['object_id'], 'AVIS_CIRCUIT_'))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $allowedObjectTypes = ['entity_id', 'VISA_CIRCUIT', 'AVIS_CIRCUIT'];
         $check = Validator::stringType()->notEmpty()->validate($data['object_type']) && in_array($data['object_type'], $allowedObjectTypes);
@@ -148,10 +152,6 @@ class ListTemplateController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $data = $request->getParams();
         $check = Validator::arrayType()->notEmpty()->validate($data['items']);
         $check = $check && (Validator::stringType()->notEmpty()->validate($data['title']) || Validator::stringType()->notEmpty()->validate($data['description']));
@@ -160,6 +160,13 @@ class ListTemplateController
         }
 
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
@@ -211,11 +218,17 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+
+        $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
+        
+        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
+        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (empty($listTemplates)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
@@ -271,7 +284,6 @@ class ListTemplateController
                 'where' => ['item_id = ?', 'object_id = ?', 'object_type = ?', 'item_mode = ?'],
                 'data'  => [$data['user_id'], $listModel['object_id'], 'entity_id', 'dest']
             ]);
-
         }
 
         return $response->withJson(['success' => 'success']);

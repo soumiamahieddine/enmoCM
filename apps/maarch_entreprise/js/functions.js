@@ -3804,7 +3804,7 @@ function print_current_result_list(path){
 
 function toggleRefMaarch() {
     if ($j('#refMaarch').is(":checked")) {
-        $j('#refSearch').show();
+        $j('#refSearch').css({"display":"flex"});
         $j(".refMaarch input").addClass("readonly");
         $j(".refMaarch input").prop("readonly", true);
     } else {
@@ -3812,7 +3812,6 @@ function toggleRefMaarch() {
         $j(".refMaarch input").removeClass("readonly");
         $j(".refMaarch input").prop("readonly", false);
     }
-    console.log('toto');
 }
 
 function setRefAdresse(item) {
@@ -3833,4 +3832,38 @@ function toggleBlock(div, divIcon) {
         $j('#'+divIcon+' i').removeClass('fa-plus-square-o');
         $j('#'+divIcon+' i').addClass('fa-minus-square-o');
     }
+}
+
+
+function reloadTypeahead(elem){
+    $j(".typeahead__result").remove();
+    $j("#searchAddress").val('');
+    $j("#searchAddress").attr("placeholder", "Rechercher dans le référentiel du "+$j('#'+elem.id).val());
+    $j("#searchAddress").typeahead({
+        delay: '500',
+        minLength: 3,
+        order: "asc",
+        maxItem: 10,
+        filter: false,
+        dynamic: true,
+        display: "address",
+        templateValue: "{{address}}",
+        emptyTemplate: "Aucune adresse n'existe avec <b>{{query}}</b>",
+        source: {
+            ajax: {
+                type: "GET",
+                dataType: "json",
+                url: "../../rest/autocomplete/banAddresses",
+                data: {
+                    address: "{{query}}",
+                    department: $j('#'+elem.id).val()
+                }
+            }
+        },
+        callback: {
+            onClickAfter: function (node, a, item, event) {
+                setRefAdresse(item);
+            }
+        }
+    });
 }

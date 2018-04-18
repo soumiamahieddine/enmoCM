@@ -38,18 +38,6 @@ function minHeightOfSection()
     });
 }
 
-
-/* facebook.js */
-
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/fr_FR/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-
 /* heightOfLicenceOverflow.js */
 function heightOfLicenceOverflow()
 {
@@ -226,22 +214,6 @@ function checkLanguage(
             $('#returnCheckLanguage').css("display","none");
         }
     });
-}
-
-/* download dependencies */
-function downloadMaarchDependencies() {
-    $('.wait').css('display','block');
-    $('#divDownDepend').css('display','none');
-    $.ajax({
-        url : 'scripts/getDependencies.php',
-        type : 'GET',
-        dataType : 'json',
-        success : function(answer) {
-            console.log(answer);
-            window.location.reload();
-        }
-    })
-   
 }
 
 /* backup version */

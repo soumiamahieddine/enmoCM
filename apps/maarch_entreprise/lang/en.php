@@ -5062,3 +5062,7 @@ if (!defined('_REF_SEARCH')) {
 if (!defined('_USE_REF')) {
     define('_USE_REF', 'User national referential');
 }
+
+if (!defined('_WARNING_REF')) {
+    define('_WARNING_REF', '<b>Referential files not found !</b><br/>In order to use refenrential, contact your <a href="mailto:'.$_SESSION['config']['adminmail'].'">administrator</a>');
+}

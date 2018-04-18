@@ -3,29 +3,30 @@
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
 * This file is part of Maarch software.
-*
 */
 
 /**
-* @brief class of install tools
-*
-* @file
-* @author Laurent Giovannoni
-* @author Arnaud Veber
-* @date $date$
-* @version $Revision$
-* @ingroup install
-*/
+ * @brief class of install tools
+ *
+ * @file
+ *
+ * @author Laurent Giovannoni
+ * @author Arnaud Veber
+ * @date $date$
+ *
+ * @version $Revision$
+ * @ingroup install
+ */
 
 //Loads the required class
 try {
     require_once 'core/class/class_functions.php';
     require_once 'core/class/class_db.php';
     require_once 'install/class/Class_Merge.php';
-    require_once('core' . DIRECTORY_SEPARATOR . 'class'
-        . DIRECTORY_SEPARATOR . 'class_security.php');
+    require_once 'core'.DIRECTORY_SEPARATOR.'class'
+        .DIRECTORY_SEPARATOR.'class_security.php';
 } catch (Exception $e) {
-    functions::xecho($e->getMessage()) . ' // ';
+    functions::xecho($e->getMessage()).' // ';
 }
 
 class Install extends functions
@@ -53,7 +54,7 @@ class Install extends functions
     public function __construct()
     {
         //merge css & js
-        $Class_Merge = new Merge;
+        $Class_Merge = new Merge();
         //load lang
         $this->loadLang();
     }
@@ -81,7 +82,7 @@ class Install extends functions
             $this->lang = 'en';
         }
 
-        require_once('install/lang/' . $this->lang . '.php');
+        require_once 'install/lang/'.$this->lang.'.php';
     }
 
     public function getActualLang()
@@ -101,10 +102,9 @@ class Install extends functions
             return '<img src="img/red_light.png"  width="20px"/>';
             exit;
         }
+
         return '<img src="img/orange_light.png"  width="20px"/>';
     }
-
-    
 
     public function checkAllNeededPrerequisites()
     {
@@ -150,11 +150,11 @@ class Install extends functions
         // if (!$this->isIniMagicQuotesGpcRequirements()) {
         //     return false;
         // }
-        
+
         if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -164,6 +164,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -173,6 +174,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -180,32 +182,33 @@ class Install extends functions
     {
         $includePath = array();
         $includePath = explode(';', ini_get('include_path'));
-        for ($i=0;$i<count($includePath);$i++) {
-            if (file_exists($includePath[$i] . '/' . $pearLibrary)) {
+        for ($i = 0; $i < count($includePath); ++$i) {
+            if (file_exists($includePath[$i].'/'.$pearLibrary)) {
                 return true;
                 exit;
             }
         }
         $includePath = explode(':', ini_get('include_path'));
-        for ($i=0;$i<count($includePath);$i++) {
-            if (file_exists($includePath[$i] . '/' . $pearLibrary)) {
+        for ($i = 0; $i < count($includePath); ++$i) {
+            if (file_exists($includePath[$i].'/'.$pearLibrary)) {
                 return true;
                 exit;
             }
         }
+
         return false;
     }
 
     public function isIniErrorRepportingRequirements()
     {
         if (version_compare(PHP_VERSION, '5.4') >= 0) {
-            if (ini_get('error_reporting') <> 22519) {
+            if (ini_get('error_reporting') != 22519) {
                 return false;
             } else {
                 return true;
             }
         } else {
-            if (ini_get('error_reporting') <> 22519) {
+            if (ini_get('error_reporting') != 22519) {
                 return false;
             } else {
                 return true;
@@ -215,7 +218,7 @@ class Install extends functions
 
     public function isIniDisplayErrorRequirements()
     {
-        if (strtoupper(ini_get('display_errors')) ==  'OFF') {
+        if (strtoupper(ini_get('display_errors')) == 'OFF') {
             return false;
         } else {
             return true;
@@ -224,7 +227,7 @@ class Install extends functions
 
     public function isIniShortOpenTagRequirements()
     {
-        if (strtoupper(ini_get('short_open_tag')) ==  'OFF') {
+        if (strtoupper(ini_get('short_open_tag')) == 'OFF') {
             return false;
         } else {
             return true;
@@ -244,14 +247,14 @@ class Install extends functions
         $stepNb,
         $stepNbTotal
     ) {
-        $stepNb--;
-        $stepNbTotal--;
+        --$stepNb;
+        --$stepNbTotal;
         if ($stepNb == 0) {
             return '';
             exit;
         }
         $return = '';
-        $percentProgress = round(($stepNb/$stepNbTotal) * 100);
+        $percentProgress = round(($stepNb / $stepNbTotal) * 100);
         $sizeProgress = round(($percentProgress * 910) / 100);
 
         $return .= '<div id="progressButton" style="width: '.$sizeProgress.'px;">';
@@ -275,10 +278,10 @@ class Install extends functions
         $databasepassword,
         $databasetype
     ) {
-        $connect  = 'host='.$databaseserver . ' ';
-        $connect .= 'port='.$databaseserverport . ' ';
-        $connect .= 'user='.$databaseuser . ' ';
-        $connect .= 'password='.$databasepassword . ' ';
+        $connect = 'host='.$databaseserver.' ';
+        $connect .= 'port='.$databaseserverport.' ';
+        $connect .= 'user='.$databaseuser.' ';
+        $connect .= 'password='.$databasepassword.' ';
         $connect .= 'dbname=postgres';
 
         if (!@pg_connect($connect)) {
@@ -296,34 +299,33 @@ class Install extends functions
         $customAlreadyExist = realpath('.').'/custom/cs_'.$databasename;
         if (file_exists($customAlreadyExist)) {
             //return false;
-                if (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")) {
-                } elseif (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/")) {
-                    $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
-                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
+            if (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")) {
+            } elseif (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/")) {
+                $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
+                mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
 
-                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
-                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
-                } elseif (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")) {
-                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
-                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
-                } elseif (!is_dir(realpath('.')."/custom/cs_$databasename/apps/")) {
-                    $cheminCustomMaarchCourrierApps = realpath('.')."/custom/cs_$databasename/apps";
-                    mkdir($cheminCustomMaarchCourrierApps, 0755);
+                $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+            } elseif (is_dir(realpath('.')."/custom/cs_$databasename/apps/") && is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/") && !is_dir(realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml/")) {
+                $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+            } elseif (!is_dir(realpath('.')."/custom/cs_$databasename/apps/")) {
+                $cheminCustomMaarchCourrierApps = realpath('.')."/custom/cs_$databasename/apps";
+                mkdir($cheminCustomMaarchCourrierApps, 0755);
 
-                    $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
-                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
+                $cheminCustomMaarchCourrierAppsMaarchEntreprise = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise";
+                mkdir($cheminCustomMaarchCourrierAppsMaarchEntreprise, 0755);
 
-                    $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
-                    mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
-                }
+                $cheminCustomMaarchCourrierAppsMaarchEntrepriseXml = realpath('.')."/custom/cs_$databasename/apps/maarch_entreprise/xml";
+                mkdir($cheminCustomMaarchCourrierAppsMaarchEntrepriseXml, 0755);
+            }
 
             if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/")) {
                 $cheminCustomMaarchCourrierModules = realpath('.')."/custom/cs_$databasename/modules";
                 mkdir($cheminCustomMaarchCourrierModules, 0755);
 
-                    /** Création répertoire thumbnails dans le custom **/
-
-                    $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
+                /** Création répertoire thumbnails dans le custom **/
+                $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
                 mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
 
                 $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
@@ -332,9 +334,8 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
                 mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
 
-                            /** Création répertoire notification dans le custom **/
-
-                    $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
+                /** Création répertoire notification dans le custom **/
+                $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
                 mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
 
                 $cheminCustomMaarchCourrierModulesNotificationsBatch = realpath('.')."/custom/cs_$databasename/modules/notifications/batch";
@@ -346,9 +347,8 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModulesNotificationsScripts = realpath('.')."/custom/cs_$databasename/modules/notifications/batch/scripts";
                 mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
 
-                    /** Création répertoire sendmail dans le custom **/
-
-                    $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
+                /** Création répertoire sendmail dans le custom **/
+                $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
                 mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
 
                 $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
@@ -360,10 +360,8 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
                 mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
 
-
-                    /** Création répertoire LDAP dans le custom **/
-
-                    $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
+                /** Création répertoire LDAP dans le custom **/
+                $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
                 mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
 
                 $cheminCustomMaarchCourrierModulesLdapXml = realpath('.')."/custom/cs_$databasename/modules/ldap/xml";
@@ -372,11 +370,8 @@ class Install extends functions
                 $cheminCustomMaarchCourrierModulesLdapScript = realpath('.')."/custom/cs_$databasename/modules/ldap/script";
                 mkdir($cheminCustomMaarchCourrierModulesLdapScript, 0755);
 
-
-
-                    /** Création répertoire fulltext dans le custom **/
-
-                    $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
+                /** Création répertoire fulltext dans le custom **/
+                $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
                 mkdir($cheminCustomMaarchCourrierModulesFullText, 0755);
 
                 $cheminCustomMaarchCourrierModulesFullTextXml = realpath('.')."/custom/cs_$databasename/modules/full_text/xml";
@@ -387,13 +382,12 @@ class Install extends functions
             }
 
             if (is_dir(realpath('.')."/custom/cs_$databasename/modules/")) {
+                /* Création répertoire thumbnails dans le custom **/
 
-                    /** Création répertoire thumbnails dans le custom **/
-
-                    if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/")) {
-                        $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
-                        mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
-                    }
+                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/")) {
+                    $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
+                    mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
+                }
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml/")) {
                     $cheminCustomMaarchCourrierModulesThumbnailsXml = realpath('.')."/custom/cs_$databasename/modules/thumbnails/xml";
                     mkdir($cheminCustomMaarchCourrierModulesThumbnailsXml, 0755);
@@ -403,11 +397,11 @@ class Install extends functions
                     mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
                 }
 
-                     /** Création répertoire thumbnails dans le custom **/
-                    if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/")) {
-                        $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications/";
-                        mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
-                    }
+                /* Création répertoire thumbnails dans le custom **/
+                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/")) {
+                    $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications/";
+                    mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
+                }
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/notifications/batch/")) {
                     $cheminCustomMaarchCourrierModulesNotificationsBatch = realpath('.')."/custom/cs_$databasename/modules/notifications/batch";
                     mkdir($cheminCustomMaarchCourrierModulesNotificationsBatch, 0755);
@@ -421,12 +415,11 @@ class Install extends functions
                     mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
                 }
 
-
-                                        /** Création répertoire thumbnails dans le custom **/
-                    if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/")) {
-                        $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
-                        mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
-                    }
+                /* Création répertoire thumbnails dans le custom **/
+                if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/")) {
+                    $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
+                    mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
+                }
 
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/")) {
                     $cheminCustomMaarchCourrierModulesSendmailBatch = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch";
@@ -441,7 +434,6 @@ class Install extends functions
                     mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
                 }
 
-
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/ldap/")) {
                     $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
                     mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
@@ -454,7 +446,6 @@ class Install extends functions
                     $cheminCustomMaarchCourrierModulesLdapScript = realpath('.')."/custom/cs_$databasename/modules/ldap/script";
                     mkdir($cheminCustomMaarchCourrierModulesLdapScript, 0755);
                 }
-
 
                 if (!is_dir(realpath('.')."/custom/cs_$databasename/modules/full_text/")) {
                     $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
@@ -472,7 +463,7 @@ class Install extends functions
 
             //Création du lien symbolique sous linux
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-                $cmd = "ln -s ".realpath('.')."/ cs_$databasename";
+                $cmd = 'ln -s '.realpath('.')."/ cs_$databasename";
                 exec($cmd);
             }/*elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
                 $cmd = "mklink cs_$databasename ".realpath('.');
@@ -484,12 +475,12 @@ class Install extends functions
         } else {
             $chemin = realpath('.');
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-                $needle   = '/';
+                $needle = '/';
             } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $needle   = '\\';
+                $needle = '\\';
             }
 
-            $pos      = strripos($chemin, $needle);
+            $pos = strripos($chemin, $needle);
 
             if ($pos === false) {
                 //echo "Désolé, impossible de trouver ($needle) dans ($chemin)";
@@ -498,9 +489,8 @@ class Install extends functions
                 // echo "Nous avons trouvé le dernier ($needle) dans ($chemin) à la position ($pos)";
             }
 
-            $rest = substr($chemin, $pos +1);    // contient le nom de l'appli (le nom du dossier où se situe l'appli)
-                // var_dump($rest);
-
+            $rest = substr($chemin, $pos + 1);    // contient le nom de l'appli (le nom du dossier où se situe l'appli)
+            // var_dump($rest);
 
             // $cheminCustom = realpath('.')."/custom";
             // // var_dump($cheminCustom);
@@ -509,7 +499,7 @@ class Install extends functions
             //var_dump(file_exists($filename));
             if (file_exists($filename)) {
                 //var_dump('dans if');
-                $xmlCustom = simplexml_load_file(realpath('.')."/custom/custom.xml");
+                $xmlCustom = simplexml_load_file(realpath('.').'/custom/custom.xml');
                 //$xmlCustom->addChild('custom');
                 $custom = $xmlCustom->addChild('custom');
                 $custom->addChild('custom_id', 'cs_'.$databasename);
@@ -517,12 +507,12 @@ class Install extends functions
                 $custom->addChild('external_domain');
                 $custom->addChild('domain');
                 if (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-                    $custom->addChild('path', "cs_".$databasename);
+                    $custom->addChild('path', 'cs_'.$databasename);
                 } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     $custom->addChild('path', $rest);
                 }
                 $res = $xmlCustom->asXML();
-                $fp = @fopen(realpath('.')."/custom/custom.xml", "w+");
+                $fp = @fopen(realpath('.').'/custom/custom.xml', 'w+');
                 if (!$fp) {
                     return false;
                     exit;
@@ -534,10 +524,8 @@ class Install extends functions
                 }
             }
 
-
-
             if (!file_exists($filename)) {
-                $manip2 = fopen(realpath('.')."/custom/custom.xml", "w+");
+                $manip2 = fopen(realpath('.').'/custom/custom.xml', 'w+');
                 $contenuXmlCustom = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
                 $contenuXmlCustom .= "<root>\n";
                 $contenuXmlCustom .= "\t<custom>\n";
@@ -551,20 +539,21 @@ class Install extends functions
                     $contenuXmlCustom .= "\t\t<path>$rest</path>\n";
                 }
                 $contenuXmlCustom .= "\t</custom>\n";
-                $contenuXmlCustom .= "</root>";
+                $contenuXmlCustom .= '</root>';
 
                 fputs($manip2, $contenuXmlCustom);
                 fclose($manip2);
             }
-            
 
             $cheminCustomMaarchCourrier = realpath('.')."/custom/cs_$databasename";
-            mkdir($cheminCustomMaarchCourrier, 0755);
+
+            if (!@mkdir($cheminCustomMaarchCourrier, 0755)) {
+                return false;
+            }
 
             /**
             Création répertoire apps/maarch_entreprise dans le custom
-            */
-
+             */
             $cheminCustomMaarchCourrierApps = realpath('.')."/custom/cs_$databasename/apps";
             mkdir($cheminCustomMaarchCourrierApps, 0755);
 
@@ -576,13 +565,11 @@ class Install extends functions
 
             /**
             Création répertoire modules dans le custom
-            */
-
+             */
             $cheminCustomMaarchCourrierModules = realpath('.')."/custom/cs_$databasename/modules";
             mkdir($cheminCustomMaarchCourrierModules, 0755);
 
             /** Création répertoire thumbnails dans le custom **/
-
             $cheminCustomMaarchCourrierModulesThumbnails = realpath('.')."/custom/cs_$databasename/modules/thumbnails";
             mkdir($cheminCustomMaarchCourrierModulesThumbnails, 0755);
 
@@ -592,8 +579,7 @@ class Install extends functions
             $cheminCustomMaarchCourrierModulesThumbnailsScripts = realpath('.')."/custom/cs_$databasename/modules/thumbnails/scripts";
             mkdir($cheminCustomMaarchCourrierModulesThumbnailsScripts, 0755);
 
-                    /** Création répertoire notification dans le custom **/
-
+            /** Création répertoire notification dans le custom **/
             $cheminCustomMaarchCourrierModulesNotifications = realpath('.')."/custom/cs_$databasename/modules/notifications";
             mkdir($cheminCustomMaarchCourrierModulesNotifications, 0755);
 
@@ -607,7 +593,6 @@ class Install extends functions
             mkdir($cheminCustomMaarchCourrierModulesNotificationsScripts, 0755);
 
             /** Création répertoire sendmail dans le custom **/
-
             $cheminCustomMaarchCourrierModulesSendmail = realpath('.')."/custom/cs_$databasename/modules/sendmail";
             mkdir($cheminCustomMaarchCourrierModulesSendmail, 0755);
 
@@ -620,9 +605,7 @@ class Install extends functions
             $cheminCustomMaarchCourrierModulesSendmailBatchScripts = realpath('.')."/custom/cs_$databasename/modules/sendmail/batch/scripts";
             mkdir($cheminCustomMaarchCourrierModulesSendmailBatchScripts, 0755);
 
-
             /** Création répertoire LDAP dans le custom **/
-
             $cheminCustomMaarchCourrierModulesLdap = realpath('.')."/custom/cs_$databasename/modules/ldap";
             mkdir($cheminCustomMaarchCourrierModulesLdap, 0755);
 
@@ -632,10 +615,7 @@ class Install extends functions
             $cheminCustomMaarchCourrierModulesLdapScript = realpath('.')."/custom/cs_$databasename/modules/ldap/script";
             mkdir($cheminCustomMaarchCourrierModulesLdapScript, 0755);
 
-
-
             /** Création répertoire fulltext dans le custom **/
-
             $cheminCustomMaarchCourrierModulesFullText = realpath('.')."/custom/cs_$databasename/modules/full_text";
             mkdir($cheminCustomMaarchCourrierModulesFullText, 0755);
 
@@ -645,10 +625,10 @@ class Install extends functions
             $cheminCustomMaarchCourrierModulesFullTextScripts = realpath('.')."/custom/cs_$databasename/modules/full_text/scripts";
             mkdir($cheminCustomMaarchCourrierModulesFullTextScripts, 0755);
             // exit;
-            
+
             //Création du lien symbolique sous linux
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-                $cmd = "ln -s ".realpath('.')."/ cs_$databasename";
+                $cmd = 'ln -s '.realpath('.')."/ cs_$databasename";
                 exec($cmd);
             }/*elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
                 $cmd = "mklink cs_$databasename ".realpath('.');
@@ -663,23 +643,22 @@ class Install extends functions
         return true;
     }
 
-
     public function updateDocserverForXml($docserverPath)
     {
-        $xmlconfig = simplexml_load_file(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/config.xml");
+        $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/config.xml');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $COLLECTION_1 = $xmlconfig->COLLECTION[0];
-        $COLLECTION_1->path_to_lucene_index = $docserverPath."indexes/letterbox_coll/";
+        $COLLECTION_1->path_to_lucene_index = $docserverPath.'indexes/letterbox_coll/';
 
         $COLLECTION_2 = $xmlconfig->COLLECTION[1];
-        $COLLECTION_2->path_to_lucene_index = $docserverPath."indexes/attachments_coll/";
+        $COLLECTION_2->path_to_lucene_index = $docserverPath.'indexes/attachments_coll/';
 
         $COLLECTION_3 = $xmlconfig->COLLECTION[2];
-        $COLLECTION_3->path_to_lucene_index = $docserverPath."indexes/version_attachments_coll/";
-        
+        $COLLECTION_3->path_to_lucene_index = $docserverPath.'indexes/version_attachments_coll/';
+
         $res = $xmlconfig->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -690,15 +669,15 @@ class Install extends functions
             exit;
         }
         //configuration du chemin dans config_batch_letterbox.xml
-        $xmlconfig2 = simplexml_load_file(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml");
+        $xmlconfig2 = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_letterbox.xml');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig2->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath."indexes/letterbox_coll/";
-        
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/letterbox_coll/';
+
         $res = $xmlconfig2->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_letterbox.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -710,15 +689,15 @@ class Install extends functions
         }
 
         //configuration du chemin dans config_batch_attachments.xml
-        $xmlconfig3 = simplexml_load_file(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_attachments.xml");
+        $xmlconfig3 = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_attachments.xml');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig3->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath."indexes/attachments_coll/";
-        
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/attachments_coll/';
+
         $res = $xmlconfig3->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_attachments.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_attachments.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -730,15 +709,15 @@ class Install extends functions
         }
 
         //configuration du chemin dans config_batch_version_attachments.xml
-        $xmlconfig4 = simplexml_load_file(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_version_attachments.xml");
+        $xmlconfig4 = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_version_attachments.xml');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig4->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath."indexes/version_attachments_coll/";
-        
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/version_attachments_coll/';
+
         $res = $xmlconfig4->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_version_attachments.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_version_attachments.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -749,16 +728,15 @@ class Install extends functions
             exit;
         }
 
-
         return true;
     }
 
     public function verificationDatabase($databasename)
     {
-        $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
-        $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
-        $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
-        $connect .= 'password='.$_SESSION['config']['databasepassword'] . ' ';
+        $connect = 'host='.$_SESSION['config']['databaseserver'].' ';
+        $connect .= 'port='.$_SESSION['config']['databaseserverport'].' ';
+        $connect .= 'user='.$_SESSION['config']['databaseuser'].' ';
+        $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
 
         //var_dump($connect);
@@ -767,8 +745,8 @@ class Install extends functions
             return false;
             exit;
         }
-        
-        $sqlCreateDatabase  = "select datname from pg_database where datname = '".$databasename."'";
+
+        $sqlCreateDatabase = "select datname from pg_database where datname = '".$databasename."'";
 
         $result = @pg_query($sqlCreateDatabase);
         if (!$result) {
@@ -778,15 +756,16 @@ class Install extends functions
 
         while ($row = pg_fetch_row($result)) {
             //echo "datname: $row[0] ";
-          if ($row[0]) {
-              return false;
-          }
+            if ($row[0]) {
+                return false;
+            }
         }
 
         return true;
-        
+
         //var_dump($execute);
     }
+
     public function verifCustom($databasename)
     {
         $customAlreadyExist = realpath('.').'/custom/cs_'.$databasename;
@@ -798,10 +777,10 @@ class Install extends functions
     public function fillConfigOfAppAndModule($databasename)
     {
         $_SESSION['config']['databasename'] = $databasename;
-        $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
-        $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
-        $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
-        $connect .= 'password='.$_SESSION['config']['databasepassword'] . ' ';
+        $connect = 'host='.$_SESSION['config']['databaseserver'].' ';
+        $connect .= 'port='.$_SESSION['config']['databaseserverport'].' ';
+        $connect .= 'user='.$_SESSION['config']['databaseuser'].' ';
+        $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
 
         if (!$this->setConfigXmlThumbnails()) {
@@ -820,7 +799,6 @@ class Install extends functions
             return false;
             exit;
         }
-
 
         if (!$this->setConfigXml()) {
             return false;
@@ -866,7 +844,7 @@ class Install extends functions
             return false;
             exit;
         }
-        
+
         if (!$this->setConfig_batch_XmlNotifications()) {
             return false;
             exit;
@@ -898,18 +876,18 @@ class Install extends functions
     public function createDatabase(
         $databasename
     ) {
-        $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
-        $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
-        $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
-        $connect .= 'password='.$_SESSION['config']['databasepassword'] . ' ';
+        $connect = 'host='.$_SESSION['config']['databaseserver'].' ';
+        $connect .= 'port='.$_SESSION['config']['databaseserverport'].' ';
+        $connect .= 'user='.$_SESSION['config']['databaseuser'].' ';
+        $connect .= 'password='.$_SESSION['config']['databasepassword'].' ';
         $connect .= 'dbname=postgres';
         if (!@pg_connect($connect)) {
             return false;
             exit;
         }
 
-        $sqlCreateDatabase  = 'CREATE DATABASE "'.$databasename.'"';
-        $sqlCreateDatabase .= " WITH TEMPLATE template0";
+        $sqlCreateDatabase = 'CREATE DATABASE "'.$databasename.'"';
+        $sqlCreateDatabase .= ' WITH TEMPLATE template0';
         $sqlCreateDatabase .= " ENCODING = 'UTF8'";
 
         $execute = pg_query($sqlCreateDatabase);
@@ -917,24 +895,23 @@ class Install extends functions
             return false;
             exit;
         }
-        
+
         @pg_query('ALTER DATABASE "'.$databasename.'" SET DateStyle =iso, dmy');
-        
+
         pg_close();
 
         $db = new Database();
-        
+
         if (!$db) {
             return false;
             exit;
         }
-        
+
         if (!$this->executeSQLScript('sql/structure.sql')) {
             return false;
             exit;
         }
 
-        
         if (!$this->setConfigXmlThumbnails()) {
             return false;
             exit;
@@ -951,7 +928,6 @@ class Install extends functions
             return false;
             exit;
         }
-
 
         if (!$this->setConfigXml()) {
             return false;
@@ -997,7 +973,7 @@ class Install extends functions
             return false;
             exit;
         }
-        
+
         if (!$this->setConfig_batch_XmlNotifications()) {
             return false;
             exit;
@@ -1017,34 +993,34 @@ class Install extends functions
             return false;
             exit;
         }
-        
+
         if (!$this->setRight()) {
             return false;
             exit;
         }
 
-       /*if (!$this->setDatasourcesXsd()) {
-            return false;
-            exit;
-        }*/
-        
+        /*if (!$this->setDatasourcesXsd()) {
+             return false;
+             exit;
+         }*/
+
         return true;
     }
 
     private function setRight()
     {
         exec('chmod -R 770 *');
+
         return true;
     }
 
     private function setConfigCron()
     {
-
         //mkdir(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/conf_cron/");
         $output = shell_exec('crontab -l');
         //var_dump($output);
-        $pathfile = realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/cron_".$_SESSION['config']['databasename'];
-        $file = fopen("custom/cs_".$_SESSION['config']['databasename']."/cron_".$_SESSION['config']['databasename'], "w+");
+        $pathfile = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/cron_'.$_SESSION['config']['databasename'];
+        $file = fopen('custom/cs_'.$_SESSION['config']['databasename'].'/cron_'.$_SESSION['config']['databasename'], 'w+');
         fwrite($file, $output);
         //ftruncate($file,0);
         $cron = '
@@ -1112,7 +1088,7 @@ class Install extends functions
         $appender->param['value'] = realpath('.').'/technique.log';
 
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/log4php.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1122,6 +1098,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1139,7 +1116,7 @@ class Install extends functions
         $CONFIG->lang = $_SESSION['lang'];
         $res = $xmlconfig->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/apps/maarch_entreprise/xml/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1149,6 +1126,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1183,7 +1161,7 @@ class Install extends functions
         $chemin_no_file = realpath('.').'/modules/thumbnails/no_thumb.png';
         $CONFIG->no_file = $chemin_no_file;
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1193,6 +1171,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1204,8 +1183,8 @@ class Install extends functions
 
         $chemin_core = realpath('.').'/core/';
 
-        $CONFIG->MaarchDirectory = realpath('.')."/";
-        
+        $CONFIG->MaarchDirectory = realpath('.').'/';
+
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
         $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
@@ -1216,10 +1195,8 @@ class Install extends functions
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_letterbox.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_letterbox.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1236,8 +1213,8 @@ class Install extends functions
 
         $chemin_core = realpath('.').'/core/';
 
-        $CONFIG->MaarchDirectory = realpath('.')."/";
-        
+        $CONFIG->MaarchDirectory = realpath('.').'/';
+
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
         $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
@@ -1248,10 +1225,8 @@ class Install extends functions
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_attachments.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_attachments.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1261,6 +1236,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1273,7 +1249,7 @@ class Install extends functions
         $chemin_core = realpath('.').'/core/';
 
         $CONFIG = $xmlconfig->CONFIG;
-        $CONFIG->MaarchDirectory = realpath('.')."/";
+        $CONFIG->MaarchDirectory = realpath('.').'/';
         //$path = "ifconfig eth2 | grep 'inet addr' | cut -f2 -d: | awk '{print $1}'";
         //$ipconfig = shell_exec($path);
         //$ipconfig = trim($ipconfig);
@@ -1283,13 +1259,13 @@ class Install extends functions
         } else {
             $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
         }
-        $chemin = $REMOTE_ADDR . dirname($_SERVER['PHP_SELF'] .'cs_'.$_SESSION['config']['databasename']);
-        $maarchUrl = rtrim($chemin, "install");
+        $chemin = $REMOTE_ADDR.dirname($_SERVER['PHP_SELF'].'cs_'.$_SESSION['config']['databasename']);
+        $maarchUrl = rtrim($chemin, 'install');
         $maarchUrl = $maarchUrl.'cs_'.$_SESSION['config']['databasename'].'/';
         $CONFIG->MaarchUrl = $maarchUrl;
         $CONFIG->MaarchApps = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';
-        
+
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
         $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
@@ -1300,10 +1276,8 @@ class Install extends functions
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/config/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1313,6 +1287,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1329,14 +1304,14 @@ class Install extends functions
         } else {
             $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
         }
-        $CONFIG->MaarchDirectory = realpath('.')."/";
-        $chemin = $REMOTE_ADDR . dirname($_SERVER['PHP_SELF'] .'cs_'.$_SESSION['config']['databasename']);
-        $maarchUrl = rtrim($chemin, "install");
+        $CONFIG->MaarchDirectory = realpath('.').'/';
+        $chemin = $REMOTE_ADDR.dirname($_SERVER['PHP_SELF'].'cs_'.$_SESSION['config']['databasename']);
+        $maarchUrl = rtrim($chemin, 'install');
         $maarchUrl = $maarchUrl.'cs_'.$_SESSION['config']['databasename'].'/';
         $CONFIG->MaarchUrl = $maarchUrl;
         $CONFIG->MaarchApps = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/sendmail/batch/tmp/';
-        
+
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
         $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
@@ -1347,10 +1322,8 @@ class Install extends functions
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/config/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1360,6 +1333,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1375,7 +1349,7 @@ class Install extends functions
         $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/config/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1385,6 +1359,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1400,21 +1375,23 @@ class Install extends functions
         $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
         $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/xml/config.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/xml/config.xml', 'w+');
         if (!$fp) {
             var_dump('fp error');
+
             return false;
             exit;
         }
         $write = fwrite($fp, $res);
         if (!$write) {
             var_dump('write error');
+
             return false;
             exit;
         }
+
         return true;
     }
-
 
     private function setConfig_fulltext()
     {
@@ -1424,7 +1401,7 @@ class Install extends functions
 
         $CONFIG = $xmlconfig->CONFIG;
         $CONFIG->MAARCH_DIRECTORY = realpath('.');
-        $CONFIG->MAARCH_TOOLS_PATH = realpath('.')."/apps/maarch_entreprise/tools/";
+        $CONFIG->MAARCH_TOOLS_PATH = realpath('.').'/apps/maarch_entreprise/tools/';
 
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1436,18 +1413,18 @@ class Install extends functions
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfig->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_letterbox.xml', 'w+');
         if (!$fp) {
             var_dump('fp error');
+
             return false;
             exit;
         }
         $write = fwrite($fp, $res);
         if (!$write) {
             var_dump('write error');
+
             return false;
             exit;
         }
@@ -1458,7 +1435,7 @@ class Install extends functions
 
         $CONFIG = $xmlconfigattachments->CONFIG;
         $CONFIG->MAARCH_DIRECTORY = realpath('.');
-        $CONFIG->MAARCH_TOOLS_PATH = realpath('.')."/apps/maarch_entreprise/tools/";
+        $CONFIG->MAARCH_TOOLS_PATH = realpath('.').'/apps/maarch_entreprise/tools/';
 
         $CONFIG_BASE = $xmlconfigattachments->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1470,18 +1447,18 @@ class Install extends functions
         $LOG4PHP = $xmlconfigattachments->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfigattachments->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_attachments.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_attachments.xml', 'w+');
         if (!$fp) {
             var_dump('fp error');
+
             return false;
             exit;
         }
         $write = fwrite($fp, $res);
         if (!$write) {
             var_dump('write error');
+
             return false;
             exit;
         }
@@ -1492,7 +1469,7 @@ class Install extends functions
 
         $CONFIG = $xmlconfigversionattachments->CONFIG;
         $CONFIG->MAARCH_DIRECTORY = realpath('.');
-        $CONFIG->MAARCH_TOOLS_PATH = realpath('.')."/apps/maarch_entreprise/tools/";
+        $CONFIG->MAARCH_TOOLS_PATH = realpath('.').'/apps/maarch_entreprise/tools/';
 
         $CONFIG_BASE = $xmlconfigversionattachments->CONFIG_BASE;
         $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
@@ -1504,21 +1481,22 @@ class Install extends functions
         $LOG4PHP = $xmlconfigversionattachments->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';
 
-
-
         $res = $xmlconfigversionattachments->asXML();
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_version_attachments.xml", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_version_attachments.xml', 'w+');
         if (!$fp) {
             var_dump('fp error');
+
             return false;
             exit;
         }
         $write = fwrite($fp, $res);
         if (!$write) {
             var_dump('write error');
+
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1530,14 +1508,15 @@ class Install extends functions
             $res .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
             $res .= "\n";
-            $res .= "cd ".realpath('.')."/modules/full_text/";
+            $res .= 'cd '.realpath('.').'/modules/full_text/';
             $res .= "\n";
-            $res .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_letterbox.xml";
+            $res .= 'php '.realpath('.').'/modules/full_text/lucene_full_text_engine.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_letterbox.xml';
             $res .= "\n";
 
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext.sh", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh', 'w+');
             if (!$fp) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1552,14 +1531,15 @@ class Install extends functions
             $res2 .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
             $res2 .= "\n";
-            $res2 .= "cd ".realpath('.')."/modules/full_text/";
+            $res2 .= 'cd '.realpath('.').'/modules/full_text/';
             $res2 .= "\n";
-            $res2 .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_attachments.xml";
+            $res2 .= 'php '.realpath('.').'/modules/full_text/lucene_full_text_engine.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_attachments.xml';
             $res2 .= "\n";
 
-            $fp2 = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext_attachments.sh", "w+");
+            $fp2 = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext_attachments.sh', 'w+');
             if (!$fp2) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1574,14 +1554,15 @@ class Install extends functions
             $res3 .= "\n";
             //$res .= "file='".realpath('.')."/modules/full_text/lucene_full_text_engine.php'";
             $res3 .= "\n";
-            $res3 .= "cd ".realpath('.')."/modules/full_text/";
+            $res3 .= 'cd '.realpath('.').'/modules/full_text/';
             $res3 .= "\n";
-            $res3 .= "php ".realpath('.')."/modules/full_text/lucene_full_text_engine.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/xml/config_batch_version_attachments.xml";
+            $res3 .= 'php '.realpath('.').'/modules/full_text/lucene_full_text_engine.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/xml/config_batch_version_attachments.xml';
             $res3 .= "\n";
 
-            $fp3 = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext_version_attachments.sh", "w+");
+            $fp3 = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext_version_attachments.sh', 'w+');
             if (!$fp3) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1591,19 +1572,18 @@ class Install extends functions
                 exit;
             }
 
-
             return true;
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             //configuration du lauch_fulltext.sh
-            $res = "cd ".realpath('.')."\modules\\full_text\\";
+            $res = 'cd '.realpath('.')."\modules\\full_text\\";
             $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.')."/custom/cs_".$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_letterbox.xml';
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_letterbox.xml';
             $res .= "\n";
 
-
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext.bat", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.bat', 'w+');
             if (!$fp) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1614,15 +1594,15 @@ class Install extends functions
             }
 
             //configuration du lauch_fulltext_attachments.sh
-            $res = "cd ".realpath('.')."\modules\\full_text\\";
+            $res = 'cd '.realpath('.')."\modules\\full_text\\";
             $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.')."/custom/cs_".$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_attachments.xml';
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_attachments.xml';
             $res .= "\n";
 
-
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext_attachments.bat", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext_attachments.bat', 'w+');
             if (!$fp) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1632,15 +1612,15 @@ class Install extends functions
                 exit;
             }
             //configuration du lauch_fulltext_version_attachments.sh
-            $res = "cd ".realpath('.')."\modules\\full_text\\";
+            $res = 'cd '.realpath('.')."\modules\\full_text\\";
             $res .= "\n";
-            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.')."/custom/cs_".$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_version_attachments.xml';
+            $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\full_text\lucene_full_text_engine.php  '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'\modules\full_text\xml\config_batch_version_attachments.xml';
             $res .= "\n";
 
-
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/full_text/scripts/launch_fulltext_version_attachments.bat", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext_version_attachments.bat', 'w+');
             if (!$fp) {
-                var_dump("false error dans setScript_full_text()");
+                var_dump('false error dans setScript_full_text()');
+
                 return false;
                 exit;
             }
@@ -1650,33 +1630,32 @@ class Install extends functions
                 exit;
             }
 
-
             return true;
         }
     }
-
 
     private function setScript_syn_LDAP_sh()
     {
         $res = '#!/bin/bash';
         $res .= "\n";
-        $res .= "cd ".realpath('.')."/modules/ldap/script/";
+        $res .= 'cd '.realpath('.').'/modules/ldap/script/';
         $res .= "\n\n";
         $res .= '#generation des fichiers xml';
         $res .= "\n";
-        $res .= "php ".realpath('.')."/modules/ldap/process_ldap_to_xml.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/xml/config.xml";
+        $res .= 'php '.realpath('.').'/modules/ldap/process_ldap_to_xml.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/xml/config.xml';
         $res .= "\n\n";
         $res .= '#mise a jour bdd';
         $res .= "\n";
-        $res .= "php ".realpath('.')."/modules/ldap/process_entities_to_maarch.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/xml/config.xml";
+        $res .= 'php '.realpath('.').'/modules/ldap/process_entities_to_maarch.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/xml/config.xml';
         $res .= "\n";
-        $res .= "php ".realpath('.')."/modules/ldap/process_users_to_maarch.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/xml/config.xml";
+        $res .= 'php '.realpath('.').'/modules/ldap/process_users_to_maarch.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/xml/config.xml';
         $res .= "\n";
-        $res .= "php ".realpath('.')."/modules/ldap/process_users_entities_to_maarch.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/xml/config.xml";
+        $res .= 'php '.realpath('.').'/modules/ldap/process_users_entities_to_maarch.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/xml/config.xml';
 
-        $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/ldap/script/syn_ldap.sh", "w+");
+        $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/ldap/script/syn_ldap.sh', 'w+');
         if (!$fp) {
-            var_dump("false error dans setScript_full_text()");
+            var_dump('false error dans setScript_full_text()');
+
             return false;
             exit;
         }
@@ -1685,21 +1664,21 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
     private function setConfigScriptLaunchThumbnails()
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = "cd ".realpath('.')."\modules\\thumbnails\\";
+            $res = 'cd '.realpath('.')."\modules\\thumbnails\\";
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_letterbox.xml';
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\thumbnails\create_tnl.php  '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\thumbnails\xml\config_batch_attachments.xml';
             $res .= "\n";
 
-
-            $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.bat", "w+");
+            $fp = @fopen(realpath('.')."\custom\cs_".$_SESSION['config']['databasename']."\modules\\thumbnails\scripts\launch_batch_thumbnails.bat", 'w+');
             if (!$fp) {
                 return false;
                 exit;
@@ -1709,17 +1688,18 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
             $res = '#!/bin/bash';
             $res .= "\n\n";
             $res .= 'cd '.realpath('.').'/modules/thumbnails/';
             $res .= "\n\n";
-            $res .= "php ".realpath('.')."/modules/thumbnails/create_tnl.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_letterbox.xml";
+            $res .= 'php '.realpath('.').'/modules/thumbnails/create_tnl.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_letterbox.xml';
             $res .= "\n\n";
-            $res .= "php ".realpath('.')."/modules/thumbnails/create_tnl.php ".realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/xml/config_batch_attachments.xml";
+            $res .= 'php '.realpath('.').'/modules/thumbnails/create_tnl.php '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/xml/config_batch_attachments.xml';
 
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/thumbnails/scripts/launch_batch_thumbnails.sh", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh', 'w+');
             if (!$fp) {
                 return false;
                 exit;
@@ -1729,15 +1709,15 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         }
     }
 
-
     private function setScriptNotificationNctNccAndAncSh()
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = "cd ".realpath('.')."\modules\\notifications\\";
+            $res = 'cd '.realpath('.')."\modules\\notifications\\";
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n NCT';
             $res .= "\n";
@@ -1749,7 +1729,7 @@ class Install extends functions
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_event_stack.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml\ -n RED';
 
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/nct-ncc-and-anc.bat", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.bat', 'w+');
             if (!$fp) {
                 return false;
                 exit;
@@ -1759,13 +1739,14 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
             $res = '#!/bin/bash';
             $res .= "\n";
             $res .= "eventStackPath='".realpath('.')."/modules/notifications/batch/process_event_stack.php'";
             $res .= "\n";
-            $res .= "cd ".realpath('.')."/modules/notifications/batch/";
+            $res .= 'cd '.realpath('.').'/modules/notifications/batch/';
             $res .= "\n";
             $res .= '#php $eventStackPath -c '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml -n NCT';
             $res .= "\n";
@@ -1777,7 +1758,7 @@ class Install extends functions
             $res .= "\n";
             $res .= 'php $eventStackPath -c '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml -n RED';
 
-            $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/nct-ncc-and-anc.sh", "w+");
+            $fp = @fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/nct-ncc-and-anc.sh', 'w+');
             if (!$fp) {
                 return false;
                 exit;
@@ -1787,6 +1768,7 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         }
     }
@@ -1794,12 +1776,12 @@ class Install extends functions
     private function setScriptNotificationSendmailSh()
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = "cd ".realpath('.')."\modules\\notifications\\";
+            $res = 'cd '.realpath('.')."\modules\\notifications\\";
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\\notifications\batch\process_email_stack.php -c '.realpath('.')."\custom\cs_".$_SESSION['config']['databasename'].'\modules\\notifications\batch\config\config.xml';
             $res .= "\n";
 
-            $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/sendmail.bat", "w+");
+            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.bat', 'w+');
             if (!$fp) {
                 //var_dump('FALSE');
                 return false;
@@ -1810,17 +1792,18 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
             $res = '#!/bin/bash';
             $res .= "\n";
-            $res .= "cd ".realpath('.')."/modules/notifications/batch/";
+            $res .= 'cd '.realpath('.').'/modules/notifications/batch/';
             $res .= "\n";
             $res .= "emailStackPath='".realpath('.')."/modules/notifications/batch/process_email_stack.php'";
             $res .= "\n";
             $res .= 'php $emailStackPath -c '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/config/config.xml';
 
-            $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/scripts/sendmail.sh", "w+");
+            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/notifications/batch/scripts/sendmail.sh', 'w+');
 
             if (!$fp) {
                 //var_dump('FALSE');
@@ -1832,18 +1815,19 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         }
     }
-    
+
     private function setScriptSendmailSendmailSh()
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $res = "cd ".realpath('.')."\modules\\sendmail\\";
+            $res = 'cd '.realpath('.')."\modules\\sendmail\\";
             $res .= "\n";
             $res .= '"'.realpath('.').'\..\..\php\php.exe" '.realpath('.').'\modules\sendmail\batch\process_emails.php -c '.realpath('.')."\custom/cs_".$_SESSION['config']['databasename'].'\modules\sendmail\batch\config\config.xml';
-            
-            $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/scripts/sendmail.bat", "w+");
+
+            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.bat', 'w+');
             if (!$fp) {
                 //var_dump('FALSE');
                 return false;
@@ -1854,18 +1838,18 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
             $res = '#!/bin/bash';
             $res .= "\n";
-            $res .= "cd ".realpath('.')."/modules/sendmail/batch/";
+            $res .= 'cd '.realpath('.').'/modules/sendmail/batch/';
             $res .= "\n";
             $res .= "emailStackPath='".realpath('.')."/modules/sendmail/batch/process_emails.php'";
             $res .= "\n";
             $res .= 'php $emailStackPath -c '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/config/config.xml';
 
-
-            $fp = fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/sendmail/batch/scripts/sendmail.sh", "w+");
+            $fp = fopen(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh', 'w+');
             if (!$fp) {
                 //var_dump('FALSE');
                 //exit;
@@ -1877,29 +1861,29 @@ class Install extends functions
                 return false;
                 exit;
             }
+
             return true;
         }
     }
 
-
     private function setDatasourcesXsd()
     {
         $Fnm = 'apps/maarch_entreprise/xml/datasources.xsd.default';
-        $inF = fopen($Fnm, "r");
+        $inF = fopen($Fnm, 'r');
         while (!feof($inF)) {
             $contentFile .= fgets($inF, 4096);
         }
-        $contentFile = str_replace("##databaseserver##", $_SESSION['config']['databaseserver'], $contentFile);
-        $contentFile = str_replace("##databaseserverport##", $_SESSION['config']['databaseserverport'], $contentFile);
-        $contentFile = str_replace("##databasename##", $_SESSION['config']['databasename'], $contentFile);
-        $contentFile = str_replace("##databaseuser##", $_SESSION['config']['databaseuser'], $contentFile);
-        $contentFile = str_replace("##databasepassword##", $_SESSION['config']['databasepassword'], $contentFile);
+        $contentFile = str_replace('##databaseserver##', $_SESSION['config']['databaseserver'], $contentFile);
+        $contentFile = str_replace('##databaseserverport##', $_SESSION['config']['databaseserverport'], $contentFile);
+        $contentFile = str_replace('##databasename##', $_SESSION['config']['databasename'], $contentFile);
+        $contentFile = str_replace('##databaseuser##', $_SESSION['config']['databaseuser'], $contentFile);
+        $contentFile = str_replace('##databasepassword##', $_SESSION['config']['databasepassword'], $contentFile);
         fclose($inF);
         if (file_exists('apps/maarch_entreprise/xml/datasources.xsd')) {
             unlink('apps/maarch_entreprise/xml/datasources.xsd');
         }
         copy('apps/maarch_entreprise/xml/datasources.xsd.default', 'apps/maarch_entreprise/xml/datasources.xsd');
-        $fp = fopen('apps/maarch_entreprise/xml/datasources.xsd', "w+");
+        $fp = fopen('apps/maarch_entreprise/xml/datasources.xsd', 'w+');
         if (!$fp) {
             return false;
             exit;
@@ -1909,9 +1893,9 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
-
 
     public function getDataList()
     {
@@ -1928,7 +1912,7 @@ class Install extends functions
         $dataFile
     ) {
         $db = new Database();
-        
+
         if (!$db) {
             return false;
             exit;
@@ -1938,6 +1922,7 @@ class Install extends functions
             return false;
             exit;
         }
+
         return true;
     }
 
@@ -1945,19 +1930,21 @@ class Install extends functions
     {
         $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
         $db = new Database();
-        
+
         $execute = $db->query($fileContent, null, false, true);
 
         if (!$execute) {
             return false;
             exit;
         }
+
         return true;
     }
 
     /**
-     * test if maarch path is writable
-     * @return boolean or error message
+     * test if maarch path is writable.
+     *
+     * @return bool or error message
      */
     public function isMaarchPathWritable()
     {
@@ -1971,8 +1958,9 @@ class Install extends functions
     }
 
     /**
-     * test if vendor and node_modules exist
-     * @return boolean or error message
+     * test if vendor and node_modules exist.
+     *
+     * @return bool or error message
      */
     public function isDependenciesExist()
     {
@@ -1984,9 +1972,11 @@ class Install extends functions
     }
 
     /**
-     * test if path is read/write
+     * test if path is read/write.
+     *
      * @param $path string path
-     * @return boolean or error message
+     *
+     * @return bool or error message
      */
     public function checkPathRoot($path)
     {
@@ -1999,7 +1989,7 @@ class Install extends functions
                 $error .= _THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
             }
         }
-        if ($error <> '') {
+        if ($error != '') {
             return $error;
         } else {
             return true;
@@ -2007,9 +1997,11 @@ class Install extends functions
     }
 
     /**
-     * create the path
+     * create the path.
+     *
      * @param $path string path
-     * @return boolean
+     *
+     * @return bool
      */
     public function createPath($path)
     {
@@ -2023,20 +2015,22 @@ class Install extends functions
     }
 
     /**
-     * create the docservers
+     * create the docservers.
+     *
      * @param $docserverPath string path to the docserver
-     * @return boolean
+     *
+     * @return bool
      */
     public function createDocservers($docserverPath)
     {
-        for ($i=0;$i<count($this->docservers);$i++) {
+        for ($i = 0; $i < count($this->docservers); ++$i) {
             if (!is_dir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . $this->docservers[$i][1])
+                $docserverPath.DIRECTORY_SEPARATOR
+                    .$this->docservers[$i][1])
             ) {
                 if (!mkdir(
-                    $docserverPath . DIRECTORY_SEPARATOR
-                        . $this->docservers[$i][1])
+                    $docserverPath.DIRECTORY_SEPARATOR
+                        .$this->docservers[$i][1])
                 ) {
                     return false;
                 }
@@ -2045,56 +2039,58 @@ class Install extends functions
 
         //create indexes dir
         if (!is_dir(
-            $docserverPath . DIRECTORY_SEPARATOR
-                . 'indexes')
+            $docserverPath.DIRECTORY_SEPARATOR
+                .'indexes')
         ) {
             if (!mkdir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . 'indexes')
+                $docserverPath.DIRECTORY_SEPARATOR
+                    .'indexes')
             ) {
                 return false;
             }
         }
         //create indexes dir for letterbox collection
         if (!is_dir(
-            $docserverPath . DIRECTORY_SEPARATOR
-                . 'indexes' . DIRECTORY_SEPARATOR . 'letterbox_coll')
+            $docserverPath.DIRECTORY_SEPARATOR
+                .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll')
         ) {
             if (!mkdir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . 'indexes' . DIRECTORY_SEPARATOR . 'letterbox_coll')
+                $docserverPath.DIRECTORY_SEPARATOR
+                    .'indexes'.DIRECTORY_SEPARATOR.'letterbox_coll')
             ) {
                 return false;
             }
         }
 
         //copy template files
-        $dir2copy = 'install' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000'. DIRECTORY_SEPARATOR;
-        $dir_paste = $docserverPath . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . '0000' . DIRECTORY_SEPARATOR;
-        
+        $dir2copy = 'install'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'0000'.DIRECTORY_SEPARATOR;
+        $dir_paste = $docserverPath.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'0000'.DIRECTORY_SEPARATOR;
+
         $this->copy_dir($dir2copy, $dir_paste);
 
         return true;
     }
 
     /**
-     * update the docservers on DB
+     * update the docservers on DB.
+     *
      * @param $docserverPath string path to the docserver
+     *
      * @return nothing
      */
     public function updateDocserversDB($docserverPath)
     {
         $db = new Database();
-        
-        for ($i=0;$i<count($this->docservers);$i++) {
-            $query = "update docservers set path_template = ?"
-                . " where docserver_id = ?";
+
+        for ($i = 0; $i < count($this->docservers); ++$i) {
+            $query = 'update docservers set path_template = ?'
+                .' where docserver_id = ?';
             $db->query(
                 $query,
                 array(
-                    $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR
-                        . $this->docservers[$i][1] . DIRECTORY_SEPARATOR),
-                    $this->docservers[$i][0]
+                    $db->protect_string_db($docserverPath.DIRECTORY_SEPARATOR
+                        .$this->docservers[$i][1].DIRECTORY_SEPARATOR),
+                    $this->docservers[$i][0],
                 )
             );
         }
@@ -2104,12 +2100,12 @@ class Install extends functions
     {
         $db = new Database();
         $sec = new security();
-        
+
         $query = "UPDATE users SET password=? WHERE user_id='superadmin'";
         $db->query($query, array($sec->getPasswordHash($newPass)));
     }
 
-    public function copy_dir($dir2copy, $dir_paste, $excludeExt=false, $excludeSymlink = false)
+    public function copy_dir($dir2copy, $dir_paste, $excludeExt = false, $excludeSymlink = false)
     {
         // On vérifie si $dir2copy est un dossier
         if (is_dir($dir2copy)) {
@@ -2124,42 +2120,42 @@ class Install extends functions
                         mkdir($dir_paste, 0777);
                     }
                     // S'il s'agit d'un dossier, on relance la fonction recursive
-                    if($excludeSymlink){
+                    if ($excludeSymlink) {
                         if (is_dir($dir2copy.$file) && $file != '..' && $file != '.' && !is_link($dir2copy.$file)) {
-                            if(!$this->copy_dir($dir2copy.$file.'/' , $dir_paste.$file.'/', $excludeExt, $excludeSymlink)){
+                            if (!$this->copy_dir($dir2copy.$file.'/', $dir_paste.$file.'/', $excludeExt, $excludeSymlink)) {
                                 return false;
-                            }  
+                            }
                         } elseif ($file != '..' && $file != '.' && !is_link($dir2copy.$file)) {
-                            if (count($excludeExt>0) && is_array($excludeExt)) {
+                            if (count($excludeExt > 0) && is_array($excludeExt)) {
                                 $copyIt = true;
                                 foreach ($excludeExt as $key => $value) {
-                                    if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                                    if (strtolower($value) == strtolower(pathinfo($dir2copy.$file, PATHINFO_EXTENSION))) {
                                         $copyIt = false;
-                                    } 
+                                    }
                                 }
                             }
                             if ($copyIt) {
-                                if(!@copy($dir2copy.$file, $dir_paste.$file)){
+                                if (!@copy($dir2copy.$file, $dir_paste.$file)) {
                                     return false;
                                 }
                             }
                         }
                     } else {
                         if (is_dir($dir2copy.$file) && $file != '..' && $file != '.') {
-                            if(!$this->copy_dir($dir2copy.$file.'/' , $dir_paste.$file.'/', $excludeExt, $excludeSymlink)){
+                            if (!$this->copy_dir($dir2copy.$file.'/', $dir_paste.$file.'/', $excludeExt, $excludeSymlink)) {
                                 return false;
-                            }  
+                            }
                         } elseif ($file != '..' && $file != '.') {
-                            if (count($excludeExt>0) && is_array($excludeExt)) {
+                            if (count($excludeExt > 0) && is_array($excludeExt)) {
                                 $copyIt = true;
                                 foreach ($excludeExt as $key => $value) {
-                                    if (strtolower($value) == strtolower(pathinfo($dir2copy . $file, PATHINFO_EXTENSION))) {
+                                    if (strtolower($value) == strtolower(pathinfo($dir2copy.$file, PATHINFO_EXTENSION))) {
                                         $copyIt = false;
-                                    } 
+                                    }
                                 }
                             }
                             if ($copyIt) {
-                                if(!@copy($dir2copy.$file, $dir_paste.$file)){
+                                if (!@copy($dir2copy.$file, $dir_paste.$file)) {
                                     return false;
                                 }
                             }
@@ -2170,6 +2166,7 @@ class Install extends functions
                 closedir($dh);
             }
         }
+
         return true;
     }
 }

@@ -21,7 +21,7 @@ $close_incoming = $_SESSION['modules_loaded']['attachments']['reconciliation']['
 // Modification of the incoming document, as deleted
 \Resource\models\ResModel::update([
     'set'       => ['status' => 'DEL'],
-    'where'     => ['res_id = (?)'],
+    'where'     => ['res_id = ?'],
     'data'      => [$res_id]
 ]);
 
@@ -32,7 +32,7 @@ if($delete_response_project == 'true'){
     \SrcCore\models\DatabaseModel::update([
         'set'       => ['status' => 'DEL'],
         'table'     => $attachmentTable,
-        'where'     => ["res_id_master = (?) AND identifier = (?) AND status NOT IN ('DEL','TMP') AND attachment_type = 'response_project'"],
+        'where'     => ["res_id_master = ? AND identifier = ? AND status NOT IN ('DEL','TMP') AND attachment_type = 'response_project'"],
         'data'      => [$res_id_master[0], $tabFormValues['chrono_number']],
     ]);
 

@@ -50,19 +50,6 @@
 <div class="blockWrapper">
     <div class="contentBlock" id="licence">
         <p>
-            <div align="center">
-                <input type="checkbox" id="checkboxLicence" onChange="checkLicence();"/>
-                <label for="checkboxLicence">
-                    <?php echo _OK_WITH_LICENCE;?>
-                </label>
-            </div>
-        </p>
-    </div>
-</div>
-<br />
-<div class="blockWrapper">
-    <div class="contentBlock" id="licence">
-        <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=welcome');">
@@ -70,7 +57,7 @@
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
-                    <span id="returnCheckLicence" style="display: none;">
+                    <span id="returnCheckLicence">
                         <a href="#" onClick="goTo('index.php?step=prerequisites');">
                             <?php echo _NEXT_INSTALL;?>
                         </a>
