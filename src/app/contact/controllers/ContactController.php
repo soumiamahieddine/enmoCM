@@ -162,9 +162,16 @@ class ContactController
         return $aCivility;
     }
 
-    public function avaiblaibleReferential()
+    public function availaibleReferential()
     {
-        $banDirectory = 'referential/';
+        $customId = CoreConfigModel::getCustomId();
+
+        if (is_dir("custom/{$customId}/referential")) {
+            $banDirectory = "custom/{$customId}/referential/";
+        } else {
+            $banDirectory = 'referential/';
+        }
+
         $empty_folder = true;
         $empty_files = true;
 
