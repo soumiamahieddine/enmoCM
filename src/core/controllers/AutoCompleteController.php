@@ -19,6 +19,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Entity\models\EntityModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
@@ -128,7 +129,13 @@ class AutoCompleteController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (!is_dir('referential/ban/indexes/' . $data['department'])) {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (is_dir("custom/{$customId}/referential/ban/indexes/{$data['department']}")) {
+            $path = "custom/{$customId}/referential/ban/indexes/{$data['department']}";
+        } elseif (is_dir('referential/ban/indexes/' . $data['department'])) {
+            $path = 'referential/ban/indexes/' . $data['department'];
+        } else {
             return $response->withStatus(400)->withJson(['errors' => 'Department indexes do not exist']);
         }
 
@@ -136,7 +143,7 @@ class AutoCompleteController
         \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
         \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 
-        $index = \Zend_Search_Lucene::open('referential/ban/indexes/' . $data['department']);
+        $index = \Zend_Search_Lucene::open($path);
         \Zend_Search_Lucene::setResultSetLimit(100);
 
         $data['address'] = str_replace(['*', '~', '-', '\''], ' ', $data['address']);
