@@ -3841,6 +3841,7 @@ function reloadTypeahead(elem){
     $j("#searchAddress").attr("placeholder", "Rechercher dans le référentiel du "+$j('#'+elem.id).val());
     $j("#searchAddress").typeahead({
         delay: '500',
+        minLength: 3,
         order: "asc",
         maxItem: 10,
         filter: false,

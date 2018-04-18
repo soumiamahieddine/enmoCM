@@ -1418,12 +1418,13 @@ abstract class contacts_v2_Abstract extends Database
                                     <input name="ban_id" type="hidden" id="ban_id" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['address']['BAN_ID'])); ?>"/>
                                     
                                     <script>$j("#numDep").chosen({width: "10%",disable_search_threshold: 10});</script>
-                                    <style>.typeahead__cancel-button{padding:4px 10px;}#numDep_chosen .chosen-drop{width:70px;}#numDep_chosen .chosen-single{border-radius : 5px 0 0 5px}#searchAddress{height:25px;min-height:inherit}</style>
+                                    <style>.typeahead__cancel-button{padding:4px 10px;}#numDep_chosen .chosen-drop{width:70px;}#numDep_chosen .chosen-single{border-radius : 5px 0 0 5px}#searchAddress{height:25px;min-height:inherit;padding:4px}</style>
                                 </div>    
                             </td>
                             <script>
                             $j("#searchAddress").typeahead({
                                 delay: '500',
+                                minLength: 3,
                                 order: "asc",
                                 filter: false,
                                 dynamic: true,
