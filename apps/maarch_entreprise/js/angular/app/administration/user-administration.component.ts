@@ -480,18 +480,35 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
 
     onSubmit() {
         if (this.creationMode) {
-            this.http.post(this.coreUrl + "rest/users", this.user)
+            var r = true;
+
+            this.http.get(this.coreUrl + "rest/users/" + this.user.userId + "/status")
                 .subscribe((data: any) => {
-                    this.notify.success(this.lang.userAdded);
-                    this.router.navigate(["/administration/users/" + data.user.id]);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
+                    var deletedUser = false;
+                    if (data.status && data.status == 'DEL') {
+                        r = confirm(this.lang.reactivateUserDeleted);
+                        deletedUser = true;
+                    }
+                    if (r) {
+                        this.http.post(this.coreUrl + "rest/users", this.user)
+                            .subscribe((data: any) => {
+                                if (deletedUser) {
+                                    this.notify.success(this.lang.userUpdated);
+                                } else {
+                                    this.notify.success(this.lang.userAdded);
+                                }
+                                this.router.navigate(["/administration/users/" + data.user.id]);
+                            }, (err: any) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    }
+                }, () => {
                 });
         } else {
             this.http.put(this.coreUrl + "rest/users/" + this.serialId, this.user)
                 .subscribe((data: any) => {
                     this.notify.success(this.lang.userUpdated);
-                }, (err) => {
+                }, (err: any) => {
                     this.notify.error(err.error.errors);
                 });
         }

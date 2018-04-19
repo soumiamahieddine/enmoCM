@@ -128,9 +128,15 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['1']]);
-        if (!empty($existingUser)) {
-            return $response->withStatus(400)->withJson(['errors' => _ID . ' ' . _ALREADY_EXISTS]);
+        $existingUser = UserModel::getByUserId(['userId' => $data['userId'], 'select' => ['id', 'status']]);
+        if (!empty($existingUser) && $existingUser['status'] == 'DEL') {
+            UserModel::updateStatus(['id' => $existingUser['id'], 'status' => 'OK']);
+            $data['enabled'] = 'Y';
+            UserModel::update(['id' => $existingUser['id'], 'user' => $data]);
+
+            return $response->withJson(['user' => $existingUser]);
+        } elseif (!empty($existingUser)) {
+            return $response->withStatus(400)->withJson(['errors' => _USER_ID_ALREADY_EXISTS]);
         }
 
         $logingModes = ['standard', 'restMode'];
@@ -152,6 +158,14 @@ class UserController
                 NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
             }
         }
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_CREATED . " {$data['userId']}"
+        ]);
 
         return $response->withJson(['user' => $newUser]);
     }
@@ -186,6 +200,14 @@ class UserController
             }
         }
 
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_UPDATED . " {$data['user_id']}"
+        ]);
+
         return $response->withJson(['success' => 'success']);
     }
 
@@ -197,6 +219,14 @@ class UserController
         }
 
         UserModel::delete(['id' => $aArgs['id']]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'ADD',
+            'eventId'      => 'userCreation',
+            'info'         => _USER_DELETED . " {$aArgs['id']}"
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -382,6 +412,17 @@ class UserController
             'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
             'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
         ]);
+    }
+
+    public function getStatusByUserId(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['status']]);
+
+        return $response->withJson(['status' => $user['status']]);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
