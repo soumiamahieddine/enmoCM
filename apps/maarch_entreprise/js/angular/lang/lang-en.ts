@@ -264,6 +264,7 @@ export const LANG_EN = {
     "record"                            : "element(s)",
     "records"                           : "result(s)",
     "reaffectUserRedirect"              : "Reaffect to user (diffusion list + diffusion model entity)",
+    "reactivateUserDeleted"             : "The id filled is linked to a deleted user. Voulez-vous le réactiver ?",
     "recordsPerPage"                    : "result per page",
     "redirectBasket"                    : "Redirect basket",
     "redirectConfidentialInfo"          : "This user has confidentials documents linked to this service.<br/>You could link to an other user in this service.",

@@ -1452,29 +1452,11 @@ if (!defined('_AUTORIZED_USER')) {
 if (!defined('_SUSPENDED_USER')) {
     define('_SUSPENDED_USER', 'Suspended user');
 }
-if (!defined('_DELETED_USER')) {
-    define('_DELETED_USER', 'Deleted user');
-}
-if (!defined('_USER_DELETION')) {
-    define('_USER_DELETION', 'User deletion');
-}
 if (!defined('_USER_AUTORIZATION')) {
     define('_USER_AUTORIZATION', 'User authorization');
 }
 if (!defined('_USER_SUSPENSION')) {
     define('_USER_SUSPENSION', 'User suspension');
-}
-if (!defined('_USER_UPDATED')) {
-    define('_USER_UPDATED', 'Modified user');
-}
-if (!defined('_USER_UPDATE')) {
-    define('_USER_UPDATE', 'User modification');
-}
-if (!defined('_USER_ADDED')) {
-    define('_USER_ADDED', 'New added user');
-}
-if (!defined('_NO_PRIMARY_GROUP')) {
-    define('_NO_PRIMARY_GROUP', 'No primary group is selected !');
 }
 if (!defined('_THE_USER')) {
     define('_THE_USER', 'The user ');
