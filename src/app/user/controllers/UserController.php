@@ -873,6 +873,16 @@ class UserController
                             'where' => ['res_id = ?', 'difflist_type = ?', 'listinstance_id = ?'],
                             'data'  => [$ressource['res_id'], 'VISA_CIRCUIT', $listInstanceId[0]['listinstance_id'] - 1]
                         ]);
+                        $listInstanceMinus = ListInstanceModel::get([
+                            'select'    => ['requested_signature'],
+                            'where'     => ['listinstance_id = ?'],
+                            'data'      => [$listInstanceId[0]['listinstance_id'] - 1]
+                        ]);
+                        if ($listInstanceMinus[0]['requested_signature']) {
+                            ResModel::update(['set' => ['status' => 'ESIG'], 'where' => ['res_id = ?'], 'data' => [$ressource['res_id']]]);
+                        } else {
+                            ResModel::update(['set' => ['status' => 'EVIS'], 'where' => ['res_id = ?'], 'data' => [$ressource['res_id']]]);
+                        }
                     }
                 }
 
