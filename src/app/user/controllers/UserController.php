@@ -663,7 +663,7 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -727,7 +727,7 @@ class UserController
 
         return $response->withJson([
             'groups'    => UserModel::getGroupsByUserId(['userId' => $user['user_id']]),
-            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
