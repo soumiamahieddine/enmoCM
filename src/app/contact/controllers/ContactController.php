@@ -166,29 +166,29 @@ class ContactController
     {
         $customId = CoreConfigModel::getCustomId();
 
-        if (is_dir("custom/{$customId}/referential/ban/indexes")) {
-            $customFilesDepartments = scandir("custom/{$customId}/referential/ban/indexes");
+        $referentialDirectory = "referential/ban/indexes";
+        if (is_dir("custom/{$customId}/".$referentialDirectory)) {
+            $customFilesDepartments = scandir("custom/{$customId}/".$referentialDirectory);
         }
-        if (is_dir("referential/ban/indexes")) {
-            $filesDepartments = scandir("referential/ban/indexes");
+        if (is_dir($referentialDirectory)) {
+            $filesDepartments = scandir($referentialDirectory);
         }
 
         $departments = [];
         if (!empty($customFilesDepartments)) {
             foreach ($customFilesDepartments as $value) {
-                if ($value != '.' && $value != '..') {
+                if ($value != '.' && $value != '..' && is_writable("custom/{$customId}/".$referentialDirectory."/".$value)) {
                     $departments[] = $value;
                 }
             }
         }
         if (!empty($filesDepartments)) {
             foreach ($filesDepartments as $value) {
-                if ($value != '.' && $value != '..' && !in_array($value, $departments)) {
+                if ($value != '.' && $value != '..' && !in_array($value, $departments) && is_writable($referentialDirectory."/".$value)) {
                     $departments[] = $value;
                 }
             }
         }
-
 
         if (!empty($departments)) {
             sort($departments, SORT_NUMERIC);
