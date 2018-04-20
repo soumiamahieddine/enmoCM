@@ -751,19 +751,7 @@ var BrowserDetect = {
 BrowserDetect.init();
 
 function resize_frame_contact(mode) {
-    if (parent.$('iframe_tab') && mode == 'contact'){
-        if($j('#divList').length) {
-            var contentHeight = Math.round($j('#divList').height())+2;
-            parent.$('iframe_tab').style.height=contentHeight+"px";
-        } else if($j('#inner_content_contact').length) {
-            var contentHeight = Math.round($j('#inner_content_contact').height())+180;
-            parent.$('iframe_tab').style.height=contentHeight+"px";
-        } else {
-            var contentHeight = Math.round($j('#inner_content').height())+20;
-            parent.$('iframe_tab').style.height=contentHeight+"px";
-        }
-        
-    } else if (parent.$('contact_iframe_attach') && mode == 'contact') {
+    if (parent.$('contact_iframe_attach') && mode == 'contact') {
         var contentHeight = 370;
         parent.$('contact_iframe_attach').style.height=contentHeight+"px";   
     } else if (parent.$('info_contact_iframe_attach') && mode != 'contact') {
