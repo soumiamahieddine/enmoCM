@@ -58,10 +58,10 @@ class VisaController
             if ($rawAction['default_action_list'] == 'Y') {
                 $actions[] = ['value' => 'end_action', 'label' => $rawAction['label_action'] . ' ('. _BY_DEFAULT .')'];
             } else {
-                if (empty($rawAction->where_clause)) {
+                if (empty($rawAction['where_clause'])) {
                     $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
                 } else {
-                    $ressource = ResModel::get(['where' => ['res_id = ?', $rawAction->where_clause], 'data' => [$resId]]);
+                    $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $rawAction['where_clause']], 'data' => [$aArgs['resId']]]);
                     if (!empty($ressource)) {
                         $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
                     }
