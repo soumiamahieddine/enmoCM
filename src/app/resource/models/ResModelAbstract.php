@@ -24,6 +24,7 @@ class ResModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aResources = DatabaseModel::select([
             'select'    => $aArgs['select'],

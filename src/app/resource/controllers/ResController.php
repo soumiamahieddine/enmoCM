@@ -284,11 +284,9 @@ class ResController
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: limit parameter not valid']);
             }
         }
-        $orderBy = $data['orderBy'];
-        $limit = $data['limit'];
         $select = explode(',', $data['select']);
         
-        if (!PreparedClauseController::isRequestValid(['select' => $select,'clause' => $data['clause'], 'orderBy' => $orderBy, 'limit' => $limit, 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['select' => $select, 'clause' => $data['clause'], 'orderBy' => $data['orderBy'], 'limit' => $data['limit'], 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
         }
 
@@ -305,7 +303,7 @@ class ResController
             $select[] = 'res_id';            
         }
 
-        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $orderBy, 'limit' => $limit]);
+        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
         if ($data['withFile'] === true) {
             foreach ($resources as $key => $res) {
                 $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
