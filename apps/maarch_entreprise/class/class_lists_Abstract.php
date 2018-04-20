@@ -321,12 +321,12 @@ abstract class lists_Abstract extends Database
                          .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .= '<option value="none" style="text-align:center;"></option>';
                 foreach (array_keys($_SESSION['mail_priorities']) as $priorityId) {
-                    if (is_numeric($_SESSION['filters']['priority']['VALUE']) && $_SESSION['filters']['priority']['VALUE'] == $priorityId) {
+                    if ($_SESSION['filters']['priority']['VALUE'] == $_SESSION['mail_priorities_id'][$priorityId]) {
                         $selected = 'selected="selected"';
                     } else {
                         $selected = '';
                     }
-                    $filters .= '<option value="'.$priorityId.'" '.$selected.'>'.$_SESSION['mail_priorities'][$priorityId].'</option>';
+                    $filters .= '<option value="'.$_SESSION['mail_priorities_id'][$priorityId].'" '.$selected.'>'.$_SESSION['mail_priorities'][$priorityId].'</option>';
                 }
                 $filters .= '</select>&nbsp;';
                 //$filters .= '<script>new c($(\'priority_id_list\'),{width:"150px",allow_single_deselect: true});</script>';
