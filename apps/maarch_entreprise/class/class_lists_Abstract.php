@@ -320,6 +320,7 @@ abstract class lists_Abstract extends Database
                          .'&filter=priority&value=\' + document.filters.priority_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .= '<option value="none" style="text-align:center;"></option>';
+
                 foreach (array_keys($_SESSION['mail_priorities']) as $priorityId) {
                     if ($_SESSION['filters']['priority']['VALUE'] == $_SESSION['mail_priorities_id'][$priorityId]) {
                         $selected = 'selected="selected"';
