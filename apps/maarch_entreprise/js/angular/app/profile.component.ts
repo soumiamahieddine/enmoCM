@@ -266,7 +266,7 @@ export class ProfileComponent implements OnInit {
     }
 
     delBasketRedirection(basket: any) {
-        this.http.delete(this.coreUrl + 'rest/users/' + this.user.id + '/redirectedBaskets/' + basket.basket_id)
+        this.http.request('DELETE', this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets/" + basket.basket_id, {body : {"basketOwner" : basket.basket_owner}})
             .subscribe((data: any) => {
                 this.user.redirectedBaskets = data["redirectedBaskets"];
                 this.user.baskets.forEach((value: any, index: number) => {

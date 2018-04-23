@@ -28,6 +28,7 @@ use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -58,10 +59,11 @@ class VisaController
             if ($rawAction['default_action_list'] == 'Y') {
                 $actions[] = ['value' => 'end_action', 'label' => $rawAction['label_action'] . ' ('. _BY_DEFAULT .')'];
             } else {
-                if (empty($rawAction->where_clause)) {
+                if (empty($rawAction['where_clause'])) {
                     $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
                 } else {
-                    $ressource = ResModel::get(['where' => ['res_id = ?', $rawAction->where_clause], 'data' => [$resId]]);
+                    $whereClause = PreparedClauseController::getPreparedClause(['clause' => $rawAction['where_clause'], 'userId' => $GLOBALS['userId']]);
+                    $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$aArgs['resId']]]);
                     if (!empty($ressource)) {
                         $actions[] = ['value' => $rawAction['id_action'], 'label' => $rawAction['label_action']];
                     }

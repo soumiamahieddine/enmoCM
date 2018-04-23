@@ -109,7 +109,7 @@ class BasketControllerTest extends TestCase
                     'id'                    => '112',
                     'where_clause'          => '1=2',
                     'used_in_basketlist'    => false,
-                    'used_in_action_page'   => false,
+                    'used_in_action_page'   => true,
                     'default_action_list'   => true,
                     'checked'               => true,
                     'statuses'              => [
@@ -149,7 +149,7 @@ class BasketControllerTest extends TestCase
                 $this->assertSame(112, $groupAction->id);
                 $this->assertSame('1=2', $groupAction->where_clause);
                 $this->assertSame('N', $groupAction->used_in_basketlist);
-                $this->assertSame('N', $groupAction->used_in_action_page);
+                $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('Y', $groupAction->default_action_list);
                 $this->assertInternalType('array', $groupAction->statuses);
                 $this->assertNotNull($groupAction->statuses);

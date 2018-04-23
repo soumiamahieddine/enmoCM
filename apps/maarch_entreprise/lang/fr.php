@@ -1460,29 +1460,11 @@ if (!defined('_EMPTY_PSW')) {
 if (!defined('_AUTORIZED_USER')) {
     define('_AUTORIZED_USER', 'Utilisateur autorisé');
 }
-if (!defined('_SUSPENDED_USER')) {
-    define('_SUSPENDED_USER', 'Utilisateur suspendu');
-}
-if (!defined('_DELETED_USER')) {
-    define('_DELETED_USER', 'Utilisateur supprimé');
-}
-if (!defined('_USER_DELETION')) {
-    define('_USER_DELETION', "Suppression de l'utilisateur");
-}
 if (!defined('_USER_AUTORIZATION')) {
     define('_USER_AUTORIZATION', "Autorisation de l'utilisateur");
 }
 if (!defined('_USER_SUSPENSION')) {
     define('_USER_SUSPENSION', "Suspension de l'utilisateur");
-}
-if (!defined('_USER_UPDATED')) {
-    define('_USER_UPDATED', 'Utilisateur modifié');
-}
-if (!defined('_USER_UPDATE')) {
-    define('_USER_UPDATE', "Modification d'un utilisateur");
-}
-if (!defined('_USER_ADDED')) {
-    define('_USER_ADDED', 'Nouvel utilisateur ajouté');
 }
 if (!defined('_NO_PRIMARY_GROUP')) {
     define('_NO_PRIMARY_GROUP', 'Aucun groupe primaire sélectionné !');

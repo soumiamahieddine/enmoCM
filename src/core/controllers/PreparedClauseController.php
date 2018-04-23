@@ -215,7 +215,8 @@ class PreparedClauseController
     {
         ValidatorModel::notEmpty($aArgs, ['clause', 'userId']);
         ValidatorModel::stringType($aArgs, ['clause', 'userId']);
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $clause = PreparedClauseController::getPreparedClause(['clause' => $aArgs['clause'], 'userId' => $aArgs['userId']]);
 
@@ -229,7 +230,7 @@ class PreparedClauseController
         }
 
         try {
-            ResModel::getOnView(['select' => $aArgs['select'], 'where' => [$clause, '1=1']]);
+            ResModel::getOnView(['select' => $aArgs['select'], 'where' => [$clause, '1=1'], 'orderBy' => $aArgs['orderBy'], 'limit' => $aArgs['limit']]);
         } catch (\Exception $e) {
             return false;
         }

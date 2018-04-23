@@ -1351,8 +1351,8 @@ Select setval('foldertype_id_id_seq', (select max(foldertype_id)+1 from folderty
 --TEMPLATES_DOCTYPE_EXT--
 ------------
 TRUNCATE TABLE templates_doctype_ext;
-INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 109, 'Y');
-INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9, 109, 'Y');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 1201, 'Y');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9, 1202, 'Y');
 ------------
 --FOLDERS
 ------------
