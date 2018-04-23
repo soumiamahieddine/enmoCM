@@ -506,6 +506,9 @@ class BasketController
                 $aArgs['groupActions'][$key]['used_in_action_page'] = empty($groupAction['used_in_action_page']) ? 'N' : 'Y';
                 $aArgs['groupActions'][$key]['default_action_list'] = empty($groupAction['default_action_list']) ? 'N' : 'Y';
                 
+                if ($aArgs['groupActions'][$key]['used_in_basketlist'] == 'N' && $aArgs['groupActions'][$key]['used_in_action_page'] == 'N') {
+                    return ['errors' => 'Action must be present in action page or in action list'];
+                }
                 if (!empty($aArgs['groupActions'][$key]['where_clause'])) {
                     if (!PreparedClauseController::isRequestValid(['clause' => $aArgs['groupActions'][$key]['where_clause'], 'userId' => $aArgs['userId']])) {
                         return ['errors' => _INVALID_CLAUSE];
