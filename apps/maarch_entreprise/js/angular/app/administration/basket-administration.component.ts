@@ -179,6 +179,7 @@ export class BasketAdministrationComponent implements OnInit {
     setDefaultAction(group: any, action: any) {
         group.groupActions.forEach((tmpAction: any) => {
             tmpAction.default_action_list = (action.id == tmpAction.id);
+            tmpAction.used_in_action_page = (action.id == tmpAction.id);
         });
         this.addAction(group);
     }
