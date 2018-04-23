@@ -108,6 +108,6 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-raised-button type="submit" [disabled]="!settingGroupsBasket.form.valid" color="primary" style="margin:auto;"
+    <button mat-raised-button type="submit" [disabled]="!data.action.used_in_basketlist && !data.action.used_in_action_page" color="primary" style="margin:auto;"
         (click)="dialogRef.close(data)">{{lang.validate}}</button>
 </mat-dialog-actions>
