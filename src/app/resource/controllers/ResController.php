@@ -299,7 +299,7 @@ class ResController
             $where[] = "({$groupsClause})";
         }
 
-        if($data['withFile'] === true){
+        if ($data['withFile'] === true) {
             $select[] = 'res_id';            
         }
 
