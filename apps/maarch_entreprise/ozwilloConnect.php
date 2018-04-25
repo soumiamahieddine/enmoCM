@@ -30,8 +30,8 @@ if (empty($user)) {
     $lastname = empty($profile->family_name) ? 'utilisateur' : $profile->family_name;
     \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'changePassword' => 'N']]);
     $user = \User\models\UserModel::getByUserId(['userId' => $idToken->sub]);
-    \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => 'AGENT']);
-    \User\models\UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => 'VILLE', 'primaryEntity' => 'Y']);
+    \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => $ozwilloConfig['groupId']]);
+    \User\models\UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => $ozwilloConfig['entityId'], 'primaryEntity' => 'Y']);
 }
 
 $_SESSION['ozwillo']['userId'] =  $idToken->sub;
