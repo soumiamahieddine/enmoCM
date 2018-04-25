@@ -36,7 +36,7 @@ if (!empty($res_id)) {
     $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
 
     //INITIATOR INFO OF DOCUMENT
-    $stmt2 = $dbDatasource->query('SELECT a.entity_id as entity_id, a.entity_label as entity_label, a.parent_entity_id as parent_entity_id, a.short_label as short_label, a.email as email, a.entity_type as entity_type, b.entity_label as parent_entity_label
+    $stmt2 = $dbDatasource->query('SELECT a.entity_id as entity_id, a.entity_label as entity_label, a.parent_entity_id as parent_entity_id, b.entity_label as parent_entity_label, a.short_label as short_label, a.email as email, a.entity_type as entity_type, b.entity_label as parent_entity_label
     FROM entities as a, entities as b
     WHERE a.entity_id = ?
     AND a.parent_entity_id = b.entity_id', array($doc['initiator']));
