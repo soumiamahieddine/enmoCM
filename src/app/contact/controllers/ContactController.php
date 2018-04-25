@@ -92,10 +92,12 @@ class ContactController
             $formattedAddress .= substr($aArgs['society'], 0, 38)."\n";
 
             // Ligne 2
-            $formattedAddress .= self::controlLengthNameAfnor([
-                                    'title' => $aArgs['title'],
-                                    'fullName' => $aArgs['firstname'].' '.$aArgs['lastname'],
-                                    'strMaxLength' => 38, ])."\n";
+            if (!empty($aArgs['title']) || !empty($aArgs['firstname']) || !empty($aArgs['lastname'])) {
+                $formattedAddress .= self::controlLengthNameAfnor([
+                    'title' => $aArgs['title'],
+                    'fullName' => $aArgs['firstname'].' '.$aArgs['lastname'],
+                    'strMaxLength' => 38, ])."\n";
+            }
 
             // Ligne 3
             if (!empty($aArgs['address_complement'])) {
@@ -119,12 +121,22 @@ class ContactController
             }
         }
         // Ligne 4
+        $aArgs['address_num'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_num']]);
+        $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
+        $aArgs['address_num'] = strtoupper($aArgs['address_num']);
+
+        $aArgs['address_street'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_street']]);
+        $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
+        $aArgs['address_street'] = strtoupper($aArgs['address_street']);
+
         $formattedAddress .= substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38)."\n";
 
         // Ligne 5
         // $formattedAddress .= "\n";
 
         // Ligne 6
+        $aArgs['address_postal_code'] = strtoupper($aArgs['address_postal_code']);
+        $aArgs['address_town'] = strtoupper($aArgs['address_town']);
         $formattedAddress .= substr($aArgs['address_postal_code'].' '.$aArgs['address_town'], 0, 38);
 
         return $formattedAddress;
@@ -166,7 +178,7 @@ class ContactController
     {
         $customId = CoreConfigModel::getCustomId();
 
-        $referentialDirectory = "referential/ban/indexes";
+        $referentialDirectory = 'referential/ban/indexes';
         if (is_dir("custom/{$customId}/".$referentialDirectory)) {
             $customFilesDepartments = scandir("custom/{$customId}/".$referentialDirectory);
         }
@@ -177,14 +189,14 @@ class ContactController
         $departments = [];
         if (!empty($customFilesDepartments)) {
             foreach ($customFilesDepartments as $value) {
-                if ($value != '.' && $value != '..' && is_writable("custom/{$customId}/".$referentialDirectory."/".$value)) {
+                if ($value != '.' && $value != '..' && is_writable("custom/{$customId}/".$referentialDirectory.'/'.$value)) {
                     $departments[] = $value;
                 }
             }
         }
         if (!empty($filesDepartments)) {
             foreach ($filesDepartments as $value) {
-                if ($value != '.' && $value != '..' && !in_array($value, $departments) && is_writable($referentialDirectory."/".$value)) {
+                if ($value != '.' && $value != '..' && !in_array($value, $departments) && is_writable($referentialDirectory.'/'.$value)) {
                     $departments[] = $value;
                 }
             }
@@ -192,6 +204,7 @@ class ContactController
 
         if (!empty($departments)) {
             sort($departments, SORT_NUMERIC);
+
             return $departments;
         } else {
             return false;
