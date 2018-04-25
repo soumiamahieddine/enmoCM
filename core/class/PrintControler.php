@@ -490,10 +490,10 @@ class PrintControler extends PrintFunctions
                     $pdf->SetFont('Arial','',11);
                     foreach ($this->array_print[$cpt]['retrieve_VisaWorkflow'] as $key => $value) {
                         $signatory = '';
-                        if($value['signatory']){
+                        if($value['signatory'] || ($value['requested_signature'] && empty($value['process_date']))){
                             $signatory = ' ('._SIGNATORY.')';
-                        } else if ($value['requested_signature'] && empty($value['process_date'])) {
-                            $signatory = ' ('._REQUESTED_SIGNATURE.')';
+                        } else {
+                            $signatory = ' ('._VISA_USER_SEARCH_MIN.')';
                         }
                         $pdf->Cell(140,5,utf8_decode($key+1 . '. ' .$value['firstname']. ' ' . $value['lastname'] . $signatory),1,0, 'L', false);
                         $pdf->Cell(42,5,functions::format_date_db($value['process_date'], true, '', true),1,1, 'C', false);
