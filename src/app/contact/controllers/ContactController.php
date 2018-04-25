@@ -121,13 +121,17 @@ class ContactController
             }
         }
         // Ligne 4
-        $aArgs['address_num'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_num']]);
-        $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
-        $aArgs['address_num'] = strtoupper($aArgs['address_num']);
+        if(!empty($aArgs['address_num'])){
+            $aArgs['address_num'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_num']]);
+            $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
+            $aArgs['address_num'] = strtoupper($aArgs['address_num']);
+        }
 
-        $aArgs['address_street'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_street']]);
-        $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
-        $aArgs['address_street'] = strtoupper($aArgs['address_street']);
+        if(!empty($aArgs['address_street'])){
+            $aArgs['address_street'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_street']]);
+            $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
+            $aArgs['address_street'] = strtoupper($aArgs['address_street']);
+        }
 
         $formattedAddress .= substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38)."\n";
 
