@@ -22,6 +22,7 @@ use Entity\models\EntityModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use Status\models\StatusModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class AutoCompleteController
@@ -45,6 +46,39 @@ class AutoCompleteController
                 'id'            => $value['user_id'],
                 'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
                 'otherInfo'     => $primaryEntity['entity_label']
+            ];
+        }
+
+        return $response->withJson($data);
+    }
+
+    public static function getUsersForAdministration(Request $request, Response $response)
+    {
+        if ($GLOBALS['userId'] != 'superadmin') {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+            $users = UserEntityModel::getUsersByEntities([
+                'select'    => ['DISTINCT users.user_id', 'users.firstname', 'users.lastname'],
+                'entities'  => $entities
+            ]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
+            $users = array_merge($users, $usersNoEntities);
+        } else {
+            $excludedUsers = ['superadmin'];
+
+            $users = UserModel::get([
+                'select'    => ['user_id', 'firstname', 'lastname'],
+                'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
+                'data'      => ['Y', 'DEL', $excludedUsers],
+                'orderBy'   => ['lastname']
+            ]);
+        }
+
+        $data = [];
+        foreach ($users as $key => $value) {
+            $data[] = [
+                'type'          => 'user',
+                'id'            => $value['user_id'],
+                'idToDisplay'   => "{$value['firstname']} {$value['lastname']}"
             ];
         }
 
