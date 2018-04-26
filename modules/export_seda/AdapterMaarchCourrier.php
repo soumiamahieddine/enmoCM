@@ -25,7 +25,7 @@ class AdapterMaarchCourrier
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message->path);
         $filePath      = $docserver['path_template'] . $pathDirectory . $message->filename;
-        $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
+        $fingerprint   = \Resource\controllers\StoreController::getFingerPrint([
             'filePath' => $filePath,
             'mode'     => $docserverType['fingerprint_mode'],
         ]);

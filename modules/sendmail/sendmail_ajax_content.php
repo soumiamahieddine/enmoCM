@@ -593,7 +593,7 @@ switch ($mode) {
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchangeData->path);
         $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchangeData->filename;
-        $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
+        $fingerprint   = \Resource\controllers\StoreController::getFingerPrint([
             'filePath' => $filePath,
             'mode'     => $docserverType['fingerprint_mode'],
         ]);

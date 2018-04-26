@@ -16,6 +16,7 @@ namespace User\controllers;
 
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Docserver\controllers\DocserverController;
 use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
@@ -30,7 +31,6 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\controllers\StoreController;
 use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
@@ -496,7 +496,7 @@ class UserController
 
         file_put_contents(CoreConfigModel::getTmpPath() . $tmpName, $file);
 
-        $storeInfos = StoreController::storeResourceOnDocServer([
+        $storeInfos = DocserverController::storeResourceOnDocServer([
             'collId'            => 'templates',
             'docserverTypeId'   => 'TEMPLATES',
             'fileInfos'         => [
