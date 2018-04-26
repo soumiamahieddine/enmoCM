@@ -75,6 +75,8 @@ define('_USER_GROUP_SUPPRESSION', 'Group deleted for user');
 define('_USER_ENTITY_CREATION', 'Entity added for user');
 define('_USER_ENTITY_MODIFICATION', 'Entity updated for user');
 define('_USER_ENTITY_SUPPRESSION', 'Entity deleted for user');
+define('_USER_ALREADY_LINK_GROUP', 'User is already linked to this group');
+define('_USER_ALREADY_LINK_ENTITY', 'User is already linked to this entity');
 define('_VISA_USER', 'For visa');
 define('_WRONG_FILE_TYPE', 'This type of file is not allowed');
 define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'Parent entity must not be a subentity');

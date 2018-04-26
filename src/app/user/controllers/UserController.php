@@ -633,7 +633,7 @@ class UserController
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this group']);
+            return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
         }
         if (empty($data['role'])) {
             $data['role'] = '';
@@ -745,7 +745,7 @@ class UserController
         if (empty(EntityModel::getById(['entityId' => $data['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         } elseif (UserModel::hasEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this entity']);
+            return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_ENTITY]);
         }
         if (empty($data['role'])) {
             $data['role'] = '';

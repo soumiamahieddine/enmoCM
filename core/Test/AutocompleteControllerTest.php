@@ -50,7 +50,7 @@ class AutocompleteControllerTest extends TestCase
         $this->assertNotEmpty($responseBody);
 
         $this->assertSame('user', $responseBody[0]->type);
-        $this->assertInternalType('string', $responseBody[0]->id);
+        $this->assertInternalType('int', $responseBody[0]->id);
         $this->assertNotEmpty($responseBody[0]->id);
         $this->assertInternalType('string', $responseBody[0]->idToDisplay);
         $this->assertNotEmpty($responseBody[0]->idToDisplay);

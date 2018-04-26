@@ -75,6 +75,8 @@ define('_USER_GROUP_SUPPRESSION', 'Groupe supprimé pour utilisateur');
 define('_USER_ENTITY_CREATION', 'Entité ajoutée pour utilisateur');
 define('_USER_ENTITY_MODIFICATION', 'Entité modifiée pour utilisateur');
 define('_USER_ENTITY_SUPPRESSION', 'Entité supprimée pour utilisateur');
+define('_USER_ALREADY_LINK_GROUP', 'L\'utilisateur est déjà lié à ce groupe');
+define('_USER_ALREADY_LINK_ENTITY', 'L\'utilisateur est déjà lié à cette entité');
 define('_VISA_USER', 'Pour visa');
 define('_WRONG_FILE_TYPE', 'Ce type de fichier n\'est pas permis');
 define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'L\'entité parente ne doit pas être dans une entité fille');
