@@ -329,7 +329,11 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.readMode();
                     this.doctypes = data['doctypeTree'];
                     this.refreshTree();
-                    $j('#jstree').jstree('select_node', this.doctypes[0]);
+                    if(this.doctypes[0]){
+                        $j('#jstree').jstree('select_node', this.doctypes[0]);
+                    } else if (this.sidenav.opened == true) {
+                        this.sidenav.close();
+                    }
                     this.notify.success(this.lang.firstLevelDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
