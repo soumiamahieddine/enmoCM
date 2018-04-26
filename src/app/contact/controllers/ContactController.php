@@ -19,6 +19,7 @@ use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\TextFormatModel;
 
 class ContactController
 {
@@ -93,7 +94,7 @@ class ContactController
 
             // Ligne 2
             if (!empty($aArgs['title']) || !empty($aArgs['firstname']) || !empty($aArgs['lastname'])) {
-                $formattedAddress .= self::controlLengthNameAfnor([
+                $formattedAddress .= ContactController::controlLengthNameAfnor([
                     'title' => $aArgs['title'],
                     'fullName' => $aArgs['firstname'].' '.$aArgs['lastname'],
                     'strMaxLength' => 38, ])."\n";
@@ -105,7 +106,7 @@ class ContactController
             }
         } else {
             // Ligne 1
-            $formattedAddress .= self::controlLengthNameAfnor([
+            $formattedAddress .= ContactController::controlLengthNameAfnor([
                                     'title' => $aArgs['contact_title'],
                                     'fullName' => $aArgs['contact_firstname'].' '.$aArgs['contact_lastname'],
                                     'strMaxLength' => 38, ])."\n";
@@ -121,14 +122,14 @@ class ContactController
             }
         }
         // Ligne 4
-        if(!empty($aArgs['address_num'])){
-            $aArgs['address_num'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_num']]);
+        if (!empty($aArgs['address_num'])) {
+            $aArgs['address_num'] = TextFormatModel::normalize(['string' => $aArgs['address_num']]);
             $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
             $aArgs['address_num'] = strtoupper($aArgs['address_num']);
         }
 
-        if(!empty($aArgs['address_street'])){
-            $aArgs['address_street'] = \SrcCore\models\TextFormatModel::normalize(['string' => $aArgs['address_street']]);
+        if (!empty($aArgs['address_street'])) {
+            $aArgs['address_street'] = TextFormatModel::normalize(['string' => $aArgs['address_street']]);
             $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
             $aArgs['address_street'] = strtoupper($aArgs['address_street']);
         }
@@ -148,7 +149,7 @@ class ContactController
 
     public static function controlLengthNameAfnor(array $aArgs)
     {
-        $aCivility = self::getContactCivility();
+        $aCivility = ContactController::getContactCivility();
         if (strlen($aArgs['title'].' '.$aArgs['fullName']) > $aArgs['strMaxLength']) {
             $aArgs['title'] = $aCivility[$aArgs['title']]['abbreviation'];
         } else {
@@ -162,9 +163,9 @@ class ContactController
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
 
+        $aCivility = [];
         if ($loadedXml != false) {
             $result = $loadedXml->xpath('/ROOT/titles');
-            $aCivility = [];
             foreach ($result as $title) {
                 foreach ($title as $value) {
                     $aCivility[(string) $value->id] = [
