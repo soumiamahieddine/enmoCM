@@ -2,17 +2,18 @@
 
 
 /**
-* File : log.php
-*
-* User identification
-*
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni  <dev@maarch.org>
-*/
+ * File : log.php.
+ *
+ * User identification
+ *
+ * @version 2.1
+ *
+ * @since 10/2005
+ *
+ * @license GPL
+ * @author  Claire Figueras  <dev@maarch.org>
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ */
 if (file_exists('../../core/init.php')) {
     include_once '../../core/init.php';
 }
@@ -150,6 +151,10 @@ if (!empty($_SESSION['error'])) {
             $login_admin = $prefix_login.'\\'.$login_admin;
         }
 
+        if ($suffix_login != '') {
+            $login_admin = $login_admin.$suffix_login;
+        }
+
         //Try to create a new ldap instance
         if (strtolower($type_ldap) == 'openldap') {
             try {
@@ -169,6 +174,12 @@ if (!empty($_SESSION['error'])) {
 
         if ($prefix_login != '') {
             $loginToAd = $prefix_login.'\\'.$login;
+        } else {
+            $loginToAd = $login;
+        }
+
+        if ($suffix_login != '') {
+            $loginToAd = $login.$suffix_login;
         } else {
             $loginToAd = $login;
         }

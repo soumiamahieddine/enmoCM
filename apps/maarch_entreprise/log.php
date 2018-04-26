@@ -160,6 +160,10 @@ if (!empty($_SESSION['error'])) {
             $login_admin = $prefix_login.'\\'.$login_admin;
         }
 
+        if ($suffix_login != '') {
+            $login_admin = $login_admin.$suffix_login;
+        }
+
         //Try to create a new ldap instance
         if (strtolower($type_ldap) == 'openldap') {
             try {
@@ -179,6 +183,12 @@ if (!empty($_SESSION['error'])) {
 
         if ($prefix_login != '') {
             $loginToAd = $prefix_login.'\\'.$login;
+        } else {
+            $loginToAd = $login;
+        }
+
+        if ($suffix_login != '') {
+            $loginToAd = $login.$suffix_login;
         } else {
             $loginToAd = $login;
         }
