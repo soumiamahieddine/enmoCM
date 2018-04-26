@@ -52,6 +52,25 @@
                     </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
+                            <div class="col-md-12" *ngIf="group.canAdminUsers">
+                                <mat-form-field>
+                                    <input class="autocompleteSearch" #autocompleteFilter type="text" placeholder="{{lang.addUser}}" matInput [matAutocomplete]="auto"
+                                        [formControl]="userCtrl">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
+                                            <p mat-line style="margin:0;">
+                                                <span class="col-xm-1" style="padding-right:5px;">
+                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
+                                                </span>
+                                                <span class="col-xm-11">
+                                                    {{ user.idToDisplay }}
+                                                    <small>{{ user.otherInfo }}</small>
+                                                </span>
+                                            </p>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
                                     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">

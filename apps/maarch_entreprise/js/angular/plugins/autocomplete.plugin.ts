@@ -36,6 +36,21 @@ export class AutoCompletePlugin {
                     location.href = "index.php";
                 });
         }
+        if (target.indexOf('adminUsers') != -1) {
+            this.userCtrl = new FormControl();
+            this.http.get(this.coreUrl + 'rest/autocomplete/users/administration')
+                .subscribe((data: any) => {
+                    this.userList = data;
+                    this.filteredUsers = this.userCtrl.valueChanges
+                        .pipe(
+                            startWith(''),
+                            map(user => user ? this.autocompleteFilterUser(user) : this.userList.slice())
+                        );
+                }, () => {
+                    location.href = "index.php";
+                });
+        }
+        
         if (target.indexOf('statuses')  != -1) {
             this.statusCtrl = new FormControl();
             this.http.get(this.coreUrl + 'rest/autocomplete/statuses')
