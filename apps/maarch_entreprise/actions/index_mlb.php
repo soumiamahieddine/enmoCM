@@ -1101,10 +1101,10 @@ function check_docserver($collId)
         && $_SESSION['upfile']['format'] == 'maarch'
     ) {
         if (!isset($_SESSION['template_content'])
-            || empty($_SESSION['template_content'])
+            || $_SESSION['template_content_same']
         ) {
             $_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
-
+            unset($_SESSION['template_content_same']);
             return false;
         }
         if (
