@@ -27,6 +27,7 @@ if (isset($_FILES) && $_FILES['file']['error'] == 1) {
     echo '<script>$j("#main_error",window.parent.document).html(\''.$error.'\').show().delay(5000).fadeOut();</script>';   
         
 } elseif (!empty($_FILES['file']['tmp_name']) && $_FILES['file']['error'] <> 1) {
+    unset($_SESSION['upfile'][0]['fileNamePdfOnTmp']);
     $_SESSION['upfile'][0]['tmp_name'] = $_FILES['file']['tmp_name'];
     $extension = explode(".", $_FILES['file']['name']);
     $name_without_ext = substr($_FILES['file']['name'], 0, strrpos($_FILES['file']['name'], "."));
