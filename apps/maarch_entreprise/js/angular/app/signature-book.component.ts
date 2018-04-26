@@ -11,6 +11,7 @@ declare function successNotification(message: string) : void;
 declare function errorNotification(message: string) : void;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
+declare function setSessionForSignatureBook(resId: any) : void;
 
 declare var angularGlobals : any;
 
@@ -455,7 +456,7 @@ export class SignatureBookComponent implements OnInit {
             isVersion = "false";
         }
 
-        this.http.put(this.coreUrl + 'rest/' + collId + '/' + resId + '/unsign', {})
+        this.http.put(this.coreUrl + 'rest/signatureBook/' + resId + '/unsign', {'table' : collId})
             .subscribe(() => {
                 this.rightViewerLink = "index.php?display=true&module=attachments&page=view_attachment&res_id_master=" + this.resId + "&id=" + attachment.viewerNoSignId + "&isVersion=" + isVersion;
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
@@ -534,6 +535,7 @@ export class SignatureBookComponent implements OnInit {
                 .subscribe((data: any) => {
                     this.signatureBook.resList = data.resList;
 
+                    setSessionForSignatureBook(this.resId);
                     valid_action_form(
                         'empty',
                         'index.php?display=true&page=manage_action&module=core',
@@ -548,6 +550,7 @@ export class SignatureBookComponent implements OnInit {
                     );
                 });
         } else {
+            setSessionForSignatureBook(this.resId);
             valid_action_form(
                 'empty',
                 'index.php?display=true&page=manage_action&module=core',

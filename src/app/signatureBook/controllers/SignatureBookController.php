@@ -7,11 +7,10 @@
 */
 
 /**
-* @brief   VisaController
+* @brief   Signature Book Controller
 * @author  <dev@maarch.org>
-* @ingroup visa
 */
-namespace Visa\Controllers;
+namespace SignatureBook\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
@@ -26,6 +25,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
@@ -33,12 +33,11 @@ use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 
-class VisaController
+class SignatureBookController
 {
     public function getSignatureBook(Request $request, Response $response, array $aArgs)
     {
         $resId = $aArgs['resId'];
-        $_SESSION['doc_id'] = $resId; //TODO Set session for some actions
 
         if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -48,7 +47,7 @@ class VisaController
             return $response->withStatus(500)->withJson(['errors' => _UNREACHABLE_DOCSERVER]);
         }
 
-        $documents = VisaController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
+        $documents = SignatureBookController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
         if (!empty($documents['error'])) {
             return $response->withJson($documents);
         }
@@ -87,7 +86,7 @@ class VisaController
 
         $datas = [];
         $datas['actions']       = $actions;
-        $datas['attachments']   = VisaController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['attachments']   = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
         $datas['documents']     = $documents;
         $datas['currentAction'] = $currentAction;
         $datas['resList']       = [];
@@ -105,9 +104,16 @@ class VisaController
 
     public function unsignFile(Request $request, Response $response, array $aArgs)
     {
-        AttachmentModel::unsignAttachment(['table' => $aArgs['collId'], 'resId' => $aArgs['resId']]);
+        $data = $request->getParams();
 
-        $isVersion = ($aArgs['collId'] == 'res_attachments' ? 'false' : 'true');
+        $check = Validator::stringType()->notEmpty()->validate($data['table']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
+
+        $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
             $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'select' => ['res_id_master']]);
@@ -123,12 +129,12 @@ class VisaController
 
     public function getIncomingMailAndAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        return $response->withJson(VisaController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $aArgs['resId']]));
+        return $response->withJson(SignatureBookController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $aArgs['resId']]));
     }
 
     public function getAttachmentsById(Request $request, Response $response, array $aArgs)
     {
-        return $response->withJson(VisaController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
+        return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
     private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
@@ -415,5 +421,4 @@ class VisaController
 
         return $response->withJson(['resList' => $resList]);
     }
-
 }

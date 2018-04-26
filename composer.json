@@ -19,14 +19,14 @@
             "Priority\\"      : "src/app/priority/",
             "Report\\"        : "src/app/report/",
             "Resource\\"      : "src/app/resource/",
+            "SignatureBook\\" : "src/app/signatureBook/",
             "Status\\"        : "src/app/status/",
             "Template\\"      : "src/app/template/",
             "User\\"          : "src/app/user/",
 
             "Core\\"          : "core/",
             "Convert\\"       : "modules/convert/",
-            "Sendmail\\"      : "modules/sendmail/",
-            "Visa\\"          : "modules/visa/"
+            "Sendmail\\"      : "modules/sendmail/"
     	}
     },
     "require": {

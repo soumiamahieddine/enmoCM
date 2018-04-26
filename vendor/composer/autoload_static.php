@@ -19,10 +19,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             'phpseclib\\' => 10,
         ),
-        'V' => 
-        array (
-            'Visa\\' => 5,
-        ),
         'U' => 
         array (
             'User\\' => 5,
@@ -37,6 +33,7 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
             'Status\\' => 7,
             'SrcCore\\' => 8,
             'Slim\\' => 5,
+            'SignatureBook\\' => 14,
             'Sendmail\\' => 9,
         ),
         'R' => 
@@ -117,10 +114,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'Visa\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/modules/visa',
-        ),
         'User\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/user',
@@ -144,6 +137,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'SignatureBook\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/signatureBook',
         ),
         'Sendmail\\' => 
         array (
