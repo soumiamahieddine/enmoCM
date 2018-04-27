@@ -60,13 +60,13 @@ class AutoCompleteController
                 'select'    => ['DISTINCT users.user_id', 'users.firstname', 'users.lastname'],
                 'entities'  => $entities
             ]);
-            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['users.id', 'user_id', 'users.firstname', 'users.lastname']]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
             $users = array_merge($users, $usersNoEntities);
         } else {
             $excludedUsers = ['superadmin'];
 
             $users = UserModel::get([
-                'select'    => ['users.id', 'user_id', 'firstname', 'lastname'],
+                'select'    => ['id', 'user_id', 'firstname', 'lastname'],
                 'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
                 'data'      => ['Y', 'DEL', $excludedUsers],
                 'orderBy'   => ['lastname']
