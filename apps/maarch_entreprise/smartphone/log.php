@@ -244,6 +244,7 @@ if (!empty($_SESSION['error'])) {
                 // exit;
             }
             if (empty($_SESSION['error'])) {
+
                 $_SESSION['error'] = $res['error'];
             }
             header(
