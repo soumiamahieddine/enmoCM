@@ -57,7 +57,7 @@ class AutoCompleteController
         if ($GLOBALS['userId'] != 'superadmin') {
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
             $users = UserEntityModel::getUsersByEntities([
-                'select'    => ['DISTINCT users.user_id', 'users.firstname', 'users.lastname'],
+                'select'    => ['DISTINCT users.user_id', 'users.id', 'users.firstname', 'users.lastname'],
                 'entities'  => $entities
             ]);
             $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname']]);
