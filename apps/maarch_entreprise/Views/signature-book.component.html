@@ -189,7 +189,7 @@
                          (mouseenter)="showSignaturesPanel = true" (mouseleave)="showSignaturesPanel = false" class="pjSign" [ngClass]="[signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' ? 'signed' : '']" [ngStyle]="{'box-shadow': signatureBook.listinstance.requested_signature ? 'inset 0px 0px 5px 0px red' : 'inset 0px 0px 5px 0px #656565;'}">
                         <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status != 'SIGN' && signatureBook.signatures[0]" style="cursor: pointer">
                             <span *ngIf="!loadingSign">
-                                <img *ngFor="let signature of signatureBook.signatures; let i = index" src="{{signature.pathToSignatureOnTmp}}" (click)="signFile(signatureBook.attachments[rightSelectedThumbnail], signature)" [ngStyle]="{'display': !showSignaturesPanel && i > 0 ? 'none' : ''}" title="{{signature.signature_label}}">
+                                <img *ngFor="let signature of signatureBook.signatures; let i = index" src="{{coreUrl}}rest/users/{{signature.user_serial_id}}/signatures/{{signature.id}}" (click)="signFile(signatureBook.attachments[rightSelectedThumbnail], signature)" [ngStyle]="{'display': !showSignaturesPanel && i > 0 ? 'none' : ''}" title="{{signature.signature_label}}">
                             </span>
                             <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                         </span>

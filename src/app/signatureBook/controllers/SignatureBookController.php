@@ -31,6 +31,7 @@ use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
+use User\models\UserSignatureModel;
 
 
 class SignatureBookController
@@ -92,7 +93,7 @@ class SignatureBookController
         $datas['resList']       = [];
         $datas['nbNotes']       = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
         $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
-        $datas['signatures']    = UserModel::getSignaturesById(['id' => $user['id']]);
+        $datas['signatures']    = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
@@ -137,7 +138,7 @@ class SignatureBookController
         return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
     }
 
-    private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs = [])
+    private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs)
     {
         $resId = $aArgs['resId'];
 

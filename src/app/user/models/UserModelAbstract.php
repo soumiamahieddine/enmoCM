@@ -300,64 +300,6 @@ class UserModelAbstract
         return true;
     }
 
-    public static function getSignaturesById(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['id', 'user_serial_id', 'signature_label', 'signature_path', 'signature_file_name'],
-            'table'     => ['user_signatures'],
-            'where'     => ['user_serial_id = ?'],
-            'data'      => [$aArgs['id']],
-            'order_by'  => ['id']
-        ]);
-
-        $docserver = [];
-        if (!empty($aReturn)) {
-            $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
-        }
-
-        if (!file_exists($docserver['path_template'])) {
-            return [];
-        }
-        $tmpPath = CoreConfigModel::getTmpPath();
-        $urlTmpPath = str_replace('rest/', '', \Url::coreurl()) . 'apps/maarch_entreprise/tmp/';
-        foreach($aReturn as $key => $value) {
-            $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $value['signature_path']) . $value['signature_file_name'];
-
-            $extension = explode('.', $pathToSignature);
-            $extension = $extension[count($extension) - 1];
-            $fileNameOnTmp = 'tmp_file_' . $aArgs['id'] . '_' . rand() . '.' . strtolower($extension);
-            $filePathOnTmp = $tmpPath . $fileNameOnTmp;
-            if (file_exists($pathToSignature) && copy($pathToSignature, $filePathOnTmp)) {
-                $aReturn[$key]['pathToSignatureOnTmp'] = $urlTmpPath . $fileNameOnTmp;
-            } else {
-                $aReturn[$key]['pathToSignatureOnTmp'] = '';
-            }
-            $aReturn[$key]['pathToSignature'] = $pathToSignature;
-
-            unset($aReturn[$key]['signature_path'], $aReturn[$key]['signature_file_name']);
-        }
-
-        return $aReturn;
-    }
-
-    public static function getSignatureWithSignatureIdById(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'signatureId']);
-        ValidatorModel::intVal($aArgs, ['id','signatureId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['id', 'user_serial_id', 'signature_label'],
-            'table'     => ['user_signatures'],
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['id'], $aArgs['signatureId']],
-        ]);
-
-        return $aReturn[0];
-    }
-
     public static function getEmailSignaturesById(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
