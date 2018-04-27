@@ -40,11 +40,6 @@ $sessionTemplateContent = trim(str_replace(
     $sessionTemplateContent
 ));
 $sessionTemplateContent = trim(str_replace(
-    " ", 
-    "",
-    $sessionTemplateContent
-));
-$sessionTemplateContent = trim(str_replace(
     "\r", 
     "",
     $sessionTemplateContent
