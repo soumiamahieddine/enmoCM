@@ -15,9 +15,9 @@
 
 namespace Sendmail\Controllers;
 
+use Resource\controllers\StoreController;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\StoreController;
 use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
 use Group\models\ServiceModel;

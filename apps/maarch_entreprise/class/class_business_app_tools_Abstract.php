@@ -132,9 +132,7 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['tablename']['contact_communication'] = 'contact_communication';
             $_SESSION['tablename']['tags']                  = (string) $tablename->tags;
             
-            $_SESSION['config']['tmppath'] = $_SESSION['config']['corepath'] . 'apps' 
-                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $_SESSION['config']['tmppath'] = \SrcCore\models\CoreConfigModel::getTmpPath();
             
             $i = 0;
 

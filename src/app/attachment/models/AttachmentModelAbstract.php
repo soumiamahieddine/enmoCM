@@ -101,7 +101,7 @@ class AttachmentModelAbstract
         return $attachmentTypes;
     }
 
-    public static function unsignAttachment(array $aArgs = [])
+    public static function unsignAttachment(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['table', 'resId']);
         ValidatorModel::stringType($aArgs, ['table']);

@@ -2,22 +2,23 @@
 
 
 /**
-* File : log.php
-*
-* User identification
-*
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni  <dev@maarch.org>
-*/
-if(empty($_COOKIE)){
+ * File : log.php.
+ *
+ * User identification
+ *
+ * @version 2.1
+ *
+ * @since 10/2005
+ *
+ * @license GPL
+ * @author  Claire Figueras  <dev@maarch.org>
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ */
+if (empty($_COOKIE)) {
     $_SESSION['error'] = 'Le cache utilisateur à été réinitialisé veuillez re-saisir vos identifiants';
     header(
-        'location: ' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=login'
+        'location: '.$_SESSION['config']['businessappurl']
+        .'index.php?display=true&page=login'
     );
     exit;
 }
@@ -25,21 +26,21 @@ if(empty($_COOKIE)){
 if (file_exists('../../core/init.php')) {
     include_once '../../core/init.php';
 }
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_functions.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_db.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_core_tools.php';
 
 $core = new core_tools();
 $core->load_lang();
 $func = new functions();
 
 $_SESSION['error'] = '';
-if(isset($_SESSION['web_cas_url'])){
-    include_once('apps/maarch_entreprise/tools/phpCAS/CAS.php');
+if (isset($_SESSION['web_cas_url'])) {
+    include_once 'apps/maarch_entreprise/tools/phpCAS/CAS.php';
 
-    phpCAS::client(constant($_SESSION['cas_version']), $_SESSION['cas_serveur'], (int)$_SESSION['cas_port'], $_SESSION['cas_context'], true);
+    phpCAS::client(constant($_SESSION['cas_version']), $_SESSION['cas_serveur'], (int) $_SESSION['cas_port'], $_SESSION['cas_context'], true);
 
-    if(!empty($_SESSION['cas_certificate'])){
+    if (!empty($_SESSION['cas_certificate'])) {
         phpCAS::setCasServerCACert($_SESSION['cas_certificate']);
     } else {
         phpCAS::setNoCasServerValidation();
@@ -48,7 +49,7 @@ if(isset($_SESSION['web_cas_url'])){
     phpCAS::forceAuthentication();
     $Id = phpCAS::getUser();
 
-    if(!empty($_SESSION['cas_id_separator'])){
+    if (!empty($_SESSION['cas_id_separator'])) {
         $tmpId = explode($_SESSION['cas_id_separator'], $Id);
         $login = $tmpId[0];
     } else {
@@ -56,13 +57,13 @@ if(isset($_SESSION['web_cas_url'])){
     }
 
     $_REQUEST['pass'] = 'maarch';
-} else if (!empty($_SESSION['ozwillo']['userId'])) {
+} elseif (!empty($_SESSION['ozwillo']['userId'])) {
     $login = $_SESSION['ozwillo']['userId'];
     $_REQUEST['pass'] = 'maarch';
-} else if (!empty($_SESSION['sso']['userId'])) {
+} elseif (!empty($_SESSION['sso']['userId'])) {
     $login = $_SESSION['sso']['userId'];
     $_REQUEST['pass'] = 'maarch';
-} else if (isset($_REQUEST['login'])) {
+} elseif (isset($_REQUEST['login'])) {
     $login = $func->wash($_REQUEST['login'], 'no', _THE_ID, 'yes');
 } else {
     $login = '';
@@ -79,8 +80,8 @@ if (isset($_REQUEST['ra_code'])) {
 }
 require_once 'core/class/class_security.php';
 require_once 'core/class/class_request.php';
-require_once 'apps/' . $_SESSION['config']['app_id']
-    . '/class/class_business_app_tools.php';
+require_once 'apps/'.$_SESSION['config']['app_id']
+    .'/class/class_business_app_tools.php';
 $sec = new security();
 $businessAppTools = new business_app_tools();
 
@@ -103,36 +104,35 @@ if (count($_SESSION['config']) <= 0) {
     $core->load_menu($_SESSION['modules']);
 }
 
-if (! empty($_SESSION['error'])) {
+if (!empty($_SESSION['error'])) {
     header(
-        'location: ' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=login'
+        'location: '.$_SESSION['config']['businessappurl']
+        .'index.php?display=true&page=login'
     );
     exit();
 } else {
-    if ($_SESSION['config']['ldap'] == 'true' && $login <> 'superadmin') {
+    if ($_SESSION['config']['ldap'] == 'true' && $login != 'superadmin') {
         //Extraction de /root/config dans le fichier de conf
-        if (file_exists($_SESSION['config']['corepath'] 
-            . '/custom/' . $_SESSION['custom_override_id']
-            . '/modules/ldap/xml/config.xml')
+        if (file_exists($_SESSION['config']['corepath']
+            .'/custom/'.$_SESSION['custom_override_id']
+            .'/modules/ldap/xml/config.xml')
         ) {
-            $pathtoConfig = $_SESSION['config']['corepath'] 
-            . '/custom/' . $_SESSION['custom_override_id']
-            . '/modules/ldap/xml/config.xml';
+            $pathtoConfig = $_SESSION['config']['corepath']
+            .'/custom/'.$_SESSION['custom_override_id']
+            .'/modules/ldap/xml/config.xml';
         } else {
-             $pathtoConfig = $_SESSION['config']['corepath'] 
-                . 'modules/ldap/xml/config.xml';
+            $pathtoConfig = $_SESSION['config']['corepath']
+                .'modules/ldap/xml/config.xml';
         }
         $ldapConf = new DomDocument();
         try {
-            if (!@$ldapConf->load($pathtoConfig)) 
-            {
+            if (!@$ldapConf->load($pathtoConfig)) {
                 throw new Exception(
                     'Impossible de charger le document : '
-                    . $pathtoConfig
+                    .$pathtoConfig
                 );
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             exit($e->getMessage());
         }
 
@@ -145,122 +145,128 @@ if (! empty($_SESSION['error'])) {
         //On inclus la class LDAP qui correspond à l'annuaire
         if (strtolower($type_ldap) == 'openldap') {
             $classLdap = 'class_openLDAP.php';
-        }else{
+        } else {
             $classLdap = 'class_adLDAP.php';
         }
 
         //customized or not
-        if (!@include $_SESSION['config']['corepath'] . '/custom/' . $_SESSION['custom_override_id'] . '/modules/ldap/class/'.$classLdap) 
-        {
-            if(!@include $_SESSION['config']['corepath'] . 'modules/ldap/class/'.$classLdap){
-                exit('Impossible de charger class_' . $_SESSION['config']['corepath'] . '/modules/ldap/class/'.$classLdap."\n"); 
+        if (!@include $_SESSION['config']['corepath'].'/custom/'.$_SESSION['custom_override_id'].'/modules/ldap/class/'.$classLdap) {
+            if (!@include $_SESSION['config']['corepath'].'modules/ldap/class/'.$classLdap) {
+                exit('Impossible de charger class_'.$_SESSION['config']['corepath'].'/modules/ldap/class/'.$classLdap."\n");
             }
         }
-        
-        if ($prefix_login <> '') {
-            $login_admin = $prefix_login . "\\" . $login_admin;
+
+        if ($prefix_login != '') {
+            $login_admin = $prefix_login.'\\'.$login_admin;
         }
-        
+
+        if ($suffix_login != '') {
+            $login_admin = $login_admin.$suffix_login;
+        }
+
         //Try to create a new ldap instance
         if (strtolower($type_ldap) == 'openldap') {
             try {
                 $ad = new LDAP($domain, $login_admin, $pass, $ssl, $hostname);
-            } catch(Exception $conFailure) {
+            } catch (Exception $conFailure) {
                 echo functions::xssafe($conFailure->getMessage());
                 exit;
             }
-        }else{
+        } else {
             try {
                 $ad = new LDAP($domain, $login_admin, $pass, $ssl);
-            } catch(Exception $conFailure) {
+            } catch (Exception $conFailure) {
                 echo functions::xssafe($conFailure->getMessage());
                 exit;
             }
         }
-        
-        if ($prefix_login <> '') {
-            $loginToAd = $prefix_login . "\\" . $login;
+
+        if ($prefix_login != '') {
+            $loginToAd = $prefix_login.'\\'.$login;
         } else {
             $loginToAd = $login;
         }
-        
-        if ($ad -> authenticate($loginToAd, $password)) {
-            //TODO: protect sql injection with PDO
-                require_once 'core/class/class_db_pdo.php';
 
-                // Instantiate database.
-                $database = new Database();
-                $stmt = $database->query(
-                    "SELECT * FROM users WHERE user_id ILIKE ?", 
+        if ($suffix_login != '') {
+            $loginToAd = $loginToAd.$suffix_login;
+        }
+
+        if ($ad->authenticate($loginToAd, $password)) {
+            //TODO: protect sql injection with PDO
+            require_once 'core/class/class_db_pdo.php';
+
+            // Instantiate database.
+            $database = new Database();
+            $stmt = $database->query(
+                    'SELECT * FROM users WHERE user_id ILIKE ?',
                     array($login)
                 ); //permet de rechercher les utilisateurs dans le LDAP sans prendre en compte la casse
-                $result = $stmt->fetch();
+            $result = $stmt->fetch();
 
             if ($result) {
                 $_SESSION['error'] = '';
                 $res = $sec->login($login, $password, 'ldap');
                 $_SESSION['user'] = $res['user'];
-                if (empty($_SESSION['error'])) {
+                if ($res['error'] == '') {
+                    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+                } else {
                     $_SESSION['error'] = $res['error'];
                 }
                 $core->load_menu($_SESSION['modules']);
                 header(
-                    'location: ' . $_SESSION['config']['businessappurl']
-                    . $res['url']
+                    'location: '.$_SESSION['config']['businessappurl']
+                    .$res['url']
                 );
                 exit();
             } else {
                 $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
                 header(
-                    'location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&page=login'
+                    'location: '.$_SESSION['config']['businessappurl']
+                    .'index.php?display=true&page=login'
                 );
                 exit;
             }
         } else {
             $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
             header(
-                'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login'
+                'location: '.$_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=login'
             );
             exit;
         }
-    }
-    elseif(isset($_REQUEST['ra_code'])) {
+    } elseif (isset($_REQUEST['ra_code'])) {
         if (empty($login) || empty($password) || empty($ra_code)) {
             $_SESSION['error'] = _IP_NOT_ALLOWED;
             header(
-                'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login'
+                'location: '.$_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=login'
             );
             exit;
-        }
-        else {
+        } else {
             $_SESSION['error'] = '';
             $res = $sec->login($login, $password, false, $ra_code);
             //$core->show_array($res);
             $_SESSION['user'] = $res['user'];
             if ($res['error'] == '') {
-               // $businessAppTools->load_app_var_session($_SESSION['user']);
+                // $businessAppTools->load_app_var_session($_SESSION['user']);
                 //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
                 $core->load_menu($_SESSION['modules']);
-               // exit;
+                // exit;
             }
             if (empty($_SESSION['error'])) {
                 $_SESSION['error'] = $res['error'];
             }
             header(
-                'location: ' . $_SESSION['config']['businessappurl'] . $res['url']
+                'location: '.$_SESSION['config']['businessappurl'].$res['url']
             );
             exit();
         }
-    }
-    else {
+    } else {
         if (empty($login) || empty($password)) {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW.'...';
             header(
-                'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login'
+                'location: '.$_SESSION['config']['businessappurl']
+                .'index.php?display=true&page=login'
             );
             exit;
         } else {
@@ -270,22 +276,20 @@ if (! empty($_SESSION['error'])) {
             $_SESSION['user'] = $res['user'];
             if ($res['error'] == '') {
                 \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
-               // $businessAppTools->load_app_var_session($_SESSION['user']);
+                // $businessAppTools->load_app_var_session($_SESSION['user']);
                 //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
                 $core->load_menu($_SESSION['modules']);
-               // exit;
-            }
-            else {
+                // exit;
+            } else {
                 $_SESSION['error'] = $res['error'];
             }
-            
+
             $pathToIPFilter = '';
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')){
+            if (file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')) {
                 $pathToIPFilter = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml';
             } elseif (file_exists('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')) {
                 $pathToIPFilter = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml';
-            }
-            else {
+            } else {
                 $ipArray = array();
                 $ipArray['enabled'] = 'false';
                 $ipArray['duration'] = '0';
@@ -295,18 +299,17 @@ if (! empty($_SESSION['error'])) {
             //print_r($ipArray);
             if ($ipArray['enabled'] == 'true') {
                 $isAllowed = false;
-                if($ipArray['IP'] <> '') {
+                if ($ipArray['IP'] != '') {
                     $isAllowed = preg_match($ipArray['IP'], $_SERVER['REMOTE_ADDR']);
                 }
-                
+
                 if (empty($_SESSION['error'])) {
                     $_SESSION['error'] = $res['error'];
                 }
                 if (!$isAllowed && $res['error'] == '') {
                     if ($ipArray['duration'] == 0) {
                         $_SESSION['error'] = _IP_NOT_ALLOWED_NO_RA_CODE;
-                    }
-                    else {
+                    } else {
                         $_SESSION['error'] = _IP_NOT_ALLOWED;
                     }
                     $res['url'] = 'index.php?display=true&page=login';
@@ -316,7 +319,7 @@ if (! empty($_SESSION['error'])) {
                 $res['url'] .= '?administration=true';
             }
             header(
-                'location: ' . $_SESSION['config']['businessappurl'] . $res['url']
+                'location: '.$_SESSION['config']['businessappurl'].$res['url']
             );
             exit();
         }

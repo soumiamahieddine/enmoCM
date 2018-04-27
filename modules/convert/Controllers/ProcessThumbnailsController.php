@@ -24,6 +24,7 @@
 namespace Convert\Controllers;
 
 use Attachment\models\AttachmentModel;
+use Docserver\controllers\DocserverController;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Resource\models\ResModel;
@@ -32,7 +33,6 @@ use Convert\Models\ProcessThumbnailsModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\ResDocserverModel;
 use SrcCore\controllers\LogsController;
-use SrcCore\controllers\StoreController;
 
 class ProcessThumbnailsController
 {
@@ -202,7 +202,7 @@ class ProcessThumbnailsController
 
         //copy the result on docserver
         // LogsController::info(['message'=>'avant cp ds', 'code'=>1112, ]);
-        $storeResult = StoreController::storeResourceOnDocServer([
+        $storeResult = DocserverController::storeResourceOnDocServer([
             'collId'    => $collId,
             'fileInfos' => [
                 'tmpDir'        => $tmpDir,

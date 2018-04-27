@@ -7,13 +7,13 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'Visa\\' => array($baseDir . '/modules/visa'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Status\\' => array($baseDir . '/src/app/status'),
     'SrcCore\\' => array($baseDir . '/src/core'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
+    'SignatureBook\\' => array($baseDir . '/src/app/signatureBook'),
     'Sendmail\\' => array($baseDir . '/modules/sendmail'),
     'Respect\\Validation\\' => array($vendorDir . '/respect/validation/library'),
     'Resource\\' => array($baseDir . '/src/app/resource'),

@@ -75,12 +75,24 @@ class CoreConfigModel
         return 'en';
     }
 
+    /**
+     * Get the tmp dir
+     * 
+     * @return string
+     */
     public static function getTmpPath()
     {
-        $tmpPath = str_replace('src/core/models', '', dirname(__FILE__));
-        $tmpPath .= 'apps/maarch_entreprise/tmp/';
+        if (isset($_SERVER['MAARCH_TMP_DIR'])) {
+            $tmpDir = $_SERVER['MAARCH_TMP_DIR'];
+        } else {
+            $tmpDir = sys_get_temp_dir();
+        }
 
-        return $tmpPath;
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0755);
+        }
+
+        return $tmpDir . '/';
     }
 
     public static function getLoggingMethod()
@@ -127,6 +139,8 @@ class CoreConfigModel
                 $ozwilloConfig['uri']                   = (string)$loadedXml->URI;
                 $ozwilloConfig['clientId']              = (string)$loadedXml->CLIENT_ID;
                 $ozwilloConfig['clientSecret']          = (string)$loadedXml->CLIENT_SECRET;
+                $ozwilloConfig['groupId']               = (string)$loadedXml->GROUP_ID;
+                $ozwilloConfig['entityId']              = (string)$loadedXml->ENTITY_ID;
             }
         }
 

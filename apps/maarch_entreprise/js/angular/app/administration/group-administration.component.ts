@@ -6,6 +6,8 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatPaginator, MatTableDataSource, MatSort} from '@angular/material';
 
+import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+
 declare function $j(selector: any) : any;
 declare const angularGlobals : any;
 
@@ -14,7 +16,7 @@ declare const angularGlobals : any;
     templateUrl: "../../../../Views/group-administration.component.html",
     providers   : [NotificationService]
 })
-export class GroupAdministrationComponent implements OnInit {
+export class GroupAdministrationComponent  extends AutoCompletePlugin implements OnInit {
 
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
@@ -41,6 +43,7 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+        super(http, ['adminUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -104,6 +107,32 @@ export class GroupAdministrationComponent implements OnInit {
                 this.notify.success(this.lang.groupServicesUpdated);
             }, (err) => {
                 service.checked = !service.checked;
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    linkUser(newUser:any) {
+        this.userCtrl.setValue('');
+        $j('.autocompleteSearch').blur();
+        var groupReq = {
+            "groupId": this.group.group_id,
+            "role": this.group.role
+        };
+        this.http.post(this.coreUrl + "rest/users/" + newUser.id + "/groups", groupReq)
+            .subscribe((data: any) => {
+                var displayName = newUser.idToDisplay.split(" ");
+                var user = {
+                    id : newUser.id,
+                    user_id : newUser.otherInfo,
+                    firstname : displayName[0],
+                    lastname : displayName[1]
+                }
+                this.group.users.push(user);
+                this.dataSource = new MatTableDataSource(this.group.users);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.notify.success(this.lang.userAdded);
+            }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }

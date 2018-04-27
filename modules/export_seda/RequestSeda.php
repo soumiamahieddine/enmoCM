@@ -489,7 +489,7 @@ class RequestSeda
                 ['id' => $docserver['docserver_type_id']]
             );
 
-            $fingerprint = \SrcCore\controllers\StoreController::getFingerPrint([
+            $fingerprint = \Resource\controllers\StoreController::getFingerPrint([
                 'filePath' => $filePath,
                 'mode'     => $docserverType['fingerprint_mode'],
             ]);

@@ -157,7 +157,7 @@ while ($state <> 'END') {
 
                 $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange->path);
                 $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange->filename;
-                $fingerprint   = \SrcCore\controllers\StoreController::getFingerPrint([
+                $fingerprint   = \Resource\controllers\StoreController::getFingerPrint([
                     'filePath' => $filePath,
                     'mode'     => $docserverType['fingerprint_mode'],
                 ]);

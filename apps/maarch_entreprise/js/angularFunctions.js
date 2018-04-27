@@ -167,3 +167,15 @@ function setAttachmentInSignatureBook(id, isVersion) {
         }
     });
 }
+
+function setSessionForSignatureBook(resId) {
+    $j.ajax({
+        url: 'index.php?display=true&dir=actions&page=setSession',
+        type : 'POST',
+        data: {
+            resId     : resId
+        },
+        success: function(result){
+        }
+    });
+}

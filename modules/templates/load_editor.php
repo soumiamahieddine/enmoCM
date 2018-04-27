@@ -38,7 +38,10 @@
                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
                  "save table contextmenu directionality paste textcolor"
         ],
-        toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | forecolor backcolor",
+        external_plugins: {
+            'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+        },
+        toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | bdesk_photo | forecolor backcolor",
 
     });
 

@@ -16,6 +16,7 @@ namespace User\controllers;
 
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Docserver\controllers\DocserverController;
 use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
@@ -30,7 +31,6 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\controllers\StoreController;
 use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
@@ -496,7 +496,7 @@ class UserController
 
         file_put_contents(CoreConfigModel::getTmpPath() . $tmpName, $file);
 
-        $storeInfos = StoreController::storeResourceOnDocServer([
+        $storeInfos = DocserverController::storeResourceOnDocServer([
             'collId'            => 'templates',
             'docserverTypeId'   => 'TEMPLATES',
             'fileInfos'         => [
@@ -633,7 +633,7 @@ class UserController
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this group']);
+            return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
         }
         if (empty($data['role'])) {
             $data['role'] = '';
@@ -745,7 +745,7 @@ class UserController
         if (empty(EntityModel::getById(['entityId' => $data['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         } elseif (UserModel::hasEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'User is already linked to this entity']);
+            return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_ENTITY]);
         }
         if (empty($data['role'])) {
             $data['role'] = '';
