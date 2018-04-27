@@ -188,9 +188,7 @@ if (!empty($_SESSION['error'])) {
         }
 
         if ($suffix_login != '') {
-            $loginToAd = $login.$suffix_login;
-        } else {
-            $loginToAd = $login;
+            $loginToAd = $loginToAd.$suffix_login;
         }
 
         if ($ad->authenticate($loginToAd, $password)) {
