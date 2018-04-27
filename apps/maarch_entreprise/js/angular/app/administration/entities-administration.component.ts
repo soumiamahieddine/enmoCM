@@ -53,7 +53,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, public dialog: MatDialog) {
-        super(http, ['usersAndEntities', 'visaUsers']);
+        super(http, ['adminUsers', 'usersAndEntities', 'visaUsers']);
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -259,7 +259,7 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         if (this.currentEntity.visaTemplate.length > 1) {
             this.currentEntity.visaTemplate[this.currentEntity.visaTemplate.length-2].item_mode = 'visa';
         }
-        this.userCtrl.setValue('');
+        this.visaUserCtrl.setValue('');
         $j('.autocompleteSearch').blur();
     }
 
@@ -676,8 +676,34 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
                     this.notify.error(err.error.errors);
                 });
         }
+    }
 
+    linkUser(newUser:any) {
+        console.log(newUser);
+        this.userCtrl.setValue('');
+        $j('.autocompleteSearch').blur();
+        let entity = {
+            "entityId"  : this.currentEntity.entity_id,
+            "role"      : ''
+        };
 
+        this.http.post(this.coreUrl + "rest/users/" + newUser.id + "/entities", entity)
+            .subscribe((data: any) => {
+                var displayName = newUser.idToDisplay.split(" ");
+                var user = {
+                    id : newUser.id,
+                    user_id : newUser.otherInfo,
+                    firstname : displayName[0],
+                    lastname : displayName[1]
+                }
+                this.currentEntity.users.push(user);
+                this.dataSource = new MatTableDataSource(this.currentEntity.users);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.notify.success(this.lang.userAdded);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 }
 @Component({

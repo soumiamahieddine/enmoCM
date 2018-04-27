@@ -10,11 +10,14 @@ declare const angularGlobals: any;
 export class AutoCompletePlugin {
     coreUrl: string;
     userCtrl: FormControl;
+    visaUserCtrl: FormControl;
     statusCtrl: FormControl;
     elementCtrl: FormControl;
+    filteredVisaUsers: Observable<any[]>;
     filteredUsers: Observable<any[]>;
     filteredElements: Observable<any[]>;
     filteredStatuses: Observable<any[]>;
+    visaUserList: any[] = [];
     userList: any[] = [];
     elemList: any[] = [];
     statusesList: any[] = [];
@@ -106,14 +109,14 @@ export class AutoCompletePlugin {
                 });
 
         } else if (target.indexOf('visaUsers') != -1) {
-            this.userCtrl = new FormControl();
+            this.visaUserCtrl = new FormControl();
             this.http.get(this.coreUrl + 'rest/autocomplete/users/visa')
                 .subscribe((data: any) => {
-                    this.userList = data;
-                    this.filteredUsers = this.userCtrl.valueChanges
+                    this.visaUserList = data;
+                    this.filteredVisaUsers = this.visaUserCtrl.valueChanges
                         .pipe(
                             startWith(''),
-                            map(user => user ? this.autocompleteFilterUser(user) : this.userList.slice())
+                            map(user => user ? this.autocompleteFilterUser(user) : this.visaUserList.slice())
                         );
                 }, () => {
                     location.href = "index.php";
@@ -123,6 +126,12 @@ export class AutoCompletePlugin {
         }
 
     }
+
+    autocompleteFilterVisaUser(name: string) {
+        return this.visaUserList.filter(user =>
+            user.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
+    }
+
     autocompleteFilterUser(name: string) {
         return this.userList.filter(user =>
             user.idToDisplay.toLowerCase().indexOf(name.toLowerCase()) >= 0);
