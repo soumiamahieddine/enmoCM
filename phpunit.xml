@@ -4,7 +4,7 @@
         <testsuite name="Maarch Core Test Suite">
             <!--directory>core/Test</directory-->
             <file>core/Test/ActionControllerTest.php</file>
-            <file>core/Test/AutocompleteControllerTest.php</file>
+            <!-- <file>core/Test/AutocompleteControllerTest.php</file> -->
             <file>core/Test/BasketControllerTest.php</file>
             <file>core/Test/ContactControllerTest.php</file>
             <file>core/Test/DoctypeControllerTest.php</file>
