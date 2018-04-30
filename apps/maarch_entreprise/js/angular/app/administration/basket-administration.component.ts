@@ -178,8 +178,13 @@ export class BasketAdministrationComponent implements OnInit {
 
     setDefaultAction(group: any, action: any) {
         group.groupActions.forEach((tmpAction: any) => {
-            tmpAction.default_action_list = (action.id == tmpAction.id);
-            tmpAction.used_in_action_page = (action.id == tmpAction.id);
+            if (tmpAction.id == action.id) {
+                tmpAction.default_action_list = true;
+                tmpAction.used_in_action_page = true;
+                tmpAction.used_in_basketlist = true;
+            } else {
+                tmpAction.default_action_list = false;
+            }
         });
         this.addAction(group);
     }
@@ -192,6 +197,7 @@ export class BasketAdministrationComponent implements OnInit {
                 this.notify.error(err.error.errors);
             });
     }
+
 
     unlinkGroup(groupIndex: any) {
         let r = confirm(this.lang.unlinkGroup + ' ?');
@@ -519,6 +525,7 @@ export class BasketAdministrationGroupListModalComponent {
             this.newBasketGroup.result_page = 'list_with_attachments';
             this.actionAll[0].used_in_action_page = true;
             this.actionAll[0].default_action_list = true;
+            this.actionAll[0].used_in_basketlist = true;
             this.actionAll[0].checked = true;
             this.newBasketGroup.groupActions = this.actionAll;
         } else {
