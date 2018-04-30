@@ -79,17 +79,9 @@ $requestTemplateContent = trim(str_replace(
     "", 
     $requestTemplateContent
 ));
-<<<<<<< Updated upstream
 
 if (($sessionTemplateContent == $requestTemplateContent) || empty($sessionTemplateContent)) {
     $_SESSION['template_content_same'] = true;
-=======
-var_dump($sessionTemplateContent);var_dump($requestTemplateContent);
-//var_dump()
-if (($sessionTemplateContent == $requestTemplateContent) || empty($sessionTemplateContent)) {
-    $_SESSION['template_content'] = null;
-    $_SESSION['template_content'] = str_replace('[time]', date('G:i:s'), $_SESSION['template_content']);
->>>>>>> Stashed changes
     echo "{status : '1, responseText : same content ! '}";
 } else {
     $_SESSION['template_content'] = $_REQUEST['template_content'];
