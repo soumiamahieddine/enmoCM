@@ -17,7 +17,7 @@ if (! isset($_REQUEST['noinit'])) {
 }
 $bask = new basket();
 if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
-    $bask->load_current_basket(trim($_REQUEST['baskets']), 'frame');
+    $bask->load_current_basket(trim($_REQUEST['baskets']));
 }
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $whereRequest = $_SESSION['current_basket']['clause'];

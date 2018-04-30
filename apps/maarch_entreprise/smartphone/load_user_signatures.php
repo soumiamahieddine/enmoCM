@@ -45,7 +45,9 @@ $users = new history();
 $sec = new security();
 $type = new types();
 $coll_id = $_SESSION['collection_id_choice'];
-if (empty($coll_id)) $_SESSION['collection_id_choice'] = 'letterbox_coll';
+if (empty($coll_id)) {
+    $_SESSION['collection_id_choice'] = 'letterbox_coll';
+}
 $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
 $s_id = $_REQUEST['id'];
 $att_id = $_REQUEST['res_id_attach'];
@@ -60,7 +62,7 @@ if (isset($_SESSION['origin']) && $_SESSION['origin'] <> "basket") {
 if (!$right) {
     ?>
     <script type="text/javascript">
-        window.top.location.href = "<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right";
+        window.top.location.href = "<?php  echo $_SESSION['config']['businessappurl']; ?>index.php?page=no_right";
     </script>
     <?php
     exit();
@@ -68,37 +70,21 @@ if (!$right) {
 
 $db = new Database();
 
-
 $res_db = $db->query("SELECT * FROM " . $view . " WHERE res_id = ? ", array($s_id));
 
 $res = $res_db->fetchObject();
 $subject = $res->subject;
-//echo "<pre>".print_r($_SESSION,true)."</pre>";
+
 ?>
 <div id="load_user_signatures" title="<?php functions::xecho($subject);?>" class="panel" style="height:90%;"> 
     <?php
-      /*echo "<pre>".print_r($_SESSION['user'],true)."</pre>";
-      $db = new Database();
-     
-      echo '<table>';
-      
-      echo '</table>';*/
-      $_SESSION['tab_copy_sign'] = array();
-      foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
-        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-                        . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
-        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+    $userInfos = \User\models\UserModel::get(['select' => ['id'], 'where' => ['user_id = ?'], 'data' => [$_SESSION['user']['UserId']]]);
+    $_SESSION['user']['pathToSignature'] = \User\models\UserSignatureModel::get(['select' => ['id'], 'where' => ['user_serial_id = ?'], 'data' => [$userInfos[0]['id']]]);
+      foreach ($_SESSION['user']['pathToSignature'] as $sign) {
+          echo '<a href="signature_main_panel.php?id='.$s_id.'&collId='.$_SESSION['collection_id_choice'].'&tableName='.$_SESSION['res_table'].'&res_id_attach='.$att_id.'">';
 
-        if (copy($sign, $filePathOnTmp)) {
-          $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
-          echo '<a href="signature_main_panel.php?id='.$s_id.'&collId='.$_SESSION['collection_id_choice'].'&tableName='.$_SESSION['res_table'].'&keySign='.$key.'&res_id_attach='.$att_id.'">';
-
-          echo '<img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:20%;margin:10px;float:left;border:1px solid black;cursor:pointer;" />';
+          echo '<img src="'. $_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'" alt="signature" style="width:20%;margin:10px;float:left;border:1px solid black;cursor:pointer;" />';
           echo '</a>';
-
-        } else {
-            echo _COPY_ERROR;
-        }       
       }
     ?>
     
