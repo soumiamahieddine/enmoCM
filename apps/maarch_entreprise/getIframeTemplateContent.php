@@ -33,12 +33,22 @@ $_SESSION['template_content'] = trim(preg_replace(
 $sessionTemplateContent = utf8_encode(html_entity_decode($_SESSION['template_content']));
 
 $requestTemplateContent = utf8_encode(html_entity_decode(strip_tags($_REQUEST['template_content'])));
+//var_dump($sessionTemplateContent);var_dump($requestTemplateContent);
+$sessionTemplateContent = trim(str_replace(
+    "Â",
+    "",
+    $sessionTemplateContent
+));
 
 $sessionTemplateContent = trim(str_replace(
     "\n", 
     "",
     $sessionTemplateContent
 ));
+$sessionTemplateContent = trim(preg_replace(
+    '/\s+/', 
+    '', 
+    $sessionTemplateContent));
 $sessionTemplateContent = trim(str_replace(
     "\r", 
     "",
