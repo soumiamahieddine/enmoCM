@@ -420,7 +420,7 @@ abstract class content_management_tools_Abstract
         $jnlp_attribute1->value = '6.0+';
         $jnlp_balise->appendChild($jnlp_attribute1); 
         $jnlp_attribute2 = $docXML->createAttribute('codebase'); 
-        $jnlp_attribute2->value = $jar_url.'/apps/maarch_entreprise/tmp/';
+        $jnlp_attribute2->value = $_SESSION['config']['tmppath'];
         $jnlp_balise->appendChild($jnlp_attribute2);
 
         $info_balise=$docXML->createElement("information");
@@ -598,7 +598,7 @@ abstract class content_management_tools_Abstract
 
         $_SESSION['cm_applet'][$_SESSION['user']['UserId']][$uid_applet_name]=$uid_applet_name.'.lck';
 
-        $file = $jar_url."/apps/maarch_entreprise/tmp/".$jnlp_name;
+        $file = $_SESSION['config']['tmppath'].$jnlp_name;
 
         //echo '<a id="jnlp_file" href="'.$file.'" onclick="window.location.href=\''.$file.'\';self.close();"></a>';
         echo '<script>window.location.href=\''.$file.'\';if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};if($(\'CMApplet\')) {destroyModal(\'CMApplet\');};</script>';

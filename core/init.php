@@ -38,6 +38,8 @@ session_start();
 
 $_SESSION['sessionName'] = $sessionName;
 
+require_once '../../vendor/autoload.php';
+
 if (!isset($_SESSION['config']) || !isset($_SESSION['businessapps'][0]['appid'])) {
     require_once('class/class_portal.php');
     $portal = new portal();
@@ -77,13 +79,6 @@ if (isset($_SESSION['custom_override_id'])
     set_include_path(
         $_SESSION['config']['corepath'] . PATH_SEPARATOR . get_include_path()
     );
-}
-
-
-if(file_exists('installed.lck')) {
-
-    require_once 'vendor/autoload.php';
-
 }
 
 

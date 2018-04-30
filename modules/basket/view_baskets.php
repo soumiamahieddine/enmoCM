@@ -80,7 +80,7 @@ if (isset($_REQUEST['extension'])) {
     $_SESSION['FILE']['extension'] = $_REQUEST['extension'];
     $_SESSION['upfile']['size'] = $_REQUEST['taille_fichier'];
     $_SESSION['upfile']['mime'] = "application/pdf";
-    $_SESSION['upfile']['local_path'] = "tmp/tmp_file_".$_REQUEST['md5'].".pdf";
+    $_SESSION['upfile']['local_path'] = $_SESSION['config']['tmppath'] . "tmp_file_".$_REQUEST['md5'].".pdf";
     $_SESSION['upfile']['name'] = "tmp_file_".$_REQUEST['md5'].".pdf";
     $_SESSION['upfile']['md5'] = $_REQUEST['md5'];
     $_SESSION['upfile']['format'] = 'pdf';
