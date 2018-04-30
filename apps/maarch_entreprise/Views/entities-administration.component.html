@@ -304,31 +304,24 @@
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="currentEntity.canAdminUsers" style="padding:5px;">
-                                <mat-accordion>
-                                    <mat-expansion-panel>
-                                        <mat-expansion-panel-header>
-                                            <mat-panel-title style="color: rgba(0,0,0,0.54);">
-                                                {{lang.addUser}}
-                                            </mat-panel-title>
-                                        </mat-expansion-panel-header>
-                                        <mat-form-field>
-                                            <input class="autocompleteSearch" #autocompleteFilter type="text" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
-                                            <mat-autocomplete #auto="matAutocomplete">
-                                                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
-                                                    <p mat-line style="margin:0;">
-                                                        <span class="col-xm-1" style="padding-right:5px;">
-                                                            <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
-                                                        </span>
-                                                        <span class="col-xm-11">
-                                                            {{ user.idToDisplay }}
-                                                            <small>{{ user.otherInfo }}</small>
-                                                        </span>
-                                                    </p>
-                                                </mat-option>
-                                            </mat-autocomplete>
-                                        </mat-form-field>
-                                    </mat-expansion-panel>
-                                </mat-accordion>
+                                <mat-form-field>
+                                    <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
+                                    <input class="autocompleteSearch" #autocompleteFilter type="text" placeholder="{{lang.linkUser}}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
+                                            <p mat-line style="margin:0;">
+                                                <span class="col-xm-1" style="padding-right:5px;">
+                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
+                                                </span>
+                                                <span class="col-xm-11">
+                                                    {{ user.idToDisplay }}
+                                                    <small>{{ user.otherInfo }}</small>
+                                                </span>
+                                            </p>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <hr/>
                             </div>
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
