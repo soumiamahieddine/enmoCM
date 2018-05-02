@@ -1100,7 +1100,7 @@ function check_docserver($collId)
     if ($core->is_module_loaded('templates')
         && $_SESSION['upfile']['format'] == 'maarch'
     ) {
-        if (!isset($_SESSION['template_content'])
+        if (!isset($_SESSION['template_modified_content'])
             || $_SESSION['template_content_same']
         ) {
             $_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
@@ -1121,8 +1121,9 @@ function check_docserver($collId)
 
                 return false;
             }
-            fwrite($myfile, $_SESSION['template_content']);
+            fwrite($myfile, $_SESSION['template_modified_content']);
             fclose($myfile);
+            $_SESSION['template_modified_content'] = '';
             $_SESSION['upfile']['size'] = filesize($tmpPath);
         }
     }

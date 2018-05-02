@@ -20,18 +20,18 @@
 */
 
 //Remove html tags to avoid empty space 
-$_SESSION['template_content'] = trim(str_replace(
+$sessionTemplateContent = trim(str_replace(
     array('&nbsp;','<p>','</p>'),
     '',
     $_SESSION['template_content']
 ));
-$_SESSION['template_content'] = strip_tags($_SESSION['template_content']);
-$_SESSION['template_content'] = trim(preg_replace(
+$sessionTemplateContent = strip_tags($sessionTemplateContent);
+$sessionTemplateContent = trim(preg_replace(
     '/\s*/m', 
     '', 
-    $_SESSION['template_content']));
+    $sessionTemplateContent));
 
-$sessionTemplateContent = utf8_encode(html_entity_decode($_SESSION['template_content']));
+$sessionTemplateContent = utf8_encode(html_entity_decode($sessionTemplateContent));
 $requestTemplateContent = utf8_encode(html_entity_decode(strip_tags($_REQUEST['template_content'])));
 //var_dump($sessionTemplateContent);var_dump($requestTemplateContent);
 $sessionTemplateContent = trim(str_replace(
@@ -79,14 +79,13 @@ $requestTemplateContent = trim(str_replace(
     "", 
     $requestTemplateContent
 ));
-
 if (($sessionTemplateContent == $requestTemplateContent) || empty($sessionTemplateContent)) {
     $_SESSION['template_content_same'] = true;
     echo "{status : '1, responseText : same content ! '}";
 } else {
-    $_SESSION['template_content'] = $_REQUEST['template_content'];
-    $_SESSION['template_content'] = str_replace('[dates]', date('d-m-Y'), $_SESSION['template_content']);
-    $_SESSION['template_content'] = str_replace('[time]', date('G:i:s'), $_SESSION['template_content']);
+    $_SESSION['template_modified_content'] = $_REQUEST['template_content'];
+    $_SESSION['template_modified_content'] = str_replace('[dates]', date('d-m-Y'),$_SESSION['template_modified_content']);
+    $_SESSION['template_modified_content'] = str_replace('[time]', date('G:i:s'), $_SESSION['template_modified_content']);
     echo "{status : '0, responseText : " . addslashes(functions::xssafe($_REQUEST['template_content'])) . "'}";
 }
 
