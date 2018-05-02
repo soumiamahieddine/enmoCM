@@ -77,7 +77,7 @@ class CoreController
 
         if (explode('.', $data['fileName'])[1] != 'jnlp') {
             return $response->withStatus(403)->withJson(['errors' => 'File extension forbidden']);
-        } elseif (strpos($data['fileName'], "{$GLOBALS['userId']}_maarchCM_")) {
+        } elseif (strpos($data['fileName'], "{$GLOBALS['userId']}_maarchCM_") === false) {
             return $response->withStatus(403)->withJson(['errors' => 'File name forbidden']);
         }
 
