@@ -22,6 +22,42 @@
   src: local('Arizonia'), local('Arizonia-Regular'), url('fonts/sonsieOne.woff') format('woff');
 }
 
+/* header.css */
+#fullWrapper #header {
+	height: 120px;
+	width: 910px;
+	text-align: left;
+}
+
+#fullWrapper #header .headerName {
+	position: relative;
+	top: 18px;
+	left: 0px;
+	float: left;
+}
+
+#fullWrapper #header .headerName h2 {
+	font-size: 70px;
+	font-family: 'Contrail One';
+	color: rgba(81, 112, 144, 1);
+}
+
+#fullWrapper #header .logo {
+	position: relative;
+	top: 17px;
+	right: 0px;
+	float: right;
+}
+
+
+/* footer.css */
+#fullWrapper #footer {
+    height: 125px;
+    width: 910px;
+    text-align: left;
+}
+
+
 /* section.css */
 #fullWrapper #section {
 }
@@ -97,11 +133,43 @@
 }
 
 
-/* footer.css */
-#fullWrapper #footer {
-    height: 125px;
-    width: 910px;
-    text-align: left;
+/* tags.css */
+body {
+    margin: 0;
+    background-color: rgba(224, 224, 224, 1);
+    font-family: "Trebuchet MS";
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+}
+
+table {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
+    font-family: 'Sonsie One';
+}
+a:hover {
+    color: rgba(255, 255, 255, 1);
 }
 
 
@@ -326,74 +394,6 @@
     padding-top: 10px;
     padding-bottom: 10px;
     cursor: progress;
-}
-
-
-/* tags.css */
-body {
-    margin: 0;
-    background-color: rgba(224, 224, 224, 1);
-    font-family: "Trebuchet MS";
-}
-
-h2 {
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-}
-
-p {
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-}
-
-form {
-    margin: 0;
-    padding: 0;
-}
-
-table {
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: bold;
-    font-family: 'Sonsie One';
-}
-a:hover {
-    color: rgba(255, 255, 255, 1);
-}
-
-
-/* header.css */
-#fullWrapper #header {
-	height: 120px;
-	width: 910px;
-	text-align: left;
-}
-
-#fullWrapper #header .headerName {
-	position: relative;
-	top: 18px;
-	left: 0px;
-	float: left;
-}
-
-#fullWrapper #header .headerName h2 {
-	font-size: 70px;
-	font-family: 'Contrail One';
-	color: rgba(81, 112, 144, 1);
-}
-
-#fullWrapper #header .logo {
-	position: relative;
-	top: 35px;
-	right: 0px;
-	float: right;
 }
 
 
