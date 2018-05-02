@@ -360,7 +360,7 @@
                             <div class="row" id="signList">
                                 <div *ngFor="let signature of user.signatures; let i = index" class="col-md-3">
                                     <div class="thumbnail">
-                                        <img src="{{signature.pathToSignatureOnTmp}}" alt="Signature" style="width:auto;height:60px;">
+                                        <img src="{{coreUrl}}rest/users/{{user.id}}/signatures/{{signature.id}}" alt="Signature" style="width:auto;height:60px;">
                                         <div class="caption" style="margin-bottom:0px;">
                                             <div *ngIf="selectedSignature != i">
                                                 <p title="{{signature.signature_label}}" style="text-overflow: ellipsis;">{{signature.signature_label}}</p>

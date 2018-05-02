@@ -1615,22 +1615,63 @@ vertical-align: middle;
 
 #bodylogin {
     background: White url(static.php?filename=logo_maarch_only.svg) center center no-repeat;
-    background-size: 50%; 
+    background-size: 90%; 
     height: auto;
     text-align: left;
 }
 
+#bodyloginCustom0 {
+    background: url(static.php?filename=bodylogin.jpg) fixed 0 0 no-repeat;
+    background-size: 100% 100%;
+}
+
+#bodyloginCustom {
+    width: 600px;
+    height: 320px;
+    /*color: #b5b5b5;*/
+    /*margin: auto;*/
+    /*margin-top: 50px;*/
+    top: 0;
+    bottom:0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    
+    border: 2px #24b0ed solid;
+    position: absolute;
+    /*margin: auto;*/
+}
+
+#bodyloginCustom:before {
+    content: '';
+    background: url(static.php?filename=bodylogin.jpg) fixed 0 0 no-repeat;
+    background-size: 100% 100%;
+    -webkit-filter: blur(15px);
+           -moz-filter: blur(15px);
+            -ms-filter: blur(15px);
+             -o-filter: blur(15px);
+                filter: blur(15px);
+    position: absolute;
+    top: 0;
+    bottom:0;
+    left: 0;
+    right: 0;    
+    z-index: -1;
+}
+
 
 #loginpage {
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50vh; /* poussé de la moitié de hauteur de viewport */
-    transform: translateY(-25%); /* tiré de la moitié de sa propre hauteur */
-
+    /*width: 300px;*/
+    /*margin-left: auto;
+    margin-right: auto;*/
+    /*margin-top: 50vh;
+    transform: translateY(-25%);*/
+    color: white;
 }
 
 #formlogin {
+    margin-left: auto;
+    margin-right: auto;
     width: 255px;
 }
 

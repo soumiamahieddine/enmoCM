@@ -113,7 +113,17 @@ if (isset($_SESSION['error'])) {
 }
 $core->load_js();
 
-echo "<body id='bodylogin' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
+if (
+    file_exists('apps/maarch_entreprise/img/bodylogin.jpg') ||
+    file_exists('custom/' . $_SESSION['custom_override_id'] . '/apps/maarch_entreprise/img/bodylogin.jpg')
+
+) {
+    echo "<body id='bodyloginCustom0' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
+} else {
+    echo "<body id='bodylogin' onload=\"session_expirate({$time}, '{$_SESSION['config']['coreurl']}');\">";
+}
+
+echo '<div id="bodyloginCustom">';
 
 if (isset($_SESSION['error'])) {
     echo '<div class="error" id="main_error_popup" onclick="this.hide();">';
@@ -158,5 +168,8 @@ if (isset($_SESSION['info']) && $_SESSION['info'] != '') {
 $loginObj->execute_login_script($loginMethods);
 
 echo '</div>';
+
+echo '</div>';
+
 echo '</body>';
 echo '</html>';

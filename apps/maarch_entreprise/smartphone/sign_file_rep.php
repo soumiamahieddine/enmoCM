@@ -44,25 +44,22 @@ $users = new history();
 $sec = new security();
 
 /* SAUVEGARDE DE L'IMAGE */
-//echo $_POST['imageData'];
+
 $data = str_replace("data:image/png;base64", "",$_POST['imageData']);
 //echo $data;
 $data = str_replace(' ', '+', $data);
 $fileData = base64_decode($data);
 
-//echo $idtrans.' - ';
 $fileName_sign = $_SESSION['config']['tmppath']."tmp_sign_test.png";
 $fileName_sign_resized = $_SESSION['config']['tmppath']."tmp_sign_test_resized.png";
-//echo $fileName;
+
 file_put_contents($fileName_sign, $fileData);
 
 $res_id_master = $_POST['res_id'];
 $res_id_attach = $_POST['res_id_attach'];
 
-$_SESSION['tmpFilenameSign'] =$_SESSION['config']['businessappurl']. DIRECTORY_SEPARATOR ."tmp". DIRECTORY_SEPARATOR .basename($fileName_sign);
-//echo $fileName_sign."\n";
-//echo $res_id_master."\n";
-//echo "<pre>".print_r($_SESSION['modules_loaded'],true)."</pre>";
+$_SESSION['tmpFilenameSign'] = $_SESSION['config']['tmppath'].basename($fileName_sign);
+
 $_SESSION['doc_id'] = $res_id_master;
 
 $db = new Database();
@@ -71,7 +68,6 @@ $stmt = $db->query("SELECT * from res_view_attachments WHERE res_id = ? AND stat
 if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
     $codeSession = $_SESSION['user']['code_session'];
 }
-
 
 while($line = $stmt->fetchObject()){
 	$objectId = $line->res_id;
@@ -86,7 +82,6 @@ while($line = $stmt->fetchObject()){
 
 	$_SESSION['visa']['repSignRel'] = $line->relation;
 
-
 	include 'modules/visa/retrieve_attachment_from_cm.php';
 
 	if (!file_exists($fileOnDs)){
@@ -98,7 +93,6 @@ while($line = $stmt->fetchObject()){
 
 	$cmd_resize = "convert ".escapeshellarg($fileName_sign)." -resize ".$new_width."x".$new_heigh." -size ".$new_width."x".$new_heigh." xc:white +swap -gravity center -composite ".escapeshellarg($fileName_sign_resized);
 
-	
 	exec($cmd_resize);
 
 	$cmd = "java -jar " 
@@ -113,8 +107,6 @@ while($line = $stmt->fetchObject()){
 	
 	$tmpFileName = pathinfo($fileOnDs, PATHINFO_BASENAME);
 	$fileExtension = "pdf";
-	
-	
 	
     if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
         if (empty($codeSession)) {

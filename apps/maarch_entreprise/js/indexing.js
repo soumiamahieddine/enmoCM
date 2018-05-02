@@ -1244,7 +1244,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 				Element.setStyle(show_multi_contact, {display : 'none'});
 				Element.setStyle(add_multi_contact, {display : 'none'});
 				// NCH01
-                var cat_id = $(category_id).options[$(category_id).selectedIndex].value;
+                var cat_id = $('category_id').options[$('category_id').selectedIndex].value;
                 if(cat_id != 'attachment') Element.setStyle(contact_id_tr, {display : 'table-row'});
 			}
         }
@@ -1342,10 +1342,11 @@ function changeCycle(path_manage_script)
 
 function getIframeContent(path_manage_script)
 {
-    if ($j('#choose_file_div') && $j("#file_iframe").contents()[0]) {
+    var iframe = document.getElementById("file_iframe");
+    if ($j('#choose_file_div') && iframe.contentDocument) {
         var choose_file_div = $('choose_file_div');
         if (choose_file_div.style.display == 'none') {
-            var iframe = document.getElementById("file_iframe");
+            
             var iframeContent = iframe.contentDocument;
             var templateContent2 = iframeContent.getElementById("template_content_ifr");
             //window.alert(templateContent2);

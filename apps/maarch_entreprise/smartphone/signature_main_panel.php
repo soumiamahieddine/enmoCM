@@ -53,7 +53,7 @@ if (isset($_SESSION['origin']) && $_SESSION['origin'] <> "basket") {
 if (!$right) {
     ?>
     <script type="text/javascript">
-        window.top.location.href = "<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right";
+        window.top.location.href = "<?php  echo $_SESSION['config']['businessappurl']; ?>index.php?page=no_right";
     </script>
     <?php
     exit();
@@ -75,25 +75,21 @@ $subject = $res->subject;
     <div id="signature-pad" class="m-signature-pad" >
         <div class="m-signature-pad--left">
         <!--<?php
-        if (count($_SESSION['user']['pathToSignature']) > 0){
-        ?>
-            <span class="action_but_sign chooseSignBut" data-action="chooseSignBut"><a href="load_user_signatures.php?id=<?php functions::xecho($s_id);?>&res_id_attach=<?php functions::xecho($att_id);?>"><i class="fa fa-bars fa-3x" aria-hidden="true"></i></a></span>
+        if (count($_SESSION['user']['pathToSignature']) > 0) {
+            ?>
+            <span class="action_but_sign chooseSignBut" data-action="chooseSignBut"><a href="load_user_signatures.php?id=<?php functions::xecho($s_id); ?>&res_id_attach=<?php functions::xecho($att_id); ?>"><i class="fa fa-bars fa-3x" aria-hidden="true"></i></a></span>
         <?php
+
         }
         ?>-->
             
             <div id="list_tnl_sign">
             <?php
-                if (count($_SESSION['user']['pathToSignature']) > 0){
-                    foreach ($_SESSION['user']['pathToSignature'] as $key=>$sign) {
-                        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-                                        . '_' . rand() . '.' . strtolower(pathinfo($sign,PATHINFO_EXTENSION));
-                        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
-
-                        if (copy($sign, $filePathOnTmp)) {
-                            $_SESSION['tab_copy_sign'][$key] = $_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp;
-                            echo '<img src="'.$_SESSION['config']['businessappurl']. '/tmp/' . $fileNameOnTmp.'" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
-                        }
+                $userInfos = \User\models\UserModel::get(['select' => ['id'], 'where' => ['user_id = ?'], 'data' => [$_SESSION['user']['UserId']]]);
+                $_SESSION['user']['pathToSignature'] = \User\models\UserSignatureModel::get(['select' => ['id'], 'where' => ['user_serial_id = ?'], 'data' => [$userInfos[0]['id']]]);
+                if (count($_SESSION['user']['pathToSignature']) > 0) {
+                    foreach ($_SESSION['user']['pathToSignature'] as $sign) {
+                      echo '<img src="'. $_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
                     }
                 }
             ?>
@@ -124,27 +120,6 @@ $subject = $res->subject;
         </div>
     </div>  
 
-    <?php 
-    
-    /*if (isset($_GET['keySign'])){
-        $sign = $_SESSION['tab_copy_sign'][$_GET['keySign']];
-
-        ?>
-        <img src="<?php echo $sign; ?>" id="myLoadedSign" style="display:none;" />
-       
-        <!--<script type="text/javascript" >
-            var canvas = document.getElementById('canvasSign');
-            var ctx = canvas.getContext('2d');
-            var img = new Image();
-            img.src = <?php echo "'".$_SESSION['user']['pathToSignature'][$_GET['keySign']]."'"; ?>;
-            img.addEventListener('load', function() {
-                ctx.drawImage(img, 0, 0);
-            });
-            
-        </script>-->
-        <?
-    }*/
-    ?>
     <a href="signature_recap.php?id=<?php functions::xecho($s_id);?>&res_id_attach=<?php functions::xecho($att_id);?>" id="link_recap" style="display:none;" />
     <a href="check_id_user.php?id=<?php functions::xecho($s_id);?>&res_id_attach=<?php functions::xecho($att_id);?>" id="link_check_user" style="display:none;" />
     <div class="error">

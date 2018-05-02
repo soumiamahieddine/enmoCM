@@ -66,24 +66,23 @@ if (!$right) {
 
 $db = new Database();
 
-
 $res_db = $db->query("SELECT * FROM " . $view . " WHERE res_id = ? ", array($s_id));
 
 $res = $res_db->fetchObject();
 $subject = $res->subject;
-//echo "<pre>".print_r($_SESSION,true)."</pre>";
+
 ?>
 <div id="signature_recap" title="<?php functions::xecho($subject);?>" class="panel" style="height:90%;"> 
     <?php
-      // echo "<pre>".print_r($_SESSION['config'],true)."</pre>";
+
       $db = new Database();
-      //$query = "SELECT * from res_view_attachments WHERE res_id_master = ? AND attachment_type IN ('signed_response') ORDER BY creation_date desc LIMIT 1";
+
       $where = "res_id_master = ? AND attachment_type IN ('signed_response')";
       $order = " ORDER by creation_date DESC";
       $query = $db->limit_select(0, 1, '*', 'res_view_attachments', $where, '', '', $order);
       
       $stmt = $db->query($query, array($_SESSION['doc_id']));
-        //$_SESSION['tmpFilenameSign']
+
       echo '<table>';
       while($line = $stmt->fetchObject()){
         $objectId = $line->res_id;        
@@ -93,8 +92,14 @@ $subject = $res->subject;
       }
       //$paramsTab['viewDocumentLink'] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=view_attachment&res_id_master='.$_SESSION['doc_id'];
       echo '</table>';
+
+      $path = $_SESSION['tmpFilenameSign'];
+      $type = pathinfo($path, PATHINFO_EXTENSION);
+      $data = file_get_contents($path);
+      $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
     ?>
-    <img id="thum_sign" src="<?php  echo $_SESSION['tmpFilenameSign'];?>" style="width:20%;"/>
+    <img id="thum_sign" src="<?php echo $base64;?>" style="width:20%;"/>
     <hr/>
     <span class="btn_recap" onclick="save_sign();" style="margin-left:10px;cursor:pointer;" id="linkSaveSign"><i class="fa fa-save"></i> Enregistrer signature</span>
     <span class="btn_recap"><i class="fa fa-ellipsis-v"></i> Détails signature</span>

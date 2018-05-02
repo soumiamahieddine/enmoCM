@@ -155,7 +155,6 @@ foreach (array_keys($data) as $key) {
             </div>';
     }
 }
-require_once('apps/maarch_entreprise/smartphone/view_resource_controler.php');
 
 require_once "modules" . DIRECTORY_SEPARATOR . "thumbnails" . DIRECTORY_SEPARATOR
 			. "class" . DIRECTORY_SEPARATOR
@@ -195,7 +194,7 @@ else{
 	<div align="center">
 		<input type="button" class="whiteButton" value="<?php 
 		echo _VIEW_DOC; 
-		?>" onclick="window.open('<?php echo $fileUrl;?>', '_blank');">
+		?>" onclick="window.open('../index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id=<?php echo $s_id;?>', '_blank');">
 	</div>
     <?php
 		}

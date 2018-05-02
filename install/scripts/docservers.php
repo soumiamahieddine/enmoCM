@@ -44,6 +44,12 @@ if ($checkDocserverRoot !== true) {
     exit;
 }
 
+$_REQUEST['docserverRoot'] .= DIRECTORY_SEPARATOR . $_SESSION['config']['databasename'];
+
+if (!is_dir($_REQUEST['docserverRoot'])) {
+    mkdir($_REQUEST['docserverRoot']);
+}
+
 if (!$Class_Install->createDocservers($_REQUEST['docserverRoot'])) {
     $return['status'] = 0;
     $return['text'] = _CAN_NOT_CREATE_SUB_DOCSERVERS;

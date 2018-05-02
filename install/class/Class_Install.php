@@ -1931,7 +1931,7 @@ class Install extends functions
         $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
         $db = new Database();
 
-        $execute = $db->query($fileContent, null, false, true);
+        $execute = $db->query($fileContent, null, true, true);
 
         if (!$execute) {
             return false;
@@ -1981,15 +1981,17 @@ class Install extends functions
     public function checkPathRoot($path)
     {
         if (!is_dir($path)) {
-            $error .= _PATH_UNAPPROACHABLE;
+            $error .= _PATH_UNAPPROACHABLE . ' ' . $path;
         } else {
             if (!is_writable($path)
                 || !is_readable($path)
             ) {
-                $error .= _THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+                $error .= _THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS . ' ' . $path;
             }
         }
         if ($error != '') {
+            $error .= '<br/>' . _CREATES_OR_UPDATES_RIGHT_ON_PATH;
+            $error .= ' <b>' . dirname($path) . '</b>';
             return $error;
         } else {
             return true;

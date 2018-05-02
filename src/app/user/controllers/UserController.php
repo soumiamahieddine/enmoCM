@@ -17,6 +17,7 @@ namespace User\controllers;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Docserver\controllers\DocserverController;
+use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
@@ -35,6 +36,7 @@ use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
+use User\models\UserSignatureModel;
 
 class UserController
 {
@@ -99,7 +101,7 @@ class UserController
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'enabled', 'phone', 'mail', 'initials', 'thumbprint', 'loginmode']]);
-        $user['signatures'] = UserModel::getSignaturesById(['id' => $aArgs['id']]);
+        $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
         $user['allGroups'] = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
@@ -234,7 +236,7 @@ class UserController
     public function getProfile(Request $request, Response $response)
     {
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'thumbprint']]);
-        $user['signatures'] = UserModel::getSignaturesById(['id' => $user['id']]);
+        $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups'] = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
         $user['entities'] = UserModel::getEntitiesById(['userId' => $user['user_id']]);
@@ -454,6 +456,38 @@ class UserController
         return $response->withJson(['user' => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])]);
     }
 
+    public function getImageSignature(Request $request, Response $response, array $aArgs)
+    {
+        $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
+        if (!empty($error['error'])) {
+            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
+        }
+
+        $signatures = UserSignatureModel::get([
+            'select'    => ['signature_path', 'signature_file_name'],
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['id'], $aArgs['signatureId']]
+        ]);
+        if (empty($signatures[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature does not exist']);
+        }
+
+        $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
+        if (!file_exists($docserver['path_template'])) {
+            return [];
+        }
+
+        $pathToSignature = $docserver['path_template'] . str_replace('#', '/', $signatures[0]['signature_path']) . $signatures[0]['signature_file_name'];
+        $image = file_get_contents($pathToSignature);
+        if ($image === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Signature not found on docserver']);
+        }
+
+        $response->write($image);
+
+        return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+    }
+
     public function addSignature(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
@@ -519,7 +553,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'signatures' => UserModel::getSignaturesById(['id' => $aArgs['id']])
+            'signatures' => UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']])
         ]);
     }
 
@@ -543,7 +577,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'signature' => UserModel::getSignatureWithSignatureIdById(['id' => $aArgs['id'], 'signatureId' => $aArgs['signatureId']])
+            'signature' => UserSignatureModel::getById(['id' => $aArgs['signatureId']])
         ]);
     }
 
@@ -557,7 +591,7 @@ class UserController
         UserModel::deleteSignature(['signatureId' => $aArgs['signatureId'], 'userSerialId' => $aArgs['id']]);
 
         return $response->withJson([
-            'signatures' => UserModel::getSignaturesById(['id' => $aArgs['id']])
+            'signatures' => UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']])
         ]);
     }
 

@@ -1221,9 +1221,9 @@ if (isset($_REQUEST['id'])) {
 
     //On recherche le type de document attaché à ce courrier
     $stmt = $db->query('SELECT type_id, creation_date FROM res_letterbox WHERE res_id = ?', array($_SESSION['doc_id']));
-    $type_id = $stmt->fetchObject();
-    $type_id = $type_id->type_id;
-    $dataForDate = $type_id->creation_date;
+    $mail_doctype = $stmt->fetchObject();
+    $type_id = $mail_doctype->type_id;
+    $dataForDate = $mail_doctype->creation_date;
     //On recherche le sve_type
     $stmt = $db->query('SELECT * FROM mlb_doctype_ext WHERE type_id = ?', array($type_id));
     $sve = $stmt->fetchObject();

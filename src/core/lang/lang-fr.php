@@ -42,6 +42,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
+define('_ID_TO_DISPLAY', 'res_id');
 define('_INVALID_CLAUSE', 'Clause non valide');
 define('_INVALID_REQUEST', 'Requête non valide');
 define('_LIST_TEMPLATE_CREATION', 'Création liste de diffusion');
@@ -58,6 +59,7 @@ define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
 define('_PRIORITY_SORT_MODIFICATION', 'Modification ordre priorités');
+define('_QUOTA_EXCEEDED', 'Quota dépassé');
 define('_REPORT_MODIFICATION', 'Modification états et édition');
 define('_STATUS_ADDED', 'Statut ajouté');
 define('_STATUS_DELETED', 'Statut supprimé');
@@ -80,6 +82,7 @@ define('_USER_ALREADY_LINK_ENTITY', 'L\'utilisateur est déjà lié à cette ent
 define('_VISA_USER', 'Pour visa');
 define('_WRONG_FILE_TYPE', 'Ce type de fichier n\'est pas permis');
 define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'L\'entité parente ne doit pas être dans une entité fille');
+define('_UNREACHABLE_DOCSERVER', 'Chemin docserver inatteignable');
 
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des documents avec avis');
@@ -90,5 +93,3 @@ define('_FOLDERS_LIST', 'Liste de dossiers');
 define('_DOCTYPE_UPDATED', 'Type de document modifié');
 define('_DOCTYPE_ADDED', 'Type de document ajouté');
 define('_DOCTYPE_DELETED', 'Type de document supprimé');
-
-define('_QUOTA_EXCEEDED', 'Quota dépassé');

@@ -174,7 +174,8 @@ if ($_REQUEST['action'] == 'testConnect') {
 
     if (!$loadDatas) {
         $return['status'] = 0;
-        $return['text'] = _UNABLE_TO_LOAD_DATAS;
+        $return['text'] = _UNABLE_TO_LOAD_DATAS . ' : ';
+        $return['text'] .= $_SESSION['errorLoadingSqlFile'];
 
         $jsonReturn = json_encode($return);
 

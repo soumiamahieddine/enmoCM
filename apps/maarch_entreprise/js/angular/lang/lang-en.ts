@@ -178,6 +178,7 @@ export const LANG_EN = {
     "limitDataReached"                  : "You have reached max display datas (<b>25000 datas</b>), refine your <b>date range</b>",
     "linkEntityToUserInfo"              : "Click on entity of tree to link / unlink to this user",
     "linkGroup"                         : "Link a group",
+    "linkUser"                          : "Link a user",
     "listTemplatesRolesUpdated"         : "Roles updated",
     "logout"                            : "Logout",
     "maarchApplication"                 : "Maarch App",

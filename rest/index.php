@@ -200,6 +200,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
+//Jnlp
+$app->get('/jnlp', \SrcCore\controllers\CoreController::class . ':renderJnlp');
+
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
 
@@ -277,6 +280,7 @@ $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\Use
 $app->get('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':isEntityDeletable');
 $app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
 $app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
+$app->get('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':getImageSignature');
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');

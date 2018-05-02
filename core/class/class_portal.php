@@ -58,9 +58,7 @@ class portal extends functions
         $corePath = str_replace('class', '', dirname(__FILE__));
         $corePath = str_replace('core' . DIRECTORY_SEPARATOR, '', $corePath);
         $_SESSION['config']['corepath'] = $corePath;
-        $_SESSION['config']['tmppath'] = $corePath . 'apps' 
-            . DIRECTORY_SEPARATOR . 'maarch_entreprise'
-            . DIRECTORY_SEPARATOR . 'tmp'. DIRECTORY_SEPARATOR;
+        $_SESSION['config']['tmppath'] = '/tmp/';
         $_SESSION['config']['defaultpage'] = $corePath . 'index.php';
         $_SESSION['config']['coreurl'] = str_replace('rest/', '', Url::coreurl());
         $i=0;

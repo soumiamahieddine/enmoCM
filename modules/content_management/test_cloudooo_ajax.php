@@ -41,10 +41,10 @@ $resp = $client->send($req);
 if (!$resp->faultCode()) {
     $encoder = new PhpXmlRpc\Encoder();
     $value = $encoder->decode($resp->value());
-    if (!is_dir('apps/maarch_entreprise/tmp/cloudooo_results')) {
-        mkdir('apps/maarch_entreprise/tmp/cloudooo_results');
+    if (!is_dir($_SESSION['config']['tmppath'] . 'cloudooo_results')) {
+        mkdir($_SESSION['config']['tmppath'] . 'cloudooo_results');
     }
-    $fileName = 'apps/maarch_entreprise/tmp/cloudooo_results/' . rand() . '.' . $outputFormat;
+    $fileName = $_SESSION['config']['tmppath'] . 'cloudooo_results/' . rand() . '.' . $outputFormat;
     $theFile = fopen($fileName, 'w+');
     fwrite($theFile, base64_decode($value));
     fclose($theFile);

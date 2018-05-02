@@ -112,8 +112,11 @@ abstract class UserSignaturesAbstract extends Database
 
 
         $storeInfos = $this->storeSignOnDocserver($tmpSourceCopy,'templates');
-        $db->query('INSERT INTO ' . USER_SIGNATURES_TABLE . ' (user_id, signature_path, signature_file_name,fingerprint) VALUES (?, ?, ?, ?)',
-            [$_SESSION['user']['UserId'],
+
+        $userInfos = \User\models\UserModel::get(['select' => ['id'], 'where' => ['user_id = ?'], 'data' => [$_SESSION['user']['UserId']]]);
+
+        $db->query('INSERT INTO ' . USER_SIGNATURES_TABLE . ' (user_serial_id, signature_path, signature_file_name,fingerprint) VALUES (?, ?, ?, ?)',
+            [$userInfos[0]['id'],
              $storeInfos['destination_dir'],
              $storeInfos['file_destination_name'],
              Ds_doFingerprint($tmpSourceCopy,$docserverTypeObjectSign->fingerprint_mode)
