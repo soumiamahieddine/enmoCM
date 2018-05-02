@@ -123,6 +123,30 @@ if (file_exists($filename)) {
             }
         });
     }
+
+    function uploadFromImagePicker()
+    {
+        selectImgPicker = document.getElementById("selectImgPicker");
+        console.log(selectImgPicker.value);
+        $.ajax({
+            url: 'scripts/uploadFromImagePicker.php',
+            dataType: 'html',
+            data: 'imgSelected='+selectImgPicker.value,
+            type: 'post',
+            success: function(php_script_response) {
+                console.log(php_script_response);
+                if(php_script_response.indexOf('error')==-1) {
+                    var theImg = document.getElementById("imageDiv");
+                    theImg.src = php_script_response;
+                    theImg.innerHTML='<img src="'+php_script_response+'?'+new Date().getTime()
+                        +'" width="30%" height="30%" />';
+                    $('#ajaxReturn_upload_ko').html('Image chargée');
+                } else {
+                    $('#ajaxReturn_upload_ko').html(php_script_response);
+                }
+            }
+        });
+    }
 </script>
 
 <div class="blockWrapper">
@@ -162,6 +186,38 @@ if (file_exists($filename)) {
                 <img src="../apps/maarch_entreprise/img/bodylogin.jpg" width="30%" height="30%" />
             </div>
         </p>
+        <link href="../css/image-picker.css" rel="stylesheet" type="text/css">
+        <div class="container">
+            <?php echo _LOGIN_PICTURE_FROM_DATA;?>
+            <select id="selectImgPicker" name="selectImgPicker" class="image-picker" onchange="uploadFromImagePicker();">
+                <optgroup label="Lettres">
+                    <option data-img-src="img/background/01.jpg" value="01">Lettre 1</option>
+                    <option data-img-src="img/background/02.jpg" value="02">Lettre 2</option>
+                    <option data-img-src="img/background/03.jpg" value="03">Lettre 3</option>
+                    <option data-img-src="img/background/04.jpg" value="04">Lettre 4</option>
+                    <option data-img-src="img/background/05.jpg" value="05">Lettre 5</option>
+                    <option data-img-src="img/background/06.jpg" value="06">Lettre 6</option>
+                    <option data-img-src="img/background/07.jpg" value="07">Lettre 7</option>
+                    <option data-img-src="img/background/08.jpg" value="08">Lettre 8</option>
+                </optgroup>
+                <optgroup label="Paysages">
+                    <option data-img-src="img/background/09.jpg" value="09">Paysage 1</option>
+                    <option data-img-src="img/background/10.jpg" value="10">Paysage 2</option>
+                    <option data-img-src="img/background/11.jpg" value="11">Paysage 3</option>
+                    <option data-img-src="img/background/12.jpg" value="12">Paysage 4</option>
+                    <option data-img-src="img/background/13.jpg" value="13">Paysage 5</option>
+                    <option data-img-src="img/background/14.jpg" value="14">Paysage 6</option>
+                    <option data-img-src="img/background/15.jpg" value="15">Paysage 7</option>
+                    <option data-img-src="img/background/16.jpg" value="16">Paysage 8</option>
+                </optgroup>
+            </select>
+        </div>
+        <script src="js/image-picker.js"></script>
+        <script>
+        $(".image-picker").imagepicker({
+            hide_select : false
+        })
+        </script>
 
 </div>
 <div class="blockWrapper">
@@ -228,7 +284,6 @@ if (file_exists($filename)) {
                         <td>:</td>
                         <td><input type="text" name="smtpPassword" id="smtpPassword" disabled="disabled" value=<?php echo $path_to_lucene_index; ?> /></td>
                     </tr>
-
                     <tr>
                         <td></td>
                         <td></td>
@@ -241,11 +296,10 @@ if (file_exists($filename)) {
             <br />
             <div id="ajaxReturn_testConnect_ko"></div>
             <div align="center">
-                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
             </div>
             <div id="ajaxReturn_testConnect_ok"></div>
         </p>
-        
     </div>
 </div>
 <br />

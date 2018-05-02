@@ -454,8 +454,11 @@ if (!defined('_CONFIG_IMG_EXP')) {
     define('_CONFIG_IMG_EXP', "Permet de modifier l'image de fond de la page de connexion, Choisissez une image de taille minimum de 1920*1080 et au format JPG");
 }
 if (!defined('_LOGIN_PICTURE')) {
-    define('_LOGIN_PICTURE', "Choisir une image");
+    define('_LOGIN_PICTURE', "Choisir une image depuis votre disque");
 }
 if (!defined('_UPLOAD_PICTURE')) {
     define('_UPLOAD_PICTURE', "Charger l'image");
+}
+if (!defined('_LOGIN_PICTURE_FROM_DATA')) {
+    define('_LOGIN_PICTURE_FROM_DATA', "Ou depuis notre banque d'images (Pixabay)");
 }
