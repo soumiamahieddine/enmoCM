@@ -1460,11 +1460,29 @@ if (!defined('_EMPTY_PSW')) {
 if (!defined('_AUTORIZED_USER')) {
     define('_AUTORIZED_USER', 'Utilisateur autorisé');
 }
+if (!defined('_SUSPENDED_USER')) {
+    define('_SUSPENDED_USER', 'Utilisateur suspendu');
+}
+if (!defined('_DELETED_USER')) {
+    define('_DELETED_USER', 'Utilisateur supprimé');
+}
+if (!defined('_USER_DELETION')) {
+    define('_USER_DELETION', "Suppression de l'utilisateur");
+}
 if (!defined('_USER_AUTORIZATION')) {
     define('_USER_AUTORIZATION', "Autorisation de l'utilisateur");
 }
 if (!defined('_USER_SUSPENSION')) {
     define('_USER_SUSPENSION', "Suspension de l'utilisateur");
+}
+if (!defined('_USER_UPDATED')) {
+    define('_USER_UPDATED', 'Utilisateur modifié');
+}
+if (!defined('_USER_UPDATE')) {
+    define('_USER_UPDATE', "Modification d'un utilisateur");
+}
+if (!defined('_USER_ADDED')) {
+    define('_USER_ADDED', 'Nouvel utilisateur ajouté');
 }
 if (!defined('_NO_PRIMARY_GROUP')) {
     define('_NO_PRIMARY_GROUP', 'Aucun groupe primaire sélectionné !');
@@ -5205,4 +5223,27 @@ if (!defined('_USE_REF')) {
 
 if (!defined('_WARNING_REF')) {
     define('_WARNING_REF', '<b>Fichiers de reférérentiel manquant !</b><br/>Pour utiliser le référentiel national, veuillez contacter votre <a href="mailto:'.$_SESSION['config']['adminmail'].'">administrateur</a>');
+}
+
+/**** Management of welcome image ****/
+if (!defined('_ERROR')) {
+    define('_ERROR', 'Erreur');
+}
+if (!defined('_IMG_SIZE_NOT_ALLOWED')) {
+    define('_IMG_SIZE_NOT_ALLOWED', "Taille d'image trop faible");
+}
+if (!defined('_SELECT_IMG_FIRST')) {
+    define('_SELECT_IMG_FIRST', "Aucun fichier chargé");
+}
+if (!defined('_ERROR')) {
+    define('_ERROR', "Erreur");
+}
+if (!defined('_IMG_UPLOADED')) {
+    define('_IMG_UPLOADED', "Image chargée");
+}
+if (!defined('_IMG_ALREADY_UPLOADED')) {
+    define('_IMG_ALREADY_UPLOADED', "Image déjà chargée");
+}
+if (!defined('_FILE_FORMAT_NOT_ALLOWED')) {
+    define('_FILE_FORMAT_NOT_ALLOWED', "Format d'image non autorisé");
 }

@@ -445,3 +445,17 @@ if (!defined('_CHECK_RIGHT_SOURCE_FOLDER')) {
 if (!defined('_MISSING_PREREQUISITE_UPDATE')) {
     define('_MISSING_PREREQUISITE_UPDATE', 'Il manque un pré-requis pour réaliser la mise à jour :');
 }
+
+// CONFIG LOGIN IMAGE
+if (!defined('_CONFIG_IMAGE')) {
+    define('_CONFIG_IMAGE', 'Configuration image');
+}
+if (!defined('_CONFIG_IMG_EXP')) {
+    define('_CONFIG_IMG_EXP', "Permet de modifier l'image de fond de la page de connexion, Choisissez une image de taille minimum de 1920*1080 et au format JPG");
+}
+if (!defined('_LOGIN_PICTURE')) {
+    define('_LOGIN_PICTURE', "Choisir une image");
+}
+if (!defined('_UPLOAD_PICTURE')) {
+    define('_UPLOAD_PICTURE', "Charger l'image");
+}
