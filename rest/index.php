@@ -200,6 +200,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
+//Jnlp
+$app->get('/jnlp', \SrcCore\controllers\CoreController::class . ':renderJnlp');
+
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
 
