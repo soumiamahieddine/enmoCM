@@ -67,13 +67,11 @@
                                     </mat-list>
                                 </mat-expansion-panel>
                             </mat-tab>
-                            <mat-tab label="{{lang.administrationServices}}">
-                                <mat-list>
-                                    <mat-list-item *ngFor="let service of group['services'].administration">
-                                        <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
-                                            matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
-                                    </mat-list-item>
-                                </mat-list>
+                            <mat-tab label="{{lang.administrationServices}}" style="overflow:hidden;">
+                                <div class="col-md-3" *ngFor="let service of group['services'].administration" style="padding:10px;">
+                                    <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
+                                        matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                                </div>
                             </mat-tab>
                             <mat-tab label="{{lang.functionnalities}}">
                                 <mat-expansion-panel *ngFor="let upperService of group.services.use; let i = index">
