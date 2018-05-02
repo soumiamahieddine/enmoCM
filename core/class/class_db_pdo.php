@@ -354,9 +354,18 @@ class Database extends functions
         }
 
         if ($multi) {
-            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
-            $this->pdo->exec($queryString);
-            return true;
+            try {
+                $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
+                $this->pdo->exec($queryString);
+
+                return true;
+            } catch (PDOException $PDOException) {
+                if ($catchExceptions) {
+                    $_SESSION['errorLoadingSqlFile'] = $PDOException->getMessage();
+                    
+                    return false;
+                }
+            }
         } else {
             try {
                 $this->stmt = $this->prepare($queryString);

@@ -189,7 +189,7 @@ if (!defined('_DOCSERVERS_EXP')) {
     define('_DOCSERVERS_EXP', "Electronic resources are stored on an HD, a disc bay, or a logical storage system like EMC Centera. Type in an existing folder name, on which Apache gets write access. The install will create the sub-folders declared in the dataset. More information on <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage' target=\"_blank\"> Gestion du stockage(FR)</A>");
 }
 if (!defined('_DOCSERVER_ROOT')) {
-    define('_DOCSERVER_ROOT', 'Root directory for storage');
+    define('_DOCSERVER_ROOT', 'Root directory');
 }
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', 'Validate');
@@ -203,6 +203,10 @@ if (!defined('_PATH_UNAPPROACHABLE')) {
 if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
     define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'The path does not have the adequate rights');
 }
+if (!defined('_CREATES_OR_UPDATES_RIGHT_ON_PATH')) {
+    define('_CREATES_OR_UPDATES_RIGHT_ON_PATH', 'Creates or updates right path');
+}
+
 
 //DATABASE
 if (!defined('_DATABASE')) {

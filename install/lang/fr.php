@@ -149,10 +149,13 @@ if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', 'Zones de stockage');
 }
 if (!defined('_DOCSERVERS_EXP')) {
-    define('_DOCSERVERS_EXP', "Les documents sont stockés à part dans des zones de stockage sur un disque, une baie de disque, ou un système de stockage logique tel que le Centera d'EMC. Entrez un nom de répertoire existant, sur lequel le serveur Apache doit avoir des droits d'écriture. L'installeur va créer les sous-répertoires déclarés dans le jeu de test. Plus d'information sur <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage' target=\"_blank\"> Gestion du stockage</A>");
+    define('_DOCSERVERS_EXP', "Les documents sont stockés à part dans des zones de stockage sur un disque, une baie de disque, ou un système de stockage logique tel que le Centera d'EMC. Entrez un nom de répertoire existant, sur lequel le serveur Apache doit avoir des droits d'écriture. L'installeur va créer les sous-répertoires déclarés dans le jeu de test. Plus d'information sur <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage' target=\"_blank\"> Gestion du stockage</A>.");
+}
+if (!defined('_DOCSERVERS_EXP_2')) {
+    define('_DOCSERVERS_EXP_2', 'Le dossier racine sera automatique suivi du nom de la base de données sélectionnée préalablement.');
 }
 if (!defined('_DOCSERVER_ROOT')) {
-    define('_DOCSERVER_ROOT', 'Chemin du répertoire');
+    define('_DOCSERVER_ROOT', 'Dossier racine');
 }
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', 'Enregistrer');
@@ -165,6 +168,9 @@ if (!defined('_PATH_UNAPPROACHABLE')) {
 }
 if (!defined('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
     define('_THE_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le dossier n'a pas les droits appropriés");
+}
+if (!defined('_CREATES_OR_UPDATES_RIGHT_ON_PATH')) {
+    define('_CREATES_OR_UPDATES_RIGHT_ON_PATH', 'Créer le répertoire ou y positionner les bons droits');
 }
 
 //DATABASE

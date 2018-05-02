@@ -337,7 +337,7 @@
                                 <select onChange="checkDataDB($(this).val());" id="dataFilename">
                                     <option value="default"><?php echo _CHOOSE;?></option>
                                     <?php
-                                        for($i=0; $i<count($listSql);$i++) {
+                                        for ($i=0; $i<count($listSql);$i++) {
                                             echo '<option ';
                                               echo 'value="'.$listSql[$i].'"';
                                             echo '>';
