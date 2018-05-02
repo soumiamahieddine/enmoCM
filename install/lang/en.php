@@ -436,3 +436,17 @@ if (!defined('_CHECK_RIGHT_SOURCE_FOLDER')) {
 if (!defined('_MISSING_PREREQUISITE_UPDATE')) {
     define('_MISSING_PREREQUISITE_UPDATE', 'Prerequisite is missing to update :');
 }
+
+// CONFIG LOGIN IMAGE
+if (!defined('_CONFIG_IMAGE')) {
+    define('_CONFIG_IMAGE', 'Picture configuration');
+}
+if (!defined('_CONFIG_IMG_EXP')) {
+    define('_CONFIG_IMG_EXP', "Allows you to update the picture login page, Choose a resolution equal or bigger than 1920*1080 and a JPG format");
+}
+if (!defined('_LOGIN_PICTURE')) {
+    define('_LOGIN_PICTURE', "Choose an picture");
+}
+if (!defined('_UPLOAD_PICTURE')) {
+    define('_UPLOAD_PICTURE', "Upload picture");
+}

@@ -5235,9 +5235,6 @@ if (!defined('_IMG_SIZE_NOT_ALLOWED')) {
 if (!defined('_SELECT_IMG_FIRST')) {
     define('_SELECT_IMG_FIRST', "Aucun fichier chargé");
 }
-if (!defined('_ERROR')) {
-    define('_ERROR', "Erreur");
-}
 if (!defined('_IMG_UPLOADED')) {
     define('_IMG_UPLOADED', "Image chargée");
 }

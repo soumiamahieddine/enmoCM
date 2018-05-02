@@ -125,7 +125,45 @@ if (file_exists($filename)) {
     }
 </script>
 
+<div class="blockWrapper">
+    <div class="titleBlock">
+            <h2 onClick="slide('configImage');" style="cursor: pointer;">
+                <?php echo _CONFIG_IMAGE;?>
+            </h2>
+    </div>
+    <div class="contentBlock" id="configImage">
+        <p>
+            <h5>
+                <?php echo _CONFIG_IMG_EXP;?>
+            </h5>
+            <form>
+                <table>
+                    <tr>
+                        <td>
+                            <?php echo _LOGIN_PICTURE;?>
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <input id="loginpicture" type="file" name="loginpicture" onchange="uploadImg($('#loginpicture'))" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <br />
+            <div id="ajaxReturn_upload_ko" style="margin-left :20px;color:red;"></div>
+            <div align="center">
+                <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+            </div>
+            <div id="ajaxReturn_upload_ok"></div>
+            <p>Image de la page de login :</p>
+            <div id="imageDiv">
+                <img src="../apps/maarch_entreprise/img/bodylogin.jpg" width="30%" height="30%" />
+            </div>
+        </p>
 
+</div>
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('configGeneral');" style="cursor: pointer;">
@@ -211,45 +249,7 @@ if (file_exists($filename)) {
     </div>
 </div>
 <br />
-<div class="blockWrapper">
-    <div class="titleBlock">
-            <h2 onClick="slide('configImage');" style="cursor: pointer;">
-                <?php echo _CONFIG_IMAGE;?>
-            </h2>
-    </div>
-    <div class="contentBlock" id="configImage">
-        <p>
-            <h5>
-                <?php echo _CONFIG_IMG_EXP;?>
-            </h5>
-            <form>
-                <table>
-                    <tr>
-                        <td>
-                            <?php echo _LOGIN_PICTURE;?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input id="loginpicture" type="file" name="loginpicture" onchange="uploadImg($('#loginpicture'))" />
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <br />
-            <div id="ajaxReturn_upload_ko" style="margin-left :20px;color:red;"></div>
-            <div align="center">
-                <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
-            </div>
-            <div id="ajaxReturn_upload_ok"></div>
-            <p>Image de la page de login :</p>
-            <div id="imageDiv">
-                <img src="../apps/maarch_entreprise/img/bodylogin.jpg" width="30%" height="30%" />
-            </div>
-        </p>
 
-</div>
 <div class="blockWrapper">
     <div class="titleBlock">
             <h2 onClick="slide('configNotificationSendmail');" style="cursor: pointer;">

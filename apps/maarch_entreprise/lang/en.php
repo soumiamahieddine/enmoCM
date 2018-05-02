@@ -5066,3 +5066,23 @@ if (!defined('_USE_REF')) {
 if (!defined('_WARNING_REF')) {
     define('_WARNING_REF', '<b>Referential files not found !</b><br/>In order to use refenrential, contact your <a href="mailto:'.$_SESSION['config']['adminmail'].'">administrator</a>');
 }
+
+/**** Management of welcome image ****/
+if (!defined('_ERROR')) {
+    define('_ERROR', 'Error');
+}
+if (!defined('_IMG_SIZE_NOT_ALLOWED')) {
+    define('_IMG_SIZE_NOT_ALLOWED', "Image size not allowed");
+}
+if (!defined('_SELECT_IMG_FIRST')) {
+    define('_SELECT_IMG_FIRST', "Select image first");
+}
+if (!defined('_IMG_UPLOADED')) {
+    define('_IMG_UPLOADED', "Image uploaded");
+}
+if (!defined('_IMG_ALREADY_UPLOADED')) {
+    define('_IMG_ALREADY_UPLOADED', "Image already uploaded");
+}
+if (!defined('_FILE_FORMAT_NOT_ALLOWED')) {
+    define('_FILE_FORMAT_NOT_ALLOWED', "Image format not allowed");
+}
