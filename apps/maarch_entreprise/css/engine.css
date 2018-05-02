@@ -320,3 +320,7 @@ h1.admin-app-name {
     display:flex;
     justify-content:center;
 }
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}
