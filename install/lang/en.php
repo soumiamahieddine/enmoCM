@@ -445,8 +445,11 @@ if (!defined('_CONFIG_IMG_EXP')) {
     define('_CONFIG_IMG_EXP', "Allows you to update the picture login page, Choose a resolution equal or bigger than 1920*1080 and a JPG format");
 }
 if (!defined('_LOGIN_PICTURE')) {
-    define('_LOGIN_PICTURE', "Choose an picture");
+    define('_LOGIN_PICTURE', "Choose an picture from your disk");
 }
 if (!defined('_UPLOAD_PICTURE')) {
     define('_UPLOAD_PICTURE', "Upload picture");
+}
+if (!defined('_LOGIN_PICTURE_FROM_DATA')) {
+    define('_LOGIN_PICTURE_FROM_DATA', "Or from our storage (Pixabay)");
 }
