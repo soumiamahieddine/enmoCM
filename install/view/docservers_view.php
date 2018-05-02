@@ -67,6 +67,9 @@
             <h6>
                 <?php echo _DOCSERVERS_EXP;?>
             </h6>
+            <h5>
+                <?php echo _DOCSERVERS_EXP_2;?>
+            </h5>
             <form>
                 <table>
                     <tr>
@@ -77,7 +80,10 @@
                             :
                         </td>
                         <td>
-                            <input type="text" name="docserverRoot" id="docserverRoot"/>
+                            <input type="text" size="30" name="docserverRoot" id="docserverRoot"/>
+                        </td>
+                        <td>
+                            <b>/<?php echo $_SESSION['config']['databasename'];?></b>
                         </td>
                     </tr>
                     <tr>
