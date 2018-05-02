@@ -21,6 +21,8 @@ export class BasketAdministrationComponent implements OnInit {
     mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
 
+    selectedIndex                   : number    = 0;
+
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
@@ -212,6 +214,7 @@ export class BasketAdministrationComponent implements OnInit {
                     });
                     this.basketGroups.splice(groupIndex, 1);
                     this.notify.success(this.lang.basketUpdated);
+                    this.selectedIndex = 0;
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -232,6 +235,7 @@ export class BasketAdministrationComponent implements OnInit {
                             }
                         });
                         this.notify.success(this.lang.basketUpdated);
+                        this.selectedIndex = this.basketGroups.length;
                     }, (err) => {
                         this.notify.error(err.error.errors);
                     });

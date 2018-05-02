@@ -33,7 +33,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
-                <mat-tab-group [(selectedIndex)]="selectedTabIndex_1">
+                <mat-tab-group [selectedIndex]="selectedIndex">
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #basketForm="ngForm">
                             <mat-form-field>
