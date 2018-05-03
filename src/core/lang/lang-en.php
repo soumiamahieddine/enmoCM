@@ -293,3 +293,7 @@ define('_ADD_COPY_IN_PROCESS', 'Add persons on copy in the handling');
 define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Forbid recipient modification on the diffusion list');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Update diffusion list from the detailed page');
 define('_ENTITIES_PRINT_SEP_MLB', 'Print limiters by department/services');
+define("_EXPORT_SEDA_VIEW", "See message export");
+define("_PUT_DOC_IN_FILEPLAN", "Classify documents");
+define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify documents in the organizational file plan");
+define("_PERSONNAL_FILEPLAN", "Personal file plan");

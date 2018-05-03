@@ -293,3 +293,7 @@ define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitemen
 define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Interdire la modification du destinataire dans la liste de diffusion');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
+define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
+define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
+define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
+define("_PERSONNAL_FILEPLAN", "Plan de classement personnel");
