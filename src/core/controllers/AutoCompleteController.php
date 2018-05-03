@@ -39,7 +39,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($users as $key => $value) {
+        foreach ($users as $value) {
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $value['user_id']]);
             $data[] = [
                 'type'          => 'user',
@@ -74,7 +74,7 @@ class AutoCompleteController
         }
 
         $data = [];
-        foreach ($users as $key => $value) {
+        foreach ($users as $value) {
             $data[] = [
                 'type'          => 'user',
                 'id'            => $value['id'],
@@ -98,7 +98,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($users as $key => $value) {
+        foreach ($users as $value) {
             if (ServiceModel::hasService(['id' => 'visa_documents', 'userId' => $value['user_id'], 'location' => 'visa', 'type' => 'use'])
                 || ServiceModel::hasService(['id' => 'sign_document', 'userId' => $value['user_id'], 'location' => 'visa', 'type' => 'use'])) {
                 $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $value['user_id']]);
@@ -124,7 +124,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($entities as $key => $value) {
+        foreach ($entities as $value) {
             $data[] = [
                 'type'          => 'entity',
                 'id'            => $value['entity_id'],
@@ -143,7 +143,7 @@ class AutoCompleteController
         ]);
 
         $data = [];
-        foreach ($statuses as $key => $value) {
+        foreach ($statuses as $value) {
             $data[] = [
                 'type'          => 'status',
                 'id'            => $value['id'],
@@ -200,7 +200,7 @@ class AutoCompleteController
         $hits = $index->find(TextFormatModel::normalize(['string' => $data['address']]));
 
         $addresses = [];
-        foreach($hits as $key => $hit){
+        foreach ($hits as $key => $hit) {
             $addresses[] = [
                 'banId'         => $hit->banId,
                 'number'        => $hit->streetNumber,
