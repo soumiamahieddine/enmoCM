@@ -4,14 +4,13 @@
  * Copyright Maarch since 2008 under licence GPLv3.
  * See LICENCE.txt file at the root folder for more details.
  * This file is part of Maarch software.
- *
  */
 
 /**
  * @brief Lang FR
+ *
  * @author dev@maarch.org
  */
-
 define('_ACTION_ADDED', 'Action ajoutée');
 define('_ACTION_DELETED', 'Action supprimée');
 define('_ACTION_UPDATED', 'Action modifiée');
@@ -94,6 +93,35 @@ define('_DOCTYPE_UPDATED', 'Type de document modifié');
 define('_DOCTYPE_ADDED', 'Type de document ajouté');
 define('_DOCTYPE_DELETED', 'Type de document supprimé');
 
+//BEGIN ALEX
+define('_SIMPLE_MAIL', 'Courrier simple');
+define('_EMAIL', 'Courriel');
+define('_FAX', 'Fax');
+define('_CHRONOPOST', 'Chronopost');
+define('_FEDEX', 'Fedex');
+define('_REGISTERED_MAIL', 'Courrier AR');
+define('_COURIER', 'Coursier');
+define('_NUMERIC_PACKAGE', 'Pli numérique');
+define('_OTHER', 'Autre');
+define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
+define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
+define('_SEND_TO_VISA', 'Envoyer pour visa');
+define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au document.');
+define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
+define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
+define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_INTERRUPT_WORKFLOW', 'Interrompre le circuit de visa');
+define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document (\'process_date\' de la table listinstance). Insère également un message d\'interruption sur le viseur actuel (\'process_comment\' de la table listinstance).');
+define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
+define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_VISA_MAIL', 'Viser le courrier');
+define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
+define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact');
+define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");
+
 define('_USERS', 'Utilisateurs');
 define('_ADMIN_USERS_DESC', "Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d'appartenance et définir leur groupe primaire.");
 define('_GROUPS', 'Groupes d\'utilisateurs');
@@ -105,13 +133,13 @@ define('_MANAGE_LISTMODELS_WORKFLOW_DESC', "Gérer les modèles de circuits d'av
 define('_DOCTYPES', 'Typologies documentaires');
 define('_ADMIN_DOCTYPES_DESC', "Définir la structure interne d'un dossier (chemise / sous-chemise / type de document). Définir pour chaque pièce la liste des index à saisir, et leur caractère obligatoire pour la complétude du dossier.");
 define('_FILEPLANS', 'Plans de classement organisationnel');
-define("_ADMIN_FILEPLANS_DESC", "Gestions du plan de classement organisationnel (Permet de gérer des plans spécifiques à une entité).");
-define("_FOLDERTYPES", "Types de dossier");
-define("_ADMIN_FOLDERTYPES_DESC", "Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.");
+define('_ADMIN_FILEPLANS_DESC', 'Gestions du plan de classement organisationnel (Permet de gérer des plans spécifiques à une entité).');
+define('_FOLDERTYPES', 'Types de dossier');
+define('_ADMIN_FOLDERTYPES_DESC', 'Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.');
 define('_TAGS', 'Mots-clés');
-define("_ADMIN_TAGS_DESC", "Permet de modifier, supprimer, ajouter ou fusionner des mots-clés depuis l'interface d'administration");
-define("_THESAURUS", "Thesaurus (Mots-clés)");
-define("_ADMIN_THESAURUS_DESC", "Le thésaurus est un outil linguistique qui permet de mettre en relation le langage naturel des utilisateurs et celui contenu dans les ressources.");
+define('_ADMIN_TAGS_DESC', "Permet de modifier, supprimer, ajouter ou fusionner des mots-clés depuis l'interface d'administration");
+define('_THESAURUS', 'Thesaurus (Mots-clés)');
+define('_ADMIN_THESAURUS_DESC', 'Le thésaurus est un outil linguistique qui permet de mettre en relation le langage naturel des utilisateurs et celui contenu dans les ressources.');
 define('_HISTORY', 'Historique');
 define('_ADMIN_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de Maarch Courrier.");
 define('_HISTORY_BATCH', 'Historique des batchs');

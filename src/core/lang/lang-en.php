@@ -4,14 +4,13 @@
  * Copyright Maarch since 2008 under licence GPLv3.
  * See LICENCE.txt file at the root folder for more details.
  * This file is part of Maarch software.
- *
  */
 
 /**
  * @brief Lang EN
+ *
  * @author dev@maarch.org
  */
-
 define('_ACTION_ADDED', 'Action added');
 define('_ACTION_DELETED', 'Action deleted');
 define('_ACTION_UPDATED', 'Action updated');
@@ -94,6 +93,35 @@ define('_DOCTYPE_UPDATED', 'Document type updated');
 define('_DOCTYPE_ADDED', 'Document type added');
 define('_DOCTYPE_DELETED', 'Document type deleted');
 
+//BEGIN ALEX
+define('_SIMPLE_MAIL', 'Simple mail');
+define('_EMAIL', 'Email');
+define('_FAX', 'Fax');
+define('_CHRONOPOST', 'Chronopost');
+define('_FEDEX', 'Fedex');
+define('_REGISTERED_MAIL', 'registered letter with recorded delivery');
+define('_COURIER', 'Courier');
+define('_NUMERIC_PACKAGE', 'Numeric package');
+define('_OTHER', 'Other');
+define('_SEND_SIGNED_DOCS', 'Pass signed responses');
+define('_SEND_SIGNED_DOCS_DESC', 'Check if response project are signed.');
+define('_SEND_TO_VISA', 'send for visa');
+define('_SEND_TO_VISA_DESC', 'Check if visa circuit is setup AND if one or several responses project are linked to document.');
+define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');
+define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset visa date of previous supervisor in visa circuit of document (\'process_date\' of listinstance table).');
+define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
+define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset visa date of all supervisor in visa circuit of document (\'process_date\' of listinstance table).');
+define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
+define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory and all next supervisors in visa circuit of document (\'process_date\' of listinstance table). Insère également un message d\'interruption sur le viseur actuel (\'process_comment\' de la table listinstance).');
+define('_PROCEED_WORKFLOW', 'continue the visa flow');
+define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of document (\'process_date\' of listinstance table).');
+define('_VISA_MAIL', 'Aim the mail');
+define('_VISA_MAIL_DESC', 'Open signatory book to visa / sign the document.');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a mandatory attachment');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Open sendmail modal with email of contact linked to document in recipient, attachment is MANDATORY.');
+define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');
+define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Open sendmail modal with email of contact linked to document in recipient.');
+
 define('_USERS', 'Users');
 define('_ADMIN_USERS_DESC', 'Add, suspend or modify users profiles. Place the users in their affiliation groups and define their primary group.');
 define('_GROUPS', 'users groups');
@@ -104,14 +132,14 @@ define('_LISTMODELS_WORKFLOW', 'Workflow models');
 define('_MANAGE_LISTMODELS_DESC', 'Manage avis and visa circuit models, which can be used in document.');
 define('_DOCTYPES', 'File plan');
 define('_ADMIN_DOCTYPES_DESC', 'Define the intern layout of a file (file/ sub-file/ document type). For each, define the index list to enter, and their mandatory character for the file completeness.');
-define("_FILEPLANS", "organizational file plan");
-define("_ADMIN_FILEPLANS_DESC", "organizational file plan management (Allows to manage specific file plans to an entity).");
-define("_FOLDERTYPES", "Types of folders");
-define("_ADMIN_FOLDERTYPES_DESC", "Administrate folder's types. For each type, define the linked qualifiers and the mandatory folder's types for the folder completeness.");
-define("_TAGS", "Tags");
-define("_ADMIN_TAGS_DESC", "Allows to modify, erase, add or merge tags");
-define("_THESAURUS", "Thesaurus (keywords)");
-define("_ADMIN_THESAURUS_DESC", "The thesaurus is a linguistic tool which allows to connect users' natural language and the language contained in the resources.");
+define('_FILEPLANS', 'organizational file plan');
+define('_ADMIN_FILEPLANS_DESC', 'organizational file plan management (Allows to manage specific file plans to an entity).');
+define('_FOLDERTYPES', 'Types of folders');
+define('_ADMIN_FOLDERTYPES_DESC', "Administrate folder's types. For each type, define the linked qualifiers and the mandatory folder's types for the folder completeness.");
+define('_TAGS', 'Tags');
+define('_ADMIN_TAGS_DESC', 'Allows to modify, erase, add or merge tags');
+define('_THESAURUS', 'Thesaurus (keywords)');
+define('_ADMIN_THESAURUS_DESC', "The thesaurus is a linguistic tool which allows to connect users' natural language and the language contained in the resources.");
 define('_HISTORY', 'History');
 define('_ADMIN_HISTORY_DESC', 'Read batch history');
 define('_HISTORY_BATCH', 'Batch history');
@@ -132,7 +160,7 @@ define('_CONTACTS', 'Contacts');
 define('_ADMIN_CONTACTS_DESC', 'Administration of contacts');
 define('_PRIORITIES', 'Priorities');
 define('_BASKETS', 'Baskets');
-define('_ADMIN_BASKETS_DESC', "Define the baskets content and associate them to users groups.");
+define('_ADMIN_BASKETS_DESC', 'Define the baskets content and associate them to users groups.');
 define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications based on application events");
 define('_TEMPLATES', 'Templates');
