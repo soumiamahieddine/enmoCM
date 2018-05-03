@@ -39,11 +39,11 @@ class ReceiveMessageExchangeController
 
     public function saveMessageExchange(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'save_numeric_package', 'userId' => $_SESSION['user']['UserId'], 'location' => 'sendmail', 'type' => 'menu'])) {
+        if (!ServiceModel::hasService(['id' => 'save_numeric_package', 'userId' => $GLOBALS['userId'], 'location' => 'sendmail', 'type' => 'menu'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (empty($_SESSION['user']['UserId'])) {
+        if (empty($GLOBALS['userId'])) {
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
@@ -58,7 +58,8 @@ class ReceiveMessageExchangeController
         $this->addComment('['.date("d/m/Y H:i:s") . '] Validation du pli numérique');
         /********** EXTRACTION DU ZIP ET CONTROLE *******/
         $receiveMessage = new \ReceiveMessage();
-        $res = $receiveMessage->receive($_SESSION['config']['tmppath'], $tmpName, 'ArchiveTransfer');
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $res = $receiveMessage->receive($tmpPath, $tmpName, 'ArchiveTransfer');
 
         if ($res['status'] == 1) {
             return $response->withStatus(400)->withJson(["errors" => _ERROR_RECEIVE_FAIL. ' ' . $res['content']]);
@@ -117,11 +118,11 @@ class ReceiveMessageExchangeController
         ]);
 
         $basketRedirection = null;
-        $userBaskets = BasketModel::getBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+        $userBaskets = BasketModel::getBasketsByUserId(['userId' => $GLOBALS['userId']]);
         if (!empty($userBaskets)) {
             foreach ($userBaskets as $value) {
                 if ($value['basket_id'] == $aDefaultConfig['basketRedirection_afterUpload'][0]) {
-                    $userGroups = UserModel::getGroupsByUserId(['userId' => $_SESSION['user']['UserId']]);
+                    $userGroups = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
                     foreach ($userGroups as $userGroupValue) {
                         if ($userGroupValue['primary_group'] == 'Y') {
                             $userPrimaryGroup = $userGroupValue['group_id'];
@@ -169,7 +170,7 @@ class ReceiveMessageExchangeController
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
         $ext      = $aArgs['extension'];
-        $tmpName  = 'tmp_file_' .$_SESSION['user']['UserId']. '_ArchiveTransfer_' .rand(). '.' . $ext;
+        $tmpName  = 'tmp_file_' .$GLOBALS['userId']. '_ArchiveTransfer_' .rand(). '.' . $ext;
 
         if (!in_array(strtolower($ext), ['zip', 'tar'])) {
             return ["errors" => _WRONG_FILE_TYPE_M2M];
@@ -179,7 +180,8 @@ class ReceiveMessageExchangeController
             return ['errors' => _WRONG_FILE_TYPE];
         }
 
-        file_put_contents($_SESSION['config']['tmppath'] . $tmpName, $file);
+        $tmpPath = CoreConfigModel::getTmpPath();
+        file_put_contents($tmpPath . $tmpName, $file);
 
         return $tmpName;
     }
@@ -444,12 +446,13 @@ class ReceiveMessageExchangeController
         $sendMessage = new \SendMessage();
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Ack';
-        $filePath = $sendMessage->generateMessageFile($acknowledgementObject, 'Acknowledgement', $_SESSION['config']['tmppath']);
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $filePath = $sendMessage->generateMessageFile($acknowledgementObject, 'Acknowledgement', $tmpPath);
 
         $acknowledgementObject->ArchivalAgency = $acknowledgementObject->Receiver;
         $acknowledgementObject->TransferringAgency = $acknowledgementObject->Sender;
 
-        $acknowledgementObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $_SESSION['user']['UserId'];
+        $acknowledgementObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $GLOBALS['userId'];
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_AckSent';
         $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
@@ -482,13 +485,14 @@ class ReceiveMessageExchangeController
         $replyObject->MessageRequestIdentifier->value = $dataObject->MessageIdentifier->value;
 
         $replyObject->TransferringAgency                = $dataObject->ArchivalAgency;
-        $replyObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $_SESSION['user']['UserId'];
+        $replyObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $GLOBALS['userId'];
         $replyObject->ArchivalAgency                    = $dataObject->TransferringAgency;
 
         $sendMessage = new \SendMessage();
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
-        $filePath = $sendMessage->generateMessageFile($replyObject, "ArchiveTransferReply", $_SESSION['config']['tmppath']);
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $filePath = $sendMessage->generateMessageFile($replyObject, "ArchiveTransferReply", $tmpPath);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
         $messageId = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
@@ -509,7 +513,7 @@ class ReceiveMessageExchangeController
 
     public function saveMessageExchangeReturn(Request $request, Response $response)
     {
-        if (empty($_SESSION['user']['UserId'])) {
+        if (empty($GLOBALS['userId'])) {
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
@@ -522,7 +526,8 @@ class ReceiveMessageExchangeController
         $tmpName = self::createFile(['base64' => $data['base64'], 'extension' => $data['extension'], 'size' => $data['size']]);
 
         $receiveMessage = new \ReceiveMessage();
-        $res = $receiveMessage->receive($_SESSION['config']['tmppath'], $tmpName, $data['type']);
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $res = $receiveMessage->receive($tmpPath, $tmpName, $data['type']);
 
         $sDataObject = $res['content'];
         $dataObject = json_decode($sDataObject);

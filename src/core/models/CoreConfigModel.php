@@ -38,9 +38,9 @@ class CoreConfigModel
         foreach ($xmlfile->custom as $value) {
             if (!empty($value->path) && $value->path == $path) {
                 return (string)$value->custom_id;
-            } elseif($value->ip == $_SERVER['SERVER_ADDR']) {
+            } elseif ($value->ip == $_SERVER['SERVER_ADDR']) {
                 return (string)$value->custom_id;
-            } else if ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
+            } elseif ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
                 return (string)$value->custom_id;
             }
         }
@@ -77,7 +77,7 @@ class CoreConfigModel
 
     /**
      * Get the tmp dir
-     * 
+     *
      * @return string
      */
     public static function getTmpPath()
