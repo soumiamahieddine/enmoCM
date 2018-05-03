@@ -11,6 +11,7 @@
  *
  * @author dev@maarch.org
  */
+
 define('_ACTION_ADDED', 'Action ajoutée');
 define('_ACTION_DELETED', 'Action supprimée');
 define('_ACTION_UPDATED', 'Action modifiée');
@@ -82,7 +83,32 @@ define('_VISA_USER', 'Pour visa');
 define('_WRONG_FILE_TYPE', 'Ce type de fichier n\'est pas permis');
 define('_CAN_NOT_MOVE_IN_CHILD_ENTITY', 'L\'entité parente ne doit pas être dans une entité fille');
 define('_UNREACHABLE_DOCSERVER', 'Chemin docserver inatteignable');
+define('_INCOMING', 'Courrier Arrivée');
+define('_OUTGOING', 'Courrier Départ');
+define('_INTERNAL', 'Courrier Interne');
+define('_ATTACHMENT', 'Pièce jointe');
+define('_GED_DOC', 'Document GED');
+define('_UNCHANGED', 'Inchangé');
+define('_NO_PAGE', 'Aucune page');
+define('_NO_KEYWORD', 'Aucun mot clé');
+define('_INDEXING', 'Indexation');
+define('_KEYWORD_REDIRECT_DESC', 'Permet de définir les options disponibles sur l\'action depuis la bannette, notamment les services et / ou les utilisateurs disponibles pour la redirection.');
+define('_KEYWORD_INDEXING_DESC', 'Permet de définir les options disponibles sur l\'action depuis la bannette, notamment les services traitant disponibles et le/les statut(s) potentiels pour un enregistrement / modification de document.');
+define('_SIMPLE_MAIL', 'Courrier simple');
+define('_EMAIL', 'Courriel');
+define('_FAX', 'Fax');
+define('_CHRONOPOST', 'Chronopost');
+define('_FEDEX', 'Fedex');
+define('_REGISTERED_MAIL', 'Courrier AR');
+define('_COURIER', 'Coursier');
+define('_NUMERIC_PACKAGE', 'Pli numérique');
+define('_OTHER', 'Autre');
 
+
+//BEGIN ALEX
+
+
+// LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
 define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des documents avec avis');
 define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
@@ -93,35 +119,7 @@ define('_DOCTYPE_UPDATED', 'Type de document modifié');
 define('_DOCTYPE_ADDED', 'Type de document ajouté');
 define('_DOCTYPE_DELETED', 'Type de document supprimé');
 
-//BEGIN ALEX
-define('_SIMPLE_MAIL', 'Courrier simple');
-define('_EMAIL', 'Courriel');
-define('_FAX', 'Fax');
-define('_CHRONOPOST', 'Chronopost');
-define('_FEDEX', 'Fedex');
-define('_REGISTERED_MAIL', 'Courrier AR');
-define('_COURIER', 'Coursier');
-define('_NUMERIC_PACKAGE', 'Pli numérique');
-define('_OTHER', 'Autre');
-define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
-define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
-define('_SEND_TO_VISA', 'Envoyer pour visa');
-define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au document.');
-define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
-define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance).');
-define('_INTERRUPT_WORKFLOW', 'Interrompre le circuit de visa');
-define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document (\'process_date\' de la table listinstance). Insère également un message d\'interruption sur le viseur actuel (\'process_comment\' de la table listinstance).');
-define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
-define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
-define('_VISA_MAIL', 'Viser le courrier');
-define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
-define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact');
-define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");
-
+// ADMINISTRATION
 define('_USERS', 'Utilisateurs');
 define('_ADMIN_USERS_DESC', "Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d'appartenance et définir leur groupe primaire.");
 define('_GROUPS', 'Groupes d\'utilisateurs');
@@ -165,3 +163,54 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
+
+// ACTIONS
+define('_REDIRECTION', 'Rediriger');
+define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
+define('_REDIRECTION_VISA_SIGN', 'Rediriger pour signature');
+define('_PUT_IN_COPY', 'Ajouter en copie');
+define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
+define('_SIMPLE_CONFIRM', 'Confirmation simple');
+define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effetuer.");
+define('_PROCESS_ACTION', 'Traiter');
+define('_PROCESS_DESC', 'Ouvre la page de traitement d\'un document (les métas-données ne peuvent être modfiées depuis cette page).');
+define('_INDEX_FILE', 'Indexer un fichier');
+define('_INDEX_FILE_DESC', 'Ouvre la page d\'indexation afin d\'enregistrer un document.');
+define('_VALIDATE_QUALIF', 'Valider/Qualifier');
+define('_VALIDATE_QUALIF_DESC', 'Ouvre la page de modification d\'un document déjà enregistré (les métas-données peuvent être modifiées depuis cette page).');
+define('_VIEW_DOC', 'Voir le document');
+define('_VIEW_DOC_DESC', 'Ouvre une modal avec le document en visualisation. Incrémente également la donnée \'viewed\' de la table listinstance (utile si utilisée dans les clauses de bannettes).');
+define('_CLOSE_MAIL', 'Clôturer un courrier');
+define('_CLOSE_MAIL_DESC', 'Permet de mettre à jour la date de clôture d\'un document (\'closing_date\' de la table mlb_coll_ext). ESSENTIEL afin de terminer votre workflow de document.');
+define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
+define('_SET_PERSISTENT_MODE_ON_DESC', 'Permet de conserver un document dans une bannette quelque soit son état. Insère la donnée dans la table \'basket_persistent_mode\'.');
+define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
+define('_SET_PERSISTENT_MODE_OFF_DESC', 'Réinitialise le comportement de visualisation du document dans la bannette. Supprime la donnée dans la table \'basket_persistent_mode\'.');
+define('_MARK_AS_READ', 'Marquer comme lu');
+define('_MARK_AS_READ_DESC', 'Marque le document comme \'lu\' dans la bannette. Insère la donnée dans la table \'res_mark_as_read\' (utile si utilisée dans les clauses de bannettes).');
+define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
+define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
+define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
+define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');
+define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
+define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un document (\'closing_date\' de la table mlb_coll_ext) ET ouvre la page d\'indexation afin d\'enregistrer un nouveau document.');
+define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Permet de mettre à jour la date de clôture d\'un document (\'closing_date\' de la table mlb_coll_ext) avec présence OBLIGATOIRE de pièce(s) jointe(s) / note(s).');
+define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
+define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
+define('_SEND_TO_VISA', 'Envoyer pour visa');
+define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au document.');
+define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
+define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
+define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_INTERRUPT_WORKFLOW', 'Interrompre le circuit de visa');
+define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du document (\'process_date\' de la table listinstance). Insère également un message d\'interruption sur le viseur actuel (\'process_comment\' de la table listinstance).');
+define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
+define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du document (\'process_date\' de la table listinstance).');
+define('_VISA_MAIL', 'Viser le courrier');
+define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire');
+define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
+define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact');
+define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");

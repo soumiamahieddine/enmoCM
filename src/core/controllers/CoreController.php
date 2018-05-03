@@ -59,11 +59,11 @@ class CoreController
     {
         if ($GLOBALS['userId'] == 'superadmin') {
             $administration                    = [];
-            $administrationMenu                = ServiceModel::getApplicationAdministrationMenuByXML();
+//            $administrationMenu                = ServiceModel::getApplicationAdministrationMenuByXML();
             $administrationApplication         = ServiceModel::getApplicationAdministrationServicesByXML();
             $administrationModule              = ServiceModel::getModulesAdministrationServicesByXML();
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-            $administration                    = array_merge_recursive($administration, $administrationMenu);
+//            $administration                    = array_merge_recursive($administration, $administrationMenu);
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
         }

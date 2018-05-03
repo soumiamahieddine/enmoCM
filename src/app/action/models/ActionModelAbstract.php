@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -29,33 +30,29 @@ class ActionModelAbstract
         return $actions;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['actions'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         if (empty($aReturn[0])) {
             return [];
         }
 
         $aReturn = $aReturn[0];
-        $aReturn['actionCategories'] = DatabaseModel::select(
-            [
+        $aReturn['actionCategories'] = DatabaseModel::select([
             'select' => ['category_id'],
             'table'  => ['actions_categories'],
             'where'  => ['action_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
        
         return $aReturn;
     }
@@ -200,7 +197,7 @@ class ActionModelAbstract
     {
         $tabKeyword   = [];
         $tabKeyword[] = ['value' => '', 'label' => _NO_KEYWORD];
-        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECT, 'desc' => _KEYWORD_REDIRECT_DESC];
+        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECTION, 'desc' => _KEYWORD_REDIRECT_DESC];
         $tabKeyword[] = ['value' => 'indexing', 'label' => _INDEXING, 'desc' => _KEYWORD_INDEXING_DESC];
 
         return $tabKeyword;

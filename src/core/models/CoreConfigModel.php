@@ -155,7 +155,10 @@ class CoreConfigModel
         $categories      = $loadedXml->COLLECTION->categories;
         if (count($categories) > 0) {
             foreach ($categories->category as $category) {
-                $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
+                $categoriesTmp = [
+                    'id'    => (string)$category->id,
+                    'label' => defined((string)$category->label) ? constant((string)$category->label) : (string)$category->label
+                ];
 
                 if ($category->id == (string)$categories->default_category) {
                     $categoriesTmp['default_category'] = true;
