@@ -214,3 +214,17 @@ define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec un
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact');
 define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");
+define("_VIEW_ATTACHMENTS", "Voir les pièces jointes");
+define("_VIEW_ATTACHMENTS_DESC", "Voir les pièces jointes");
+define("_MANAGE_ATTACHMENTS", "Gérer les pièces jointes");
+define("_INDEX_ATTACHMENT", "Indexer une pièce jointe");
+define("_INDEX_ATTACHMENT_DESC", "Indexer une pièce jointe");
+define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Créer des pièces jointes depuis la fiche détail");
+define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
+define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
+define('_CONFIG_AVIS_WORKFLOW', "Configuration du circuit d'avis");
+define('_CONFIG_AVIS_WORKFLOW_DESC', "Permet de configurer le circuit d'avis du courrier");
+define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Configuration du circuit d'avis depuis la fiche détaillée");
+define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Permet de définir le circuit directement depuis la fiche détaillée du courrier");
+define("_AVIS_ANSWERS", "Donner son avis");
+define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");

@@ -214,3 +214,17 @@ define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Open sendmail modal with email of contact linked to document in recipient, attachment is MANDATORY.');
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');
 define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Open sendmail modal with email of contact linked to document in recipient.');
+define("_VIEW_ATTACHMENTS", "View attachments");
+define("_VIEW_ATTACHMENTS_DESC", "View attachments");
+define("_MANAGE_ATTACHMENTS", "Manage the attachments");
+define("_INDEX_ATTACHMENT", "Index an attachment");
+define("_INDEX_ATTACHMENT_DESC", "Index an attachment");
+define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Create attachments from details card");
+define("_MODIFY_ATTACHMENTS", "Modify attachments");
+define("_DELETE_ATTACHMENTS", "Delete attachments");
+define('_CONFIG_AVIS_WORKFLOW', 'Recommendation flow configuration');
+define('_CONFIG_AVIS_WORKFLOW_DESC', 'Allow to set the mail recommendation flow up');
+define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Recommendation workflow setting from the detailed form");
+define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Allows to define the workflow directly from the mail detailed form");
+define("_AVIS_ANSWERS", "Give oneself's opinion");
+define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
