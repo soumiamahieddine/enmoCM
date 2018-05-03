@@ -1123,6 +1123,7 @@ function check_docserver($collId)
             }
             fwrite($myfile, $_SESSION['template_modified_content']);
             fclose($myfile);
+            $_SESSION['template_modified_content'] = '';
             $_SESSION['upfile']['size'] = filesize($tmpPath);
             $_SESSION['template_modified_content'] = '';
         }

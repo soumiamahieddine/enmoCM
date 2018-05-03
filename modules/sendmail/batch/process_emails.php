@@ -131,7 +131,33 @@ while ($state <> 'END') {
                 $body = str_replace('###', ';', $email->email_body);
                 $body = str_replace('___', '--', $body);
                 $body = $sendmail_tools->rawToHtml($body);
-                $GLOBALS['mailer']->setHtml($body);
+                $body = "<html><body>".$body."<br></body></html>";
+
+                $dom = new DOMDocument();
+                @$dom->loadHTML($body);  // Using @ to hide any parse warning sometimes resulting from markup errors
+                $dom->preserveWhiteSpace = false;
+                // Here we strip all the img tags in the document
+                $images = $dom->getElementsByTagName('img');
+
+                foreach ($images as $key => $tag) {
+                    $base64_string = $tag->getAttribute('src');
+                    $image = explode(',', $base64_string);
+                    if (base64_encode(base64_decode($image[1], true)) === $image[1]) {
+                        $imageData = base64_decode($image[1]);
+
+                        $finfo     = finfo_open();
+                        $mime_type = finfo_buffer($finfo, $imageData, FILEINFO_MIME_TYPE);
+                        $mime_type = explode("/", $mime_type);
+
+                        $nbAttachment = $key+1;
+                        $filename     = $nbAttachment."_attachment.".$mime_type[1];
+                        file_put_contents($GLOBALS['TmpDirectory']."/".$filename, $imageData);
+
+                        $body = str_replace($base64_string, basename($filename), $body);
+                    }
+                }
+
+                $GLOBALS['mailer']->setHtml($body, "", $GLOBALS['TmpDirectory']);
             } else {
                 $body = $sendmail_tools->htmlToRaw($email->email_body);
                 $GLOBALS['mailer']->setText($body);
