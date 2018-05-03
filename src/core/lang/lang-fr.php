@@ -11,7 +11,6 @@
  *
  * @author dev@maarch.org
  */
-
 define('_ACTION_ADDED', 'Action ajoutée');
 define('_ACTION_DELETED', 'Action supprimée');
 define('_ACTION_UPDATED', 'Action modifiée');
@@ -104,9 +103,63 @@ define('_COURIER', 'Coursier');
 define('_NUMERIC_PACKAGE', 'Pli numérique');
 define('_OTHER', 'Autre');
 
-
 //BEGIN ALEX
-
+define('_ID', 'Identifiant');
+define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
+define('_ADMIN', 'Administration');
+define('_ADV_SEARCH_MLB', 'Rechercher');
+define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+define('_SEARCH_CONTACTS', 'Rechercher un contact');
+define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
+define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
+define('_WELCOME_TEXT_LOAD', "Chargement texte page d'accueil");
+define('_QUICKLAUNCH', 'Raccourcis');
+define('_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
+define('_MY_CONTACTS_MENU', 'Mes contacts');
+define('_CREATE_CONTACTS', 'Tous les contacts');
+define('_UPDATE_CONTACTS', 'Mise à jour contact depuis indexation/qualification');
+define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
+define('_VIEW_DOC_HISTORY', "Voir l'historique des actions sur le document");
+define('_VIEW_FULL_HISTORY', "Voir l'historique complet du document");
+define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
+define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
+define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
+define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
+define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Envoyer le document en validation depuis la page détails');
+define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
+define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
+define('_ADD_LINKS', 'Ajouter des liaisons');
+define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
+define('_BASKETS_COMMENT', 'Bannettes');
+define('_CASES_COMMENT', 'Affaires');
+define('_ENTITIES_COMMENT', 'Entités');
+define('_FILEPLAN_COMMENT', 'Plan de classement organisationnel');
+define('_FOLDERS_COMMENT', 'Dossiers');
+define('_FULL_TEXT', 'Plein texte');
+define('_NOTES_COMMENT', 'Notes');
+define('_NOTIFICATIONS_COMMENT', 'Notifications');
+define('_TEMPLATES_COMMENT', 'Modèles de document');
+define('_REPORTS_COMMENT', 'Statistiques');
+define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
+define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
+define('_TAGS_COMMENT', 'Mots-clés');
+define('_SENDMAIL_COMMENT', 'Envoi de courriels');
+define('_THUMBNAILS_COMMENT', 'Module des miniatures');
+define('_VISA_WORKFLOW_COMMENT', 'Gestion du circuit de visa');
+define('_AVIS_WORKFLOW_COMMENT', "Gestion du circuit d'avis");
+define('_THESAURUS_COMMENT', 'Gestion du thesaurus');
+define('_THESAURUS_COMMENT', 'Thesaurus management');
+define('_EXPORT_SEDA_COMMENT', 'Export');
+define('_CONVERT_COMMENT', 'Module de conversions');
+define('_VIEW_BASKETS', 'Mes bannettes');
+define('_PRINT_SEPS', 'Impression des séparateurs');
+define('_FILEPLAN_SHORT', 'Plan de classement');
+define('_CREATE_FOLDER', 'Créer un dossier');
+define('_FOLDER_SEARCH', 'Rechercher un dossier');
+define('_VIEW_FOLDER_TREE', 'Consulter un dossier');
+define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');

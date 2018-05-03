@@ -11,7 +11,6 @@
  *
  * @author dev@maarch.org
  */
-
 define('_ACTION_ADDED', 'Action added');
 define('_ACTION_DELETED', 'Action deleted');
 define('_ACTION_UPDATED', 'Action updated');
@@ -104,9 +103,62 @@ define('_COURIER', 'Courier');
 define('_NUMERIC_PACKAGE', 'Numeric package');
 define('_OTHER', 'Other');
 
-
 //BEGIN ALEX
-
+define('_ID', 'Identifier');
+define('_REDIRECT_TO_ACTION', 'Redirect to an action');
+define('_ADMIN', 'Administration');
+define('_ADV_SEARCH_MLB', 'Search');
+define('_INDEXING_MLB', 'Save a mail/document');
+define('_SEARCH_CONTACTS', 'Search a contact');
+define('_PARAM_MLB_DOCTYPES', 'Documents types configuration ');
+define('_PARAM_MLB_DOCTYPES_DESC', 'Doctypes configuration ');
+define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
+define('_QUICKLAUNCH', 'Short cut');
+define('_MY_CONTACTS', 'Create contacts from indexation/title');
+define('_MY_CONTACTS_MENU', 'My contacts');
+define('_CREATE_CONTACTS', 'All the contacts');
+define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
+define('_VIEW_TECHNICAL_INFORMATIONS', 'See technical information');
+define('_VIEW_DOC_HISTORY', 'See global document history');
+define('_VIEW_FULL_HISTORY', 'See Full document history');
+define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the utilisation of Maarch.');
+define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
+define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
+define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
+define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Send the document for validation from the detailed page');
+define('_LOAD_STATUSES_SESSION', 'Load Status session');
+define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
+define('_ADD_LINKS', 'Add connection');
+define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
+define('_ATTACHMENTS_COMMENT', 'Attachments management');
+define('_BASKETS_COMMENT', 'Baskets');
+define('_CASES_COMMENT', 'Cases');
+define('_ENTITIES_COMMENT', 'Departments');
+define('_FILEPLAN_COMMENT', 'Organizational file plan');
+define('_FOLDERS_COMMENT', 'Folders');
+define('_FULL_TEXT', 'Full text');
+define('_NOTES_COMMENT', 'Notes');
+define('_NOTIFICATIONS_COMMENT', 'Notifications');
+define('_TEMPLATES_COMMENT', 'Templates');
+define('_REPORTS_COMMENT', 'States and editions');
+define('_LIFE_CYCLE_COMMENT', 'Life cycle management');
+define('_CONTENT_MANAGEMENT_COMMENT', 'Management of document versions');
+define('_TAGS_COMMENT', 'Tags');
+define('_SENDMAIL_COMMENT', 'Send emails');
+define('_THUMBNAILS_COMMENT', 'Unit of thumbnails');
+define('_VISA_WORKFLOW_COMMENT', 'Visa workflow management');
+define('_AVIS_WORKFLOW_COMMENT', 'recommendation workflow management');
+define('_THESAURUS_COMMENT', 'Thesaurus management');
+define('_EXPORT_SEDA_COMMENT', 'Export');
+define('_CONVERT_COMMENT', 'Conversions module');
+define('_VIEW_BASKETS', 'My baskets');
+define('_PRINT_SEPS', 'Limiters printing');
+define('_FILEPLAN_SHORT', 'File plan');
+define('_CREATE_FOLDER', 'Create a folder');
+define('_FOLDER_SEARCH', 'Search a folder');
+define('_VIEW_FOLDER_TREE', 'Read a folder');
+define('_SAVE_NUMERIC_PACKAGE', 'Save numeric package');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
