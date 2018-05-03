@@ -297,3 +297,59 @@ define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
 define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
 define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
 define("_PERSONNAL_FILEPLAN", "Plan de classement personnel");
+
+
+//FOLDER
+define("_SELECT_FOLDER", "Sélection Dossier");
+define("_FOLDER_HISTORY", "Historique dossier");
+define("_MODIFY_FOLDER", "Modifier les index d'un dossier");
+define("_ATTACH_DOC_TO_FOLDER", "Rattacher un document à un dossier");
+define("_DELETE_FOLDER", "Supprimer un dossier");
+define("_FREEZE_FOLDER", "Geler le dossier");
+define("_CLOSE_FOLDER", "Clôturer le dossier");
+
+//NOTES
+define("_NOTES_RESTRICTION", "Restreindre par défaut les notes à votre entité");
+define("_MANAGE_NOTES", "Gérer les notes");
+
+//NOTIFICATIONS
+define("_NOTIFICATIONS", "Notifications");
+
+//REPORTS
+define('_REPORTS', 'Statistiques');
+define('_REPORTS_DESC', 'Editions des états');
+define('_GRAPHICS_REPORTS', "Activer l'affichage graphique");
+
+//SENDMAIL
+define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'expéditeur");
+define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
+
+//TAGS
+define("_TAG_DEFAULT", "Mot-clé");
+define("_TAG_VIEW", "Voir les ".strtolower(_TAGS_DEFAULT)." des documents");
+define("_TAG_VIEW_DESC", "Permet d'afficher le champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée.");
+define("_CREATE_TAG", "Créer des ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions");
+define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des ".strtolower(_TAGS_DEFAULT)." inexistants dans la base de données");
+define("_ADD_TAG_TO_RES", "Associer des ".strtolower(_TAGS_DEFAULT)." disponibles pour un document");
+define("_ADD_TAG_TO_RES_DESC", "Permet d'associer des ".strtolower(_TAGS_DEFAULT)." à un document grâce au champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée");
+define("_PRIVATE_TAGS", "Lier les ".strtolower(_TAGS_DEFAULT)." à l'entité de l'utilisateur (Niveau direction)");
+define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les ".strtolower(_TAGS_DEFAULT)." qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
+
+//THESAURUS
+define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
+define("_THESAURUS_VIEW_DESC", "Permet de voir le(s) terme(s) qui sont associés aux différents documents");
+define("_ADD_THESAURUS_TO_RES", "Pouvoir associer des termes aux différents documents");
+define("_ADD_THESAURUS_TO_RES_DESC", "Permet de pouvoir utiliser les termes disponibles du thésaurus afin de référencer les documents");
+
+//VISA
+define('_CONFIG_VISA_WORKFLOW', 'Configuration du circuit de visa');
+define('_CONFIG_VISA_WORKFLOW_DESC', 'Permet de configurer le circuit de visa que devra prendre le courrier');
+define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuration du circuit de visa depuis la fiche détaillée');
+define('_VISA_ANSWERS', 'Viser les projets de réponse');
+define('_VISA_ANSWERS_DESC', 'Permet de viser les projets de réponse');
+define('_SIGN_DOCS', 'Signer les documents');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modifier le viseur en cours depuis le parapheur');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant que parapheur de supervision');
+define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
+define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
+define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");

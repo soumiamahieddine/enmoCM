@@ -297,3 +297,59 @@ define("_EXPORT_SEDA_VIEW", "See message export");
 define("_PUT_DOC_IN_FILEPLAN", "Classify documents");
 define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify documents in the organizational file plan");
 define("_PERSONNAL_FILEPLAN", "Personal file plan");
+
+
+//FOLDER
+define("_SELECT_FOLDER", "Folder selection");
+define("_FOLDER_HISTORY", "Folder's history");
+define("_MODIFY_FOLDER", "Modify folder's index");
+define("_ATTACH_DOC_TO_FOLDER", "Attach a document to a folder");
+define("_DELETE_FOLDER", "Delete a folder");
+define("_FREEZE_FOLDER", "Freeze the folder");
+define("_CLOSE_FOLDER", "Close the folder");
+
+//NOTES
+define("_NOTES_RESTRICTION", "By default, limit the notes to your department");
+define("_MANAGE_NOTES", "Manage notes");
+
+//NOTIFICATIONS
+define("_NOTIFICATIONS", "Notifications");
+
+//REPORTS
+define("_REPORTS","States and editions");
+define("_REPORTS_DESC","States editions");
+define('_GRAPHICS_REPORTS', 'Graphics mode enabled');
+
+//SENDMAIL
+define("_USE_MAIL_SERVICES", "Use emails services as sender");
+define("_USE_MAIL_SERVICES_DESC", "Use emails services as sender");
+
+//TAGS
+define("_TAG_DEFAULT", "Tag");
+define("_TAG_VIEW", "View the "._TAGS_DEFAULT." of the documents");
+define("_TAG_VIEW_DESC", "Allows to view "._TAGS_DEFAULT);
+define("_CREATE_TAG", "Create "._TAGS_DEFAULT);
+define("_CREATE_TAG_DESC", "Allows to create ".strtolower(_TAGS_DEFAULT)." not existing in database");
+define("_ADD_TAG_TO_RES", "Associate the available "._TAGS_DEFAULT." to a document");
+define("_ADD_TAG_TO_RES_DESC", "Allows to add "._TAGS_DEFAULT." to a resource");
+define("_PRIVATE_TAGS", "Associate ".strtolower(_TAGS_DEFAULT)." to the user's entity (Direction level)");
+define("_PRIVATE_TAGS_DESC", "User will only see ".strtolower(_TAGS_DEFAULT)." restricted to user's direction (adding / updating will automatically associate the word to user's direction).");
+
+//THESAURUS
+define("_THESAURUS_VIEW", "Display the thesaurus in the process pages");
+define("_THESAURUS_VIEW_DESC", "Be able to see the term(s) which are associated to different documents");
+define("_ADD_THESAURUS_TO_RES", "Be able to associate terms to different documents");
+define("_ADD_THESAURUS_TO_RES_DESC", "Allow to use thesaurus 's available terms to refer documents");
+
+//VISA
+define('_CONFIG_VISA_WORKFLOW', 'Visa workflow setting');
+define('_CONFIG_VISA_WORKFLOW_DESC', 'Allows to set up visa flow which the mail will have to follow');
+define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Visa workflow setting from detailed card');
+define('_VISA_ANSWERS', 'Aim the responses projects');
+define('_VISA_ANSWERS_DESC', 'Allows to aim response projects');
+define('_SIGN_DOCS', 'Sign the documents');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modify current visa user from signature book');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Useful if signature book is used as a supervision signature book');
+define('_PRINT_FOLDER_DOC', 'Print the entire folder');
+define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
+define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
