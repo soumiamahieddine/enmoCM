@@ -281,3 +281,15 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Configuration du circuit d'avis depui
 define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Permet de définir le circuit directement depuis la fiche détaillée du courrier");
 define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
+define("_VIEW_BASKETS", "Mes bannettes");
+define("_VIEW_BASKETS_DESC", "Mes bannettes");
+define("_UPDATE_CASE", "Mise à jour d'affaires");
+define("_JOIN_RES_CASE", "Attacher des courriers aux affaires");
+define("_JOIN_RES_CASE_IN_PROCESS", "Attacher des courriers aux affaires (bannette de traitement)");
+define("_CLOSE_CASE", "Clôturer des affaires");
+define("_ADD_CASES", "Créer des affaires");
+define('_CHOOSE_ENTITY', 'Choisissez une entité');
+define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitement');
+define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Interdire la modification du destinataire dans la liste de diffusion');
+define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
+define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');

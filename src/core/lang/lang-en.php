@@ -280,3 +280,16 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Recommendation workflow setting from 
 define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Allows to define the workflow directly from the mail detailed form");
 define("_AVIS_ANSWERS", "Give oneself's opinion");
 define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
+define("_VIEW_BASKETS", "My baskets");
+define("_VIEW_BASKETS_DESC", "My baskets");
+define("_UPDATE_CASE", "Cases updates");
+define("_JOIN_RES_CASE", "Attach mails to cases");
+define("_JOIN_RES_CASE_IN_PROCESS", "Link mails to cases (handling basket)");
+define("_CLOSE_CASE", "Enclose cases");
+define("_ADD_CASES", "Create cases");
+define('_CHOOSE_ENTITY', 'Choose a department');
+define('_MANAGE_LISTMODELS_WORKFLOW_DESC', "Manage avis and visa circuit models, which can be used in document.");
+define('_ADD_COPY_IN_PROCESS', 'Add persons on copy in the handling');
+define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Forbid recipient modification on the diffusion list');
+define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Update diffusion list from the detailed page');
+define('_ENTITIES_PRINT_SEP_MLB', 'Print limiters by department/services');
