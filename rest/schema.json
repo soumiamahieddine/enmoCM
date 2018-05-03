@@ -197,7 +197,7 @@
                         "entity_label",
                         "short_label",
                         "entity_type",
-                        "enabled",
+                        "enabled"
                     ],
                     "properties" : {
                         "entity_id" : {
