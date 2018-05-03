@@ -2,7 +2,7 @@
 <root>
 	<SERVICE>
 		<id>admin_reports</id>
-		<name>_ADMIN_REPORTS</name>
+		<name>_REPORTS</name>
 		<comment>_ADMIN_REPORTS_DESC</comment>
 		<servicepage>/administration/reports</servicepage>
 		<servicetype>admin</servicetype>

@@ -2,8 +2,8 @@
 <root>
 	<SERVICE>
 		<id>admin_fileplan</id>
-		<name>_ADMIN_MODULE_FILEPLAN</name>
-		<comment>_ADMIN_MODULE_FILEPLAN_DESC</comment>
+		<name>_FILEPLANS</name>
+		<comment>_ADMIN_FILEPLANS_DESC</comment>
 		<servicepage>index.php?page=fileplan_admin&amp;module=fileplan&amp;load</servicepage>
 		<servicetype>admin</servicetype>
 		<category>classement</category>

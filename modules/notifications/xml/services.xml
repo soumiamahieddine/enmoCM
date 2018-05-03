@@ -2,7 +2,7 @@
 <root>
 	<SERVICE>
 			<id>admin_notif</id>
-			<name>_ADMIN_NOTIFICATIONS</name>
+			<name>_NOTIFICATIONS</name>
 			<comment>_ADMIN_NOTIFICATIONS_DESC</comment>
 			<!--servicepage>index.php?page=admin_notif&amp;module=notifications</servicepage-->
 			<servicepage>administration/notifications</servicepage>
