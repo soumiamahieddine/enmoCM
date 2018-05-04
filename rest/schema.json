@@ -9,62 +9,54 @@
             "email" : "info@maarch.org"
         }
     },
+    "basePath" : "/rest",
     "paths" : {
-        "/rest/res/resource/status" : {
+        "/res/resource/status" : {
             "put" :  {
                 "description" : "Update documents status",
                 "operationId" : " Resource/controllers/ResController::updateStatus",
                 "parameters" : [
                     {
-                        "name" : "resId",
-                        "description" : "Documents identifier",
+                        "name" : "body",
                         "in" : "body",
-                        "required" : false,
                         "schema": {
-                            "type" : "array",
-                            "items" : {
-                                "type" : "integer",
-                                "example" : 101
+                            "type": "object",
+                            "properties": {
+                                "resId": {
+                                    "type": "array",
+                                    "description" : "Documents identifier",
+                                    "items": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "example" : 101
+                                    }
+                                },
+                                "chrono": {
+                                    "type": "array",
+                                    "description" : "Documents chrono number",
+                                    "items": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example" : "MAARCH/2017A/91"
+                                    }
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "description" : "New status",
+                                    "maxLength": 10,
+                                    "default": "COU",
+                                    "example" : "NEW"
+                        
+                                },
+                                "historyMessage": {
+                                    "type": "string",
+                                    "description" : "Message in history table",
+                                    "default": "status update",
+                                    "example" : "Document is reopen"
+                                }
                             }
                         }
-                    },
-                    {
-                        "name" : "chrono",
-                        "description" : "Documents chrono number",
-                        "in" : "body",
-                        "required" : false,
-                        "schema": {
-                            "type" : "array",
-                            "items" : {
-                                "type" : "string",
-                                "maxLength" : 255,
-                                "example" : "MAARCH/2017A/91"
-                            }
-                        }
-                    },
-                    {
-                        "name" : "status",
-                        "description" : "New status",
-                        "in" : "body",
-                        "required" : false,
-                        "schema": {
-                            "type" : "string",
-                            "maxLength" : 10,
-                            "default" : "COU",
-                            "example" : "NEW"
-                        }
-                    },
-                    {
-                        "name" : "historyMessage",
-                        "description" : "Message in history table",
-                        "in" : "body",
-                        "required" : false,
-                        "schema": {
-                            "type" : "string",
-                            "default" : "status update",
-                            "example" : "Document is reopen"
-                        }
-                    }  
+                    } 
                 ],
                 "responses" : {
                     "200" : {
@@ -118,7 +110,7 @@
                 }
             } 
         },
-        "/rest/entities/{id}" : {
+        "/entities/{id}" : {
             "get" : {
                 "description" : "Get entity informations",
                 "operationId" : "Entity/controllers/EntityController::getById",
