@@ -198,6 +198,8 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.source,
     r.author,
     r.reference_number,
+    r.external_id,
+    r.external_link,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
