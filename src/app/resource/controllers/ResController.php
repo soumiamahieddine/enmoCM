@@ -154,7 +154,7 @@ class ResController
                 'moduleId'  => 'apps',
                 'eventId'   => 'resup',
             ]);
-        }        
+        }
 
         return $response->withJson(['success' => 'success']);
     }

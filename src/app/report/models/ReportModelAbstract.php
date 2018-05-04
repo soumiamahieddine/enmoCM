@@ -18,7 +18,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
-class ReportModelAbstract
+abstract class ReportModelAbstract
 {
     public static function getByGroupId(array $aArgs)
     {

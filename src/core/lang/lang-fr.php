@@ -11,6 +11,7 @@
  *
  * @author dev@maarch.org
  */
+
 define('_ACTION_ADDED', 'Action ajoutée');
 define('_ACTION_DELETED', 'Action supprimée');
 define('_ACTION_UPDATED', 'Action modifiée');
@@ -41,6 +42,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
+define('_ID', 'Identifiant');
 define('_ID_TO_DISPLAY', 'res_id');
 define('_INVALID_CLAUSE', 'Clause non valide');
 define('_INVALID_REQUEST', 'Requête non valide');
@@ -102,64 +104,10 @@ define('_REGISTERED_MAIL', 'Courrier AR');
 define('_COURIER', 'Coursier');
 define('_NUMERIC_PACKAGE', 'Pli numérique');
 define('_OTHER', 'Autre');
-
-//BEGIN ALEX
-define('_ID', 'Identifiant');
-define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
-define('_ADMIN', 'Administration');
-define('_ADV_SEARCH_MLB', 'Rechercher');
-define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
-define('_SEARCH_CONTACTS', 'Rechercher un contact');
-define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
-define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
-define('_WELCOME_TEXT_LOAD', "Chargement texte page d'accueil");
-define('_QUICKLAUNCH', 'Raccourcis');
-define('_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
-define('_MY_CONTACTS_MENU', 'Mes contacts');
-define('_CREATE_CONTACTS', 'Tous les contacts');
-define('_UPDATE_CONTACTS', 'Mise à jour contact depuis indexation/qualification');
-define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
-define('_VIEW_DOC_HISTORY', "Voir l'historique des actions sur le document");
-define('_VIEW_FULL_HISTORY', "Voir l'historique complet du document");
-define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
-define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
-define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
-define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
-define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Envoyer le document en validation depuis la page détails');
-define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
-define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
-define('_ADD_LINKS', 'Ajouter des liaisons');
-define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
-define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
-define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
-define('_BASKETS_COMMENT', 'Bannettes');
-define('_CASES_COMMENT', 'Affaires');
-define('_ENTITIES_COMMENT', 'Entités');
-define('_FILEPLAN_COMMENT', 'Plan de classement organisationnel');
-define('_FOLDERS_COMMENT', 'Dossiers');
-define('_FULL_TEXT', 'Plein texte');
-define('_NOTES_COMMENT', 'Notes');
-define('_NOTIFICATIONS_COMMENT', 'Notifications');
-define('_TEMPLATES_COMMENT', 'Modèles de document');
-define('_REPORTS_COMMENT', 'Statistiques');
-define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
-define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
-define('_TAGS_COMMENT', 'Mots-clés');
-define('_SENDMAIL_COMMENT', 'Envoi de courriels');
-define('_THUMBNAILS_COMMENT', 'Module des miniatures');
-define('_VISA_WORKFLOW_COMMENT', 'Gestion du circuit de visa');
-define('_AVIS_WORKFLOW_COMMENT', "Gestion du circuit d'avis");
-define('_THESAURUS_COMMENT', 'Gestion du thesaurus');
-define('_THESAURUS_COMMENT', 'Thesaurus management');
-define('_EXPORT_SEDA_COMMENT', 'Export');
-define('_CONVERT_COMMENT', 'Module de conversions');
-define('_VIEW_BASKETS', 'Mes bannettes');
-define('_PRINT_SEPS', 'Impression des séparateurs');
-define('_FILEPLAN_SHORT', 'Plan de classement');
-define('_CREATE_FOLDER', 'Créer un dossier');
-define('_FOLDER_SEARCH', 'Rechercher un dossier');
-define('_VIEW_FOLDER_TREE', 'Consulter un dossier');
-define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
+define('_NOTIFICATION_ALREADY_EXIST', 'Notification déjà existante');
+define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
+define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
+define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin Docserver inaccessible');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
@@ -216,6 +164,99 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
+
+//SERVICES
+define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
+define('_ADMIN', 'Administration');
+define('_ADV_SEARCH_MLB', 'Rechercher');
+define('_INDEXING_MLB', 'Enregistrer un courrier/doc');
+define('_SEARCH_CONTACTS', 'Rechercher un contact');
+define('_PARAM_MLB_DOCTYPES', 'Paramétrage des types de document ');
+define('_PARAM_MLB_DOCTYPES_DESC', 'Paramétrage des types de document ');
+define('_WELCOME_TEXT_LOAD', "Chargement texte page d'accueil");
+define('_QUICKLAUNCH', 'Raccourcis');
+define('_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
+define('_MY_CONTACTS_MENU', 'Mes contacts');
+define('_CREATE_CONTACTS', 'Tous les contacts');
+define('_UPDATE_CONTACTS', 'Mise à jour contact depuis indexation/qualification');
+define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
+define('_VIEW_DOC_HISTORY', "Voir l'historique des actions sur le document");
+define('_VIEW_FULL_HISTORY', "Voir l'historique complet du document");
+define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
+define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
+define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
+define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
+define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Envoyer le document en validation depuis la page détails');
+define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
+define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
+define('_ADD_LINKS', 'Ajouter des liaisons');
+define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');
+define('_BASKETS_COMMENT', 'Bannettes');
+define('_CASES_COMMENT', 'Affaires');
+define('_ENTITIES_COMMENT', 'Entités');
+define('_FILEPLAN_COMMENT', 'Plan de classement organisationnel');
+define('_FOLDERS_COMMENT', 'Dossiers');
+define('_FULL_TEXT', 'Plein texte');
+define('_NOTES_COMMENT', 'Notes');
+define('_NOTIFICATIONS_COMMENT', 'Notifications');
+define('_TEMPLATES_COMMENT', 'Modèles de document');
+define('_REPORTS_COMMENT', 'Statistiques');
+define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
+define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
+define('_TAGS_COMMENT', 'Mots-clés');
+define('_SENDMAIL_COMMENT', 'Envoi de courriels');
+define('_THUMBNAILS_COMMENT', 'Module des miniatures');
+define('_VISA_WORKFLOW_COMMENT', 'Gestion du circuit de visa');
+define('_AVIS_WORKFLOW_COMMENT', "Gestion du circuit d'avis");
+define('_THESAURUS_COMMENT', 'Gestion du thesaurus');
+define('_EXPORT_SEDA_COMMENT', 'Export');
+define('_CONVERT_COMMENT', 'Module de conversions');
+define('_VIEW_BASKETS', 'Mes bannettes');
+define('_PRINT_SEPS', 'Impression des séparateurs');
+define('_FILEPLAN_SHORT', 'Plan de classement');
+define('_CREATE_FOLDER', 'Créer un dossier');
+define('_FOLDER_SEARCH', 'Rechercher un dossier');
+define('_VIEW_FOLDER_TREE', 'Consulter un dossier');
+define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
+define("_SELECT_FOLDER", "Sélection Dossier");
+define("_FOLDER_HISTORY", "Historique dossier");
+define("_MODIFY_FOLDER", "Modifier les index d'un dossier");
+define("_ATTACH_DOC_TO_FOLDER", "Rattacher un document à un dossier");
+define("_DELETE_FOLDER", "Supprimer un dossier");
+define("_FREEZE_FOLDER", "Geler le dossier");
+define("_CLOSE_FOLDER", "Clôturer le dossier");
+define("_NOTES_RESTRICTION", "Restreindre par défaut les notes à votre entité");
+define("_MANAGE_NOTES", "Gérer les notes");
+define('_REPORTS_DESC', 'Editions des états');
+define('_GRAPHICS_REPORTS', "Activer l'affichage graphique");
+define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'expéditeur");
+define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
+define("_TAG_DEFAULT", "Mot-clé");
+define("_TAG_VIEW", "Voir les Mots-clé des documents");
+define("_TAG_VIEW_DESC", "Permet d'afficher le champ Mot-clé depuis les pages d'actions et fiche détaillée.");
+define("_CREATE_TAG", "Créer des Mots-clé depuis les pages d'actions");
+define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des Mots-clé inexistants dans la base de données");
+define("_ADD_TAG_TO_RES", "Associer des Mots-clé disponibles pour un document");
+define("_ADD_TAG_TO_RES_DESC", "Permet d'associer des Mots-clé à un document grâce au champ Mot-clé depuis les pages d'actions et fiche détaillée");
+define("_PRIVATE_TAGS", "Lier les Mots-clé à l'entité de l'utilisateur (Niveau direction)");
+define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
+define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
+define("_THESAURUS_VIEW_DESC", "Permet de voir le(s) terme(s) qui sont associés aux différents documents");
+define("_ADD_THESAURUS_TO_RES", "Pouvoir associer des termes aux différents documents");
+define("_ADD_THESAURUS_TO_RES_DESC", "Permet de pouvoir utiliser les termes disponibles du thésaurus afin de référencer les documents");
+define('_CONFIG_VISA_WORKFLOW', 'Configuration du circuit de visa');
+define('_CONFIG_VISA_WORKFLOW_DESC', 'Permet de configurer le circuit de visa que devra prendre le courrier');
+define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuration du circuit de visa depuis la fiche détaillée');
+define('_VISA_ANSWERS', 'Viser les projets de réponse');
+define('_VISA_ANSWERS_DESC', 'Permet de viser les projets de réponse');
+define('_SIGN_DOCS', 'Signer les documents');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modifier le viseur en cours depuis le parapheur');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant que parapheur de supervision');
+define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
+define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
+define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
 
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
@@ -281,7 +322,6 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Configuration du circuit d'avis depui
 define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Permet de définir le circuit directement depuis la fiche détaillée du courrier");
 define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
-define("_VIEW_BASKETS", "Mes bannettes");
 define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define("_UPDATE_CASE", "Mise à jour d'affaires");
 define("_JOIN_RES_CASE", "Attacher des courriers aux affaires");
@@ -298,58 +338,20 @@ define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
 define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
 define("_PERSONNAL_FILEPLAN", "Plan de classement personnel");
 
-
-//FOLDER
-define("_SELECT_FOLDER", "Sélection Dossier");
-define("_FOLDER_HISTORY", "Historique dossier");
-define("_MODIFY_FOLDER", "Modifier les index d'un dossier");
-define("_ATTACH_DOC_TO_FOLDER", "Rattacher un document à un dossier");
-define("_DELETE_FOLDER", "Supprimer un dossier");
-define("_FREEZE_FOLDER", "Geler le dossier");
-define("_CLOSE_FOLDER", "Clôturer le dossier");
-
-//NOTES
-define("_NOTES_RESTRICTION", "Restreindre par défaut les notes à votre entité");
-define("_MANAGE_NOTES", "Gérer les notes");
-
-//NOTIFICATIONS
-define("_NOTIFICATIONS", "Notifications");
-
-//REPORTS
-define('_REPORTS', 'Statistiques');
-define('_REPORTS_DESC', 'Editions des états');
-define('_GRAPHICS_REPORTS', "Activer l'affichage graphique");
-
-//SENDMAIL
-define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'expéditeur");
-define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
-
-//TAGS
-define("_TAG_DEFAULT", "Mot-clé");
-define("_TAG_VIEW", "Voir les ".strtolower(_TAGS_DEFAULT)." des documents");
-define("_TAG_VIEW_DESC", "Permet d'afficher le champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée.");
-define("_CREATE_TAG", "Créer des ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions");
-define("_CREATE_TAG_DESC", "Permet d'enregistrer à la volée des ".strtolower(_TAGS_DEFAULT)." inexistants dans la base de données");
-define("_ADD_TAG_TO_RES", "Associer des ".strtolower(_TAGS_DEFAULT)." disponibles pour un document");
-define("_ADD_TAG_TO_RES_DESC", "Permet d'associer des ".strtolower(_TAGS_DEFAULT)." à un document grâce au champ ".strtolower(_TAGS_DEFAULT)." depuis les pages d'actions et fiche détaillée");
-define("_PRIVATE_TAGS", "Lier les ".strtolower(_TAGS_DEFAULT)." à l'entité de l'utilisateur (Niveau direction)");
-define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les ".strtolower(_TAGS_DEFAULT)." qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
-
-//THESAURUS
-define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
-define("_THESAURUS_VIEW_DESC", "Permet de voir le(s) terme(s) qui sont associés aux différents documents");
-define("_ADD_THESAURUS_TO_RES", "Pouvoir associer des termes aux différents documents");
-define("_ADD_THESAURUS_TO_RES_DESC", "Permet de pouvoir utiliser les termes disponibles du thésaurus afin de référencer les documents");
-
-//VISA
-define('_CONFIG_VISA_WORKFLOW', 'Configuration du circuit de visa');
-define('_CONFIG_VISA_WORKFLOW_DESC', 'Permet de configurer le circuit de visa que devra prendre le courrier');
-define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuration du circuit de visa depuis la fiche détaillée');
-define('_VISA_ANSWERS', 'Viser les projets de réponse');
-define('_VISA_ANSWERS_DESC', 'Permet de viser les projets de réponse');
-define('_SIGN_DOCS', 'Signer les documents');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modifier le viseur en cours depuis le parapheur');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant que parapheur de supervision');
-define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
-define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
-define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
+// REPORTS
+define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
+define('_ENTITY_VOL_STAT', 'Volume des courriers par entité');
+define('_ENTITY_VOL_STAT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par service.');
+define('_RESPONSE_RATE_BY_ENTITIES', 'Taux de réponse par entité');
+define('_RESPONSE_RATE_BY_ENTITIES_DESC', 'Permet d\'afficher le pourcentage de courrier dont une réponse a été effectuée. Cette statistique se base sur le nombre de courriers dont une date de départ a été inscrite (il faut utiliser le champ custom_d1)');
+define('_ENTITY_LATE_MAIL', 'Volume de courriers en retard par entité');
+define('_ENTITY_PROCESS_DELAY', 'Délai moyen de traitement par entité');
+define('_USERS_LOGS', 'Liste des accès à l\'application par agent');
+define('_PROCESS_DELAY_REPORT', 'Délai moyen de traitement par typologie');
+define('_PROCESS_DELAY_REPORT_DESC', 'Permet d\'afficher le délai (en jour) de la création jusqu\'à la clôture d\'un courrier.');
+define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT', 'Délai moyen de traitement par période');
+define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC', 'Permet d\'afficher le délai (en jour) de la création jusqu\'à la clôture d\'un courrier.');
+define('_MAIL_TYPOLOGY_REPORT', 'Volume de courriers par typologie');
+define('_MAIL_TYPOLOGY_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par type de document.');
+define('_MAIL_VOL_BY_CAT_REPORT', 'Volume de courriers par catégorie');
+define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).');

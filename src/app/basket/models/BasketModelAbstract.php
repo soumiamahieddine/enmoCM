@@ -8,8 +8,8 @@
 */
 
 /**
-* @brief   BasketModelAbstract
-* @author  <dev@maarch.org>
+* @brief   Basket Model Abstract
+* @author  dev@maarch.org
 */
 
 namespace Basket\models;
@@ -22,7 +22,7 @@ use SrcCore\models\DatabaseModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserModel;
 
-class BasketModelAbstract
+abstract class BasketModelAbstract
 {
     public static function get(array $aArgs = [])
     {

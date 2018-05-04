@@ -1,13 +1,15 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
-* @brief   ActionModelAbstract
-* @author  dev <dev@maarch.org>
-* @ingroup core
+/**
+* @brief   Action Model Abstract
+* @author  dev@maarch.org
 */
 
 namespace Action\models;
@@ -16,7 +18,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
-class ActionModelAbstract
+abstract class ActionModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -161,12 +163,12 @@ class ActionModelAbstract
                 if (!empty((string) $actionPage->MODULE)) {
                     $origin = (string) $actionPage->MODULE;
                 } else {
-                    $origin =  'apps';
+                    $origin = 'apps';
                 }
                 if (!empty((string) $actionPage->DESC)) {
                     $desc = constant((string) $actionPage->DESC);
                 } else {
-                    $desc =  'no description';
+                    $desc = 'no description';
                 }
                 $tabActions_pages['actionsPageList'][] = array(
                     'id'     => (string) $actionPage->ID,

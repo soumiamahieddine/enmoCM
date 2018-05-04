@@ -20,7 +20,7 @@ namespace Parameter\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class ParameterModelAbstract
+abstract class ParameterModelAbstract
 {
     public static function get(array $aArgs = [])
     {

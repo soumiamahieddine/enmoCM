@@ -17,7 +17,7 @@ namespace Note\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class NoteModelAbstract
+abstract class NoteModelAbstract
 {
     public static function countByResId(array $aArgs)
     {

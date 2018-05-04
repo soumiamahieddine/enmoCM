@@ -10,7 +10,6 @@
 /**
 * @brief Status Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Status\controllers;
@@ -31,9 +30,7 @@ class StatusController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson([
-            'statuses' => StatusModel::get()
-        ]);
+        return $response->withJson(['statuses' => StatusModel::get()]);
     }
 
     public function getNewInformations(Request $request, Response $response)
@@ -69,25 +66,18 @@ class StatusController
         }
     }
 
-    public function getById(Request $request, Response $response, $aArgs)
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_status', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!empty($aArgs['id'])) {
-            $obj = StatusModel::getById(['id' => $aArgs['id']]);
-
-            if (empty($obj)) {
-                return $response->withStatus(404)->withJson(['errors' => 'id not found']);
-            }
-
-            return $response->withJson([
-                'status' => $obj,
-            ]);
-        } else {
-            return $response->withStatus(500)->withJson(['errors' => 'id not valid']);
+        $status = StatusModel::getById(['id' => $aArgs['id']]);
+        if (empty($status)) {
+            return $response->withStatus(404)->withJson(['errors' => 'id not found']);
         }
+
+        return $response->withJson(['status' => $status]);
     }
 
     public function create(Request $request, Response $response)
@@ -97,7 +87,7 @@ class StatusController
         }
 
         $request = $request->getParams();
-        $aArgs   = self::manageValue($request);
+        $aArgs   = StatusController::manageValue($request);
         $errors  = $this->control($aArgs, 'create');
 
         if (!empty($errors)) {
@@ -128,7 +118,7 @@ class StatusController
         $request = $request->getParams();
         $request = array_merge($request, $aArgs);
 
-        $aArgs   = self::manageValue($request);
+        $aArgs   = StatusController::manageValue($request);
         $errors  = $this->control($aArgs, 'update');
 
         if (!empty($errors)) {
@@ -169,15 +159,13 @@ class StatusController
                 'info'       => _STATUS_DELETED . ' : ' . $statusDeleted[0]['id']
             ]);
         } else {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'identifier not valid']);
+            return $response->withStatus(500)->withJson(['errors' => 'identifier not valid']);
         }
 
         return $response->withJson(['statuses' => StatusModel::get()]);
     }
 
-    protected function manageValue($request)
+    protected static function manageValue($request)
     {
         foreach ($request  as $key => $value) {
             if (in_array($key, ['is_system', 'is_folder_status', 'can_be_searched', 'can_be_modified'])) {

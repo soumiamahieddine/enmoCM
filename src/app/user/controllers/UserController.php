@@ -542,10 +542,10 @@ class UserController
         ]);
 
         if (!file_exists($storeInfos['path_template']. str_replace('#', '/', $storeInfos['destination_dir']) .$storeInfos['file_destination_name'])) {
-            return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' '._PATH_OF_DOCSERVER_UNAPPROACHABLE]);
+            return $response->withStatus(500)->withJson(['errors' => $storeInfos['error'] .' '. _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
-        UserModel::createSignature([
+        UserSignatureModel::create([
             'userSerialId'      => $aArgs['id'],
             'signatureLabel'    => $data['label'],
             'signaturePath'     => $storeInfos['destination_dir'],
@@ -570,7 +570,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        UserModel::updateSignature([
+        UserSignatureModel::update([
             'signatureId'   => $aArgs['signatureId'],
             'userSerialId'  => $aArgs['id'],
             'label'         => $data['label']
@@ -588,7 +588,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        UserModel::deleteSignature(['signatureId' => $aArgs['signatureId'], 'userSerialId' => $aArgs['id']]);
+        UserSignatureModel::delete(['signatureId' => $aArgs['signatureId'], 'userSerialId' => $aArgs['id']]);
 
         return $response->withJson([
             'signatures' => UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']])
@@ -600,18 +600,14 @@ class UserController
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
-            return $response->withJson(['errors' => _EMPTY_EMAIL_SIGNATURE_FORM]);
+            return $response->withJson(['errors' => 'Bad Request']);
         }
 
-        $r = UserModel::createEmailSignature([
+        UserModel::createEmailSignature([
             'userId'    => $GLOBALS['userId'],
             'title'     => $data['title'],
             'htmlBody'  => $data['htmlBody']
         ]);
-
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Creation Error']);
-        }
 
         return $response->withJson([
             'emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])
@@ -623,19 +619,15 @@ class UserController
         $data = $request->getParams();
 
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['title', 'htmlBody']])) {
-            return $response->withJson(['errors' => _EMPTY_EMAIL_SIGNATURE_FORM]);
+            return $response->withJson(['errors' => 'Bad Request']);
         }
 
-        $r = UserModel::updateEmailSignature([
+        UserModel::updateEmailSignature([
             'id'        => $aArgs['id'],
             'userId'    => $GLOBALS['userId'],
             'title'     => $data['title'],
             'htmlBody'  => $data['htmlBody']
         ]);
-
-        if (!$r) {
-            return $response->withStatus(500)->withJson(['errors' => 'Email Signature Update Error']);
-        }
 
         return $response->withJson([
             'emailSignature' => UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $aArgs['id']])

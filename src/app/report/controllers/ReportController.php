@@ -21,7 +21,6 @@ use Report\models\ReportModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-
 class ReportController
 {
     public function getGroups(Request $request, Response $response)

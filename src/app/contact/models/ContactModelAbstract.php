@@ -18,7 +18,7 @@ use Resource\models\ResModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class ContactModelAbstract
+abstract class ContactModelAbstract
 {
     public static function getById(array $aArgs)
     {
@@ -121,7 +121,7 @@ class ContactModelAbstract
         return $nextSequenceId;
     }
 
-    public static function getFullAddressById(array $aArgs = [])
+    public static function getFullAddressById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['addressId']);
         ValidatorModel::intVal($aArgs, ['addressId']);
@@ -136,7 +136,7 @@ class ContactModelAbstract
         return $aReturn;
     }
 
-    public static function getContactFullLabel(array $aArgs = [])
+    public static function getContactFullLabel(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['addressId']);
         ValidatorModel::intVal($aArgs, ['addressId']);
@@ -173,7 +173,7 @@ class ContactModelAbstract
         return $contactName;
     }
 
-    public static function getContactCommunication(array $aArgs = [])
+    public static function getContactCommunication(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId']);
         ValidatorModel::intVal($aArgs, ['contactId']);
@@ -193,7 +193,7 @@ class ContactModelAbstract
         }
     }
 
-    public static function getContactIdByCommunicationValue(array $aArgs = [])
+    public static function getContactIdByCommunicationValue(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['communicationValue']);
 
@@ -205,15 +205,16 @@ class ContactModelAbstract
         ]);
 
         if (empty($aReturn)) {
-            return "";
+            return '';
         } else {
             return $aReturn[0];
         }
     }
 
-    public static function getAddressByExternalContactId(array $aArgs = [])
+    public static function getAddressByExternalContactId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['externalContactId']);
+
         $aReturn = DatabaseModel::select([
             'select'    => ['*'],
             'table'     => ['view_contacts'],
@@ -222,18 +223,18 @@ class ContactModelAbstract
         ]);
 
         if (empty($aReturn)) {
-            return "";
+            return '';
         } else {
             return $aReturn[0];
         }
     }
 
-    public static function createContactCommunication(array $aArgs = [])
+    public static function createContactCommunication(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId', 'type', 'value']);
         ValidatorModel::intVal($aArgs, ['contactId']);
 
-        $aReturn = DatabaseModel::insert([
+        DatabaseModel::insert([
             'table' => 'contact_communication',
             'columnsValues' => [
                 'contact_id' => $aArgs['contactId'],
@@ -242,7 +243,7 @@ class ContactModelAbstract
             ]
         ]);
 
-        return $aReturn;
+        return true;
     }
 
     public static function getLabelledContactWithAddress(array $aArgs)
@@ -331,7 +332,7 @@ class ContactModelAbstract
         return $aContact[0];
     }
 
-    public static function getCommunicationByContactId(array $aArgs = [])
+    public static function getCommunicationByContactId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId']);
         ValidatorModel::stringType($aArgs, ['contactId']);
@@ -346,7 +347,7 @@ class ContactModelAbstract
         return $aReturn[0];
     }
 
-    public static function CreateContactM2M(array $aArgs = [])
+    public static function CreateContactM2M(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data', 'contactCommunication']);
 
@@ -397,7 +398,7 @@ class ContactModelAbstract
 
         // Si le contact n'existe pas, on le créé
         if (!$contact_exists) {
-            $contactInfo = self::getContactIdByCommunicationValue(['communicationValue' => $aArgs['contactCommunication']]);
+            $contactInfo = ContactModel::getContactIdByCommunicationValue(['communicationValue' => $aArgs['contactCommunication']]);
             if (!empty($contactInfo)) {
                 $currentContactId = $contactInfo['contact_id'];
             } else {
@@ -413,13 +414,13 @@ class ContactModelAbstract
                         'columnsValues' => $formatedDataContact
                     ]);
                 } catch (\Exception $e) {
-                    $returnResArray = array(
+                    $returnResArray = [
                         'returnCode'  => (int) -1,
                         'contactId'   => 'ERROR',
                         'addressId'   => 'ERROR',
                         'contactInfo' => '',
                         'error'       => 'contact creation error : '. $e->getMessage(),
-                    );
+                    ];
                     
                     return $returnResArray;
                 }
@@ -436,33 +437,33 @@ class ContactModelAbstract
                         'columnsValues' => $formatedDataAddress
                     ]);
             } catch (\Exception $e) {
-                $returnResArray = array(
+                $returnResArray = [
                     'returnCode'  => (int) -1,
                     'contactId'   => $currentContactId,
                     'addressId'   => 'ERROR',
                     'contactInfo' => '',
                     'error'       => 'address creation error : '. $e->getMessage(),
-                );
+                ];
                 
                 return $returnResArray;
             }
-            $returnResArray = array(
+            $returnResArray = [
                 'returnCode'  => (int) 0,
                 'contactId'   => $currentContactId,
                 'addressId'   => $currentAddressId,
                 'contactInfo' => 'contact created and attached to doc ... ',
-                'error'       => '',
-            );
+                'error'       => ''
+            ];
             
             return $returnResArray;
         } else {
-            $returnResArray = array(
+            $returnResArray = [
                 'returnCode'  => (int) 0,
                 'contactId'   => $currentContactId,
                 'addressId'   => $currentAddressId,
                 'contactInfo' => 'contact already exist, attached to doc ... ',
-                'error'       => '',
-            );
+                'error'       => ''
+            ];
             
             return $returnResArray;
         }

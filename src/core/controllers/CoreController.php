@@ -10,7 +10,6 @@
  * @brief Core Controller
  *
  * @author dev@maarch.org
- * @ingroup Core
  */
 
 namespace SrcCore\controllers;

@@ -10,7 +10,6 @@
 /**
 * @brief Notifications Events Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Notification\models;
@@ -18,9 +17,9 @@ namespace Notification\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class NotificationsEventsModelAbstract
+abstract class NotificationsEventsModelAbstract
 {
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid', 'table_name', 'record_id', 'user_id', 'event_info']);
         ValidatorModel::stringType($aArgs, ['table_name', 'user_id', 'event_info']);
@@ -31,7 +30,7 @@ class NotificationsEventsModelAbstract
         $aReturn = DatabaseModel::insert([
             'table'         => 'notif_event_stack',
             'columnsValues' => $aArgs
-            ]);
+        ]);
 
         return $aReturn;
     }

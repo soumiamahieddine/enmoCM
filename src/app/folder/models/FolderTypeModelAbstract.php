@@ -12,12 +12,11 @@
 namespace Folder\models;
 
 use SrcCore\models\ValidatorModel;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
 class FolderTypeModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $aArgs)
     {
         ValidatorModel::arrayType($aArgs, ['select']);
 
@@ -29,7 +28,7 @@ class FolderTypeModelAbstract
         return $folderType;
     }
 
-    public static function getFolderTypeDocTypeFirstLevel(array $aArgs = [])
+    public static function getFolderTypeDocTypeFirstLevel(array $aArgs)
     {
         ValidatorModel::arrayType($aArgs, ['select']);
 
@@ -43,7 +42,7 @@ class FolderTypeModelAbstract
         return $folderType;
     }
 
-    public static function createFolderTypeDocTypeFirstLevel(array $aArgs = [])
+    public static function createFolderTypeDocTypeFirstLevel(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['foldertype_id', 'doctypes_first_level_id']);
         ValidatorModel::intVal($aArgs, ['foldertype_id', 'doctypes_first_level_id']);
@@ -69,5 +68,4 @@ class FolderTypeModelAbstract
 
         return true;
     }
-
 }

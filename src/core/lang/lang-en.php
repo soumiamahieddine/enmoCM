@@ -11,6 +11,7 @@
  *
  * @author dev@maarch.org
  */
+
 define('_ACTION_ADDED', 'Action added');
 define('_ACTION_DELETED', 'Action deleted');
 define('_ACTION_UPDATED', 'Action updated');
@@ -41,6 +42,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document not found');
 define('_ENTITY_CREATION', 'Entity creation');
 define('_ENTITY_MODIFICATION', 'Entity modification');
 define('_ENTITY_SUPPRESSION', 'Entity suppression');
+define('_ID', 'Identifier');
 define('_ID_TO_DISPLAY', 'res_id');
 define('_INVALID_CLAUSE', 'Clause is not valid');
 define('_INVALID_REQUEST', 'Request is not valid');
@@ -102,63 +104,10 @@ define('_REGISTERED_MAIL', 'registered letter with recorded delivery');
 define('_COURIER', 'Courier');
 define('_NUMERIC_PACKAGE', 'Numeric package');
 define('_OTHER', 'Other');
-
-//BEGIN ALEX
-define('_ID', 'Identifier');
-define('_REDIRECT_TO_ACTION', 'Redirect to an action');
-define('_ADMIN', 'Administration');
-define('_ADV_SEARCH_MLB', 'Search');
-define('_INDEXING_MLB', 'Save a mail/document');
-define('_SEARCH_CONTACTS', 'Search a contact');
-define('_PARAM_MLB_DOCTYPES', 'Documents types configuration ');
-define('_PARAM_MLB_DOCTYPES_DESC', 'Doctypes configuration ');
-define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
-define('_QUICKLAUNCH', 'Short cut');
-define('_MY_CONTACTS', 'Create contacts from indexation/title');
-define('_MY_CONTACTS_MENU', 'My contacts');
-define('_CREATE_CONTACTS', 'All the contacts');
-define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
-define('_VIEW_TECHNICAL_INFORMATIONS', 'See technical information');
-define('_VIEW_DOC_HISTORY', 'See global document history');
-define('_VIEW_FULL_HISTORY', 'See Full document history');
-define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the utilisation of Maarch.');
-define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
-define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
-define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
-define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Send the document for validation from the detailed page');
-define('_LOAD_STATUSES_SESSION', 'Load Status session');
-define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
-define('_ADD_LINKS', 'Add connection');
-define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
-define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
-define('_ATTACHMENTS_COMMENT', 'Attachments management');
-define('_BASKETS_COMMENT', 'Baskets');
-define('_CASES_COMMENT', 'Cases');
-define('_ENTITIES_COMMENT', 'Departments');
-define('_FILEPLAN_COMMENT', 'Organizational file plan');
-define('_FOLDERS_COMMENT', 'Folders');
-define('_FULL_TEXT', 'Full text');
-define('_NOTES_COMMENT', 'Notes');
-define('_NOTIFICATIONS_COMMENT', 'Notifications');
-define('_TEMPLATES_COMMENT', 'Templates');
-define('_REPORTS_COMMENT', 'States and editions');
-define('_LIFE_CYCLE_COMMENT', 'Life cycle management');
-define('_CONTENT_MANAGEMENT_COMMENT', 'Management of document versions');
-define('_TAGS_COMMENT', 'Tags');
-define('_SENDMAIL_COMMENT', 'Send emails');
-define('_THUMBNAILS_COMMENT', 'Unit of thumbnails');
-define('_VISA_WORKFLOW_COMMENT', 'Visa workflow management');
-define('_AVIS_WORKFLOW_COMMENT', 'recommendation workflow management');
-define('_THESAURUS_COMMENT', 'Thesaurus management');
-define('_EXPORT_SEDA_COMMENT', 'Export');
-define('_CONVERT_COMMENT', 'Conversions module');
-define('_VIEW_BASKETS', 'My baskets');
-define('_PRINT_SEPS', 'Limiters printing');
-define('_FILEPLAN_SHORT', 'File plan');
-define('_CREATE_FOLDER', 'Create a folder');
-define('_FOLDER_SEARCH', 'Search a folder');
-define('_VIEW_FOLDER_TREE', 'Read a folder');
-define('_SAVE_NUMERIC_PACKAGE', 'Save numeric package');
+define('_NOTIFICATION_ALREADY_EXIST', 'Notification already exists');
+define('_WRONG_PSW', 'Wrong password');
+define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
+define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
@@ -215,6 +164,99 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications based on application events");
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
+
+//SERVICES
+define('_REDIRECT_TO_ACTION', 'Redirect to an action');
+define('_ADMIN', 'Administration');
+define('_ADV_SEARCH_MLB', 'Search');
+define('_INDEXING_MLB', 'Save a mail/document');
+define('_SEARCH_CONTACTS', 'Search a contact');
+define('_PARAM_MLB_DOCTYPES', 'Documents types configuration ');
+define('_PARAM_MLB_DOCTYPES_DESC', 'Doctypes configuration ');
+define('_WELCOME_TEXT_LOAD', 'Text loading of the home page');
+define('_QUICKLAUNCH', 'Short cut');
+define('_MY_CONTACTS', 'Create contacts from indexation/title');
+define('_MY_CONTACTS_MENU', 'My contacts');
+define('_CREATE_CONTACTS', 'All the contacts');
+define('_UPDATE_CONTACTS', 'Contact update from indexation/ title');
+define('_VIEW_TECHNICAL_INFORMATIONS', 'See technical information');
+define('_VIEW_DOC_HISTORY', 'See global document history');
+define('_VIEW_FULL_HISTORY', 'See Full document history');
+define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the utilisation of Maarch.');
+define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
+define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
+define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
+define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Send the document for validation from the detailed page');
+define('_LOAD_STATUSES_SESSION', 'Load Status session');
+define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
+define('_ADD_LINKS', 'Add connection');
+define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
+define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the liaison sheets from the results lists');
+define('_ATTACHMENTS_COMMENT', 'Attachments management');
+define('_BASKETS_COMMENT', 'Baskets');
+define('_CASES_COMMENT', 'Cases');
+define('_ENTITIES_COMMENT', 'Departments');
+define('_FILEPLAN_COMMENT', 'Organizational file plan');
+define('_FOLDERS_COMMENT', 'Folders');
+define('_FULL_TEXT', 'Full text');
+define('_NOTES_COMMENT', 'Notes');
+define('_NOTIFICATIONS_COMMENT', 'Notifications');
+define('_TEMPLATES_COMMENT', 'Templates');
+define('_REPORTS_COMMENT', 'States and editions');
+define('_LIFE_CYCLE_COMMENT', 'Life cycle management');
+define('_CONTENT_MANAGEMENT_COMMENT', 'Management of document versions');
+define('_TAGS_COMMENT', 'Tags');
+define('_SENDMAIL_COMMENT', 'Send emails');
+define('_THUMBNAILS_COMMENT', 'Unit of thumbnails');
+define('_VISA_WORKFLOW_COMMENT', 'Visa workflow management');
+define('_AVIS_WORKFLOW_COMMENT', 'recommendation workflow management');
+define('_THESAURUS_COMMENT', 'Thesaurus management');
+define('_EXPORT_SEDA_COMMENT', 'Export');
+define('_CONVERT_COMMENT', 'Conversions module');
+define('_VIEW_BASKETS', 'My baskets');
+define('_PRINT_SEPS', 'Limiters printing');
+define('_FILEPLAN_SHORT', 'File plan');
+define('_CREATE_FOLDER', 'Create a folder');
+define('_FOLDER_SEARCH', 'Search a folder');
+define('_VIEW_FOLDER_TREE', 'Read a folder');
+define('_SAVE_NUMERIC_PACKAGE', 'Save numeric package');
+define("_SELECT_FOLDER", "Folder selection");
+define("_FOLDER_HISTORY", "Folder's history");
+define("_MODIFY_FOLDER", "Modify folder's index");
+define("_ATTACH_DOC_TO_FOLDER", "Attach a document to a folder");
+define("_DELETE_FOLDER", "Delete a folder");
+define("_FREEZE_FOLDER", "Freeze the folder");
+define("_CLOSE_FOLDER", "Close the folder");
+define("_NOTES_RESTRICTION", "By default, limit the notes to your department");
+define("_MANAGE_NOTES", "Manage notes");
+define("_REPORTS_DESC", "States editions");
+define('_GRAPHICS_REPORTS', 'Graphics mode enabled');
+define("_USE_MAIL_SERVICES", "Use emails services as sender");
+define("_USE_MAIL_SERVICES_DESC", "Use emails services as sender");
+define("_TAG_DEFAULT", "Tag");
+define("_TAG_VIEW", "View the Tag of the documents");
+define("_TAG_VIEW_DESC", "Allows to view Tag");
+define("_CREATE_TAG", "Create Tag");
+define("_CREATE_TAG_DESC", "Allows to create Tag not existing in database");
+define("_ADD_TAG_TO_RES", "Associate the available Tag to a document");
+define("_ADD_TAG_TO_RES_DESC", "Allows to add Tag to a resource");
+define("_PRIVATE_TAGS", "Associate Tag to the user's entity (Direction level)");
+define("_PRIVATE_TAGS_DESC", "User will only see Tag restricted to user's direction (adding / updating will automatically associate the word to user's direction).");
+define("_THESAURUS_VIEW", "Display the thesaurus in the process pages");
+define("_THESAURUS_VIEW_DESC", "Be able to see the term(s) which are associated to different documents");
+define("_ADD_THESAURUS_TO_RES", "Be able to associate terms to different documents");
+define("_ADD_THESAURUS_TO_RES_DESC", "Allow to use thesaurus 's available terms to refer documents");
+define('_CONFIG_VISA_WORKFLOW', 'Visa workflow setting');
+define('_CONFIG_VISA_WORKFLOW_DESC', 'Allows to set up visa flow which the mail will have to follow');
+define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Visa workflow setting from detailed card');
+define('_VISA_ANSWERS', 'Aim the responses projects');
+define('_VISA_ANSWERS_DESC', 'Allows to aim response projects');
+define('_SIGN_DOCS', 'Sign the documents');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modify current visa user from signature book');
+define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Useful if signature book is used as a supervision signature book');
+define('_PRINT_FOLDER_DOC', 'Print the entire folder');
+define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
+define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
 
 // ACTIONS
 define('_REDIRECTION', 'Redirection');
@@ -280,7 +322,6 @@ define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Recommendation workflow setting from 
 define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Allows to define the workflow directly from the mail detailed form");
 define("_AVIS_ANSWERS", "Give oneself's opinion");
 define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
-define("_VIEW_BASKETS", "My baskets");
 define("_VIEW_BASKETS_DESC", "My baskets");
 define("_UPDATE_CASE", "Cases updates");
 define("_JOIN_RES_CASE", "Attach mails to cases");
@@ -298,58 +339,20 @@ define("_PUT_DOC_IN_FILEPLAN", "Classify documents");
 define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify documents in the organizational file plan");
 define("_PERSONNAL_FILEPLAN", "Personal file plan");
 
-
-//FOLDER
-define("_SELECT_FOLDER", "Folder selection");
-define("_FOLDER_HISTORY", "Folder's history");
-define("_MODIFY_FOLDER", "Modify folder's index");
-define("_ATTACH_DOC_TO_FOLDER", "Attach a document to a folder");
-define("_DELETE_FOLDER", "Delete a folder");
-define("_FREEZE_FOLDER", "Freeze the folder");
-define("_CLOSE_FOLDER", "Close the folder");
-
-//NOTES
-define("_NOTES_RESTRICTION", "By default, limit the notes to your department");
-define("_MANAGE_NOTES", "Manage notes");
-
-//NOTIFICATIONS
-define("_NOTIFICATIONS", "Notifications");
-
-//REPORTS
-define("_REPORTS","States and editions");
-define("_REPORTS_DESC","States editions");
-define('_GRAPHICS_REPORTS', 'Graphics mode enabled');
-
-//SENDMAIL
-define("_USE_MAIL_SERVICES", "Use emails services as sender");
-define("_USE_MAIL_SERVICES_DESC", "Use emails services as sender");
-
-//TAGS
-define("_TAG_DEFAULT", "Tag");
-define("_TAG_VIEW", "View the "._TAGS_DEFAULT." of the documents");
-define("_TAG_VIEW_DESC", "Allows to view "._TAGS_DEFAULT);
-define("_CREATE_TAG", "Create "._TAGS_DEFAULT);
-define("_CREATE_TAG_DESC", "Allows to create ".strtolower(_TAGS_DEFAULT)." not existing in database");
-define("_ADD_TAG_TO_RES", "Associate the available "._TAGS_DEFAULT." to a document");
-define("_ADD_TAG_TO_RES_DESC", "Allows to add "._TAGS_DEFAULT." to a resource");
-define("_PRIVATE_TAGS", "Associate ".strtolower(_TAGS_DEFAULT)." to the user's entity (Direction level)");
-define("_PRIVATE_TAGS_DESC", "User will only see ".strtolower(_TAGS_DEFAULT)." restricted to user's direction (adding / updating will automatically associate the word to user's direction).");
-
-//THESAURUS
-define("_THESAURUS_VIEW", "Display the thesaurus in the process pages");
-define("_THESAURUS_VIEW_DESC", "Be able to see the term(s) which are associated to different documents");
-define("_ADD_THESAURUS_TO_RES", "Be able to associate terms to different documents");
-define("_ADD_THESAURUS_TO_RES_DESC", "Allow to use thesaurus 's available terms to refer documents");
-
-//VISA
-define('_CONFIG_VISA_WORKFLOW', 'Visa workflow setting');
-define('_CONFIG_VISA_WORKFLOW_DESC', 'Allows to set up visa flow which the mail will have to follow');
-define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Visa workflow setting from detailed card');
-define('_VISA_ANSWERS', 'Aim the responses projects');
-define('_VISA_ANSWERS_DESC', 'Allows to aim response projects');
-define('_SIGN_DOCS', 'Sign the documents');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modify current visa user from signature book');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Useful if signature book is used as a supervision signature book');
-define('_PRINT_FOLDER_DOC', 'Print the entire folder');
-define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
-define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
+// REPORTS
+define('_FOLDER_VIEW_STAT', 'Number of read folders');
+define('_ENTITY_VOL_STAT', 'Mails volume by department');
+define('_ENTITY_VOL_STAT_DESC', 'Mails volume by department');
+define('_RESPONSE_RATE_BY_ENTITIES', 'Taux de réponse par entité');
+define('_RESPONSE_RATE_BY_ENTITIES_DESC', 'Permet d\'afficher le pourcentage de courrier dont une réponse a été effectuée. Cette statistique se base sur le nombre de courriers dont une date de départ a été inscrite (il faut utiliser le champ custom_d1)');
+define('_ENTITY_LATE_MAIL', 'Late mail volume by department');
+define('_ENTITY_PROCESS_DELAY', 'Medium handling time by department');
+define('_USERS_LOGS', 'Access list to the application by agent');
+define('_PROCESS_DELAY_REPORT', 'Average process period by mail type');
+define('_PROCESS_DELAY_REPORT_DESC', 'Average process period by mail type');
+define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT', 'Handling medium time');
+define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC', 'Permet d\'afficher le délai (en jour) de la création jusqu\'à la clôture d\'un courrier.');
+define('_MAIL_TYPOLOGY_REPORT', 'Mails typology by period');
+define('_MAIL_TYPOLOGY_REPORT_DESC', 'Mails typology by period');
+define('_MAIL_VOL_BY_CAT_REPORT', 'Mails volume by category, by period');
+define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Mails volume by category, by period');

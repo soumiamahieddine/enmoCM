@@ -17,7 +17,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class ServiceModelAbstract
+abstract class ServiceModelAbstract
 {
     public static function getServicesByXML()
     {

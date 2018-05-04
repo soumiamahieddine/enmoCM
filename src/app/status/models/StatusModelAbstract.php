@@ -10,7 +10,6 @@
 /**
 * @brief Status Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Status\models;
@@ -18,7 +17,7 @@ namespace Status\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class StatusModelAbstract
+abstract class StatusModelAbstract
 {
     public static function get(array $aArgs = [])
     {
