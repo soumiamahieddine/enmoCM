@@ -198,6 +198,8 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.source,
     r.author,
     r.reference_number,
+    r.external_id,
+    r.external_link,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
@@ -769,6 +771,6 @@ UPDATE notifications SET event_id = 'baskets' WHERE notification_id = 'BASKETS';
 DELETE FROM parameters where id = 'user_quota';
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 DELETE FROM parameters where id = 'database_version';
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.1', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '18.04.2', NULL, NULL);
 
 INSERT INTO templates_doctype_ext SELECT null, d.type_id, 'N' FROM doctypes d LEFT JOIN templates_doctype_ext tde ON d.type_id = tde.type_id WHERE tde.type_id IS NULL;
