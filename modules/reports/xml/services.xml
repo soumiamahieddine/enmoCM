@@ -28,7 +28,7 @@
 		<id>graphics_reports</id>
 		<name>_GRAPHICS_REPORTS</name>
 		<comment>_GRAPHICS_REPORTS_DESC</comment>
-		<servicetype></servicetype>
+		<servicetype>use</servicetype>
 		<system_service>false</system_service>
 		<enabled>true</enabled>
 	</SERVICE>
