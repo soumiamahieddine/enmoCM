@@ -20,7 +20,6 @@
     "jquery.nicescroll": "~3.6.8",
     "jstree-bootstrap-theme": "^1.0.1",
     "photoswipe": "^4.1.2",
-    "rxjs-compat": "^6.0.0-rc.0",
     "tinymce": "^4.7.12",
     "tooltipster": "^4.2.6",
     "zone.js": "^0.8.26"
