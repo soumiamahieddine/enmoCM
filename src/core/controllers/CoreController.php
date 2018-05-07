@@ -38,7 +38,7 @@ class CoreController
 
         $scriptsToInject = scandir('dist');
         foreach ($scriptsToInject as $key => $value) {
-            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
+            if (strstr($value, 'runtime.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
                 if (strstr($value, '.js.map') === false) {
                     $aInit['scriptsToinject'][] = $value;
                 }
