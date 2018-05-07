@@ -3,7 +3,7 @@
 	<REPORT>
 		<ID>folder_view_stat</ID>
 		<LABEL>_FOLDER_VIEW_STAT</LABEL>
-		<DESCRIPTION>_FOLDER_VIEW_STAT_DESC</DESCRIPTION>
+		<DESCRIPTION>_FOLDER_VIEW_STAT</DESCRIPTION>
 		<URL>folder_view_stats</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!--  the report can be accessed by the menu report -->
 		<ENABLED>true</ENABLED>
@@ -58,7 +58,7 @@
 	<REPORT>
 		<ID>users_logs</ID>
 		<LABEL>_USERS_LOGS</LABEL>
-		<DESCRIPTION>_USERS_LOGS_DESC</DESCRIPTION>
+		<DESCRIPTION>_USERS_LOGS</DESCRIPTION>
 		<URL>users_logs</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>false</ENABLED>

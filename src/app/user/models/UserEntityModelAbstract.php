@@ -18,7 +18,7 @@ use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class UserEntityModelAbstract
+abstract class UserEntityModelAbstract
 {
     public static function get(array $aArgs)
     {

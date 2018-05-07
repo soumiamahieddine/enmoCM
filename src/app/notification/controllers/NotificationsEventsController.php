@@ -8,9 +8,8 @@
 */
 
 /**
-* @brief Notifications events Controller
+* @brief Notifications Events Controller
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Notification\controllers;
@@ -35,7 +34,7 @@ class NotificationsEventsController
             $event_ids = explode(',', $notification['event_id']);
 
             if ($aArgs['eventId'] == $notification['event_id']
-                || self::wildcardMatch(["pattern" => $notification['event_id'], "str" => $aArgs['eventId']])
+                || NotificationsEventsController::wildcardMatch(["pattern" => $notification['event_id'], "str" => $aArgs['eventId']])
                 || in_array($aArgs['eventId'], $event_ids)) {
                 NotificationsEventsModel::create([
                     'notification_sid' => $notification['notification_sid'],
@@ -48,7 +47,7 @@ class NotificationsEventsController
         }
     }
 
-    public function wildcardMatch(array $aArgs)
+    public static function wildcardMatch(array $aArgs)
     {
         $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($aArgs['pattern'])) . '$/is';
         $result = preg_match($pattern, $aArgs['str']);

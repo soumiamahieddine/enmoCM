@@ -10,7 +10,6 @@
  * @brief Notifications Model
  *
  * @author dev@maarch.org
- * @ingroup Module
  */
 
 namespace Notification\models;
@@ -22,7 +21,7 @@ use SrcCore\models\DatabaseModel;
 use Status\models\StatusModel;
 use SrcCore\models\CoreConfigModel;
 
-class NotificationModelAbstract
+abstract class NotificationModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -36,7 +35,7 @@ class NotificationModelAbstract
         return $aNotifications;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid']);
 
@@ -54,7 +53,7 @@ class NotificationModelAbstract
         return $aNotification[0];
     }
 
-    public static function getByNotificationId(array $aArgs = [])
+    public static function getByNotificationId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notificationId']);
 
@@ -72,7 +71,7 @@ class NotificationModelAbstract
         return $aNotification[0];
     }
 
-    public static function delete(array $aArgs = [])
+    public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid']);
         ValidatorModel::intVal($aArgs, ['notification_sid']);
@@ -86,7 +85,7 @@ class NotificationModelAbstract
         return true;
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_id', 'description', 'is_enabled', 'event_id', 'notification_mode', 'template_id', 'diffusion_type']);
         ValidatorModel::intVal($aArgs, ['template_id']);
@@ -250,6 +249,8 @@ class NotificationModelAbstract
 
     public static function getEnableNotifications(array $aArgs = [])
     {
+        ValidatorModel::arrayType($aArgs, ['select']);
+
         $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['notifications'],

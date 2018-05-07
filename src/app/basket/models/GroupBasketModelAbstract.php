@@ -9,7 +9,7 @@
 
 /**
 * @brief   GroupBasket Model Abstract
-* @author  <dev@maarch.org>
+* @author  dev@maarch.org
 */
 
 namespace Basket\models;
@@ -17,7 +17,7 @@ namespace Basket\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class GroupBasketModelAbstract
+abstract class GroupBasketModelAbstract
 {
     public static function get(array $aArgs)
     {

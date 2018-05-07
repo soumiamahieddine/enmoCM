@@ -17,7 +17,7 @@ namespace Link\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class LinkModelAbstract
+abstract class LinkModelAbstract
 {
     public static function getByResId(array $aArgs)
     {

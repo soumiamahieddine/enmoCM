@@ -17,7 +17,7 @@ namespace Entity\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class ListTemplateModelAbstract
+abstract class ListTemplateModelAbstract
 {
     public static function get(array $aArgs = [])
     {

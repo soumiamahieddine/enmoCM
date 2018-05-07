@@ -3,7 +3,7 @@
     <SERVICE>
        <id>export_seda_view</id>
        <name>_EXPORT_SEDA_VIEW</name>
-       <comment>_EXPORT_SEDA_DESC</comment>
+       <comment>_EXPORT_SEDA_VIEW</comment>
        <servicepage>export_seda_view.php</servicepage>
        <servicetype>use</servicetype>
        <system_service>false</system_service>

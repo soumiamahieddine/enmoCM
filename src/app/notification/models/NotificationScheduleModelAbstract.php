@@ -10,7 +10,6 @@
  * @brief Notifications Model
  *
  * @author dev@maarch.org
- * @ingroup Module
  */
 
 namespace Notification\models;
@@ -19,7 +18,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use History\controllers\HistoryController;
 
-class NotificationScheduleModelAbstract
+abstract class NotificationScheduleModelAbstract
 {
     public static function saveCrontab(array $aArgs = [])
     {
@@ -68,7 +67,7 @@ class NotificationScheduleModelAbstract
         $crontab = shell_exec('crontab -l');
         // TODO check crontab is installed
         $lines = explode("\n", $crontab);
-        $data = array();
+        $data = [];
         $customId = CoreConfigModel::getCustomId();
         $corePath = str_replace('custom/'.$customId.'/src/app/notification/models', '', __DIR__);
         $corePath = str_replace('src/app/notification/models', '', $corePath);
@@ -103,7 +102,7 @@ class NotificationScheduleModelAbstract
 
             $filename = explode('/', $cmd);
 
-            $data[] = array(
+            $data[] = [
                 'm'           => $m,
                 'h'           => $h,
                 'dom'         => $dom,
@@ -112,13 +111,13 @@ class NotificationScheduleModelAbstract
                 'cmd'         => $cmd,
                 'description' => end($filename),
                 'state'       => $state,
-            );
+            ];
         }
 
         return $data;
     }
 
-    public static function createScriptNotification(array $aArgs = [])
+    public static function createScriptNotification(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid', 'notification_id']);
         ValidatorModel::intVal($aArgs, ['notification_sid']);

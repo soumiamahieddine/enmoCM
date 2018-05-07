@@ -10,7 +10,6 @@
  * @brief Core Controller
  *
  * @author dev@maarch.org
- * @ingroup Core
  */
 
 namespace SrcCore\controllers;
@@ -39,7 +38,7 @@ class CoreController
 
         $scriptsToInject = scandir('dist');
         foreach ($scriptsToInject as $key => $value) {
-            if (strstr($value, 'inline.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
+            if (strstr($value, 'runtime.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
                 if (strstr($value, '.js.map') === false) {
                     $aInit['scriptsToinject'][] = $value;
                 }
@@ -59,11 +58,11 @@ class CoreController
     {
         if ($GLOBALS['userId'] == 'superadmin') {
             $administration                    = [];
-            $administrationMenu                = ServiceModel::getApplicationAdministrationMenuByXML();
+//            $administrationMenu                = ServiceModel::getApplicationAdministrationMenuByXML();
             $administrationApplication         = ServiceModel::getApplicationAdministrationServicesByXML();
             $administrationModule              = ServiceModel::getModulesAdministrationServicesByXML();
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-            $administration                    = array_merge_recursive($administration, $administrationMenu);
+//            $administration                    = array_merge_recursive($administration, $administrationMenu);
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
         }

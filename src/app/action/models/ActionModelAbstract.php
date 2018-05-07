@@ -1,12 +1,15 @@
 <?php
-/**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
 
-* @brief   ActionModelAbstract
-* @author  dev <dev@maarch.org>
-* @ingroup core
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
+
+/**
+* @brief   Action Model Abstract
+* @author  dev@maarch.org
 */
 
 namespace Action\models;
@@ -15,7 +18,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
-class ActionModelAbstract
+abstract class ActionModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -29,33 +32,29 @@ class ActionModelAbstract
         return $actions;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['actions'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         if (empty($aReturn[0])) {
             return [];
         }
 
         $aReturn = $aReturn[0];
-        $aReturn['actionCategories'] = DatabaseModel::select(
-            [
+        $aReturn['actionCategories'] = DatabaseModel::select([
             'select' => ['category_id'],
             'table'  => ['actions_categories'],
             'where'  => ['action_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
        
         return $aReturn;
     }
@@ -164,12 +163,12 @@ class ActionModelAbstract
                 if (!empty((string) $actionPage->MODULE)) {
                     $origin = (string) $actionPage->MODULE;
                 } else {
-                    $origin =  'apps';
+                    $origin = 'apps';
                 }
                 if (!empty((string) $actionPage->DESC)) {
                     $desc = constant((string) $actionPage->DESC);
                 } else {
-                    $desc =  'no description';
+                    $desc = 'no description';
                 }
                 $tabActions_pages['actionsPageList'][] = array(
                     'id'     => (string) $actionPage->ID,
@@ -200,7 +199,7 @@ class ActionModelAbstract
     {
         $tabKeyword   = [];
         $tabKeyword[] = ['value' => '', 'label' => _NO_KEYWORD];
-        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECT, 'desc' => _KEYWORD_REDIRECT_DESC];
+        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECTION, 'desc' => _KEYWORD_REDIRECT_DESC];
         $tabKeyword[] = ['value' => 'indexing', 'label' => _INDEXING, 'desc' => _KEYWORD_INDEXING_DESC];
 
         return $tabKeyword;

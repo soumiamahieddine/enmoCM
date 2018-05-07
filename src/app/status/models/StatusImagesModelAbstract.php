@@ -15,11 +15,14 @@
 namespace Status\models;
 
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\ValidatorModel;
 
-class StatusImagesModelAbstract
+abstract class StatusImagesModelAbstract
 {
     public static function getStatusImages(array $aArgs = [])
     {
+        ValidatorModel::arrayType($aArgs, ['select']);
+
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['status_images'],

@@ -16,13 +16,13 @@
 namespace Link\controllers;
 
 use Link\models\LinkModel;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Respect\Validation\Validator;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class LinkController
 {
-    public function getByResId(RequestInterface $request, ResponseInterface $response, $aArgs)
+    public function getByResId(Request $request, Response $response, $aArgs)
     {
         $check = Validator::intVal()->validate($aArgs['resId']);
         if (!$check) {

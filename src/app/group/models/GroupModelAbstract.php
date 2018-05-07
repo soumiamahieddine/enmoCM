@@ -14,13 +14,12 @@
 
 namespace Group\models;
 
-use Group\models\ServiceModel;
 use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
-class GroupModelAbstract
+abstract class GroupModelAbstract
 {
     public static function get(array $aArgs = [])
     {

@@ -19,6 +19,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Resource\models\ResModel;
 use Action\models\ActionModel;
+use SrcCore\models\CoreConfigModel;
 
 require_once __DIR__.'/../../export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/RequestSeda.php';
@@ -46,6 +47,9 @@ class MessageExchangeReviewController
         }
     }
 
+    /*
+    * Used in manage_action.php, so does not remove sessions
+    */
     public static function sendMessageExchangeReview($aArgs = [])
     {
         $messageExchangeData = self::canSendMessageExchangeReview(['res_id' => $aArgs['res_id']]);
@@ -83,7 +87,8 @@ class MessageExchangeReviewController
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
 
-            $filePath = $sendMessage->generateMessageFile($reviewObject, 'ArchiveModificationNotification', $_SESSION['config']['tmppath']);
+            $tmpPath = CoreConfigModel::getTmpPath();
+            $filePath = $sendMessage->generateMessageFile($reviewObject, 'ArchiveModificationNotification', $tmpPath);
 
             $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_NotificationSent';
             $reviewObject->TransferringAgency = $reviewObject->OriginatingAgency;
@@ -107,7 +112,7 @@ class MessageExchangeReviewController
 
     public function saveMessageExchangeReview(Request $request, Response $response)
     {
-        if (empty($_SESSION['user']['UserId'])) {
+        if (empty($GLOBALS['userId'])) {
             return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
@@ -123,7 +128,8 @@ class MessageExchangeReviewController
         }
 
         $receiveMessage = new \ReceiveMessage();
-        $res = $receiveMessage->receive($_SESSION['config']['tmppath'], $tmpName, $data['type']);
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $res = $receiveMessage->receive($tmpPath, $tmpName, $data['type']);
 
         $sDataObject = $res['content'];
         $dataObject = json_decode($sDataObject);

@@ -136,7 +136,7 @@ class DatabaseModel
         $stmt = $db->query($query, $args['data']);
 
         $rowset = [];
-        while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $rowset[] = $row;
         }
 

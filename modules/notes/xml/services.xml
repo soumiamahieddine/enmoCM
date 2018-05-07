@@ -3,7 +3,7 @@
 <SERVICE>
    <id>manage_notes_doc</id>
    <name>_MANAGE_NOTES</name>
-   <comment>_MANAGE_NOTES_DESC</comment>
+   <comment>_MANAGE_NOTES</comment>
    <servicepage>notes_doc.php</servicepage>
    <servicetype>use</servicetype>
    <system_service>true</system_service>

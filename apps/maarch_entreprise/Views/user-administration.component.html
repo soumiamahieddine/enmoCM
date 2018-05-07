@@ -48,7 +48,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
-                <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectChange)="initService()">
+                <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="initService()">
                     <mat-tab label="Informations">
                         <div *ngIf="user.status == 'ABS'" class="text-warning" style="position: absolute;opacity: 0.25;font-size: 120px;transform: rotate(324deg);-webkit-transform: rotate(324deg);margin-left: 35%;margin-top: 90px;">{{user.status}}</div>
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #profileForm="ngForm">

@@ -2,7 +2,7 @@
 <root>
 	<SERVICE>
 		<id>admin_tag</id>
-		<name>_ADMIN_TAGS</name>
+		<name>_TAGS</name>
 		<comment>_ADMIN_TAGS_DESC</comment>
 		<servicepage>index.php?page=manage_tag_list_controller&amp;module=tags</servicepage>
 		<servicetype>admin</servicetype>

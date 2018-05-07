@@ -38,9 +38,9 @@ class CoreConfigModel
         foreach ($xmlfile->custom as $value) {
             if (!empty($value->path) && $value->path == $path) {
                 return (string)$value->custom_id;
-            } elseif($value->ip == $_SERVER['SERVER_ADDR']) {
+            } elseif ($value->ip == $_SERVER['SERVER_ADDR']) {
                 return (string)$value->custom_id;
-            } else if ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
+            } elseif ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
                 return (string)$value->custom_id;
             }
         }
@@ -77,7 +77,7 @@ class CoreConfigModel
 
     /**
      * Get the tmp dir
-     * 
+     *
      * @return string
      */
     public static function getTmpPath()
@@ -155,7 +155,10 @@ class CoreConfigModel
         $categories      = $loadedXml->COLLECTION->categories;
         if (count($categories) > 0) {
             foreach ($categories->category as $category) {
-                $categoriesTmp = ['id' => (string)$category->id, 'label'=> constant((string)$category->label)];
+                $categoriesTmp = [
+                    'id'    => (string)$category->id,
+                    'label' => defined((string)$category->label) ? constant((string)$category->label) : (string)$category->label
+                ];
 
                 if ($category->id == (string)$categories->default_category) {
                     $categoriesTmp['default_category'] = true;

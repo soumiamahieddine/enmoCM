@@ -113,7 +113,7 @@ class NotificationController
         $notificationInDb = NotificationModel::getByNotificationId(['notificationId' => $data['notification_id'], 'select' => ['notification_sid']]);
 
         if (Validator::notEmpty()->validate($notificationInDb)) {
-            return $response->withStatus(400)->withJson(['errors' => _NOTIF_ALREADY_EXIST]);
+            return $response->withStatus(400)->withJson(['errors' => _NOTIFICATION_ALREADY_EXIST]);
         }
 
         $data['notification_mode'] = 'EMAIL';
@@ -150,7 +150,7 @@ class NotificationController
         }
     }
 
-    public function update(Request $request, Response $response, $aArgs)
+    public function update(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $GLOBALS['userId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -163,8 +163,7 @@ class NotificationController
         $errors = $this->control($data, 'update');
 
         if (!empty($errors)) {
-            return $response
-                ->withStatus(500)->withJson(['errors' => $errors]);
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
         $data['diffusion_properties'] = implode(',', $data['diffusion_properties']);
@@ -189,16 +188,14 @@ class NotificationController
         return $response->withJson(['notification' => $notification]);
     }
 
-    public function delete(Request $request, Response $response, $aArgs)
+    public function delete(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_notif', 'userId' => $GLOBALS['userId'], 'location' => 'notifications', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         if (!Validator::intVal()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'Id is not a numeric']);
+            return $response->withStatus(500)->withJson(['errors' => 'Id is not a numeric']);
         }
 
         $notification = NotificationModel::getById(['notification_sid' => $aArgs['id']]);
@@ -255,7 +252,7 @@ class NotificationController
         ]);
     }
 
-    protected function control($aArgs, $mode)
+    protected function control(array $aArgs, string $mode)
     {
         $errors = [];
 

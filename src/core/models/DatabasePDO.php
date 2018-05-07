@@ -14,7 +14,6 @@
 
 namespace SrcCore\models;
 
-
 class DatabasePDO
 {
     private static $pdo             = null;

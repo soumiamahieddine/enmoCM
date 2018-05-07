@@ -74,9 +74,9 @@
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.mail}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
-                        <mat-header-cell *matHeaderCellDef style="text-align: right;padding: 10px">
+                        <mat-header-cell *matHeaderCellDef>
                         </mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="text-align:right">
+                        <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
                             <button mat-icon-button color="primary" [disabled]="element.user_id==user.user_id" *ngIf="element.enabled == 'Y' && element.inDiffListDest == 'Y'" matTooltip="{{lang.suspend}}"
                                 (click)="$event.stopPropagation();suspendUser(element)">
                                 <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>

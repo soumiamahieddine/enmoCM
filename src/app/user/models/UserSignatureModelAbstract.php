@@ -17,7 +17,7 @@ namespace User\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class UserSignatureModelAbstract
+abstract class UserSignatureModelAbstract
 {
     public static function get(array $aArgs)
     {
@@ -63,5 +63,56 @@ class UserSignatureModelAbstract
         ]);
 
         return $signatures;
+    }
+
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userSerialId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
+        ValidatorModel::stringType($aArgs, ['signatureLabel', 'signaturePath', 'signatureFileName']);
+        ValidatorModel::intVal($aArgs, ['userSerialId']);
+
+        DatabaseModel::insert([
+            'table'         => 'user_signatures',
+            'columnsValues' => [
+                'user_serial_id'        => $aArgs['userSerialId'],
+                'signature_label'       => $aArgs['signatureLabel'],
+                'signature_path'        => $aArgs['signaturePath'],
+                'signature_file_name'   => $aArgs['signatureFileName']
+            ]
+        ]);
+
+        return true;
+    }
+
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['signatureId', 'userSerialId', 'label']);
+        ValidatorModel::stringType($aArgs, ['label']);
+        ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
+
+        DatabaseModel::update([
+            'table'     => 'user_signatures',
+            'set'       => [
+                'signature_label'   => $aArgs['label']
+            ],
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']]
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['signatureId', 'userSerialId']);
+        ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
+
+        DatabaseModel::delete([
+            'table'     => 'user_signatures',
+            'where'     => ['user_serial_id = ?', 'id = ?'],
+            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
+        ]);
+
+        return true;
     }
 }

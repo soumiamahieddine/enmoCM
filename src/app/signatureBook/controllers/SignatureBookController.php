@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Copyright Maarch since 2008 under licence GPLv3.
 * See LICENCE.txt file at the root folder for more details.
@@ -8,8 +9,9 @@
 
 /**
 * @brief   Signature Book Controller
-* @author  <dev@maarch.org>
+* @author  dev@maarch.org
 */
+
 namespace SignatureBook\controllers;
 
 use Attachment\models\AttachmentModel;
@@ -32,7 +34,6 @@ use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 use User\models\UserSignatureModel;
-
 
 class SignatureBookController
 {

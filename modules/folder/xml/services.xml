@@ -85,7 +85,7 @@
   </SERVICE>
   <SERVICE>
    <id>admin_foldertypes</id>
-   <name>_ADMIN_FOLDERTYPES</name>
+   <name>_FOLDERTYPES</name>
    <comment>_ADMIN_FOLDERTYPES_DESC</comment>
    <servicepage>index.php?page=foldertypes&amp;module=folder</servicepage>
    <servicetype>admin</servicetype>

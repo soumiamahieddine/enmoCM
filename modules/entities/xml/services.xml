@@ -18,8 +18,8 @@
     </SERVICE>
     <SERVICE>
         <id>admin_listmodels</id>
-        <name>_LISTMODELS</name>
-        <comment>_MANAGE_LISTMODELS_DESC</comment>
+        <name>_LISTMODELS_WORKFLOW</name>
+        <comment>_MANAGE_LISTMODELS_WORKFLOW_DESC</comment>
         <servicepage>/administration/diffusionModels</servicepage>
         <category>organisation</category>
         <servicetype>admin</servicetype>

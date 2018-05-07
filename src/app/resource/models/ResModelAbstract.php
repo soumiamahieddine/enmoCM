@@ -18,7 +18,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class ResModelAbstract
+abstract class ResModelAbstract
 {
     public static function getOnView(array $aArgs)
     {

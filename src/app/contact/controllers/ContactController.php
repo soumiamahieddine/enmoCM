@@ -169,8 +169,8 @@ class ContactController
             foreach ($result as $title) {
                 foreach ($title as $value) {
                     $aCivility[(string) $value->id] = [
-                        'label' => (string) $value->label,
-                        'abbreviation' => (string) $value->abbreviation,
+                        'label'         => (string) $value->label,
+                        'abbreviation'  => (string) $value->abbreviation,
                     ];
                 }
             }

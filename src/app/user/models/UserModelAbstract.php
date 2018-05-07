@@ -14,15 +14,13 @@
 
 namespace User\models;
 
-use Docserver\models\DocserverModel;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 
 require_once 'core/class/Url.php';
 
-class UserModelAbstract
+abstract class UserModelAbstract
 {
     public static function get(array $aArgs)
     {
@@ -85,7 +83,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'user']);
         ValidatorModel::notEmpty($aArgs['user'], ['firstname', 'lastname']);
@@ -128,7 +126,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function getByUserId(array $aArgs = [])
+    public static function getByUserId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
@@ -147,7 +145,7 @@ class UserModelAbstract
         return $aUser[0];
     }
 
-    public static function getByEmail(array $aArgs = [])
+    public static function getByEmail(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['mail']);
         ValidatorModel::stringType($aArgs, ['mail']);
@@ -163,7 +161,7 @@ class UserModelAbstract
         return $aUser;
     }
 
-    public static function updatePassword(array $aArgs = [])
+    public static function updatePassword(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'password']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -199,58 +197,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function createSignature(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['userSerialId', 'signatureLabel', 'signaturePath', 'signatureFileName']);
-        ValidatorModel::stringType($aArgs, ['signatureLabel', 'signaturePath', 'signatureFileName']);
-        ValidatorModel::intVal($aArgs, ['userSerialId']);
-
-        DatabaseModel::insert([
-            'table'         => 'user_signatures',
-            'columnsValues' => [
-                'user_serial_id'        => $aArgs['userSerialId'],
-                'signature_label'       => $aArgs['signatureLabel'],
-                'signature_path'        => $aArgs['signaturePath'],
-                'signature_file_name'   => $aArgs['signatureFileName']
-            ]
-        ]);
-
-        return true;
-    }
-
-    public static function updateSignature(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['signatureId', 'userSerialId', 'label']);
-        ValidatorModel::stringType($aArgs, ['label']);
-        ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
-
-        DatabaseModel::update([
-            'table'     => 'user_signatures',
-            'set'       => [
-                'signature_label'   => $aArgs['label']
-            ],
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']]
-        ]);
-
-        return true;
-    }
-
-    public static function deleteSignature(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['signatureId', 'userSerialId']);
-        ValidatorModel::intVal($aArgs, ['signatureId', 'userSerialId']);
-
-        DatabaseModel::delete([
-            'table'     => 'user_signatures',
-            'where'     => ['user_serial_id = ?', 'id = ?'],
-            'data'      => [$aArgs['userSerialId'], $aArgs['signatureId']],
-        ]);
-
-        return true;
-    }
-
-    public static function createEmailSignature(array $aArgs = [])
+    public static function createEmailSignature(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'title', 'htmlBody']);
         ValidatorModel::stringType($aArgs, ['userId', 'title', 'htmlBody']);
@@ -267,7 +214,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function updateEmailSignature(array $aArgs = [])
+    public static function updateEmailSignature(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id','userId', 'title', 'htmlBody']);
         ValidatorModel::stringType($aArgs, ['userId', 'title', 'htmlBody']);
@@ -286,7 +233,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function deleteEmailSignature(array $aArgs = [])
+    public static function deleteEmailSignature(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
@@ -300,7 +247,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function getEmailSignaturesById(array $aArgs = [])
+    public static function getEmailSignaturesById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
         ValidatorModel::stringType($aArgs, ['userId']);
@@ -316,7 +263,7 @@ class UserModelAbstract
         return $aReturn;
     }
 
-    public static function getEmailSignatureWithSignatureIdById(array $aArgs = [])
+    public static function getEmailSignatureWithSignatureIdById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'signatureId']);
         ValidatorModel::stringType($aArgs, ['userId']);
@@ -332,7 +279,7 @@ class UserModelAbstract
         return $aReturn[0];
     }
 
-    public static function getLabelledUserById(array $aArgs = [])
+    public static function getLabelledUserById(array $aArgs)
     {
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['userId']);
@@ -351,11 +298,10 @@ class UserModelAbstract
         return $labelledUser;
     }
 
-    public static function getCurrentConsigneById(array $aArgs = [])
+    public static function getCurrentConsigneById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-
 
         $aReturn = DatabaseModel::select([
             'select'    => ['process_comment'],
@@ -441,7 +387,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function hasGroup(array $aArgs = [])
+    public static function hasGroup(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -478,7 +424,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function updateGroup(array $aArgs = [])
+    public static function updateGroup(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -497,7 +443,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function deleteGroup(array $aArgs = [])
+    public static function deleteGroup(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -513,7 +459,7 @@ class UserModelAbstract
         return true;
     }
 
-    public static function hasEntity(array $aArgs = [])
+    public static function hasEntity(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
         ValidatorModel::intVal($aArgs, ['id']);

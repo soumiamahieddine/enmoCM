@@ -2,7 +2,7 @@
 <root>
 <SERVICE>
    <id>admin_templates</id>
-   <name>_ADMIN_TEMPLATES</name>
+   <name>_TEMPLATES</name>
    <comment>_ADMIN_TEMPLATES_DESC</comment>
    <servicepage>index.php?page=templates_management_controler&amp;module=templates</servicepage>
    <servicetype>admin</servicetype>

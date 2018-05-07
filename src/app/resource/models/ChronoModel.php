@@ -33,7 +33,6 @@ class ChronoModel
         if ($loadedXml) {
             foreach ($loadedXml->CHRONO as $chrono) {
                 if ($chrono->id == $aArgs['id']) {
-                    $separator = (string)$chrono->separator;
                     foreach ($chrono->ELEMENT as $chronoElement) {
                         $elements[] = [
                             'type'  => (string)$chronoElement->type,

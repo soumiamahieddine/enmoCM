@@ -143,7 +143,6 @@ abstract class PriorityModelAbstract
         ]);
         
         return true;
-    }   
-    
+    }
 }
 

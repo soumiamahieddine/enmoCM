@@ -19,7 +19,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use User\models\UserModel;
 
-class EntityModelAbstract
+abstract class EntityModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -190,13 +190,13 @@ class EntityModelAbstract
         ValidatorModel::notEmpty($aArgs, ['entityId']);
         ValidatorModel::stringType($aArgs, ['entityId']);
 
-        $aReturn = self::getById([
+        $aReturn = EntityModel::getById([
             'select'   => ['entity_id', 'entity_label', 'parent_entity_id'],
             'entityId' => $aArgs['entityId']
         ]);
 
         if (!empty($aReturn['parent_entity_id'])) {
-            $aReturn = self::getEntityRootById(['entityId' => $aReturn['parent_entity_id']]);
+            $aReturn = EntityModel::getEntityRootById(['entityId' => $aReturn['parent_entity_id']]);
         }
 
         return $aReturn;
@@ -364,8 +364,8 @@ class EntityModelAbstract
         if ($loadedXml) {
             foreach ($loadedXml->ROLES->ROLE as $value) {
                 $roles[] = [
-                    'id'        => (string)$value->id,
-                    'label'     => defined((string)$value->label) ? constant((string)$value->label) : (string)$value->label,
+                    'id'    => (string)$value->id,
+                    'label' => defined((string)$value->label) ? constant((string)$value->label) : (string)$value->label
                 ];
             }
         }

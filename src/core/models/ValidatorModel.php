@@ -10,7 +10,6 @@
 /**
 * @brief Validator Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace SrcCore\models;
@@ -90,5 +89,4 @@ class ValidatorModel
             }
         }
     }
-
 }

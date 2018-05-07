@@ -18,7 +18,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class AttachmentModelAbstract
+abstract class AttachmentModelAbstract
 {
     public static function getOnView(array $aArgs)
     {

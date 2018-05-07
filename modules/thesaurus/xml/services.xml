@@ -2,7 +2,7 @@
 <root>
 	<SERVICE>
 		<id>admin_thesaurus</id>
-		<name>_ADMIN_THESAURUS</name>
+		<name>_THESAURUS</name>
 		<comment>_ADMIN_THESAURUS_DESC</comment>
 		<servicepage>index.php?page=manage_thesaurus_list_controller&amp;module=thesaurus</servicepage>
 		<servicetype>admin</servicetype>

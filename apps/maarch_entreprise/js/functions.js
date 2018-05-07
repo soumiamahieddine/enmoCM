@@ -3268,16 +3268,6 @@ function getChildrenHtml (branch_id, treeDiv, path_manage_script, opened, closed
     });
 }
 
-// Exemple appel service
-// function testService(){
-//     $j.ajax({
-//         url: globalConfig.coreurl+'rest.php?module=core&service=Core_Session_Service&method=getUserEntitiesLst', 
-//         success: function(result){
-//             console.log(result);
-//         }
-//     });
-// }
-
 function titleWithTooltipster(id){
     $j(document).ready(function() {
         $j('#'+id).tooltipster({delay :0});

@@ -2,7 +2,7 @@
 <root>
  <SERVICE>
    <id>admin_baskets</id>
-   <name>_ADMIN_BASKETS</name>
+   <name>_BASKETS</name>
    <comment>_ADMIN_BASKETS_DESC</comment>
    <servicepage>/administration/baskets</servicepage>
    <servicetype>admin</servicetype>

@@ -54,7 +54,7 @@
     padding: 0px !important;
 }
 
-.mat-input-container {
+.mat-form-field {
     width: 100% !important;
 }
 
@@ -62,7 +62,7 @@
     padding: 10px;
 }
 
-table tr:not(.filters) .mat-input-container {
+table tr:not(.filters) .mat-form-field {
     width: 200px !important;
 }
 
@@ -307,6 +307,10 @@ h1.admin-app-name {
     min-height: 100%;
 }
 
+.headerMaarch .mat-menu-content{
+    position:relative !important;
+}
+
 .headerMaarch.mat-menu-panel {
     background: #135f7f !important;
 }
@@ -319,4 +323,8 @@ h1.admin-app-name {
 .mat-column-working_days {
     display:flex;
     justify-content:center;
+}
+
+.mat-tab-body-content {
+    overflow: hidden !important;
 }

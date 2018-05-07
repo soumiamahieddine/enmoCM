@@ -18,7 +18,7 @@
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-//Remove html tags to avoid empty space 
+//Remove html tags to avoid empty space
 $sessionTemplateContent = trim(str_replace(
     array('&nbsp;','<p>','</p>'),
     '',
@@ -26,8 +26,8 @@ $sessionTemplateContent = trim(str_replace(
 ));
 $sessionTemplateContent = strip_tags($sessionTemplateContent);
 $sessionTemplateContent = trim(preg_replace(
-    '/\s*/m', 
-    '', 
+    '/\s*/m',
+    '',
     $sessionTemplateContent));
 
 $sessionTemplateContent = utf8_encode(html_entity_decode($sessionTemplateContent));
@@ -40,42 +40,42 @@ $sessionTemplateContent = trim(str_replace(
 ));
 
 $sessionTemplateContent = trim(str_replace(
-    "\n", 
+    "\n",
     "",
     $sessionTemplateContent
 ));
 $sessionTemplateContent = trim(preg_replace(
-    '/\s+/', 
-    '', 
+    '/\s+/',
+    '',
     $sessionTemplateContent));
 $sessionTemplateContent = trim(str_replace(
-    "\r", 
+    "\r",
     "",
     $sessionTemplateContent
 ));
 $sessionTemplateContent = trim(str_replace(
-    "\t", 
+    "\t",
     "",
     $sessionTemplateContent
 ));
 $requestTemplateContent = trim(str_replace(
-    "\n", 
-    "", 
+    "\n",
+    "",
     $requestTemplateContent
 ));
 $requestTemplateContent = trim(str_replace(
-    " ", 
-    "", 
+    " ",
+    "",
     $requestTemplateContent
 ));
 $requestTemplateContent = trim(str_replace(
-    "\r", 
-    "", 
+    "\r",
+    "",
     $requestTemplateContent
 ));
 $requestTemplateContent = trim(str_replace(
-    "\t", 
-    "", 
+    "\t",
+    "",
     $requestTemplateContent
 ));
 

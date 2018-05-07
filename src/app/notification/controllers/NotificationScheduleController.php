@@ -10,7 +10,6 @@
  * @brief Notifications Schedule Controller
  *
  * @author dev@maarch.org
- * @ingroup notifications
  */
 
 namespace Notification\controllers;
@@ -33,7 +32,7 @@ class NotificationScheduleController
 
         return $response->withJson([
             'crontab'                => NotificationScheduleModel::getCrontab(),
-            'authorizedNotification' => self::getAuthorizedNotifications(),
+            'authorizedNotification' => NotificationScheduleController::getAuthorizedNotifications(),
         ]);
     }
 
@@ -45,7 +44,7 @@ class NotificationScheduleController
         }
 
         $data = $request->getParams();
-        if (!self::checkCrontab($data)) {
+        if (!NotificationScheduleController::checkCrontab($data)) {
             return $response->withStatus(500)->withJson(['errors' => 'Problem with crontab']);
         }
 
@@ -71,7 +70,7 @@ class NotificationScheduleController
     protected static function getAuthorizedNotifications()
     {
         $aNotification = NotificationModel::getEnableNotifications(['select' => ['notification_id', 'notification_sid', 'description']]);
-        $notificationsArray = array();
+        $notificationsArray = [];
         $customId = CoreConfigModel::getCustomId();
         $corePath = str_replace('custom/'.$customId.'/src/app/notification/controllers', '', __DIR__);
         $corePath = str_replace('src/app/notification/controllers', '', $corePath);
@@ -92,7 +91,7 @@ class NotificationScheduleController
             $path = $pathToFolow.'modules/notifications/batch/scripts/'.$filename;
 
             if (file_exists($path)) {
-                $notificationsArray[] = array('description' => $result['description'], 'path' => $path);
+                $notificationsArray[] = ['description' => $result['description'], 'path' => $path];
             }
         }
 
@@ -105,6 +104,8 @@ class NotificationScheduleController
         $crontabBeforeSave = NotificationScheduleModel::getCrontab();
         $corePath          = str_replace('custom/'.$customId.'/src/app/notification/controllers', '', __DIR__);
         $corePath          = str_replace('src/app/notification/controllers', '', $corePath);
+
+        $returnValue = false;
         foreach ($crontabToSave as $id => $cronValue) {
             if ($cronValue['state'] != 'hidden' && $crontabBeforeSave[$id]['state'] == 'hidden') {
                 $returnValue = false;
@@ -148,9 +149,7 @@ class NotificationScheduleController
         }
 
         if (!empty($errors)) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => $errors]);
+            return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
         $notification_sid = $data['notification_sid'];

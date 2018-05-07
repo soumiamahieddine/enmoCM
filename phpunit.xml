@@ -4,7 +4,7 @@
         <testsuite name="Maarch Core Test Suite">
             <!--directory>core/Test</directory-->
             <file>core/Test/ActionControllerTest.php</file>
-            <!-- <file>core/Test/AutocompleteControllerTest.php</file> -->
+             <file>core/Test/AutocompleteControllerTest.php</file>
             <file>core/Test/BasketControllerTest.php</file>
             <file>core/Test/ContactControllerTest.php</file>
             <file>core/Test/DoctypeControllerTest.php</file>
@@ -19,10 +19,10 @@
             <file>core/Test/ResControllerTest.php</file>
             <file>core/Test/StatusControllerTest.php</file>
             <file>core/Test/UserControllerTest.php</file>
-            <file>modules/convert/Test/ProcessConvertTest.php</file>
-            <file>modules/convert/Test/ProcessFulltextTest.php</file>
-            <file>modules/convert/Test/ProcessManageConvertTest.php</file>
-            <file>modules/convert/Test/ProcessThumbnailsTest.php</file>
+            <!--<file>modules/convert/Test/ProcessConvertTest.php</file>-->
+            <!--<file>modules/convert/Test/ProcessFulltextTest.php</file>-->
+            <!--<file>modules/convert/Test/ProcessManageConvertTest.php</file>-->
+            <!--<file>modules/convert/Test/ProcessThumbnailsTest.php</file>-->
             <!-- The last one should be history -->
             <file>core/Test/HistoryControllerTest.php</file>
         </testsuite>
@@ -31,8 +31,8 @@
       <whitelist>
           <directory suffix="Test.php">core/Test</directory>
           <directory suffix=".php">src</directory>
-          <directory suffix=".php">modules/convert/Controllers</directory>
-          <directory suffix=".php">modules/convert/Models</directory>
+          <!--<directory suffix=".php">modules/convert/Controllers</directory>-->
+          <!--<directory suffix=".php">modules/convert/Models</directory>-->
       </whitelist>
     </filter>
     <logging>

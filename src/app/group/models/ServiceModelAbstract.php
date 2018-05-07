@@ -17,7 +17,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class ServiceModelAbstract
+abstract class ServiceModelAbstract
 {
     public static function getServicesByXML()
     {
@@ -317,12 +317,12 @@ class ServiceModelAbstract
         }
 
         $administration = [];
-        $administrationMenu = ServiceModel::getApplicationAdministrationMenuByUserServices(['userServices' => $servicesStoredInDB]);
+//        $administrationMenu = ServiceModel::getApplicationAdministrationMenuByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
 
         $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-        $administration = array_merge_recursive($administration, $administrationMenu);
+//        $administration = array_merge_recursive($administration, $administrationMenu);
 
         return $administration;
     }

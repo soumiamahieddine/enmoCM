@@ -17,7 +17,7 @@ namespace History\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class HistoryModelAbstract
+abstract class HistoryModelAbstract
 {
     public static function get(array $aArgs)
     {

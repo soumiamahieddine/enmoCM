@@ -17,7 +17,7 @@ namespace Template\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class TemplateModelAbstract
+abstract class TemplateModelAbstract
 {
     public static function getById(array $aArgs)
     {

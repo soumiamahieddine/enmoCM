@@ -17,7 +17,7 @@ namespace User\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class UserBasketPreferenceModelAbstract
+abstract class UserBasketPreferenceModelAbstract
 {
     public static function get(array $aArgs = [])
     {
