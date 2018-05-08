@@ -14,7 +14,7 @@
         "/res/resource/status" : {
             "put" :  {
                 "description" : "Update documents status",
-                "operationId" : " Resource/controllers/ResController::updateStatus",
+                "operationId" : "Resource/controllers/ResController::updateStatus",
                 "parameters" : [
                     {
                         "name" : "body",
