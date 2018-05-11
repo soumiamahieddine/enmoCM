@@ -14,9 +14,8 @@
 
 require '../vendor/autoload.php';
 
-if (strpos(getcwd(), '/rest')) {
-    chdir('..');
-}
+//Root application position
+chdir('..');
 
 $userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
@@ -37,6 +36,12 @@ if (empty($userId)) {
 }
 
 $language = \SrcCore\models\CoreConfigModel::getLanguage();
+
+$customId = \SrcCore\models\CoreConfigModel::getCustomId();
+if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
+    require_once("custom/{$customId}/src/core/lang/lang-{$language}.php");
+}
+
 require_once("src/core/lang/lang-{$language}.php");
 
 
