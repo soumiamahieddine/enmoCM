@@ -192,7 +192,7 @@ if(!defined('_ATTACH_TO_EMPTY_ERROR'))
 if(!defined('_ERROR_EMPTY_RES_ID'))
     define('_ERROR_EMPTY_RES_ID', 'Aucun courrier n\'a été selectionné, merci de selectionner au moins un courrier');
 if(!defined('_SAME_RES_ID_ERROR'))
-    define('_SAME_RES_ID_ERROR', 'Un des courriers sélectionnés est le même que le document courant, veuillez le désélectionner');
+    define('_SAME_RES_ID_ERROR', 'L\'Un des courriers sélectionnés est le même que le document courant, veuillez le désélectionner');
 
 /************** INTERFACE ***********/
 
