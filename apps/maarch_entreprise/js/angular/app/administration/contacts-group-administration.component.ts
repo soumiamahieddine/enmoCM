@@ -50,6 +50,8 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
                         this.loading = false;
                     });
+            } else {
+                this.loading = false;
             }
         });
     }
