@@ -58,7 +58,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
         this.http.get(this.coreUrl + 'rest/contactsGroups')
             .subscribe((data) => {
-                this.contactsGroups = data['actions'];
+                this.contactsGroups = data['contactsGroups'];
                 this.loading = false;
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.contactsGroups);
