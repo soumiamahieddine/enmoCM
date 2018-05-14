@@ -64,7 +64,7 @@ class ContactGroupController
 
         $data['public'] = $data['public'] ? 'true' : 'false';
         $data['owner'] = $GLOBALS['userId'];
-        $data['entity_owner'] = UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']])['entity_id'];
+        $data['entity_owner'] = ($GLOBALS['userId'] == 'superadmin' ? 'superadmin' : UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']])['entity_id']);
 
         $id = ContactGroupModel::create($data);
 
