@@ -72,7 +72,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
     }
 
     deleteContactsGroup(contactsGroup: any) {
-        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label_action + ' »');
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label + ' »');
 
         if (r) {
             this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
