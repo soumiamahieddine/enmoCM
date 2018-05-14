@@ -26,6 +26,8 @@ import { NotificationAdministrationComponent }          from './notification-adm
 import { HistoryAdministrationComponent }               from './history-administration.component';
 import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
+import { ContactsGroupsAdministrationComponent }        from './contacts-groups-administration.component';
+import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
 
  
 @NgModule({
@@ -65,6 +67,9 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
             { path: 'administration/history', component: HistoryAdministrationComponent },
             { path: 'administration/historyBatch', component: BatchHistoryAdministrationComponent },
             { path: 'administration/update-status', component: UpdateStatusAdministrationComponent },
+            { path: 'administration/contacts-groups', component: ContactsGroupsAdministrationComponent },
+            { path: 'administration/contacts-groups/new', component: ContactsGroupAdministrationComponent },
+            { path: 'administration/contacts-groups/:id', component: ContactsGroupAdministrationComponent },
         ]),
     ],
     exports: [

@@ -464,4 +464,11 @@ export const LANG_FR = {
     'inactives'                         : 'Inactif(s)',
     'quota'                             : 'Quota',
     'quotaExceeded'                     : 'Quota dépassé',
+    'contactsGroups'                    : 'Groupement(s) de contact(s)',
+    "contactsGroupModification"         : "Modification du groupement de contact",
+    "contactGroupCreation"              : "Création d'un groupement de contact",
+    "private"                           : "Privé",
+    "public"                            : "Public",
+    "contactsGroupDesc"                 : "Si le groupement est public, tous les utilisateurs pourront utiliser celui-ci. Sinon il est privé, et seul le créateur pourra l'utiliser",
+    "createdBy"                         : "Créé par",
 };

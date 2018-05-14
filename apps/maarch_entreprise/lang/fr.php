@@ -2605,6 +2605,13 @@ if (!defined('_VIEW_TREE_CONTACTS')) {
     define('_VIEW_TREE_CONTACTS', 'Arborescence des contacts');
 }
 
+if (!defined('_VIEW_CONTACTS_GROUPS_DESC')) {
+    define('_VIEW_CONTACTS_GROUPS_DESC', 'Groupements de contacts utilisés à l\'indexation d\'un courrier');
+}
+if (!defined('_VIEW_CONTACTS_GROUPS')) {
+    define('_VIEW_CONTACTS_GROUPS', 'Groupements de contacts');
+}
+
 if (!defined('_ADDRESSES_LIST')) {
     define('_ADDRESSES_LIST', 'Liste des adresses');
 }

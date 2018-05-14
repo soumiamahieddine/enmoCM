@@ -2574,6 +2574,13 @@ if (!defined('_VIEW_TREE_CONTACTS')) {
     define('_VIEW_TREE_CONTACTS', 'Contacts tree view');
 }
 
+if (!defined('_VIEW_CONTACTS_GROUPS_DESC')) {
+    define('_VIEW_CONTACTS_GROUPS_DESC', 'Contacts groups');
+}
+if (!defined('_VIEW_CONTACTS_GROUPS')) {
+    define('_VIEW_CONTACTS_GROUPS', 'Contacts groups');
+}
+
 if (!defined('_ADDRESSES_LIST')) {
     define('_ADDRESSES_LIST', 'Addresses list');
 }

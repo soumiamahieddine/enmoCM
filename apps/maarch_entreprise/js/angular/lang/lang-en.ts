@@ -444,4 +444,14 @@ export const LANG_EN = {
     "deleteAssignation"                 : "Delete assignation",
     "webserviceAccount"                 : "Webservice account",
     "webserviceAccountDesc"             : "If enabled, this account cannot be used to login in application (in graphic mode).",
+    'contactsGroups'                    : 'Contact(s) group(s)',
+    "contactsGroupModification"         : "Contacts group modification",
+    "contactGroupCreation"              : "Contacts group creation",
+    "private"                           : "Private",
+    "public"                            : "Public",
+    "contactsGroupDesc"                 : "If the grouping is public, all the users will be able to use this one. Otherwise it is private, and only the creator can use it",
+    "createdBy"                         : "Created by",
+
+
+
 };
