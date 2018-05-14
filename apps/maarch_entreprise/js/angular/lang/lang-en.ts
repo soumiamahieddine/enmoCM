@@ -451,7 +451,8 @@ export const LANG_EN = {
     "public"                            : "Public",
     "contactsGroupDesc"                 : "If the grouping is public, all the users will be able to use this one. Otherwise it is private, and only the creator can use it",
     "createdBy"                         : "Created by",
-
-
+    "contactsGroupAdded"                : "Contacts group added",
+    "contactsGroupUpdated"              : "Contacts group updated",
+    "contactsGroupDeleted"              : "Contacts group deleted",
 
 };

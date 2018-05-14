@@ -4,7 +4,7 @@
             <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
         </button>
         <h1 class="admin-toolbar-title">{{lang.administration}} {{lang.contactsGroups}}
-            <small [class.hide-for-mobile]="mobileQuery.matches">{{actions.length}} {{lang.contactsGroups}}</small>
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{contactsGroups.length}} {{lang.contactsGroups}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
@@ -42,30 +42,30 @@
                         </mat-paginator>
                     </div>
                 </div>
-                <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
-                    <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.label}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.id}} </mat-cell>
-                    </ng-container>
+                <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
                     <ng-container matColumnDef="label">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.label}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches"> {{element.label}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="public">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.public}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches">
-                            <span *ngIf="element.is_folder_action == 'N'"> {{lang.no}} </span>
-                            <span *ngIf="element.is_folder_action == 'Y'"> {{lang.yes}} </span>
+                            <span *ngIf="!element.public"> {{lang.no}} </span>
+                            <span *ngIf="element.public"> {{lang.yes}} </span>
                         </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="owner">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.createdBy}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.label_action}} </mat-cell>
+                        <mat-cell *matCellDef="let element"> {{element.labelledOwner}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
-                            <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteContactsGroup(element)">
+                            <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteContactsGroup(element)">
                                 <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>

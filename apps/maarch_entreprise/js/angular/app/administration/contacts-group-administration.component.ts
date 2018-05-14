@@ -21,11 +21,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     lang: any = LANG;
     coreUrl: string;
     creationMode: boolean;
-    action: any = {};
-    statuses: any[] = [];
-    actionPagesList: any[] = [];
-    categoriesList: any[] = [];
-    keywordsList: any[] = [];
+    contactsGroup: any = {};
 
     loading: boolean = false;
 
@@ -45,31 +41,13 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            if (typeof params['id'] == "undefined") {
-                this.creationMode = true;
-
-                this.http.get(this.coreUrl + 'rest/initAction')
-                    .subscribe((data: any) => {
-                        this.action = data.action;
-                        this.categoriesList = data.categoriesList;
-                        this.statuses = data.statuses;
-
-                        this.actionPagesList = data.action_pagesList;
-                        this.keywordsList = data.keywordsList;
-                        this.loading = false;
-                    });
-            }
-            else {
+            if (typeof params['id'] != "undefined") {
                 this.creationMode = false;
 
-                this.http.get(this.coreUrl + 'rest/actions/' + params['id'])
+                this.http.get(this.coreUrl + 'rest/contactsGroups/' + params['id'])
                     .subscribe((data: any) => {
-                        this.action = data.action;
-                        this.categoriesList = data.categoriesList;
-                        this.statuses = data.statuses;
+                        this.contactsGroup = data.contactsGroup;
 
-                        this.actionPagesList = data.action_pagesList;
-                        this.keywordsList = data.keywordsList;
                         this.loading = false;
                     });
             }
@@ -78,19 +56,19 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
     onSubmit() {
         if (this.creationMode) {
-            this.http.post(this.coreUrl + 'rest/actions', this.action)
+            this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
                 .subscribe(() => {
-                    this.router.navigate(['/administration/actions']);
-                    this.notify.success(this.lang.actionAdded);
+                    this.router.navigate(['/administration/contacts-groups']);
+                    this.notify.success(this.lang.contactsGroupAdded);
 
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.put(this.coreUrl + 'rest/actions/' + this.action.id, this.action)
+            this.http.put(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
                 .subscribe(() => {
-                    this.router.navigate(['/administration/actions']);
-                    this.notify.success(this.lang.actionUpdated);
+                    this.router.navigate(['/administration/contacts-groups']);
+                    this.notify.success(this.lang.contactsGroupUpdated);
 
                 }, (err) => {
                     this.notify.error(err.error.errors);

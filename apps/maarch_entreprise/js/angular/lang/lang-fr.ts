@@ -471,4 +471,8 @@ export const LANG_FR = {
     "public"                            : "Public",
     "contactsGroupDesc"                 : "Si le groupement est public, tous les utilisateurs pourront utiliser celui-ci. Sinon il est privé, et seul le créateur pourra l'utiliser",
     "createdBy"                         : "Créé par",
+    "contactsGroupAdded"                : "Groupement de contacts créé",
+    "contactsGroupUpdated"              : "Groupement de contacts modifié",
+    "contactsGroupDeleted"              : "Groupement de contacts supprimé",
+
 };

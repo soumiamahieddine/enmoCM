@@ -23,13 +23,13 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
     lang: any = LANG;
     search: string = null;
 
-    actions: any[] = [];
+    contactsGroups: any[] = [];
     titles: any[] = [];
 
     loading: boolean = false;
 
-    displayedColumns = ['id', 'label', 'public', 'owner', 'actions'];
-    dataSource = new MatTableDataSource(this.actions);
+    displayedColumns = ['label', 'description', 'public', 'owner', 'actions'];
+    dataSource = new MatTableDataSource(this.contactsGroups);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -49,26 +49,19 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.actions;
-        }
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
-        this.updateBreadcrumb(angularGlobals.applicationName);
         $j('#inner_content').remove();
 
-        this.http.get(this.coreUrl + 'rest/actions')
+        this.http.get(this.coreUrl + 'rest/contactsGroups')
             .subscribe((data) => {
-                this.actions = data['actions'];
+                this.contactsGroups = data['actions'];
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.actions);
+                    this.dataSource = new MatTableDataSource(this.contactsGroups);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
@@ -84,11 +77,11 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
                 .subscribe((data: any) => {
-                    this.actions = data.actions;
-                    this.dataSource = new MatTableDataSource(this.actions);
+                    this.contactsGroups = data.contactsGroups;
+                    this.dataSource = new MatTableDataSource(this.contactsGroups);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.actionDeleted);
+                    this.notify.success(this.lang.contactsGroupDeleted);
 
                 }, (err) => {
                     this.notify.error(err.error.errors);

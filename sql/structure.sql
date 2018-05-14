@@ -1259,6 +1259,31 @@ CREATE TABLE contact_addresses
   CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
 ) WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS contacts_groups;
+CREATE TABLE contacts_groups
+(
+  id serial,
+  label character varying(32) NOT NULL,
+  description character varying(255) NOT NULL,
+  public boolean NOT NULL,
+  owner integer NOT NULL,
+  entity_owner character varying(32) NOT NULL,
+  CONSTRAINT contacts_groups_pkey PRIMARY KEY (id),
+  CONSTRAINT contacts_groups_key UNIQUE (label, owner)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS contacts_groups_lists;
+CREATE TABLE contacts_groups_lists
+(
+  id serial,
+  contacts_groups_id integer NOT NULL,
+  contact_addresses_id integer NOT NULL,
+  CONSTRAINT contacts_groups_lists_pkey PRIMARY KEY (id),
+  CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
+)
+WITH (OIDS=FALSE);
+
 CREATE TABLE saved_queries (
   query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
   user_id character varying(128)  default NULL,
