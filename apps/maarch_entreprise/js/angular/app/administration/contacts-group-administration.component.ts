@@ -51,6 +51,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                         this.loading = false;
                     });
             } else {
+                this.creationMode = true;
                 this.loading = false;
             }
         });
