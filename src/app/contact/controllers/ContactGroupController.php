@@ -62,8 +62,9 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
         $data['public'] = $data['public'] ? 'true' : 'false';
-        $data['owner'] = $GLOBALS['userId'];
+        $data['owner'] = $user['id'];
         $data['entity_owner'] = ($GLOBALS['userId'] == 'superadmin' ? 'superadmin' : UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']])['entity_id']);
 
         $id = ContactGroupModel::create($data);
