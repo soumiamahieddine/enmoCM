@@ -27,7 +27,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.6.1",
     "@angular/animations": "6.0.0",
-    "@angular/cdk": "^6.0.1",
+    "@angular/cdk": "^6.0.2",
     "@angular/cli": "^6.0.1",
     "@angular/common": "6.0.0",
     "@angular/compiler": "6.0.0",
@@ -35,7 +35,7 @@
     "@angular/core": "6.0.0",
     "@angular/forms": "6.0.0",
     "@angular/http": "6.0.0",
-    "@angular/material": "^6.0.1",
+    "@angular/material": "^6.0.2",
     "@angular/platform-browser": "6.0.0",
     "@angular/platform-browser-dynamic": "6.0.0",
     "@angular/platform-server": "6.0.0",
@@ -48,7 +48,7 @@
     "node-sass": "^4.9.0",
     "nodemon": "^1.17.4",
     "rxjs": "6.1.0",
-    "tslib": "^1.9.0",
+    "tslib": "^1.9.1",
     "typescript": "2.7.2"
   },
   "repository": {}
