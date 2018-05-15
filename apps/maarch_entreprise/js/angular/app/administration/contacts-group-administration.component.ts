@@ -173,7 +173,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.contactsGroup.contacts    = data['contacts'];
                     this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
-                    this.dataSourceAdded.paginator = this.sortAdded;
+                    this.dataSourceAdded.paginator = this.paginatorAdded;
                     this.dataSourceAdded.sort      = this.sortAdded;
                 }, 0);
                 this.notify.success(this.lang.contactDeletedFromGroup);

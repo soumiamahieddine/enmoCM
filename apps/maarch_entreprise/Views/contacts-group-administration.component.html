@@ -110,6 +110,10 @@
                             </div>
                         </div>
                         <hr/>
+                        <div class="col-md-6 col-xs-6">
+                            <mat-paginator #paginatorAdded [length]="100" [pageSize]="10">
+                            </mat-paginator>
+                        </div>
                         <mat-table #table [dataSource]="dataSourceAdded" matSort matSortActive="contact" matSortDirection="asc">
                             <ng-container matColumnDef="contact">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.contact}}</mat-header-cell>
