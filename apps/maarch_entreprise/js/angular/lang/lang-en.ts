@@ -456,5 +456,7 @@ export const LANG_EN = {
     "contactsGroupDeleted"              : "Contacts group deleted",
     "linkContact"                       : "Link a contact",
     "relatedContacts"                   : "Related contacts",
+    "contact"                           : "Contact",
+    "contactAdded"                      : "Contact(s) added",
 
 };

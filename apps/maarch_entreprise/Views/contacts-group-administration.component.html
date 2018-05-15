@@ -58,62 +58,49 @@
                     <mat-tab label="{{lang.relatedContacts}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" style="padding:5px;">
-                                <!-- <mat-form-field>
-                                    <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
-                                    <input class="autocompleteSearch" #autocompleteFilter placeholder="{{lang.linkContact}}" type="text" matInput [matAutocomplete]="auto"
-                                        [formControl]="userCtrl">
-                                    <mat-autocomplete #auto="matAutocomplete">
-                                         <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
-                                            <p mat-line style="margin:0;">
-                                                <span class="col-xm-1" style="padding-right:5px;">
-                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
-                                                </span>
-                                                <span class="col-xm-11">
-                                                    {{ user.idToDisplay }}
-                                                    <small>{{ user.otherInfo }}</small>
-                                                </span>
-                                            </p>
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field> -->
                                 <mat-form-field>
                                     <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
-                                    <input class="autocompleteSearch" #autocompleteFilter type="text" placeholder="{{lang.linkContact}}" matInput [formControl]="searchTerm" [matAutocomplete]="auto">
-                                    <!-- <mat-autocomplete #auto="matAutocomplete">
-                                      <mat-option *ngFor="let item of searchResult" [value]="item">
-                                        {{ item }}
-                                      </mat-option>
-                                    </mat-autocomplete> -->
+                                    <input class="autocompleteSearch" type="text" placeholder="{{lang.linkContact}}" matInput [formControl]="searchTerm">
                                   </mat-form-field>
-                                <hr/>
-                            </div>
-                            <!-- <div class="col-md-6 col-xs-6">
-                                <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                                </mat-form-field>
                             </div>
                             <div class="col-md-6 col-xs-6">
                                 <mat-paginator #paginator [length]="100" [pageSize]="10">
                                 </mat-paginator>
-                            </div> -->
+                            </div>
                         </div>
-                        <!-- <mat-table #table [dataSource]="dataSource" matSort matSortActive="lastname" matSortDirection="asc">
-                            <ng-container matColumnDef="user_id">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.user_id}} </mat-cell>
+                        <mat-table #table [dataSource]="dataSource" matSort matSortActive="contact" matSortDirection="asc" *ngIf="dataSource">
+                            <ng-container matColumnDef="select">
+                                <mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                    </mat-checkbox>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(element.addressId) : null"
+                                        [checked]="selection.isSelected(element.addressId)">
+                                    </mat-checkbox>
+                                </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="firstname">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+                            <ng-container matColumnDef="contact">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.contact}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.contact}} </mat-cell>
                             </ng-container>
-                            <ng-container matColumnDef="lastname">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+                            <ng-container matColumnDef="address">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.address}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
-                                style="cursor:pointer;"></mat-row>
-                        </mat-table> -->
+                            <mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selection.toggle(element.addressId)"></mat-row>
+                        </mat-table>
+                        <hr/>
+
+                        <div class="form-group">
+                            <div class="col-sm-12" style="text-align:center;margin-top:30px">
+                                <button mat-raised-button color="primary" type="button"(click)="saveContactsList()">{{lang.save}}</button>
+                            </div>
+                        </div>
                     </mat-tab>
                 </mat-tab-group>
 

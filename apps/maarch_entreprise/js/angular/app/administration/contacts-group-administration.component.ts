@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,6 +6,8 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { SelectionModel } from '@angular/cdk/collections';
 
 declare function $j(selector: any): any;
 
@@ -30,6 +32,32 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     searchTerm: FormControl = new FormControl();
     searchResult:any = [];
 
+    displayedColumns    = ['select', 'contact', 'address'];
+    dataSource          : any;
+    selection           = new SelectionModel<Element>(true, []);
+
+    /** Whether the number of selected elements matches the total number of rows. */
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        // this.isAllSelected() ?
+        //     this.selection.clear() :
+        //     this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    applyFilter(filterValue: string) {
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
+        this.dataSource.filter = filterValue;
+    }
+
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -42,7 +70,9 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             distinctUntilChanged(),
             switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', {params: {"search" : data, "type" : '106'}}))
         ).subscribe((response: any) => {
-            this.searchResult = response.word;
+            this.dataSource = new MatTableDataSource(response);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
         });
     }
 
@@ -70,6 +100,16 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 this.contactsGroup.public = false
             }
         });
+    }
+
+    saveContactsList(): void {
+        this.http.post(this.coreUrl + 'rest/contactsGroups/'+ this.contactsGroup.id, this.selection.selected)
+            .subscribe(() => {
+                this.notify.success(this.lang.contactAdded);
+
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });        
     }
 
     onSubmit() {
