@@ -52,17 +52,13 @@ class ContactGroupController
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
-        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']]);
+        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
     }
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
@@ -71,7 +67,7 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingGroup = ContactGroupModel::getByLabel(['label' => $data['label']]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $GLOBALS['userId']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group with this label already exists']);
         }
@@ -191,7 +187,7 @@ class ContactGroupController
 
         $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
-        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']]);
+        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
     }

@@ -49,22 +49,6 @@ abstract class ContactGroupModelAbstract
         return $aContactGroup[0];
     }
 
-    public static function getByLabel(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['label']);
-        ValidatorModel::stringType($aArgs, ['label']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $aContactGroup = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['contacts_groups'],
-            'where'     => ['label = ?'],
-            'data'      => [$aArgs['label']]
-        ]);
-
-        return $aContactGroup[0];
-    }
-
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['label', 'description', 'public', 'owner', 'entity_owner']);
