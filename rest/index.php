@@ -96,6 +96,8 @@ $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class
 $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
+$app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
+
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');

@@ -45,9 +45,11 @@ class AutoCompleteController
         $where = ['contact_type = ?'];
         $data = [$data['type']];
         foreach ($searchItems as $item) {
-            $where[] = $fields;
-            for ($i = 0; $i < 9; $i++) {
-                $data[] = $item . '%';
+            if (strlen($item) >= 2) {
+                $where[] = $fields;
+                for ($i = 0; $i < 9; $i++) {
+                    $data[] = $item . '%';
+                }
             }
         }
 
