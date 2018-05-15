@@ -42,13 +42,17 @@ class AutoCompleteController
 
         $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
                     OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
-        $where = ['contact_type = ?'];
-        $data = [$data['type']];
+        $where = [];
+        $requestData = [];
+        if ($data['type'] != 'all') {
+            $where = ['contact_type = ?'];
+            $requestData = [$data['type']];
+        }
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
                 $where[] = $fields;
                 for ($i = 0; $i < 9; $i++) {
-                    $data[] = $item . '%';
+                    $requestData[] = "%{$item}%";
                 }
             }
         }
@@ -59,7 +63,7 @@ class AutoCompleteController
                 'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
             ],
             'where'     => $where,
-            'data'      => $data,
+            'data'      => $requestData,
             'limit'     => 25000
         ]);
 

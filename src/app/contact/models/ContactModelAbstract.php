@@ -45,7 +45,7 @@ abstract class ContactModelAbstract
 
         $aContact = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => empty($aArgs['table']) ? ['contacts_v2'] : $aArgs['table'],
+            'table'     => ['contacts_v2'],
             'where'     => ['contact_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
@@ -159,7 +159,7 @@ abstract class ContactModelAbstract
         ValidatorModel::notEmpty($aArgs, ['addressId']);
         ValidatorModel::intVal($aArgs, ['addressId']);
 
-        $fullAddress = self::getFullAddressById($aArgs);
+        $fullAddress = ContactModel::getFullAddressById($aArgs);
         $fullAddress = $fullAddress[0];
 
         if ($fullAddress['is_corporate_person'] == 'Y') {

@@ -49,6 +49,22 @@ abstract class ContactGroupModelAbstract
         return $aContactGroup[0];
     }
 
+    public static function getByLabel(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['label']);
+        ValidatorModel::stringType($aArgs, ['label']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aContactGroup = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['contacts_groups'],
+            'where'     => ['label = ?'],
+            'data'      => [$aArgs['label']]
+        ]);
+
+        return $aContactGroup[0];
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['label', 'description', 'public', 'owner', 'entity_owner']);
@@ -105,6 +121,52 @@ abstract class ContactGroupModelAbstract
             'table' => 'contacts_groups_lists',
             'where' => ['contacts_groups_id = ?'],
             'data'  => [$aArgs['id']]
+        ]);
+
+        return true;
+    }
+
+    public static function getListById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aList = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['contacts_groups_lists'],
+            'where'     => ['contacts_groups_id = ?'],
+            'data'      => [$aArgs['id']]
+        ]);
+
+        return $aList;
+    }
+
+    public static function addContact(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'addressId']);
+        ValidatorModel::intVal($aArgs, ['id', 'addressId']);
+
+        DatabaseModel::insert([
+            'table'         => 'contacts_groups_lists',
+            'columnsValues' => [
+                'contacts_groups_id'    => $aArgs['id'],
+                'contact_addresses_id'  => $aArgs['addressId']
+            ]
+        ]);
+
+        return true;
+    }
+
+    public static function deleteContact(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id', 'addressId']);
+        ValidatorModel::intVal($aArgs, ['id', 'addressId']);
+
+        DatabaseModel::delete([
+            'table' => 'contacts_groups_lists',
+            'where' => ['contacts_groups_id = ?', 'contact_addresses_id = ?'],
+            'data'  => [$aArgs['id'], $aArgs['addressId']]
         ]);
 
         return true;

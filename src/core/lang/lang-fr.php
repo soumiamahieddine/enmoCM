@@ -33,6 +33,8 @@ define('_BY_DEFAULT', 'par défaut');
 define('_CONTACTS_GROUP_ADDED', 'Groupe de contacts ajouté');
 define('_CONTACTS_GROUP_UPDATED', 'Groupe de contacts modifié');
 define('_CONTACTS_GROUP_DELETED', 'Groupe de contacts supprimé');
+define('_CONTACTS_GROUP_LIST_ADDED', 'Ajout de contacts dans le groupe');
+define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression de contacts dans le groupe');
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
