@@ -478,5 +478,8 @@ export const LANG_FR = {
     "relatedContacts"                   : "Contact(s) associé(s)",
     "contact"                           : "Contact",
     "contactAdded"                      : "Contact(s) ajouté(s)",
+    "contactDeletedFromGroup"           : "Le contact a été retiré du groupe",
+    "reallyWantToDeleteContactFromGroup": "Etes-vous sûr de vouloir retirer ce contact du groupe ?",
+    "chooseContactType"                 : "Choisissez un type de contact",
 
 };
