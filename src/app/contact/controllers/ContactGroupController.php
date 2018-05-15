@@ -67,12 +67,12 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $GLOBALS['userId']]]);
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $user['id']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group with this label already exists']);
         }
 
-        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
         $data['public'] = $data['public'] ? 'true' : 'false';
         $data['owner'] = $user['id'];
         $data['entity_owner'] = ($GLOBALS['userId'] == 'superadmin' ? 'superadmin' : UserModel::getPrimaryEntityByUserId(['userId' => $GLOBALS['userId']])['entity_id']);
