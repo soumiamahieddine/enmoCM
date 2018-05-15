@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 
 declare function $j(selector: any): any;
 
@@ -25,11 +27,23 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
+    searchTerm: FormControl = new FormControl();
+    searchResult:any = [];
+
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
+
+        this.searchTerm.valueChanges.pipe(
+            debounceTime(500),
+            filter(value => value.length > 3),
+            distinctUntilChanged(),
+            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', {params: {"search" : data, "type" : '106'}}))
+        ).subscribe((response: any) => {
+            this.searchResult = response.word;
+        });
     }
 
     ngOnDestroy(): void {

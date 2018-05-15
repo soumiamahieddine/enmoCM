@@ -474,5 +474,7 @@ export const LANG_FR = {
     "contactsGroupAdded"                : "Groupement de contacts créé",
     "contactsGroupUpdated"              : "Groupement de contacts modifié",
     "contactsGroupDeleted"              : "Groupement de contacts supprimé",
+    "linkContact"                       : "Associer un contact",
+    "relatedContacts"                   : "Contact(s) associé(s)",
 
 };
