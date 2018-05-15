@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Contact\models\ContactModel;
 use Group\models\ServiceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -27,6 +28,60 @@ use User\models\UserModel;
 
 class AutoCompleteController
 {
+    public static function getContacts(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['type']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $searchItems = explode(' ', $data['search']);
+
+        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
+                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $where = ['contact_type = ?'];
+        $data = [$data['type']];
+        foreach ($searchItems as $item) {
+            $where[] = $fields;
+            for ($i = 0; $i < 9; $i++) {
+                $data[] = $item . '%';
+            }
+        }
+
+        $contacts = ContactModel::getOnView([
+            'select'    => [
+                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
+                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+            ],
+            'where'     => $where,
+            'data'      => $data,
+            'limit'     => 25000
+        ]);
+
+        $data = [];
+        foreach ($contacts as $contact) {
+            if ($contact['is_corporate_person'] == 'Y') {
+                $arr = [
+                    'addressId' => $contact['ca_id'],
+                    'contact'   => $contact['society'],
+                    'address'   => "{$contact['firstname']} {$contact['lastname']}, {$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
+                ];
+            } else {
+                $arr = [
+                    'addressId' => $contact['ca_id'],
+                    'contact'   => "{$contact['contact_firstname']} {$contact['contact_lastname']} {$contact['society']}",
+                    'address'   => "{$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
+                ];
+            }
+            $data[] = $arr;
+        }
+
+        return $response->withJson($data);
+    }
+
     public static function getUsers(Request $request, Response $response)
     {
         $excludedUsers = ['superadmin'];

@@ -63,6 +63,7 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
 
 //AutoComplete
+$app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');

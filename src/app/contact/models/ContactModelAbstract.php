@@ -20,6 +20,24 @@ use SrcCore\models\ValidatorModel;
 
 abstract class ContactModelAbstract
 {
+    public static function getOnView(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aContacts = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['view_contacts'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy'],
+            'limit'     => $aArgs['limit']
+        ]);
+
+        return $aContacts;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
