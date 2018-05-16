@@ -71,13 +71,18 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
             });
     }
 
-    deleteContactsGroup(contactsGroup: any) {
+    deleteContactsGroup(row: any) {
+        var contactsGroup = this.contactsGroups[row];
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + contactsGroup.label + ' »');
 
         if (r) {
             this.http.delete(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
-                .subscribe((data: any) => {
-                    this.contactsGroups = data.contactsGroups;
+                .subscribe(() => {
+                    var lastElement = this.contactsGroups.length - 1;
+                    this.contactsGroups[row] = this.contactsGroups[lastElement];
+                    this.contactsGroups[row].position = row; 
+                    this.contactsGroups.splice(lastElement, 1);
+
                     this.dataSource = new MatTableDataSource(this.contactsGroups);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;

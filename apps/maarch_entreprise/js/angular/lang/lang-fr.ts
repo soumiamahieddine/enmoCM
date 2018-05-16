@@ -481,5 +481,7 @@ export const LANG_FR = {
     "contactDeletedFromGroup"           : "Le contact a été retiré du groupe",
     "reallyWantToDeleteContactFromGroup": "Etes-vous sûr de vouloir retirer ce contact du groupe ?",
     "chooseContactType"                 : "Choisissez un type de contact",
+    "addContacts"                       : "Ajouter des contacts",
+    "all"                               : "Tous",
 
 };

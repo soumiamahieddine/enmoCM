@@ -461,5 +461,7 @@ export const LANG_EN = {
     "contactDeletedFromGroup"           : "Contact was removed from the group",
     "reallyWantToDeleteContactFromGroup": "Do you really want to remove contact from the group",
     "chooseContactType"                 : "Choose a contact type",
+    "addContacts"                       : "Add contacts",
+    "all"                               : "All",
 
 };

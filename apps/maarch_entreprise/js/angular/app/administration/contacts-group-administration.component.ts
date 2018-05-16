@@ -6,7 +6,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatSidenav } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
 declare function $j(selector: any): any;
@@ -55,6 +55,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         //     this.dataSource.data.forEach(row => this.selection.select(row));
     }
 
+    @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -91,6 +92,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
         this.loading = true;
+        this.contactTypeSearch = 'all';
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
@@ -143,7 +145,6 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 .subscribe((data:any) => {
                     this.router.navigate(['/administration/contacts-groups/' + data.contactsGroup]);
                     this.notify.success(this.lang.contactsGroupAdded);
-
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -159,25 +160,26 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         }
     }
 
-    preDelete(contact: any) {
+    preDelete(row: any) {
         let r = confirm(this.lang.reallyWantToDeleteContactFromGroup);
 
         if (r) {
-            this.removeContact(contact);
+            this.removeContact(this.contactsGroup.contacts[row], row);
         }
     }
 
-    removeContact(contact: any) {
+    removeContact(contact: any, row: any) {
         this.http.delete(this.coreUrl + "rest/contactsGroups/" + this.contactsGroup.id + "/contacts/" + contact['addressId'])
-            .subscribe((data: any) => {
-                setTimeout(() => {
-                    this.contactsGroup.contacts    = data['contacts'];
-                    this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
-                    this.dataSourceAdded.paginator = this.paginatorAdded;
-                    this.dataSourceAdded.sort      = this.sortAdded;
-                }, 0);
-                this.notify.success(this.lang.contactDeletedFromGroup);
+            .subscribe(() => {
+                var lastElement = this.contactsGroup.contacts.length - 1;
+                this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
+                this.contactsGroup.contacts[row].position = row; 
+                this.contactsGroup.contacts.splice(lastElement, 1);
 
+                this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
+                this.dataSourceAdded.paginator = this.paginatorAdded;
+                this.dataSourceAdded.sort      = this.sortAdded;
+                this.notify.success(this.lang.contactDeletedFromGroup);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
