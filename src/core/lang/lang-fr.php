@@ -34,13 +34,8 @@ define('_CONTACTS_GROUP_ADDED', 'Groupe de contacts ajouté');
 define('_CONTACTS_GROUP_UPDATED', 'Groupe de contacts modifié');
 define('_CONTACTS_GROUP_DELETED', 'Groupe de contacts supprimé');
 define('_CONTACTS_GROUP_LIST_ADDED', 'Ajout de contacts dans le groupe');
-<<<<<<< c775c2ab5ad5d20ed7714655e22355e405842786
-define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression d\'un contact dans le groupe');
-define('_CONTACTS_GROUP_LABEL_EXISTS', 'Groupe de contacts avec le même label existe déjà');
-=======
 define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression de contacts dans le groupe');
 define('_CONTACT_GROUP_LABEL_ALREADY_EXISTS', 'Un groupe avec ce libellé existe déjà');
->>>>>>> FEAT #7699 added new lang var
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
