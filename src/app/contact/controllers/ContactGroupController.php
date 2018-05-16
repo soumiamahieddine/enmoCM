@@ -35,6 +35,7 @@ class ContactGroupController
         $contactsGroups = ContactGroupModel::get();
 
         foreach ($contactsGroups as $key => $contactsGroup) {
+            $contactsGroups[$key]['position'] = $key;
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
         }
 
@@ -155,7 +156,7 @@ class ContactGroupController
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
         }
 
-        return $response->withJson(['contactsGroups' => $contactsGroups]);
+        return $response->withJson(['success' => 'success']);
     }
 
     public function addContacts(Request $request, Response $response, array $aArgs)
@@ -233,6 +234,7 @@ class ContactGroupController
         $list = ContactGroupModel::getListById(['select' => ['contact_addresses_id'], 'id' => $aArgs['id']]);
 
         $contacts = [];
+        $position = 0;
         foreach ($list as $listItem) {
             $contact = ContactModel::getOnView([
                 'select'    => [
@@ -244,7 +246,8 @@ class ContactGroupController
             ]);
 
             if (!empty($contact[0])) {
-                $contacts[] = ContactGroupController::getFormattedContact(['contact' => $contact[0]])['contact'];
+                $contacts[] = ContactGroupController::getFormattedContact(['contact' => $contact[0], 'position' => $position])['contact'];
+                ++$position;
             }
         }
 
@@ -255,6 +258,7 @@ class ContactGroupController
     {
         ValidatorModel::notEmpty($aArgs, ['contact']);
         ValidatorModel::arrayType($aArgs, ['contact']);
+        ValidatorModel::intType($aArgs, ['position']);
 
         $address = '';
         if ($aArgs['contact']['is_corporate_person'] == 'Y') {
@@ -276,9 +280,10 @@ class ContactGroupController
                 $address.= $aArgs['contact']['address_postal_code'] . ' ';
             }
             $contact = [
+                'position'  => $aArgs['position'],
                 'addressId' => $aArgs['contact']['ca_id'],
                 'contact'   => $aArgs['contact']['society'],
-                'address'   => $address,
+                'address'   => $address
             ];
         } else {
             if (!empty($aArgs['contact']['address_num'])) {
@@ -295,9 +300,10 @@ class ContactGroupController
             }
 
             $contact = [
+                'position'  => $aArgs['position'],
                 'addressId' => $aArgs['contact']['ca_id'],
                 'contact'   => "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']} {$aArgs['contact']['society']}",
-                'address'   => $address,
+                'address'   => $address
             ];
         }
 
