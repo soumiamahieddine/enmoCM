@@ -171,7 +171,7 @@ class EntityController
 
         $existingEntity = EntityModel::getById(['entityId' => $data['entity_id'], 'select' => [1]]);
         if (!empty($existingEntity)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Entity already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _ENTITY_ALREADY_EXISTS]);
         }
 
         EntityModel::create($data);
