@@ -71,7 +71,7 @@ class ParameterController
 
         $parameter = ParameterModel::getById(['id' => $data['id']]);
         if (!empty($parameter)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Parameter already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _PARAMETER_ID_ALREADY_EXISTS]);
         }
 
         ParameterModel::create($data);

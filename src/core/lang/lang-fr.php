@@ -42,6 +42,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
+define('_ENTITY_ID_ALREADY_EXISTS', 'Cette entité existe déjà');
 define('_INVALID_CLAUSE', 'Clause non valide');
 define('_INVALID_REQUEST', 'Requête non valide');
 define('_LIST_TEMPLATE_CREATION', 'Création liste de diffusion');
@@ -54,6 +55,7 @@ define('_NOTIFICATION_SCRIPT_ADDED', 'Le script de la notification a été cré�
 define('_PARAMETER_CREATION', 'Création paramètre');
 define('_PARAMETER_MODIFICATION', 'Modification paramètre');
 define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
+define('_PARAMETER_ID_ALREADY_EXISTS', 'Ce paramètre existe déjà');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
