@@ -21,6 +21,7 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 class ContactGroupController
@@ -93,7 +94,12 @@ class ContactGroupController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $contactsGroup = ContactGroupModel::getById(['select' => ['owner'], 'id' => $aArgs['id']]);
+        if (empty($contactsGroup)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        }
+
+        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -124,7 +130,12 @@ class ContactGroupController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $contactsGroup = ContactGroupModel::getById(['select' => ['owner'], 'id' => $aArgs['id']]);
+        if (empty($contactsGroup)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        }
+
+        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -149,7 +160,12 @@ class ContactGroupController
 
     public function addContacts(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $contactsGroup = ContactGroupModel::getById(['select' => ['owner', 'label'], 'id' => $aArgs['id']]);
+        if (empty($contactsGroup)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        }
+
+        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -157,11 +173,6 @@ class ContactGroupController
         $check = Validator::arrayType()->notEmpty()->validate($data['contacts']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $contactsGroup = ContactGroupModel::getById(['select' => ['label'], 'id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
         }
 
         $rawList = ContactGroupModel::getListById(['select' => ['contact_addresses_id'], 'id' => $aArgs['id']]);
@@ -194,13 +205,13 @@ class ContactGroupController
 
     public function deleteContact(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $contactsGroup = ContactGroupModel::getById(['select' => ['label'], 'id' => $aArgs['id']]);
+        $contactsGroup = ContactGroupModel::getById(['select' => ['owner', 'label'], 'id' => $aArgs['id']]);
         if (empty($contactsGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        }
+
+        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         ContactGroupModel::deleteContact(['id' => $aArgs['id'], 'addressId' => $aArgs['addressId']]);
@@ -233,23 +244,63 @@ class ContactGroupController
             ]);
 
             if (!empty($contact[0])) {
-                $contact = $contact[0];
-                if ($contact['is_corporate_person'] == 'Y') {
-                    $contacts[] = [
-                        'addressId' => $contact['ca_id'],
-                        'contact'   => $contact['society'],
-                        'address'   => "{$contact['firstname']} {$contact['lastname']}, {$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
-                    ];
-                } else {
-                    $contacts[] = [
-                        'addressId' => $contact['ca_id'],
-                        'contact'   => "{$contact['contact_firstname']} {$contact['contact_lastname']} {$contact['society']}",
-                        'address'   => "{$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
-                    ];
-                }
+                $contacts[] = ContactGroupController::getFormattedContact(['contact' => $contact[0]])['contact'];
             }
         }
 
         return ['list' => $contacts];
+    }
+
+    public static function getFormattedContact(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contact']);
+        ValidatorModel::arrayType($aArgs, ['contact']);
+
+        $address = '';
+        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
+            $address.= $aArgs['contact']['firstname'];
+            $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
+            if (!empty($address)) {
+                $address.= ', ';
+            }
+            if (!empty($aArgs['contact']['address_num'])) {
+                $address.= $aArgs['contact']['address_num'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_street'])) {
+                $address.= $aArgs['contact']['address_street'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_town'])) {
+                $address.= $aArgs['contact']['address_town'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
+            $contact = [
+                'addressId' => $aArgs['contact']['ca_id'],
+                'contact'   => $aArgs['contact']['society'],
+                'address'   => $address,
+            ];
+        } else {
+            if (!empty($aArgs['contact']['address_num'])) {
+                $address.= $aArgs['contact']['address_num'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_street'])) {
+                $address.= $aArgs['contact']['address_street'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_town'])) {
+                $address.= $aArgs['contact']['address_town'] . ' ';
+            }
+            if (!empty($aArgs['contact']['address_postal_code'])) {
+                $address.= $aArgs['contact']['address_postal_code'] . ' ';
+            }
+
+            $contact = [
+                'addressId' => $aArgs['contact']['ca_id'],
+                'contact'   => "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']} {$aArgs['contact']['society']}",
+                'address'   => $address,
+            ];
+        }
+
+        return ['contact' => $contact];
     }
 }

@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Contact\controllers\ContactGroupController;
 use Contact\models\ContactModel;
 use Group\models\ServiceModel;
 use Respect\Validation\Validator;
@@ -69,20 +70,7 @@ class AutoCompleteController
 
         $data = [];
         foreach ($contacts as $contact) {
-            if ($contact['is_corporate_person'] == 'Y') {
-                $arr = [
-                    'addressId' => $contact['ca_id'],
-                    'contact'   => $contact['society'],
-                    'address'   => "{$contact['firstname']} {$contact['lastname']}, {$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
-                ];
-            } else {
-                $arr = [
-                    'addressId' => $contact['ca_id'],
-                    'contact'   => "{$contact['contact_firstname']} {$contact['contact_lastname']} {$contact['society']}",
-                    'address'   => "{$contact['address_num']} {$contact['address_street']} {$contact['address_town']} {$contact['address_postal_code']}",
-                ];
-            }
-            $data[] = $arr;
+            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];;
         }
 
         return $response->withJson($data);
