@@ -150,6 +150,11 @@ class BasketModelAbstract
             'where' => ['basket_id = ?'],
             'data'  => [$aArgs['id']]
         ]);
+        DatabaseModel::delete([
+            'table' => 'users_baskets_preferences',
+            'where' => ['basket_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
 
         return true;
     }

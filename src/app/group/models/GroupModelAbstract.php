@@ -168,6 +168,11 @@ class GroupModelAbstract
             'where'     => ['group_id = ?'],
             'data'      => [$group['group_id']]
         ]);
+        DatabaseModel::delete([
+            'table' => 'users_baskets_preferences',
+            'where' => ['group_serial_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
 
         return true;
     }
