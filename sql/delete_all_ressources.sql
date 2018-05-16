@@ -74,6 +74,8 @@ ALTER SEQUENCE notif_event_stack_seq restart WITH 1;
 TRUNCATE TABLE notif_email_stack;
 ALTER SEQUENCE notif_email_stack_seq restart WITH 1;
 
+TRUNCATE TABLE user_signatures;
+ALTER SEQUENCE user_signatures_id_seq restart WITH 1;
 
 /* reset chrono */
 UPDATE parameters SET param_value_int = '1' WHERE id = 'chrono_outgoing_' || extract(YEAR FROM current_date);

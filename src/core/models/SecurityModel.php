@@ -96,7 +96,7 @@ class SecurityModel
             $cookieKey = $user[0]['cookie_key'];
         }
 
-        $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
+        $cookiePath = str_replace(['apps/maarch_entreprise/index.php', 'apps/maarch_entreprise/log.php', 'rest/index.php'], '', $_SERVER['SCRIPT_NAME']);
         $cookieTime = time() + 60 * $cookieTime;
 
         DatabaseModel::update([

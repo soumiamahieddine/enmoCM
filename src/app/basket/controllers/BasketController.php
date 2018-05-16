@@ -25,6 +25,8 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use User\models\UserBasketPreferenceModel;
+use User\models\UserModel;
 
 class BasketController
 {
@@ -363,6 +365,18 @@ class BasketController
                 }
             }
         }
+
+        $users = GroupModel::getUsersByGroupId(['select' => ['id'], 'groupId' => $data['group_id']]);
+        $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $data['group_id']]);
+        foreach ($users as $user) {
+            UserBasketPreferenceModel::create([
+                'userSerialId'  => $user['id'],
+                'groupSerialId' => $group['id'],
+                'basketId'      => $aArgs['id'],
+                'display'       => 'true',
+            ]);
+        }
+
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],

@@ -20,6 +20,24 @@ use SrcCore\models\ValidatorModel;
 
 abstract class ContactModelAbstract
 {
+    public static function getOnView(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aContacts = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['view_contacts'],
+            'where'     => $aArgs['where'],
+            'data'      => $aArgs['data'],
+            'order_by'  => $aArgs['orderBy'],
+            'limit'     => $aArgs['limit']
+        ]);
+
+        return $aContacts;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -27,7 +45,7 @@ abstract class ContactModelAbstract
 
         $aContact = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => empty($aArgs['table']) ? ['contacts_v2'] : $aArgs['table'],
+            'table'     => ['contacts_v2'],
             'where'     => ['contact_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
@@ -141,7 +159,7 @@ abstract class ContactModelAbstract
         ValidatorModel::notEmpty($aArgs, ['addressId']);
         ValidatorModel::intVal($aArgs, ['addressId']);
 
-        $fullAddress = self::getFullAddressById($aArgs);
+        $fullAddress = ContactModel::getFullAddressById($aArgs);
         $fullAddress = $fullAddress[0];
 
         if ($fullAddress['is_corporate_person'] == 'Y') {

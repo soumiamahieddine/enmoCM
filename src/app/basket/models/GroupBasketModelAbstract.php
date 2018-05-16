@@ -14,6 +14,7 @@
 
 namespace Basket\models;
 
+use Group\models\GroupModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
@@ -56,6 +57,8 @@ abstract class GroupBasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);
         ValidatorModel::stringType($aArgs, ['basketId', 'groupId']);
 
+        $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
+
         DatabaseModel::delete([
             'table' => 'groupbasket',
             'where' => ['basket_id = ?', 'group_id = ?'],
@@ -75,6 +78,11 @@ abstract class GroupBasketModelAbstract
             'table' => 'groupbasket_status',
             'where' => ['basket_id = ?', 'group_id = ?'],
             'data'  => [$aArgs['basketId'], $aArgs['groupId']]
+        ]);
+        DatabaseModel::delete([
+            'table' => 'users_baskets_preferences',
+            'where' => ['basket_id = ?', 'group_serial_id = ?'],
+            'data'  => [$aArgs['basketId'], $group['id']]
         ]);
 
         return true;

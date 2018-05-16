@@ -103,7 +103,7 @@
                             </mat-form-field>
                             <h5>Action(s) choisie(s)</h5>
                             <mat-chip-list #chipList class="mat-chip-list-stacked">
-                                <span *ngFor="let action of group.groupActions">
+                                <span *ngFor="let action of group.groupActions" style="width:100%;">
                                     <mat-chip color="primary" (click)="openSettings(group,action)" matTooltip="id : {{action.id}}" [ngStyle]="{'font-weight': action.default_action_list == true ? 'bold' : ''}"
                                         style="cursor:pointer;margin:5px;border-radius:0px;display:flex;" *ngIf="action.checked == true"
                                         selectable="true" removable="true" (remove)="unlinkAction(group,action)">

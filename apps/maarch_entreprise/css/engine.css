@@ -328,3 +328,7 @@ h1.admin-app-name {
 .mat-tab-body-content {
     overflow: hidden !important;
 }
+
+.mat-raised-button {
+    margin : 5px !important;
+}

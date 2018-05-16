@@ -65,7 +65,7 @@ unset($_SESSION['m_admin']);
 
     <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
         <div>
-            <i class="fa fa-users fa-4x" title="<?php echo _MANAGE_CONTACTS_DESC;?>" ></i>
+            <i class="fa fa-address-book-o fa-4x" title="<?php echo _MANAGE_CONTACTS_DESC;?>" ></i>
         </div>
         <div>
                 <strong><?php echo _MANAGE_CONTACTS;?></strong>
@@ -96,6 +96,15 @@ unset($_SESSION['m_admin']);
         </div>
         <div>
                 <strong><?php echo _VIEW_TREE_CONTACTS;?></strong>
+         </div>
+    </div>
+
+    <div class="admin_item" onclick="triggerAngular('#/administration/contacts-groups')">
+        <div>
+            <i class="fa fa-users fa-4x" title="<?php echo _VIEW_CONTACTS_GROUPS_DESC;?>" ></i>
+        </div>
+        <div>
+                <strong><?php echo _VIEW_CONTACTS_GROUPS;?></strong>
          </div>
     </div>
     <div class="clearfix"></div>

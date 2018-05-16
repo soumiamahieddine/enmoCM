@@ -14,9 +14,8 @@
 
 require '../vendor/autoload.php';
 
-if (strpos(getcwd(), '/rest')) {
-    chdir('..');
-}
+//Root application position
+chdir('..');
 
 $userId = null;
 if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
@@ -37,6 +36,12 @@ if (empty($userId)) {
 }
 
 $language = \SrcCore\models\CoreConfigModel::getLanguage();
+
+$customId = \SrcCore\models\CoreConfigModel::getCustomId();
+if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
+    require_once("custom/{$customId}/src/core/lang/lang-{$language}.php");
+}
+
 require_once("src/core/lang/lang-{$language}.php");
 
 
@@ -58,6 +63,7 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
 
 //AutoComplete
+$app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
@@ -85,6 +91,15 @@ $app->get('/batchHistories', \History\controllers\BatchHistoryController::class 
 //Contacts
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
 $app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
+$app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
+$app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
+$app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
+$app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
+$app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
+$app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupController::class . ':addContacts');
+$app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
+$app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
+
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');

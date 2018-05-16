@@ -14,6 +14,8 @@
 
 namespace SrcCore\controllers;
 
+use Contact\controllers\ContactGroupController;
+use Contact\models\ContactModel;
 use Group\models\ServiceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -27,6 +29,53 @@ use User\models\UserModel;
 
 class AutoCompleteController
 {
+    public static function getContacts(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['type']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $searchItems = explode(' ', $data['search']);
+
+        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
+                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $where = [];
+        $requestData = [];
+        if ($data['type'] != 'all') {
+            $where = ['contact_type = ?'];
+            $requestData = [$data['type']];
+        }
+        foreach ($searchItems as $item) {
+            if (strlen($item) >= 2) {
+                $where[] = $fields;
+                for ($i = 0; $i < 9; $i++) {
+                    $requestData[] = "%{$item}%";
+                }
+            }
+        }
+
+        $contacts = ContactModel::getOnView([
+            'select'    => [
+                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
+                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+            ],
+            'where'     => $where,
+            'data'      => $requestData,
+            'limit'     => 25000
+        ]);
+
+        $data = [];
+        foreach ($contacts as $contact) {
+            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];;
+        }
+
+        return $response->withJson($data);
+    }
+
     public static function getUsers(Request $request, Response $response)
     {
         $excludedUsers = ['superadmin'];
