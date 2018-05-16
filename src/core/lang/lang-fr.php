@@ -34,8 +34,13 @@ define('_CONTACTS_GROUP_ADDED', 'Groupe de contacts ajouté');
 define('_CONTACTS_GROUP_UPDATED', 'Groupe de contacts modifié');
 define('_CONTACTS_GROUP_DELETED', 'Groupe de contacts supprimé');
 define('_CONTACTS_GROUP_LIST_ADDED', 'Ajout de contacts dans le groupe');
+<<<<<<< c775c2ab5ad5d20ed7714655e22355e405842786
 define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression d\'un contact dans le groupe');
 define('_CONTACTS_GROUP_LABEL_EXISTS', 'Groupe de contacts avec le même label existe déjà');
+=======
+define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression de contacts dans le groupe');
+define('_CONTACT_GROUP_LABEL_ALREADY_EXISTS', 'Un groupe avec ce libellé existe déjà');
+>>>>>>> FEAT #7699 added new lang var
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
@@ -48,6 +53,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
+define('_ENTITY_ID_ALREADY_EXISTS', 'Cette entité existe déjà');
 define('_ID', 'Identifiant');
 define('_ID_TO_DISPLAY', 'res_id');
 define('_INVALID_CLAUSE', 'Clause non valide');
@@ -62,6 +68,7 @@ define('_NOTIFICATION_SCRIPT_ADDED', 'Le script de la notification a été cré�
 define('_PARAMETER_CREATION', 'Création paramètre');
 define('_PARAMETER_MODIFICATION', 'Modification paramètre');
 define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
+define('_PARAMETER_ID_ALREADY_EXISTS', 'Ce paramètre existe déjà');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
