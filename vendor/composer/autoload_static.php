@@ -19,6 +19,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             'phpseclib\\' => 10,
         ),
+        'V' => 
+        array (
+            'VersionUpdate\\' => 14,
+        ),
         'U' => 
         array (
             'User\\' => 5,
@@ -113,6 +117,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'VersionUpdate\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/versionUpdate',
         ),
         'User\\' => 
         array (

@@ -201,6 +201,15 @@ $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':is
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 
+//SignatureBook
+$app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');
+$app->get('/{basketId}/signatureBook/resList/details', \SignatureBook\controllers\SignatureBookController::class . ':getDetailledResList');
+$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
+$app->get('/signatureBook/{resId}/attachments', \SignatureBook\controllers\SignatureBookController::class . ':getAttachmentsById');
+$app->get('/signatureBook/{resId}/incomingMailAttachments', \SignatureBook\controllers\SignatureBookController::class . ':getIncomingMailAndAttachmentsById');
+$app->put('/signatureBook/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignFile');
+$app->put('/attachments/{id}/inSignatureBook', \SignatureBook\controllers\SignatureBookController::class . ':setInSignatureBook');
+
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
 $app->post('/statuses', \Status\controllers\StatusController::class . ':create');
@@ -238,14 +247,8 @@ $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::cl
 $app->delete('/users/{id}/redirectedBaskets/{basketId}', \User\controllers\UserController::class . ':deleteRedirectedBaskets');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 
-//Visa
-$app->get('/{basketId}/signatureBook/resList', \SignatureBook\controllers\SignatureBookController::class . ':getResList');
-$app->get('/{basketId}/signatureBook/resList/details', \SignatureBook\controllers\SignatureBookController::class . ':getDetailledResList');
-$app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
-$app->get('/signatureBook/{resId}/attachments', \SignatureBook\controllers\SignatureBookController::class . ':getAttachmentsById');
-$app->get('/signatureBook/{resId}/incomingMailAttachments', \SignatureBook\controllers\SignatureBookController::class . ':getIncomingMailAndAttachmentsById');
-$app->put('/signatureBook/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \SignatureBook\controllers\SignatureBookController::class . ':setInSignatureBook');
+//VersionsUpdate
+$app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');
 
 //CurrentUser
 $app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');

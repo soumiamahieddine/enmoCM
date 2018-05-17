@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'VersionUpdate\\' => array($baseDir . '/src/app/versionUpdate'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
