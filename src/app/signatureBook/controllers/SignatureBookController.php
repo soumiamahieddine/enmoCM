@@ -18,7 +18,6 @@ use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Action\models\ActionModel;
 use Contact\models\ContactModel;
-use Core\Models\LangModel;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\models\ServiceModel;
@@ -99,7 +98,6 @@ class SignatureBookController
         $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
-        $datas['lang']          = LangModel::getSignatureBookLang();
 
         return $response->withJson($datas);
     }
