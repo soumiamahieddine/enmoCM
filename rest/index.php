@@ -208,7 +208,7 @@ $app->get('/groups/{groupId}/baskets/{basketId}/signatureBook/{resId}', \Signatu
 $app->get('/signatureBook/{resId}/attachments', \SignatureBook\controllers\SignatureBookController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \SignatureBook\controllers\SignatureBookController::class . ':getIncomingMailAndAttachmentsById');
 $app->put('/signatureBook/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \SignatureBook\controllers\SignatureBookController::class . ':setInSignatureBook');
+$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
