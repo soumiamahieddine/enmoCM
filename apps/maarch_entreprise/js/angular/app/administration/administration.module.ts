@@ -38,6 +38,7 @@ import { NotificationsAdministrationComponent }         from './notifications-ad
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 import { ContactsGroupsAdministrationComponent }        from './contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
+import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 
 @NgModule({
     imports:      [
@@ -86,7 +87,8 @@ import { ContactsGroupAdministrationComponent }         from './contacts-group-a
         DoctypesAdministrationRedirectModalComponent,
         DiffusionModelsAdministrationComponent,
         DiffusionModelAdministrationComponent,
-        SortPipe
+        SortPipe,
+        VersionsUpdateAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
