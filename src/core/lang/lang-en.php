@@ -367,3 +367,17 @@ define('_MAIL_TYPOLOGY_REPORT', 'Mails typology by period');
 define('_MAIL_TYPOLOGY_REPORT_DESC', 'Mails typology by period');
 define('_MAIL_VOL_BY_CAT_REPORT', 'Mails volume by category, by period');
 define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Mails volume by category, by period');
+
+//ATTACHMENT TYPES
+define( "_RESPONSE_PROJECT", "Response project");
+define( "_SIGNED_RESPONSE", "Signed response");
+define( "_OUTGOING_MAIL_SIGNED", "Signed start date");
+define( "_A_PJ", "Attachment");
+define( "_INCOMING_PJ", "Incoming attachment");
+define( "_WAYBILL", "Mailing slip");
+define( "_ROUTING", "Flow slip");
+define( "_OUTGOING_MAIL", "Spontaneous start mail");
+define( "_CONVERTED_PDF", "Converted PDF by the solution");
+define('_PRINT_FOLDER', 'Folder');
+define('_SVA', 'SVA');
+define('_SVR', 'SVR');
