@@ -72,7 +72,7 @@ class ContactGroupController
         $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
         $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $user['id']]]);
         if (!empty($existingGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_EXISTS]);
+            return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
         $data['public'] = $data['public'] ? 'true' : 'false';

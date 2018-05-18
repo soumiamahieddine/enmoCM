@@ -35,7 +35,7 @@ define('_CONTACTS_GROUP_UPDATED', 'Contacts group updated');
 define('_CONTACTS_GROUP_DELETED', 'Contacts group deleted');
 define('_CONTACTS_GROUP_LIST_ADDED', 'Add contacts for group');
 define('_CONTACTS_GROUP_LIST_DELETED', 'Delete contacts for group');
-define('_CONTACT_GROUP_LABEL_ALREADY_EXISTS', 'Group with this label already exists');
+define('_CONTACTS_GROUP_LABEL_ALREADY_EXISTS', 'Group with this label already exists');
 define('_DELETE_NOTIFICATIONS', 'Notification deleted');
 define('_DEST_USER', 'Recipient');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Doctype first level added');
