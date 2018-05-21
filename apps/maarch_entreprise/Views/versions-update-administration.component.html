@@ -16,14 +16,14 @@
         </mat-sidenav>
         <mat-sidenav-content>
             <div>
+                Votre version : {{versions.currentVersion}}
                 <mat-form-field>
-                        <mat-select id="entity_type" name="minorVersions" title="{{lang.availableMinorVersions}}" placeholder="{{lang.entityType}}"
-                                                            maxlength="32" required>
-                            <mat-option *ngFor="let minorVersion of versionsList.currentMinorVersions" [value]="minorVersion.name">
-                                {{minorVersion.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <mat-select id="entity_type" name="minorVersions" title="{{lang.availableMinorVersions}}" placeholder="{{lang.entityType}}" maxlength="32" required>
+                        <mat-option *ngFor="let minorVersion of versions.currentMinorVersions" [value]="minorVersion.name">
+                            {{minorVersion.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>   

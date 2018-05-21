@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -11,27 +9,21 @@ declare var angularGlobals: any;
 
 
 @Component({
-    templateUrl: "../../../../Views/versions-update-administration.component.html",
-    providers: [NotificationService]
+    templateUrl: "../../../../Views/versions-update-administration.component.html"
 })
 export class VersionsUpdateAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
-    versionsList: any = {}
-    availableMajorVersions: any = [];
-    currentMinorVersions: any = [];
-    currentVersion: any ;
-    loading: boolean = false;
 
-    displayedColumns = ['id', 'description', 'value', 'actions'];
-    dataSource: any;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    mobileQuery                     : MediaQueryList;
+    private _mobileQueryListener    : () => void;
+
+    coreUrl     : string;
+    lang        : any = LANG;
+    loading     : boolean = false;
+
+    versions    : any = {};
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -42,58 +34,16 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.updateVersionControl;
-        }
-    }
-
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    }
-
     ngOnInit(): void {
-        this.updateBreadcrumb(angularGlobals.applicationName);
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
         this.http.get(this.coreUrl + 'rest/versionsUpdate')
             .subscribe((data: any) => {
-                console.log(data);
-                this.versionsList = data;
-                console.log(this.versionsList);
-                // this.availableMajorVersions = data.availableMajorVersions;
-                // this.currentMinorVersions = data.currentMinorVersions;
-                // this.currentVersion = data.currentVersion;
-                /*this.parameters = data.parameters;
-
-                setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.parameters);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);*/
+                this.versions = data;
 
                 this.loading = false;
             });
     }
-
-    /*deleteParameter(paramId: string) {
-        let r = confirm(this.lang.deleteMsg);
-
-        if (r) {
-            this.http.delete(this.coreUrl + 'rest/parameters/' + paramId)
-                .subscribe((data: any) => {
-                    this.parameters = data.parameters;
-                    this.dataSource = new MatTableDataSource(this.parameters);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.parameterDeleted);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        }
-    }*/
 }
