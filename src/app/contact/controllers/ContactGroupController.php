@@ -36,7 +36,7 @@ class ContactGroupController
 
         foreach ($contactsGroups as $key => $contactsGroup) {
             $contactsGroups[$key]['position'] = $key;
-            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
+            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         }
 
         return $response->withJson(['contactsGroups' => $contactsGroups]);

@@ -289,7 +289,7 @@ export const LANG_EN = {
     "recordsPerPage"                    : "result per page",
     "redirectBasket"                    : "Redirect basket",
     "redirectConfidentialInfo"          : "This user has confidentials documents linked to this service.<br/>You could link to an other user in this service.",
-    "redirectModelInfo"                : "This user is in diffusion list model of this entity.",
+    "redirectModelInfo"                 : "This user is in diffusion list model of this entity.",
     "redirects"                         : "Redirections",
     "reinitPassword"                    : "Reset password",
     "relatedUsers"                      : "Related users",
