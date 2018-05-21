@@ -53,7 +53,7 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Contacts group not found']);
         }
 
-        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
+        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
@@ -72,7 +72,7 @@ class ContactGroupController
         $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
         $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $user['id']]]);
         if (!empty($existingGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group with this label already exists']);
+            return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
         $data['public'] = $data['public'] ? 'true' : 'false';
@@ -153,7 +153,7 @@ class ContactGroupController
 
         $contactsGroups = ContactGroupModel::get();
         foreach ($contactsGroups as $key => $contactsGroup) {
-            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
+            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         }
 
         return $response->withJson(['success' => 'success']);
@@ -198,7 +198,7 @@ class ContactGroupController
         ]);
 
         $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
-        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
+        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
@@ -261,6 +261,9 @@ class ContactGroupController
         ValidatorModel::intType($aArgs, ['position']);
 
         $address = '';
+        if (empty($aArgs['position'])) {
+            $aArgs['position'] = 0;
+        }
         if ($aArgs['contact']['is_corporate_person'] == 'Y') {
             $address.= $aArgs['contact']['firstname'];
             $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");

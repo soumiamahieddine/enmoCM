@@ -31,7 +31,7 @@ abstract class ContactModelAbstract
             'table'     => ['view_contacts'],
             'where'     => $aArgs['where'],
             'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy'],
+            'order_by'  => empty($aArgs['orderBy']) ? null : $aArgs['orderBy'],
             'limit'     => $aArgs['limit']
         ]);
 

@@ -50,17 +50,19 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
-        // this.isAllSelected() ?
-        //     this.selection.clear() :
-        //     this.dataSource.data.forEach(row => this.selection.select(row));
+        this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach((row: any) => {
+            this.selection.select(row.addressId)
+        });
     }
 
     @ViewChild('snav2') sidenav: MatSidenav;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('table') sort: MatSort;
 
-    @ViewChild(MatPaginator) paginatorAdded: MatPaginator;
-    @ViewChild(MatSort) sortAdded: MatSort;
+    @ViewChild('paginatorAdded') paginatorAdded: MatPaginator;
+    @ViewChild('tableAdded') sortAdded: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
@@ -75,11 +77,12 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
         this.searchTerm.valueChanges.pipe(
             debounceTime(500),
-            filter(value => value.length > 3),
+            filter(value => value.length > 2),
             distinctUntilChanged(),
             switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', {params: {"search" : data, "type" : this.contactTypeSearch}}))
         ).subscribe((response: any) => {
-            this.dataSource           = new MatTableDataSource(response);
+            this.searchResult         = response;
+            this.dataSource           = new MatTableDataSource(this.searchResult);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort      = this.sort;
         });
@@ -123,11 +126,14 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         });
     }
 
-    saveContactsList(): void {
+    saveContactsList(elem:any): void {
+        elem.textContent = this.lang.loading+'...';
+        elem.disabled = true;
         this.http.post(this.coreUrl + 'rest/contactsGroups/'+ this.contactsGroup.id+'/contacts', {'contacts': this.selection.selected})
             .subscribe((data: any) => {
                 this.notify.success(this.lang.contactAdded);
-                this.dataSource = null;
+                this.selection.clear();
+                elem.textContent = this.lang.add;
                 this.contactsGroup = data.contactsGroup;
                 setTimeout(() => {
                     this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
@@ -185,4 +191,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             });
     }
 
+    launchLoading() {
+        this.dataSource = null;
+    }
 }

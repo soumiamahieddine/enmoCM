@@ -23,8 +23,8 @@
             "Status\\"        : "src/app/status/",
             "Template\\"      : "src/app/template/",
             "User\\"          : "src/app/user/",
+            "VersionUpdate\\" : "src/app/versionUpdate/",
 
-            "Core\\"          : "core/",
             "Convert\\"       : "modules/convert/",
             "Sendmail\\"      : "modules/sendmail/"
     	}

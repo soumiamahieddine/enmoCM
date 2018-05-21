@@ -252,7 +252,7 @@ var initList_hidden_input_before = function (idField, idList, theUrlToListScript
                 return entry + "&"+previous_name+"=" + $j("#"+previous_field).val(); 
             },
             afterUpdateElement: function (text, li){
-                $j("#"+new_value).value = li.id;
+                $j("#"+new_value).val(li.id);
             }
         });
 };

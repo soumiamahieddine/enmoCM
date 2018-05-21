@@ -89,9 +89,6 @@ if (!defined('_ENTITY_IS_RELATED')) {
 if (!defined('_TYPE')) {
     define('_TYPE', 'Type');
 }
-if (!defined('_ENTITY_ALREADY_EXISTS')) {
-    define('_ENTITY_ALREADY_EXISTS', 'Entity already exists');
-}
 
 /*************************** Users - Entites management *****************/
 if (!defined('_ENTITY_USER_DESC')) {

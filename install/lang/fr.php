@@ -462,3 +462,7 @@ if (!defined('_UPLOAD_PICTURE')) {
 if (!defined('_LOGIN_PICTURE_FROM_DATA')) {
     define('_LOGIN_PICTURE_FROM_DATA', "Ou depuis notre banque d'images (Pixabay)");
 }
+
+if (!defined('_CUSTOM_LIST')) {
+    define('_CUSTOM_LIST', "Liste des instances MaarchCourrier déjà installées sur ce serveur");
+}

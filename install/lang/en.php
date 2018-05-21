@@ -453,3 +453,7 @@ if (!defined('_UPLOAD_PICTURE')) {
 if (!defined('_LOGIN_PICTURE_FROM_DATA')) {
     define('_LOGIN_PICTURE_FROM_DATA', "Or from our storage (Pixabay)");
 }
+
+if (!defined('_CUSTOM_LIST')) {
+    define('_CUSTOM_LIST', "Custom list already installed on this server");
+}

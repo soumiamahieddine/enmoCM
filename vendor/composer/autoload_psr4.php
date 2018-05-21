@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'VersionUpdate\\' => array($baseDir . '/src/app/versionUpdate'),
     'User\\' => array($baseDir . '/src/app/user'),
     'Template\\' => array($baseDir . '/src/app/template'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
@@ -39,7 +40,6 @@ return array(
     'Entity\\' => array($baseDir . '/src/app/entity'),
     'Doctype\\' => array($baseDir . '/src/app/doctype'),
     'Docserver\\' => array($baseDir . '/src/app/docserver'),
-    'Core\\' => array($baseDir . '/core'),
     'Convert\\' => array($baseDir . '/modules/convert'),
     'Contact\\' => array($baseDir . '/src/app/contact'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),

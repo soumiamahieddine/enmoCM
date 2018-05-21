@@ -39,6 +39,26 @@
             <?php echo _DESC_INSTALL;?>
         </p>
     </div>
+    <div>
+        <?php
+        $customList = array();
+        foreach (glob('cs_*') as $customPath) {
+            $customPath = str_replace('cs_', '', $customPath);
+            array_push($customList, $customPath);
+            $thelist .= '<li>' . $customPath . '</a></li>';
+        }
+        
+        if (!empty($thelist)) {
+            ?>
+            <P><b><?php echo _CUSTOM_LIST;?></b></p>
+            <ul>
+                <P><?=$thelist?></p>
+            </ul>
+            <?php
+        }
+        ?>
+    </div>
+    <br/>
 </div>
 <br />
 <div class="blockWrapper">

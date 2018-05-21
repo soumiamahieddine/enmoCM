@@ -4632,7 +4632,7 @@ if (!defined('_CHOOSE_ENTITY_SUBENTITIES')) {
 }
 
 if (!defined('_TAG_ADMIN')) {
-    define('_TAG_ADMIN', 'Administration des '.strtolower(_TAG_DEFAULT));
+    define('_TAG_ADMIN', 'Administration des mot-clé');
 }
 
 if (!defined('_REFERENCE_MAIL')) {

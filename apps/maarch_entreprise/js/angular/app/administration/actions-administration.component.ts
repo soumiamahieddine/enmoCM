@@ -49,19 +49,10 @@ export class ActionsAdministrationComponent implements OnInit {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    updateBreadcrumb(applicationName: string) {
-        if ($j('#ariane')[0]) {
-            $j('#ariane')[0].innerHTML = "<a href='index.php?reinit=true'>" + applicationName + "</a> > <a onclick='location.hash = \"/administration\"' style='cursor: pointer'>" + this.lang.administration + "</a> > " + this.lang.actions;
-        }
-    }
-
     ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
-
-        this.updateBreadcrumb(angularGlobals.applicationName);
-        $j('#inner_content').remove();
 
         this.http.get(this.coreUrl + 'rest/actions')
             .subscribe((data) => {

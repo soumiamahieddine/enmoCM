@@ -65,7 +65,7 @@ class AutoCompleteController
             ],
             'where'     => $where,
             'data'      => $requestData,
-            'limit'     => 25000
+            'limit'     => 1000
         ]);
 
         $data = [];

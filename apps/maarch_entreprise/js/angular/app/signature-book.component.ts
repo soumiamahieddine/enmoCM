@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, Component, OnInit, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
+import { LANG } from './translate.component';
 import { Router, ActivatedRoute } from '@angular/router';
 
 declare function lockDocument(resId: number) : void;
@@ -33,6 +34,7 @@ export class SignatureBookComponent implements OnInit {
     resId                       : number;
     basketId                    : string;
     groupId                     : string;
+    lang                        : any       = LANG;
 
     signatureBook: any = {
         currentAction           : {},

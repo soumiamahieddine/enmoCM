@@ -167,6 +167,18 @@ class BasketControllerTest extends TestCase
         $this->assertNotNull($responseBody->allGroups);
         $this->assertInternalType('array', $responseBody->pages);
         $this->assertNotNull($responseBody->pages);
+
+        $users = \Group\models\GroupModel::getUsersByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);
+        $group = \Group\models\GroupModel::getByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);
+        foreach ($users as $user) {
+            $preference = \User\models\UserBasketPreferenceModel::get([
+                'select'    => ['display'],
+                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                'data'      => [$user['id'], $group['id'], 'TEST-BASKET123']
+            ]);
+            $this->assertNotNull($preference[0]);
+            $this->assertSame(true, $preference[0]['display']);
+        }
     }
 
     public function testUpdateGroup()
