@@ -246,6 +246,7 @@ export const LANG_FR = {
     "linkUser"                          : "Associer un utilisateur",
     "listTemplatesRolesUpdated"         : "Rôles modifiés",
     "loadedFile"                        : "Fichier importé",
+    "loading"                           : "Chargement",
     "logout"                            : "Se déconnecter",
     "maarchApplication"                 : "Application Maarch",
     "mail"                              : "Courrier",

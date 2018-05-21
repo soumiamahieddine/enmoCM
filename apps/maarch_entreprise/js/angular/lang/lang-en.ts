@@ -406,6 +406,7 @@ export const LANG_EN = {
     "processMode"                       : "Process modes",
     "progression"                       : "Progression",
     "loadedFile"                        : "Loaded file",
+    "loading"                           : "Loading",
     "generatedFile"                     : "Generated file",
     "destruction"                       : "Destruction",
     "conservation"                      : "Retention",
