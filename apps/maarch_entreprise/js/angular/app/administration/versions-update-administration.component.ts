@@ -46,4 +46,8 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
                 this.loading = false;
             });
     }
+
+    updateVersionAccess() {
+        location.href = this.coreUrl+'install/index.php?step=update_language';
+    }
 }
