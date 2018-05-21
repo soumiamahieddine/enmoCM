@@ -55,9 +55,7 @@ class VersionUpdateController
                 }
             } else {
                 if ($tag > $currentVersionTag) {
-                    $currentMinorVersions[] = [
-                        'name'  => $value['name']
-                    ];
+                    $currentMinorVersions[] = $value['name'];
                 }
             }
         }
