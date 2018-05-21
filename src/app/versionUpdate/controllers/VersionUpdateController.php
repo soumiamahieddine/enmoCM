@@ -40,7 +40,6 @@ class VersionUpdateController
 
         $currentMinorVersions = [];
         $availableMajorVersions = [];
-        $cptCurrentTags = 0;
 
         foreach ($tags as $value) {
             if (!preg_match("/^\d{2}\.\d{2}\.\d+$/", $value['name'])) {
@@ -55,14 +54,11 @@ class VersionUpdateController
                     $availableMajorVersions[] = $value['name'];
                 }
             } else {
-                $currentMinorVersions[$cptCurrentTags] = [];
-                $currentMinorVersions[$cptCurrentTags]['name'] = $value['name'];
                 if ($tag > $currentVersionTag) {
-                    $currentMinorVersions[$cptCurrentTags]['enabled'] = true;
-                } else {
-                    $currentMinorVersions[$cptCurrentTags]['enabled'] = false;
+                    $currentMinorVersions[] = [
+                        'name'  => $value['name']
+                    ];
                 }
-                ++$cptCurrentTags;
             }
         }
 

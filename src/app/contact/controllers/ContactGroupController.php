@@ -261,6 +261,9 @@ class ContactGroupController
         ValidatorModel::intType($aArgs, ['position']);
 
         $address = '';
+        if (empty($aArgs['position'])) {
+            $aArgs['position'] = 0;
+        }
         if ($aArgs['contact']['is_corporate_person'] == 'Y') {
             $address.= $aArgs['contact']['firstname'];
             $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");

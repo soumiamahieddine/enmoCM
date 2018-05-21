@@ -96,7 +96,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'C' => 
         array (
-            'Core\\' => 5,
             'Convert\\' => 8,
             'Contact\\' => 8,
             'Clue\\StreamFilter\\' => 18,
@@ -250,10 +249,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Docserver\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/docserver',
-        ),
-        'Core\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/core',
         ),
         'Convert\\' => 
         array (

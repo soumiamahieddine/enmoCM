@@ -40,7 +40,6 @@ return array(
     'Entity\\' => array($baseDir . '/src/app/entity'),
     'Doctype\\' => array($baseDir . '/src/app/doctype'),
     'Docserver\\' => array($baseDir . '/src/app/docserver'),
-    'Core\\' => array($baseDir . '/core'),
     'Convert\\' => array($baseDir . '/modules/convert'),
     'Contact\\' => array($baseDir . '/src/app/contact'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
