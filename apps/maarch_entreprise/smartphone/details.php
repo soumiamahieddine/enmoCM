@@ -234,7 +234,8 @@ else{
         </ul>-->
         <?php
     }
-    if ($_SESSION['current_basket']['id'] == "EsigBasket" && $infos_attach['attachment_type'] != 'signed_response'){
+    $action = \Action\models\ActionModel::getById(['id' => $_SESSION['current_basket']['default_action'], 'select' => ['action_page']]);
+    if (!empty($action) && $action['action_page'] == 'visa_mail' && $infos_attach['attachment_type'] != 'signed_response'){
         ?>
         <a href="signature_main_panel.php?id=<?php functions::xecho($s_id);?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']);
