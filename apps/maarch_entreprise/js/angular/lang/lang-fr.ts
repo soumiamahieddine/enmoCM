@@ -242,6 +242,7 @@ export const LANG_FR = {
     "lastname"                          : "Nom",
     "life_cycle"                        : "Cycle de vie",
     "limitDataReached"                  : "Vous avez atteint la limite d'affichage (<b>25000 entrées</b>), veuillez affiner votre <b>plage de dates</b>",
+    "limitDataReached_1000"             : "Limite de <b>1000 entrées</b> atteinte.",
     "linkDetails"                       : "Accédez à la fiche détaillée",
     "linkEntityToUserInfo"              : "Cliquez sur une entité de l'arborescence pour l'associer / dissocier à l'utilisateur",
     "linkGroup"                         : "Associer un groupe",

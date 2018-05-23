@@ -189,6 +189,7 @@ export const LANG_EN = {
     "lastname"                          : "Lastname",
     "life_cycle"                        : "Life cycle",
     "limitDataReached"                  : "You have reached max display datas (<b>25000 datas</b>), refine your <b>date range</b>",
+    "limitDataReached_1000"             : "You have reached max display datas (<b>1000 datas</b>).",
     "linkDetails"                       : "Access to details",
     "linkEntityToUserInfo"              : "Click on entity of tree to link / unlink to this user",
     "linkGroup"                         : "Link a group",

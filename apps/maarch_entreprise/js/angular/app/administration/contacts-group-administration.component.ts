@@ -6,7 +6,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
-import { MatPaginator, MatSort, MatTableDataSource, MatSidenav } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatSidenav, MatProgressBarModule } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
 declare function $j(selector: any): any;
@@ -31,35 +31,33 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     contactTypeSearch: string;
 
     loading: boolean = false;
+    initAutoCompleteContact = true;
 
     searchTerm: FormControl = new FormControl();
-    searchResult:any = [];
+    searchResult: any = [];
 
-    displayedColumns    = ['select', 'contact', 'address'];
+    displayedColumns = ['select', 'contact', 'address'];
     displayedColumnsAdded = ['contact', 'address', 'actions'];
-    dataSource          : any;
-    dataSourceAdded    : any;
-    selection           = new SelectionModel<Element>(true, []);
-
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
+    dataSource: any;
+    dataSourceAdded: any;
+    selection = new SelectionModel<Element>(true, []);
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach((row: any) => {
-            this.selection.select(row.addressId)
-        });
+    masterToggle(event: any) {
+        if (event.checked) {
+            this.dataSource.data.forEach((row: any) => {
+                if (!$j("#check_" + row.addressId + '-input').is(":disabled")) {
+                    this.selection.select(row.addressId);
+                }
+            });
+        } else {
+            this.selection.clear();
+        }
     }
 
     @ViewChild('snav2') sidenav: MatSidenav;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild('table') sort: MatSort;
+    @ViewChild('paginatorContactList') paginator: MatPaginator;
+    //@ViewChild('tableContactList') sortContactList: MatSort;
 
     @ViewChild('paginatorAdded') paginatorAdded: MatPaginator;
     @ViewChild('tableAdded') sortAdded: MatSort;
@@ -79,13 +77,14 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             debounceTime(500),
             filter(value => value.length > 2),
             distinctUntilChanged(),
-            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', {params: {"search" : data, "type" : this.contactTypeSearch}}))
+            switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/contacts', { params: { "search": data, "type": this.contactTypeSearch } }))
         ).subscribe((response: any) => {
-            this.searchResult         = response;
-            this.dataSource           = new MatTableDataSource(this.searchResult);
+            this.searchResult = response;
+            this.dataSource = new MatTableDataSource(this.searchResult);
             this.dataSource.paginator = this.paginator;
-            this.dataSource.sort      = this.sort;
+            //this.dataSource.sort      = this.sortContactList;
         });
+        
     }
 
     ngOnDestroy(): void {
@@ -99,25 +98,25 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] == "undefined") {
-                this.creationMode         = true;
+                this.creationMode = true;
                 this.contactsGroup.public = false;
-                this.loading              = false;
+                this.loading = false;
             } else {
                 this.creationMode = false;
 
                 this.http.get(this.coreUrl + 'rest/contactsTypes')
-                .subscribe((data: any) => {
-                    this.contactTypes = data.contactsTypes;
-                });
+                    .subscribe((data: any) => {
+                        this.contactTypes = data.contactsTypes;
+                    });
 
                 this.http.get(this.coreUrl + 'rest/contactsGroups/' + params['id'])
                     .subscribe((data: any) => {
                         this.contactsGroup = data.contactsGroup;
 
                         setTimeout(() => {
-                            this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
+                            this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);
                             this.dataSourceAdded.paginator = this.paginatorAdded;
-                            this.dataSourceAdded.sort      = this.sortAdded;
+                            this.dataSourceAdded.sort = this.sortAdded;
                         }, 0);
 
                         this.loading = false;
@@ -126,29 +125,29 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         });
     }
 
-    saveContactsList(elem:any): void {
-        elem.textContent = this.lang.loading+'...';
+    saveContactsList(elem: any): void {
+        elem.textContent = this.lang.loading + '...';
         elem.disabled = true;
-        this.http.post(this.coreUrl + 'rest/contactsGroups/'+ this.contactsGroup.id+'/contacts', {'contacts': this.selection.selected})
+        this.http.post(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id + '/contacts', { 'contacts': this.selection.selected })
             .subscribe((data: any) => {
                 this.notify.success(this.lang.contactAdded);
                 this.selection.clear();
                 elem.textContent = this.lang.add;
                 this.contactsGroup = data.contactsGroup;
                 setTimeout(() => {
-                    this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
+                    this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);
                     this.dataSourceAdded.paginator = this.paginatorAdded;
-                    this.dataSourceAdded.sort      = this.sortAdded;
+                    this.dataSourceAdded.sort = this.sortAdded;
                 }, 0);
             }, (err) => {
                 this.notify.error(err.error.errors);
-            });        
+            });
     }
 
     onSubmit() {
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
-                .subscribe((data:any) => {
+                .subscribe((data: any) => {
                     this.router.navigate(['/administration/contacts-groups/' + data.contactsGroup]);
                     this.notify.success(this.lang.contactsGroupAdded);
                 }, (err) => {
@@ -179,12 +178,12 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             .subscribe(() => {
                 var lastElement = this.contactsGroup.contacts.length - 1;
                 this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
-                this.contactsGroup.contacts[row].position = row; 
+                this.contactsGroup.contacts[row].position = row;
                 this.contactsGroup.contacts.splice(lastElement, 1);
 
-                this.dataSourceAdded           = new MatTableDataSource(this.contactsGroup.contacts);
+                this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);
                 this.dataSourceAdded.paginator = this.paginatorAdded;
-                this.dataSourceAdded.sort      = this.sortAdded;
+                this.dataSourceAdded.sort = this.sortAdded;
                 this.notify.success(this.lang.contactDeletedFromGroup);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -192,6 +191,25 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     }
 
     launchLoading() {
-        this.dataSource = null;
+        if (this.searchTerm.value.length > 2) {
+            this.dataSource = null;
+            this.initAutoCompleteContact = false;
+        }
+    }
+
+    isInGrp(address: any): boolean {
+        let isInGrp = false;
+        this.contactsGroup.contacts.forEach((row: any) => {
+            if (row.addressId == address.addressId) {
+                isInGrp = true;
+            }
+        });
+        return isInGrp;
+    }
+
+    selectAddress(addressId:any) {
+        if (!$j("#check_" + addressId + '-input').is(":disabled")) {
+            this.selection.toggle(addressId);
+        }    
     }
 }
