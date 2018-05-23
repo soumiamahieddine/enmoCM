@@ -105,8 +105,7 @@ class ContactGroupController
         }
 
         $data = $request->getParams();
-        $check = Validator::intVal()->notEmpty()->validate($data['id']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['label']);
+        $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
         $check = $check && Validator::boolType()->validate($data['public']);
         if (!$check) {
@@ -114,7 +113,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
-        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$data['label'], $user['id'], $data['id']]]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$data['label'], $user['id'], $aArgs['id']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
