@@ -102,6 +102,73 @@ class ContactGroupControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->contactsGroup->contacts);
     }
 
+    public function testAddContacts()
+    {
+        $contactGroupController = new \Contact\controllers\ContactGroupController();
+
+        $contacts = \Contact\models\ContactModel::getOnView([
+            'select'    => ['ca_id'],
+            'limit'     => 1
+        ]);
+
+        if (!empty($contacts[0])) {
+            //  UPDATE
+            $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+            $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+            $aArgs = [
+                'contacts'  => [$contacts[0]['ca_id']]
+            ];
+            $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+            $response     = $contactGroupController->addContacts($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+            $responseBody = json_decode((string)$response->getBody());
+
+            $this->assertSame(self::$id, $responseBody->contactsGroup->id);
+            $this->assertNotEmpty($responseBody->contactsGroup);
+            $this->assertNotEmpty($responseBody->contactsGroup->contacts);
+            $this->assertSame($contacts[0]['ca_id'], $responseBody->contactsGroup->contacts[0]->addressId);
+            $this->assertSame(0, $responseBody->contactsGroup->contacts[0]->position);
+            $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->contact);
+            $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->address);
+        }
+    }
+
+    public function testDeleteContacts()
+    {
+        $contactGroupController = new \Contact\controllers\ContactGroupController();
+
+        $contacts = \Contact\models\ContactModel::getOnView([
+            'select'    => ['ca_id'],
+            'limit'     => 1
+        ]);
+
+        if (!empty($contacts[0])) {
+            //  UPDATE
+            $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+            $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+            $response     = $contactGroupController->deleteContact($request, new \Slim\Http\Response(), ['id' => self::$id, 'addressId' => $contacts[0]['ca_id']]);
+            $responseBody = json_decode((string)$response->getBody());
+
+            $this->assertSame('success', $responseBody->success);
+        }
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $contactGroupController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $user = \User\models\UserModel::getByUserId(['select' => ['id'], 'userId' => 'superadmin']);
+        $this->assertSame(self::$id, $responseBody->contactsGroup->id);
+        $this->assertSame($user['id'], $responseBody->contactsGroup->owner);
+        $this->assertSame('superadmin', $responseBody->contactsGroup->entity_owner);
+        $this->assertInternalType('string', $responseBody->contactsGroup->labelledOwner);
+        $this->assertInternalType('array', $responseBody->contactsGroup->contacts);
+        $this->assertEmpty($responseBody->contactsGroup->contacts);
+    }
+
     public function testDelete()
     {
         $contactGroupController = new \Contact\controllers\ContactGroupController();
