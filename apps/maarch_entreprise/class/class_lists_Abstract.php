@@ -1165,7 +1165,7 @@ abstract class lists_Abstract extends Database
         //Show document icon
         $href = $this->_buildMyLink('index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction', $resultTheLine, $listKey);
         $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
-                ._PROCESS.'"><i class="fa fa-gear fa-2x" title="'._PROCESS.'"></i></a></div>';
+                ._PROCESS.'"><i class="fa fa-cog fa-2x" title="'._PROCESS.'"></i></a></div>';
 
         return $return;
     }
@@ -1523,7 +1523,7 @@ abstract class lists_Abstract extends Database
     {
         $return = '';
         if ($resultTheLine[0]['hasNotes'] || $resultTheLine[1]['hasNotes']) {
-            $return .= '<i class="fa fa-pencil fa-2x" style="cursor: pointer;" title="'._NOTES.'" onclick="loadNoteList('.$resultTheLine[0]['value'].');"></i>';
+            $return .= '<i class="fa fa-pen-square fa-2x" style="cursor: pointer;" title="'._NOTES.'" onclick="loadNoteList('.$resultTheLine[0]['value'].');"></i>';
         }
 
         return $return;
@@ -1548,9 +1548,9 @@ abstract class lists_Abstract extends Database
             $return = '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true'
                             .'&module=attachments&page=del_attachment&relation='.$resultTheLine[1]['value'].'&id='.$resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'"'
                             .'onclick="return(confirm(\''._REALLY_DELETE.' ?\n\r\n\r'
-                            ._DEFINITIVE_ACTION.'\'));"><i class="tooltip fa fa-trash-o fa-2x visaPjDel" style="color:white;font-size: 21px;padding-right: 12px;padding-bottom: 12px;padding-top:11px;margin-right:10px;" title="'._DELETE.'"></i></a>';
+                            ._DEFINITIVE_ACTION.'\'));"><i class="tooltip fa fa-trash-alt fa-2x visaPjDel" style="color:white;font-size: 21px;padding-right: 12px;padding-bottom: 12px;padding-top:11px;margin-right:10px;" title="'._DELETE.'"></i></a>';
         } else {
-            $return = '<a href="" class="delete" style="visibility:hidden;"><i class="tooltip fa fa-trash-o fa-2x" title="'._DELETE.'"></i></a>';
+            $return = '<a href="" class="delete" style="visibility:hidden;"><i class="tooltip fa fa-trash-alt fa-2x" title="'._DELETE.'"></i></a>';
         }
         $return .= '<script>titleWithTooltipsterClass("tooltip");</script>';
 
@@ -1578,11 +1578,11 @@ abstract class lists_Abstract extends Database
 
         $core_tools = new core_tools();
         if (($core_tools->test_service('modify_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && $status != 'TRA') {
-            $return = '<i style="font-size: 21px;padding-bottom: 11px;padding-left: 13px;margin-right:10px;padding-top:12px" class="tooltip fa fa-pencil-square-o fa-2x visaPjUp" title="'._MODIFY.'" onclick="modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl']
+            $return = '<i style="font-size: 21px;padding-bottom: 11px;padding-left: 13px;margin-right:10px;padding-top:12px" class="tooltip fa fa-edit fa-2x visaPjUp" title="'._MODIFY.'" onclick="modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl']
                             .'index.php?display=true&module=attachments&page=attachments_content&id='.$resultTheLine[0]['value'].'&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');"></i>';
         } else {
             $return = '<a href="javascript://" disabled="disabled" class="change" style="visibility:hidden;">
-                                <i class="tooltip fa fa-pencil-square-o fa-2x" title="'._MODIFY.'"></i></a>';
+                                <i class="tooltip fa fa-edit fa-2x" title="'._MODIFY.'"></i></a>';
         }
 
         return $return;
@@ -2821,7 +2821,7 @@ abstract class lists_Abstract extends Database
                             .'onclick="javascript:loadList2(\''.$this->link
                             .'&filter=reset\', \''.$this->divListId.'\', '
                             .$this->modeReturn.');">'
-                            .'<i class="fa fa-refresh fa-2x" style="position: relative;top: 6px;" title="'._CLEAR_SEARCH.'"></i></a>';
+                            .'<i class="fa fa-sync fa-2x" style="position: relative;top: 6px;" title="'._CLEAR_SEARCH.'"></i></a>';
                 $filters .= '</form></div>';
             } else {
                 $filters = _NO_CORRESPONDING_FILTERS;
@@ -3170,7 +3170,7 @@ abstract class lists_Abstract extends Database
                 $icon .= '<i class="fa fa-edit fa-2x" title="'._MODIFY.'"></i>';
                 $showLabel = false;
             } elseif ($actualButton['class'] == 'delete') {
-                $icon .= '<i class="fa fa-remove fa-2x" title="'._DELETE.'"></i>';
+                $icon .= '<i class="fa fa-times fa-2x" title="'._DELETE.'"></i>';
                 $showLabel = false;
             } elseif ($actualButton['class'] == 'suspend') {
                 $icon .= '<i class="fa fa-pause fa-2x" title="'._SUSPEND.'"></i>';
@@ -3182,7 +3182,7 @@ abstract class lists_Abstract extends Database
                 $icon .= '<i class="fa fa-eye fa-2x" title="'._VIEW.'"></i>';
                 $showLabel = false;
             } elseif ($actualButton['class'] == 'use') {
-                $icon .= '<i class="fa fa-dot-circle-o fa-2x" title="'._USE.'"></i>';
+                $icon .= '<i class="fa fa-dot-circle fa-2x" title="'._USE.'"></i>';
                 $showLabel = false;
             }
         } else {

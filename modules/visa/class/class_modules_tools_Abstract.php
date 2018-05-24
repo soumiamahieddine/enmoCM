@@ -655,8 +655,8 @@ abstract class visa_Abstract extends Database
                             }
                             if ($core->test_service('modify_visa_in_signatureBook', 'visa', false)) {
                                 $modif = 'true';
-                                $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
-                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                                $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                                $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                             } else {
                                 $modif = 'false';
                             }
@@ -673,11 +673,11 @@ abstract class visa_Abstract extends Database
                             $info_vised .= '>'._SIGNATORY.'</option>';
                             $info_vised .= '</select>';
                         } else {
-                            $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                            $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
                             $vised = '';
                             if ($bool_modif == true) {
                                 $modif = 'true';
-                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                                $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                                 $disabled = '';
                             } else {
                                 $modif = 'false';
@@ -725,7 +725,7 @@ abstract class visa_Abstract extends Database
                             $info_vised .= '</select>';
                             $link_vis = 'times';
                             $vised = ' moved vised';
-                            $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                         } else {
                             if (!empty($info_userVis['signatory'])) {
                                 $info_vised = '<br/><sub>signé le : '.functions::format_date_db($info_userVis['process_date'], '', '', true).'</sub>';
@@ -807,8 +807,8 @@ abstract class visa_Abstract extends Database
                         }
                         if ($core->test_service('modify_visa_in_signatureBook', 'visa', false)) {
                             $modif = 'true';
-                            $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
-                            $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                            $dropZone = '<i class="fa -alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                         } else {
                             $modif = 'false';
                         }
@@ -824,11 +824,11 @@ abstract class visa_Abstract extends Database
                         $info_vised .= '>'._SIGNATORY.'</option>';
                         $info_vised .= '</select>';
                     } else {
-                        $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                        $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
                         $vised = '';
                         if ($bool_modif == true) {
                             $modif = 'true';
-                            $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                            $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                             $disabled = '';
                         } else {
                             $dropZone = '';
@@ -872,7 +872,7 @@ abstract class visa_Abstract extends Database
                         $link_vis = 'hourglass-half';
                         $link_vis = 'times';
                         $vised = ' moved vised';
-                        $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
+                        $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                     } else {
                         $vised = ' vised';
                         $link_vis = 'check';
@@ -1376,7 +1376,7 @@ abstract class PdfNotes_Abstract extends FPDI
         $s = str_replace("\r", '', $txt);
         $nb = strlen($s);
         if ($nb > 0 and $s[$nb - 1] == "\n") {
-            $nb--;
+            --$nb;
         }
         $sep = -1;
         $i = 0;
@@ -1400,7 +1400,7 @@ abstract class PdfNotes_Abstract extends FPDI
             if ($l > $wmax) {
                 if ($sep == -1) {
                     if ($i == $j) {
-                        $i++;
+                        ++$i;
                     }
                 } else {
                     $i = $sep + 1;
@@ -1410,7 +1410,7 @@ abstract class PdfNotes_Abstract extends FPDI
                 $l = 0;
                 ++$nl;
             } else {
-                $i++;
+                ++$i;
             }
         }
 

@@ -69,7 +69,7 @@ if (empty($files)) {
         $content .= "<a target=\"_blank\" href=\"index.php?display=true&module=reports&page=saveStatFile&filename={$fileInfo['filename']}\"><i class=\"fa fa-download fa-2x\" title=\""._DOWNLOAD.'"></i></a>';
         $content .= '</td>';
         $content .= '<td style="padding:5px;">';
-        $content .= "{$fileInfo['filename']}.{$fileInfo['extension']}<br/><small><i class=\"fa fa-calendar\"></i> <i style='font-size:9px;'>{$fileDate}</i></small>";
+        $content .= "{$fileInfo['filename']}.{$fileInfo['extension']}<br/><small><i class=\"fa fa-calendar-alt\"></i> <i style='font-size:9px;'>{$fileDate}</i></small>";
         $content .= '</td>';
         $content .= '</tr>';
     }

@@ -15,13 +15,13 @@ function addAvisUser(users) {
                 + '<input class="userId" type="hidden" value="' + $j("select#avisUserList option:selected").val() + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
                 + '<span class="avisUserAction">'
-                + '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
+                + '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
                 + '</span>'
                 + '<span class="avisUserConsigne">'
                 + '<input type="text" class="consigne" value=""/>'
                 + '</span>'
                 + '<span id="dropZone" title="Glisser/déposer pour modifier l\'ordre du circuit" style="cursor: pointer">'
-                + '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+                + '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true"></i>'
                 + '</span>'
                 + '</div>');
 
@@ -43,13 +43,13 @@ function addAvisUser(users) {
                 + '<input class="userId" type="hidden" value="' + users.user_id + '"/><input class="avisDate" type="hidden" value=""/>'
                 + '</span>'
                 + '<span class="avisUserAction">'
-                + '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
+                + '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);"></i>'
                 + '</span>'
                 + '<span class="avisUserConsigne">'
                 + '<input type="text" class="consigne" value="' + users.process_comment + '"/>'
                 + '</span>'
                 + '<span id="dropZone" title="Glisser/déposer pour modifier l\'ordre du circuit" style="cursor: pointer">'
-                + '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+                + '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true"></i>'
                 + '</span>'
                 + '</div>');
 

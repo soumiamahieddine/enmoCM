@@ -53,7 +53,7 @@ if ($rep->is_module_loaded('folder')) {
 }
 
 // HEADER
-echo '<h1><i class="fa fa-area-chart fa-2x"></i>'._REPORTS.'</h1>';
+echo '<h1><i class="fa fa-chart-area fa-2x"></i>'._REPORTS.'</h1>';
 echo '<div id="inner_content" class="clearfix">';
 echo '<div class="block">';
 

@@ -77,7 +77,7 @@ class LinkController
             $return .= $infos['category_id']['show_value'];
             $return .= '</td>';
             $return .= '<td style="font-size:12px;width:14%" title="'._DOC_DATE.'" onclick="window.top.location.href=\'index.php?page=details&dir=indexing_searching&id='.$key.'\'">';
-            $return .= '<i class="fa fa-calendar-o fa-2x" style="font-size:10px;"></i> ';
+            $return .= '<i class="fa fa-calendar-alt fa-2x" style="font-size:10px;"></i> ';
             $date = explode('-', substr($infos['doc_date']['show_value'], 0, 10));
             $return .= $date[2].' '.$date[1].' '.$date[0];
             $return .= '</td>';

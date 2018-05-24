@@ -1323,7 +1323,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     //FILE
     if ($mode == 'add') {
         $content .= '<p>';
-        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
+        $content .= '<label id="file_label">'._FILE.' <span id="templateOfficeTool"><i class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" style="cursor:pointer;" id="attachment_type_icon" onclick="$(\'attachment_type_icon\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon2\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'none\'});$(\'templateOffice\').disabled=true;$(\'templateOffice_edit\').setStyle({display: \'none\'});$(\'choose_file\').setStyle({display: \'inline-block\'});document.getElementById(\'choose_file\').contentDocument.getElementById(\'file\').click();"></i> <i class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" style="cursor:pointer;color:#135F7F;" id="attachment_type_icon2" onclick="$(\'attachment_type_icon2\').setStyle({color: \'#135F7F\'});$(\'attachment_type_icon\').setStyle({color: \'#666\'});$(\'templateOffice\').setStyle({display: \'inline-block\'});$(\'templateOffice\').disabled=false;$(\'choose_file\').setStyle({display: \'none\'});"></i></span></label>';
         $content .= '<select name="templateOffice[]" id="templateOffice" style="display:inline-block;" onchange="showEditButton(this);">';
         $content .= '<option value="">'._CHOOSE_MODEL.'</option>';
 
@@ -1348,7 +1348,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
     //PJ SUBJECT
     $content .= '<p>';
     $content .= '<label>'._OBJECT.'</label>';
-    $content .= "<input type='text' name='title[]' id='title' maxlength='250' value=\"" . htmlentities($infoAttach->title) ."\"/> ";
+    $content .= "<input type='text' name='title[]' id='title' maxlength='250' value=\"".htmlentities($infoAttach->title).'"/> ';
     $content .= '&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
     $content .= '</p>';
 
@@ -1399,7 +1399,7 @@ $content .= '<div class="transmissionDiv" id="addAttach1">';
         $content .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
                 .'" onclick="new Effect.toggle(\'create_contact_div_attach\', '
                 .'\'blind\', {delay:0.2});return false;" '
-                .'style="display:inline;" ><i class="fa fa-pencil fa-lg" title="'._CREATE_CONTACT.'"></i></a>';
+                .'style="display:inline;" ><i class="fa fa-pencil-alt fa-lg" title="'._CREATE_CONTACT.'"></i></a>';
     }
     $content .= '</label>';
     $content .= '<span style="position:relative;"><input type="text" name="contact_attach[]" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" onchange="saveContactToSession(this);" value="';

@@ -103,7 +103,7 @@ $_ENV['categories']['incoming']['doc_date'] = array(
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -223,7 +223,7 @@ $_ENV['categories']['ged_doc']['doc_date'] = array(
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -304,7 +304,7 @@ $_ENV['categories']['outgoing']['doc_date'] = array(
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -426,7 +426,7 @@ $_ENV['categories']['internal']['doc_date'] = array(
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -558,7 +558,7 @@ $_ENV['categories']['ged_doc']['doc_date'] = array(
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -628,7 +628,7 @@ $_ENV['categories']['folder_document']['doc_date'] = array(
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -648,14 +648,14 @@ $_ENV['categories']['folder_document']['author'] = array(
     'mandatory' => true,
     'label' => _AUTHOR,
     'table' => 'res',
-    'img' => 'pencil-square-o',
+    'img' => 'edit',
     'modify' => true,
     'form_show' => 'textfield',
 );
 
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array();
-$_ENV['categories']['empty']['img_cat'] = '<i class="fa fa-circle-thin fa-2x"></i>';
+$_ENV['categories']['empty']['img_cat'] = '<i class="fa fa-circle fa-2x"></i>';
 $_ENV['categories']['empty']['other_cases'] = array();
 $_ENV['categories']['empty']['type_id'] = array(
     'type_form' => 'integer',
@@ -673,7 +673,7 @@ $_ENV['categories']['empty']['doc_date'] = array(
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => 'calendar-o',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
 );
@@ -892,7 +892,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             'show_value' => $_SESSION['coll_categories']['letterbox_coll'][$res->category_id],
             'label' => _CATEGORY,
             'display' => 'textinput',
-            'img' => 'arrows',
+            'img' => 'arrows-alt',
         );
     } else {
         $data['category_id'] = $res->category_id;
@@ -944,7 +944,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                         } elseif ($field == 'priority') {
                             foreach (array_keys($_SESSION['mail_priorities']) as $prio) {
                                 $data[$field]['select'][] = [
-                                    'ID'    => $_SESSION['mail_priorities_id'][$prio],
+                                    'ID' => $_SESSION['mail_priorities_id'][$prio],
                                     'LABEL' => $_SESSION['mail_priorities'][$prio],
                                 ];
                             }
@@ -1343,7 +1343,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
  **/
 function get_img_cat($cat_id)
 {
-    $default = '<i class="fa fa-remove fa-2x"></i>';
+    $default = '<i class="fa fa-times fa-2x"></i>';
     if (empty($cat_id)) {
         return $default;
     } else {

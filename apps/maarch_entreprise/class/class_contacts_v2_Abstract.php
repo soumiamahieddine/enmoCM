@@ -984,7 +984,7 @@ abstract class contacts_v2_Abstract extends Database
                 <br>
                 
                 <h1>
-                    <i class="fa fa-remove fa-2x"></i>
+                    <i class="fa fa-times fa-2x"></i>
                     <?php echo _CONTACT_DELETION; ?>
                 </h1>
                 
@@ -1238,7 +1238,7 @@ abstract class contacts_v2_Abstract extends Database
                 <table width="600px">
                     <tr align="left">
                         <td colspan="4" onclick="toggleBlock('address_div', 'divStatus_address_div');"><label>
-                            <span id="divStatus_address_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;
+                            <span id="divStatus_address_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;
                             <b><?php echo _ADDRESS; ?> </b></label>
                         </td>
                     </tr>
@@ -1562,7 +1562,7 @@ abstract class contacts_v2_Abstract extends Database
                     <table width="600px">
                         <tr align="left">
                             <td colspan="4" onclick="toggleBlock('salutation_div', 'divStatus_salutation_div');"><label>
-                            <span id="divStatus_salutation_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b><?php echo _SALUTATION; ?> </b></label></td>
+                            <span id="divStatus_salutation_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;<b><?php echo _SALUTATION; ?> </b></label></td>
                         </tr>
                     </table>
                 <div id="salutation_div" style="display:inline">
@@ -2141,7 +2141,7 @@ abstract class contacts_v2_Abstract extends Database
                 </div>
                 <br>
 
-                <h1><i class="fa fa-remove fa-2x"></i>
+                <h1><i class="fa fa-times fa-2x"></i>
                     <?php
                         functions::xecho($title); ?>
                 </h1><?php
@@ -2382,7 +2382,7 @@ abstract class contacts_v2_Abstract extends Database
                 <tr align="left">
                     <td colspan="4" onclick="toggleBlock('info_contact_div', 'divStatus_contact_div');">
                         <label>
-                            <span id="divStatus_contact_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b><?php echo _CONTACT; ?></b>
+                            <span id="divStatus_contact_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;<b><?php echo _CONTACT; ?></b>
                         </label>
                     </td>
                 </tr>
@@ -2513,7 +2513,7 @@ abstract class contacts_v2_Abstract extends Database
             <table width="600px;">
                 <tr align="left">
                     <td colspan="4" onclick="toggleBlock('address_div', 'divStatus_address_div');"><label>
-                        <span id="divStatus_address_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b><?php echo _ADDRESS; ?></b></label>
+                        <span id="divStatus_address_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;<b><?php echo _ADDRESS; ?></b></label>
                     </td>
                 </tr>
             </table>
@@ -2698,7 +2698,7 @@ abstract class contacts_v2_Abstract extends Database
                 <table width="600px">
                     <tr align="left">
                         <td colspan="4" onclick="toggleBlock('salutation_div', 'divStatus_salutation_div');"><label>
-                        <span id="divStatus_salutation_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;<b><?php echo _SALUTATION; ?></b></label></td>
+                        <span id="divStatus_salutation_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;<b><?php echo _SALUTATION; ?></b></label></td>
                     </tr>
                 </table>
             <div id="salutation_div" style="display:inline">

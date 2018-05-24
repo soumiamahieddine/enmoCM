@@ -95,7 +95,7 @@ if (count($docs_library) == 0) {
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-pencil fa-2x" title="<?php echo _CASE_LABEL; ?>"></i>
+                    <i class="fa fa-pencil-alt fa-2x" title="<?php echo _CASE_LABEL; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php echo _CASE_LABEL; ?> :
@@ -143,7 +143,7 @@ if (count($docs_library) == 0) {
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-calendar-o fa-2x" title="<?php echo _CASE_CREATION_DATE; ?>"></i>
+                    <i class="fa fa-calendar-alt fa-2x" title="<?php echo _CASE_CREATION_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php echo _CASE_CREATION_DATE; ?> :
@@ -156,7 +156,7 @@ if (count($docs_library) == 0) {
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-clock-o fa-2x" title="<?php echo _CASE_LAST_UPDATE_DATE; ?>"></i>
+                    <i class="fa fa-clock fa-2x" title="<?php echo _CASE_LAST_UPDATE_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php echo _CASE_LAST_UPDATE_DATE; ?> :
@@ -223,7 +223,7 @@ if (count($docs_library) == 0) {
     <?php
     } ?>
     </p>
-<?php $core_tools->load_js();?>
+<?php $core_tools->load_js(); ?>
 </form>
 </div>
 

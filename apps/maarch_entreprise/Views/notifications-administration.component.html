@@ -23,7 +23,7 @@
                     </p>
                 </a>
                 <a mat-list-item (click)="loadCron();snav2.toggle();">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-clock-o"></mat-icon>
+                    <mat-icon color="primary" mat-list-icon class="fa fa-clock"></mat-icon>
                     <p mat-line>
                         {{lang.toSchedule}}
                     </p>
@@ -67,7 +67,7 @@
                         <mat-header-cell *matHeaderCellDef style="flex:1;"></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;flex:1;">
                             <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteNotification(element)">
-                                <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                                <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>

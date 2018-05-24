@@ -12,9 +12,9 @@ function whatIsTheDivStatus(theDiv, divStatus)
 {
     console.log($j('#'+theDiv).css('display'));
     if ($j('#'+theDiv).css('display') == 'none') {
-        $j('#'+divStatus).html('<i class="fa fa-minus-square-o"></i>');
+        $j('#'+divStatus).html('<i class="fa fa-minus-square"></i>');
     } else {
-        $j('#'+divStatus).html('<i class="fa fa-plus-square-o"></i>');
+        $j('#'+divStatus).html('<i class="fa fa-plus-square"></i>');
     }
 }
 
@@ -3155,7 +3155,7 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
     if(document.getElementById('show_tab').getAttribute('module') == module){
         document.getElementById('show_tab').style.display='none';
         if(document.getElementById(module+'_tab') != undefined ){
-            document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-plus-square-o"></i>';
+            document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-plus-square"></i>';
         }
         document.getElementById('show_tab').setAttribute('module','');
         return false;
@@ -3176,9 +3176,9 @@ function loadTab(resId,collId,titleTab,pathScriptTab,module){
             document.getElementById('show_tab').style.display='block';
             document.getElementById('show_tab').setAttribute('module',module);
             
-            $j("span[class='tab_module']").each(function(i, e) {e.innerHTML = '<i class="fa fa-plus-square-o"></i>';})
+            $j("span[class='tab_module']").each(function(i, e) {e.innerHTML = '<i class="fa fa-plus-square"></i>';})
             if(document.getElementById(module+'_tab') != undefined ){
-                document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square-o"></i>';
+                document.getElementById(module+'_tab').innerHTML = '<i class="fa fa-minus-square"></i>';
             }
             document.getElementById('show_tab').innerHTML = answer;
         }
@@ -3436,7 +3436,7 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             tmp += '</td><td width="30px">';
             tmp += '<a href="#" onclick="delete_criteria(\'' + elem + '\', \'';
             tmp += id_form + '\');return false;">';
-            tmp += '<i class="fa fa-remove fa-2x"></i></a>';
+            tmp += '<i class="fa fa-times fa-2x"></i></a>';
             tmp += '</td></tr></table>';
             // Loading content in the page
             node.innerHTML = tmp;
@@ -3767,8 +3767,8 @@ function print_current_result_list(path){
     alert("Cela imprimera la liste actuellement affichée");
     var mywindow = window.open('', 'my div', 'height=400,width=600');
     mywindow.document.write('<html><head><title>MAARCH</title>');
-    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>');
-    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/css/font-maarch.css" type="text/css" media="all"/>');
+    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css" media="all"/>');
+    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome-maarch/css/font-maarch.css" type="text/css" media="all"/>');
     mywindow.document.write('<link rel="stylesheet" href="'+path+'/merged_css.php" type="text/css" media="all"/>');
     mywindow.document.write('</head><body >');
     mywindow.document.write('<style>.check,#checkUncheck{display:none;}</style>');
@@ -3803,12 +3803,12 @@ function setRefAdresse(item) {
 
 function toggleBlock(div, divIcon) {
     $j('#'+div).slideToggle('slow');
-    if ($j('#'+divIcon+' i').hasClass('fa-minus-square-o')) {
-        $j('#'+divIcon+' i').removeClass('fa-minus-square-o');
-        $j('#'+divIcon+' i').addClass('fa-plus-square-o');
+    if ($j('#'+divIcon+' i').hasClass('fa-minus-square')) {
+        $j('#'+divIcon+' i').removeClass('fa-minus-square');
+        $j('#'+divIcon+' i').addClass('fa-plus-square');
     } else {
-        $j('#'+divIcon+' i').removeClass('fa-plus-square-o');
-        $j('#'+divIcon+' i').addClass('fa-minus-square-o');
+        $j('#'+divIcon+' i').removeClass('fa-plus-square');
+        $j('#'+divIcon+' i').addClass('fa-minus-square');
     }
 }
 

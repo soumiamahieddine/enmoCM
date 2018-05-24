@@ -29,16 +29,16 @@
 * @ingroup apps
 */
 
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'class_request.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'class_functions.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'class_security.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'class_resource.php');
-require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
-    . 'docservers_controler.php');
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'class_request.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'class_functions.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'class_security.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'class_resource.php';
+require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
+    .'docservers_controler.php';
 $func = new functions();
 $coreTools = new core_tools();
 $coreTools->test_user();
@@ -47,8 +47,8 @@ $security = new security();
 $db = new Database();
 
 if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
-    if (!isset ($_SESSION['collection_id_choice'])
-        || empty ($_SESSION['collection_id_choice'])
+    if (!isset($_SESSION['collection_id_choice'])
+        || empty($_SESSION['collection_id_choice'])
     ) {
         $collId = 'res_coll';
         $table = 'res_view';
@@ -58,19 +58,19 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
         $collId = $_SESSION['collection_id_choice'];
         $table = $security->retrieve_view_from_coll_id($collId);
         $isView = true;
-        if (empty ($table)) {
+        if (empty($table)) {
             $table = $security->retrieve_table_from_coll($collId);
             $isView = false;
         }
     }
-    for ($cptColl = 0;$cptColl < count($_SESSION['collections']);$cptColl++) {
-        if ($table == $_SESSION['collections'][$cptColl]['table'] 
+    for ($cptColl = 0; $cptColl < count($_SESSION['collections']); ++$cptColl) {
+        if ($table == $_SESSION['collections'][$cptColl]['table']
             || $table == $_SESSION['collections'][$cptColl]['view']
         ) {
             $adrTable = $_SESSION['collections'][$cptColl]['adr'];
         }
     }
-    $selectRes = "SELECT * FROM " . $table . " WHERE res_id = ?";
+    $selectRes = 'SELECT * FROM '.$table.' WHERE res_id = ?';
     $stmt = $db->query($selectRes, array($_SESSION['doc_id']));
     $res = $stmt->fetchObject();
     $typist = $res->typist;
@@ -99,66 +99,64 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
         $resource = new resource();
         $whereClause = ' and 1=1';
         $adr = $resource->getResourceAdr(
-            $table, 
-            $_SESSION['doc_id'], 
-            $whereClause, 
+            $table,
+            $_SESSION['doc_id'],
+            $whereClause,
             $adrTable
         );
-    }
-    ?>
-    <dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _TECHNICAL_INFORMATIONS;?>"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
+    } ?>
+    <dt class="fa fa-cogs" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="<?php echo _TECHNICAL_INFORMATIONS; ?>"><sup><span style="font-size: 10px;display: none;" class="nbResZero"></span></sup></dt>
     <dd>
         <h2>
             <span class="date">
-                <b><?php echo _SOURCE_FILE_PROPERTIES;?></b>
+                <b><?php echo _SOURCE_FILE_PROPERTIES; ?></b>
             </span>
         </h2>
         <br/>
         <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
             <tr>
                 <th align="left" class="picto">
-                    <i class="fa fa-user fa-2x" title="<?php echo _TYPIST;?>"></i>
+                    <i class="fa fa-user fa-2x" title="<?php echo _TYPIST; ?>"></i>
                 </th>
-                <td align="left" width="200px"><?php echo _TYPIST;?> :</td>
+                <td align="left" width="200px"><?php echo _TYPIST; ?> :</td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($typist);?>"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($typist); ?>"  />
                 </td>
                 <th align="left" class="picto">
-                    <i class="fa fa-square fa-2x" title="<?php echo _SIZE;?>"></i>
+                    <i class="fa fa-square fa-2x" title="<?php echo _SIZE; ?>"></i>
                 </th>
-                <td align="left" width="200px"><?php echo _SIZE;?> :</td>
+                <td align="left" width="200px"><?php echo _SIZE; ?> :</td>
                 <?php
                 $txtByte = '';
-                if (isset($_SESSION['lang'])) {
-                    $txtByte = $_SESSION['lang']['txt_byte'];
-                }
-                ?>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($filesize." ".$txtByte." ( ".round($filesize / 1024, 2)."K )");?>" /></td>
+    if (isset($_SESSION['lang'])) {
+        $txtByte = $_SESSION['lang']['txt_byte'];
+    } ?>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($filesize.' '.$txtByte.' ( '.round($filesize / 1024, 2).'K )'); ?>" /></td>
             </tr>
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-file-image-o fa-2x" title="<?php echo _FORMAT;?>"></i>
+                    <i class="fa fa-file-image fa-2x" title="<?php echo _FORMAT; ?>"></i>
                 </th>
-                <td align="left"><?php echo _FORMAT;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($format);?>" size="40"  /></td>
+                <td align="left"><?php echo _FORMAT; ?> :</td>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($format); ?>" size="40"  /></td>
                 <th align="left" class="picto">
-                    <i class="fa fa-calendar fa-2x" title="<?php echo _CREATION_DATE;?>"></i>
+                    <i class="fa fa-calendar-alt fa-2x" title="<?php echo _CREATION_DATE; ?>"></i>
                 </th>
-                <td align="left"><?php echo _CREATION_DATE;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($func->format_date_db($creationDate, false));?>"/></td>
+                <td align="left"><?php echo _CREATION_DATE; ?> :</td>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($func->format_date_db($creationDate, false)); ?>"/></td>
             </tr>
             <tr>
                 <th align="left" class="picto">
-                    <i class="fa fa-lock fa-2x" title="<?php echo _FINGERPRINT;?>"></i>
+                    <i class="fa fa-lock fa-2x" title="<?php echo _FINGERPRINT; ?>"></i>
                 </th>
-                <td align="left"><?php echo _FINGERPRINT;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint);?>"  title="<?php functions::xecho($fingerprint);?>" alt="<?php functions::xecho($fingerprint);?>" /></td>
+                <td align="left"><?php echo _FINGERPRINT; ?> :</td>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>"  title="<?php functions::xecho($fingerprint); ?>" alt="<?php functions::xecho($fingerprint); ?>" /></td>
 
                 <th align="left" class="picto">
-                    <i class="fa fa-gears fa-2x" title="<?php echo _WORK_BATCH;?>"></i>
+                    <i class="fa fa-cogs fa-2x" title="<?php echo _WORK_BATCH; ?>"></i>
                 </th>
-                <td align="left"><?php echo _WORK_BATCH;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($workBatch);?>" title="<?php functions::xecho($workBatch);?>" alt="<?php functions::xecho($workBatch);?>" /></td>
+                <td align="left"><?php echo _WORK_BATCH; ?> :</td>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($workBatch); ?>" title="<?php functions::xecho($workBatch); ?>" alt="<?php functions::xecho($workBatch); ?>" /></td>
             </tr>
         </table>
         <br>
@@ -167,7 +165,7 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
             ?>
             <h2>
             <span class="date">
-                <b><?php echo _LIFE_CYCLE;?></b>
+                <b><?php echo _LIFE_CYCLE; ?></b>
             </span>
             </h2>
             <br/>
@@ -176,121 +174,117 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _LC_POLICY_ID;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($policyId);?>"  /></td>
+                    <td align="left" width="200px"><?php echo _LC_POLICY_ID; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($policyId); ?>"  /></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _CYCLE_ID;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($cycleId);?>" /></td>
+                    <td align="left" width="200px"><?php echo _CYCLE_ID; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($cycleId); ?>" /></td>
                 </tr>
             </table>
             <?php
-        }
-        ?>
+        } ?>
         <br>
         <h2>
         <span class="date">
-            <b><?php echo _DOCSERVERS;?></b>
+            <b><?php echo _DOCSERVERS; ?></b>
         </span>
         </h2>
         <br/>
         <?php
         $docserversControler = new docservers_controler();
-        if ($isMultiDs == 'Y') {
-            for ($cptAdr = 0;$cptAdr < count($adr[0]);$cptAdr++) {
-                $docserver = $docserversControler->get(
+    if ($isMultiDs == 'Y') {
+        for ($cptAdr = 0; $cptAdr < count($adr[0]); ++$cptAdr) {
+            $docserver = $docserversControler->get(
                     $adr[0][$cptAdr]['docserver_id']
                 );
-                echo '<h4>' . functions::xssafe($adr[0][$cptAdr]['docserver_id'])
-                    . ' (' . functions::xssafe($docserver->device_label) . ')</h4>';
-                ?>
+            echo '<h4>'.functions::xssafe($adr[0][$cptAdr]['docserver_id'])
+                    .' ('.functions::xssafe($docserver->device_label).')</h4>'; ?>
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _PATH_TEMPLATE;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', functions::xssafe($adr[0][$cptAdr]['path']));?>"/></td>
+                        <td align="left" width="200px"><?php echo _PATH_TEMPLATE; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', functions::xssafe($adr[0][$cptAdr]['path'])); ?>"/></td>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _FILE;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['filename']);?>" /></td>
+                        <td align="left" width="200px"><?php echo _FILE; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['filename']); ?>" /></td>
                     </tr>
                     <tr>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _FORMAT;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['format']);?>"/></td>
+                        <td align="left" width="200px"><?php echo _FORMAT; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['format']); ?>"/></td>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _FINGERPRINT;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['fingerprint']);?>" /></td>
+                        <td align="left" width="200px"><?php echo _FINGERPRINT; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['fingerprint']); ?>" /></td>
                     </tr>
                     <tr>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _OFFSET;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['offset_doc']);?>"/></td>
+                        <td align="left" width="200px"><?php echo _OFFSET; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['offset_doc']); ?>"/></td>
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _ADR_PRIORITY;?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['adr_priority']);?>" /></td>
+                        <td align="left" width="200px"><?php echo _ADR_PRIORITY; ?> :</td>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['adr_priority']); ?>" /></td>
                     </tr>
                 </table>
                 <?php
-            }
-        } else {
-            $docserver = $docserversControler->get($docserverId);
-           echo '<h4>' . functions::xssafe($docserverId) 
-                    . ' (' . functions::xssafe($docserver->device_label) . ')</h4>';
-            ?>
+        }
+    } else {
+        $docserver = $docserversControler->get($docserverId);
+        echo '<h4>'.functions::xssafe($docserverId)
+                    .' ('.functions::xssafe($docserver->device_label).')</h4>'; ?>
             <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                 <tr>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _PATH_TEMPLATE;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php echo functions::xssafe(str_replace('#', '/', $path));?>"/></td>
+                    <td align="left" width="200px"><?php echo _PATH_TEMPLATE; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php echo functions::xssafe(str_replace('#', '/', $path)); ?>"/></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _FILE;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fileName);?>" /></td>
+                    <td align="left" width="200px"><?php echo _FILE; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fileName); ?>" /></td>
                 </tr>
                 <tr>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _FORMAT;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($format);?>"/></td>
+                    <td align="left" width="200px"><?php echo _FORMAT; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($format); ?>"/></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _FINGERPRINT;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint);?>" /></td>
+                    <td align="left" width="200px"><?php echo _FINGERPRINT; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>" /></td>
                 </tr>
                 <tr>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _OFFSET;?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($offsetDoc);?>"/></td>
+                    <td align="left" width="200px"><?php echo _OFFSET; ?> :</td>
+                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($offsetDoc); ?>"/></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
-                    <td align="left" width="200px"><?php echo _ADR_PRIORITY;?> :</td>
+                    <td align="left" width="200px"><?php echo _ADR_PRIORITY; ?> :</td>
                     <td><input type="text" class="readonly" readonly="readonly" value="1" /></td>
                 </tr>
             </table>
             <?php
-        }
-        ?>
+    } ?>
         <br>
         
     </dd>

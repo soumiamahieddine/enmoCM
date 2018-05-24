@@ -117,7 +117,7 @@
     <servicepage>/administration/actions</servicepage>
     <servicetype>admin</servicetype>
     <category>production</category>
-    <style>fa fa-exchange</style>
+    <style>fa fa-exchange-alt</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
     <angular>true</angular>
@@ -242,7 +242,7 @@
     <servicetype>admin</servicetype>
     <category>supervision</category>
     <system_service>false</system_service>
-    <style>fa fa-hdd-o</style>
+    <style>fa fa-hdd</style>
     <enabled>true</enabled>
   </SERVICE>
   <SERVICE>
@@ -393,7 +393,7 @@
     <servicepage>/administration/priorities</servicepage>
     <servicetype>admin</servicetype>
     <category>production</category>
-    <style>fa fa-clock-o</style>
+    <style>fa fa-clock</style>
     <system_service>false</system_service>
     <enabled>true</enabled>
     <angular>true</angular>
@@ -428,7 +428,7 @@
     <servicetype>admin</servicetype>
     <category>supervision</category>
     <system_service>false</system_service>
-    <style>fa fa-refresh</style>
+    <style>fa fa-sync</style>
     <enabled>true</enabled>
     <angular>true</angular>
   </SERVICE>

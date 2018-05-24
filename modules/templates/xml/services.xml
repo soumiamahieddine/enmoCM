@@ -8,7 +8,7 @@
    <servicetype>admin</servicetype>
    <category>production</category>
    <system_service>false</system_service>
-   <style>fa fa-file-text-o</style>
+   <style>fa fa-file-alt</style>
    <enabled>true</enabled>
    <WHEREAMIUSED>
      <page>admin.php</page>

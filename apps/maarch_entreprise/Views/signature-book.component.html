@@ -5,10 +5,10 @@
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
             <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
-                <i class="fa fa-file-text-o fa-2x"></i>
+                <i class="fa fa-file-alt fa-2x"></i>
             </div>
             <div title="{{lang.notes}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-                <i class="fa fa-pencil fa-2x">
+                <i class="fa fa-pencil-alt fa-2x">
                     <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
                 </i>
             </div>
@@ -57,7 +57,7 @@
                         <i class="fa fa-book" title="{{lang.contactInfo}}"></i> {{res.sender}}
                     </div>
                     <div class="resListContentInfo">
-                        <i class="fa fa-calendar" title="{{lang.arrivalDate}}"></i> {{res.creation_date | date:'dd/MM/y'}}
+                        <i class="fa fa-calendar-alt" title="{{lang.arrivalDate}}"></i> {{res.creation_date | date:'dd/MM/y'}}
                     </div>
                     <div class="resListContentInfo" style="margin-top:-10px;">
                         <i class="fa fa-bell" title="{{lang.processLimitDate}}"></i> {{res.process_limit_date | date:'dd/MM/y'}}
@@ -181,7 +181,7 @@
                         <div style="padding-top: 25%;">L'édition de la pièce jointe a été interrompue.<br/><sub>Veuillez la ré-éditer.</sub></div>
                         <div>
                             <a title="Editer la pièce jointe" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                                <i class="fa fa-pencil-square-o fa-2x" style="cursor:pointer;"></i>
+                                <i class="fa fa-edit fa-2x" style="cursor:pointer;"></i>
                             </a>
                         </div>
                     </div>
@@ -211,10 +211,10 @@
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail && !showAttachmentPanel}">
                     <span class="fa-stack fa-lg">
-                        <i class="fa fa-file-o fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
+                        <i class="fa fa-file fa-stack-2x"></i><i style="font-weight:bold;letter-spacing: -1px;">{{attachment.icon}}</i>
                     </span>
                     <i *ngIf="attachment.sign && attachment.status == 'SIGN'" title="Le document a été signé" style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
-                    <i *ngIf="attachment.sign && attachment.status != 'SIGN' && attachment.status != 'TMP'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle-o"></i>
+                    <i *ngIf="attachment.sign && attachment.status != 'SIGN' && attachment.status != 'TMP'" title="Le document n'a pas encore été signé"  style="position: absolute;top: 12px;right: 6px;" class="fa fa-circle"></i>
                     <i *ngIf="attachment.sign && attachment.status == 'TMP'"  style="color:green;-ms-transform: rotate(-35deg);-webkit-transform: rotate(-35deg);transform: rotate(-35deg);position: absolute;top: 39px;right: 1px;" >{{lang.draft}}</i>
                     <br/><i style="position: absolute;margin-left: -9px;" >.{{attachment.format}}</i>
                 </div>
@@ -230,10 +230,10 @@
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
                     <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="{{lang.updateAtt}}" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
-                        <i class="fa fa-pencil-square-o fa-2x"></i>
+                        <i class="fa fa-edit fa-2x"></i>
                     </div>
                     <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="{{lang.deleteAtt}}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
-                        <i class="fa fa-trash fa-2x"></i>
+                        <i class="fa fa-trash-alt fa-2x"></i>
                     </div>
                 </div>
             </div>

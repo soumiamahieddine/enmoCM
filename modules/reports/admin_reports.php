@@ -32,41 +32,37 @@ $admin = new core_tools();
 $admin->test_admin('admin_reports', 'reports');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+$level = '';
+if (isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_reports&module=reports';
 $page_label = _ADMIN_REPORTS;
-$page_id = "admin_reports";
+$page_id = 'admin_reports';
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
 //Get all group for admin
-$_SESSION['m_admin']['load_groups']  = true;
+$_SESSION['m_admin']['load_groups'] = true;
 $_SESSION['m_admin']['all_groups'] = array();
 
 $db = new Database();
-$stmt = $db->query("select group_id, group_desc from ".$_SESSION['tablename']['usergroups']." where enabled ='Y' order by group_desc");
-while($res = $stmt->fetchObject())
-{
-    array_push($_SESSION['m_admin']['all_groups'], array('id'=> $res->group_id, 'label' => $res->group_desc));
+$stmt = $db->query('select group_id, group_desc from '.$_SESSION['tablename']['usergroups']." where enabled ='Y' order by group_desc");
+while ($res = $stmt->fetchObject()) {
+    array_push($_SESSION['m_admin']['all_groups'], array('id' => $res->group_id, 'label' => $res->group_desc));
 }
 
 //Get the groupe Id
-$groupeid = "";
+$groupeid = '';
 
-if(isset($_GET['id']) && !empty($_GET['id']))
-{
+if (isset($_GET['id']) && !empty($_GET['id'])) {
     $groupeid = $_GET['id'];
 }
 ?>
-<h1><i class="fa fa-area-chart fa-2x"></i> <?php echo _ADMIN_REPORTS;?></h1>
+<h1><i class="fa fa-chart-area fa-2x"></i> <?php echo _ADMIN_REPORTS; ?></h1>
 
             <script type='text/javascript'>
             // Two functions to access javascript object in Ajax frame
@@ -101,23 +97,23 @@ if(isset($_GET['id']) && !empty($_GET['id']))
                         xhr = new ActiveXObject("Microsoft.XMLHTTP");
                     }
                 }
-                else { // XMLHttpRequest non supporté par le navigateur
+                else { // XMLHttpRequest non supportï¿½ par le navigateur
                     alert("Votre navigateur ne supporte pas les objets XMLHTTPRequest...");
                     xhr = false;
                 }
                 return xhr;
             }
 
-            // Méthode qui sera appelée pour rafraichir dynamiquement la liste des etats
+            // Mï¿½thode qui sera appelï¿½e pour rafraichir dynamiquement la liste des etats
             function listReportsUpdate(){
                 var xhr = getXhr();
-                // On défini ce qu'on va faire quand on aura la réponse
+                // On dï¿½fini ce qu'on va faire quand on aura la rï¿½ponse
                 xhr.onreadystatechange = function(){
                     //On affiche l'image de chargement
                     //if(xhr.readyState == 2)
                     if(xhr.readyState == 1)
                         document.getElementById('loading').style.display = 'block';
-                    // On ne fait quelque chose que si on a tout reçu et que le serveur est ok
+                    // On ne fait quelque chose que si on a tout reï¿½u et que le serveur est ok
                     if(xhr.readyState == 4 && xhr.status == 200){
                         result = xhr.responseText;
                         // On se sert de innerHTML pour afficher le resultat dans la div
@@ -126,10 +122,10 @@ if(isset($_GET['id']) && !empty($_GET['id']))
                         evalMyScripts('listReports');
                     }
                 }
-                xhr.open("POST", "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=list_reports';?>", true);
+                xhr.open("POST", "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=list_reports'; ?>", true);
                 xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
                 sendParam = '';
-                // ici, on recupère les arguments à poster
+                // ici, on recupï¿½re les arguments ï¿½ poster
                 if(document.getElementById('group_id')){
                     selEnt = document.getElementById('group_id');
                     sendParam = sendParam + "group="+selEnt.options[selEnt.selectedIndex].value;
@@ -146,23 +142,19 @@ if(isset($_GET['id']) && !empty($_GET['id']))
         <div class="block">
         <h2>
         <form name="choose_a_group" id="choose_a_group" method="post">
-            <label><?php echo ucwords( _GROUPS);?> :</label>
+            <label><?php echo ucwords(_GROUPS); ?> :</label>
             <select name="group_id" id="group_id" onchange="listReportsUpdate();" class="listext_big">
-            <option value=""><?php echo _CHOOSE_GROUP;?></option>
+            <option value=""><?php echo _CHOOSE_GROUP; ?></option>
             <?php
 
-            for($k=0;$k<count($_SESSION['m_admin']['all_groups']);$k++)
-            {
-                if($_SESSION['m_admin']['all_groups'][$k]['id'] == $_SESSION['m_admin']['group'])
-                {
+            for ($k = 0; $k < count($_SESSION['m_admin']['all_groups']); ++$k) {
+                if ($_SESSION['m_admin']['all_groups'][$k]['id'] == $_SESSION['m_admin']['group']) {
                     ?>
-                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']);?>" selected="selected"><?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['label']);?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']); ?>" selected="selected"><?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['label']); ?></option>
                     <?php
-                }
-                else
-                {
+                } else {
                     ?>
-                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']);?>"><?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['label']);?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']); ?>"><?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['label']); ?></option>
                     <?php
                 }
             }

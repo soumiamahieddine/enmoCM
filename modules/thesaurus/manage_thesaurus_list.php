@@ -54,7 +54,7 @@ if ($mode == 'list') {
         false,
         _ALL_THESAURUS,
         _THESAURUS,
-        'bookmark-o',
+        'bookmark',
         true,
         true,
         false,
@@ -77,7 +77,7 @@ if ($mode == 'list') {
     };
 </script>';
 } elseif ($mode == 'up' || $mode == 'add') {
-    //var_dump($_SESSION['m_admin']['thesaurus'])?><h1><i class="fa fa-bookmark-o fa-2x"> </i>
+    //var_dump($_SESSION['m_admin']['thesaurus'])?><h1><i class="fa fa-bookmark fa-2x"> </i>
         <?php
         if ($mode == 'up') {
             echo _MODIFY_THESAURUS;

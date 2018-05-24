@@ -19,7 +19,7 @@
                     </li>
                     <li style="cursor: pointer">
                         <a data-toggle="modal" data-target="#manageSign">
-                            <i class="fa fa-vcard-o"></i> {{lang.manageSignatures}} </a>
+                            <i class="fa fa-address-card"></i> {{lang.manageSignatures}} </a>
                     </li>
                     <li style="cursor: pointer" (click)="displayAbsenceButton=false">
                         <a data-toggle="modal" data-target="#manageAbs" id="redirectBasketCard">
@@ -131,7 +131,7 @@
                     <div class="col-sm-12">
                         <div class="input-group">
                             <span class="input-group-addon">
-                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
                             </span>
                             <input type="email" class="form-control" id="mail" name="mail" title="{{lang.email}}" placeholder="{{lang.email}}" [(ngModel)]="user.mail"
                                 pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)">
@@ -252,7 +252,7 @@
                         <span class="pull-right">
                             <span class="label label-primary" title="{{basket.userIdRedirection}}">{{basket.userToDisplay}}</span>
                             <a (click)="delBasketRedirection(basket)" style="cursor: pointer" title="Supprimer la redirection">
-                                <i class="fa fa-trash fa-lg" style="color:red;"></i>
+                                <i class="fa fa-trash-alt fa-lg" style="color:red;"></i>
                             </a>
                         </span>
                     </li>
@@ -310,12 +310,12 @@
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
                                     <button type="button" class="form-control btn btn-sm btn-success" (click)="updateEmailSignature()" [disabled]="!emailSignatureForm.form.valid"
                                         title="{{lang.update}}">
-                                        <i class="fa fa-pencil"></i>
+                                        <i class="fa fa-pencil-alt"></i>
                                     </button>
                                 </div>
                                 <div class="col-md-1" *ngIf="mailSignatureModel.selected > 0">
                                     <button type="button" class="form-control btn btn-sm btn-danger" (click)="deleteEmailSignature()" title="{{lang.delete}}">
-                                        <i class="fa fa-trash"></i>
+                                        <i class="fa fa-trash-alt"></i>
                                     </button>
                                 </div>
                             </div>
@@ -368,7 +368,7 @@
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                                 <a (click)="deleteSignature(signature.id)" class="btn btn-danger" role="button" title="{{lang.delete}}">
-                                                    <i class="fa fa-trash"></i>
+                                                    <i class="fa fa-trash-alt"></i>
                                                 </a>
                                             </div>
                                             <div *ngIf="selectedSignature == i">

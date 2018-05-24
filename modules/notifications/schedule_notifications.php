@@ -60,7 +60,7 @@ require_once 'modules/notifications/class/class_schedule_notifications.php';
 
 ?>
 <h1>
-	<i class='fa fa-clock-o fa-2x'></i>
+	<i class='fa fa-clock fa-2x'></i>
 	<?php echo _SCHEDULE_NOTIFICATIONS; ?>
 </h1>
 
@@ -190,7 +190,7 @@ $flag_notif = false;
 						</select></td>\
 					<td width=\"20px\" align=\"center\">\
 						<input type='hidden' id='state-"+linecount+"' name='data["+linecount+"][state]' value='new' />\
-						<i class='fa fa-remove fa-1x' onclick='del("+linecount+");' onmouseover=\"this.style.cursor='pointer'\" ></i>\
+						<i class='fa fa-times fa-1x' onclick='del("+linecount+");' onmouseover=\"this.style.cursor='pointer'\" ></i>\
 					</td>\
 				</tr>";
 		linecount++;
@@ -357,7 +357,7 @@ $flag_notif = false;
 					</td>
 					<td width="20px" align="center">
 						<input type='hidden' id='state-<?php functions::xecho($id); ?>' name='data[<?php functions::xecho($id); ?>][state]' value='normal' />
-						<i class='fa fa-remove fa-2x' onclick='del(<?php functions::xecho($id); ?>);' onmouseover="this.style.cursor='pointer'"></i>
+						<i class='fa fa-times fa-2x' onclick='del(<?php functions::xecho($id); ?>);' onmouseover="this.style.cursor='pointer'"></i>
 					</td>
 				</tr>
 		<?php
@@ -367,13 +367,13 @@ $flag_notif = false;
 		<span <?php if ($flag_notif) {
                                  ?> style="display:none" <?php
                              } ?> id="no_notif">
-			<i><?php echo _NO_NOTIF;?></i>
+			<i><?php echo _NO_NOTIF; ?></i>
 		</span><br/>
 		<i class='fa fa-plus-square fa-2x' onclick='add_cronLine();' onmouseover="this.style.cursor='pointer'"></i>
 		<br />
 		<br />
-		<input type='submit' value='<?php echo _VALIDATE;?>' name='save' class="button" />
-		<input type="button" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL;?>" name="cancel">
+		<input type='submit' value='<?php echo _VALIDATE; ?>' name='save' class="button" />
+		<input type="button" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL; ?>" name="cancel">
 	</form>
 </div>
 </div>

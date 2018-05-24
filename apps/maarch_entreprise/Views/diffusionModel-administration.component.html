@@ -12,7 +12,7 @@
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
         <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
         </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -92,7 +92,7 @@
                                                         <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                                     </p>
                                                     <button matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffListVisa(template,i)">
-                                                        <mat-icon class="fa fa-remove"></mat-icon>
+                                                        <mat-icon class="fa fa-times"></mat-icon>
                                                     </button>
                                                 </mat-list-item>
                                             </span>

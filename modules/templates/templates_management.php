@@ -21,7 +21,7 @@ if ($mode == 'list') {
         false,
         _ALL_TEMPLATES,
         _TEMPLATES,
-        'file-text-o',
+        'file-alt',
         true,
         true,
         false,
@@ -33,7 +33,7 @@ if ($mode == 'list') {
 } elseif ($mode == 'up' || $mode == 'add') {
     $height = '400';
     include 'modules/templates/load_editor.php'; ?>
-    <h1><i class="fa fa-file-text-o fa-2x"></i>
+    <h1><i class="fa fa-file-alt fa-2x"></i>
         <?php
         if ($mode == 'add') {
             echo _TEMPLATE_ADDITION;
@@ -211,7 +211,7 @@ if ($mode == 'list') {
                         <?php 
                         echo '<label for="template_style">'._TEMPLATE_STYLE.' : ';
             if ($mode == 'add') {
-                echo '<i id="template_style_icon" class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" onclick="$j(\'#templateEditTr\').hide();$j(\'#addTemplateFile\').click();$(\'template_style_icon\').setStyle({color: \'#135F7F\'});$(\'template_style_icon2\').setStyle({color: \'#666\'});"></i> <i id="template_style_icon2" class="fa fa-file-text-o fa-lg" title="'._GENERATED_FILE.'" onclick="$j(\'#templateEditTr\').show();$j(\'#template_style\').show();$j(\'#addTemplate\').hide();$(\'template_style_icon\').setStyle({color: \'#666\'});$(\'template_style_icon2\').setStyle({color: \'#135F7F\'});" style="color:#135F7F"></i>';
+                echo '<i id="template_style_icon" class="fa fa-paperclip fa-lg" title="'._LOADED_FILE.'" onclick="$j(\'#templateEditTr\').hide();$j(\'#addTemplateFile\').click();$(\'template_style_icon\').setStyle({color: \'#135F7F\'});$(\'template_style_icon2\').setStyle({color: \'#666\'});"></i> <i id="template_style_icon2" class="fa fa-file-alt fa-lg" title="'._GENERATED_FILE.'" onclick="$j(\'#templateEditTr\').show();$j(\'#template_style\').show();$j(\'#addTemplate\').hide();$(\'template_style_icon\').setStyle({color: \'#666\'});$(\'template_style_icon2\').setStyle({color: \'#135F7F\'});" style="color:#135F7F"></i>';
             }
             echo '</label>';
             if ($mode == 'up') {
@@ -273,7 +273,7 @@ if ($mode == 'list') {
                                 $strAction .= 'showAppletLauncher(this,\''.$objectId.'\',\''.$objectTable.'\',\''.$objectType.'\',\'template\', \'100px\', \'500px\');$(\'add\').value=\'Edition en cours ...\';editingDoc(\''.$_SESSION['user']['UserId'].'\');$(\'add\').disabled=\'disabled\';$(\'add\').style.opacity=\'0.5\';'; ?>
                                 <a href="#" onClick="<?php functions::xecho($strAction); ?>">
                                 
-                                    <i class="fa fa-pencil fa-2x"></i>
+                                    <i class="fa fa-pencil-alt fa-2x"></i>
                                 <?php echo _EDIT_TEMPLATE; ?>
                             </a>
                         </span>

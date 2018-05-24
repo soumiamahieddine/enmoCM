@@ -12,7 +12,7 @@
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
         <button mat-icon-button (click)="this.sidenav.toggle()" *ngIf="!creationMode">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
         </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -149,7 +149,7 @@
                     <mat-header-cell *matHeaderCellDef style="flex:1;"></mat-header-cell>
                     <mat-cell *matCellDef="let element" style="justify-content: flex-end;flex:1;">
                         <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();preDelete(element.position)">
-                            <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                            <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                         </button>
                     </mat-cell>
                 </ng-container>
