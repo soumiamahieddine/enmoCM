@@ -1,14 +1,13 @@
 import { NgModule }                             from '@angular/core';
-import { CommonModule }                         from '@angular/common';
-import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
-import { HttpClientModule }                     from '@angular/common/http';
+
+import { SharedModule }                         from '../app-common.module';
 
 import { SortPipe }                             from '../../plugins/sorting.pipe';
 
-import { MenuComponent }                        from '../menu/menu.component';
-import { MenuNavComponent }                     from '../menu/menu-nav.component';
-import { MenuTopComponent }                     from '../menu/menu-top.component';
-import { AppMaterialModule }                    from '../app-material.module';
+//import { MenuComponent }                        from '../menu/menu.component';
+//import { MenuNavComponent }                     from '../menu/menu-nav.component';
+//import { MenuTopComponent }                     from '../menu/menu-top.component';
+
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }                      from './administration.component';
@@ -43,17 +42,13 @@ import { DocserversAdministrationComponent }            from './docservers-admin
 
 @NgModule({
     imports:      [
-        CommonModule, 
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        AppMaterialModule,
+        SharedModule,
         AdministrationRoutingModule
     ],
     declarations: [
-        MenuComponent,
-        MenuNavComponent,
-        MenuTopComponent,
+        //MenuComponent,
+        //MenuNavComponent,
+        //MenuTopComponent,
         AdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,
