@@ -135,6 +135,7 @@ export const LANG_FR = {
     "dlAttachment"                      : "Télécharger la pièce jointe",
     "doctype"                           : "Type de document",
     "doctypesAdmin"                     : "Typologie(s) documentaire(s)",
+    "docservers"                        : "Zones de stockage",
     "documents"                         : "document(s)",
     "documentTypeAdded"                 : "Type de document ajouté",
     "documentTypeDeleted"               : "Type de document supprimé",

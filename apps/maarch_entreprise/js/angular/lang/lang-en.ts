@@ -399,6 +399,7 @@ export const LANG_EN = {
     "firstLevelDoctype"                 : "Folder",
     "secondLevelDoctype"                : "Sub-folder",
     "doctype"                           : "Document types",
+    "docservers"                        : "Docservers",
     "folderTypeList"                    : "Folder types list",
     "firstLevelAttached"                : "Attach to folder",
     "secondLevelAttached"               : "Attach to subfolder",

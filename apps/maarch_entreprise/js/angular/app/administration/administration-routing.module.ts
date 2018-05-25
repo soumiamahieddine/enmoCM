@@ -29,6 +29,7 @@ import { UpdateStatusAdministrationComponent }          from './update-status-ad
 import { ContactsGroupsAdministrationComponent }        from './contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
+import { DocserversAdministrationComponent }            from './docservers-administration.component';
  
 @NgModule({
     imports: [
@@ -71,6 +72,7 @@ import { VersionsUpdateAdministrationComponent }        from './versions-update-
             { path: 'administration/contacts-groups/new', component: ContactsGroupAdministrationComponent },
             { path: 'administration/contacts-groups/:id', component: ContactsGroupAdministrationComponent },
             { path: 'administration/versions-update', component: VersionsUpdateAdministrationComponent },
+            { path: 'administration/docservers', component: DocserversAdministrationComponent },
         ]),
     ],
     exports: [
