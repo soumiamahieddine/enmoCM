@@ -23,7 +23,7 @@ before_script:
   #- apt-get install libreoffice -yqq > /dev/null
   - apt-get install xpdf-utils -yqq > /dev/null
   - apt-get install imagemagick -yqq > /dev/null
-  - apt-get install npm -yqq > /dev/null 
+  #- apt-get install npm -yqq > /dev/null 
   - apt-get install git -yqq > /dev/null
   - bash ci/docker_install_php.sh > /dev/null
   - bash ci/docker_install_database.sh > /dev/null
