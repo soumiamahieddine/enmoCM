@@ -20,7 +20,7 @@ before_script:
   - tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
   - mv wkhtmltox/bin/wkhtmlto* /usr/bin
   - chmod +x /usr/bin/wkhtmlto*
-  - apt-get install libreoffice -yqq > /dev/null
+  #- apt-get install libreoffice -yqq > /dev/null
   - apt-get install xpdf-utils -yqq > /dev/null
   - apt-get install imagemagick -yqq > /dev/null
   - apt-get install npm -yqq > /dev/null 
