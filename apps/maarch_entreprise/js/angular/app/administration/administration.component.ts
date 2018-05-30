@@ -60,6 +60,8 @@ export class AdministrationComponent implements OnInit {
                 this.classementServices = data.administrations.classement;
                 this.supervisionServices = data.administrations.supervision;
                 this.loading = false;
+            }, () => {
+                location.href = "index.php";
             });
     }
 
