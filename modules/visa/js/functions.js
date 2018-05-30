@@ -26,13 +26,13 @@ function addVisaUser(users) {
                 + signRequest      
             +'</span>'
             +'<span class="visaUserAction">'
-                +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+                +'<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
             +'</span>'
             +'<span class="visaUserConsigne">'
                 +'<input type="text" class="consigne" value=""/>'
             +'</span>'
             +'<span id="dropZone" title="Glisser/déposer pour modifier l\'ordre du circuit" style="cursor: pointer">'
-                +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+                +'<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true"></i>'
             +'</span>'
         +'</div>');
         
@@ -65,13 +65,13 @@ function addVisaUser(users) {
                 + signRequest 
                 +'</span>'
             +'<span class="visaUserAction">'
-                +'<i class="fa fa-trash" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
+                +'<i class="fa fa-trash-alt" aria-hidden="true" onclick="delVisaUser(this.parentElement.parentElement);"></i>'
             +'</span>'
             +'<span class="visaUserConsigne">'
                 +'<input type="text" class="consigne" value="' + users.process_comment + '"/>'
             +'</span>'
             +'<span id="dropZone" title="Glisser/déposer pour modifier l\'ordre du circuit" style="cursor: pointer">'
-                +'<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true"></i>'
+                +'<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true"></i>'
             +'</span>'
         +'</div>');
         

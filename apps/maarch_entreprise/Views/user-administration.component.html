@@ -12,7 +12,7 @@
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
         <button mat-icon-button (click)="this.sidenav.toggle()" *ngIf="!creationMode">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
         </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -194,7 +194,7 @@
                                 <div style="margin-top:40px">
                                     <ng-container *ngFor="let basket of user.baskets;let i = index">
                                         <mat-list-item *ngIf="basket.group_id && basket.userToDisplay != ''">
-                                            <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-60px;" class="fa fa-paper-plane-o">
+                                            <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-60px;" class="fa fa-paper-plane">
                                             </mat-icon>
                                             <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
                                                 <span class="label label-primary" style="font-weight:normal">{{basket.group_id}}</span>

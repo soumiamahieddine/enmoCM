@@ -318,7 +318,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</select>';
     $frm_str .= '</div>';
     $frm_str .= '<div style="display:table-cell;text-align:right;vertical-align:middle;width: 12%;">';
-    $frm_str .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a style="cursor:pointer;"><i class="fa fa-trash fa-2x" onclick="delIndexingModel();"></i></a>';
+    $frm_str .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a style="cursor:pointer;"><i class="fa fa-trash-alt fa-2x" onclick="delIndexingModel();"></i></a>';
     $frm_str .= '</div>';
     $frm_str .= '</div>';
     $frm_str .= '<script>$j("#indexing_models_select").chosen({width: "100%", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});</script>';
@@ -328,7 +328,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
         .'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
         .'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frm_str .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;'
+    $frm_str .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;'
         ._GENERAL_INFO;
     $frm_str .= '</h4>';
     $frm_str .= '<div id="general_infos_div"  style="display:inline">';
@@ -631,7 +631,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $pathScriptTab = $_SESSION['config']['businessappurl']
         .'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frm_str .= ' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" >'
-            .'<i class="fa fa-pencil" title="'._CREATE_CONTACT.'"></i></a>';
+            .'<i class="fa fa-pen-square" title="'._CREATE_CONTACT.'"></i></a>';
     } else {
         $frm_str .= ' <a href="#" id="create_contact"/></a>';
     }
@@ -703,7 +703,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             .'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frm_str .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
             .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
-            .'style="display:inline;" ><i class="fa fa-pencil" title="'._CREATE_CONTACT.'"></i></a>';
+            .'style="display:inline;" ><i class="fa fa-pen-square" title="'._CREATE_CONTACT.'"></i></a>';
     }
     $frm_str .= '</label></td>';
     $contact_mode = 'view';
@@ -985,7 +985,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
         .'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
         .'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frm_str .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'
+    $frm_str .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>&nbsp;'
         ._OPT_INDEXES;
     $frm_str .= '</h4>';
     $frm_str .= '<div id="complementary_fields"  style="display:none">';
@@ -1111,7 +1111,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$res_id.'&collId='.$coll_id;
         $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._DOC_HISTORY.'\',\''.$pathScriptTab.'\',\'history\');return false;" '
             .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="history_tab"  class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
+        $frm_str .= '<span id="history_tab"  class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>';
         $frm_str .= '&nbsp;<i class="fa fa-history fa-2x" title="'._DOC_HISTORY.'"></i><sup><span style="display:none;"></span></sup>';
         $frm_str .= '</span>';
         $frm_str .= '</td>';
@@ -1127,8 +1127,8 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
         $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._NOTES.'\',\''.$pathScriptTab.'\',\'notes\');return false;" '
             .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="notes_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>'
-        .'&nbsp;<i id="notes_tab_img" class="fa fa-pencil fa-2x" title="'._NOTES.'"></i><span id="notes_tab_badge"></span>';
+        $frm_str .= '<span id="notes_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>'
+        .'&nbsp;<i id="notes_tab_img" class="fa fa-pen-square fa-2x" title="'._NOTES.'"></i><span id="notes_tab_badge"></span>';
         $frm_str .= '</span>';
 
         //LOAD TOOLBAR BADGE
@@ -1146,7 +1146,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
         $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_PJ).'\',\''.$pathScriptTab.'\',\'attachments\');return false;" '
             .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="attachments_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>&nbsp;'
+        $frm_str .= '<span id="attachments_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
             .'<i id="attachments_tab_img" class="fa fa-paperclip fa-2x" title="'._PJ.'"></i><span id="attachments_tab_badge"></span>';
         $frm_str .= '</span>';
         $frm_str .= '</td>';
@@ -1164,7 +1164,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
                 .'index.php?display=true&page=show_diffListHistory_tab&module=entities&resId='.$res_id.'&collId='.$coll_id;
 
         $frm_str .= '<span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._DIFF_LIST_HISTORY.'\',\''.$pathScriptTab.'\',\'difflistHistory\');return false;">';
-        $frm_str .= '<span id="difflistHistory_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>';
+        $frm_str .= '<span id="difflistHistory_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>';
         $frm_str .= '<b>&nbsp;<i class="fa fa-share-alt fa-2x" title="'._DIFF_LIST_HISTORY.'"></i><sup><span style="display:none;"></span></sup></b>';
         $frm_str .= '</span>';
         $frm_str .= '</td>';
@@ -1178,7 +1178,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= '<span id="to_link" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''._LINK_TAB.'\',\''.$pathScriptTab.'\',\'links\');return false;" '
         .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="links_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>&nbsp;'
+    $frm_str .= '<span id="links_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
         .'<i id="links_tab_img" class="fa fa-link fa-2x" title="'._LINK_TAB.'"></i><span id="links_tab_badge"></span>';
     $frm_str .= '</span>';
 
@@ -1196,7 +1196,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
         $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_CASE).'\',\''.$pathScriptTab.'\',\'cases\');return false;" '
             .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="cases_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span><b>&nbsp;'
+        $frm_str .= '<span id="cases_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
             .'<i id="cases_tab_img" class="fa fa-suitcase fa-2x" title="'._CASE.'"></i><span id="cases_tab_badge"></span>';
         $frm_str .= '</span>';
         $frm_str .= '</td>';

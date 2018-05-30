@@ -91,7 +91,7 @@ class core_tools extends functions
     {
         require_once 'core/class/class_request.php';
         // Browses enabled modules
-        for ($i = 0; $i < count($modules); ++$i ) {
+        for ($i = 0; $i < count($modules); ++$i) {
             if (file_exists(
                 $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
                 .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR
@@ -229,7 +229,7 @@ class core_tools extends functions
      */
     public function load_var_session($modules, $userData)
     {
-        for ($i = 0; $i < count($modules); ++$i ) {
+        for ($i = 0; $i < count($modules); ++$i) {
             if (file_exists(
                 $_SESSION['config']['corepath'].'custom'
                     .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
@@ -369,10 +369,10 @@ class core_tools extends functions
                     $libmenu = constant($libmenu);
                 }
                 $_SESSION['menu'][$k]['libconst'] = $libmenu;
-                if($_SESSION['menu'][$k]['angular'] == 'true'){
+                if ($_SESSION['menu'][$k]['angular'] == 'true') {
                     $_SESSION['menu'][$k]['url'] = (string) $MENU2->url;
                 } else {
-                    $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'] .(string) $MENU2->url;
+                    $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU2->url;
                 }
                 if (trim((string) $MENU2->target) != '') {
                     $tmp = preg_replace(
@@ -392,7 +392,7 @@ class core_tools extends functions
             ++$k;
         }
         // Browses the enabled modules array
-        for ($i = 0; $i < count($modules); ++$i ) {
+        for ($i = 0; $i < count($modules); ++$i) {
             if (file_exists(
                 $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
                 .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR
@@ -438,12 +438,12 @@ class core_tools extends functions
                             $libmenu = constant($libmenu);
                         }
                         $_SESSION['menu'][$k]['libconst'] = $libmenu;
-                        if($_SESSION['menu'][$k]['angular'] == 'true'){
+                        if ($_SESSION['menu'][$k]['angular'] == 'true') {
                             $_SESSION['menu'][$k]['url'] = (string) $MENU->url;
                         } else {
-                            $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'] .(string) $MENU->url;
+                            $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU->url;
                         }
-                        
+
                         if (trim((string) $MENU->target) != '') {
                             $tmp = preg_replace(
                                 '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -500,7 +500,7 @@ class core_tools extends functions
                     } else {
                         $tmp .= '&reinit=true';
                     }
-                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes ?>
+                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes?>
                     <li onmouseover="this.className='on';" onmouseout="this.className='';">
                     <a href="#" onclick="window.open('<?php echo $tmp; ?>', '<?php
                         if (isset($menu[$i]['target']) && $menu[$i]['target'] != '') {
@@ -567,12 +567,12 @@ class core_tools extends functions
                 }
                 $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
 
-                if($_SESSION['quicklaunch'][$k]['angular'] == 'true'){
+                if ($_SESSION['quicklaunch'][$k]['angular'] == 'true') {
                     $_SESSION['quicklaunch'][$k]['url'] = (string) $MENU2->url;
                 } else {
                     $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU2->url;
                 }
-                
+
                 if (trim((string) $MENU2->target) != '') {
                     $tmp = preg_replace(
                         '/\/core\/$/', '/', $_SESSION['urltocore']
@@ -591,7 +591,7 @@ class core_tools extends functions
             ++$k;
         }
         // Browses the enabled modules array
-        for ($i = 0; $i < count($modules); ++$i ) {
+        for ($i = 0; $i < count($modules); ++$i) {
             if (file_exists(
                 $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
                 .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR
@@ -637,7 +637,7 @@ class core_tools extends functions
                             $libmenu = constant($libmenu);
                         }
                         $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
-                        if($_SESSION['quicklaunch'][$k]['angular'] == 'true'){
+                        if ($_SESSION['quicklaunch'][$k]['angular'] == 'true') {
                             $_SESSION['quicklaunch'][$k]['url'] = (string) $MENU->url;
                         } else {
                             $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU->url;
@@ -691,7 +691,7 @@ class core_tools extends functions
                     } else {
                         $tmp .= '&reinit=true';
                     }
-                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes ?>
+                    $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes?>
                     <a href="#" style="display: inline-block;width: 45%;float:left;" onclick="window.open('<?php
                             echo $tmp; ?>', '<?php
                             if (
@@ -728,7 +728,7 @@ class core_tools extends functions
         echo '<div style="clear:both;"></div>';
         // quicklaunch items always displayed
         echo '<div style="width: 85%;margin: auto;">';
-        
+
         echo '<a style="display: inline-block;width: 45%;float: left;cursor: pointer" onClick="triggerAngular(\'#/profile\')">';
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
@@ -880,7 +880,7 @@ class core_tools extends functions
     public function load_modules_services($modules)
     {
         // Browses the enabled modules array
-        for ($i = 0; $i < count($modules); ++$i ) {
+        for ($i = 0; $i < count($modules); ++$i) {
             // Reads the module config.xml file
             if (file_exists(
                 $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
@@ -1018,13 +1018,13 @@ class core_tools extends functions
     {
         $executedServices = array();
         if (!empty($id_service) && !empty($id_module)) {
-            for ($i = 0; $i < count($modules_services[$id_module]); ++$i ) {
+            for ($i = 0; $i < count($modules_services[$id_module]); ++$i) {
                 if ($modules_services[$id_module][$i]['id'] == $id_service
                     && isset($modules_services[$id_module][$i]['whereamiused'])
                 ) {
                     for ($k = 0; $k < count(
                         $modules_services[$id_module][$i]['whereamiused']
-                    ); ++$k 
+                    ); ++$k
                     ) {
                         $name = $id = $width = $height = $frameborder = $scrolling = $style = '';
                         if ($modules_services[$id_module][$i]['whereamiused'][$k]['page'] == $whereami) {
@@ -1173,7 +1173,7 @@ class core_tools extends functions
                 foreach (array_keys($modules_services) as $value) {
                     if (isset($modules_services[$value])) {
                         for ($iService = 0; $iService < count($modules_services[$value]);
-                            ++$iService 
+                            ++$iService
                         ) {
                             if (isset($modules_services[$value][$iService])
                                 && isset($modules_services[$value][$iService]['whereamiused'])
@@ -1181,7 +1181,7 @@ class core_tools extends functions
                             ) {
                                 for ($k = 0; $k < count(
                                     $modules_services[$value][$iService]['whereamiused']
-                                ); ++$k 
+                                ); ++$k
                                 ) {
                                     if (isset(
                                         $modules_services[$value][$iService]['whereamiused'][$k]['page']
@@ -1396,9 +1396,9 @@ class core_tools extends functions
     public function execute_app_services($appServices, $whereami, $servicenature = 'all')
     {
         $executedServices = array();
-        for ($i = 0; $i < count($appServices); ++$i ) {
+        for ($i = 0; $i < count($appServices); ++$i) {
             if (isset($appServices[$i]['whereamiused'])) {
-                for ($k = 0; $k < count($appServices[$i]['whereamiused']); ++$k ) {
+                for ($k = 0; $k < count($appServices[$i]['whereamiused']); ++$k) {
                     if ($appServices[$i]['whereamiused'][$k]['page'] == $whereami) {
                         if ($appServices[$i]['whereamiused'][$k]['nature'] == 'frame'
                             && $_SESSION['user']['services'][$appServices[$i]['id']]
@@ -1542,8 +1542,8 @@ class core_tools extends functions
     private function load_css()
     {
         ?>
-        <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" media="screen" />
-        <link rel="stylesheet" href="css/font-awesome/css/font-maarch.css" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css" media="screen" />
+        <link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />
         <link rel="stylesheet" type="text/css" href="merged_css.php" media="screen" />
         <?php
     }
@@ -1761,8 +1761,8 @@ class core_tools extends functions
                     require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
                     $found = true;
                     break;
-                } else  {
-                    require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+                } else {
+                    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php';
                     $app = new business_app_tools();
                     $path = $app->insert_app_page($this->f_page);
                     if (
@@ -1834,48 +1834,48 @@ class core_tools extends functions
             $tmpTab = explode('&', $target);
             if (count($tmpTab) == 1) {
                 $page = str_replace('page=', '', $tmpTab[0]);
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
+                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
             } elseif (count($tmpTab) == 2) {
                 $tabPage = array();
                 $tabModuleOrAdmin = array();
                 $tabPage = explode('=', $tmpTab[0]);
                 $tabModuleOrAdmin = explode('=', $tmpTab[1]);
-                if ($tabModuleOrAdmin[0] == 'module' ) {
-                    require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                if ($tabModuleOrAdmin[0] == 'module') {
+                     require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
                 } else {
                     //admin case
                     if ($tabPage[1] == 'users' || $tabPage[1] == 'groups' || $tabPage[1] == 'admin_archi' || $tabPage[1] == 'history' || $tabPage[1] == 'history_batch'
                        || $tabPage[1] == 'status' || $tabPage[1] == 'action' || $tabPage[1] == 'xml_param_services' || $tabPage[1] == 'modify_user'
                        ) {
-                        require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
-                    }  else {
-                        require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+                         require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                    } else {
+                         require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
                     }
                 }
-            }  else {
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+            } else {
+                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
             }
         } elseif (trim($_SESSION['config']['defaultPage']) != '') {
             $tmpTab = array();
             $tmpTab = explode('&', $_SESSION['config']['defaultPage']);
             if (count($tmpTab) == 1) {
                 $page = str_replace('page=', '', $tmpTab[0]);
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
+                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
             } elseif (count($tmpTab) == 2) {
                 $tabPage = array();
                 $tabModuleOrAdmin = array();
                 $tabPage = explode('=', $tmpTab[0]);
                 $tabModuleOrAdmin = explode('=', $tmpTab[1]);
-                if ($tabModuleOrAdmin[0] == 'module' ) {
-                    require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
-                }  else {
-                    require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                if ($tabModuleOrAdmin[0] == 'module') {
+                     require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                } else {
+                     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
                 }
-            }  else {
-                require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+            } else {
+                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
             }
-        }  else {
-            require('apps'.DIRECTORY_SEPARATOR.'welcome.php');
+        } else {
+             require('apps'.DIRECTORY_SEPARATOR.'welcome.php');
         }
     }
 
@@ -2197,9 +2197,8 @@ class core_tools extends functions
     }
 
     public function is_action_defined($action_id)
-    
     {
-        require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_db.php');
+        require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_db.php';
         if (empty($action_id)) {
             return false;
         }
@@ -2302,7 +2301,7 @@ class core_tools extends functions
                 $this->loadSmartphoneCss();
             }
         if ($load_js) {
-            //$this->load_js(); ?>
+            //$this->load_js();?>
                 <script type="application/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/maarch_functions.js"></script>
                 <script type="application/x-javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/iui/iui.js"></script>
                 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/iscroll.js?v3.7.1"></script>
@@ -2329,7 +2328,7 @@ class core_tools extends functions
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
             .'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
-            .'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
+            .'css/font-awesome-maarch/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
 

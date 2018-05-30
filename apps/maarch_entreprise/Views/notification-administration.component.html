@@ -71,14 +71,14 @@
                                     <mat-optgroup label="{{lang.triggerSystem}} :">
                                         <ng-container *ngFor="let event of notification.data.event">
                                             <mat-option *ngIf="!isNumber(event.id)" [value]="event.id">
-                                                <mat-icon class="fa fa-gear" color="primary" style="height:auto;"></mat-icon> {{event.label_action}}
+                                                <mat-icon class="fa fa-cog" color="primary" style="height:auto;"></mat-icon> {{event.label_action}}
                                             </mat-option>
                                         </ng-container>
                                     </mat-optgroup>
                                     <mat-optgroup label="{{lang.triggerAction}} :">
                                         <ng-container *ngFor="let event of notification.data.event">
                                             <mat-option *ngIf="isNumber(event.id)" [value]="event.id">
-                                                <mat-icon class="fa fa-exchange" color="primary" style="height:auto;"></mat-icon> {{event.label_action}}
+                                                <mat-icon class="fa fa-exchange-alt" color="primary" style="height:auto;"></mat-icon> {{event.label_action}}
                                             </mat-option>
                                         </ng-container>
                                     </mat-optgroup>

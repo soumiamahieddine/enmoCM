@@ -1,16 +1,16 @@
 <?php
 
 /**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
-*
-*/
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
 
 /**
-* @brief   GroupBasket Model Abstract
-* @author  dev@maarch.org
-*/
+ * @brief   GroupBasket Model Abstract
+ * @author  dev@maarch.org
+ */
 
 namespace Basket\models;
 
@@ -56,6 +56,7 @@ abstract class GroupBasketModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['basketId', 'groupId']);
         ValidatorModel::stringType($aArgs, ['basketId', 'groupId']);
+        ValidatorModel::boolType($aArgs, ['preferences']);
 
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
 
@@ -79,11 +80,14 @@ abstract class GroupBasketModelAbstract
             'where' => ['basket_id = ?', 'group_id = ?'],
             'data'  => [$aArgs['basketId'], $aArgs['groupId']]
         ]);
-        DatabaseModel::delete([
-            'table' => 'users_baskets_preferences',
-            'where' => ['basket_id = ?', 'group_serial_id = ?'],
-            'data'  => [$aArgs['basketId'], $group['id']]
-        ]);
+
+        if (!empty($aArgs['preferences'])) {
+            DatabaseModel::delete([
+                'table' => 'users_baskets_preferences',
+                'where' => ['basket_id = ?', 'group_serial_id = ?'],
+                'data'  => [$aArgs['basketId'], $group['id']]
+            ]);
+        }
 
         return true;
     }

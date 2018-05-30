@@ -1,20 +1,19 @@
 <?php
-/* 
+/*
  * Copyright Maarch since 2008 under licence GPLv3.
  * See LICENCE.txt file at the root folder for more details.
  * This file is part of Maarch software.
- * 
+ *
  */
 
-/* 
+/*
  * @brief avis_controler_Abstract
  * @author dev@maarch.org
  * @ingroup avis
- * 
+ *
  */
 abstract class avis_controler_Abstract
 {
-
     public function getAvis($resId)
     {
         //define avis limit date
@@ -29,28 +28,26 @@ abstract class avis_controler_Abstract
         return $avis;
     }
 
-    #####################################
-    ## send avis
-    #####################################
+    //####################################
+    //# send avis
+    //####################################
 
     public function processAvis($resId, $recommendation_limit_date = '')
     {
         //define avis limit date
         $db = new Database();
 
-        if ($recommendation_limit_date <> '') {
-
-            $query = "UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?";
+        if ($recommendation_limit_date != '') {
+            $query = 'UPDATE mlb_coll_ext SET recommendation_limit_date = ? where res_id = ?';
             $stmt = $db->query($query, array($recommendation_limit_date, $resId));
         }
 
-        $query = "UPDATE res_letterbox SET modification_date = " . $db->current_datetime() . " where res_id = ?";
+        $query = 'UPDATE res_letterbox SET modification_date = '.$db->current_datetime().' where res_id = ?';
         $stmt = $db->query($query, array($resId));
     }
 
-    public function getList($res_id, $coll_id, $bool_modif = false, $typeList, $isAvisStep = false, $fromDetail = "")
+    public function getList($res_id, $coll_id, $bool_modif = false, $typeList, $isAvisStep = false, $fromDetail = '')
     {
-
         $circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 
         $str .= '<div class="error" id="divErrorAvis" onclick="this.hide();"></div>';
@@ -58,20 +55,21 @@ abstract class avis_controler_Abstract
 
         //AVIS USER LIST
         if ($bool_modif == true) {
-            $str .= '<select data-placeholder="' . _ADD_AVIS_ROLE . '" id="avisUserList" onchange="addAvisUser();">';
+            $str .= '<select data-placeholder="'._ADD_AVIS_ROLE.'" id="avisUserList" onchange="addAvisUser();">';
             $str .= '<option value="" ></option>';
 
             $tab_userentities = $this->getEntityAvis();
             $tab_users = $this->getUsersAvis();
             //Order by parent entity
             foreach ($tab_userentities as $key => $value) {
-                $str .= '<optgroup label="' . $tab_userentities[$key]['entity_id'] . '">';
+                $str .= '<optgroup label="'.$tab_userentities[$key]['entity_id'].'">';
                 foreach ($tab_users as $user) {
                     if ($tab_userentities[$key]['entity_id'] == $user['entity_id']) {
-                        $selected = " ";
-                        if ($user['id'] == $step['user_id'])
-                            $selected = " selected";
-                        $str .= '<option value="' . $user['id'] . '" ' . $selected . '>' . $user['lastname'] . ' ' . $user['firstname'] . '</option>';
+                        $selected = ' ';
+                        if ($user['id'] == $step['user_id']) {
+                            $selected = ' selected';
+                        }
+                        $str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].' '.$user['firstname'].'</option>';
                     }
                 }
                 $str .= '</optgroup>';
@@ -81,15 +79,14 @@ abstract class avis_controler_Abstract
             $str .= '$j("#avisUserList").chosen({width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
 
-            include_once "modules/entities/class/class_manage_listdiff.php";
+            include_once 'modules/entities/class/class_manage_listdiff.php';
             $diff_list = new diffusion_list();
             $listModels = $diff_list->select_listmodels($typeList);
 
             $str .= ' <select data-placeholder="'._ADD_AVIS_MODEL.'" name="modelList" id="modelList" onchange="loadAvisModelUsers();">';
             $str .= '<option value=""></option>';
             foreach ($listModels as $lm) {
-
-                $str .= '<option value="' . $lm['object_id'] . '">' . $lm['title'] . '</option>';
+                $str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
             }
             $str .= '</select>';
 
@@ -105,9 +102,9 @@ abstract class avis_controler_Abstract
         $lastUserAvis = true;
 
         if (count($circuit['avis']['users']) == 0) {
-            $str .= '<div id="emptyAvis"><strong><em>' . _EMPTY_AVIS_WORKFLOW . '</em></strong></div>';
+            $str .= '<div id="emptyAvis"><strong><em>'._EMPTY_AVIS_WORKFLOW.'</em></strong></div>';
         } else {
-            $str .= '<div id="emptyAvis" style="display:none;"><strong><em>' . _EMPTY_AVIS_WORKFLOW . '</em></strong></div>';
+            $str .= '<div id="emptyAvis" style="display:none;"><strong><em>'._EMPTY_AVIS_WORKFLOW.'</em></strong></div>';
             if (count($circuit['avis']['users']) > 0) {
                 foreach ($circuit['avis']['users'] as $it => $info_userAvis) {
                     if (empty($info_userAvis['process_date'])) {
@@ -117,7 +114,7 @@ abstract class avis_controler_Abstract
                             $disabled = '';
                             $link_vis = 'arrow-right ';
                             $del_vis = '<div class="delete_avis"></div>';
-                            if ($info_userAvis['user_id'] <> $_SESSION['user']['UserId']) {
+                            if ($info_userAvis['user_id'] != $_SESSION['user']['UserId']) {
                                 //$info_vised = '<p style="color:red;">Vous donnez votre avis à la place de ' . $info_userAvis['firstname'] . ' ' . $info_userAvis['lastname'] . '!</p>';
                                 $dropZone = '';
                             } else {
@@ -125,11 +122,11 @@ abstract class avis_controler_Abstract
                                 $dropZone = '';
                             }
                         } else {
-                            $dropZone = '<i class="fa fa-exchange fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
+                            $dropZone = '<i class="fa fa-exchange-alt fa-2x fa-rotate-90" aria-hidden="true" title="'._DRAG_N_DROP_CHANGE_ORDER.'" style="cursor: pointer"></i>';
                             $vised = '';
                             if ($bool_modif == true) {
                                 $modif = 'true';
-                                $del_vis = '<i class="fa fa-trash" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);" title="' . _DELETE . '"></i>';
+                                $del_vis = '<i class="fa fa-trash-alt" aria-hidden="true" onclick="delAvisUser(this.parentElement.parentElement);" title="'._DELETE.'"></i>';
                                 $disabled = '';
                             } else {
                                 $dropZone = '';
@@ -138,12 +135,9 @@ abstract class avis_controler_Abstract
                                 $disabled = ' disabled="disabled"';
                             }
 
-
                             $info_vised = '';
                             $link_vis = 'hourglass-half';
                         }
-
-
 
                         $lastUserAvis = false;
                     } else {
@@ -152,30 +146,30 @@ abstract class avis_controler_Abstract
                         $vised = ' vised';
                         $link_vis = 'check';
                         $disabled = ' disabled="disabled"';
-                        $info_vised = '<br/><sub>avis donné le : ' . functions::format_date_db($info_userAvis['process_date'], '', '', true) . '</sub>';
+                        $info_vised = '<br/><sub>avis donné le : '.functions::format_date_db($info_userAvis['process_date'], '', '', true).'</sub>';
                         $del_vis = '';
                     }
                     //AVIS USER LINE CIRCUIT
-                    $str .= '<div class="droptarget' . $vised . '" id="avis_' . $i . '" draggable="' . $modif . '">';
+                    $str .= '<div class="droptarget'.$vised.'" id="avis_'.$i.'" draggable="'.$modif.'">';
                     $str .= '<span class="avisUserStatus">';
-                    $str .= '<i class="fa fa-' . $link_vis . '" aria-hidden="true"></i>';
+                    $str .= '<i class="fa fa-'.$link_vis.'" aria-hidden="true"></i>';
                     $str .= '</span>';
                     $str .= '<span class="avisUserInfo">';
                     $str .= '<sup class="avisUserPos nbResZero">'.$i.'</sup>&nbsp;&nbsp;';
-                    $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> ' . $info_userAvis['lastname'] . ' ' . $info_userAvis['firstname'] . ' <sup class="nbRes">' . $info_userAvis['entity_id'] . '</sup>' . $info_vised;
+                    $str .= '<i class="fa fa-user fa-2x" aria-hidden="true"></i> '.$info_userAvis['lastname'].' '.$info_userAvis['firstname'].' <sup class="nbRes">'.$info_userAvis['entity_id'].'</sup>'.$info_vised;
                     $str .= '</span>';
                     $str .= '<span class="avisUserAction">';
                     $str .= $del_vis;
                     $str .= '</span>';
                     $str .= '<span class="avisUserConsigne">';
-                    $str .= '<input class="userId" type="hidden" value="' . $info_userAvis['user_id'] . '"/><input class="avisDate" type="hidden" value="' . $info_userAvis['process_date'] . '"/><input' . $disabled . ' class="consigne" type="text" value="' . $info_userAvis['process_comment'] . '"/>';
+                    $str .= '<input class="userId" type="hidden" value="'.$info_userAvis['user_id'].'"/><input class="avisDate" type="hidden" value="'.$info_userAvis['process_date'].'"/><input'.$disabled.' class="consigne" type="text" value="'.$info_userAvis['process_comment'].'"/>';
                     $str .= '</span>';
                     $str .= '<span id="dropZone">';
                     $str .= $dropZone;
                     $str .= '</span>';
                     $str .= '</div>';
 
-                    $i++;
+                    ++$i;
                 }
             }
         }
@@ -184,31 +178,34 @@ abstract class avis_controler_Abstract
 
         if ($bool_modif == true) {
             //SAVE AVIS CIRCUIT
-            $str .= '<input type="button" name="send" id="send" value="' . _SAVE_CHANGES . '" class="button" ';
-            $str .= 'onclick="updateAvisWorkflow(' . $res_id . ');" /> ';
+            $str .= '<input type="button" name="send" id="send" value="'._SAVE_CHANGES.'" class="button" ';
+            $str .= 'onclick="updateAvisWorkflow('.$res_id.');" /> ';
 
             //SAVE AS MODEL
             $str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'block\';" />';
             $str .= '<div id="modalSaveAvisModel" >';
-            $str .= '<h3>' . _SAVE_POSITION . ' ' . _AVIS_WORKFLOW . '</h3><br/>';
-            $str .= '<label for="titleModel">' . _TITLE . '</label> ';
+            $str .= '<h3>'._SAVE_POSITION.' '._AVIS_WORKFLOW.'</h3><br/>';
+            $str .= '<label for="titleModel">'._TITLE.'</label> ';
             $str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
-            $str .= '<input type="button" name="saveModel" id="saveModel" value="' . _VALIDATE . '" class="button" onclick="saveAvisWorkflowAsModel();" /> ';
-            $str .= '<input type="button" name="cancelModel" id="cancelModel" value="' . _CANCEL . '" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'none\';" />';
+            $str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveAvisWorkflowAsModel();" /> ';
+            $str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveAvisModel\').style.display = \'none\';" />';
             $str .= '</div>';
         }
         $str .= '<script>initDragNDropAvis();</script>';
+
         return $str;
     }
 
     public function getWorkflow($res_id, $coll_id, $typeList)
     {
-        require_once('modules/entities/class/class_manage_listdiff.php');
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
         $circuitAvis = $listdiff->get_listinstance($res_id, false, $coll_id, $typeList);
-        if (isset($circuitAvis['copy']))
+        if (isset($circuitAvis['copy'])) {
             unset($circuitAvis['copy']);
+        }
+
         return $circuitAvis;
     }
 
@@ -223,7 +220,6 @@ abstract class avis_controler_Abstract
 
         $tab_userentities = array();
 
-
         while ($res = $stmt->fetchObject()) {
             array_push($tab_userentities, array('entity_id' => $res->entity_id));
         }
@@ -235,10 +231,9 @@ abstract class avis_controler_Abstract
     {
         $db = new Database();
 
-        $stmt = $db->query("SELECT DISTINCT(usergroup_content.group_id),group_desc from usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)", array('avis_documents'));
+        $stmt = $db->query('SELECT DISTINCT(usergroup_content.group_id),group_desc from usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)', array('avis_documents'));
 
         $tab_usergroup = array();
-
 
         while ($res = $stmt->fetchObject()) {
             array_push($tab_usergroup, array('group_id' => $res->group_id, 'group_desc' => $res->group_desc));
@@ -251,7 +246,7 @@ abstract class avis_controler_Abstract
     {
         $db = new Database();
 
-        if ($group_id <> null) {
+        if ($group_id != null) {
             $stmt = $db->query("SELECT users.user_id, users.firstname, users.lastname, usergroup_content.group_id,entities.entity_id from users, usergroup_content, users_entities,entities WHERE users_entities.user_id = users.user_id and users.status <> 'DEL' and 
                 users_entities.primary_entity = 'Y' and users.user_id = usergroup_content.user_id AND entities.entity_id = users_entities.entity_id AND group_id IN 
                 (SELECT group_id FROM usergroups_services WHERE service_id = ? AND group_id = ?)  order by users.lastname", array('avis_documents', $group_id));
@@ -264,18 +259,18 @@ abstract class avis_controler_Abstract
 
         $tab_users = array();
 
-
         while ($res = $stmt->fetchObject()) {
             array_push($tab_users, array('id' => $res->user_id, 'firstname' => $res->firstname, 'lastname' => $res->lastname, 'group_id' => $res->group_id, 'entity_id' => $res->entity_id));
         }
+
         return $tab_users;
     }
 
     public function myPosAvis($res_id, $coll_id, $listDiffType)
     {
         $db = new Database();
-        $where = "res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL";
-        $order = " ORDER by listinstance_id ASC";
+        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL';
+        $order = ' ORDER by listinstance_id ASC';
         $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
 
         $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
@@ -288,9 +283,8 @@ abstract class avis_controler_Abstract
 
     public function saveModelWorkflow($id_list, $workflow, $typeList, $title)
     {
-        require_once('modules/entities/class/class_manage_listdiff.php');
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $diff_list = new diffusion_list();
-
 
         $diff_list->save_listmodel(
                 $workflow, $typeList, $id_list, $title
@@ -299,7 +293,7 @@ abstract class avis_controler_Abstract
 
     public function saveWorkflow($res_id, $coll_id, $workflow, $typeList)
     {
-        require_once('modules/entities/class/class_manage_listdiff.php');
+        require_once 'modules/entities/class/class_manage_listdiff.php';
         $diff_list = new diffusion_list();
 
         $diff_list->save_listinstance(
@@ -315,8 +309,8 @@ abstract class avis_controler_Abstract
         } else {
             $order = 'ASC';
         }
-        $where = "res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL";
-        $order = "ORDER by listinstance_id " . $order;
+        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL';
+        $order = 'ORDER by listinstance_id '.$order;
         $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
 
         $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType));
@@ -331,8 +325,8 @@ abstract class avis_controler_Abstract
     {
         $stepDetails = array();
         $db = new Database();
-        $where = "res_id= ? and coll_id = ? and difflist_type = ? and sequence = ?";
-        $order = " ORDER by listinstance_id ASC";
+        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and sequence = ?';
+        $order = ' ORDER by listinstance_id ASC';
         $query = $db->limit_select(0, 1, '*', 'listinstance', $where, '', '', $order);
         $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $sequence));
         $res = $stmt->fetchObject();
@@ -359,12 +353,13 @@ abstract class avis_controler_Abstract
     {
         $db = new Database();
         $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ? and difflist_type = 'AVIS_CIRCUIT'", array($res_id, $coll_id, 'avis'));
+
         return $stmt->rowCount();
     }
 
-    #####################################
-    ## add note on a resource
-    #####################################
+    //####################################
+    //# add note on a resource
+    //####################################
 
     public function UpdateNoteAvis($resId, $collId, $noteContent)
     {
@@ -391,25 +386,25 @@ abstract class avis_controler_Abstract
             $view = $security->retrieve_view_from_coll_id($collId);
             $table = $security->retrieve_table_from_coll($collId);
             $db = new Database();
-            $query = "SELECT res_id FROM " . $view . " WHERE res_id = ?";
+            $query = 'SELECT res_id FROM '.$view.' WHERE res_id = ?';
             $stmt = $db->query($query, array($resId));
             if ($stmt->rowCount() == 0) {
                 $status = 'ko';
                 $error .= 'resId not exists';
             } else {
-                $query = "UPDATE " . NOTES_TABLE
-                        . " SET note_text = ?"
-                        . ", date_note = CURRENT_TIMESTAMP"
-                        . " WHERE identifier = ?"
-                        . " AND note_text LIKE '[POUR AVIS]%'"
-                        . " AND coll_id = ?";
+                $query = 'UPDATE '.NOTES_TABLE
+                        .' SET note_text = ?'
+                        .', date_note = CURRENT_TIMESTAMP'
+                        .' WHERE identifier = ?'
+                        ." AND note_text LIKE '[POUR AVIS]%'"
+                        .' AND coll_id = ?';
 
                 $stmt = $db->query($query, array($noteContent, $resId, $collId));
 
                 $hist = new history();
                 $hist->add(
                         $view, $resId, 'UP', 'resup', _AVIS_UPDATED
-                        . _ON_DOC_NUM . $resId . ' ' . _BY . ' ' . $_SESSION['user']['UserId'], $_SESSION['config']['databasetype'], 'notes'
+                        ._ON_DOC_NUM.$resId.' '._BY.' '.$_SESSION['user']['UserId'], $_SESSION['config']['databasetype'], 'notes'
                 );
             }
         }
@@ -418,7 +413,7 @@ abstract class avis_controler_Abstract
             'value' => $id,
             'error' => $error,
         );
+
         return $returnArray;
     }
-
 }

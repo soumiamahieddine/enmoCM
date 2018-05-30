@@ -8,7 +8,7 @@
 		<servicetype>admin</servicetype>
 		<category>classement</category>
 		<system_service>false</system_service>
-		<style>fa fa-bookmark-o</style>
+		<style>fa fa-bookmark</style>
 		<enabled>true</enabled>
 		<WHEREAMIUSED>
 			<page>admin.php</page>

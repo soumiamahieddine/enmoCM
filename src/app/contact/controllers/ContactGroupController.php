@@ -36,7 +36,7 @@ class ContactGroupController
 
         foreach ($contactsGroups as $key => $contactsGroup) {
             $contactsGroups[$key]['position'] = $key;
-            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['id']]);
+            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         }
 
         return $response->withJson(['contactsGroups' => $contactsGroups]);
@@ -110,6 +110,12 @@ class ContactGroupController
         $check = $check && Validator::boolType()->validate($data['public']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$data['label'], $user['id'], $aArgs['id']]]);
+        if (!empty($existingGroup)) {
+            return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
         $data['id'] = $aArgs['id'];

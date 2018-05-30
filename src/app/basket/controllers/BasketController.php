@@ -4,11 +4,11 @@
  * Copyright Maarch since 2008 under licence GPLv3.
  * See LICENCE.txt file at the root folder for more details.
  * This file is part of Maarch software.
- *
  */
 
 /**
  * @brief Basket Controller
+ *
  * @author dev@maarch.org
  */
 
@@ -26,7 +26,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserBasketPreferenceModel;
-use User\models\UserModel;
 
 class BasketController
 {
@@ -416,7 +415,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Group does not exist for this basket']);
         }
 
-        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => false]);
 
         GroupBasketModel::createGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'resultPage' => $data['result_page']]);
         foreach ($data['groupActions'] as $groupAction) {
@@ -478,7 +477,7 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
-        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        GroupBasketModel::deleteGroupBasket(['basketId' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'preferences' => true]);
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],
@@ -519,7 +518,7 @@ class BasketController
                 $aArgs['groupActions'][$key]['used_in_basketlist'] = empty($groupAction['used_in_basketlist']) ? 'N' : 'Y';
                 $aArgs['groupActions'][$key]['used_in_action_page'] = empty($groupAction['used_in_action_page']) ? 'N' : 'Y';
                 $aArgs['groupActions'][$key]['default_action_list'] = empty($groupAction['default_action_list']) ? 'N' : 'Y';
-                
+
                 if ($aArgs['groupActions'][$key]['checked'] && $aArgs['groupActions'][$key]['used_in_basketlist'] == 'N' && $aArgs['groupActions'][$key]['used_in_action_page'] == 'N') {
                     return ['errors' => 'Action must be present in action page or in action list'];
                 }

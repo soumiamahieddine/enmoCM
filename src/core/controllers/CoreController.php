@@ -64,6 +64,10 @@ class CoreController
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
 //            $administration                    = array_merge_recursive($administration, $administrationMenu);
         } else {
+            if (!ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
         }
 

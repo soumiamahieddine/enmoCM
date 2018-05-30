@@ -24,7 +24,6 @@
                 </a>
             </mat-nav-list>
             <mat-divider></mat-divider>
-            <menu-app></menu-app>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
@@ -69,7 +68,7 @@
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
                             <button mat-icon-button color="warn" [disabled]="element.is_system == 'Y'" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();deleteAction(element)">
-                                <mat-icon class="fa fa-trash fa-2x" aria-hidden="true"></mat-icon>
+                                <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                             </button>
                         </mat-cell>
                     </ng-container>

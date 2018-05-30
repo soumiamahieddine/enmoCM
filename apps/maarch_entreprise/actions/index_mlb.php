@@ -225,14 +225,14 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
     $frmStr .= '<div style="display:table;width:100%;">';
     $frmStr .= '<div style="display:table-cell;vertical-align:middle;">';
-    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel(\'' .$actionId. '\');"><option value="none"></option>';
+    $frmStr .= '<select id="indexing_models_select" data-placeholder="Utiliser un modèle d\'enregistrement..." onchange="loadIndexingModel(\''.$actionId.'\');"><option value="none"></option>';
     while ($resIndexingModels = $stmt->fetchObject()) {
         $frmStr .= '<option value="'.$resIndexingModels->id.'">'.$resIndexingModels->label.'</option>';
     }
     $frmStr .= '</select>';
     $frmStr .= '</div>';
     $frmStr .= '<div style="display:table-cell;text-align:right;vertical-align:middle;width: 12%;">';
-    $frmStr .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a id="delete_indexingmodels" style="cursor:pointer;"><i id="action2_indexingmodels" style="visibility:hidden;" class="fa fa-trash fa-2x" onclick="delIndexingModel();"></i></a>';
+    $frmStr .= '<a style="cursor:pointer;"><i id="action1_indexingmodels" class="fa fa-plus fa-2x" onclick="saveIndexingModel();"></i></a> <a id="delete_indexingmodels" style="cursor:pointer;"><i id="action2_indexingmodels" style="visibility:hidden;" class="fa fa-trash-alt fa-2x" onclick="delIndexingModel();"></i></a>';
     $frmStr .= '</div>';
     $frmStr .= '</div>';
     $frmStr .= '<script>$j("#indexing_models_select").chosen({width: "100%", disable_search_threshold: 10, search_contains: true, allow_single_deselect: true});</script>';
@@ -251,7 +251,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
         .'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
         .'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;"><i class="fa fa-minus-square-o"></i></span>&nbsp;'
+    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;"><i class="fa fa-minus-square"></i></span>&nbsp;'
         ._GENERAL_INFO;
     $frmStr .= '</h4>';
     $frmStr .= '<div id="general_infos_div"  style="display:inline">';
@@ -568,7 +568,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 .'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frmStr .= ' <a href="#" id="create_contact" title="'._CREATE_CONTACT
                 .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
-                .'style="display:inline;" ><i class="fa fa-pencil" title="'
+                .'style="display:inline;" ><i class="fa fa-pen-square" title="'
                 ._CREATE_CONTACT.'"></i></a>';
     } else {
         $frmStr .= ' <a href="#" id="create_contact"/></a>';
@@ -621,7 +621,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
                 .'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
         $frmStr .= ' <a href="#" id="create_multi_contact" title="'._CREATE_CONTACT
                 .'" onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\'\',\''.$pathScriptTab.'\',\'create_contact\');return false;" '
-                .'style="display:inline;" ><i class="fa fa-pencil" title="'
+                .'style="display:inline;" ><i class="fa fa-pen-square" title="'
                 ._CREATE_CONTACT.'"></i></a>';
     }
     $frmStr .= '</label></td>';
@@ -843,7 +843,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
         .'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
         .'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-    $frmStr .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-plus-square-o"></i></span>&nbsp;'
+    $frmStr .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span>&nbsp;'
         ._OPT_INDEXES;
     $frmStr .= '</h4>';
     $frmStr .= '<div id="complementary_fields"  style="display:none">';
@@ -1105,6 +1105,7 @@ function check_docserver($collId)
         ) {
             $_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
             unset($_SESSION['template_content_same']);
+
             return false;
         }
         if (

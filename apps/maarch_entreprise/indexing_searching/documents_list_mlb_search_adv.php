@@ -116,7 +116,7 @@ if ($mode == 'normal') {
     $url_search = $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';
 
     //error
-    $_SESSION['error_search'] = '<p style="text-align:center;color:red;"><i class="fa fa-remove fa-2x"></i><br />'
+    $_SESSION['error_search'] = '<p style="text-align:center;color:red;"><i class="fa fa-times fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 } elseif ($mode == 'popup' || $mode == 'frame') {
@@ -211,7 +211,7 @@ if ($mode == 'normal') {
         .'&page=search_adv&load&mode='.$mode.$urlParameters;
 
     //Displayed error text
-    $_SESSION['error_search'] = '<p style="color:red;text-align:center;"><i class="fa fa-remove fa-2x"></i><br />'
+    $_SESSION['error_search'] = '<p style="color:red;text-align:center;"><i class="fa fa-times fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 }
@@ -846,7 +846,7 @@ if ($nbTab > 0) {
     if ($exportTool) {
         $export = array(
                     'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-                    'icon' => 'file-excel-o',
+                    'icon' => 'file-excel',
                     'tooltip' => _EXPORT_LIST,
                     'disabledRules' => $nbTab.' == 0',
                     );

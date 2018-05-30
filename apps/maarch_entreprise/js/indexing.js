@@ -1342,14 +1342,21 @@ function changeCycle(path_manage_script)
 
 function getIframeContent(path_manage_script)
 {
-    var iframe = document.getElementById("file_iframe");
-    if ($j('#choose_file_div') && iframe.contentDocument) {
+    userAgent = navigator.userAgent;
+    var isIE = userAgent.indexOf("MSIE ") > -1 || userAgent.indexOf("Trident/") > -1 || userAgent.indexOf("Edge/") > -1;
+    if(isIE){
+        var iframe = document.frames['file_iframe'];
+        doc_content = iframe.document
+    } else {
+        var iframe = document.getElementById("file_iframe");
+        doc_content = iframe.contentDocument;
+    }
+
+    if ($j('#choose_file_div') && doc_content) {
         var choose_file_div = $('choose_file_div');
-        if (choose_file_div.style.display == 'none') {
-            
-            var iframeContent = iframe.contentDocument;
+        if (choose_file_div.style.display == 'none') {            
+            var iframeContent = doc_content;
             var templateContent2 = iframeContent.getElementById("template_content_ifr");
-            //window.alert(templateContent2);
             if (templateContent2) {
                 var templateContent = templateContent2.contentDocument;
                 if (templateContent) {

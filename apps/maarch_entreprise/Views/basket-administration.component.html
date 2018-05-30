@@ -39,7 +39,7 @@
                             <mat-form-field>
                                 <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="basket.id" (blur)="isAvailable()"
                                     maxlength="32" pattern="^[\w.-]*$" required>
-                                <!-- <i *ngIf="creationMode" class="fa fa-circle-o" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i> -->
+                                <!-- <i *ngIf="creationMode" class="fa fa-circle" aria-hidden="true" [ngStyle]="{'color': basketIdAvailable ? 'green' : 'red'}"></i> -->
                                 <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="basket.id"
                                     required disabled>
                             </mat-form-field>
@@ -91,7 +91,7 @@
                     <mat-tab *ngFor="let group of basketGroups;let i = index" label="{{group.group_desc}}">
                         <ng-template mat-tab-label>
                             <span>{{group.group_desc}}</span>
-                            <mat-icon color="warn" class="fa fa-close" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
+                            <mat-icon color="warn" class="fa fa-times" matTooltip="{{lang.unlinkGroup}}" (click)="unlinkGroup(i)"></mat-icon>
                         </ng-template>
                         <div class="col-md-6">
                             <mat-form-field style="margin-top:5px;">

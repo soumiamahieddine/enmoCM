@@ -16,6 +16,6 @@
 		<id>view_folder_tree</id>
 		<libconst>_VIEW_FOLDER_TREE</libconst>
 		<url>index.php?page=search_folder_tree&amp;module=folder</url>
-		<style>fa fa-code-fork</style>
+		<style>fa fa-code-branch</style>
 	</MENU>
 </root>

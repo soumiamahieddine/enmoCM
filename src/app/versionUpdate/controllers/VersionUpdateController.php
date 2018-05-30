@@ -29,7 +29,11 @@ class VersionUpdateController
         }
 
         $client = new Client('https://labs.maarch.org/api/v4/');
-        $tags = $client->api('tags')->all('12');
+        try {
+            $tags = $client->api('tags')->all('12');
+        } catch (\Exception $e) {
+            return $response->withJson(['errors' => $e->getMessage()]);
+        }
 
         $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'database_version']);
 

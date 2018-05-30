@@ -17,7 +17,7 @@ function lauch_thesaurus_list(e){
 			if(json){
 				content += '<ul id="thesaurus_list">';
 				for (var i = json.length - 1; i >= 0; i--) {
-					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
 				} 
 				content += '</ul>';
 			}else{
@@ -43,7 +43,7 @@ function lauch_thesaurus_list_admin(e){
 			if(json){
 				content += '<ul id="thesaurus_list">';
 				for (var i = json.length - 1; i >= 0; i--) {
-					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
 				} 
 				content += '</ul>';
 			}else{
@@ -69,7 +69,7 @@ function lauch_thesaurus_list_admin_assoc(e){
 			if(json){
 				content += '<ul id="thesaurus_list">';
 				for (var i = json.length - 1; i >= 0; i--) {
-					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
+					content += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'"><i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\'0\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i> <span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span><li>';
 				} 
 				content += '</ul>';
 			}else{
@@ -224,7 +224,7 @@ function add_thes_admin(thesaurus_id,thesaurus_name){
 function getChildThes(thesaurus_id,level) {
 	var indent ='';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
-	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square'){
 		for (var i = level; i >= 0; i--) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
@@ -243,19 +243,19 @@ function getChildThes(thesaurus_id,level) {
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
 			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
-			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square';
 					for (var i = json.length - 1; i >= 0; i--) {
 						if(json[i].total != 0){
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThes(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
 
 						}else{
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
 						}
 						//console.log(json[i].thesaurus_name);
 					} 
 				}else{
 					alert('Aucun éléments présent');
-					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 				}
 				
 			},
@@ -270,9 +270,9 @@ function getChildThes(thesaurus_id,level) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
 		level++;
-		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 		//console.log(document.getElementById('list_'+thesaurus_id));
-		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThes(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThes(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
 	}
 	
 
@@ -282,7 +282,7 @@ function getChildThes(thesaurus_id,level) {
 function getChildThesAdmin(thesaurus_id,level) {
 	var indent ='';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
-	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square'){
 		for (var i = level; i >= 0; i--) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
@@ -301,19 +301,19 @@ function getChildThesAdmin(thesaurus_id,level) {
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
 			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
-			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square';
 					for (var i = json.length - 1; i >= 0; i--) {
 						if(json[i].total != 0){
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdmin(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
 
 						}else{
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
 						}
 						//console.log(json[i].thesaurus_name);
 					} 
 				}else{
 					alert('Aucun éléments présent');
-					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 				}
 				
 			},
@@ -328,9 +328,9 @@ function getChildThesAdmin(thesaurus_id,level) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
 		level++;
-		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 		//console.log(document.getElementById('list_'+thesaurus_id));
-		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdmin(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdmin(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
 	}
 	
 
@@ -339,7 +339,7 @@ function getChildThesAdmin(thesaurus_id,level) {
 function getChildThesAdminAssoc(thesaurus_id,level) {
 	var indent ='';
 	var path_to_script = "<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=get_thesaurus_childs&module=thesaurus";
-	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square-o'){
+	if(document.getElementById('dev_list_'+thesaurus_id).className == 'fa fa-plus-square'){
 		for (var i = level; i >= 0; i--) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
@@ -358,19 +358,19 @@ function getChildThesAdminAssoc(thesaurus_id,level) {
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.fontWeight = "bold";
 			 		document.getElementById('list_'+thesaurus_id+'_span').style.color = "rgb(22, 173, 235)";
 			 		document.getElementById('dev_list_'+thesaurus_id).style.color = "rgb(22, 173, 235)";
-			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square-o';
+			 		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-minus-square';
 					for (var i = json.length - 1; i >= 0; i--) {
 						if(json[i].total != 0){
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i onclick="getChildThesAdminAssoc(\''+json[i].thesaurus_id+'\',\''+level+'\')" id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';
 
 						}else{
-							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
+							document.getElementById('list_'+thesaurus_id).innerHTML += '<li id="list_'+json[i].thesaurus_id+'" data-value="'+json[i].thesaurus_name+'">'+indent+'<i id="dev_list_'+json[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="opacity:0.5;font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+json[i].thesaurus_id+'\',\''+addslashes(json[i].thesaurus_name)+'\')" id="list_'+json[i].thesaurus_id+'_span">'+json[i].thesaurus_name+'</span></li>';	
 						}
 						//console.log(json[i].thesaurus_name);
 					} 
 				}else{
 					alert('Aucun éléments présent');
-					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+					document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 				}
 				
 			},
@@ -385,9 +385,9 @@ function getChildThesAdminAssoc(thesaurus_id,level) {
 			indent += '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
 		}
 		level++;
-		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square-o';
+		document.getElementById('dev_list_'+thesaurus_id).className = 'fa fa-plus-square';
 		//console.log(document.getElementById('list_'+thesaurus_id));
-		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdminAssoc(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
+		document.getElementById('list_'+thesaurus_id).innerHTML = indent+'<i onclick="getChildThesAdminAssoc(\''+thesaurus_id+'\',\''+level+'\')" id="dev_list_'+thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="font-weight:bold;cursor:pointer;width:20px;text-align:center;padding:5px;"></i><span onclick="add_thes_admin_assoc(\''+thesaurus_id+'\',\''+addslashes(document.getElementById('list_'+thesaurus_id).getAttribute("data-value"))+'\')" id="list_'+thesaurus_id+'_span">'+document.getElementById('list_'+thesaurus_id).getAttribute("data-value")+'</span>';
 	}
 	
 
@@ -420,12 +420,12 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 			if (json.info.thesaurus_parent_id) {
 				level = 2;
 				indent = '<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i>';
-				content += '<li title="terme parent" style="font-weight:bold;color:rgb(22, 173, 235)"><i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_parent_id+'</span><li>';
-				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)"><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
+				content += '<li title="terme parent" style="font-weight:bold;color:rgb(22, 173, 235)"><i class="fa fa-minus-square" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_parent_id+'</span><li>';
+				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)"><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i class="fa fa-minus-square" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
 			}else{
 				indent = '';
 				level = 1;
-				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)">'+indent+'<i class="fa fa-minus-square-o" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
+				content += '<li title="terme" style="font-weight:bold;color:rgb(22, 173, 235)">'+indent+'<i class="fa fa-minus-square" aria-hidden="true" style="font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span>'+json.info.thesaurus_name+'</span><li>';
 			}
 			if(json.info.thesaurus_description != null){
 				content += '<li style="font-style:italic;text-align:center;padding:10px;white-space:nowrap;" title="description">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i> <div style="border: 1px dashed;padding: 5px;white-space: normal;display: block;width:95%;">'+json.info.thesaurus_description+'</div><li>';
@@ -446,10 +446,10 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 				for (var i = json.info_children.length - 1; i >= 0; i--) {
 					if(json.info.thesaurus_name != json.info_children[i]){
 						if(json.info_children[i].total != 0){
-							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_children[i].thesaurus_id+'\',\''+level+'\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
+							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_children[i].thesaurus_id+'\',\''+level+'\')" class="fa fa-plus-square" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
 
 						}else{
-							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
+							content += '<li id="list_'+json.info_children[i].thesaurus_id+'" title="terme(s) spécique(s) à :  « '+json.info.thesaurus_name+' »" data-value="'+json.info_children[i].thesaurus_name+'">'+indent+'<i style="font-weight:bold;width:20px;text-align:center;display: inline-block;"></i><i id="dev_list_'+json.info_children[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_children[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_children[i].thesaurus_id+'\', \''+addslashes(json.info_children[i].thesaurus_name)+'\');">'+json.info_children[i].thesaurus_name+'</span><li>';
 						}
 					}
 				} 
@@ -463,10 +463,10 @@ function launch_thesaurus_tooltips(trigger, target,thesaurus_name) {
 					opt_array.push(json.info_annexe[i].thesaurus_id);
 					if(json.info.thesaurus_name != json.info_annexe[i]){
 						if(json.info_annexe[i].total != 0){
-							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_annexe[i].thesaurus_id+'\',\'1\')" class="fa fa-plus-square-o" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
+							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" onclick="getChildThes(\''+json.info_annexe[i].thesaurus_id+'\',\'1\')" class="fa fa-plus-square" aria-hidden="true" style="cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 
 						}else{
-							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" class="fa fa-plus-square-o" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
+							content_tab[json.info_annexe[i].thesaurus_id] = '<li id="list_'+json.info_annexe[i].thesaurus_id+'" title="autre(s) terme(s) lié(s) à :  « '+json.info.thesaurus_parent_id+' »" data-value="'+json.info_annexe[i].thesaurus_name+'" >'+indent+'<i id="dev_list_'+json.info_annexe[i].thesaurus_id+'" class="fa fa-plus-square" aria-hidden="true" style="opacity:0.5;cursor:pointer;font-weight:bold;width:20px;text-align:center;padding:5px;"></i> <span id="list_'+json.info_annexe[i].thesaurus_id+'_span" onclick="add_thes(\''+json.info_annexe[i].thesaurus_id+'\', \''+addslashes(json.info_annexe[i].thesaurus_name)+'\');">'+json.info_annexe[i].thesaurus_name+'</span><li>';
 						}
 					}
 				}

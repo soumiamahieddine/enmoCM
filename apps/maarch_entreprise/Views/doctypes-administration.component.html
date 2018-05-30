@@ -9,7 +9,7 @@
         <span style="flex: 1 1 auto;"></span>
         <menu-top></menu-top>
         <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-gear fa-2x"></mat-icon>
+            <mat-icon class="fa fa-cog fa-2x"></mat-icon>
         </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -21,7 +21,7 @@
                 <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item (click)="prepareDoctypeAdd('firstLevel')">
                     <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
-                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-folder"></i>
                       <i class="fa fa-plus" style="position:absolute"></i>
                     </mat-icon>
                     <p mat-line>
@@ -30,7 +30,7 @@
                 </a>
                 <a mat-list-item (click)="prepareDoctypeAdd('secondLevel')">
                     <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
-                      <i class="fa fa-folder-o"></i>
+                      <i class="fa fa-folder"></i>
                       <i class="fa fa-plus" style="position:absolute"></i>
                     </mat-icon>
                     <p mat-line>
@@ -39,7 +39,7 @@
                 </a>
                 <a mat-list-item (click)="prepareDoctypeAdd('doctype')">
                     <mat-icon color="primary" mat-list-icon class="fa-stack fa-fw" style="margin-left:-3px; font-size:18px">
-                      <i class="fa fa-file-o"></i>
+                      <i class="fa fa-file"></i>
                       <i class="fa fa-plus" style="position:absolute"></i>
                     </mat-icon>
                     <p mat-line>

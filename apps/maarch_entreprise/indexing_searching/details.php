@@ -181,7 +181,7 @@ if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') 
     );
 }
 
-$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false); 
+$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false);
 
 //UPDATE DATAS (IF FIELDS CAN BE MODIFIED) OF DOC
 if (isset($_POST['submit_index_doc'])) {
@@ -505,7 +505,7 @@ if ($stmt->rowCount() == 0) {
         $avis_frame = '';
         $pathScriptTab = $_SESSION['config']['businessappurl']
                 .'index.php?display=true&page=show_avis_tab&module=avis&resId='.$s_id.'&collId='.$coll_id.'&fromDetail=true';
-        $avis_frame .= '<div id="avis_tab" class="fa fa-commenting DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup>';
+        $avis_frame .= '<div id="avis_tab" class="fa fa-comment-alt DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._AVIS_WORKFLOW.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'avis_tab\',true);"> <sup id="avis_tab_badge"></sup>';
         $avis_frame .= '</div>';
         $avis_frame .= '<div id="page_circuit_avis" style="overflow-x: hidden;"></div>';
 
@@ -540,7 +540,7 @@ if ($stmt->rowCount() == 0) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
                     .'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
                     .$s_id.'&collId='.$coll_id.$extraParam;
-        $responses_frame .= '<div id="responses_tab" class="fa fa-mail-reply DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup>';
+        $responses_frame .= '<div id="responses_tab" class="fa fa-reply DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._DONE_ANSWERS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'responses_tab\',true);"> <sup id="responses_tab_badge"></sup>';
         $responses_frame .= '</div>';
 
         //LOAD TOOLBAR BADGE
@@ -575,7 +575,7 @@ if ($stmt->rowCount() == 0) {
         $pathScriptTab = $_SESSION['config']['businessappurl']
                 .'index.php?display=true&module=notes&page=notes&identifier='
                 .$s_id.'&origin=document&coll_id='.$coll_id.'&load&size=full';
-        $note .= '<div id="notes_tab" class="fa fa-pencil DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup>';
+        $note .= '<div id="notes_tab" class="fa fa-pencil-alt DetailsTabFunc" style="font-size:2em;padding-left: 15px;padding-right: 15px;" title="'._NOTES.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'notes_tab\',true);"> <sup id="notes_tab_badge"></sup>';
         $note .= '</div>';
 
         //LOAD TOOLBAR BADGE
@@ -657,7 +657,7 @@ if ($stmt->rowCount() == 0) {
 
         $pathScriptTab = $_SESSION['config']['businessappurl']
                 .'index.php?display=true&page=show_versions_tab&collId='.$coll_id.'&resId='.$s_id.'&objectTable='.$objectTable;
-        $version .= '<div  class="fa fa-code-fork DetailsTabFunc" id="DetailsCodeForkTab" style="font-size:2em;padding-left: 15px;';
+        $version .= '<div  class="fa fa-code-branch DetailsTabFunc" id="DetailsCodeForkTab" style="font-size:2em;padding-left: 15px;';
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
             $version .= 'padding-right: 0px;';
         } else {
@@ -760,7 +760,7 @@ if ($stmt->rowCount() == 0) {
 
                 echo $iconShow;
             } else {
-                echo "<i class='fa fa-question-circle-o fa-2x' title='{$iconLabel}'></i>";
+                echo "<i class='fa fa-question-circle fa-2x' title='{$iconLabel}'></i>";
             }
             echo '</th>';
             // END DATA ICON

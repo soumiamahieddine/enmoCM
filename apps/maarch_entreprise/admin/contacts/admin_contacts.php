@@ -19,89 +19,88 @@
 */
 
 /**
-* @brief   Architecture Administration summary Page
-*
-* Architecture Administration summary Page
-*
-* @file
-* @author Claire Figueras <dev@maarch.org>
-* @date $date$
-* @version $Revision$
-* @ingroup admin
-*/
-
+ * @brief   Architecture Administration summary Page
+ *
+ * Architecture Administration summary Page
+ *
+ * @file
+ *
+ * @author Claire Figueras <dev@maarch.org>
+ * @date $date$
+ *
+ * @version $Revision$
+ * @ingroup admin
+ */
 $admin = new core_tools();
 $admin->test_admin('admin_contacts', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+$level = '';
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_contacts&admin=contacts';
 $page_label = _ADMIN_CONTACTS;
-$page_id = "admin_contacts";
+$page_id = 'admin_contacts';
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><i class="fa fa-book fa-2x"></i> <?php echo _ADMIN_CONTACTS_DESC;?></h1>
+<h1><i class="fa fa-book fa-2x"></i> <?php echo _ADMIN_CONTACTS_DESC; ?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
-    <h2><?php echo _ADMIN_CONTACTS;?></h2>
-    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';">
+    <h2><?php echo _ADMIN_CONTACTS; ?></h2>
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=contact_types';">
         <div>
-            <i class="fa fa-share-alt fa-4x" title="<?php echo _MANAGE_CONTACT_TYPES_DESC;?>" ></i>
+            <i class="fa fa-share-alt fa-4x" title="<?php echo _MANAGE_CONTACT_TYPES_DESC; ?>" ></i>
         </div>
         <div>
-                <strong><?php echo _MANAGE_CONTACT_TYPES;?></strong>
+                <strong><?php echo _MANAGE_CONTACT_TYPES; ?></strong>
         </div>
     </div>
 
-    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=contacts_v2';">
         <div>
-            <i class="fa fa-address-book-o fa-4x" title="<?php echo _MANAGE_CONTACTS_DESC;?>" ></i>
+            <i class="fa fa-address-book fa-4x" title="<?php echo _MANAGE_CONTACTS_DESC; ?>" ></i>
         </div>
         <div>
-                <strong><?php echo _MANAGE_CONTACTS;?></strong>
+                <strong><?php echo _MANAGE_CONTACTS; ?></strong>
          </div>
     </div>
     
-    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_purposes';">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=contact_purposes';">
         <div>
-            <i class="fa fa-tags fa-4x" title="<?php echo _MANAGE_CONTACT_PURPOSES_DESC;?>" ></i>
+            <i class="fa fa-tags fa-4x" title="<?php echo _MANAGE_CONTACT_PURPOSES_DESC; ?>" ></i>
         </div>
         <div>
-                <strong><?php echo _MANAGE_CONTACT_PURPOSES;?></strong>
+                <strong><?php echo _MANAGE_CONTACT_PURPOSES; ?></strong>
          </div>
     </div>
 
-    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_addresses_list';">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=contact_addresses_list';">
         <div>
-            <i class="fa fa-home fa-4x" title="<?php echo _MANAGE_CONTACT_ADDRESSES_LIST_DESC;?>" ></i>
+            <i class="fa fa-home fa-4x" title="<?php echo _MANAGE_CONTACT_ADDRESSES_LIST_DESC; ?>" ></i>
         </div>
         <div>
-                <strong><?php echo _MANAGE_CONTACT_ADDRESSES_LIST;?></strong>
+                <strong><?php echo _MANAGE_CONTACT_ADDRESSES_LIST; ?></strong>
          </div>
     </div>
 
-    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=view_tree_contacts';">
         <div>
-            <i class="fa fa-code-fork fa-4x" title="<?php echo _VIEW_TREE_CONTACTS_DESC;?>" ></i>
+            <i class="fa fa-code-branch fa-4x" title="<?php echo _VIEW_TREE_CONTACTS_DESC; ?>" ></i>
         </div>
         <div>
-                <strong><?php echo _VIEW_TREE_CONTACTS;?></strong>
+                <strong><?php echo _VIEW_TREE_CONTACTS; ?></strong>
          </div>
     </div>
 
     <div class="admin_item" onclick="triggerAngular('#/administration/contacts-groups')">
         <div>
-            <i class="fa fa-users fa-4x" title="<?php echo _VIEW_CONTACTS_GROUPS_DESC;?>" ></i>
+            <i class="fa fa-users fa-4x" title="<?php echo _VIEW_CONTACTS_GROUPS_DESC; ?>" ></i>
         </div>
         <div>
                 <strong><?php echo _VIEW_CONTACTS_GROUPS;?></strong>

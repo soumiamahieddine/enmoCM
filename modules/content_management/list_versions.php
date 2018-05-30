@@ -6,8 +6,8 @@ require_once 'core/class/class_core_tools.php';
 require_once 'core/class/class_db.php';
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
-require_once 'apps/' . $_SESSION['config']['app_id']
-    . '/class/class_list_show.php';
+require_once 'apps/'.$_SESSION['config']['app_id']
+    .'/class/class_list_show.php';
 $core = new core_tools();
 $core->load_lang();
 $security = new security();
@@ -43,8 +43,8 @@ $body = '';
 $cutString = 100;
 $extendUrl = '&size=full';
 
-for ($indVersion=0;$indVersion<count($tabVersions);$indVersion++) {
-    for ($indVersionBis = 0;$indVersionBis < count($tabVersions[$indVersion]);$indVersionBis ++) {
+for ($indVersion = 0; $indVersion < count($tabVersions); ++$indVersion) {
+    for ($indVersionBis = 0; $indVersionBis < count($tabVersions[$indVersion]); ++$indVersionBis ) {
         foreach (array_keys($tabVersions[$indVersion][$indVersionBis]) as $value) {
             if ($tabVersions[$indVersion][$indVersionBis][$value] == 'res_id') {
                 $tabVersions[$indVersion][$indVersionBis]['res_id']
@@ -98,18 +98,18 @@ if ($tabVersions[0][0]['res_id'] == '') {
 }
 
 $createDiv = '<a href="#" onClick="window.open(\''
-    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-    . '&module=content_management&page=applet_popup_launcher&objectType=resource'
-    . '&objectId='
-    . $objectId
-    . '&objectTable='
-    . $objectTable
-    . '&resMaster='
-    . $_SESSION['doc_id']
-    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
-    . '<i class="fa fa-pencil fa-2x" title="' . _CREATE_NEW_VERSION . '"></i>'
-    . _CREATE_NEW_VERSION
-    . '</a>';
+    .$_SESSION['config']['businessappurl'].'index.php?display=true'
+    .'&module=content_management&page=applet_popup_launcher&objectType=resource'
+    .'&objectId='
+    .$objectId
+    .'&objectTable='
+    .$objectTable
+    .'&resMaster='
+    .$_SESSION['doc_id']
+    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
+    .'<i class="fa fa-pencil-alt fa-2x" title="'._CREATE_NEW_VERSION.'"></i>'
+    ._CREATE_NEW_VERSION
+    .'</a>';
 
 $title = '';
 $listVersions = new list_show();
@@ -122,8 +122,8 @@ $formatText = $listVersions->list_simple(
     'res_id',
     true,
     $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&amp;dir=indexing_searching&amp;'
-        . 'page=view_resource_controler&aVersion&resIdMaster=' . $_SESSION['doc_id'],
+        .'index.php?display=true&amp;dir=indexing_searching&amp;'
+        .'page=view_resource_controler&aVersion&resIdMaster='.$_SESSION['doc_id'],
     $css,
     '',
     '',
@@ -132,6 +132,6 @@ $formatText = $listVersions->list_simple(
     true
 );
 
-echo "{status : 0, list : '" . addslashes($formatText) . "', nb : '"
-    . count($tabVersions) . "', create : '" . addslashes($createDiv) . "'}";
+echo "{status : 0, list : '".addslashes($formatText)."', nb : '"
+    .count($tabVersions)."', create : '".addslashes($createDiv)."'}";
 exit();

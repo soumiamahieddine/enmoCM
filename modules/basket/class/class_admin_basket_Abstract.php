@@ -357,7 +357,7 @@ abstract class admin_basket_Abstract extends Database
                                     <i class="fa fa-search fa-2x" id="is_visible_only_on_search_icon" title="<?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH; ?>" style="<?php echo $css; ?>" onclick="$j('#is_visible_only_on_search').click();"></i>
                                      <?php if ($core_tools->is_module_loaded('folder')) {
                                             ?>
-                                    <i class="fa fa-folder-o fa-2x" id="is_folder_basket_icon" title="<?php echo _IS_FOLDER_BASKET; ?>" style="<?php echo $css2; ?>" onclick="$j('#is_folder_basket').click();"></i>
+                                    <i class="fa fa-folder fa-2x" id="is_folder_basket_icon" title="<?php echo _IS_FOLDER_BASKET; ?>" style="<?php echo $css2; ?>" onclick="$j('#is_folder_basket').click();"></i>
                                 <?php
                                         } ?>
                                 <?php if ($core_tools->is_module_loaded('notifications')) {
@@ -366,7 +366,7 @@ abstract class admin_basket_Abstract extends Database
                                             } else {
                                                 $css2 = 'color:rgb(102, 102, 102);cursor:pointer;';
                                             } ?>
-                                    <i class="fa fa-bell-o fa-2x" id="flag_notif_icon" title="<?php echo _ACTIVATE_NOTIFICATION; ?>" style="<?php echo $css2; ?>" onclick="$j('#flag_notif').click();"></i>
+                                    <i class="fa fa-bell fa-2x" id="flag_notif_icon" title="<?php echo _ACTIVATE_NOTIFICATION; ?>" style="<?php echo $css2; ?>" onclick="$j('#flag_notif').click();"></i>
                                 <?php
                                         } ?>
                                 </p>
@@ -672,7 +672,7 @@ abstract class admin_basket_Abstract extends Database
         } else {
             // Gets the basket collection
             $ind = -1;
-            for ($i = 0; $i < count($_SESSION['collections']); ++$i ) {
+            for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
                 if ($_SESSION['m_admin']['basket']['coll_id']
                     == $_SESSION['collections'][$i]['id']) {
                     $ind = $i;
@@ -841,7 +841,7 @@ abstract class admin_basket_Abstract extends Database
             && isset($_SESSION['m_admin']['basket']['groups'][$ind_group_session])) {
             for ($i = 0; $i < count(
                 $_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS']
-                ); ++$i ) {
+                ); ++$i) {
                 if (trim($id_action) == trim(
                     $_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS'][$i]['ID_ACTION'])) {
                     return true;
