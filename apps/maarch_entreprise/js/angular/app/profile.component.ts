@@ -108,7 +108,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                     });
             }
         } else if (event.index == 3) {
-            console.log('fuck');
             tinymce.remove('textarea');
             //LOAD EDITOR TINYMCE for MAIL SIGN
             tinymce.baseURL = "../../node_modules/tinymce";
