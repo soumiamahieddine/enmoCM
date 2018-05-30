@@ -1834,48 +1834,48 @@ class core_tools extends functions
             $tmpTab = explode('&', $target);
             if (count($tmpTab) == 1) {
                 $page = str_replace('page=', '', $tmpTab[0]);
-                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
+                require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php';
             } elseif (count($tmpTab) == 2) {
                 $tabPage = array();
                 $tabModuleOrAdmin = array();
                 $tabPage = explode('=', $tmpTab[0]);
                 $tabModuleOrAdmin = explode('=', $tmpTab[1]);
                 if ($tabModuleOrAdmin[0] == 'module') {
-                     require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                    require 'modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php';
                 } else {
                     //admin case
                     if ($tabPage[1] == 'users' || $tabPage[1] == 'groups' || $tabPage[1] == 'admin_archi' || $tabPage[1] == 'history' || $tabPage[1] == 'history_batch'
                        || $tabPage[1] == 'status' || $tabPage[1] == 'action' || $tabPage[1] == 'xml_param_services' || $tabPage[1] == 'modify_user'
                        ) {
-                         require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                        require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php';
                     } else {
-                         require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+                        require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php';
                     }
                 }
             } else {
-                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+                require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php';
             }
         } elseif (trim($_SESSION['config']['defaultPage']) != '') {
             $tmpTab = array();
             $tmpTab = explode('&', $_SESSION['config']['defaultPage']);
             if (count($tmpTab) == 1) {
                 $page = str_replace('page=', '', $tmpTab[0]);
-                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php');
+                require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.'.php';
             } elseif (count($tmpTab) == 2) {
                 $tabPage = array();
                 $tabModuleOrAdmin = array();
                 $tabPage = explode('=', $tmpTab[0]);
                 $tabModuleOrAdmin = explode('=', $tmpTab[1]);
                 if ($tabModuleOrAdmin[0] == 'module') {
-                     require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                    require 'modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php';
                 } else {
-                     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php');
+                    require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].'.php';
                 }
             } else {
-                 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php');
+                require 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'welcome.php';
             }
         } else {
-             require('apps'.DIRECTORY_SEPARATOR.'welcome.php');
+            require 'apps'.DIRECTORY_SEPARATOR.'welcome.php';
         }
     }
 
@@ -2326,7 +2326,7 @@ class core_tools extends functions
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
         <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
-            .'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
+            .'css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css'; ?>" media="screen" />
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
             .'css/font-awesome-maarch/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
