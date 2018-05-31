@@ -90,20 +90,31 @@ class DocserverModelAbstract
         return $aReturn;
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'size_limit_number', 'priority_number', 'adr_priority_number', 'is_readonly']);
+        ValidatorModel::stringType($aArgs, ['id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'is_readonly']);
+        ValidatorModel::intVal($aArgs, ['size_limit_number', 'priority_number', 'adr_priority_number']);
 
         DatabaseModel::insert([
             'table'         => 'docservers',
-            'columnsValues' => $aArgs
+            'columnsValues' => [
+                'docserver_id'          => $aArgs['id'],
+                'docserver_type_id'     => $aArgs['docserver_type_id'],
+                'device_label'          => $aArgs['device_label'],
+                'path_template'         => $aArgs['path_template'],
+                'coll_id'               => $aArgs['coll_id'],
+                'size_limit_number'     => $aArgs['size_limit_number'],
+                'priority_number'       => $aArgs['priority_number'],
+                'adr_priority_number'   => $aArgs['adr_priority_number'],
+                'is_readonly'           => $aArgs['is_readonly']
+            ]
         ]);
 
         return true;
     }
 
-    public static function update(array $aArgs = [])
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['docserver_id']);
         ValidatorModel::stringType($aArgs, ['docserver_id']);

@@ -16,7 +16,9 @@ namespace Docserver\controllers;
 
 use Docserver\models\DocserverTypeModel;
 use Group\models\ServiceModel;
+use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\ValidatorModel;
@@ -46,6 +48,46 @@ class DocserverController
         }
 
         return $response->withJson($docserver);
+    }
+
+    public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['docserver_type_id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['device_label']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['coll_id']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $existingDocserver = DocserverModel::getById(['id' => $data['id'], 'select' => ['1']]);
+        if (!empty($existingDocserver)) {
+            return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
+        }
+
+        $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
+
+        DocserverModel::create($data);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $data['id'],
+            'eventType' => 'ADD',
+            'info'      => _BASKET_CREATION . " : {$data['id']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverCreation',
+        ]);
+
+        return $response->withJson(['basket' => $data['id']]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
