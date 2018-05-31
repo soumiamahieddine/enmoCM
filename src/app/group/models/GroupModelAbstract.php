@@ -344,14 +344,13 @@ abstract class GroupModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'newGroupId']);
         ValidatorModel::stringType($aArgs, ['groupId', 'newGroupId']);
-
         DatabaseModel::update([
             'table'     => 'usergroup_content',
             'set'       => [
                 'group_id'  => $aArgs['newGroupId']
             ],
-            'where'     => ['group_id = ?'],
-            'data'      => [$aArgs['groupId']]
+            'where'     => ['group_id = ?','user_id NOT IN (?)'],
+            'data'      => [$aArgs['groupId'], $aArgs['ignoredUsers']]
         ]);
 
         return true;
