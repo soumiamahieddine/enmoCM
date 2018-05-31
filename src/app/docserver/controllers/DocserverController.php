@@ -58,7 +58,7 @@ class DocserverController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['id']) && preg_match("/^[\w-]*$/", $data['id']) && (strlen($data['id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['docserver_id']) && preg_match("/^[\w-]*$/", $data['docserver_id']) && (strlen($data['docserver_id']) < 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['docserver_type_id']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['device_label']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
@@ -70,7 +70,7 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingDocserver = DocserverModel::getById(['id' => $data['id'], 'select' => ['1']]);
+        $existingDocserver = DocserverModel::getById(['id' => $data['docserver_id'], 'select' => ['1']]);
         if (!empty($existingDocserver)) {
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
@@ -80,14 +80,52 @@ class DocserverController
         DocserverModel::create($data);
         HistoryController::add([
             'tableName' => 'docservers',
-            'recordId'  => $data['id'],
+            'recordId'  => $data['docserver_id'],
             'eventType' => 'ADD',
-            'info'      => _BASKET_CREATION . " : {$data['id']}",
+            'info'      => _DOCSERVER_ADDED . " : {$data['docserver_id']}",
             'moduleId'  => 'docserver',
             'eventId'   => 'docserverCreation',
         ]);
 
-        return $response->withJson(['basket' => $data['id']]);
+        return $response->withJson(['docserver' => $data['docserver_id']]);
+    }
+
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['device_label']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['1']]);
+        if (empty($docserver)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
+        }
+
+        $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
+        $data['docserver_id'] = $aArgs['id'];
+
+        DocserverModel::update($data);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _DOCSERVER_UPDATED . " : {$aArgs['id']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -97,12 +135,19 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-
         if(empty($docserver)){
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
-        DocserverModel::delete(['id' => $aArgs['id']]);
+        DocserverModel::delete(['docserver_id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _DOCSERVER_DELETED . " : {$aArgs['id']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverSuppression',
+        ]);
 
         return $response->withJson(['docservers' => DocserverModel::get()]);
     }

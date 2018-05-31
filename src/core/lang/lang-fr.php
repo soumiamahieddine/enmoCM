@@ -38,9 +38,9 @@ define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression de contacts dans le groupe')
 define('_CONTACTS_GROUP_LABEL_ALREADY_EXISTS', 'Un groupe avec ce libellé existe déjà');
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
-define('_DOCSERVER_ADDED', 'Docserver ajouté');
-define('_DOCSERVER_UPDATED', 'Docserver modifié');
-define('_DOCSERVER_DELETED', 'Docserver supprimé');
+define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
+define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
+define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');

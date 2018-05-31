@@ -103,7 +103,10 @@ $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . 
 
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
+$app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');
 $app->get('/docservers/{id}', \Docserver\controllers\DocserverController::class . ':getById');
+$app->put('/docservers/{id}', \Docserver\controllers\DocserverController::class . ':update');
+$app->delete('/docservers/{id}', \Docserver\controllers\DocserverController::class . ':delete');
 
 //DocserverTypes
 $app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
