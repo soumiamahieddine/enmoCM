@@ -23,6 +23,7 @@ export class DocserversAdministrationComponent implements OnInit {
     dataSource  : any;
 
     docservers    : any = {};
+    docserversFasthd : any = [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -53,11 +54,56 @@ export class DocserversAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/docservers')
             .subscribe((data: any) => {
                 this.docservers = data.docservers;
-                setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.docservers);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
+
+                this.docserversFasthd = [
+                    {
+                        actual_size_number: 44444444444,
+                        adr_priority_number: 2,
+                        coll_id: "letterbox_coll",
+                        creation_date: "2011-01-13 14:47:49.197164",
+                        device_label: "Fast internal disc bay for letterbox mode",
+                        docserver_id: "FASTHD_MAN",
+                        docserver_location_id: "NANTERRE",
+                        docserver_type_id: "DOC",
+                        enabled: "Y",
+                        is_readonly: "N",
+                        path_template: "/var/www/html/docservers/maarch_courrier_develop/manual/",
+                        priority_number: 10,
+                        size_limit_number: 50000000000
+                    },
+                    {
+                        actual_size_number: 2455890616,
+                        adr_priority_number: 2,
+                        coll_id: "letterbox_coll",
+                        creation_date: "2011-01-13 14:47:49.197164",
+                        device_label: "Fast internal disc bay for letterbox mode",
+                        docserver_id: "FASTHD_AI",
+                        docserver_location_id: "NANTERRE",
+                        docserver_type_id: "DOC",
+                        enabled: "Y",
+                        is_readonly: "Y",
+                        path_template: "/var/www/html/docservers/maarch_courrier_develop/ai/",
+                        priority_number: 10,
+                        size_limit_number: 50000000000
+                    }
+                ]
+                this.docserversFasthd.forEach((elem: any, index: number) => {
+                    var factor = null;
+
+                    elem.size_limit_number = elem.size_limit_number / 1000000000;
+                    factor = Math.pow(10, 2);
+                    elem.size_limit_number = Math.round(elem.size_limit_number * factor) / factor;
+
+                    elem.actual_size_number = elem.actual_size_number / 1000000000;
+                    factor = Math.pow(10, 2);
+                    elem.actual_size_number = Math.round(elem.actual_size_number * factor) / factor;
+
+                    //percent
+                    elem.percent_number = (elem.actual_size_number*100)/elem.size_limit_number;
+                });
+
+                console.log(this.docserversFasthd);
+                
                 this.loading = false;
 
             });
