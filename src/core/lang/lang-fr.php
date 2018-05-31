@@ -344,10 +344,25 @@ define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitemen
 define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Interdire la modification du destinataire dans la liste de diffusion');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
-define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
-define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
-define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
-define("_PERSONNAL_FILEPLAN", "Plan de classement personnel");
+define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
+define('_PUT_DOC_IN_FILEPLAN', 'Classer des documents');
+define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Classer des documents dans le plan de classement organisationnel');
+define('_PERSONNAL_FILEPLAN', 'Plan de classement personnel');
+define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
+define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Ouvre une modal permettant d\'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.');
+define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');
+define('_VALIDATE_RECOMMENDATION_DESC', 'Permet d\'ajouter dans la note de demande avis la personne qui a contrôlé la demande.');
+define('_SEND_TO_AVIS_WF', 'Envoyer une demande d\'avis (séquentiel)');
+define('_SEND_TO_AVIS_WF_DESC', 'Ouvre une modal permettant de configurer un circuit d\'avis pour le document.');
+define('_PROCEED_WORKFLOW_AVIS', 'Émettre un avis (séquentiel)');
+define('_PROCEED_WORKFLOW_AVIS_DESC', 'Met à jour la date d\'émission d\'avis du conseiller actuel du circuit d\'avis ("process_date" de la table listinstance).');
+define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Émettre un avis (parallèle)');
+define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Met à jour la date d\'émission d\'avis de l\'utilisateur présent en avis dans la liste de diffusion du document ("process_date" de la table listinstance).');
+define('_EXPORT_SEDA', 'Transferer vos courriers');
+define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
+define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
+define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
+define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');

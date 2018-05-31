@@ -64,7 +64,7 @@ class ActionController
 
             $obj['statuses'] = StatusModel::get();
             array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_', 'label_status'=> _UNCHANGED]);
-            $obj['action_pagesList'] = ActionModel::getAction_pages();
+            $obj['action_pagesList'] = ActionModel::getActionPages();
             array_unshift($obj['action_pagesList']['actionsPageList'], ['id' => '', 'label' => _NO_PAGE, 'name' => '', 'origin' => '']);
             $obj['keywordsList'] = ActionModel::getKeywords();
         }
@@ -211,7 +211,7 @@ class ActionController
 
         $obj['statuses'] = StatusModel::get();
         array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['action_pagesList'] = ActionModel::getAction_pages();
+        $obj['action_pagesList'] = ActionModel::getActionPages();
         array_unshift($obj['action_pagesList']['actionsPageList'], ['id'=>'','label'=> _NO_PAGE, 'name'=>'', 'origin'=>'']);
         $obj['keywordsList'] = ActionModel::getKeywords();
         

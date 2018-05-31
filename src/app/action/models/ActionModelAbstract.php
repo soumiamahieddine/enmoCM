@@ -147,36 +147,40 @@ abstract class ActionModelAbstract
         return true;
     }
 
-    public static function getAction_pages()
+    public static function getActionPages()
     {
-        $tabActions_pages              = [];
-        $tabActions_pages['modules'][] = 'Apps';
+        $actionsPages              = [];
+        $actionsPages['modules'][] = 'Apps';
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'core/xml/actions_pages.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->ACTIONPAGE as $actionPage) {
-                if (!defined((string) $actionPage->LABEL)) {
-                    $label = $actionPage->LABEL;
-                } else {
-                    $label = constant((string) $actionPage->LABEL);
+        $paths = ['core/xml/actions_pages.xml', 'modules/avis/xml/actions_pages.xml', 'modules/export_seda/xml/actions_pages.xml'];
+
+        foreach ($paths as $path) {
+            $loadedXml = CoreConfigModel::getXmlLoaded(['path' => $path]);
+            if ($loadedXml) {
+                foreach ($loadedXml->ACTIONPAGE as $actionPage) {
+                    if (!defined((string) $actionPage->LABEL)) {
+                        $label = $actionPage->LABEL;
+                    } else {
+                        $label = constant((string) $actionPage->LABEL);
+                    }
+                    if (!empty((string) $actionPage->MODULE)) {
+                        $origin = (string) $actionPage->MODULE;
+                    } else {
+                        $origin = 'apps';
+                    }
+                    if (!empty((string) $actionPage->DESC)) {
+                        $desc = constant((string) $actionPage->DESC);
+                    } else {
+                        $desc = 'No description';
+                    }
+                    $actionsPages['actionsPageList'][] = [
+                        'id'     => (string) $actionPage->ID,
+                        'label'  => $label,
+                        'name'   => (string) $actionPage->NAME,
+                        'desc'   => $desc,
+                        'origin' => ucfirst($origin)
+                    ];
                 }
-                if (!empty((string) $actionPage->MODULE)) {
-                    $origin = (string) $actionPage->MODULE;
-                } else {
-                    $origin = 'apps';
-                }
-                if (!empty((string) $actionPage->DESC)) {
-                    $desc = constant((string) $actionPage->DESC);
-                } else {
-                    $desc = 'no description';
-                }
-                $tabActions_pages['actionsPageList'][] = array(
-                    'id'     => (string) $actionPage->ID,
-                    'label'  => $label,
-                    'name'   => (string) $actionPage->NAME,
-                    'desc'   => $desc,
-                    'origin' => ucfirst($origin),
-                );
             }
         }
 
@@ -184,15 +188,15 @@ abstract class ActionModelAbstract
             array_map(
                 function ($element) {
                     return $element['label'];
-                }, $tabActions_pages['actionsPageList']
+                }, $actionsPages['actionsPageList']
             ),
-            SORT_ASC, $tabActions_pages['actionsPageList']
+            SORT_ASC, $actionsPages['actionsPageList']
         );
-        
-        $tabActions_pages['modules'] = array_unique($tabActions_pages['modules']);
-        sort($tabActions_pages['modules']);
 
-        return $tabActions_pages;
+        $actionsPages['modules'] = array_unique($actionsPages['modules']);
+        sort($actionsPages['modules']);
+
+        return $actionsPages;
     }
 
     public static function getKeywords()

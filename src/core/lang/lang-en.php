@@ -349,6 +349,21 @@ define("_EXPORT_SEDA_VIEW", "See message export");
 define("_PUT_DOC_IN_FILEPLAN", "Classify documents");
 define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classify documents in the organizational file plan");
 define("_PERSONNAL_FILEPLAN", "Personal file plan");
+define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
+define("_SEND_DOCS_TO_RECOMMENDATION_DESC", "Ouvre une modal permettant d'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.");
+define("_VALIDATE_RECOMMENDATION", 'Validate the recommendation request (parallel)');
+define("_VALIDATE_RECOMMENDATION_DESC", "Permet d'ajouter dans la note de demande avis la personne qui a contrôlé la demande.");
+define("_SEND_TO_AVIS_WF", 'Request for a recommendation (sequential)');
+define("_SEND_TO_AVIS_WF_DESC", "Ouvre une modal permettant de configurer un circuit d'avis pour le document.");
+define("_PROCEED_WORKFLOW_AVIS", 'Issue an opinion (sequential)');
+define("_PROCEED_WORKFLOW_AVIS_DESC", "Met à jour la date d'émission d'avis du conseiller actuel du circuit d'avis ('process_date' de la table listinstance).");
+define("_PROCEED_WORKFLOW_AVIS_SIMPLE", 'Issue an opinion (parallel)');
+define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du document ('process_date' de la table listinstance).");
+define('_EXPORT_SEDA', 'Transferer vos courriers');
+define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
+define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
+define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
+define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');
