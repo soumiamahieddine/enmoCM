@@ -20,7 +20,7 @@ class CoreConfigModel
 {
     public static function getCustomId()
     {
-        if (!file_exists('custom/custom.xml')) {
+        if (!file_exists('custom/custom.xml') || empty($_SERVER['SCRIPT_NAME']) || empty($_SERVER['SERVER_ADDR'])) {
             return '';
         }
 
