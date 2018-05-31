@@ -1,12 +1,15 @@
 <?php
-/**
-* Copyright Maarch since 2008 under licence GPLv3.
-* See LICENCE.txt file at the root folder for more details.
-* This file is part of Maarch software.
 
-* @brief   ActionModelAbstract
-* @author  dev <dev@maarch.org>
-* @ingroup core
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
+
+/**
+* @brief   Action Model Abstract
+* @author  dev@maarch.org
 */
 
 namespace Action\models;
@@ -15,7 +18,7 @@ use SrcCore\models\ValidatorModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 
-class ActionModelAbstract
+abstract class ActionModelAbstract
 {
     public static function get(array $aArgs = [])
     {
@@ -29,33 +32,29 @@ class ActionModelAbstract
         return $actions;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $aReturn = DatabaseModel::select(
-            [
+        $aReturn = DatabaseModel::select([
             'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'  => ['actions'],
             'where'  => ['id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
 
         if (empty($aReturn[0])) {
             return [];
         }
 
         $aReturn = $aReturn[0];
-        $aReturn['actionCategories'] = DatabaseModel::select(
-            [
+        $aReturn['actionCategories'] = DatabaseModel::select([
             'select' => ['category_id'],
             'table'  => ['actions_categories'],
             'where'  => ['action_id = ?'],
             'data'   => [$aArgs['id']]
-            ]
-        );
+        ]);
        
         return $aReturn;
     }
@@ -148,36 +147,40 @@ class ActionModelAbstract
         return true;
     }
 
-    public static function getAction_pages()
+    public static function getActionPages()
     {
-        $tabActions_pages              = [];
-        $tabActions_pages['modules'][] = 'Apps';
+        $actionsPages              = [];
+        $actionsPages['modules'][] = 'Apps';
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'core/xml/actions_pages.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->ACTIONPAGE as $actionPage) {
-                if (!defined((string) $actionPage->LABEL)) {
-                    $label = $actionPage->LABEL;
-                } else {
-                    $label = constant((string) $actionPage->LABEL);
+        $paths = ['core/xml/actions_pages.xml', 'modules/avis/xml/actions_pages.xml', 'modules/export_seda/xml/actions_pages.xml'];
+
+        foreach ($paths as $path) {
+            $loadedXml = CoreConfigModel::getXmlLoaded(['path' => $path]);
+            if ($loadedXml) {
+                foreach ($loadedXml->ACTIONPAGE as $actionPage) {
+                    if (!defined((string) $actionPage->LABEL)) {
+                        $label = $actionPage->LABEL;
+                    } else {
+                        $label = constant((string) $actionPage->LABEL);
+                    }
+                    if (!empty((string) $actionPage->MODULE)) {
+                        $origin = (string) $actionPage->MODULE;
+                    } else {
+                        $origin = 'apps';
+                    }
+                    if (!empty((string) $actionPage->DESC)) {
+                        $desc = constant((string) $actionPage->DESC);
+                    } else {
+                        $desc = 'No description';
+                    }
+                    $actionsPages['actionsPageList'][] = [
+                        'id'     => (string) $actionPage->ID,
+                        'label'  => $label,
+                        'name'   => (string) $actionPage->NAME,
+                        'desc'   => $desc,
+                        'origin' => ucfirst($origin)
+                    ];
                 }
-                if (!empty((string) $actionPage->MODULE)) {
-                    $origin = (string) $actionPage->MODULE;
-                } else {
-                    $origin =  'apps';
-                }
-                if (!empty((string) $actionPage->DESC)) {
-                    $desc = constant((string) $actionPage->DESC);
-                } else {
-                    $desc =  'no description';
-                }
-                $tabActions_pages['actionsPageList'][] = array(
-                    'id'     => (string) $actionPage->ID,
-                    'label'  => $label,
-                    'name'   => (string) $actionPage->NAME,
-                    'desc'   => $desc,
-                    'origin' => ucfirst($origin),
-                );
             }
         }
 
@@ -185,22 +188,22 @@ class ActionModelAbstract
             array_map(
                 function ($element) {
                     return $element['label'];
-                }, $tabActions_pages['actionsPageList']
+                }, $actionsPages['actionsPageList']
             ),
-            SORT_ASC, $tabActions_pages['actionsPageList']
+            SORT_ASC, $actionsPages['actionsPageList']
         );
-        
-        $tabActions_pages['modules'] = array_unique($tabActions_pages['modules']);
-        sort($tabActions_pages['modules']);
 
-        return $tabActions_pages;
+        $actionsPages['modules'] = array_unique($actionsPages['modules']);
+        sort($actionsPages['modules']);
+
+        return $actionsPages;
     }
 
     public static function getKeywords()
     {
         $tabKeyword   = [];
         $tabKeyword[] = ['value' => '', 'label' => _NO_KEYWORD];
-        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECT, 'desc' => _KEYWORD_REDIRECT_DESC];
+        $tabKeyword[] = ['value' => 'redirect', 'label' => _REDIRECTION, 'desc' => _KEYWORD_REDIRECT_DESC];
         $tabKeyword[] = ['value' => 'indexing', 'label' => _INDEXING, 'desc' => _KEYWORD_INDEXING_DESC];
 
         return $tabKeyword;
