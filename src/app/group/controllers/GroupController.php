@@ -177,8 +177,28 @@ class GroupController
         if (empty($newGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
+        $oldGroupUsers = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.user_id']]);
+        $newGroupUsers = GroupModel::getUsersByGroupId(['groupId' => $newGroup['group_id'], 'select' => ['users.user_id']]);
+        
+        //Mapped array to have only user_id
+        $oldGroupUsers = array_map(function ($entry) {
+            return $entry['user_id'];
+        }, $oldGroupUsers);
 
-        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id']]);
+        $newGroupUsers = array_map(function ($entry) {
+            return $entry['user_id'];
+        }, $newGroupUsers);
+
+        $ignoredUsers = [];
+
+        foreach($oldGroupUsers as $user){
+            if(in_array($user, $newGroupUsers)){
+                $ignoredUsers[] = $user;
+            }
+        }
+        
+
+        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id'], 'ignoredUsers' => $ignoredUsers]);
 
         return $response->withJson(['success' => 'success']);
     }

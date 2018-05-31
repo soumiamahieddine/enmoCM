@@ -351,8 +351,8 @@ class GroupModelAbstract
             'set'       => [
                 'group_id'  => $aArgs['newGroupId']
             ],
-            'where'     => ['group_id = ?'],
-            'data'      => [$aArgs['groupId']]
+            'where'     => ['group_id = ?','user_id NOT IN (?)'],
+            'data'      => [$aArgs['groupId'],$aArgs['ignoredUsers']]
         ]);
 
         return true;
