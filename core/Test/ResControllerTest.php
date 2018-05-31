@@ -73,6 +73,36 @@ class ResControllerTest extends TestCase
         $this->assertSame(null, $res['destination']);
     }
 
+    public function testCreateExt(){
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        
+        $data = [
+            [
+                'column'    => 'category_id',
+                'value'     => 'incoming',
+                'type'      => 'string',
+            ]
+        ];
+
+        $aArgs = [
+            'resId'        => self::$id,
+            'data'          => $data
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        
+        $ext = \Resource\models\ResModel::getExtById(['resId' => self::$id, 'select' => ['category_id']]);
+
+        $this->assertSame(true,$responseBody->status);
+        $this->assertSame('incoming',$ext['category_id']);
+    }
+
     public function testUpdateStatus()
     {
         $resController = new \Resource\controllers\ResController();
