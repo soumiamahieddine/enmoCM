@@ -107,7 +107,8 @@ class DocserverModelAbstract
                 'size_limit_number'     => $aArgs['size_limit_number'],
                 'priority_number'       => $aArgs['priority_number'],
                 'adr_priority_number'   => $aArgs['adr_priority_number'],
-                'is_readonly'           => $aArgs['is_readonly']
+                'is_readonly'           => $aArgs['is_readonly'],
+                'creation_date'         => 'CURRENT_TIMESTAMP'
             ]
         ]);
 

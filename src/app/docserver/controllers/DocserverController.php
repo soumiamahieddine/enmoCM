@@ -34,8 +34,9 @@ class DocserverController
 
         $sortedDocservers = [];
         $docservers = DocserverModel::get();
-        foreach ($docservers as $key => $docserver) {
+        foreach ($docservers as $docserver) {
             $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
+            $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
             $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
         }
 
@@ -125,10 +126,17 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
-        $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
-        $data['docserver_id'] = $aArgs['id'];
+        $updateData = [
+            'docserver_id'          => $aArgs['id'],
+            'device_label'          => $data['device_label'],
+            'size_limit_number'     => $data['size_limit_number'],
+            'path_template'         => $data['path_template'],
+            'priority_number'       => $data['priority_number'],
+            'adr_priority_number'   => $data['adr_priority_number'],
+            'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
+        ];
 
-        DocserverModel::update($data);
+        DocserverModel::update($updateData);
         HistoryController::add([
             'tableName' => 'docservers',
             'recordId'  => $aArgs['id'],
@@ -436,16 +444,22 @@ class DocserverController
             $firstLayerDirectories = scandir($aArgs['path']);
             foreach ($firstLayerDirectories as $firstLayerDirectory) {
                 if ($firstLayerDirectory != '.' && $firstLayerDirectory != '..') {
-                    $secondLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}");
-                    foreach ($secondLayerDirectories as $secondLayerDirectory) {
-                        if ($secondLayerDirectory != '.' && $secondLayerDirectory != '..') {
-                            $thirdLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}");
-                            foreach ($thirdLayerDirectories as $thirdLayerDirectory) {
-                                if ($thirdLayerDirectory != '.' && $thirdLayerDirectory != '..') {
-                                    $files = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}");
-                                    foreach ($files as $file) {
-                                        if ($file != '.' && $file != '..') {
-                                            $size += filesize("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}/{$file}");
+                    if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}"])) {
+                        $secondLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}");
+                        foreach ($secondLayerDirectories as $secondLayerDirectory) {
+                            if ($secondLayerDirectory != '.' && $secondLayerDirectory != '..') {
+                                if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}"])) {
+                                    $thirdLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}");
+                                    foreach ($thirdLayerDirectories as $thirdLayerDirectory) {
+                                        if ($thirdLayerDirectory != '.' && $thirdLayerDirectory != '..') {
+                                            if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}"])) {
+                                                $files = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}");
+                                                foreach ($files as $file) {
+                                                    if ($file != '.' && $file != '..') {
+                                                        $size += filesize("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}/{$file}");
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -465,6 +479,9 @@ class DocserverController
         ValidatorModel::stringType($aArgs, ['path']);
 
         if (!is_dir($aArgs['path'])) {
+            return false;
+        }
+        if (!is_readable($aArgs['path'])) {
             return false;
         }
         if (!is_writable($aArgs['path'])) {
