@@ -73,7 +73,8 @@ CREATE TABLE docservers
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
   priority_number integer NOT NULL DEFAULT 10,
   adr_priority_number integer NOT NULL DEFAULT 1,
-  CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
+  CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id),
+  CONSTRAINT docservers_id_key UNIQUE (id)
 )
 WITH (OIDS=FALSE);
 

@@ -122,9 +122,12 @@ class DocserverModelAbstract
         ValidatorModel::stringType($aArgs, ['docserver_id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'is_readonly']);
         ValidatorModel::intVal($aArgs, ['size_limit_number', 'priority_number', 'adr_priority_number']);
 
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'docservers_id_seq']);
+
         DatabaseModel::insert([
             'table'         => 'docservers',
             'columnsValues' => [
+                'id'                    => $nextSequenceId,
                 'docserver_id'          => $aArgs['docserver_id'],
                 'docserver_type_id'     => $aArgs['docserver_type_id'],
                 'device_label'          => $aArgs['device_label'],
@@ -138,7 +141,7 @@ class DocserverModelAbstract
             ]
         ]);
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function update(array $aArgs)

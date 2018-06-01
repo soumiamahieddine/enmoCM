@@ -37,5 +37,6 @@ ALTER TABLE docservers DROP COLUMN IF EXISTS closing_date;
 ALTER TABLE docservers DROP COLUMN IF EXISTS enabled;
 ALTER TABLE docservers DROP COLUMN IF EXISTS id;
 ALTER TABLE docservers ADD COLUMN id serial;
+ALTER TABLE docservers ADD UNIQUE (id);
 DROP TABLE IF EXISTS docserver_locations;
 
