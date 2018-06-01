@@ -47,7 +47,7 @@ class DocserverController
             $types[] = $docserver['docserver_type_id'];
         }
 
-        return $response->withJson(['docservers' => $sortedDocservers, 'types' => array_unique($types)]);
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => array_values(array_unique($types))]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -84,7 +84,7 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingDocserver = DocserverModel::getById(['id' => $data['docserver_id'], 'select' => ['1']]);
+        $existingDocserver = DocserverModel::getByDocserverId(['docserverId' => $data['docserver_id'], 'select' => ['1']]);
         if (!empty($existingDocserver)) {
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
@@ -133,7 +133,7 @@ class DocserverController
         }
 
         $updateData = [
-            'docserver_id'          => $aArgs['id'],
+            'id'                    => $aArgs['id'],
             'device_label'          => $data['device_label'],
             'size_limit_number'     => $data['size_limit_number'],
             'path_template'         => $data['path_template'],
@@ -147,7 +147,7 @@ class DocserverController
             'tableName' => 'docservers',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _DOCSERVER_UPDATED . " : {$aArgs['id']}",
+            'info'      => _DOCSERVER_UPDATED . " : {$data['device_label']}",
             'moduleId'  => 'docserver',
             'eventId'   => 'docserverModification',
         ]);
@@ -166,7 +166,7 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
-        DocserverModel::delete(['docserver_id' => $aArgs['id']]);
+        DocserverModel::delete(['id' => $aArgs['id']]);
         HistoryController::add([
             'tableName' => 'docservers',
             'recordId'  => $aArgs['id'],
@@ -176,7 +176,7 @@ class DocserverController
             'eventId'   => 'docserverSuppression',
         ]);
 
-        return $response->withJson(['docservers' => DocserverModel::get()]);
+        return $response->withJson(['sucess' => 'success']);
     }
 
     public static function storeResourceOnDocServer(array $aArgs)
@@ -229,7 +229,7 @@ class DocserverController
         $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
 
         DocserverModel::update([
-            'docserver_id'          => $docserver['docserver_id'],
+            'id'                    => $docserver['id'],
             'actual_size_number'    => $docserver['actual_size_number'] + $aArgs['fileInfos']['size']
         ]);
 

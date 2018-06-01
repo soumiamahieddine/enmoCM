@@ -18,7 +18,7 @@ class AdapterMaarchCourrier
 
         $messageObject = json_decode($message->data);
 
-        $docserver     = \Docserver\models\DocserverModel::getById(['id' => $message->docserver_id]);
+        $docserver     = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $message->docserver_id]);
         $docserverType = \Docserver\models\DocserverTypeModel::getById(
             ['id' => $docserver['docserver_type_id']]
         );

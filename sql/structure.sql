@@ -60,6 +60,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE docservers
 (
+  id serial,
   docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
   docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,

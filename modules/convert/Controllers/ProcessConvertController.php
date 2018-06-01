@@ -233,7 +233,7 @@ class ProcessConvertController
             return $returnArray;
         }
 
-        $targetDs = DocserverModel::getById(['id' => $storeResult['docserver_id']]);
+        $targetDs = DocserverModel::getByDocserverId(['docserverId' => $storeResult['docserver_id']]);
 
         // LogsController::info(['message'=>'avant update', 'code'=>19, ]);
         //update the \Database

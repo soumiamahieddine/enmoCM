@@ -264,8 +264,8 @@ class ReconciliationController{
         $filetmp .= $tmp;
         $filetmp .= $filename;
 
-        $docserver = \Docserver\models\DocserverModel::getById([
-            'id' => $docserverId
+        $docserver = \Docserver\models\DocserverModel::getByDocserverId([
+            'docserverId' => $docserverId
         ]);
         $docserverType = \Docserver\models\DocserverTypeModel::getById([
             'id' => $docserver['docserver_type_id']

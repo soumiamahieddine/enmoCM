@@ -483,7 +483,7 @@ class RequestSeda
             $docserver_id = $storeResult['docserver_id'];
             $filepath     = $storeResult['destination_dir'];
             $filename     = $storeResult['file_destination_name'];
-            $docserver     = \Docserver\models\DocserverModel::getById(['id' => $docserver_id]);
+            $docserver     = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $docserver_id]);
 
             $docserverType = \Docserver\models\DocserverTypeModel::getById(
                 ['id' => $docserver['docserver_type_id']]

@@ -100,7 +100,6 @@ $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupCon
 $app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
 $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
 
-
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');

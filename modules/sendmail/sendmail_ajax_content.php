@@ -588,7 +588,7 @@ switch ($mode) {
         $RequestSeda         = new RequestSeda();
         $messageExchangeData = $RequestSeda->getMessageByIdentifierAndResId(['message_id' => $_GET['id'], 'res_id_master' => $_GET['identifier']]);
 
-        $docserver     = \Docserver\models\DocserverModel::getById(['id' => $messageExchangeData->docserver_id]);
+        $docserver     = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $messageExchangeData->docserver_id]);
         $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
         $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchangeData->path);

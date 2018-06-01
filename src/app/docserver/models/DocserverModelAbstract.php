@@ -32,15 +32,16 @@ class DocserverModelAbstract
         return $aDocservers;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $aDocserver = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
-            'where'     => ['docserver_id = ?'],
+            'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
 
@@ -51,19 +52,44 @@ class DocserverModelAbstract
         return $aDocserver[0];
     }
 
-    public static function getByTypeId(array $aArgs = [])
+    public static function getByDocserverId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['docserverId']);
+        ValidatorModel::stringType($aArgs, ['docserverId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aDocserver = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['docservers'],
+            'where'     => ['docserver_id = ?'],
+            'data'      => [$aArgs['docserverId']]
+        ]);
+
+        if (empty($aDocserver[0])) {
+            return [];
+        }
+
+        return $aDocserver[0];
+    }
+
+    public static function getByTypeId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
         ValidatorModel::stringType($aArgs, ['docserver_type_id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aReturn = DatabaseModel::select([
+        $aDocserver = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_type_id = ?'],
             'data'      => [$aArgs['docserver_type_id']]
         ]);
 
-        return $aReturn[0];
+        if (empty($aDocserver[0])) {
+            return [];
+        }
+
+        return $aDocserver[0];
     }
 
     public static function getByCollId(array $aArgs)
@@ -117,14 +143,17 @@ class DocserverModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
+
+        $id = $aArgs['id'];
+        unset($aArgs['id']);
 
         DatabaseModel::update([
             'table'     => 'docservers',
             'set'       => $aArgs,
-            'where'     => ['docserver_id = ?'],
-            'data'      => [$aArgs['docserver_id']]
+            'where'     => ['id = ?'],
+            'data'      => [$id]
         ]);
 
         return true;
@@ -132,13 +161,13 @@ class DocserverModelAbstract
 
     public static function delete(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         DatabaseModel::delete([
             'table'     => 'docservers',
-            'where'     => ['docserver_id = ?'],
-            'data'      => [$aArgs['docserver_id']]
+            'where'     => ['id = ?'],
+            'data'      => [$aArgs['id']]
         ]);
 
         return true;
