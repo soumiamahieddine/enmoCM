@@ -101,6 +101,47 @@ class ResControllerTest extends TestCase
 
         $this->assertSame(true,$responseBody->status);
         $this->assertSame('incoming',$ext['category_id']);
+
+        $data = [
+            [
+                'column'    => 'category_id',
+                'value'     => 'incoming',
+                'type'      => 'string',
+            ]
+        ];
+
+        $aArgs = [
+            'resId'        => self::$id,
+            'data'          => $data
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("Document already exists in mlb_coll_ext",$responseBody->errors);
+
+        $data = [
+            [
+                'column'    => 'category_id',
+                'value'     => 'incoming',
+                'type'      => 'string',
+            ]
+        ];
+
+        $aArgs = [
+            'resId'        => self::$id,
+            'data'          => null
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame("Bad Request",$responseBody->errors);
+
     }
 
     public function testUpdateStatus()
