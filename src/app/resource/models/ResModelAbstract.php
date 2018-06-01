@@ -267,7 +267,9 @@ abstract class ResModelAbstract
                 '11-11',
                 '25-12'
             ];
-            $hollidays[] = date('d-m', easter_date() + 86400);
+            if (function_exists('easter_date')) {
+                $hollidays[] = date('d-m', easter_date() + 86400);
+            }
 
             $processDelayUpdated = 1;
             for ($i = 1; $i <= $processDelay; $i++) {
