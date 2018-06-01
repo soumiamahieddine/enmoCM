@@ -33,6 +33,7 @@ class DocserverController
         }
 
         $sortedDocservers = [];
+        $types = [];
         $docservers = DocserverModel::get();
         foreach ($docservers as $docserver) {
             $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
@@ -43,9 +44,10 @@ class DocserverController
             }
             $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
             $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
+            $types[] = $docserver['docserver_type_id'];
         }
 
-        return $response->withJson(['docservers' => $sortedDocservers]);
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => $types]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -55,7 +57,6 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-
         if(empty($docserver)){
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
