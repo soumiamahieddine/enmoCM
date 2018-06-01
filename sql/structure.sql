@@ -68,14 +68,9 @@ CREATE TABLE docservers
   size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
   actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
   path_template character varying(255) NOT NULL,
-  ext_docserver_info character varying(255) DEFAULT NULL::character varying,
-  chain_before character varying(32) DEFAULT NULL::character varying,
-  chain_after character varying(32) DEFAULT NULL::character varying,
   creation_date timestamp without time zone NOT NULL,
-  closing_date timestamp without time zone,
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
   priority_number integer NOT NULL DEFAULT 10,
-  docserver_location_id character varying(32) NOT NULL,
   adr_priority_number integer NOT NULL DEFAULT 1,
   CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
 )

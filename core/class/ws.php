@@ -26,7 +26,6 @@ $SOAP_typedef['docservers'] = array(    'docserver_id'=>'string',
                                         'path_template'=>'string',
                                         'coll_id'=>'string',
                                         'priority_number'=>'string',
-                                        'docserver_location_id'=>'string',
                                         'adr_priority_number'=>'string'
                                     );
 $SOAP_typedef['returnViewResource'] = array('status'=>'string',
@@ -67,40 +66,6 @@ $SOAP_dispatch_map['viewResource'] = array(
                                         'in'  => Array('gedId' => 'string', 'tableName' => 'string', 'adrTableName' => 'string', 'calledByWS' => 'string'),
                                         'out' => Array('return' => '{urn:MaarchSoapServer}returnViewResource'),
                                         'method' => "core#docservers::viewResource"
-                                    );
-/**************************************************************************************************/
-// DOCSERVERS LOCATIONS
-$SOAP_typedef['docserverLocations'] = array(    'docserver_location_id'=>'string',
-                                                'ipv4'=>'string',
-                                                'ipv6'=>'string',
-                                                'net_domain'=>'string',
-                                                'mask'=>'string',
-                                                'net_link'=>'string'
-                                            );
-$SOAP_dispatch_map['docserverLocationSave'] = array(
-                                        'in'  => array('docserver_location' => '{urn:MaarchSoapServer}docserverLocations', 'mode' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_locations::save"
-                                        );
-$SOAP_dispatch_map['docserverLocationDelete'] = array(
-                                        'in'  => array('docserver_location' => '{urn:MaarchSoapServer}docserverLocations'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_locations::delete"
-                                    );
-$SOAP_dispatch_map['docserverLocationEnable'] = array(
-                                        'in'  => array('docserver_location' => '{urn:MaarchSoapServer}docserverLocations'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_locations::enable"
-                                    );
-$SOAP_dispatch_map['docserverLocationDisable'] = array(
-                                        'in'  => array('docserver_location' => '{urn:MaarchSoapServer}docserverLocations'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
-                                        'method' => "core#docserver_locations::disable"
-                                    );
-$SOAP_dispatch_map['docserverLocationGet'] = array(
-                                        'in'  => array('docserverLocationId' => 'string'),
-                                        'out' => array('out' => '{urn:MaarchSoapServer}docserverLocations'),
-                                        'method' => "core#docserver_locations::getWs"
                                     );
 /**************************************************************************************************/
 // DOCSERVERS TYPES

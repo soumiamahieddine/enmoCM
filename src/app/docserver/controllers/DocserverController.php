@@ -36,6 +36,11 @@ class DocserverController
         $docservers = DocserverModel::get();
         foreach ($docservers as $docserver) {
             $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
+            if ($docserver['actual_size_number'] > 1000000000) {
+                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000000, 3) . ' Go';
+            } else {
+                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000, 3) . ' Mo';
+            }
             $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
             $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
         }

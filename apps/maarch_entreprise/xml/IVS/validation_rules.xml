@@ -102,53 +102,6 @@
       <parameter name="duration_current_use" type="integer" />
     </validationRule>
 
-    <validationRule name="admin_docserver_location" extends="standardForm" mode="error">
-      <parameter name="id" type="identifier" />
-      <parameter name="ipv4" type="ip" />
-      <parameter name="ipv6" type="ipv6" />
-      <parameter name="mask" type="ip" />
-      <parameter name="net_domain" type="string" />
-      <parameter name="net_link" type="url" />
-      <parameter name="submit" type="string" />
-    </validationRule>
-
-    <validationRule name="admin_docserver_type" extends="standardForm" mode="error">
-      <parameter name="docserver_type_label" type="string" />
-      <parameter name="compression_mode" type="alnum" />
-      <parameter name="container_max_number" type="digit" />
-      <parameter name="fingerprint_mode" type="alnum" />
-      <parameter name="id" type="identifier" />
-      <parameter name="is_compressed" type="boolean" />
-      <parameter name="is_container" type="boolean" />
-      <parameter name="is_logged" type="boolean" />
-      <parameter name="is_meta" type="boolean" />
-      <parameter name="is_signed" type="boolean" />
-      <parameter name="log_template" type="identifierPoint" />
-      <parameter name="meta_template" type="identifierPoint" />
-      <parameter name="submit" type="string" />
-    </validationRule>
-
-    <validationRule name="admin_docservers" extends="standardForm" mode="error">
-      <parameter name="actual_size_hidden" type="string" />
-      <parameter name="actual_size_number" type="filename" />
-      <parameter name="adr_priority_number" type="digit" />
-      <parameter name="coll_id" type="collection_list" />
-      <parameter name="device_label" type="string" />
-      <parameter name="docserver_location_id" type="identifier" />
-      <parameter name="docserver_type_id" type="identifier" />
-      <parameter name="id" type="identifier" />
-      <parameter name="is_readonly" type="boolean" />
-      <parameter name="path_template" type="string" />
-      <parameter name="priority_number" type="digit" />
-      <parameter name="size_format" type="alpha" />
-      <parameter name="size_limit_hidden" type="digit" />
-      <parameter name="size_limit_number" type="digit" />
-      <parameter name="submit" type="string" />
-      <parameter name="percentage_full" type="string" />
-      <parameter name="docserver_type_id_txt" type="identifier" />
-      <parameter name="coll_id_txt" type="string" />
-    </validationRule>
-
     <validationRule name="val_integer" extends="standardForm" mode="error">
       <parameter name="val" type="integer" />
     </validationRule>

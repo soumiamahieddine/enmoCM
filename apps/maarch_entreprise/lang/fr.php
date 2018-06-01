@@ -3833,12 +3833,6 @@ if (!defined('_DOCSERVER_ATTACHED_TO_RES_X')) {
 }
 
 /************DOCSERVER LOCATIONS******************************/
-if (!defined('_DOCSERVER_LOCATION_ID')) {
-    define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
-}
-if (!defined('_DOCSERVER_LOCATIONS')) {
-    define('_DOCSERVER_LOCATIONS', 'Lieu(x) de stockage ');
-}
 if (!defined('_IPV4')) {
     define('_IPV4', 'Adresse IPv4');
 }

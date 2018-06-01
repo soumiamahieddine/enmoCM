@@ -20,29 +20,17 @@ for (
     }
 }
 $docserverControler = new docservers_controler();
-$viewResourceArr = array();
-$docserverLocation = array();
-$docserverLocation = 
-    $docserverControler->retrieveDocserverNetLinkOfResource(
-        $resId, $objectTable, $adrTable
-    );
-if ($docserverLocation['status'] <> 'ko') {
-    $viewResourceArr = $docserverControler->viewResource(
-        $resId,
-        $objectTable,
-        $adrTable,
-        false
-    );
-    if ($viewResourceArr['error'] <> '') {
-        $result = array('ERROR' => $viewResourceArr['error']);
-        createXML('ERROR', $result);
-    } else {
-        $filePathOnTmp = $viewResourceArr['file_path'];
-        $fileExtension = $viewResourceArr['ext'];
-    }
-} else {
-    $result = array('ERROR' => 'docserver location response ' 
-        . $docserverLocation['error']
-    );
+
+$viewResourceArr = $docserverControler->viewResource(
+    $resId,
+    $objectTable,
+    $adrTable,
+    false
+);
+if ($viewResourceArr['error'] <> '') {
+    $result = array('ERROR' => $viewResourceArr['error']);
     createXML('ERROR', $result);
+} else {
+    $filePathOnTmp = $viewResourceArr['file_path'];
+    $fileExtension = $viewResourceArr['ext'];
 }

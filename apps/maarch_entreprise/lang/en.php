@@ -3780,12 +3780,6 @@ if (!defined('_DOCSERVER_ATTACHED_TO_RES_X')) {
 }
 
 /************DOCSERVER LOCATIONS******************************/
-if (!defined('_DOCSERVER_LOCATION_ID')) {
-    define('_DOCSERVER_LOCATION_ID', 'ID of the storage location ');
-}
-if (!defined('_DOCSERVER_LOCATIONS')) {
-    define('_DOCSERVER_LOCATIONS', 'Storage location(s) ');
-}
 if (!defined('_IPV4')) {
     define('_IPV4', 'IPv4 Address');
 }
