@@ -73,7 +73,8 @@ class ResControllerTest extends TestCase
         $this->assertSame(null, $res['destination']);
     }
 
-    public function testCreateExt(){
+    public function testCreateExt()
+    {
         $resController = new \Resource\controllers\ResController();
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -88,8 +89,8 @@ class ResControllerTest extends TestCase
         ];
 
         $aArgs = [
-            'resId'        => self::$id,
-            'data'          => $data
+            'resId' => self::$id,
+            'data'  => $data
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -97,10 +98,11 @@ class ResControllerTest extends TestCase
         $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         
+        $this->assertSame(true, $responseBody->status);
+
         $ext = \Resource\models\ResModel::getExtById(['resId' => self::$id, 'select' => ['category_id']]);
 
-        $this->assertSame(true,$responseBody->status);
-        $this->assertSame('incoming',$ext['category_id']);
+        $this->assertSame('incoming', $ext['category_id']);
 
         $data = [
             [
@@ -111,8 +113,8 @@ class ResControllerTest extends TestCase
         ];
 
         $aArgs = [
-            'resId'        => self::$id,
-            'data'          => $data
+            'resId' => self::$id,
+            'data'  => $data
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -120,19 +122,12 @@ class ResControllerTest extends TestCase
         $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame("Document already exists in mlb_coll_ext",$responseBody->errors);
+        $this->assertSame('Document already exists in mlb_coll_ext', $responseBody->errors);
 
-        $data = [
-            [
-                'column'    => 'category_id',
-                'value'     => 'incoming',
-                'type'      => 'string',
-            ]
-        ];
 
         $aArgs = [
-            'resId'        => self::$id,
-            'data'          => null
+            'resId' => self::$id,
+            'data'  => null
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -140,8 +135,7 @@ class ResControllerTest extends TestCase
         $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame("Bad Request",$responseBody->errors);
-
+        $this->assertSame('Bad Request', $responseBody->errors);
     }
 
     public function testUpdateStatus()
