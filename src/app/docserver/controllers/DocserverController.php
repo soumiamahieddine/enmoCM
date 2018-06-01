@@ -32,7 +32,14 @@ class DocserverController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['docservers' => DocserverModel::get()]);
+        $sortedDocservers = [];
+        $docservers = DocserverModel::get();
+        foreach ($docservers as $key => $docserver) {
+            $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
+            $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
+        }
+
+        return $response->withJson(['docservers' => $sortedDocservers]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -74,6 +81,9 @@ class DocserverController
         if (!empty($existingDocserver)) {
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
+        if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
+            return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
+        }
 
         $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
 
@@ -110,6 +120,9 @@ class DocserverController
         $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['1']]);
         if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
+        }
+        if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
+            return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
         $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
@@ -410,6 +423,55 @@ class DocserverController
         }
 
         return $dataToReturn;
+    }
+
+    private static function getDocserverSize(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        $size = 0;
+
+        if (DocserverController::isPathAvailable(['path' => $aArgs['path']])) {
+            $firstLayerDirectories = scandir($aArgs['path']);
+            foreach ($firstLayerDirectories as $firstLayerDirectory) {
+                if ($firstLayerDirectory != '.' && $firstLayerDirectory != '..') {
+                    $secondLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}");
+                    foreach ($secondLayerDirectories as $secondLayerDirectory) {
+                        if ($secondLayerDirectory != '.' && $secondLayerDirectory != '..') {
+                            $thirdLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}");
+                            foreach ($thirdLayerDirectories as $thirdLayerDirectory) {
+                                if ($thirdLayerDirectory != '.' && $thirdLayerDirectory != '..') {
+                                    $files = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}");
+                                    foreach ($files as $file) {
+                                        if ($file != '.' && $file != '..') {
+                                            $size += filesize("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}/{$file}");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $size;
+    }
+
+    private static function isPathAvailable(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        if (!is_dir($aArgs['path'])) {
+            return false;
+        }
+        if (!is_writable($aArgs['path'])) {
+            return false;
+        }
+
+        return true;
     }
 
     private static function directoryWasher(array $aArgs)
