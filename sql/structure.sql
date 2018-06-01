@@ -76,19 +76,6 @@ CREATE TABLE docservers
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE docserver_locations
-(
-  docserver_location_id character varying(32) NOT NULL,
-  ipv4 character varying(255) DEFAULT NULL::character varying,
-  ipv6 character varying(255) DEFAULT NULL::character varying,
-  net_domain character varying(32) DEFAULT NULL::character varying,
-  mask character varying(255) DEFAULT NULL::character varying,
-  net_link character varying(255) DEFAULT NULL::character varying,
-  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
-)
-WITH (OIDS=FALSE);
-
 CREATE SEQUENCE doctypes_type_id_seq
   INCREMENT 1
   MINVALUE 1

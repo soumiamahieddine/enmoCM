@@ -44,9 +44,6 @@ if (! defined('_DOCSERVERS_TABLE_NAME')) {
 if (!defined('_DOCSERVER_TYPES_TABLE_NAME')) {
     define('_DOCSERVER_TYPES_TABLE_NAME', 'docserver_types');
 }
-if (! defined('_DOCSERVER_LOCATIONS_TABLE_NAME')) {
-    define('_DOCSERVER_LOCATIONS_TABLE_NAME', 'docserver_locations');
-}
 if (! defined('_LC_CYCLE_STEPS_TABLE_NAME')) {
     define('_LC_CYCLE_STEPS_TABLE_NAME', 'lc_cycle_steps');
 }

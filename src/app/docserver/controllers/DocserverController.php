@@ -47,7 +47,7 @@ class DocserverController
             $types[] = $docserver['docserver_type_id'];
         }
 
-        return $response->withJson(['docservers' => $sortedDocservers, 'types' => $types]);
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => array_unique($types)]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)

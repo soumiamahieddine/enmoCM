@@ -3848,36 +3848,6 @@ if (!defined('_MASK')) {
 if (!defined('_NET_LINK')) {
     define('_NET_LINK', 'URL du frontal');
 }
-if (!defined('_DOCSERVER_LOCATION_ADDITION')) {
-    define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage ');
-}
-if (!defined('_DOCSERVER_LOCATION_MODIFICATION')) {
-    define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage');
-}
-if (!defined('_ALL_DOCSERVER_LOCATIONS')) {
-    define('_ALL_DOCSERVER_LOCATIONS', 'Tout afficher');
-}
-if (!defined('_DOCSERVER_LOCATIONS_LIST')) {
-    define('_DOCSERVER_LOCATIONS_LIST', 'Liste des lieux de stockage');
-}
-if (!defined('_DOCSERVER_LOCATION')) {
-    define('_DOCSERVER_LOCATION', 'un lieu de stockage');
-}
-if (!defined('_DOCSERVER_LOCATION_UPDATED')) {
-    define('_DOCSERVER_LOCATION_UPDATED', 'Lieu de stockage mis à jour');
-}
-if (!defined('_DOCSERVER_LOCATION_ADDED')) {
-    define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
-}
-if (!defined('_DOCSERVER_LOCATION_DELETED')) {
-    define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
-}
-if (!defined('_DOCSERVER_LOCATION_DISABLED')) {
-    define('_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage desactivé');
-}
-if (!defined('_DOCSERVER_LOCATION_ENABLED')) {
-    define('_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage activé');
-}
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) {
     define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');
 }

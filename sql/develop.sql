@@ -34,3 +34,6 @@ ALTER TABLE docservers DROP COLUMN IF EXISTS ext_docserver_info;
 ALTER TABLE docservers DROP COLUMN IF EXISTS chain_before;
 ALTER TABLE docservers DROP COLUMN IF EXISTS chain_after;
 ALTER TABLE docservers DROP COLUMN IF EXISTS closing_date;
+ALTER TABLE docservers DROP COLUMN IF EXISTS enabled;
+DROP TABLE IF EXISTS docserver_locations;
+

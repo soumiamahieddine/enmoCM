@@ -156,8 +156,8 @@ class DocserverModelAbstract
         $aDocserver = DatabaseModel::select([
             'select'    => ['*'],
             'table'     => ['docservers'],
-            'where'     => ['is_readonly = ?', 'enabled = ?', 'coll_id = ?', 'docserver_type_id = ?'],
-            'data'      => ['N', 'Y', $aArgs['collId'], $aArgs['typeId']],
+            'where'     => ['is_readonly = ?', 'coll_id = ?', 'docserver_type_id = ?'],
+            'data'      => ['N', $aArgs['collId'], $aArgs['typeId']],
             'order_by'  => ['priority_number'],
             'limit'     => 1,
         ]);

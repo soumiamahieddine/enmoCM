@@ -4,13 +4,6 @@ global $XMLRPC_dispatch_map;
 global $SOAP_typedef;
 
 
-//test
-/*$SOAP_dispatch_map['testMethod'] = array(
-                                        'in'  => array('myVar' => 'string'),
-                                        'out' => array('out' => 'string'),
-                                        'method' => "core#docserver_locations::testMethod"
-                                        );*/
-
 // COMMON
 $SOAP_typedef['returnArray'] = array(   'status'=>'string',
                                         'value'=>'string',
