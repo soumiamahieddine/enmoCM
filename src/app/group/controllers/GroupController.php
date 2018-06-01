@@ -191,15 +191,14 @@ class GroupController
         }, $newGroupUsers);
 
         $ignoredUsers = [];
-
         foreach($oldGroupUsers as $user){
-            if(in_array($user, $newGroupUsers)){
+            if (in_array($user, $newGroupUsers)) {
                 $ignoredUsers[] = $user;
             }
         }
-        
 
         GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id'], 'ignoredUsers' => $ignoredUsers]);
+
         return $response->withJson(['success' => 'success']);
     }
 

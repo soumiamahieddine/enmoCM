@@ -52,6 +52,10 @@ abstract class BasketModelAbstract
             'data'      => [$aArgs['id']]
         ]);
 
+        if (empty($aBasket[0])) {
+            return [];
+        }
+
         return $aBasket[0];
     }
 
