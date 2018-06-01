@@ -10,6 +10,8 @@
 use PHPUnit\Framework\TestCase;
 
 class DocserverControllerTest extends TestCase {
+
+    private static $id = null;
     public function testGet(){
         $docserverController = new \Docserver\controllers\DocserverController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -19,28 +21,7 @@ class DocserverControllerTest extends TestCase {
         $response     = $docserverController->get($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $this->assertNotNull($responseBody);
-    }
-
-    public function testGetById(){
-        $docserverController = new \Docserver\controllers\DocserverController();
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
-            'id'    =>  'FASTHD_MAN'
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $docserverController->getById($fullRequest, new \Slim\Http\Response(),$aArgs);
-        $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('FASTHD_MAN', $responseBody->docserver_id);
-
-        $aArgs = [
-            'id'    =>  'NOT_EXISTS'
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $docserverController->getById($fullRequest, new \Slim\Http\Response(),$aArgs);
-        $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Docserver not found', $responseBody->errors);
-    }
+    }    
 
     public function testCreate(){
         $docserverController = new \Docserver\controllers\DocserverController();
@@ -59,8 +40,12 @@ class DocserverControllerTest extends TestCase {
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response(),$aArgs);
         $responseBody = json_decode((string)$response->getBody());
-        
-        $this->assertSame('NEW_DOCSERVER', $responseBody->docserver);
+        self::$id = $responseBody->docserver;
+        $this->assertInternalType('int', self::$id);
+
+        $response     = $docserverController->getById($fullRequest, new \Slim\Http\Response(),['id' =>  self::$id]);
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame('NEW_DOCSERVER', $responseBody->docserver_id);
 
         $aArgs = [
             'docserver_id'           =>  'WRONG_PATH',
@@ -124,7 +109,7 @@ class DocserverControllerTest extends TestCase {
             'adr_priority_number'    =>  99
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => 'NEW_DOCSERVER']);
+        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('success', $responseBody->success);
 
@@ -137,7 +122,7 @@ class DocserverControllerTest extends TestCase {
             'adr_priority_number'    =>  99
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => 'NEW_DOCSERVER']);
+        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame(_PATH_OF_DOCSERVER_UNAPPROACHABLE, $responseBody->errors);
 
@@ -150,7 +135,7 @@ class DocserverControllerTest extends TestCase {
             'adr_priority_number'    =>  99
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => 'NOT_EXISTING']);
+        $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(),['id' => 12345]);
         $responseBody = json_decode((string)$response->getBody());
         $this->assertSame('Docserver not found', $responseBody->errors);
     }
@@ -160,15 +145,15 @@ class DocserverControllerTest extends TestCase {
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'id'           =>  'NEW_DOCSERVER'
+            'id'           =>  self::$id
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->delete($fullRequest, new \Slim\Http\Response(),$aArgs);
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertNotNull($responseBody->docservers);
+        $this->assertsame('success',$responseBody->success);
 
         $aArgs = [
-            'id'           =>  'NOT_EXISTING'
+            'id'           =>  self::$id
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->delete($fullRequest, new \Slim\Http\Response(),$aArgs);

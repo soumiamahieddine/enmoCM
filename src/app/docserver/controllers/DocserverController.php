@@ -181,7 +181,7 @@ class DocserverController
             'eventId'   => 'docserverSuppression',
         ]);
 
-        return $response->withJson(['sucess' => 'success']);
+        return $response->withJson(['success' => 'success']);
     }
 
     public static function storeResourceOnDocServer(array $aArgs)

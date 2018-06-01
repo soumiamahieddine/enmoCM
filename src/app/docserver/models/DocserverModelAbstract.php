@@ -147,7 +147,7 @@ class DocserverModelAbstract
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         $id = $aArgs['id'];
         unset($aArgs['id']);
@@ -165,7 +165,7 @@ class DocserverModelAbstract
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::delete([
             'table'     => 'docservers',
