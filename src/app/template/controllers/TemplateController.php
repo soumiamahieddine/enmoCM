@@ -34,11 +34,11 @@ class TemplateController
         if ($template['template_type'] == 'OFFICE') {
             $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
 
-            $pathOnDocserver = DocserverController::createPathOnDocServer(['path' => $docserver[0]['path_template']]);
+            $pathOnDocserver = DocserverController::createPathOnDocServer(['path' => $docserver['path_template']]);
             $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);
             $docinfo['fileDestinationName'] .=  '.' . explode('.', $template['template_file_name'])[1];
 
-            $pathToDocumentToCopy = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            $pathToDocumentToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
             $copyResult = DocserverController::copyOnDocServer([
                 'sourceFilePath'             => $pathToDocumentToCopy,
                 'destinationDir'             => $docinfo['destinationDir'],
@@ -47,7 +47,7 @@ class TemplateController
             if (!empty($copyResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => 'Template duplication failed : ' . $copyResult['errors']]);
             }
-            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver[0]['path_template']), '', $copyResult['destinationDir']);
+            $template['template_path'] = str_replace(str_replace(DIRECTORY_SEPARATOR, '#', $docserver['path_template']), '', $copyResult['destinationDir']);
             $template['template_file_name'] = $copyResult['fileDestinationName'];
         }
 
