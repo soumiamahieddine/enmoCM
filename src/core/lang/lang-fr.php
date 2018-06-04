@@ -386,15 +386,15 @@ define('_MAIL_VOL_BY_CAT_REPORT', 'Volume de courriers par catégorie');
 define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).');
 
 //ATTACHMENT TYPES
-define( "_RESPONSE_PROJECT", "Projet de réponse");
-define( "_SIGNED_RESPONSE", "Réponse signée");
-define( "_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
-define( "_A_PJ", "Pièce jointe");
-define( "_INCOMING_PJ", "Pièce jointe capturée");
-define( "_WAYBILL", "Bordereau d'envoi");
-define( "_ROUTING", "Fiche de circulation");
-define( "_OUTGOING_MAIL", "Courrier départ spontané");
-define( "_CONVERTED_PDF", "PDF converti par la solution");
+define("_RESPONSE_PROJECT", "Projet de réponse");
+define("_SIGNED_RESPONSE", "Réponse signée");
+define("_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
+define("_A_PJ", "Pièce jointe");
+define("_INCOMING_PJ", "Pièce jointe capturée");
+define("_WAYBILL", "Bordereau d'envoi");
+define("_ROUTING", "Fiche de circulation");
+define("_OUTGOING_MAIL", "Courrier départ spontané");
+define("_CONVERTED_PDF", "PDF converti par la solution");
 define('_PRINT_FOLDER', 'Dossier');
 define('_SVA', 'SVA');
 define('_SVR', 'SVR');

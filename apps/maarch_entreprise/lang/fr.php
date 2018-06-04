@@ -2222,7 +2222,7 @@ if (!defined('_PROCESS')) {
     define('_PROCESS', 'Traitement ');
 }
 if (!defined('_PROCESS_ACTION')) {
-    define('_PROCESS', 'Traiter ');
+    define('_PROCESS_ACTION', 'Traiter');
 }
 if (!defined('_PROCESS_DESC')) {
     define('_PROCESS_DESC', "Ouvre la page de traitement d'un document (les métas-données ne peuvent être modfiées depuis cette page).");

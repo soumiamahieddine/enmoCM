@@ -191,26 +191,29 @@ if (isset($_REQUEST['res_id_master'])) {
 }
 ?>
 <div id="details" title="Détails" class="panel">
-	<?php
+    <?php
         if (!is_file($path)) {
             echo 'pdf : '.$pdf_id; ?>
-	<div align="center">
-		<input type="button" class="whiteButton" value="<?php 
+    <div align="center">
+        <input type="button" class="whiteButton" value="<?php 
         echo _VIEW_DOC; ?>" onclick="window.open('../index.php?display=true&editingMode=true&dir=indexing_searching&page=view_resource_controler&id=<?php echo $s_id; ?>', '_blank');">
-	</div>
+    </div>
     <?php
+
         } else {
             ?>
-		<!--<img style="width:90%;" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll&display=true'; ?>" onclick="window.open('<?php echo $fileUrl; ?>', '_blank');"/>-->		
-		
-		<div id="frameThumb">
-		<iframe id="ifrm" frameborder="0" scrolling="no" width="0" height="0" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll'.$getAttach; ?>"></iframe>
-		</div>
-		
-		<?php
+    <!--<img style="width:90%;" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll&display=true'; ?>" onclick="window.open('
+    <?php echo $fileUrl; ?>', '_blank');"/>-->
+
+    <div id="frameThumb">
+        <iframe id="ifrm" frameborder="0" scrolling="no" width="0" height="0" src="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails&res_id='.$s_id.'&coll_id=letterbox_coll'.$getAttach; ?>"></iframe>
+    </div>
+
+    <?php
+
         }
         ?>
-	
+
     <hr/>
     <?php
     if ($core->is_module_loaded('notes')) {
@@ -219,37 +222,50 @@ if (isset($_REQUEST['res_id_master'])) {
         $dbNotes = new Database();
         $stmtNote = $dbNotes->query($selectNotes, array($s_id, $_SESSION['collection_id_choice']));
         $nbNotes = $stmtNote->rowCount(); ?>
-        <!--<ul>
+    <!--<ul>
             <li>-->
-                <a href="view_notes.php?id=<?php functions::xecho($s_id); ?>&collId=<?php
+    <a href="view_notes.php?id=<?php functions::xecho($s_id); ?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']); ?>&tableName=<?php
-                    functions::xecho($_SESSION['res_table']); ?>"><!--<span class="fa fa-edit"></span>
+                    functions::xecho($_SESSION['res_table']); ?>">
+        <!--<span class="fa fa-edit"></span>
                     &nbsp;<?php echo _NOTES; ?>-->
-                    <span class="bubble"><i class="fa fa-pencil-alt fa-2x mCdarkGrey"></i>&nbsp;<?php echo $nbNotes; ?></span>
-                </a>
-            <!--</li>
+        <span class="bubble">
+            <i class="fa fa-pencil-alt fa-2x mCdarkGrey"></i>&nbsp;
+            <?php echo $nbNotes; ?>
+        </span>
+    </a>
+    <!--</li>
         </ul>-->
-        <?php
+    <?php
+
     }
     $action = \Action\models\ActionModel::getById(['id' => $_SESSION['current_basket']['default_action'], 'select' => ['action_page']]);
     if (!empty($action) && $action['action_page'] == 'visa_mail' && $infos_attach['attachment_type'] != 'signed_response') {
         ?>
-        <a href="signature_main_panel.php?id=<?php functions::xecho($s_id); ?>&collId=<?php
+    <a href="signature_main_panel.php?id=<?php functions::xecho($s_id); ?>&collId=<?php
                     functions::xecho($_SESSION['collection_id_choice']); ?>&tableName=<?php
             functions::xecho($_SESSION['res_table']); ?>&res_id_attach=<?php
             functions::xecho($att_id); ?>">
-            <span class="bubble" style="cursor: pointer;margin-right: 5px;"><i class="fa fa-hand-point-up fa-2x mCdarkGrey" aria-hidden="true"></i></span>
-        </a>
+        <span class="bubble" style="cursor: pointer;margin-right: 5px;">
+            <i class="fa fa-hand-point-up fa-2x mCdarkGrey" aria-hidden="true"></i>
+        </span>
+    </a>
 
-        <span class="bubble" style="cursor: pointer;margin-right: 5px;" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);"><i class="fa fa-retweet fa-2x mCdarkGrey"></i></span>
-        <input type="hidden" id="type_doc_show" value="attach" />
-        <?php
+    <span class="bubble" style="cursor: pointer;margin-right: 5px;" onclick="switchFrame('<?php functions::xecho($_SESSION['config']['businessappurl'].'index.php?page=doc_thumb_frame&body_loaded&module=thumbnails'); ?>',<?php functions::xecho($s_id); ?>,<?php functions::xecho($pdf_id); ?>);">
+        <i class="fa fa-retweet fa-2x mCdarkGrey"></i>
+    </span>
+    <input type="hidden" id="type_doc_show" value="attach" />
+    <?php
+
     }
     ?>
     <br/>
     <br/>
     <hr/>
-    <h2><span class="fa fa-exclamation-circle" style="margin-right:10px;"></span><?php echo _GENERAL_INFO; ?></h2>
+    <h2>
+        <span class="fa fa-exclamation-circle" style="margin-right:10px;"></span>
+        <?php echo _GENERAL_INFO; ?>
+    </h2>
     <fieldset>
         <?php
         echo $generalData;
@@ -258,12 +274,16 @@ if (isset($_REQUEST['res_id_master'])) {
     <?php
     if (count($indexes) > 0) {
         ?>
-        <h2><span class="fa fa-exclamation-circle" style="margin-right:10px;"></span><?php echo _OPT_INDEXES; ?></h2>
-        <fieldset>
-            <?php
-            echo $indexesData; ?>
-        </fieldset>
+    <h2>
+        <span class="fa fa-exclamation-circle" style="margin-right:10px;"></span>
+        <?php echo _OPT_INDEXES; ?>
+    </h2>
+    <fieldset>
         <?php
+            echo $indexesData; ?>
+    </fieldset>
+    <?php
+
     }
     ?>
 </div>

@@ -116,7 +116,7 @@ class GroupController
         GroupModel::delete(['id' => $aArgs['id']]);
 
         $groups = GroupModel::get();
-        foreach ($groups as $key => $value) {            
+        foreach ($groups as $key => $value) {
             $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
         }
 
@@ -191,7 +191,7 @@ class GroupController
         }, $newGroupUsers);
 
         $ignoredUsers = [];
-        foreach($oldGroupUsers as $user){
+        foreach ($oldGroupUsers as $user) {
             if (in_array($user, $newGroupUsers)) {
                 $ignoredUsers[] = $user;
             }
