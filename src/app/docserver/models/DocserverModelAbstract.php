@@ -72,17 +72,19 @@ class DocserverModelAbstract
         return $aDocserver[0];
     }
 
-    public static function getByTypeId(array $aArgs)
+    public static function getFirstByTypeId(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
+        ValidatorModel::notEmpty($aArgs, ['typeId']);
+        ValidatorModel::stringType($aArgs, ['typeId']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aDocserver = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
             'where'     => ['docserver_type_id = ?'],
-            'data'      => [$aArgs['docserver_type_id']]
+            'data'      => [$aArgs['typeId']],
+            'order_by'  => ['priority_number'],
+            'limit'     => 1
         ]);
 
         if (empty($aDocserver[0])) {
@@ -90,30 +92,6 @@ class DocserverModelAbstract
         }
 
         return $aDocserver[0];
-    }
-
-    public static function getByCollId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['collId']);
-        ValidatorModel::stringType($aArgs, ['collId']);
-        ValidatorModel::boolType($aArgs, ['priority']);
-
-        $data = [
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['docservers'],
-            'where'     => ['coll_id = ?'],
-            'data'      => [$aArgs['collId']]
-        ];
-        if (!empty($aArgs['priority'])) {
-            $data['order_by'] = ['priority_number'];
-        }
-        $aReturn = DatabaseModel::select($data);
-
-        if (!empty($aArgs['priority'])) {
-            return $aReturn[0];
-        }
-
-        return $aReturn;
     }
 
     public static function create(array $aArgs)

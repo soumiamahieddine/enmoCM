@@ -359,7 +359,7 @@ abstract class GroupModelAbstract
                 'group_id'  => $aArgs['newGroupId']
             ],
             'where'     => $where,
-            'data'      => [$aArgs['groupId'], $aArgs['ignoredUsers']]
+            'data'      => $data
         ]);
 
         return true;

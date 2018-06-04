@@ -43,8 +43,8 @@ class SignatureBookController
         if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
-        $docserver = DocserverModel::getByTypeId(['docserver_type_id' => 'TEMPLATES', 'select' => ['path_template']]);
-        if (!file_exists($docserver['path_template'])) {
+        $docserver = DocserverModel::getFirstByTypeId(['typeId' => 'TEMPLATES', 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(500)->withJson(['errors' => _UNREACHABLE_DOCSERVER]);
         }
 
