@@ -14,7 +14,6 @@
 
 namespace Group\models;
 
-use Group\models\ServiceModel;
 use Group\controllers\GroupController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -345,14 +344,22 @@ class GroupModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['groupId', 'newGroupId']);
         ValidatorModel::stringType($aArgs, ['groupId', 'newGroupId']);
+        ValidatorModel::arrayType($aArgs, ['ignoredUsers']);
+
+        $where = ['group_id = ?'];
+        $data = [$aArgs['groupId']];
+        if (!empty($aArgs['ignoredUsers'])) {
+            $where[] = 'user_id NOT IN (?)';
+            $data[] = $aArgs['ignoredUsers'];
+        }
 
         DatabaseModel::update([
             'table'     => 'usergroup_content',
             'set'       => [
                 'group_id'  => $aArgs['newGroupId']
             ],
-            'where'     => ['group_id = ?','user_id NOT IN (?)'],
-            'data'      => [$aArgs['groupId'],$aArgs['ignoredUsers']]
+            'where'     => $where,
+            'data'      => $data
         ]);
 
         return true;
