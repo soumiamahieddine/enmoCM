@@ -361,7 +361,7 @@ define('_PROCEED_WORKFLOW_AVIS', 'Émettre un avis (séquentiel)');
 define('_PROCEED_WORKFLOW_AVIS_DESC', 'Met à jour la date d\'émission d\'avis du conseiller actuel du circuit d\'avis ("process_date" de la table listinstance).');
 define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Émettre un avis (parallèle)');
 define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Met à jour la date d\'émission d\'avis de l\'utilisateur présent en avis dans la liste de diffusion du document ("process_date" de la table listinstance).');
-define('_EXPORT_SEDA', 'Transferer vos courriers');
+define('_EXPORT_SEDA', 'Transférer vos courriers');
 define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
 define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
 define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');

@@ -348,7 +348,7 @@ abstract class GroupModelAbstract
 
         $where = ['group_id = ?'];
         $data = [$aArgs['groupId']];
-        if (empty($aArgs['ignoredUsers'])) {
+        if (!empty($aArgs['ignoredUsers'])) {
             $where[] = 'user_id NOT IN (?)';
             $data[] = $aArgs['ignoredUsers'];
         }
