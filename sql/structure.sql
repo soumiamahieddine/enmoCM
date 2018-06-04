@@ -60,6 +60,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE docservers
 (
+  id serial,
   docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
   docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
@@ -68,29 +69,12 @@ CREATE TABLE docservers
   size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
   actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
   path_template character varying(255) NOT NULL,
-  ext_docserver_info character varying(255) DEFAULT NULL::character varying,
-  chain_before character varying(32) DEFAULT NULL::character varying,
-  chain_after character varying(32) DEFAULT NULL::character varying,
   creation_date timestamp without time zone NOT NULL,
-  closing_date timestamp without time zone,
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
   priority_number integer NOT NULL DEFAULT 10,
-  docserver_location_id character varying(32) NOT NULL,
   adr_priority_number integer NOT NULL DEFAULT 1,
-  CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE docserver_locations
-(
-  docserver_location_id character varying(32) NOT NULL,
-  ipv4 character varying(255) DEFAULT NULL::character varying,
-  ipv6 character varying(255) DEFAULT NULL::character varying,
-  net_domain character varying(32) DEFAULT NULL::character varying,
-  mask character varying(255) DEFAULT NULL::character varying,
-  net_link character varying(255) DEFAULT NULL::character varying,
-  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
+  CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id),
+  CONSTRAINT docservers_id_key UNIQUE (id)
 )
 WITH (OIDS=FALSE);
 

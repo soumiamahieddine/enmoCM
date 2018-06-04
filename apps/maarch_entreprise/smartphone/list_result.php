@@ -48,16 +48,16 @@ if (isset($whereRequest) && !empty($whereRequest)) {
     } else {
         echo '<ul id ="list">';
     } ?>
-    <button id="boutonSuivant" class="whiteButton" style="display:block;"
-            onclick="toggle_visibility_suivant(<?php functions::xecho($nombreDeLignes); ?>)">Suivant
-    </button>
-    <button id="boutonPrecedent" class="whiteButton" style="display:block;" disabled="disabled"
-            onclick="toggle_visibility_precedent(<?php functions::xecho($nombreDeLignes); ?>)">Précédent
-    </button>
-    <input type="hidden" id="start" value=" <?php functions::xecho($nombreDeLignesAffiche); ?> "/>
-    <input type="hidden" id="sendNbLineToShow" value=" <?php functions::xecho($nombreDeLignesAffiche); ?> "/>
+<button id="boutonSuivant" class="whiteButton" style="display:block;" onclick="toggle_visibility_suivant(<?php functions::xecho($nombreDeLignes); ?>)">Suivant
+</button>
+<button id="boutonPrecedent" class="whiteButton" style="display:block;" disabled="disabled" onclick="toggle_visibility_precedent(<?php functions::xecho($nombreDeLignes); ?>)">Précédent
+</button>
+<input type="hidden" id="start" value=" <?php functions::xecho($nombreDeLignesAffiche); ?> "
+/>
+<input type="hidden" id="sendNbLineToShow" value=" <?php functions::xecho($nombreDeLignesAffiche); ?> "
+/>
 
-    <?php
+<?php
     if (count($tab) > 0) {
         for ($i = 0; $i < count($tab); ++$i) {
             if ($view == 'view_folders') {

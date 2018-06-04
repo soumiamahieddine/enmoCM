@@ -434,10 +434,6 @@ abstract class SendmailAbstract extends Database
             include_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
                 . 'docservers_controler.php';
             $docserverControler = new docservers_controler();
-            $docserverLocation = array();
-            $docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource(
-                $res_id, $table, $adrTable
-            );
             //View resource controler
             $viewResourceArr = $docserverControler->viewResource(
                 $res_id,

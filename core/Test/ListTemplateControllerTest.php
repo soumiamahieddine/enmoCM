@@ -67,9 +67,8 @@ class ListTemplateControllerTest extends TestCase
                 $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION', $listTemplate->description);
             }
         }
-        if (empty(self::$id)) {
-            $this->assertSame('Error', 'Creation failed');
-        }
+
+        $this->assertNotEmpty(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -153,9 +152,7 @@ class ListTemplateControllerTest extends TestCase
                 $this->assertSame('TEST LISTTEMPLATE123 DESCRIPTION UPDATED', $listTemplate->description);
             }
         }
-        if (empty(self::$id)) {
-            $this->assertSame('Error', 'Update failed');
-        }
+        $this->assertNotEmpty(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

@@ -19,7 +19,76 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
+                <h3>Zone documentaire <small>DOC</small></h3>
+                <hr/>
                 <div class="row">
+                    <div class="col-md-4" *ngFor="let docserver of this.docserversFasthd">
+                        <mat-card>
+                            <div color="warn" style="position: absolute;top: 10px;left: 10px;font-weight: bold;">
+                                {{docserver.priority_number}}
+                            </div>
+                            <button *ngIf="docserver.is_readonly == 'N'" mat-icon-button color="accent" style="position: absolute;top: 5px;right:10px;" title="Verrouiller la zone de stockage (lecture seule)">
+                                <mat-icon class="fa fa-lock-open"></mat-icon>
+                            </button>
+                            <button *ngIf="docserver.is_readonly == 'Y'" mat-icon-button color="warn" style="position: absolute;top: 5px;right:10px;" title="Déverouiller la zone de stockage (lecture seule)">
+                                <mat-icon class="fa fa-lock"></mat-icon>
+                            </button>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12">
+                                    <mat-form-field>
+                                        <input matInput required name="label" id="label" title="{{lang.label}}" type="text" placeholder="{{lang.label}}" maxlength="255"
+                                        [(ngModel)]="docserver.device_label" [disabled]="docserver.is_readonly == 'Y'">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-progress-spinner *ngIf="docserver.percent_number < 70" name="percent_val" id="percent_val" color="primary" mode="determinate" [value]="docserver.percent_number" style="margin:auto;">
+                                    </mat-progress-spinner>
+                                    <mat-progress-spinner *ngIf="docserver.percent_number >= 70" name="percent_val" id="percent_val" color="warn" mode="determinate" [value]="docserver.percent_number" style="margin:auto;">
+                                    </mat-progress-spinner>
+                                    <span style="position: absolute;top: 40px;left:60px;font-weight: bold;" title="{{docserver.actual_size_number}} Go">{{docserver.percent_number}}%</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <mat-form-field>
+                                        <input matInput required name="Collection" id="Collection" title="Collection" type="text" placeholder="Collection"
+                                        [(ngModel)]="docserver.coll_id" maxlength="255" disabled>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput required name="identifier" id="identifier" title="Identifiant" type="text" placeholder="Identifiant"
+                                        [(ngModel)]="docserver.docserver_id" maxlength="255" disabled>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <mat-select id="status" name="status" title="Docserver secondaire" placeholder="Docserver secondaire"
+                                            required>
+                                            <mat-option value="none">
+                                                Aucun
+                                            </mat-option>
+                                            <mat-option value="fasthd_man_2">
+                                                FASTHD_MAN_2
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput required name="max_size" id="max_size" title="Taille maximale" type="number" placeholder="Taille maximale"
+                                        [(ngModel)]="docserver.size_limit_number" [disabled]="docserver.is_readonly == 'Y'">
+                                        <span matSuffix> Go</span>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-form-field>
+                                        <input matInput required name="path" id="path" title="path" type="text" placeholder="Chemin" maxlength="255" [(ngModel)]="docserver.path_template" [disabled]="docserver.is_readonly == 'Y'">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </mat-card>
+                    </div>
+                </div>
+                <h3>Zone Imagette</h3>
+                <hr/>
+                <div class="row">
+                
+                </div>
+                <!--<div class="row">
                     <div class="col-md-6 col-xs-6">
                         <mat-form-field>
                             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
@@ -56,8 +125,8 @@
                     </ng-container>
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/docservers/{{row.docserver_id}}" style="cursor:pointer;" matTooltip="{{lang.view}}"></mat-row>
-                </mat-table>
+                </mat-table>-->
             </mat-card>
         </mat-sidenav-content>
-    </mat-sidenav-container>   
+    </mat-sidenav-container>
 </div>

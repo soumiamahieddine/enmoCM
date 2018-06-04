@@ -174,9 +174,9 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
     }
     if ($aArgs['data'][$i]['column'] == 'docserver_id') {
         // Retrieve the PATH TEMPLATE
-        $docserverPath = \Docserver\models\DocserverModel::getById([
-            'select'    => ['path_template'],
-            'id'        => $aArgs['data'][$i]['value']
+        $docserverPath = \Docserver\models\DocserverModel::getByDocserverId([
+            'select'        => ['path_template'],
+            'docserverId'   => $aArgs['data'][$i]['value']
         ]);
 
         $aArgs['docserverPath'] = $docserverPath['path_template'];

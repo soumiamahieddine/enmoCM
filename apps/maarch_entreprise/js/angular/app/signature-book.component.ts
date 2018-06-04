@@ -1,15 +1,14 @@
 import { Pipe, PipeTransform, Component, OnInit, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LANG } from './translate.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { LANG } from './translate.component';
+import { NotificationService } from './notification.service';
 
 declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
 declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
-declare function successNotification(message: string) : void;
-declare function errorNotification(message: string) : void;
 declare function showAttachmentsForm(path: string) : void;
 declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 declare function setSessionForSignatureBook(resId: any) : void;
@@ -26,7 +25,8 @@ export class SafeUrlPipe implements PipeTransform {
 }
 
 @Component({
-  templateUrl: "../../../Views/signature-book.component.html",
+    templateUrl: "../../../Views/signature-book.component.html",
+    providers: [NotificationService]
 })
 export class SignatureBookComponent implements OnInit {
 
@@ -71,7 +71,7 @@ export class SignatureBookComponent implements OnInit {
     attachmentsViewerLink       : string    = "";
 
 
-    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone) {
+    constructor(public http: HttpClient, private route: ActivatedRoute, private router: Router, private zone: NgZone, private notify: NotificationService) {
         
         $j("head style").remove();
         if ($j("link[href='merged_css.php']").length == 0) {
@@ -164,7 +164,7 @@ export class SignatureBookComponent implements OnInit {
                         }
                     }, 0);
                 }, (err) => {
-                    errorNotification(JSON.parse(err._body).errors);
+                    this.notify.error(err.error.errors);
                     setTimeout(() => {
                         this.backToBasket();
                     }, 2000);

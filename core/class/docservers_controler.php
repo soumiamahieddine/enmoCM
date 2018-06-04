@@ -81,7 +81,6 @@ class docservers_controler
                 'docserver_id',
                 'docserver_type_id',
                 'coll_id',
-                'docserver_location_id',
             )
         );
         $this->set_specific_id('docserver_id');
@@ -271,16 +270,7 @@ class docservers_controler
                 0,
                 6
             );
-        $docserver->docserver_location_id = 
-            $f->wash(
-                $docserver->docserver_location_id,
-                'no',
-                _DOCSERVER_LOCATIONS . ' ',
-                'yes',
-                0,
-                32
-            );
-        $docserver->adr_priority_number = 
+        $docserver->adr_priority_number =
             $f->wash(
                 $docserver->adr_priority_number,
                 'num',
@@ -877,7 +867,7 @@ class docservers_controler
         $db = new Database();
         $query = "select priority_number, docserver_id from "
                . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-               . " enabled = 'Y' and coll_id = ? order by priority_number";
+               . "coll_id = ? order by priority_number";
         $stmt = $db->query($query, array($collId));
         $queryResult = $stmt->fetchObject();
         if ($queryResult->docserver_id <> '') {
@@ -1173,57 +1163,7 @@ class docservers_controler
         
         return $newSize;
     }
-
-    /**
-     * Get the network link of a resource on a docserver
-     * @param   bigint $gedId id of th resource
-     * @param   string $tableName name of the res table
-     * @param   string $adrTable name of the res address table
-     * @return  array of net address to the docserver
-     */
-    public function retrieveDocserverNetLinkOfResource(
-        $gedId,
-        $tableName,
-        $adrTable
-    ) {
-        $adr = array();
-        $resource = new resource();
-        $whereClause = ' and 1=1';
-        $adr = $resource->getResourceAdr(
-            $tableName,
-            $gedId,
-            $whereClause,
-            $adrTable
-        );
-        if ($adr['status'] == 'ko') {
-            $result = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _RESOURCE_NOT_EXISTS,
-            );
-        } else {
-            //TODO : MANAGEMENT OF GEOLOCALISATION FAILOVER
-            //$resource->show_array($adr);
-            $docserver = $adr[0][0]['docserver_id'];
-            //retrieve infos of the docserver
-            $docserverObject = $this->get($docserver);
-            //retrieve infos of the docserver type
-            require_once('core' . DIRECTORY_SEPARATOR . 'class'
-                . DIRECTORY_SEPARATOR . 'docserver_locations_controler.php');
-            $docserverLocationControler = new docserver_locations_controler();
-            $docserverLocationObject =
-                $docserverLocationControler->get(
-                    $docserverObject->docserver_location_id
-                );
-            $result = array(
-                'status' => 'ok',
-                'value' => $docserverLocationObject->net_link,
-                'error' => '',
-            );
-        }
-        return $result;
-    }
-
+    
     /**
      * 
      * Get a resources at a specific address in adr table or res table

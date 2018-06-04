@@ -73,6 +73,71 @@ class ResControllerTest extends TestCase
         $this->assertSame(null, $res['destination']);
     }
 
+    public function testCreateExt()
+    {
+        $resController = new \Resource\controllers\ResController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        
+        $data = [
+            [
+                'column'    => 'category_id',
+                'value'     => 'incoming',
+                'type'      => 'string',
+            ]
+        ];
+
+        $aArgs = [
+            'resId' => self::$id,
+            'data'  => $data
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        
+        $this->assertSame(true, $responseBody->status);
+
+        $ext = \Resource\models\ResModel::getExtById(['resId' => self::$id, 'select' => ['category_id']]);
+
+        $this->assertSame('incoming', $ext['category_id']);
+
+        $data = [
+            [
+                'column'    => 'category_id',
+                'value'     => 'incoming',
+                'type'      => 'string',
+            ]
+        ];
+
+        $aArgs = [
+            'resId' => self::$id,
+            'data'  => $data
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Document already exists in mlb_coll_ext', $responseBody->errors);
+
+
+        $aArgs = [
+            'resId' => self::$id,
+            'data'  => null
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
+
     public function testUpdateStatus()
     {
         $resController = new \Resource\controllers\ResController();

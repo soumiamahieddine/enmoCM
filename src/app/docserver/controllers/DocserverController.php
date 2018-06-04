@@ -16,7 +16,9 @@ namespace Docserver\controllers;
 
 use Docserver\models\DocserverTypeModel;
 use Group\models\ServiceModel;
+use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\ValidatorModel;
@@ -30,7 +32,27 @@ class DocserverController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['docservers' => DocserverModel::get()]);
+        $sortedDocservers = [];
+        $types = [];
+        $docservers = DocserverModel::get();
+        foreach ($docservers as $docserver) {
+            $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
+            if ($docserver['actual_size_number'] > 1000000000) {
+                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000000, 3) . ' Go';
+            } else {
+                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000, 3) . ' Mo';
+            }
+            if ($docserver['size_limit_number'] > 1000000000) {
+                $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3) . ' Go';
+            } else {
+                $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000, 3) . ' Mo';
+            }
+            $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
+            $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
+            $types[] = $docserver['docserver_type_id'];
+        }
+
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => array_values(array_unique($types))]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -40,12 +62,102 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-
         if(empty($docserver)){
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
 
         return $response->withJson($docserver);
+    }
+
+    public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['docserver_id']) && preg_match("/^[\w-]*$/", $data['docserver_id']) && (strlen($data['docserver_id']) < 32);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['docserver_type_id']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['device_label']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['coll_id']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $existingDocserver = DocserverModel::getByDocserverId(['docserverId' => $data['docserver_id'], 'select' => ['1']]);
+        if (!empty($existingDocserver)) {
+            return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
+        }
+        if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
+            return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
+        }
+
+        $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
+
+        $id = DocserverModel::create($data);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $data['docserver_id'],
+            'eventType' => 'ADD',
+            'info'      => _DOCSERVER_ADDED . " : {$data['docserver_id']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverCreation',
+        ]);
+
+        return $response->withJson(['docserver' => $id]);
+    }
+
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['device_label']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['1']]);
+        if (empty($docserver)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
+        }
+        if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
+            return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
+        }
+
+        $updateData = [
+            'id'                    => $aArgs['id'],
+            'device_label'          => $data['device_label'],
+            'size_limit_number'     => $data['size_limit_number'],
+            'path_template'         => $data['path_template'],
+            'priority_number'       => $data['priority_number'],
+            'adr_priority_number'   => $data['adr_priority_number'],
+            'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
+        ];
+
+        DocserverModel::update($updateData);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _DOCSERVER_UPDATED . " : {$data['device_label']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -55,14 +167,21 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-
         if(empty($docserver)){
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
         DocserverModel::delete(['id' => $aArgs['id']]);
+        HistoryController::add([
+            'tableName' => 'docservers',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _DOCSERVER_DELETED . " : {$aArgs['id']}",
+            'moduleId'  => 'docserver',
+            'eventId'   => 'docserverSuppression',
+        ]);
 
-        return $response->withJson(['docservers' => DocserverModel::get()]);
+        return $response->withJson(['success' => 'success']);
     }
 
     public static function storeResourceOnDocServer(array $aArgs)
@@ -115,7 +234,7 @@ class DocserverController
         $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
 
         DocserverModel::update([
-            'docserver_id'          => $docserver['docserver_id'],
+            'id'                    => $docserver['id'],
             'actual_size_number'    => $docserver['actual_size_number'] + $aArgs['fileInfos']['size']
         ]);
 
@@ -323,6 +442,64 @@ class DocserverController
         }
 
         return $dataToReturn;
+    }
+
+    private static function getDocserverSize(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        $size = 0;
+
+        if (DocserverController::isPathAvailable(['path' => $aArgs['path']])) {
+            $firstLayerDirectories = scandir($aArgs['path']);
+            foreach ($firstLayerDirectories as $firstLayerDirectory) {
+                if ($firstLayerDirectory != '.' && $firstLayerDirectory != '..') {
+                    if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}"])) {
+                        $secondLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}");
+                        foreach ($secondLayerDirectories as $secondLayerDirectory) {
+                            if ($secondLayerDirectory != '.' && $secondLayerDirectory != '..') {
+                                if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}"])) {
+                                    $thirdLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}");
+                                    foreach ($thirdLayerDirectories as $thirdLayerDirectory) {
+                                        if ($thirdLayerDirectory != '.' && $thirdLayerDirectory != '..') {
+                                            if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}"])) {
+                                                $files = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}");
+                                                foreach ($files as $file) {
+                                                    if ($file != '.' && $file != '..') {
+                                                        $size += filesize("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}/{$file}");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $size;
+    }
+
+    private static function isPathAvailable(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['path']);
+        ValidatorModel::stringType($aArgs, ['path']);
+
+        if (!is_dir($aArgs['path'])) {
+            return false;
+        }
+        if (!is_readable($aArgs['path'])) {
+            return false;
+        }
+        if (!is_writable($aArgs['path'])) {
+            return false;
+        }
+
+        return true;
     }
 
     private static function directoryWasher(array $aArgs)

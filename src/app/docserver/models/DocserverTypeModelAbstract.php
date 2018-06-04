@@ -10,7 +10,6 @@
 /**
 * @brief DocserverType Model
 * @author dev@maarch.org
-* @ingroup core
 */
 
 namespace Docserver\models;
@@ -49,47 +48,5 @@ class DocserverTypeModelAbstract
         }
 
         return $aDocserverType[0];
-    }
-
-    public static function create(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
-
-        DatabaseModel::insert([
-            'table'         => 'docserver_types',
-            'columnsValues' => $aArgs
-        ]);
-
-        return true;
-    }
-
-    public static function update(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['docserver_type_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_type_id']);
-
-        DatabaseModel::update([
-            'table'     => 'docserver_types',
-            'set'       => $aArgs,
-            'where'     => ['docserver_type_id = ?'],
-            'data'      => [$aArgs['docserver_type_id']]
-        ]);
-
-        return true;
-    }
-
-    public static function delete(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['id']);
-
-        DatabaseModel::delete([
-            'table' => 'docserver_types',
-            'where' => ['docserver_type_id = ?'],
-            'data'  => [$aArgs['id']]
-        ]);
-
-        return true;
     }
 }

@@ -44,21 +44,4 @@ class DocserverTypeController
 
         return $response->withJson($docserverType);
     }
-
-    public function delete(Request $request, Response $response, array $aArgs)
-    {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $docserverType = DocserverTypeModel::getById(['id' => $aArgs['id']]);
-
-        if(empty($docserverType)){
-            return $response->withStatus(400)->withJson(['errors' => 'Docserver Type does not exist']);
-        }
-
-        DocserverTypeModel::delete(['id' => $aArgs['id']]);
-
-        return $response->withJson(['docserverTypes' => DocserverTypeModel::get()]);
-    }
 }

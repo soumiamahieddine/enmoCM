@@ -27,3 +27,16 @@ CREATE TABLE contacts_groups_lists
   CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
 )
 WITH (OIDS=FALSE);
+
+/* Docservers */
+ALTER TABLE docservers DROP COLUMN IF EXISTS docserver_location_id;
+ALTER TABLE docservers DROP COLUMN IF EXISTS ext_docserver_info;
+ALTER TABLE docservers DROP COLUMN IF EXISTS chain_before;
+ALTER TABLE docservers DROP COLUMN IF EXISTS chain_after;
+ALTER TABLE docservers DROP COLUMN IF EXISTS closing_date;
+ALTER TABLE docservers DROP COLUMN IF EXISTS enabled;
+ALTER TABLE docservers DROP COLUMN IF EXISTS id;
+ALTER TABLE docservers ADD COLUMN id serial;
+ALTER TABLE docservers ADD UNIQUE (id);
+DROP TABLE IF EXISTS docserver_locations;
+

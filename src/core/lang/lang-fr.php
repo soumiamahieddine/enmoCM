@@ -38,6 +38,9 @@ define('_CONTACTS_GROUP_LIST_DELETED', 'Suppression de contacts dans le groupe')
 define('_CONTACTS_GROUP_LABEL_ALREADY_EXISTS', 'Un groupe avec ce libellé existe déjà');
 define('_DELETE_NOTIFICATIONS', 'Notification supprimée');
 define('_DEST_USER', 'Destinataire');
+define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
+define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
+define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');
@@ -344,10 +347,25 @@ define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitemen
 define('_ADD_COPY_IN_INDEXING_VALIDATION', 'Interdire la modification du destinataire dans la liste de diffusion');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la page de détails');
 define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
-define("_EXPORT_SEDA_VIEW", "Voir le bordereau");
-define("_PUT_DOC_IN_FILEPLAN", "Classer des documents");
-define("_PUT_DOC_IN_FILEPLAN_COMMENT", "Classer des documents dans le plan de classement organisationnel");
-define("_PERSONNAL_FILEPLAN", "Plan de classement personnel");
+define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
+define('_PUT_DOC_IN_FILEPLAN', 'Classer des documents');
+define('_PUT_DOC_IN_FILEPLAN_COMMENT', 'Classer des documents dans le plan de classement organisationnel');
+define('_PERSONNAL_FILEPLAN', 'Plan de classement personnel');
+define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
+define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Ouvre une modal permettant d\'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.');
+define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');
+define('_VALIDATE_RECOMMENDATION_DESC', 'Permet d\'ajouter dans la note de demande avis la personne qui a contrôlé la demande.');
+define('_SEND_TO_AVIS_WF', 'Envoyer une demande d\'avis (séquentiel)');
+define('_SEND_TO_AVIS_WF_DESC', 'Ouvre une modal permettant de configurer un circuit d\'avis pour le document.');
+define('_PROCEED_WORKFLOW_AVIS', 'Émettre un avis (séquentiel)');
+define('_PROCEED_WORKFLOW_AVIS_DESC', 'Met à jour la date d\'émission d\'avis du conseiller actuel du circuit d\'avis ("process_date" de la table listinstance).');
+define('_PROCEED_WORKFLOW_AVIS_SIMPLE', 'Émettre un avis (parallèle)');
+define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Met à jour la date d\'émission d\'avis de l\'utilisateur présent en avis dans la liste de diffusion du document ("process_date" de la table listinstance).');
+define('_EXPORT_SEDA', 'Transférer vos courriers');
+define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
+define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
+define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
+define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
@@ -368,15 +386,15 @@ define('_MAIL_VOL_BY_CAT_REPORT', 'Volume de courriers par catégorie');
 define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).');
 
 //ATTACHMENT TYPES
-define( "_RESPONSE_PROJECT", "Projet de réponse");
-define( "_SIGNED_RESPONSE", "Réponse signée");
-define( "_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
-define( "_A_PJ", "Pièce jointe");
-define( "_INCOMING_PJ", "Pièce jointe capturée");
-define( "_WAYBILL", "Bordereau d'envoi");
-define( "_ROUTING", "Fiche de circulation");
-define( "_OUTGOING_MAIL", "Courrier départ spontané");
-define( "_CONVERTED_PDF", "PDF converti par la solution");
+define("_RESPONSE_PROJECT", "Projet de réponse");
+define("_SIGNED_RESPONSE", "Réponse signée");
+define("_OUTGOING_MAIL_SIGNED", "Courrier départ signé");
+define("_A_PJ", "Pièce jointe");
+define("_INCOMING_PJ", "Pièce jointe capturée");
+define("_WAYBILL", "Bordereau d'envoi");
+define("_ROUTING", "Fiche de circulation");
+define("_OUTGOING_MAIL", "Courrier départ spontané");
+define("_CONVERTED_PDF", "PDF converti par la solution");
 define('_PRINT_FOLDER', 'Dossier');
 define('_SVA', 'SVA');
 define('_SVR', 'SVR');

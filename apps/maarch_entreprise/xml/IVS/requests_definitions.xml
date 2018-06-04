@@ -192,62 +192,6 @@
       <parameter name="id"/>
     </requestDefinition>
 
-    <!-- Admin docserver -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_locations_list_by_id"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_docserver_location" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_locations_management_controler"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_locations_management_controler"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id" />
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_types_list_by_id"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_docserver_type" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_types_management_controler"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docserver_types_management_controler"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_ajax_search" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docservers_list_by_id"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_docservers" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docservers_management_controler"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id_string" >
-      <parameter name="admin" value="docservers"/>
-      <parameter name="page" value="docservers_management_controler"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
-
     <!-- indexing_searching  -->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="multi_contacts" >
       <parameter name="dir" value="indexing_searching"/>

@@ -178,7 +178,7 @@ while ($state <> 'END') {
                 $smtp = $stmt = Bt_doQuery($GLOBALS['db'], $query, array($email->message_exchange_id));
                 $messageExchange = $smtp->fetchObject();
 
-                $docserver     = \Docserver\models\DocserverModel::getById(['id' => $messageExchange->docserver_id]);
+                $docserver     = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $messageExchange->docserver_id]);
                 $docserverType = \Docserver\models\DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
                 $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange->path);

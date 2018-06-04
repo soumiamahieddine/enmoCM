@@ -10,7 +10,7 @@ function manage_send($aId)
 
     foreach ($aId as $resId) {
         $document = \Resource\models\ResModel::getById(['resId' => $resId, 'select' => ['res_id', 'format', 'path', 'filename']]);
-        $docserver = \Docserver\models\DocserverModel::getByCollId(['collId' => 'letterbox_coll', 'priority' => true, 'select' => ['path_template']]);
+        $docserver = \Docserver\models\DocserverModel::getFirstByTypeId(['typeId' => 'DOC', 'select' => ['path_template']]);
 
         $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $document['path']) . $document['filename']);
         $encodedFile = base64_encode($file);

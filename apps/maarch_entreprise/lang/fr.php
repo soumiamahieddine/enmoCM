@@ -2222,7 +2222,7 @@ if (!defined('_PROCESS')) {
     define('_PROCESS', 'Traitement ');
 }
 if (!defined('_PROCESS_ACTION')) {
-    define('_PROCESS', 'Traiter ');
+    define('_PROCESS_ACTION', 'Traiter');
 }
 if (!defined('_PROCESS_DESC')) {
     define('_PROCESS_DESC', "Ouvre la page de traitement d'un document (les métas-données ne peuvent être modfiées depuis cette page).");
@@ -3833,12 +3833,6 @@ if (!defined('_DOCSERVER_ATTACHED_TO_RES_X')) {
 }
 
 /************DOCSERVER LOCATIONS******************************/
-if (!defined('_DOCSERVER_LOCATION_ID')) {
-    define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
-}
-if (!defined('_DOCSERVER_LOCATIONS')) {
-    define('_DOCSERVER_LOCATIONS', 'Lieu(x) de stockage ');
-}
 if (!defined('_IPV4')) {
     define('_IPV4', 'Adresse IPv4');
 }
@@ -3853,36 +3847,6 @@ if (!defined('_MASK')) {
 }
 if (!defined('_NET_LINK')) {
     define('_NET_LINK', 'URL du frontal');
-}
-if (!defined('_DOCSERVER_LOCATION_ADDITION')) {
-    define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage ');
-}
-if (!defined('_DOCSERVER_LOCATION_MODIFICATION')) {
-    define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage');
-}
-if (!defined('_ALL_DOCSERVER_LOCATIONS')) {
-    define('_ALL_DOCSERVER_LOCATIONS', 'Tout afficher');
-}
-if (!defined('_DOCSERVER_LOCATIONS_LIST')) {
-    define('_DOCSERVER_LOCATIONS_LIST', 'Liste des lieux de stockage');
-}
-if (!defined('_DOCSERVER_LOCATION')) {
-    define('_DOCSERVER_LOCATION', 'un lieu de stockage');
-}
-if (!defined('_DOCSERVER_LOCATION_UPDATED')) {
-    define('_DOCSERVER_LOCATION_UPDATED', 'Lieu de stockage mis à jour');
-}
-if (!defined('_DOCSERVER_LOCATION_ADDED')) {
-    define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
-}
-if (!defined('_DOCSERVER_LOCATION_DELETED')) {
-    define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
-}
-if (!defined('_DOCSERVER_LOCATION_DISABLED')) {
-    define('_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage desactivé');
-}
-if (!defined('_DOCSERVER_LOCATION_ENABLED')) {
-    define('_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage activé');
 }
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) {
     define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');

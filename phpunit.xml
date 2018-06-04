@@ -9,6 +9,7 @@
             <file>core/Test/ContactControllerTest.php</file>
             <file>core/Test/ContactGroupControllerTest.php</file>
             <file>core/Test/ContactTypeControllerTest.php</file>
+            <file>core/Test/DocserverControllerTest.php</file>
             <file>core/Test/DoctypeControllerTest.php</file>
             <file>core/Test/EntityControllerTest.php</file>
             <file>core/Test/GroupControllerTest.php</file>
