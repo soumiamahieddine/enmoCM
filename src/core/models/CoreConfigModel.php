@@ -20,7 +20,7 @@ class CoreConfigModel
 {
     public static function getCustomId()
     {
-        if (!file_exists('custom/custom.xml')) {
+        if (!file_exists('custom/custom.xml') || empty($_SERVER['SCRIPT_NAME']) || empty($_SERVER['SERVER_ADDR'])) {
             return '';
         }
 
@@ -28,6 +28,8 @@ class CoreConfigModel
 
         if (strpos($_SERVER['SCRIPT_NAME'], 'ws_server') !== false) {
             $path = $explodeUrl[count($explodeUrl) - 2];
+        } elseif (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise/smartphone') !== false) {
+            $path = $explodeUrl[count($explodeUrl) - 5];
         } elseif (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise') === false) {
             $path = $explodeUrl[count($explodeUrl) - 3];
         } else {
@@ -38,9 +40,9 @@ class CoreConfigModel
         foreach ($xmlfile->custom as $value) {
             if (!empty($value->path) && $value->path == $path) {
                 return (string)$value->custom_id;
-            } elseif($value->ip == $_SERVER['SERVER_ADDR']) {
+            } elseif ($value->ip == $_SERVER['SERVER_ADDR']) {
                 return (string)$value->custom_id;
-            } else if ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
+            } elseif ($value->external_domain == $_SERVER['HTTP_HOST'] || $value->domain == $_SERVER['HTTP_HOST']) {
                 return (string)$value->custom_id;
             }
         }
