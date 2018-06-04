@@ -38,7 +38,7 @@ class TemplateController
             $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);
             $docinfo['fileDestinationName'] .=  '.' . explode('.', $template['template_file_name'])[1];
 
-            $pathToDocumentToCopy = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            $pathToDocumentToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
             $copyResult = DocserverController::copyOnDocServer([
                 'sourceFilePath'             => $pathToDocumentToCopy,
                 'destinationDir'             => $docinfo['destinationDir'],
