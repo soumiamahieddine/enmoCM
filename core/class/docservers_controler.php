@@ -867,7 +867,7 @@ class docservers_controler
         $db = new Database();
         $query = "select priority_number, docserver_id from "
                . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-               . " enabled = 'Y' and coll_id = ? order by priority_number";
+               . "coll_id = ? order by priority_number";
         $stmt = $db->query($query, array($collId));
         $queryResult = $stmt->fetchObject();
         if ($queryResult->docserver_id <> '') {
