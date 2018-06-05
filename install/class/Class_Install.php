@@ -6,7 +6,6 @@
 */
 
 /**
- * @brief class of install tools
  *
  * @file
  *
@@ -648,13 +647,13 @@ class Install extends functions
         $xmlconfig = simplexml_load_file(realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/config.xml');
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $COLLECTION_1 = $xmlconfig->COLLECTION[0];
-        $COLLECTION_1->path_to_lucene_index = $docserverPath.'indexes/letterbox_coll/';
+        $COLLECTION_1->path_to_lucene_index = $docserverPath.'/indexes/letterbox_coll/';
 
         $COLLECTION_2 = $xmlconfig->COLLECTION[1];
-        $COLLECTION_2->path_to_lucene_index = $docserverPath.'indexes/attachments_coll/';
+        $COLLECTION_2->path_to_lucene_index = $docserverPath.'/indexes/attachments_coll/';
 
         $COLLECTION_3 = $xmlconfig->COLLECTION[2];
-        $COLLECTION_3->path_to_lucene_index = $docserverPath.'indexes/version_attachments_coll/';
+        $COLLECTION_3->path_to_lucene_index = $docserverPath.'/indexes/version_attachments_coll/';
 
         $res = $xmlconfig->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
@@ -673,7 +672,7 @@ class Install extends functions
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig2->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/letterbox_coll/';
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'/indexes/letterbox_coll/';
 
         $res = $xmlconfig2->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
@@ -693,7 +692,7 @@ class Install extends functions
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig3->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/attachments_coll/';
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'/indexes/attachments_coll/';
 
         $res = $xmlconfig3->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
@@ -713,7 +712,7 @@ class Install extends functions
         //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig4->CONFIG;
 
-        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'indexes/version_attachments_coll/';
+        $CONFIG->INDEX_FILE_DIRECTORY = $docserverPath.'/indexes/version_attachments_coll/';
 
         $res = $xmlconfig4->asXML();
         // $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
