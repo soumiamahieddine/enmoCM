@@ -40,7 +40,7 @@ $_SESSION = array();
 session_unset();
 session_destroy();
 if(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
-header('Location: ../'.$nomCustom);
+header('Location: ../' . $nomCustom . '/');
 }elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
 header('Location: ../');
 }
