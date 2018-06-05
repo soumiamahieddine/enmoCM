@@ -80,7 +80,7 @@
                             :
                         </td>
                         <td>
-                            <input type="text" size="30" name="docserverRoot" id="docserverRoot"/>
+                            <input type="text" size="30" name="docserverRoot" id="docserverRoot" value="/opt/maarch/docservers/"/>
                         </td>
                         <td>
                             <b>/<?php echo $_SESSION['config']['databasename'];?></b>
