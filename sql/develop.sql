@@ -35,6 +35,7 @@ ALTER TABLE docservers DROP COLUMN IF EXISTS chain_before;
 ALTER TABLE docservers DROP COLUMN IF EXISTS chain_after;
 ALTER TABLE docservers DROP COLUMN IF EXISTS closing_date;
 ALTER TABLE docservers DROP COLUMN IF EXISTS enabled;
+ALTER TABLE docservers DROP COLUMN IF EXISTS adr_priority_number;
 ALTER TABLE docservers DROP COLUMN IF EXISTS id;
 ALTER TABLE docservers ADD COLUMN id serial;
 ALTER TABLE docservers ADD UNIQUE (id);

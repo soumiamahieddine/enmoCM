@@ -1010,36 +1010,36 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 
 TRUNCATE TABLE docservers;
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FASTHD_AI', 'DOC', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', '2011-01-07 13:43:48.696644', 'letterbox_coll', 11, 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FASTHD_MAN', 'DOC', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/opt/maarch/docservers/manual/', '2011-01-13 14:47:49.197164', 'letterbox_coll', 10, 2);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments/', '2011-01-13 14:47:49.197164', 'attachments_coll', 2, 3);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FASTHD_ATTACH_VERSION', 'FASTHD', 'Fast internal disc bay for attachments version', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments_version/', '2011-01-13 14:47:49.197164', 'attachments_version_coll', 100, 100);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('CONVERT_MLB', 'CONVERT', 'Server for mlb documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 13, 4);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('CONVERT_ATTACH', 'CONVERT', 'Server for attachments documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 14, 5);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('CONVERT_ATTACH_VERSION', 'CONVERT', 'Server for attachments version documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 101, 101);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('TNL_MLB', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 12, 3);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('TNL_ATTACH', 'TNL', 'Server for thumbnails of attachments', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 15, 6);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('TNL_ATTACH_VERSION', 'TNL', 'Server for thumbnails of attachments version', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 102, 102);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FULLTEXT_MLB', 'FULLTEXT', 'Server for mlb documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 16, 7);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FULLTEXT_ATTACH', 'FULLTEXT', 'Server for attachments documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 17, 8);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 103, 103);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', '2012-04-01 14:49:05.095119', 'templates', 1, 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number, adr_priority_number)
-VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Fast internal disc bay for archive transfer', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/archive_transfer/', '2017-01-13 14:47:49.197164', 'archive_transfer_coll', 10, 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FASTHD_AI', 'DOC', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', '2011-01-07 13:43:48.696644', 'letterbox_coll', 11);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FASTHD_MAN', 'DOC', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1290730, '/opt/maarch/docservers/manual/', '2011-01-13 14:47:49.197164', 'letterbox_coll', 10);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FASTHD_ATTACH', 'FASTHD', 'Fast internal disc bay for attachments', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments/', '2011-01-13 14:47:49.197164', 'attachments_coll', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FASTHD_ATTACH_VERSION', 'FASTHD', 'Fast internal disc bay for attachments version', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/manual_attachments_version/', '2011-01-13 14:47:49.197164', 'attachments_version_coll', 100);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('CONVERT_MLB', 'CONVERT', 'Server for mlb documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 13);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('CONVERT_ATTACH', 'CONVERT', 'Server for attachments documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 14);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('CONVERT_ATTACH_VERSION', 'CONVERT', 'Server for attachments version documents conversion', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/convert_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 101);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('TNL_MLB', 'TNL', 'Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 12);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('TNL_ATTACH', 'TNL', 'Server for thumbnails of attachments', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 15);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('TNL_ATTACH_VERSION', 'TNL', 'Server for thumbnails of attachments version', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 102);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FULLTEXT_MLB', 'FULLTEXT', 'Server for mlb documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_mlb/', '2015-03-16 14:47:49.197164', 'letterbox_coll', 16);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FULLTEXT_ATTACH', 'FULLTEXT', 'Server for attachments documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments/', '2015-03-16 14:47:49.197164', 'attachments_coll', 17);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('FULLTEXT_ATTACH_VERSION', 'FULLTEXT', 'Server for attachments version documents fulltext', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/fulltext_attachments_version/', '2015-03-16 14:47:49.197164', 'attachments_version_coll', 103);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 71511, '/opt/maarch/docservers/templates/', '2012-04-01 14:49:05.095119', 'templates', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)
+VALUES ('ARCHIVETRANSFER', 'ARCHIVETRANSFER', 'Fast internal disc bay for archive transfer', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/archive_transfer/', '2017-01-13 14:47:49.197164', 'archive_transfer_coll', 10);
 ------------
 --SUPERADMIN USER
 ------------

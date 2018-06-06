@@ -88,13 +88,6 @@ class ProcessFulltextModelAbstract
                 $resOffsetDoc = $returnRes['offset_doc'];
                 $fingerprintInit = $returnRes['fingerprint'];
 
-                $returnDs = DatabaseModel::select([
-                    'select'    => ['adr_priority_number'],
-                    'table'     => ['docservers'],
-                    'where'     => ['docserver_id = ?'],
-                    'data'      => [$resDocserverId]
-                ]);
-
                 DatabaseModel::insert([
                     'table'         => $aArgs['adrTable'],
                     'columnsValues' => [
@@ -104,7 +97,7 @@ class ProcessFulltextModelAbstract
                         'filename'      => $resFilename,
                         'offset_doc'    => $resOffsetDoc,
                         'fingerprint'   => $fingerprintInit,
-                        'adr_priority'  => $returnDs[0]['adr_priority_number'],
+                        'adr_priority'  => 1,
                     ]
                 ]);
             }
@@ -126,7 +119,7 @@ class ProcessFulltextModelAbstract
                         'filename'      => $aArgs['fileName'],
                         'offset_doc'    => '',
                         'fingerprint'   => '',
-                        'adr_priority'  => $aArgs['docserver']['adr_priority_number'],
+                        'adr_priority'  => 1,
                         'adr_type'      => 'TXT',
                     ]
                 ]);
@@ -139,7 +132,7 @@ class ProcessFulltextModelAbstract
                         'filename'      => $aArgs['fileName'],
                         'offset_doc'    => '',
                         'fingerprint'   => '',
-                        'adr_priority'  => $aArgs['docserver']['adr_priority_number'],
+                        'adr_priority'  => 1,
                     ],
                     'where'     => ['res_id = ?', "adr_type = ?"],
                     'data'      => [$aArgs['resId'], 'TXT']

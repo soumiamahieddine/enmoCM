@@ -270,23 +270,10 @@ class docservers_controler
                 0,
                 6
             );
-        $docserver->adr_priority_number =
-            $f->wash(
-                $docserver->adr_priority_number,
-                'num',
-                _ADR_PRIORITY . ' ',
-                'yes',
-                0,
-                6
-            );
         if ($mode == 'add'
             && $this->docserversExists($docserver->docserver_id)
         ) {
             $error .= $docserver->docserver_id . ' ' . _ALREADY_EXISTS . '#';
-        }
-        if (!$this->adrPriorityNumberControl($docserver)) {
-            $error .= _PRIORITY . ' ' . $docserver->adr_priority_number . ' '
-                    . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER . '#';
         }
         if (!$this->priorityNumberControl($docserver)) {
             $error .= _ADR_PRIORITY . $docserver->priority_number . '  '
@@ -738,38 +725,6 @@ class docservers_controler
         }
     }
 
-    /**
-    * Check if two docservers have the same priorities
-    *
-    * @param $docserver docservers object
-    * @return bool true if the control is ok
-    */
-    private function adrPriorityNumberControl($docserver)
-    {
-        $func = new functions();
-        if (!isset($docserver)
-            || empty($docserver)
-            || empty($docserver->adr_priority_number)
-        ) {
-            return false;
-        }
-        $db = new Database();
-        $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where adr_priority_number = ? AND docserver_type_id = ?"
-               . " AND docserver_id <> ?";
-        $stmt = $db->query(
-            $query, 
-            array(
-                $docserver->adr_priority_number, 
-                $docserver->docserver_type_id, 
-                $docserver->docserver_id 
-            )
-        );
-        if ($stmt->rowCount() > 0) {
-            return false;
-        }
-        return true;
-    }
 
     /**
     * Check if two docservers have the same priorities

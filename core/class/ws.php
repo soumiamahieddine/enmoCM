@@ -19,7 +19,6 @@ $SOAP_typedef['docservers'] = array(    'docserver_id'=>'string',
                                         'path_template'=>'string',
                                         'coll_id'=>'string',
                                         'priority_number'=>'string',
-                                        'adr_priority_number'=>'string'
                                     );
 $SOAP_typedef['returnViewResource'] = array('status'=>'string',
                                             'mime_type'=>'string',

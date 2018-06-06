@@ -84,7 +84,6 @@ class DocserverController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['coll_id']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -124,7 +123,6 @@ class DocserverController
         $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['adr_priority_number']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -143,7 +141,6 @@ class DocserverController
             'size_limit_number'     => $data['size_limit_number'],
             'path_template'         => $data['path_template'],
             'priority_number'       => $data['priority_number'],
-            'adr_priority_number'   => $data['adr_priority_number'],
             'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
         ];
 

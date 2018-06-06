@@ -42,8 +42,7 @@ class DocserverControllerTest extends TestCase
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
             'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  20
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -72,8 +71,7 @@ class DocserverControllerTest extends TestCase
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/wrong/path/',
             'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  666
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -92,8 +90,7 @@ class DocserverControllerTest extends TestCase
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  null,
             'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  666
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -112,8 +109,7 @@ class DocserverControllerTest extends TestCase
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/var/docserversDEV/dev1804/archive_transfer/',
             'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  666
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -134,8 +130,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  30
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -160,8 +155,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/wrong/path/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  30
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -178,8 +172,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'priority_number'        =>  30
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => 12345]);
