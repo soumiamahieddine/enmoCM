@@ -86,7 +86,7 @@ export class DocserversAdministrationComponent implements OnInit {
         docserver.size_limit_number = docserver.limitSizeFormatted * 1000000000;
         this.http.put(this.coreUrl + 'rest/docservers/'+docserver.id,docserver)
             .subscribe((data: any) => {
-                this.docserversClone[docserver.docserver_type_id][i] = this.docservers[docserver.docserver_type_id][i];
+                this.docserversClone[docserver.docserver_type_id][i] = JSON.parse(JSON.stringify(this.docservers[docserver.docserver_type_id][i]));
                 this.notify.success(this.lang.docserverUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
