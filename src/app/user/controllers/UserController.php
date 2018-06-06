@@ -375,8 +375,7 @@ class UserController
         }
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
-            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -411,8 +410,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
-            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 

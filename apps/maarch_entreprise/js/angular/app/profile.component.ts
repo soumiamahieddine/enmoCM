@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef } from '@angular/material';
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 
@@ -23,6 +23,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     private _mobileQueryListener    : () => void;
     mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
+
     coreUrl                     : string;
     lang                        : any       = LANG;
 
@@ -59,6 +60,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     displayedColumns = ['event_date','info'];
     dataSource = new MatTableDataSource(this.histories);
+    
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
