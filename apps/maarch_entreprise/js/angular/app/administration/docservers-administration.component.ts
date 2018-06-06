@@ -82,11 +82,11 @@ export class DocserversAdministrationComponent implements OnInit {
         }
     }
 
-    onSubmit(docserver:any) {
+    onSubmit(docserver:any,i:number) {
         docserver.size_limit_number = docserver.limitSizeFormatted * 1000000000;
         this.http.put(this.coreUrl + 'rest/docservers/'+docserver.id,docserver)
-            .subscribe((data: any) => {     
-                this.docserversClone = JSON.parse(JSON.stringify(this.docservers));
+            .subscribe((data: any) => {
+                this.docserversClone[docserver.docserver_type_id][i] = this.docservers[docserver.docserver_type_id][i];
                 this.notify.success(this.lang.docserverUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);

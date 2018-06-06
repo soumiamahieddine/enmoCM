@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class="col-md-4" *ngFor="let docserver of this.docservers[docserverType.docserver_type_id];let i=index">
                                 <mat-card>
-                                    <form class="form-horizontal" (ngSubmit)="onSubmit(docserver)" #docserverFormUp="ngForm">
+                                    <form class="form-horizontal" (ngSubmit)="onSubmit(docserver,i)" #docserverFormUp="ngForm">
                                         <button *ngIf="!docserver.is_readonly" mat-icon-button color="accent" (click)="toggleDocserver(docserver)" style="position: absolute;top: 5px;right:10px;"
                                             matTooltip="{{lang.lockDocserver}}">
                                             <mat-icon class="fa fa-lock-open"></mat-icon>
