@@ -21,7 +21,7 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         }
 
         return $response->withJson(['groups' => $groups]);
