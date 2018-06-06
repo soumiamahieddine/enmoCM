@@ -30,6 +30,7 @@ import { ContactsGroupsAdministrationComponent }        from './contacts-groups-
 import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docservers-administration.component';
+import { DocserverAdministrationComponent }            from './docserver-administration.component';
  
 @NgModule({
     imports: [
@@ -73,6 +74,7 @@ import { DocserversAdministrationComponent }            from './docservers-admin
             { path: 'administration/contacts-groups/:id', component: ContactsGroupAdministrationComponent },
             { path: 'administration/versions-update', component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', component: DocserversAdministrationComponent },
+            { path: 'administration/docservers/new', component: DocserverAdministrationComponent },
         ]),
     ],
     exports: [

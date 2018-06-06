@@ -181,8 +181,12 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
+                console.log('oops');
                 if (this.currentEntity.visaTemplate[0]) {
                     this.idCircuitVisa = this.currentEntity.visaTemplate[0].id;
+                } else {
+                    console.log('oops');
+                    this.idCircuitVisa = null;
                 }
                 this.dataSource = new MatTableDataSource(this.currentEntity.users);
                 this.dataSource.paginator = this.paginator;

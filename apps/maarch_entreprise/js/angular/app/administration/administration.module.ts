@@ -39,6 +39,7 @@ import { ContactsGroupsAdministrationComponent }        from './contacts-groups-
 import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docservers-administration.component';
+import { DocserverAdministrationComponent }             from './docserver-administration.component';
 
 @NgModule({
     imports:      [
@@ -86,6 +87,7 @@ import { DocserversAdministrationComponent }            from './docservers-admin
         SortPipe,
         VersionsUpdateAdministrationComponent,
         DocserversAdministrationComponent,
+        DocserverAdministrationComponent,
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,
