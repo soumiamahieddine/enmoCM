@@ -44,15 +44,6 @@ CREATE TABLE docserver_types
   docserver_type_id character varying(32) NOT NULL,
   docserver_type_label character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  is_container character(1) NOT NULL DEFAULT 'N'::bpchar,
-  container_max_number integer NOT NULL DEFAULT (0)::integer,
-  is_compressed character(1) NOT NULL DEFAULT 'N'::bpchar,
-  compression_mode character varying(32) DEFAULT NULL::character varying,
-  is_meta character(1) NOT NULL DEFAULT 'N'::bpchar,
-  meta_template character varying(32) DEFAULT NULL::character varying,
-  is_logged character(1) NOT NULL DEFAULT 'N'::bpchar,
-  log_template character varying(32) DEFAULT NULL::character varying,
-  is_signed character(1) NOT NULL DEFAULT 'N'::bpchar,
   fingerprint_mode character varying(32) DEFAULT NULL::character varying,
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )

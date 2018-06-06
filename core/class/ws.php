@@ -63,15 +63,6 @@ $SOAP_dispatch_map['viewResource'] = array(
 // DOCSERVERS TYPES
 $SOAP_typedef['docserverTypes'] = array(    'docserver_type_id'=>'string',
                                             'docserver_type_label'=>'string',
-                                            'is_container'=>'string',
-                                            'container_max_number'=>'int',
-                                            'is_compressed'=>'string',
-                                            'compression_mode'=>'string',
-                                            'is_meta'=>'string',
-                                            'meta_template'=>'string',
-                                            'is_logged'=>'string',
-                                            'log_template'=>'string',
-                                            'is_signed'=>'string',
                                             'fingerprint_mode'=>'string'
                                             );
 $SOAP_dispatch_map['docserverTypeSave'] = array(

@@ -120,6 +120,7 @@ define('_NOTIFICATION_ALREADY_EXIST', 'Notification already exists');
 define('_WRONG_PSW', 'Wrong password');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
+define('_BACK_FROM_VACATION', 'back from vacation');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

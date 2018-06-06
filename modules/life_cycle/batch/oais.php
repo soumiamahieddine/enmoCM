@@ -78,12 +78,6 @@ function createAip($resInContainer)
             $tmpDir . DIRECTORY_SEPARATOR 
             . $resInContainer[$cptRes]['offset_doc']
         );
-        /*$resInContainer[$cptRes]['offset_doc'] = 'CI.' 
-            . strtolower(
-                $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['compression_mode']
-            ) 
-            . '#' . $resInContainer[$cptRes]['offset_doc'];*/
     }
     //CI compression
     $newSourceFilePath = doCompression('CI', $arrayOfFileToCompress, $tmpDir);

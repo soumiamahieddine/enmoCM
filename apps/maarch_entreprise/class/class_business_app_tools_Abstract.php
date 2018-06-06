@@ -729,29 +729,6 @@ abstract class business_app_tools_Abstract extends Database
         );
         
         $this->_loadListsConfig();
-         
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-            . 'docservers_features.xml'
-        )
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
-                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
-                  . DIRECTORY_SEPARATOR . 'docservers_features.xml';
-        } else {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-                  . 'docservers_features.xml';
-        }
-        $_SESSION['docserversFeatures'] = array();
-        $_SESSION['docserversFeatures'] = functions::object2array(
-            simplexml_load_file($path)
-        );
     }
 
     /**

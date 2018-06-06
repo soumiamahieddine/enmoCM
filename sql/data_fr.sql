@@ -996,18 +996,18 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_inser
 --DOCSERVERS
 ------------
 TRUNCATE TABLE docserver_types;
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('DOC', 'Documents', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('CONVERT', 'Conversions', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) 
-VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('DOC', 'Documents', 'Y', 'SHA512');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('CONVERT', 'Conversions', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('FULLTEXT', 'FULLTEXT', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('TNL', 'Thumbnails', 'Y', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, fingerprint_mode)
+VALUES ('ARCHIVETRANSFER', 'Archive Transfer', 'Y', 'SHA256');
 
 TRUNCATE TABLE docservers;
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, creation_date, coll_id, priority_number)

@@ -39,6 +39,15 @@ ALTER TABLE docservers DROP COLUMN IF EXISTS adr_priority_number;
 ALTER TABLE docservers DROP COLUMN IF EXISTS id;
 ALTER TABLE docservers ADD COLUMN id serial;
 ALTER TABLE docservers ADD UNIQUE (id);
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_container;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS container_max_number;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_compressed;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS compression_mode;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_meta;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS meta_template;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_logged;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS log_template;
+ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_signed;
 DROP TABLE IF EXISTS docserver_locations;
 
 /* Refactoring */
