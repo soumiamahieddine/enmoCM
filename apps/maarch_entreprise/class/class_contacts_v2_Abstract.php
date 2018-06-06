@@ -1393,20 +1393,35 @@ abstract class contacts_v2_Abstract extends Database
                 $stateRef = 'disabled';
                 $stateRefInfo = _WARNING_REF;
                 $stateRefCss = 'opacity:0.5;';
+            } 
+            
+            $defaultDepartment = \Parameter\models\ParameterModel::getById(['id' => 'defaultDepartment', 'select' => ['param_value_int']]);
+            if(!empty($defaultDepartment['param_value_int'])){
+                $selected = $defaultDepartment['param_value_int'];
             } ?>
-                            <td colspan="2" style="text-align:center;padding-bottom:10px;">
-                                <hr/>
-                                <div style="color:red;<?php echo $stateRefCss; ?>"><?php echo $stateRefInfo; ?></div>
-                                <div style="text-align:right;color:#135F7F;font-style:italic;<?php echo $stateRefCss; ?>">
-                                    <label for="refMaarch" style="width:auto;float:none;display:inline-block;"><?php echo _USE_REF; ?>&nbsp;: </label> <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch" type="checkbox"  id="refMaarch" value="Y" onclick="toggleRefMaarch()" <?php echo $stateRef; ?>/>
-                                </div>
-                                <div id="refSearch" style="display:none;">
-                                <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
-                                    <?php foreach ($numDepList as $key => $value) {
-                echo "<option value='{$value}'>{$value}</option>";
-            } ?>
-        
-                                    </select>
+                <td colspan="2" style="text-align:center;padding-bottom:10px;">
+                    <hr/>
+                    <div style="color:red;<?php echo $stateRefCss; ?>">
+                        <?php echo $stateRefInfo; ?>
+                    </div>
+                    <div style="text-align:right;color:#135F7F;font-style:italic;<?php echo $stateRefCss; ?>">
+                        <label for="refMaarch" style="width:auto;float:none;display:inline-block;">
+                            <?php echo _USE_REF; ?>&nbsp;: </label>
+                        <input style="margin-left:0px;" class="<?php echo $fieldAddressClass; ?>" name="refMaarch"
+                            type="checkbox" id="refMaarch" value="Y" onclick="toggleRefMaarch()" <?php
+                            echo $stateRef; ?>/>
+                    </div>
+                    <div id="refSearch" style="display:none;">
+                        <select id="numDep" style="display:inline-block;width:10%;" onchange="reloadTypeahead(this);">
+                            <?php foreach ($numDepList as $value) {
+                                echo "<option value='{$value}'";
+                                if($selected == $value){
+                                    echo " selected ";
+                                }
+                                echo ">{$value}</option>";
+                            } ?>
+
+                        </select>
                                     <div class="typeahead__container" style="width: 100%;display:inline-block;">
                                         <div class="typeahead__field">
                                         <span class="typeahead__query">
