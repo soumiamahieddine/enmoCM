@@ -28,29 +28,33 @@ class ContactGroupController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        $hasService = ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
+
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
 
         $contactsGroups = ContactGroupModel::get();
-
         foreach ($contactsGroups as $key => $contactsGroup) {
+            if (!$contactsGroup['public'] && $user['id'] != $contactsGroup['owner'] && !$hasService) {
+                unset($contactsGroups[$key]);
+                continue;
+            }
             $contactsGroups[$key]['position'] = $key;
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         }
 
-        return $response->withJson(['contactsGroups' => $contactsGroups]);
+        return $response->withJson(['contactsGroups' => array_values($contactsGroups)]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
         if (empty($contactsGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contacts group not found']);
+        }
+
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
+        if ($contactsGroup['owner'] != $user['id'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
@@ -100,7 +104,8 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
+        if ($contactsGroup['owner'] != $user['id'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -112,7 +117,6 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
         $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$data['label'], $user['id'], $aArgs['id']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
@@ -142,7 +146,8 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $user = UserModel::getByUserId(['select' => ['id'], 'userId' => $GLOBALS['userId']]);
+        if ($contactsGroup['owner'] != $user['id'] && !ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
