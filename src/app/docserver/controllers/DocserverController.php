@@ -42,11 +42,7 @@ class DocserverController
             } else {
                 $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000, 3) . ' Mo';
             }
-            if ($docserver['size_limit_number'] > 1000000000) {
-                $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3) . ' Go';
-            } else {
-                $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000, 3) . ' Mo';
-            }
+            $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3); // Giga
             $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
             $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
             $types[] = $docserver['docserver_type_id'];
