@@ -656,4 +656,46 @@ class UserControllerTest extends TestCase
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
     }
+
+    public function testSetRedirectedBasket(){
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            [
+                'newUser'       =>  'bblier',
+                'basketId'      =>  'MyBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ],
+            [
+                'newUser'       =>  'bblier',
+                'basketId'      =>  'EenvBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19]);
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertNotNull($responseBody->baskets);        
+    }
+
+    public function testDeleteRedirectedBaskets(){
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+                'basketOwner'   =>  'bbain',
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19, 'basketId' => 'MyBasket']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->baskets);        
+    }
 }
