@@ -60,7 +60,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     displayedColumns = ['event_date','info'];
     dataSource = new MatTableDataSource(this.histories);
-    
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {

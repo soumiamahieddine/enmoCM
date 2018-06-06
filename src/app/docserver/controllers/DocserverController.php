@@ -36,6 +36,7 @@ class DocserverController
         $types = [];
         $docservers = DocserverModel::get();
         foreach ($docservers as $docserver) {
+            $docserver['is_readonly'] = ($docserver['is_readonly'] == 'Y');
             $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
             if ($docserver['actual_size_number'] > 1000000000) {
                 $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000000, 3) . ' Go';
@@ -48,7 +49,10 @@ class DocserverController
             $types[] = $docserver['docserver_type_id'];
         }
 
-        return $response->withJson(['docservers' => $sortedDocservers, 'types' => array_values(array_unique($types))]);
+        $types = array_values(array_unique($types));
+        sort($types);
+
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => $types]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
