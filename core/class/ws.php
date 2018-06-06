@@ -223,16 +223,6 @@ $SOAP_typedef['docListReturnArray'] = array(
     'error'=>'string',
 );
 
-$SOAP_dispatch_map['Demo_searchResources'] = array(
-    'in' => array(
-        'searchParams' => '{urn:MaarchSoapServer}searchParams',
-    ),
-    'out' => array(
-        'out' => '{urn:MaarchSoapServer}docListReturnArray',
-    ),
-    'method' => "core#resources::Demo_searchResources",
-);
-
 $SOAP_typedef['returnRetrieveMasterResByChrono'] = array(
     'returnCode'=> 'int',
     'resId' => 'string',

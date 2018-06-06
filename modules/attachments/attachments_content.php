@@ -1202,7 +1202,7 @@ if (isset($_REQUEST['id'])) {
         $viewResourceArr = $docserverControler->viewResource(
             $resId,
             $infoAttach->target_table_origin,
-            'adr_x',
+            'adr_attachments',
             false
         );
         $_SESSION['upfile'][0]['fileNameOnTmp'] = str_replace($viewResourceArr['tmp_path'].DIRECTORY_SEPARATOR, '', $viewResourceArr['file_path']);
