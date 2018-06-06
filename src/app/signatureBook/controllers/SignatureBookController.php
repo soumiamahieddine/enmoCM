@@ -86,18 +86,19 @@ class SignatureBookController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $datas = [];
-        $datas['actions']       = $actions;
-        $datas['attachments']   = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
-        $datas['documents']     = $documents;
-        $datas['currentAction'] = $currentAction;
-        $datas['resList']       = [];
-        $datas['nbNotes']       = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
-        $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
-        $datas['signatures']    = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
-        $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
-        $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
-        $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['actions']               = $actions;
+        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['documents']             = $documents;
+        $datas['currentAction']         = $currentAction;
+        $datas['resList']               = [];
+        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['nbLinks']               = count(LinkModel::getByResId(['resId' => $resId]));
+        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
+        $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
+        $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
+        $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
+        $datas['canSign']               = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
     }
