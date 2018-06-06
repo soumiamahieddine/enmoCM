@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import {Location} from '@angular/common';
 import { LANG } from '../translate.component';
@@ -19,7 +19,7 @@ export class MenuNavComponent implements OnInit {
     coreUrl                     : string;
     router :any;
 
-    constructor(public http: HttpClient, private _location: Location, private _router: Router) {
+    constructor(public http: HttpClient, private _location: Location, private _router: Router, private activatedRoute:ActivatedRoute) {
         this.router = _router;
     }
 
@@ -28,6 +28,6 @@ export class MenuNavComponent implements OnInit {
     }
 
     backClicked() {
-        this._location.back();
+        this.router.navigate(['../'],{ relativeTo: this.activatedRoute });
     }
 }
