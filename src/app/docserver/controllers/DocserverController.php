@@ -33,7 +33,6 @@ class DocserverController
         }
 
         $sortedDocservers = [];
-        $types = [];
         $docservers = DocserverModel::get(['orderBy' => ['priority_number']]);
         foreach ($docservers as $docserver) {
             $docserver['is_readonly'] = ($docserver['is_readonly'] == 'Y');
@@ -46,13 +45,11 @@ class DocserverController
             $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3); // Giga
             $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
             $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
-            $types[] = $docserver['docserver_type_id'];
         }
 
-        $types = array_values(array_unique($types));
-        sort($types);
+        $docserversTypes = DocserverTypeModel::get(['select' => ['docserver_type_id', 'docserver_type_label'], 'orderBy' => ['docserver_type_label']]);
 
-        return $response->withJson(['docservers' => $sortedDocservers, 'types' => $types]);
+        return $response->withJson(['docservers' => $sortedDocservers, 'types' => $docserversTypes]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -151,8 +148,8 @@ class DocserverController
         }
         $existingDocserverPriority = DocserverModel::get([
             'select'    => ['1'],
-            'where'     => ['priority_number = ?', 'docserver_type_id = ?'],
-            'data'      => [$data['priority_number'], $docserver['docserver_type_id']]
+            'where'     => ['priority_number = ?', 'docserver_type_id = ?', 'id != ?'],
+            'data'      => [$data['priority_number'], $docserver['docserver_type_id'], $aArgs['id']]
         ]);
         if (!empty($existingDocserverPriority)) {
             return $response->withStatus(400)->withJson(['errors' => _DOCSERVER_PRIORITY_EXISTS]);

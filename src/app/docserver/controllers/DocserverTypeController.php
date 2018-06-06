@@ -27,7 +27,7 @@ class DocserverTypeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['docserverTypes' => DocserverTypeModel::get()]);
+        return $response->withJson(['docserverTypes' => DocserverTypeModel::get(['orderBy' => ['docserver_type_label']])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
