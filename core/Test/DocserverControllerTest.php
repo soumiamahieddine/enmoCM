@@ -41,8 +41,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  20
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -70,8 +69,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/wrong/path/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  666
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -89,8 +87,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  null,
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  666
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -108,8 +105,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/var/docserversDEV/dev1804/archive_transfer/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  666
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());

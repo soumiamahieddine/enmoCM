@@ -34,7 +34,7 @@ class DocserverController
 
         $sortedDocservers = [];
         $types = [];
-        $docservers = DocserverModel::get();
+        $docservers = DocserverModel::get(['orderBy' => ['priority_number']]);
         foreach ($docservers as $docserver) {
             $docserver['is_readonly'] = ($docserver['is_readonly'] == 'Y');
             $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
@@ -83,7 +83,6 @@ class DocserverController
         $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['coll_id']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -92,11 +91,27 @@ class DocserverController
         if (!empty($existingDocserver)) {
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
+        $existingDocserverType = DocserverTypeModel::get(['select' => ['1'], 'where' => ['docserver_type_id = ?'], 'data' => [$data['docserver_type_id']]]);
+        if (empty($existingDocserverType)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver type does not exist']);
+        }
         if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
             return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
         $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
+        $docservers = DocserverModel::get([
+            'select'    => ['priority_number'],
+            'where'     => ['docserver_type_id = ?'],
+            'data'      => [$data['docserver_type_id']],
+            'orderBy'   => ['priority_number DESC'],
+            'limit'     => 1
+        ]);
+        if (empty($docservers[0]['priority_number'])) {
+            $data['priority_number'] = 1;
+        } else {
+            $data['priority_number'] = $docservers[0]['priority_number'] + 1;
+        }
 
         $id = DocserverModel::create($data);
         HistoryController::add([
@@ -127,12 +142,20 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['1']]);
+        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['docserver_type_id']]);
         if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
         if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
             return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
+        }
+        $existingDocserverPriority = DocserverModel::get([
+            'select'    => ['1'],
+            'where'     => ['priority_number = ?', 'docserver_type_id = ?'],
+            'data'      => [$data['priority_number'], $docserver['docserver_type_id']]
+        ]);
+        if (!empty($existingDocserverPriority)) {
+            return $response->withStatus(400)->withJson(['errors' => _DOCSERVER_PRIORITY_EXISTS]);
         }
 
         $updateData = [
@@ -449,36 +472,11 @@ class DocserverController
         $size = 0;
 
         if (DocserverController::isPathAvailable(['path' => $aArgs['path']])) {
-            $firstLayerDirectories = scandir($aArgs['path']);
-            foreach ($firstLayerDirectories as $firstLayerDirectory) {
-                if ($firstLayerDirectory != '.' && $firstLayerDirectory != '..') {
-                    if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}"])) {
-                        $secondLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}");
-                        foreach ($secondLayerDirectories as $secondLayerDirectory) {
-                            if ($secondLayerDirectory != '.' && $secondLayerDirectory != '..') {
-                                if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}"])) {
-                                    $thirdLayerDirectories = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}");
-                                    foreach ($thirdLayerDirectories as $thirdLayerDirectory) {
-                                        if ($thirdLayerDirectory != '.' && $thirdLayerDirectory != '..') {
-                                            if (DocserverController::isPathAvailable(['path' => "{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}"])) {
-                                                $files = scandir("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}");
-                                                foreach ($files as $file) {
-                                                    if ($file != '.' && $file != '..') {
-                                                        $size += filesize("{$aArgs['path']}{$firstLayerDirectory}/{$secondLayerDirectory}/{$thirdLayerDirectory}/{$file}");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            $exec = shell_exec("du -s -b {$aArgs['path']}");
+            $size = explode("\t", $exec)[0];
         }
 
-        return $size;
+        return (int)$size;
     }
 
     private static function isPathAvailable(array $aArgs)

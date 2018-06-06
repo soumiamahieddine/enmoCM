@@ -22,11 +22,16 @@ class DocserverModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aDocservers = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['docservers'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aDocservers;
