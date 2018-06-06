@@ -64,10 +64,9 @@ abstract class NotificationScheduleModelAbstract
             $aArgs['setHiddenValue'] = true;
         }
 
-        $crontab = shell_exec('crontab -l');
-        // TODO check crontab is installed
-        $lines = explode("\n", $crontab);
-        $data = [];
+        $crontab  = shell_exec('crontab -l');
+        $lines    = explode("\n", $crontab);
+        $data     = [];
         $customId = CoreConfigModel::getCustomId();
         $corePath = str_replace('custom/'.$customId.'/src/app/notification/models', '', __DIR__);
         $corePath = str_replace('src/app/notification/models', '', $corePath);
@@ -82,8 +81,8 @@ abstract class NotificationScheduleModelAbstract
             }
             $cronLine = preg_replace('![ \t]+!', ' ', $cronLine);
             if ($cronLine[0] == '@') {
-                // TODO $time not used
-                list($time, $cmd) = explode(' ', $cronLine, 2);
+                $explodeCronLine = explode(' ', $cronLine, 2);
+                $cmd = $explodeCronLine[1];
             } else {
                 list($m, $h, $dom, $mon, $dow, $cmd) = explode(' ', $cronLine, 6);
             }
