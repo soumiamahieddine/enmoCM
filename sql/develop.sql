@@ -36,6 +36,7 @@ ALTER TABLE docservers DROP COLUMN IF EXISTS chain_after;
 ALTER TABLE docservers DROP COLUMN IF EXISTS closing_date;
 ALTER TABLE docservers DROP COLUMN IF EXISTS enabled;
 ALTER TABLE docservers DROP COLUMN IF EXISTS adr_priority_number;
+ALTER TABLE docservers DROP COLUMN IF EXISTS priority_number;
 ALTER TABLE docservers DROP COLUMN IF EXISTS id;
 ALTER TABLE docservers ADD COLUMN id serial;
 ALTER TABLE docservers ADD UNIQUE (id);
@@ -49,6 +50,7 @@ ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_logged;
 ALTER TABLE docserver_types DROP COLUMN IF EXISTS log_template;
 ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_signed;
 DROP TABLE IF EXISTS docserver_locations;
+UPDATE docservers set is_readonly = 'Y' WHERE docserver_id = 'FASTHD_AI';
 
 /* Refactoring */
 DROP TABLE IF EXISTS allowed_ip;

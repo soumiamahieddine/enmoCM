@@ -470,7 +470,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Signature does not exist']);
         }
 
-        $docserver = DocserverModel::getFirstByTypeId(['typeId' => 'TEMPLATES', 'select' => ['path_template']]);
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return [];
         }

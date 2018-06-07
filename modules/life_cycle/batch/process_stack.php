@@ -208,8 +208,7 @@ while ($GLOBALS['state'] <> "END") {
                             );
                     }
                     // no need for a purge
-                    $query = "select * from " . _DOCSERVERS_TABLE_NAME 
-                           . " where docserver_type_id = ? and coll_id = ? order by priority_number";
+                    $query = "select * from docservers where docserver_type_id = ? and coll_id = ?";
                     $stmt2 = Bt_doQuery(
                         $GLOBALS['db2'], 
                         $query,

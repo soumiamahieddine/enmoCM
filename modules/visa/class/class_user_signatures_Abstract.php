@@ -28,8 +28,8 @@ abstract class UserSignaturesAbstract extends Database
             . DIRECTORY_SEPARATOR . 'docservers_controler.php');
         $ds_ctrl = new docservers_controler();
         $db = new Database();
-        $query_ds = "select priority_number, docserver_id, path_template  from docservers where is_readonly = 'N' and "
-        . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TEMPLATES' order by priority_number";
+        $query_ds = "select docserver_id, path_template  from docservers where is_readonly = 'N' and "
+        . "coll_id = ? and docserver_type_id = 'TEMPLATES'";
         $stmt = $db->query($query_ds,[$coll_id]);
 
         if($res = $stmt->fetchObject()){

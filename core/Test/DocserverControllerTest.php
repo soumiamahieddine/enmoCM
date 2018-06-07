@@ -125,8 +125,7 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/',
-            'priority_number'        =>  30
+            'path_template'          =>  '/tmp/'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -151,8 +150,7 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/wrong/path/',
-            'priority_number'        =>  30
+            'path_template'          =>  '/wrong/path/'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -168,8 +166,7 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/',
-            'priority_number'        =>  30
+            'path_template'          =>  '/tmp/'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => 12345]);

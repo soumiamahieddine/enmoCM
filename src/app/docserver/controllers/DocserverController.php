@@ -33,7 +33,7 @@ class DocserverController
         }
 
         $sortedDocservers = [];
-        $docservers = DocserverModel::get(['orderBy' => ['priority_number']]);
+        $docservers = DocserverModel::get();
         foreach ($docservers as $docserver) {
             $sortedDocservers[$docserver['docserver_type_id']][] = DocserverController::getFormattedDocserver(['docserver' => $docserver]);
         }
@@ -87,19 +87,13 @@ class DocserverController
             return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
 
-        $data['is_readonly'] = empty($data['is_readonly']) ? 'N' : 'Y';
-        $docservers = DocserverModel::get([
-            'select'    => ['priority_number'],
-            'where'     => ['docserver_type_id = ?'],
-            'data'      => [$data['docserver_type_id']],
-            'orderBy'   => ['priority_number DESC'],
-            'limit'     => 1
+        $existingCurrentDocserver = DocserverModel::getCurrentDocserver([
+            'select' => ['1'],
+            'typeId' => $data['docserver_type_id'],
+            'collId' => $data['coll_id']
         ]);
-        if (empty($docservers[0]['priority_number'])) {
-            $data['priority_number'] = 1;
-        } else {
-            $data['priority_number'] = $docservers[0]['priority_number'] + 1;
-        }
+        $data['is_readonly'] = empty($existingCurrentDocserver) ? 'N' : 'Y';
+
 
         $id = DocserverModel::create($data);
         HistoryController::add([
@@ -125,25 +119,27 @@ class DocserverController
         $check = Validator::stringType()->notEmpty()->validate($data['device_label']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['path_template']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['priority_number']);
+        $check = $check && Validator::boolType()->validate($data['is_readonly']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['docserver_type_id']]);
+        $docserver = DocserverModel::getById(['id' => $aArgs['id'], 'select' => ['docserver_type_id', 'coll_id']]);
         if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
         if (!DocserverController::isPathAvailable(['path' => $data['path_template']])) {
             return $response->withStatus(400)->withJson(['errors' => _PATH_OF_DOCSERVER_UNAPPROACHABLE]);
         }
-        $existingDocserverPriority = DocserverModel::get([
-            'select'    => ['1'],
-            'where'     => ['priority_number = ?', 'docserver_type_id = ?', 'id != ?'],
-            'data'      => [$data['priority_number'], $docserver['docserver_type_id'], $aArgs['id']]
-        ]);
-        if (!empty($existingDocserverPriority)) {
-            return $response->withStatus(400)->withJson(['errors' => _DOCSERVER_PRIORITY_EXISTS]);
+        if (!$data['is_readonly']) {
+            $existingCurrentDocserver = DocserverModel::getCurrentDocserver([
+                'select' => ['id'],
+                'typeId' => $docserver['docserver_type_id'],
+                'collId' => $docserver['coll_id']
+            ]);
+            if (!empty($existingCurrentDocserver) && $existingCurrentDocserver['id'] != $aArgs['id']) {
+                return $response->withStatus(400)->withJson(['errors' => _DOCSERVER_ACTIVATED_EXISTS]);
+            }
         }
 
         $updateData = [
@@ -151,7 +147,6 @@ class DocserverController
             'device_label'          => $data['device_label'],
             'size_limit_number'     => $data['size_limit_number'],
             'path_template'         => $data['path_template'],
-            'priority_number'       => $data['priority_number'],
             'is_readonly'           => empty($data['is_readonly']) ? 'N' : 'Y'
         ];
 
@@ -196,9 +191,9 @@ class DocserverController
 
     public static function storeResourceOnDocServer(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['collId', 'fileInfos']);
-        ValidatorModel::arrayType($aArgs, ['fileInfos']);
+        ValidatorModel::notEmpty($aArgs, ['collId', 'docserverTypeId', 'fileInfos']);
         ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId']);
+        ValidatorModel::arrayType($aArgs, ['fileInfos']);
         ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'size', 'format', 'tmpFileName']);
         ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'format', 'tmpFileName']);
         ValidatorModel::intVal($aArgs['fileInfos'], ['size']);
@@ -211,8 +206,7 @@ class DocserverController
                 . $aArgs['fileInfos']['tmpDir'] . $aArgs['fileInfos']['tmpFileName']];
         }
 
-        $aArgs['docserverTypeId'] = empty($aArgs['docserverTypeId']) ? 'DOC' : $aArgs['docserverTypeId'];
-        $docserver = DocserverModel::getDocserverToInsert(['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]);
+        $docserver = DocserverModel::getCurrentDocserver(['collId' => $aArgs['collId'], 'typeId' => $aArgs['docserverTypeId']]);
         if (empty($docserver)) {
             return ['errors' => '[storeRessourceOnDocserver] No available Docserver'];
         }

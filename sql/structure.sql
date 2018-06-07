@@ -62,7 +62,6 @@ CREATE TABLE docservers
   path_template character varying(255) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
-  priority_number integer NOT NULL DEFAULT 10,
   CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id),
   CONSTRAINT docservers_id_key UNIQUE (id)
 )

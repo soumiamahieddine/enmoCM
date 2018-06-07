@@ -41,7 +41,7 @@ define('_DEST_USER', 'Destinataire');
 define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
 define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
 define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
-define('_DOCSERVER_PRIORITY_EXISTS', 'Une zone de stockage avec cette priorité existe déjà');
+define('_DOCSERVER_ACTIVATED_EXISTS', 'Une zone de stockage avec le même type et la même collection est déjà activée');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');

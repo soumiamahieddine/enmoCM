@@ -32,7 +32,7 @@ class TemplateController
         }
 
         if ($template['template_type'] == 'OFFICE') {
-            $docserver = DocserverModel::getFirstByTypeId(['typeId' => 'TEMPLATES', 'select' => ['path_template']]);
+            $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
 
             $pathOnDocserver = DocserverController::createPathOnDocServer(['path' => $docserver['path_template']]);
             $docinfo = DocserverController::getNextFileNameInDocServer(['pathOnDocserver' => $pathOnDocserver['pathToDocServer']]);

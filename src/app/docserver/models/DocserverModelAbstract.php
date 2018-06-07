@@ -77,33 +77,11 @@ class DocserverModelAbstract
         return $aDocserver[0];
     }
 
-    public static function getFirstByTypeId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['typeId']);
-        ValidatorModel::stringType($aArgs, ['typeId']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $aDocserver = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['docservers'],
-            'where'     => ['docserver_type_id = ?'],
-            'data'      => [$aArgs['typeId']],
-            'order_by'  => ['priority_number'],
-            'limit'     => 1
-        ]);
-
-        if (empty($aDocserver[0])) {
-            return [];
-        }
-
-        return $aDocserver[0];
-    }
-
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'size_limit_number', 'priority_number', 'is_readonly']);
+        ValidatorModel::notEmpty($aArgs, ['docserver_id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'size_limit_number', 'is_readonly']);
         ValidatorModel::stringType($aArgs, ['docserver_id', 'docserver_type_id', 'device_label', 'path_template', 'coll_id', 'is_readonly']);
-        ValidatorModel::intVal($aArgs, ['size_limit_number', 'priority_number']);
+        ValidatorModel::intVal($aArgs, ['size_limit_number']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'docservers_id_seq']);
 
@@ -117,7 +95,6 @@ class DocserverModelAbstract
                 'path_template'         => $aArgs['path_template'],
                 'coll_id'               => $aArgs['coll_id'],
                 'size_limit_number'     => $aArgs['size_limit_number'],
-                'priority_number'       => $aArgs['priority_number'],
                 'is_readonly'           => $aArgs['is_readonly'],
                 'creation_date'         => 'CURRENT_TIMESTAMP'
             ]
@@ -158,21 +135,16 @@ class DocserverModelAbstract
         return true;
     }
 
-    public static function getDocserverToInsert(array $aArgs)
+    public static function getCurrentDocserver(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['collId']);
+        ValidatorModel::notEmpty($aArgs, ['collId', 'typeId']);
         ValidatorModel::stringType($aArgs, ['collId', 'typeId']);
-
-        if (empty($aArgs['typeId'])) {
-            $aArgs['typeId'] = 'DOC';
-        }
 
         $aDocserver = DatabaseModel::select([
             'select'    => ['*'],
             'table'     => ['docservers'],
             'where'     => ['is_readonly = ?', 'coll_id = ?', 'docserver_type_id = ?'],
             'data'      => ['N', $aArgs['collId'], $aArgs['typeId']],
-            'order_by'  => ['priority_number'],
             'limit'     => 1,
         ]);
 

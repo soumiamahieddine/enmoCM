@@ -304,40 +304,6 @@ class docservers_controler
         }
     }
 
-
-    /**
-    * Check if two docservers have the same priorities
-    *
-    * @param $docserver docservers object
-    * @return bool true if the control is ok
-    */
-    private function priorityNumberControl($docserver)
-    {
-        $func = new functions();
-        if (!isset($docserver)
-            || empty($docserver)
-            || empty($docserver->priority_number)
-        ) {
-            return false;
-        }
-        $db = new Database();
-        $query = "select priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where priority_number = ? AND docserver_type_id = ?"
-               . " AND docserver_id <> ?";
-        $stmt = $db->query(
-            $query, 
-            array(
-                $docserver->priority_number, 
-                $docserver->docserver_type_id, 
-                $docserver->docserver_id 
-            )
-        );
-        if ($stmt->rowCount() > 0) {
-            return false;
-        }
-        return true;
-    }
-
     /**
     * Check if the docserver actual size is less than the size limit
     *
@@ -368,19 +334,11 @@ class docservers_controler
         }
     }
 
-    /**
-     * Get docservers to insert a new doc.
-     * Can return null if no corresponding object.
-     * @param  $coll_id  string Collection identifier
-     * @return docservers
-     */
-    public function getDocserverToInsert($collId)
+    public function getDocserverToInsert($collId, $typeId = 'DOC')
     {
         $db = new Database();
-        $query = "select priority_number, docserver_id from "
-               . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-               . "coll_id = ? order by priority_number";
-        $stmt = $db->query($query, array($collId));
+        $query = "select docserver_id from docservers where is_readonly = 'N' and coll_id = ?  and docserver_type_id = ?";
+        $stmt = $db->query($query, [$collId, $typeId]);
         $queryResult = $stmt->fetchObject();
         if ($queryResult->docserver_id <> '') {
             $docserver = $this->get($queryResult->docserver_id);
