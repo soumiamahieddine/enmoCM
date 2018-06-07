@@ -53,18 +53,18 @@ DROP TABLE IF EXISTS docserver_locations;
 UPDATE docservers set is_readonly = 'Y' WHERE docserver_id = 'FASTHD_AI';
 
 /* Refactoring */
-DROP TABLE IF EXISTS allowed_ip;
-DROP TABLE IF EXISTS af_security;
-DROP TABLE IF EXISTS af_view_customer_target;
-DROP TABLE IF EXISTS af_view_year_target;
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;
 DROP VIEW IF EXISTS af_view_year_target_view;
 DROP VIEW IF EXISTS af_view_year_view;
+DROP TABLE IF EXISTS allowed_ip;
+DROP TABLE IF EXISTS af_security;
+DROP TABLE IF EXISTS af_view_customer_target;
+DROP TABLE IF EXISTS af_view_year_target;
+DROP VIEW IF EXISTS res_view;
 DROP TABLE IF EXISTS res_x;
 DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
-DROP VIEW IF EXISTS res_view;
 
 
 
