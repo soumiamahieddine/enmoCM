@@ -35,16 +35,7 @@ class DocserverController
         $sortedDocservers = [];
         $docservers = DocserverModel::get(['orderBy' => ['priority_number']]);
         foreach ($docservers as $docserver) {
-            $docserver['is_readonly'] = ($docserver['is_readonly'] == 'Y');
-            $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
-            if ($docserver['actual_size_number'] > 1000000000) {
-                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000000, 3) . ' Go';
-            } else {
-                $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000, 3) . ' Mo';
-            }
-            $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3); // Giga
-            $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
-            $sortedDocservers[$docserver['docserver_type_id']][] = $docserver;
+            $sortedDocservers[$docserver['docserver_type_id']][] = DocserverController::getFormattedDocserver(['docserver' => $docserver]);
         }
 
         $docserversTypes = DocserverTypeModel::get(['select' => ['docserver_type_id', 'docserver_type_label'], 'orderBy' => ['docserver_type_label']]);
@@ -68,7 +59,7 @@ class DocserverController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -125,7 +116,7 @@ class DocserverController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin'])) {
+        if (!ServiceModel::hasService(['id' => 'admin_docservers', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -174,7 +165,9 @@ class DocserverController
             'eventId'   => 'docserverModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
+
+        return $response->withJson(['docserver' => DocserverController::getFormattedDocserver(['docserver' => $docserver])]);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -461,6 +454,26 @@ class DocserverController
         return $dataToReturn;
     }
 
+    private static function getFormattedDocserver(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['docserver']);
+        ValidatorModel::arrayType($aArgs, ['docserver']);
+
+        $docserver = $aArgs['docserver'];
+
+        $docserver['is_readonly'] = ($docserver['is_readonly'] == 'Y');
+        $docserver['actual_size_number'] = DocserverController::getDocserverSize(['path' => $docserver['path_template']]);
+        if ($docserver['actual_size_number'] > 1000000000) {
+            $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000000, 3) . ' Go';
+        } else {
+            $docserver['actualSizeFormatted'] = round($docserver['actual_size_number'] / 1000000, 3) . ' Mo';
+        }
+        $docserver['limitSizeFormatted'] = round($docserver['size_limit_number'] / 1000000000, 3); // Giga
+        $docserver['percentage'] = round($docserver['actual_size_number'] / $docserver['size_limit_number'] * 100, 2);
+
+        return $docserver;
+    }
+
     private static function getDocserverSize(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['path']);
@@ -470,7 +483,10 @@ class DocserverController
 
         if (DocserverController::isPathAvailable(['path' => $aArgs['path']])) {
             $exec = shell_exec("du -s -b {$aArgs['path']}");
-            $size = explode("\t", $exec)[0];
+            $execPlode = explode("\t", $exec);
+            if (isset($execPlode[0]) && is_numeric($execPlode[0])) {
+                $size = $execPlode[0];
+            }
         }
 
         return (int)$size;

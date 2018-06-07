@@ -132,7 +132,8 @@ class DocserverControllerTest extends TestCase
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertNotEmpty($responseBody->docserver);
+        $this->assertSame('updated docserver', $responseBody->docserver->device_label);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
