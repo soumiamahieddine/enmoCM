@@ -89,6 +89,11 @@ class docservers_controler
         }
     }
 
+    public function delete($args)
+    {
+    }
+
+
     /**
      * get docservers with given id for a ws.
      * Can return null if no corresponding object.

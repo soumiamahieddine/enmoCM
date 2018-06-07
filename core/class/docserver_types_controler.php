@@ -67,6 +67,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
     public function save($docserver_type, $mode = "") {
     }
 
+    public function delete($args)
+    {
+    }
+
     /**
     * Returns an docserver_types object based on a docserver_types identifier
     *
