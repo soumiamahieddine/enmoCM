@@ -57,12 +57,8 @@ export class DocserversAdministrationComponent implements OnInit {
     }
 
     toggleDocserver(docserver: any) {
-        //TO DO : implement secondary_docserver instead of priority
-        if (docserver.secondary_docserver == '') {
-            alert('Veuillez choisir un docserver secondaire');
-        } else {
-            docserver.is_readonly = !docserver.is_readonly;
-        }
+
+        docserver.is_readonly = !docserver.is_readonly;
     }
 
     cancelModification(docserverType: any, index: number) {
@@ -74,7 +70,7 @@ export class DocserversAdministrationComponent implements OnInit {
         if (JSON.stringify(docserver) === JSON.stringify(docserversClone)) {
             return true 
         } else {
-            if (docserver.size_limit_number >= docserver.actual_size_number && docserver.limitSizeFormatted > 0 && /^[\d]*$/.test(docserver.limitSizeFormatted) && /^[\d]*$/.test(docserver.priority_number) && /\/$/.test(docserver.path_template) ) {
+            if (docserver.size_limit_number >= docserver.actual_size_number && docserver.limitSizeFormatted > 0 && /^[\d]*$/.test(docserver.limitSizeFormatted) && /\/$/.test(docserver.path_template) ) {
                 return false;
             } else {
                 return true;
