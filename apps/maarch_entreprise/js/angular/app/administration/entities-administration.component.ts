@@ -4,9 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { ConfirmModalComponent } from '../confirmModal.component';
 import { NotificationService } from '../notification.service';
-import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { SortPipe } from '../../plugins/sorting.pipe';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
 
 declare function $j(selector: any): any;
@@ -181,11 +180,9 @@ export class EntitiesAdministrationComponent extends AutoCompletePlugin implemen
         this.http.get(this.coreUrl + "rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
-                console.log('oops');
                 if (this.currentEntity.visaTemplate[0]) {
                     this.idCircuitVisa = this.currentEntity.visaTemplate[0].id;
                 } else {
-                    console.log('oops');
                     this.idCircuitVisa = null;
                 }
                 this.dataSource = new MatTableDataSource(this.currentEntity.users);
