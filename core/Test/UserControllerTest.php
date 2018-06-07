@@ -657,7 +657,8 @@ class UserControllerTest extends TestCase
         $this->assertSame('SU', $responseBody->initials);
     }
 
-    public function testSetRedirectedBasket(){
+    public function testSetRedirectedBasket()
+    {
         $userController = new \User\controllers\UserController();
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -677,8 +678,9 @@ class UserControllerTest extends TestCase
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19]);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => 19]);
         $responseBody = json_decode((string)$response->getBody());
+        
         $this->assertNotNull($responseBody->baskets);
 
         $aArgs = [
@@ -696,9 +698,10 @@ class UserControllerTest extends TestCase
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19]);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => 19]);
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('Bad Request',$responseBody->errors);
+
+        $this->assertSame('Bad Request', $responseBody->errors);
 
         $aArgs = [
             [
@@ -715,12 +718,14 @@ class UserControllerTest extends TestCase
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19]);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => 19]);
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertSame('User not found',$responseBody->errors);
+
+        $this->assertSame('User not found', $responseBody->errors);
     }
 
-    public function testDeleteRedirectedBaskets(){
+    public function testDeleteRedirectedBaskets()
+    {
         $userController = new \User\controllers\UserController();
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
@@ -731,8 +736,9 @@ class UserControllerTest extends TestCase
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19, 'basketId' => 'MyBasket']);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => 19, 'basketId' => 'MyBasket']);
         $responseBody = json_decode((string)$response->getBody());
+
         $this->assertNotNull($responseBody->baskets);
 
         $aArgs = [
@@ -740,8 +746,9 @@ class UserControllerTest extends TestCase
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(),['id' => 19, 'basketId' => 'MyBasket']);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => 19, 'basketId' => 'MyBasket']);
         $responseBody = json_decode((string)$response->getBody());
+
         $this->assertSame('Bad Request', $responseBody->errors);
     }
 }
