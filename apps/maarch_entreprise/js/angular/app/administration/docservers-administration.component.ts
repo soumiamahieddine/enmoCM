@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatSort } from '@angular/material';
 
 declare function $j(selector: any): any;
 
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: "../../../../Views/docservers-administration.component.html",
+    templateUrl : "../../../../Views/docservers-administration.component.html",
     providers   : [NotificationService]
 })
 
@@ -19,14 +19,14 @@ export class DocserversAdministrationComponent implements OnInit {
     mobileQuery                     : MediaQueryList;
     private _mobileQueryListener    : () => void;
 
-    coreUrl     : string;
-    lang        : any = LANG;
-    loading     : boolean = false;
-    dataSource  : any;
+    coreUrl             : string;
+    lang                : any = LANG;
+    loading             : boolean = false;
+    dataSource          : any;
 
-    docservers    : any = [];
-    docserversClone    : any = [];
-    docserversTypes    : any = {};
+    docservers          : any = [];
+    docserversClone     : any = [];
+    docserversTypes     : any = {};
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -56,7 +56,7 @@ export class DocserversAdministrationComponent implements OnInit {
             });
     }
 
-    toggleDocserver(docserver:any) {
+    toggleDocserver(docserver: any) {
         //TO DO : implement secondary_docserver instead of priority
         if (docserver.secondary_docserver == '') {
             alert('Veuillez choisir un docserver secondaire');
@@ -65,11 +65,11 @@ export class DocserversAdministrationComponent implements OnInit {
         }
     }
 
-    cancelModification(docserverType:any, index:number) {
-        this.docservers[docserverType][index] =JSON.parse(JSON.stringify(this.docserversClone[docserverType][index]));
+    cancelModification(docserverType: any, index: number) {
+        this.docservers[docserverType][index] = JSON.parse(JSON.stringify(this.docserversClone[docserverType][index]));
     }
 
-    checkModif(docserver:any,docserversClone:any) {
+    checkModif(docserver: any, docserversClone: any) {
         docserver.size_limit_number = docserver.limitSizeFormatted * 1000000000;
         if (JSON.stringify(docserver) === JSON.stringify(docserversClone)) {
             return true 
@@ -82,10 +82,11 @@ export class DocserversAdministrationComponent implements OnInit {
         }
     }
 
-    onSubmit(docserver:any,i:number) {
+    onSubmit(docserver: any, i: number) {
         docserver.size_limit_number = docserver.limitSizeFormatted * 1000000000;
-        this.http.put(this.coreUrl + 'rest/docservers/'+docserver.id,docserver)
+        this.http.put(this.coreUrl + 'rest/docservers/' + docserver.id, docserver)
             .subscribe((data: any) => {
+                this.docservers[docserver.docserver_type_id][i] = data['docserver'];
                 this.docserversClone[docserver.docserver_type_id][i] = JSON.parse(JSON.stringify(this.docservers[docserver.docserver_type_id][i]));
                 this.notify.success(this.lang.docserverUpdated);
             }, (err) => {
@@ -93,7 +94,7 @@ export class DocserversAdministrationComponent implements OnInit {
             });
     }
 
-    delete(docserver:any,i:number) {
+    delete(docserver: any, i: number) {
         let r = null;
         if (docserver.actual_size_number == 0) {
             r = confirm(this.lang.delete+' ?');
@@ -103,7 +104,7 @@ export class DocserversAdministrationComponent implements OnInit {
         
         if (r) {
             this.http.delete(this.coreUrl + 'rest/docservers/'+docserver.id)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 this.docservers[docserver.docserver_type_id].splice(i, 1);
                 this.notify.success(this.lang.docserverDeleted);
             }, (err) => {
