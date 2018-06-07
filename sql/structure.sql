@@ -83,8 +83,6 @@ CREATE TABLE doctypes
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   doctypes_first_level_id integer,
   doctypes_second_level_id integer,
-  primary_retention  character varying(50) DEFAULT NULL,
-  secondary_retention  character varying(50) DEFAULT NULL,
   retention_final_disposition character varying(255) DEFAULT NULL,
   retention_rule character varying(15) DEFAULT NULL,
   duration_current_use integer,
