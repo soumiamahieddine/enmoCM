@@ -122,10 +122,11 @@ class DocserverControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'docserver_type_id'      =>  'DOC',
-            'device_label'           =>  'updated docserver',
-            'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/'
+            'docserver_type_id' =>  'DOC',
+            'device_label'      =>  'updated docserver',
+            'size_limit_number' =>  50000000000,
+            'path_template'     =>  '/tmp/',
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -150,7 +151,8 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/wrong/path/'
+            'path_template'          =>  '/wrong/path/',
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -166,7 +168,8 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/'
+            'path_template'          =>  '/tmp/',
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => 12345]);
