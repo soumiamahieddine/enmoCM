@@ -65,7 +65,7 @@ class DocserverController
 
         $data = $request->getParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['docserver_id']) && preg_match("/^[\w-]*$/", $data['docserver_id']) && (strlen($data['docserver_id']) < 32);
+        $check = Validator::stringType()->notEmpty()->validate($data['docserver_id']) && preg_match("/^[\w-]*$/", $data['docserver_id']) && (strlen($data['docserver_id']) <= 32);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['docserver_type_id']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['device_label']);
         $check = $check && Validator::intVal()->notEmpty()->validate($data['size_limit_number']);
