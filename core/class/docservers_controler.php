@@ -336,6 +336,10 @@ class docservers_controler
 
     public function getDocserverToInsert($collId, $typeId = 'DOC')
     {
+        if ($collId == 'templates') {
+            $typeId = 'TEMPLATES';
+        }
+
         $db = new Database();
         $query = "select docserver_id from docservers where is_readonly = 'N' and coll_id = ?  and docserver_type_id = ?";
         $stmt = $db->query($query, [$collId, $typeId]);
