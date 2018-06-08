@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 class DocserverControllerTest extends TestCase
 {
     private static $id = null;
+    private static $pathTemplate = '/tmp/unitTestMaarchCourrier/';
 
     public function testGet()
     {
@@ -35,12 +36,16 @@ class DocserverControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
+        if (!is_dir(self::$pathTemplate)) {
+            mkdir(self::$pathTemplate);
+        }
+
         $aArgs = [
             'docserver_id'           =>  'NEW_DOCSERVER',
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/',
+            'path_template'          =>  self::$pathTemplate,
             'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -125,7 +130,7 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id' =>  'DOC',
             'device_label'      =>  'updated docserver',
             'size_limit_number' =>  50000000000,
-            'path_template'     =>  '/tmp/',
+            'path_template'     =>  self::$pathTemplate,
             'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -168,7 +173,7 @@ class DocserverControllerTest extends TestCase
             'docserver_type_id'      =>  'DOC',
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/',
+            'path_template'          =>  self::$pathTemplate,
             'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -205,5 +210,7 @@ class DocserverControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Docserver does not exist', $responseBody->errors);
+
+        rmdir(self::$pathTemplate);
     }
 }
