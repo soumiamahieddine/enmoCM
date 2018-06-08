@@ -52,6 +52,13 @@ ALTER TABLE docserver_types DROP COLUMN IF EXISTS is_signed;
 DROP TABLE IF EXISTS docserver_locations;
 UPDATE docservers set is_readonly = 'Y' WHERE docserver_id = 'FASTHD_AI';
 
+/* Templates */
+ALTER TABLE templates_association DROP COLUMN IF EXISTS system_id;
+ALTER TABLE templates_association DROP COLUMN IF EXISTS what;
+ALTER TABLE templates_association DROP COLUMN IF EXISTS maarch_module;
+ALTER TABLE templates_association ADD COLUMN id serial;
+ALTER TABLE templates_association ADD UNIQUE (id);
+
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;
@@ -65,7 +72,3 @@ DROP VIEW IF EXISTS res_view;
 DROP TABLE IF EXISTS res_x;
 DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
-
-
-
-

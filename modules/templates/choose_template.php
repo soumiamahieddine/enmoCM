@@ -64,7 +64,7 @@ $stmt = $db->query(
     "select * from " 
     . _TEMPLATES_TABLE_NAME . " t, " 
     . _TEMPLATES_ASSOCIATION_TABLE_NAME . " ta where "
-    . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = ? ", array($_REQUEST['entity'])
+    . "t.template_id = ta.template_id and ta.value_field = ? ", array($_REQUEST['entity'])
 );
 
 

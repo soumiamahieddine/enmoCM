@@ -19,6 +19,23 @@ use SrcCore\models\DatabaseModel;
 
 abstract class TemplateModelAbstract
 {
+    public static function get(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aTemplates;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -79,34 +96,5 @@ abstract class TemplateModelAbstract
         );
 
         return $nextSequenceId;
-    }
-
-    public static function getAssociation(array $aArgs = [])
-    {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
-
-        $aTemplatesAssociation = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['templates_association'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
-        ]);
-
-        return $aTemplatesAssociation;
-    }
-
-    public static function updateAssociation(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
-
-        DatabaseModel::delete([
-            'table' => 'templates_association',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
-        ]);
-
-        return true;
     }
 }

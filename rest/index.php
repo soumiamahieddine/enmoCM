@@ -222,6 +222,7 @@ $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::cla
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //Templates
+$app->get('/templates', \Template\controllers\TemplateController::class . ':get');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Users

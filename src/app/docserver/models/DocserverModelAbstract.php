@@ -22,7 +22,7 @@ class DocserverModelAbstract
 {
     public static function get(array $aArgs = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'orderBy']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
         ValidatorModel::intType($aArgs, ['limit']);
 
         $aDocservers = DatabaseModel::select([

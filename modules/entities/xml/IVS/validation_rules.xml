@@ -75,12 +75,6 @@
 		<parameter name="archival_agreement" type="string" />
 		<parameter name="archival_agency" type="string" />
     </validationRule>
-    <validationRule name="entity_del" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="id" type="identifier" />
-		<parameter name="valid" type="identifier" />
-		<parameter name="doc_entity_id" type="string" />
-    </validationRule>
     <validationRule name="choose_tree" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="tree_id" type="identifier" />

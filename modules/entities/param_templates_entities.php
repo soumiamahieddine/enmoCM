@@ -102,11 +102,11 @@ elseif($_SESSION['service_tag'] == 'template_info')
 elseif($_SESSION['service_tag'] == 'load_template_db')
 {
     $db = new Database();
-    $stmt = $db->query("Delete from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = 'destination'",array($_SESSION['m_admin']['template']['ID']));
+    $stmt = $db->query("Delete from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ?",array($_SESSION['m_admin']['template']['ID']));
 
     for($i=0; $i < count($_SESSION['m_admin']['template']['ENTITIES']);$i++)
     {
-        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_association']." ( template_id, what, value_field, maarch_module  ) VALUES (  ? , 'destination', ?, 'entities')",array($_SESSION['m_admin']['template']['ID'],$_SESSION['m_admin']['template']['ENTITIES'][$i]['ID']));
+        $stmt = $db->query("insert into ".$_SESSION['tablename']['temp_templates_association']." ( template_id, value_field  ) VALUES (?, ?)",array($_SESSION['m_admin']['template']['ID'],$_SESSION['m_admin']['template']['ENTITIES'][$i]['ID']));
     }
     $_SESSION['service_tag'] = '';
 }

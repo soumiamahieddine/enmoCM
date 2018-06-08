@@ -537,8 +537,8 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $db = new Database();
         $stmt = $db->query(
             'select * from ' . _TEMPLATES_TABLE_NAME . ' t, ' . _TEMPLATES_ASSOCIATION_TABLE_NAME . ' ta '
-            . 'where t.template_id = ta.template_id and ta.what = ? and ta.value_field = ? ORDER BY t.template_label',
-            ['destination', $entityId]
+            . 'where t.template_id = ta.template_id and ta.value_field = ? ORDER BY t.template_label',
+            [$entityId]
         );
         $docservers_controler = new docservers_controler();
         $docserverTemplate = $docservers_controler->get('TEMPLATES');
@@ -563,13 +563,13 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         $db = new Database();
         $db->query(
             "delete from " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-            . " where template_id = ? and what = 'destination' ", array($templateId)
+            . " where template_id = ?", array($templateId)
         );
        
         for ($i=0;$i<count($_SESSION['m_admin']['templatesEntitiesSelected']);$i++) {
             $db->query(
                 "insert into " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                . " (template_id, what, value_field, maarch_module) VALUES (?, 'destination', ? , 'entities')", 
+                . " (template_id, value_field) VALUES (?, ?)",
                 array($templateId, $_SESSION['m_admin']['templatesEntitiesSelected'][$i])
             ); 
         }
@@ -583,31 +583,21 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             return $items;
         }
         if (empty($field)) {
+            $items['destination'] = [];
             $stmt = $db->query(
-                "select distinct what from " 
+                "select value_field from "
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME
-                . " where template_id = ? ", array($templateId)
+                . " where template_id = ?", array($templateId)
             );
             while ($res = $stmt->fetchObject()) {
-                $items[$res->what] = array();
-            }
-            foreach (array_keys($items) as $key) {
-                $stmt = $db->query(
-                    "select value_field from " 
-                    . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                    . " where template_id = ? and what = ? ", array($templateId, $key)
-                );
-                $items[$key] = array();
-                while ($res = $stmt->fetchObject()) {
-                    array_push($items[$key], $res->value_field);
-                }
+                array_push($items['destination'], $res->value_field);
             }
         } else {
-            $items[$field] = array();
+            $items[$field] = [];
             $stmt = $db->query(
                 "select value_field from " 
                 . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-                . " where template_id = ? and what = ? ", array($templateId, $field)
+                . " where template_id = ?", array($templateId)
             );
             while ($res = $stmt->fetchObject()) {
                 array_push($items[$field], $res->value_field);

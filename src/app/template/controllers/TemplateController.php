@@ -16,13 +16,31 @@ namespace Template\controllers;
 
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
-
 
 class TemplateController
 {
+    public function get(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $templates = TemplateModel::get();
+        foreach ($templates as $key => $template) {
+            $linkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
+            foreach ($linkedEntities as $linkedEntity) {
+                $templates[$key]['entities'][] = $linkedEntity['value_field'];
+            }
+        }
+
+        return $response->withJson(['templates' => $templates]);
+    }
+
     public function duplicate(Request $request, Response $response, array $aArgs)
     {
         $template = TemplateModel::getById(['id' => $aArgs['id']]);
