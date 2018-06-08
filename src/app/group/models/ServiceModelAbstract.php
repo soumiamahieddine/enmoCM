@@ -321,8 +321,16 @@ abstract class ServiceModelAbstract
         $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
 
+        foreach($administrationApplication['supervision'] as $key => $value){
+            if($value['name'] == "Historique des batchs"){
+                array_splice($administrationApplication['supervision'], $key, 1);
+            }            
+        }
+        unset($key);
+
         $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-//        $administration = array_merge_recursive($administration, $administrationMenu);
+        
+        
 
         return $administration;
     }

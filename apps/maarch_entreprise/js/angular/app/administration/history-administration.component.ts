@@ -21,22 +21,41 @@ export class HistoryAdministrationComponent implements OnInit {
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
+    loading1                        : boolean   = false;
+    loading2                        : boolean   = false;
     limitExceeded                   : boolean   = false;
+    batchLimitExceeded              : boolean   = false;
 
     data                            : any[]     = [];
+    batchData                       : any[]     = [];
     startDate                       : Date      = new Date();
     endDate                         : Date      = new Date();
+    batchStartDate                  : Date      = new Date();
+    batchEndDate                    : Date      = new Date();
+
 
     dataSource          = new MatTableDataSource(this.data);
+    batchDataSource     = new MatTableDataSource(this.batchData);
     displayedColumns    = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
+    batchDisplayedColumns = ['event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
+
+    accessBatchHistory              : boolean   = true;
+    accessHistory                   : boolean   = true;
 
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    applyFilter(filterValue: string) {
+    @ViewChild('paginator') paginator: MatPaginator;
+    @ViewChild('batchPaginator') batchPaginator: MatPaginator;
+    @ViewChild('sort') sort: MatSort;
+    @ViewChild('batchSort') batchSort: MatSort;
+    applyFilter(filterValue: string, historyType : string) {
+        console.log(historyType);
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
-        this.dataSource.filter = filterValue;
+        if(historyType == 'normal'){
+            this.dataSource.filter = filterValue;
+        } else {
+            this.batchDataSource.filter = filterValue
+        }        
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient) {
@@ -45,6 +64,10 @@ export class HistoryAdministrationComponent implements OnInit {
         this.startDate.setHours(0,0,0,0);
         this.startDate.setMonth(this.endDate.getMonth()-1);
         this.endDate.setHours(23,59,59,59);
+
+        this.batchStartDate.setHours(0,0,0,0);
+        this.batchStartDate.setMonth(this.endDate.getMonth()-1);
+        this.batchEndDate.setHours(23,59,59,59);
 
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -65,20 +88,70 @@ export class HistoryAdministrationComponent implements OnInit {
                 this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
+                    this.accessHistory = true;
                     this.dataSource = new MatTableDataSource(this.data);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, () => {
-                location.href = "index.php";
+            }, (data: any) => {
+                if(data['error'].errors == 'Service forbidden'){
+                        this.loading = false;
+                        this.accessHistory = false;;
+                } else {
+                    location.href = "index.php";
+                }                
             });
+
+        this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
+            .subscribe((data: any) => {
+                this.batchData = data['batchHistories'];
+                this.batchLimitExceeded = data['limitExceeded'];
+                this.loading = false;
+                setTimeout(() => {
+                    this.accessBatchHistory = true;
+                    this.batchDataSource = new MatTableDataSource(this.batchData);
+                    this.batchDataSource.paginator = this.batchPaginator;
+                    this.batchDataSource.sort = this.batchSort;
+                }, 0);
+            }, (data: any) => {
+                if(data['error'].errors == 'Service forbidden'){
+                        this.loading = false
+                        this.accessBatchHistory = false;
+                } else {
+                    location.href = "index.php";
+                }
+                
+            });
+            
     }
 
-    refreshHistory() {
-        this.startDate.setHours(0,0,0,0);
-        this.endDate.setHours(23,59,59,59);
+    ngAfterViewInit() {
+        this.batchDataSource.paginator = this.batchPaginator;
+        this.batchDataSource.sort = this.batchSort;
+    }
+    
+    _setDataSource(indexNumber : any) {
+        console.log("datasource");
+        setTimeout(() => {
+          switch (indexNumber) {
+            case 0:
+              !this.dataSource.paginator ? this.dataSource.paginator = this.paginator : null;
+              !this.dataSource.sort ? this.dataSource.sort = this.sort : null;
+              break;
+            case 1:
+              !this.batchDataSource.paginator ? this.batchDataSource.paginator = this.batchPaginator : null;
+              !this.batchDataSource.sort ? this.batchDataSource.sort = this.batchSort : null;
+          }
+        });
+      }
+
+    refreshHistory(historyType : string) {
         
-        this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+        //console.log(historyType)
+        if(historyType == 'normal'){
+            this.startDate.setHours(0,0,0,0);
+            this.endDate.setHours(23,59,59,59);
+            this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
                 this.data = data['histories'];
                 this.limitExceeded = data['limitExceeded'];
@@ -91,5 +164,30 @@ export class HistoryAdministrationComponent implements OnInit {
             }, () => {
                 location.href = "index.php";
             });
+        } else {
+            console.log(historyType)
+            this.batchStartDate.setHours(0,0,0,0);
+            this.batchEndDate.setHours(23,59,59,59);
+            this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
+            .subscribe((data: any) => {
+                this.batchData = data['batchHistories'];
+                this.batchLimitExceeded = data['limitExceeded'];
+                this.loading = false;
+                setTimeout(() => {
+                    this.accessBatchHistory = true;
+                    this.batchDataSource = new MatTableDataSource(this.batchData);
+                    this.batchDataSource.paginator = this.batchPaginator;
+                    this.batchDataSource.sort = this.batchSort;
+                }, 0);
+            }, (data: any) => {
+                if(data['error'].errors == 'Service forbidden'){
+                        this.loading = false
+                        this.accessBatchHistory = false;
+                } else {
+                    location.href = "index.php";
+                }                
+            });
+        }
+        
     }
 }
