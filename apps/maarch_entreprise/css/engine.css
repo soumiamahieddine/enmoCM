@@ -102,29 +102,14 @@ table tr:not(.filters) .mat-form-field {
     background: white;
 }
 
-
 /*** FIX BUG EXPANSION PANEL MATERIAL WITH TABS (DELETE AFTER CORRECTION) ***/
 
-div.mat-expansion-panel-content:not(.mat-expanded) {
-    height: 0px;
-    visibility: hidden;
-}
-
-.mat-expansion-panel-header:not(.mat-expanded) {
+.mat-expansion-panel-header {
     height: 48px;
 }
 
-.mat-expansion-panel-header {
-    height: 64px;
-    .mat-content {
-        font-weight: 100;
-        font-size: 18px;
-    }
-    &.mat-expanded {
-        .mat-expansion-indicator {
-            transform: rotate(180deg);
-        }
-    }
+.mat-expansion-panel-content:not(.mat-expanded):not(.ng-animating) {
+    display: none;
 }
 
 /*********************************/
@@ -170,7 +155,7 @@ div.mat-expansion-panel-content:not(.mat-expanded) {
     /*transform: scale(5);*/
 }
 
-.admin-toolbar .maarchLogo svg{
+.admin-toolbar .maarchLogo svg {
     vertical-align: middle;
 }
 
@@ -301,14 +286,17 @@ h1.admin-app-name {
         margin-left: 0px !important;
     }
 }
-.jstree-checkbox { display: none !important; }
+
+.jstree-checkbox {
+    display: none !important;
+}
 
 .card-app-content {
     min-height: 100%;
 }
 
-.headerMaarch .mat-menu-content{
-    position:relative !important;
+.headerMaarch .mat-menu-content {
+    position: relative !important;
 }
 
 .headerMaarch.mat-menu-panel {
@@ -316,13 +304,13 @@ h1.admin-app-name {
 }
 
 .mat-column-default_priority {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
 }
 
 .mat-column-working_days {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
 }
 
 .mat-tab-body-content {
@@ -330,15 +318,15 @@ h1.admin-app-name {
 }
 
 .mat-raised-button {
-    margin : 5px !important;
+    margin: 5px !important;
 }
 
-.mat-expansion-panel-header-title, 
+.mat-expansion-panel-header-title,
 .mat-expansion-panel-header-description {
-  flex-basis: 0;
+    flex-basis: 0;
 }
 
 .mat-expansion-panel-header-description {
-  justify-content: space-between;
-  align-items: center;
+    justify-content: space-between;
+    align-items: center;
 }
