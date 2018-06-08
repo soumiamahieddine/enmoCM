@@ -70,7 +70,7 @@ export class DocserversAdministrationComponent implements OnInit {
         if (JSON.stringify(docserver) === JSON.stringify(docserversClone)) {
             return true 
         } else {
-            if (docserver.size_limit_number >= docserver.actual_size_number && docserver.limitSizeFormatted > 0 && /^[\d]*$/.test(docserver.limitSizeFormatted) && /\/$/.test(docserver.path_template) ) {
+            if (docserver.size_limit_number >= docserver.actual_size_number && docserver.limitSizeFormatted > 0 && /^[\d]*$/.test(docserver.limitSizeFormatted) ) {
                 return false;
             } else {
                 return true;

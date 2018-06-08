@@ -50,7 +50,7 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-        if(empty($docserver)){
+        if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
 
@@ -93,7 +93,10 @@ class DocserverController
             'collId' => $data['coll_id']
         ]);
         $data['is_readonly'] = empty($existingCurrentDocserver) ? 'N' : 'Y';
-
+        
+        if (substr($data['path_template'], -1) != DIRECTORY_SEPARATOR) {
+            $data['path_template'] .= "/";
+        }
 
         $id = DocserverModel::create($data);
         HistoryController::add([
@@ -142,6 +145,10 @@ class DocserverController
             }
         }
 
+        if (substr($data['path_template'], -1) != DIRECTORY_SEPARATOR) {
+            $data['path_template'] .= "/";
+        }
+
         $updateData = [
             'id'                    => $aArgs['id'],
             'device_label'          => $data['device_label'],
@@ -172,7 +179,7 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-        if(empty($docserver)){
+        if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
