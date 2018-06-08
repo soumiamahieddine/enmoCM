@@ -47,9 +47,6 @@ if (!defined('_DOCSERVER_TYPES_TABLE_NAME')) {
 if (! defined('_LC_CYCLE_STEPS_TABLE_NAME')) {
     define('_LC_CYCLE_STEPS_TABLE_NAME', 'lc_cycle_steps');
 }
-if (! defined('_ADR_X_TABLE_NAME')) {
-    define('_ADR_X_TABLE_NAME', 'adr_x');
-}
 if (! defined('DOCTYPES_TABLE')) {
     define('DOCTYPES_TABLE', 'doctypes');
 }

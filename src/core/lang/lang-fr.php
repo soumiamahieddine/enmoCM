@@ -41,6 +41,7 @@ define('_DEST_USER', 'Destinataire');
 define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
 define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
 define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
+define('_DOCSERVER_ACTIVATED_EXISTS', 'Une zone de stockage avec le même type et la même collection est déjà activée');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');
@@ -118,7 +119,8 @@ define('_OTHER', 'Autre');
 define('_NOTIFICATION_ALREADY_EXIST', 'Notification déjà existante');
 define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
-define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin Docserver inaccessible');
+define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
+define('_BACK_FROM_VACATION', 'de retour de son absence');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');

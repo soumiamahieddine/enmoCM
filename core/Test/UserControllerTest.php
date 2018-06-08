@@ -656,4 +656,103 @@ class UserControllerTest extends TestCase
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
     }
+
+    public function testSetRedirectedBasket()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            [
+                'newUser'       =>  'bblier',
+                'basketId'      =>  'MyBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ],
+            [
+                'newUser'       =>  'bblier',
+                'basketId'      =>  'EenvBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ]
+        ];
+
+        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+        
+        $this->assertNotNull($responseBody->baskets);
+
+        $aArgs = [
+            [
+                'newUser'       =>  null,
+                'basketId'      =>  'MyBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ],
+            [
+                'newUser'       =>  'bblier',
+                'basketId'      =>  'EenvBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+
+        $aArgs = [
+            [
+                'newUser'       =>  'notExist',
+                'basketId'      =>  'MyBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ],
+            [
+                'newUser'       =>  'existNot',
+                'basketId'      =>  'EenvBasket',
+                'basketOwner'   =>  'bbain',
+                'virtual'       =>  'Y'
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('User not found', $responseBody->errors);
+    }
+
+    public function testDeleteRedirectedBaskets()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+                'basketOwner'   =>  'bbain',
+        ];
+
+        $user_id = \User\models\UserModel::getByUserId(['userId' => 'bbain', 'select' => ['id']]);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'EenvBasket']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotNull($responseBody->baskets);
+
+        $aArgs = [
+            'basketOwner'   =>  null,
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response     = $userController->deleteRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'], 'basketId' => 'MyBasket']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Bad Request', $responseBody->errors);
+    }
 }

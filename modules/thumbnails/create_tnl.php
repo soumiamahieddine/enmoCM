@@ -156,8 +156,8 @@ $GLOBALS['db'] = new Database($conf);
 
 Bt_getWorkBatch();
 
-$query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
-       . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
+$query = "select docserver_id from docservers where is_readonly = 'N' and "
+       . " coll_id = ? and docserver_type_id = 'TNL'";
        
 $stmt1 = $GLOBALS['db']->query($query, array($GLOBALS['collection']));
 if ($res = $stmt1->fetchObject()) {

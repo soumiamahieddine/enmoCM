@@ -45,9 +45,6 @@ ALTER SEQUENCE res_id_mlb_seq restart WITH 1;
 
 TRUNCATE TABLE res_version_letterbox;
 
-TRUNCATE TABLE res_x;
-ALTER SEQUENCE res_id_seq restart WITH 1;
-
 TRUNCATE TABLE res_attachments;
 ALTER SEQUENCE res_attachment_res_id_seq restart WITH 1;
 
@@ -57,7 +54,6 @@ TRUNCATE TABLE res_mark_as_read;
 
 TRUNCATE TABLE saved_queries;
 TRUNCATE TABLE lc_stack;
-TRUNCATE TABLE adr_x;
 
 TRUNCATE TABLE tags;
 ALTER SEQUENCE tag_id_seq restart WITH 1;

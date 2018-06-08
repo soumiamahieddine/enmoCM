@@ -56,21 +56,12 @@ $coreTools->load_header('', true, false);
 $coreTools->load_js();
 $db = new Database();
 
-    if (!isset($_SESSION['collection_id_choice'])
-        || empty($_SESSION['collection_id_choice'])
-    ) {
-        $collId = 'res_coll';
-        $table = 'res_view';
-        $adrTable = 'adr_x';
-        $isView = true;
-    } else {
-        $collId = $_SESSION['collection_id_choice'];
-        $table = $security->retrieve_view_from_coll_id($collId);
-        $isView = true;
-        if (empty($table)) {
-            $table = $security->retrieve_table_from_coll($collId);
-            $isView = false;
-        }
+    $collId = $_SESSION['collection_id_choice'];
+    $table = $security->retrieve_view_from_coll_id($collId);
+    $isView = true;
+    if (empty($table)) {
+        $table = $security->retrieve_table_from_coll($collId);
+        $isView = false;
     }
     for ($cptColl = 0; $cptColl < count($_SESSION['collections']); ++$cptColl) {
         if ($table == $_SESSION['collections'][$cptColl]['table']

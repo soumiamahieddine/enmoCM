@@ -41,6 +41,7 @@ define('_DEST_USER', 'Recipient');
 define('_DOCSERVER_ADDED', 'Docserver added');
 define('_DOCSERVER_UPDATED', 'Docserver updated');
 define('_DOCSERVER_DELETED', 'Docserver deleted');
+define('_DOCSERVER_ACTIVATED_EXISTS', 'A docserver with this type and this collection is already activated');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Doctype first level added');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Doctype first level deleted');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Doctype first level edited');
@@ -119,6 +120,7 @@ define('_NOTIFICATION_ALREADY_EXIST', 'Notification already exists');
 define('_WRONG_PSW', 'Wrong password');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
+define('_BACK_FROM_VACATION', 'back from vacation');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

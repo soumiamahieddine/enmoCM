@@ -65,362 +65,8 @@ class docservers_controler
      */
     public function save($docserver, $mode='')
     {
-        //var_dump($docserver);
-        $control = array();
-        if (!isset($docserver) || empty($docserver)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _DOCSERVER_EMPTY,
-            );
-            return $control;
-        }
-        $docserver = $this->isADocserver($docserver);
-        $this->set_foolish_ids(
-            array(
-                'docserver_id',
-                'docserver_type_id',
-                'coll_id',
-            )
-        );
-        $this->set_specific_id('docserver_id');
-        if ($mode == 'up') {
-            $control = $this->control($docserver, 'up');
-            if ($control['status'] == 'ok') {
-                //Update existing docserver
-                if ($this->update($docserver)) {
-                    $this->createPackageInformation($docserver);
-                    $control = array(
-                        'status' => 'ok',
-                        'value' => $docserver->docserver_id,
-                    );
-                    //history
-                    if ($_SESSION['history']['docserversadd'] == 'true') {
-                        $history = new history();
-                        $history->add(
-                            _DOCSERVERS_TABLE_NAME,
-                            $docserver->docserver_id,
-                            'UP','docserversadd',
-                            _DOCSERVER_UPDATED . ' : '
-                            . $docserver->docserver_id,
-                            $_SESSION['config']['databasetype']
-                        );
-                    }
-                } else {
-                    $control = array(
-                        'status' => 'ko',
-                        'value' => '',
-                        'error' => _PB_WITH_DOCSERVER,
-                    );
-                }
-                return $control;
-            }
-        } else {
-            $control = $this->control($docserver, 'add');
-            if ($control['status'] == 'ok') {
-                //Insert new docserver
-                if ($this->insert($docserver)) {
-                    $this->createPackageInformation($docserver);
-                    $control = array(
-                        'status' => 'ok',
-                        'value' => $docserver->docserver_id,
-                    );
-                    //history
-                    if ($_SESSION['history']['docserversadd'] == 'true') {
-                        $history = new history();
-                        $history->add(
-                            _DOCSERVERS_TABLE_NAME,
-                            $docserver->docserver_id,
-                            'ADD','docserversadd',
-                            _DOCSERVER_ADDED . ' : ' . $docserver->docserver_id,
-                            $_SESSION['config']['databasetype']
-                        );
-                    }
-                } else {
-                    $control = array(
-                        'status' => 'ko',
-                        'value' => '',
-                        'error' => _PB_WITH_DOCSERVER,
-                    );
-                }
-            }
-        }
-        return $control;
     }
 
-    /**
-    * control the docserver object before action
-    *
-    * @param  $docserver docserver object
-    * @return array ok if the object is well formated, ko otherwise
-    */
-    private function control($docserver, $mode)
-    {
-        $f = new functions();
-        $error = '';
-        if ($mode == 'add') {
-            // Update, so values exist
-            if (isset($docserver->docserver_id)
-                && $docserver->docserver_id <> ''
-            ) {
-                $docserver->docserver_id = 
-                    $f->wash(
-                        $docserver->docserver_id,
-                        'nick',
-                        _DOCSERVER_ID . ' ',
-                        'yes', 0, 32
-                    );
-            } else {
-                $error .= _DOCSERVER_ID . ' ' . _IS_EMPTY . '#';
-            }
-        }
-        $docserver->docserver_type_id = 
-            $f->wash(
-                $docserver->docserver_type_id,
-                'no',
-                _DOCSERVER_TYPES . ' ',
-                'yes',
-                0,
-                32
-            );
-        $docserver->device_label = 
-            $f->wash(
-                $docserver->device_label,
-                'no',
-                _DEVICE_LABEL . ' ',
-                'yes',
-                0,
-                255
-            );
-        if ($docserver->is_readonly == '') {
-            $docserver->is_readonly = 'false';
-        }
-        $docserver->is_readonly = 
-            $f->wash(
-                $docserver->is_readonly,
-                'no',
-                _IS_READONLY . ' ',
-                'yes',
-                0,
-                5
-            );
-        if ($docserver->is_readonly == 'false') {
-            $docserver->is_readonly = false;
-        } else {
-            $docserver->is_readonly = true;
-        }
-        if (isset($docserver->size_limit_number)
-            && !empty($docserver->size_limit_number)
-        ) {
-            $docserver->size_limit_number = 
-                $f->wash(
-                    $docserver->size_limit_number,
-                    'no',
-                    _SIZE_LIMIT . ' ',
-                    'yes',
-                    0,
-                    255
-                );
-            if ($docserver->size_limit_number == 0) {
-                $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
-            }
-            if ($this->sizeLimitControl($docserver)) {
-                $error .= _SIZE_LIMIT_UNAPPROACHABLE . '#';
-            }
-            if ($this->actualSizeNumberControl($docserver)) {
-                $error .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE . '#';
-            }
-        } else {
-            $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
-        }
-        $docserver->path_template = 
-            $f->wash(
-                $docserver->path_template,
-                'no',
-                _PATH_TEMPLATE . ' ',
-                'yes',
-                0,
-                255
-            );
-        if (!is_dir($docserver->path_template)) {
-            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE . '#';
-        } else {
-            // $Fnm = $docserver->path_template . 'test_docserver.txt';
-            if (!is_writable($docserver->path_template)
-                || !is_readable($docserver->path_template)
-            ) {
-                $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
-            }
-        }
-        $docserver->coll_id = 
-            $f->wash(
-                $docserver->coll_id,
-                'no',
-                _COLLECTION . ' ',
-                'yes',
-                0,
-                32
-            );
-        $docserver->priority_number = 
-            $f->wash(
-                $docserver->priority_number,
-                'num',
-                _PRIORITY . ' ',
-                'yes',
-                0,
-                6
-            );
-        $docserver->adr_priority_number =
-            $f->wash(
-                $docserver->adr_priority_number,
-                'num',
-                _ADR_PRIORITY . ' ',
-                'yes',
-                0,
-                6
-            );
-        if ($mode == 'add'
-            && $this->docserversExists($docserver->docserver_id)
-        ) {
-            $error .= $docserver->docserver_id . ' ' . _ALREADY_EXISTS . '#';
-        }
-        if (!$this->adrPriorityNumberControl($docserver)) {
-            $error .= _PRIORITY . ' ' . $docserver->adr_priority_number . ' '
-                    . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER . '#';
-        }
-        if (!$this->priorityNumberControl($docserver)) {
-            $error .= _ADR_PRIORITY . $docserver->priority_number . '  '
-                    . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER . '#';
-        }
-        $error .= $_SESSION['error'];
-        //TODO:rewrite wash to return errors without html
-        $error = str_replace('<br />', '#', $error);
-        $return = array();
-        if (!empty($error)) {
-                $return = array(
-                    'status' => 'ko',
-                    'value' => $docserver->docserver_id,
-                    'error' => $error,
-                );
-        } else {
-            $return = array(
-                'status' => 'ok',
-                'value' => $docserver->docserver_id,
-            );
-        }
-        return $return;
-    }
-
-    /**
-    * method to create package information file on the root of the docserver
-    *
-    * @param  $docserver docserver object
-    */
-    private function createPackageInformation($docserver)
-    {
-        if (is_writable($docserver->path_template)
-            && is_readable($docserver->path_template)
-        ) {
-            require_once('core' . DIRECTORY_SEPARATOR . 'class'
-                . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
-            $docserverTypeControler = new docserver_types_controler();
-            $docserverTypeObject = $docserverTypeControler->get(
-                $docserver->docserver_type_id
-            );
-            $Fnm = $docserver->path_template . DIRECTORY_SEPARATOR
-                 . 'package_information';
-            if (file_exists($Fnm)) {
-                unlink($Fnm);
-            }
-            $inF = fopen($Fnm, 'a');
-            fwrite(
-                $inF,
-                _DOCSERVER_TYPE_ID . ' : '
-                . $docserverTypeObject->docserver_type_id . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _DOCSERVER_TYPE_LABEL . ' : '
-                . $docserverTypeObject->docserver_type_label . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _IS_CONTAINER . ' : ' . $docserverTypeObject->is_container
-                . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _CONTAINER_MAX_NUMBER . ' : '
-                . $docserverTypeObject->container_max_number . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _IS_COMPRESSED . ' : ' . $docserverTypeObject->is_compressed
-                . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _COMPRESS_MODE . ' : '
-                . $docserverTypeObject->compression_mode . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _IS_META . ' : ' . $docserverTypeObject->is_meta . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _META_TEMPLATE . ' : ' . $docserverTypeObject->meta_template
-                . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _IS_LOGGED . ' : ' . $docserverTypeObject->is_logged . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _LOG_TEMPLATE . ' : ' . $docserverTypeObject->log_template
-                . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _IS_SIGNED . ' : ' . $docserverTypeObject->is_signed . '\r\n'
-            );
-            fwrite(
-                $inF,
-                _FINGERPRINT_MODE . ' : '
-                . $docserverTypeObject->fingerprint_mode . '\r\n'
-            );
-            fclose($inF);
-        }
-    }
-
-    /**
-    * Inserts in the database (docservers table) a docserver object
-    *
-    * @param  $docserver docserver object
-    * @return bool true if the insertion is complete, false otherwise
-    */
-    private function insert($docserver)
-    {
-        $db = new Database();
-        //Giving automatised values
-        $docserver->enabled = 'Y';
-        $docserver->creation_date = $db->current_datetime();
-        //Inserting object
-        $result = $this->advanced_insert($docserver);
-        return $result;
-    }
-
-    /**
-    * Updates in the database (docserver table) a docservers object
-    *
-    * @param  $docserver docserver object
-    * @return bool true if the update is complete, false otherwise
-    */
-    private function update($docserver)
-    {
-        return $this->advanced_update($docserver);
-    }
 
     /**
      * Get docservers with given id.
@@ -443,6 +89,11 @@ class docservers_controler
         }
     }
 
+    public function delete($args)
+    {
+    }
+
+
     /**
      * get docservers with given id for a ws.
      * Can return null if no corresponding object.
@@ -460,91 +111,6 @@ class docservers_controler
             $docserver = $docserver->getArray();
             return $docserver;
         }
-    }
-
-    /**
-     * Delete given docserver from database.
-     * @param docservers $docservers
-     */
-    public function delete($docserver)
-    {
-        if ($docserver->docserver_id <> 'TEMPLATES') {
-            $func = new functions();
-            $control = array();
-            if (!isset($docserver) || empty($docserver)) {
-                $control = array(
-                    'status' => 'ko',
-                    'value' => '',
-                    'error' => _DOCSERVER_EMPTY,
-                );
-                return $control;
-            }
-            $docserver = $this->isADocserver($docserver);
-            if (!$this->docserversExists($docserver->docserver_id)) {
-                $control = array(
-                    'status' => 'ko',
-                    'value' => '',
-                    'error' => _DOCSERVER_NOT_EXISTS,
-                );
-                return $control;
-            }
-            if ($this->adrxLinkExists(
-                $docserver->docserver_id,
-                $docserver->coll_id
-                )
-            ) {
-                $control = array('status' => 'ko', 'value' => '',
-                'error' => _DOCSERVER_ATTACHED_TO_ADR_X);
-                return $control;
-            }
-            if ($this->resxLinkExists(
-                $docserver->docserver_id,
-                $docserver->coll_id
-            )
-            ) {
-                $control = array(
-                    'status' => 'ko',
-                    'value' => '',
-                    'error' => _DOCSERVER_ATTACHED_TO_RES_X,
-                );
-                return $control;
-            }
-            $db = new Database();
-            $query = "delete from " . _DOCSERVERS_TABLE_NAME
-                   . " where docserver_id = ?";
-            try {
-                $stmt = $db->query($query, array($docserver->docserver_id));
-            } catch (Exception $e) {
-                $control = array(
-                    'status' => 'ko',
-                    'value' => '',
-                    'error' => _CANNOT_DELETE_DOCSERVER_ID
-                    . ' ' . $docserver->docserver_id,
-                );
-            }
-            $control = array(
-                'status' => 'ok',
-                'value' => $docserver->docserver_id,
-            );
-            if ($_SESSION['history']['docserversdel'] == 'true') {
-                $history = new history();
-                $history->add(
-                    _DOCSERVERS_TABLE_NAME,
-                    $docserver->docserver_id,
-                    'DEL','docserversdel',
-                    _DOCSERVER_DELETED . ' : ' . $docserver->docserver_id,
-                    $_SESSION['config']['databasetype']
-                );
-            }
-        } else {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _CANNOT_DELETE_DOCSERVER_ID
-                . ' ' . $docserver->docserver_id,
-            );
-        }
-        return $control;
     }
 
     /**
@@ -739,72 +305,6 @@ class docservers_controler
     }
 
     /**
-    * Check if two docservers have the same priorities
-    *
-    * @param $docserver docservers object
-    * @return bool true if the control is ok
-    */
-    private function adrPriorityNumberControl($docserver)
-    {
-        $func = new functions();
-        if (!isset($docserver)
-            || empty($docserver)
-            || empty($docserver->adr_priority_number)
-        ) {
-            return false;
-        }
-        $db = new Database();
-        $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where adr_priority_number = ? AND docserver_type_id = ?"
-               . " AND docserver_id <> ?";
-        $stmt = $db->query(
-            $query, 
-            array(
-                $docserver->adr_priority_number, 
-                $docserver->docserver_type_id, 
-                $docserver->docserver_id 
-            )
-        );
-        if ($stmt->rowCount() > 0) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-    * Check if two docservers have the same priorities
-    *
-    * @param $docserver docservers object
-    * @return bool true if the control is ok
-    */
-    private function priorityNumberControl($docserver)
-    {
-        $func = new functions();
-        if (!isset($docserver)
-            || empty($docserver)
-            || empty($docserver->priority_number)
-        ) {
-            return false;
-        }
-        $db = new Database();
-        $query = "select priority_number from " . _DOCSERVERS_TABLE_NAME
-               . " where priority_number = ? AND docserver_type_id = ?"
-               . " AND docserver_id <> ?";
-        $stmt = $db->query(
-            $query, 
-            array(
-                $docserver->priority_number, 
-                $docserver->docserver_type_id, 
-                $docserver->docserver_id 
-            )
-        );
-        if ($stmt->rowCount() > 0) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
     * Check if the docserver actual size is less than the size limit
     *
     * @param $docserver docservers object
@@ -834,41 +334,15 @@ class docservers_controler
         }
     }
 
-    /**
-    * Check if the docserver size has not reached the limit
-    *
-    * @param $docserver docservers object
-    * @return bool true if the control is ok
-    */
-    private function sizeLimitControl($docserver)
+    public function getDocserverToInsert($collId, $typeId = 'DOC')
     {
-        $docserver->size_limit_number = floatval($docserver->size_limit_number);
-        $maxsizelimit = floatval(
-            $_SESSION['docserversFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']
-        ) * 1000 * 1000 * 1000;
-        if (!isset($docserver) || empty($docserver)) {
-            return false;
+        if ($collId == 'templates') {
+            $typeId = 'TEMPLATES';
         }
-        if ($docserver->size_limit_number < $maxsizelimit) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
-    /**
-     * Get docservers to insert a new doc.
-     * Can return null if no corresponding object.
-     * @param  $coll_id  string Collection identifier
-     * @return docservers
-     */
-    public function getDocserverToInsert($collId)
-    {
         $db = new Database();
-        $query = "select priority_number, docserver_id from "
-               . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-               . "coll_id = ? order by priority_number";
-        $stmt = $db->query($query, array($collId));
+        $query = "select docserver_id from docservers where is_readonly = 'N' and coll_id = ?  and docserver_type_id = ?";
+        $stmt = $db->query($query, [$collId, $typeId]);
         $queryResult = $stmt->fetchObject();
         if ($queryResult->docserver_id <> '') {
             $docserver = $this->get($queryResult->docserver_id);
@@ -1200,61 +674,16 @@ class docservers_controler
             $fingerprintFromDocserver = Ds_doFingerprint(
                 $file, $docserverTypeObject->fingerprint_mode
             );
-            $adrToExtract = array();
             $adrToExtract = $adr;
             $adrToExtract['path_to_file'] = $file;
-            $docserverTypeControler = new docserver_types_controler();
-            $docserverTypeObject = $docserverTypeControler->get(
-                $docserverObject->docserver_type_id
-            );
 
-            if ($docserverTypeObject->is_container == 'Y'
-                && $adr['offset_doc'] == ''
-            ) {
-                $error = true;
-                $concatError .=
-                    _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
-                $history->add(
-                    $tableName, $gedId, 'ERR', 'docserverserr',
-                    _FAILOVER . ' ' . _DOCSERVERS . ' '
-                    . $adr['docserver_id'] . ':'
-                    . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER,
-                    $_SESSION['config']['databasetype']
-                );
-            }
-            //manage compressed resource
-            if ($docserverTypeObject->is_compressed == 'Y') {
-                $extract = array();
-                $extract = Ds_extractArchive(
-                    $adrToExtract,
-                    $docserverTypeObject->fingerprint_mode
-                );
-                if ($extract['status'] == 'ko' || !is_array($extract)) {
-                    $error = true;
-                    $concatError .= $extract['error'] . '||';
-                    $history->add(
-                        $tableName, $gedId, 'ERR', 'docserverserr',
-                        _FAILOVER . ' ' . _DOCSERVERS . ' '
-                        . $adr['docserver_id'] . ':'
-                        . $extract['error'],
-                        $_SESSION['config']['databasetype']
-                    );
-                } else {
-                    $file = $extract['path'];
-                    $mimeType = $extract['mime_type'];
-                    $format = $extract['format'];
-                    //to control fingerprint of the offset
-                    $fingerprintFromDocserver = $extract['fingerprint'];
-                }
-            } else {
-                $mimeType = Ds_getMimeType(
-                    $adrToExtract['path_to_file']
-                );
-                $format = substr(
-                    $adrToExtract['filename'],
-                    strrpos($adrToExtract['filename'], '.') + 1
-                );
-            }
+            $mimeType = Ds_getMimeType(
+                $adrToExtract['path_to_file']
+            );
+            $format = substr(
+                $adrToExtract['filename'],
+                strrpos($adrToExtract['filename'], '.') + 1
+            );
             //manage view of the file
             $use_tiny_mce = false;
             if (strtolower($format) == 'maarch'
@@ -1504,49 +933,10 @@ class docservers_controler
                     $docserverTypeObject = $docserverTypeControler->get(
                         $docserverObject->docserver_type_id
                     );
-                    if ($docserverTypeObject->is_container == "Y"
-                        && $adr[0][$cptDocserver]['offset_doc'] == ''
-                    ) {
-                        $error = true;
-                        $concatError .=
-                            _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
-                        $history->add(
-                            $tableName, $gedId, 'ERR','docserverserr',
-                            _FAILOVER . ' ' . _DOCSERVERS . ' '
-                            . $adr[0][$cptDocserver]['docserver_id'] . ':'
-                            . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER,
-                            $_SESSION['config']['databasetype']
-                        );
-                    }
                     //manage compressed resource
-                    if ($docserverTypeObject->is_compressed == "Y") {
-                        $extract = array();
-                        $extract = Ds_extractArchive(
-                            $adrToExtract,
-                            $docserverTypeObject->fingerprint_mode
-                        );
-                        if ($extract['status'] == 'ko' || !is_array($extract)) {
-                            $error = true;
-                            $concatError .= $extract['error'] . '||';
-                            $history->add(
-                                $tableName, $gedId, 'ERR','docserverserr',
-                                _FAILOVER . ' ' . _DOCSERVERS . ' '
-                                . $adr[0][$cptDocserver]['docserver_id'] . ':'
-                                . $extract['error'],
-                                $_SESSION['config']['databasetype']
-                            );
-                        } else {
-                            $file = $extract['path'];
-                            $mimeType = $extract['mime_type'];
-                            $format = $extract['format'];
-                            //to control fingerprint of the offset
-                            $fingerprintFromDocserver = $extract['fingerprint'];
-                        }
-                    } else {
-                        $mimeType = Ds_getMimeType(
-                            $adrToExtract['path_to_file']
-                        );
-                    }
+                    $mimeType = Ds_getMimeType(
+                        $adrToExtract['path_to_file']
+                    );
                     //manage view of the file
                     $use_tiny_mce = false;
                     if (strtolower($format) == 'maarch'

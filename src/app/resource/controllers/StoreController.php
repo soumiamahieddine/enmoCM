@@ -47,12 +47,13 @@ class StoreController
             fclose($file);
 
             $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'    => $aArgs['collId'],
-                'fileInfos' => [
-                    'tmpDir'        => CoreConfigModel::getTmpPath(),
-                    'size'          => filesize($tmpFilepath),
-                    'format'        => $aArgs['fileFormat'],
-                    'tmpFileName'   => $fileName,
+                'collId'            => $aArgs['collId'],
+                'docserverTypeId'   => 'DOC',
+                'fileInfos'         => [
+                    'tmpDir'            => CoreConfigModel::getTmpPath(),
+                    'size'              => filesize($tmpFilepath),
+                    'format'            => $aArgs['fileFormat'],
+                    'tmpFileName'       => $fileName,
                 ]
             ]);
             if (!empty($storeResult['errors'])) {

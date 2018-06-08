@@ -41,9 +41,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -71,9 +69,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/wrong/path/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -91,9 +87,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  null,
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -111,9 +105,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'new docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/var/docserversDEV/dev1804/archive_transfer/',
-            'coll_id'                =>  'letterbox_coll',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'coll_id'                =>  'letterbox_coll'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->create($fullRequest, new \Slim\Http\Response());
@@ -130,18 +122,18 @@ class DocserverControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'docserver_type_id'      =>  'DOC',
-            'device_label'           =>  'updated docserver',
-            'size_limit_number'      =>  50000000000,
-            'path_template'          =>  '/tmp/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'docserver_type_id' =>  'DOC',
+            'device_label'      =>  'updated docserver',
+            'size_limit_number' =>  50000000000,
+            'path_template'     =>  '/tmp/',
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('success', $responseBody->success);
+        $this->assertNotEmpty($responseBody->docserver);
+        $this->assertSame('updated docserver', $responseBody->docserver->device_label);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -160,8 +152,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/wrong/path/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
@@ -178,8 +169,7 @@ class DocserverControllerTest extends TestCase
             'device_label'           =>  'updated docserver',
             'size_limit_number'      =>  50000000000,
             'path_template'          =>  '/tmp/',
-            'priority_number'        =>  99,
-            'adr_priority_number'    =>  99
+            'is_readonly'       =>  true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
         $response     = $docserverController->update($fullRequest, new \Slim\Http\Response(), ['id' => 12345]);

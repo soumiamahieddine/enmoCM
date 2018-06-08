@@ -18,8 +18,6 @@ $SOAP_typedef['docservers'] = array(    'docserver_id'=>'string',
                                         'size_limit_number'=>'string',
                                         'path_template'=>'string',
                                         'coll_id'=>'string',
-                                        'priority_number'=>'string',
-                                        'adr_priority_number'=>'string'
                                     );
 $SOAP_typedef['returnViewResource'] = array('status'=>'string',
                                             'mime_type'=>'string',
@@ -64,15 +62,6 @@ $SOAP_dispatch_map['viewResource'] = array(
 // DOCSERVERS TYPES
 $SOAP_typedef['docserverTypes'] = array(    'docserver_type_id'=>'string',
                                             'docserver_type_label'=>'string',
-                                            'is_container'=>'string',
-                                            'container_max_number'=>'int',
-                                            'is_compressed'=>'string',
-                                            'compression_mode'=>'string',
-                                            'is_meta'=>'string',
-                                            'meta_template'=>'string',
-                                            'is_logged'=>'string',
-                                            'log_template'=>'string',
-                                            'is_signed'=>'string',
                                             'fingerprint_mode'=>'string'
                                             );
 $SOAP_dispatch_map['docserverTypeSave'] = array(
@@ -222,16 +211,6 @@ $SOAP_typedef['docListReturnArray'] = array(
     'status'=>'string',
     'value'=>'{urn:MaarchSoapServer}listOfResources',
     'error'=>'string',
-);
-
-$SOAP_dispatch_map['Demo_searchResources'] = array(
-    'in' => array(
-        'searchParams' => '{urn:MaarchSoapServer}searchParams',
-    ),
-    'out' => array(
-        'out' => '{urn:MaarchSoapServer}docListReturnArray',
-    ),
-    'method' => "core#resources::Demo_searchResources",
 );
 
 $SOAP_typedef['returnRetrieveMasterResByChrono'] = array(

@@ -368,56 +368,6 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
             $resId
         )
     );
-    $query = "select * from " . $GLOBALS['adrTable'] 
-        . " where res_id = ? order by adr_priority";
-    $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resId));
-    if ($stmt->rowCount() == 0) {
-        $query = "select docserver_id, path, filename, offset_doc, fingerprint"
-               . " from " . $GLOBALS['table'] . " where res_id = ?";
-        $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resId));
-        $recordset = $stmt->fetchObject();
-        $resDocserverId = $recordset->docserver_id;
-        $resPath = $recordset->path;
-        $resFilename = $recordset->filename;
-        $resOffsetDoc = $recordset->offset_doc;
-        $fingerprintInit = $recordset->fingerprint;
-        $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME 
-               . " where docserver_id = ?";
-        $stmt = Bt_doQuery($GLOBALS['db'], $query, array($resDocserverId));
-        $recordset = $stmt->fetchObject();
-        $query = "insert into " . $GLOBALS['adrTable'] . " (res_id, "
-               . "docserver_id, path, filename, offset_doc, fingerprint, "
-               . "adr_priority) values (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = Bt_doQuery(
-            $GLOBALS['db'], 
-            $query, 
-            array(
-                $resId,
-                $resDocserverId,
-                $resPath,
-                $resFilename,
-                $resOffsetDoc,
-                $fingerprintInit,
-                $recordset->adr_priority_number
-            )
-        );
-    }
-    $query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, "
-           . "path, filename, offset_doc, fingerprint, adr_priority) values (" 
-           . "?, ?, ?, ?, ?, ?, ?)";
-    $stmt = Bt_doQuery(
-        $GLOBALS['db'], 
-        $query, 
-        array(
-            $resId,
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'],
-            $path,
-            $fileName,
-            $offsetDoc,
-            $fingerprint,
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number']
-        )
-    );
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values (" 
            . "?, ?, 'ADD', 'LC_BOT', " 

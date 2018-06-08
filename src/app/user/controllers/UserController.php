@@ -375,8 +375,7 @@ class UserController
         }
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
-            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -411,8 +410,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'baskets'           => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]),
-            'redirectedBaskets' => BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']])
+            'baskets'   => BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']])
         ]);
     }
 
@@ -472,7 +470,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Signature does not exist']);
         }
 
-        $docserver = DocserverModel::getFirstByTypeId(['typeId' => 'TEMPLATES', 'select' => ['path_template']]);
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return [];
         }

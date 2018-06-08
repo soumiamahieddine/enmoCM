@@ -43,7 +43,7 @@ class SignatureBookController
         if (!ResController::hasRightByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
-        $docserver = DocserverModel::getFirstByTypeId(['typeId' => 'TEMPLATES', 'select' => ['path_template']]);
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(500)->withJson(['errors' => _UNREACHABLE_DOCSERVER]);
         }
@@ -86,18 +86,19 @@ class SignatureBookController
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $datas = [];
-        $datas['actions']       = $actions;
-        $datas['attachments']   = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
-        $datas['documents']     = $documents;
-        $datas['currentAction'] = $currentAction;
-        $datas['resList']       = [];
-        $datas['nbNotes']       = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
-        $datas['nbLinks']       = count(LinkModel::getByResId(['resId' => $resId]));
-        $datas['signatures']    = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
-        $datas['consigne']      = UserModel::getCurrentConsigneById(['resId' => $resId]);
-        $datas['hasWorkflow']   = ((int)$listInstances[0]['count'] > 0);
-        $datas['listinstance']  = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']       = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['actions']               = $actions;
+        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['documents']             = $documents;
+        $datas['currentAction']         = $currentAction;
+        $datas['resList']               = [];
+        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['nbLinks']               = count(LinkModel::getByResId(['resId' => $resId]));
+        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
+        $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
+        $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
+        $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
+        $datas['canSign']               = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
     }

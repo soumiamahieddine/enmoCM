@@ -386,12 +386,14 @@
             $format = $line->format;
             if($line->is_multi_docservers == "Y") {
                 if (
-                    $adrTable == 'adr_x' ||
                     $adrTable == 'adr_letterbox' ||
                     $adrTable == 'adr_attachments' ||
                     $adrTable == 'adr_attachments_version'
 
                 ) {
+                    if ($adrTable == 'adr_x') {
+                        $adrTable = 'adr_letterbox';
+                    }
                     $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 
                         . $adrTable . " where res_id = ? order by adr_priority";
                     $stmt = $db->query($query, array($resId));

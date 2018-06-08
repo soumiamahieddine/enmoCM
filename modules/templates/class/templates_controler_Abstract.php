@@ -85,7 +85,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                             _TEMPLATES_TABLE_NAME, 
                             $template->template_id, 
                             'UP', 'templateadd',
-                            _TEMPLATES_UPDATED.' : '.$template->template_id, 
+                            _TEMPLATE_UPDATED.' : '.$template->template_id,
                             $_SESSION['config']['databasetype']
                         );
                     }
@@ -120,7 +120,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
                             _TEMPLATES_TABLE_NAME, 
                             $templateId, 
                             'ADD', 'templateadd',
-                            _TEMPLATES_ADDED . ' : ' . $templateId, 
+                            _TEMPLATE_ADDED . ' : ' . $templateId,
                             $_SESSION['config']['databasetype']
                         );
                     }
@@ -355,7 +355,7 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             $history = new history();
             $history->add(
                 _TEMPLATES_TABLE_NAME, $template->template_id, 'DEL', 'templatedel',
-                _TEMPLATES_DELETED.' : '.$template->template_id, 
+                _TEMPLATE_DELETED.' : '.$template->template_id,
                 $_SESSION['config']['databasetype']
             );
         }

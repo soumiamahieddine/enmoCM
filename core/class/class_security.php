@@ -286,28 +286,6 @@ class security extends Database
         }
     }
 
-    public function test_allowed_ip()
-    {
-        $db = new Database();
-        if ($_SERVER['REMOTE_ADDR'] == '::1') {
-            $current_ip = 'localhost';
-        } else {
-            $current_ip = $_SERVER['REMOTE_ADDR'];
-        }
-        $list_ip = 'SELECT ip from allowed_ip';
-        $stmt = $db->query($list_ip, array());
-        while ($res = $stmt->fetchObject()) {
-            if ($res->ip == $current_ip) {
-                return true;
-            }
-        }
-        if ($stmt->rowCount() == 0) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function generateRaCode($login, $password = '', $redirect = true)
     {
         require_once 'apps/maarch_entreprise/class/class_users.php';

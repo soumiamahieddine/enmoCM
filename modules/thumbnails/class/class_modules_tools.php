@@ -49,8 +49,8 @@ class thumbnails
 }
 	public function generateTnl($res_id, $coll_id, $table_name = false){
 		$db = new Database();
-		$query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
-	   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
+		$query = "select docserver_id from docservers where is_readonly = 'N' and "
+	   . " coll_id = ? and docserver_type_id = 'TNL'";
 		$stmt1 = $db->query($query, array($coll_id));
 
 		if($res = $stmt1->fetchObject()){
@@ -156,9 +156,7 @@ class thumbnails
 		if ($table_name) $table = $table_name;
 		$db = new Database();
 		
-		$query = "select priority_number, docserver_id from "
-			   . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
-			   . " enabled = 'Y' and coll_id = ? and docserver_type_id = 'TNL' order by priority_number";
+		$query = "select docserver_id from docservers where is_readonly = 'N' and coll_id = ? and docserver_type_id = 'TNL'";
 			   
 		$stmt = $db->query($query, array($coll_id));
 		$docserverId = $stmt->fetchObject()->docserver_id;

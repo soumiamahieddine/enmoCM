@@ -97,7 +97,7 @@ abstract class visa_Abstract extends Database
         $request = new request();
         $table = $_SESSION['current_basket']['view'];
         $select[$table] = array();
-        array_push($select[$table],'res_id', 'status', 'category_id as category_img',
+        array_push($select[$table], 'res_id', 'status', 'category_id as category_img',
                         'contact_firstname', 'contact_lastname', 'contact_society', 'user_lastname',
                         'user_firstname', 'priority', 'creation_date', 'admission_date', 'subject',
                         'process_limit_date', 'entity_label', 'dest_user', 'category_id', 'type_label',
@@ -1221,7 +1221,7 @@ abstract class visa_Abstract extends Database
                     //Get data
                     $idNote = $user_notes[$i]['id'];
                     //$noteShort = $request->cut_string($user_notes[$i]['label'], 50);
-                    $noteShort = $request->cut_string(str_replace(array("'", "\r", "\n", '"'),array("'", ' ', ' ', '&quot;'),
+                    $noteShort = $request->cut_string(str_replace(array("'", "\r", "\n", '"'), array("'", ' ', ' ', '&quot;'),
                             $user_notes[$i]['label']), 50);
                     $noteShort = functions::xssafe($noteShort);
                     $note = $user_notes[$i]['label'];
@@ -1271,6 +1271,9 @@ abstract class visa_Abstract extends Database
     public function currentUserSignRequired($res_id)
     {
         $user_id = $this->getCurrentUserStep($res_id);
+        if ($_SESSION['user']['UserId'] != $user_id) {
+            return 'false';
+        }
         $db = new Database();
         $stmt = $db->query("SELECT count(listinstance_id) as nb from listinstance l where l.res_id=? AND l.item_id=? AND l.difflist_type='VISA_CIRCUIT' AND l.requested_signature='true'", array($res_id, $user_id));
         $res = $stmt->fetchObject();

@@ -282,7 +282,7 @@ if ($res_master_attached == 'Y'){
 	
 $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
 $where = ' and 1=1';
-$adrTable = 'adr_x';
+$adrTable = 'adr_letterbox';
 $infos_file = $resource->getResourceAdr($view, $_REQUEST['join_file'], $where, $adrTable) ;
 
 $ds_id = $infos_file[0][0]['docserver_id'];
