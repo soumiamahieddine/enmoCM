@@ -140,7 +140,7 @@ class EntityController
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
+        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         $entity['templates'] = count($templates);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $entity['instances'] = count($instances);
@@ -306,7 +306,7 @@ class EntityController
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
-        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
+        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $redirects = BasketModel::getGroupActionRedirect(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
