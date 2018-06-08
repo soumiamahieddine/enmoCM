@@ -1662,7 +1662,7 @@ abstract class contacts_v2_Abstract extends Database
             <tr>
                 <?php 
                             $contactController = new \Contact\controllers\ContactController();
-            if (!$numDepList = $contactController->availaibleReferential()) {
+            if (!$numDepList = $contactController->availableReferential()) {
                 $stateRef = 'disabled';
                 $stateRefInfo = _WARNING_REF;
                 $stateRefCss = 'opacity:0.5;';

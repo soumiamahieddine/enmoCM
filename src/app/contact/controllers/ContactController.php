@@ -179,7 +179,7 @@ class ContactController
         return $aCivility;
     }
 
-    public function availaibleReferential()
+    public function availableReferential()
     {
         $customId = CoreConfigModel::getCustomId();
 
