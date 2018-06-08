@@ -1713,7 +1713,7 @@ abstract class contacts_v2_Abstract extends Database
                                 width: "10%",
                                 disable_search_threshold: 10
                             });
-                            reloadTypeahead($j("#numDep"));
+                            reloadTypeahead($j("#numDep")[0]);
                         </script>
                         <style>
                             .typeahead__cancel-button {
