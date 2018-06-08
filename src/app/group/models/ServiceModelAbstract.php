@@ -30,13 +30,13 @@ abstract class ServiceModelAbstract
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                     $services['application'][] = [
-                        'id' => (string) $value->id,
-                        'name' => $name,
-                        'comment' => $comment,
-                        'servicepage' => (string) $value->servicepage,
-                        'style' => (string) $value->style,
+                        'id'             => (string) $value->id,
+                        'name'           => $name,
+                        'comment'        => $comment,
+                        'servicepage'    => (string) $value->servicepage,
+                        'style'          => (string) $value->style,
                         'system_service' => (string) $value->system_service == 'true' ? true : false,
-                        'servicetype' => (string) $value->servicetype,
+                        'servicetype'    => (string) $value->servicetype,
                     ];
                 }
             }
@@ -54,13 +54,13 @@ abstract class ServiceModelAbstract
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         $services[$module][] = [
-                            'id' => (string) $value->id,
-                            'name' => $name,
-                            'comment' => $comment,
-                            'servicepage' => (string) $value->servicepage,
-                            'style' => (string) $value->style,
+                            'id'             => (string) $value->id,
+                            'name'           => $name,
+                            'comment'        => $comment,
+                            'servicepage'    => (string) $value->servicepage,
+                            'style'          => (string) $value->style,
                             'system_service' => (string) $value->system_service == 'true' ? true : false,
-                            'servicetype' => (string) $value->servicetype,
+                            'servicetype'    => (string) $value->servicetype,
                         ];
                     }
                 }
@@ -82,11 +82,11 @@ abstract class ServiceModelAbstract
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                     $applicationServices[$category][] = [
-                        'name' => $name,
-                        'comment' => $comment,
+                        'name'        => $name,
+                        'comment'     => $comment,
                         'servicepage' => (string) $value->servicepage,
-                        'style' => (string) $value->style,
-                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        'style'       => (string) $value->style,
+                        'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
                 }
             }
@@ -110,11 +110,11 @@ abstract class ServiceModelAbstract
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                     $applicationServices[$category][] = [
-                        'name' => $name,
-                        'comment' => $comment,
+                        'name'        => $name,
+                        'comment'     => $comment,
                         'servicepage' => (string) $value->servicepage,
-                        'style' => (string) $value->style,
-                        'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        'style'       => (string) $value->style,
+                        'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                     ];
                 }
             }
@@ -139,11 +139,11 @@ abstract class ServiceModelAbstract
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         $modulesServices[$category][] = [
-                            'name' => $name,
-                            'comment' => $comment,
+                            'name'        => $name,
+                            'comment'     => $comment,
                             'servicepage' => (string) $value->servicepage,
-                            'style' => (string) $value->style,
-                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            'style'       => (string) $value->style,
+                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
@@ -172,11 +172,11 @@ abstract class ServiceModelAbstract
                         $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                         $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
                         $modulesServices[$category][] = [
-                            'name' => $name,
-                            'comment' => $comment,
+                            'name'        => $name,
+                            'comment'     => $comment,
                             'servicepage' => (string) $value->servicepage,
-                            'style' => (string) $value->style,
-                            'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                            'style'       => (string) $value->style,
+                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
                 }
@@ -195,10 +195,10 @@ abstract class ServiceModelAbstract
             $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
             $modulesServices['menuList'][] = [
-                'id' => (string) $value->id,
-                'label' => $label,
-                'link' => (string) $value->url,
-                'icon' => (string) $value->style,
+                'id'      => (string) $value->id,
+                'label'   => $label,
+                'link'    => (string) $value->url,
+                'icon'    => (string) $value->style,
                 'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
             ];
         }
@@ -260,10 +260,10 @@ abstract class ServiceModelAbstract
                 $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
                 $modulesServices['menuList'][] = [
-                    'id' => (string) $value->id,
-                    'label' => $label,
-                    'link' => (string) $value->url,
-                    'icon' => (string) $value->style,
+                    'id'      => (string) $value->id,
+                    'label'   => $label,
+                    'link'    => (string) $value->url,
+                    'icon'    => (string) $value->style,
                     'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                 ];
             }
@@ -291,10 +291,10 @@ abstract class ServiceModelAbstract
                         $label = defined((string) $value->libconst) ? constant((string) $value->libconst) : (string) $value->libconst;
 
                         $modulesServices['menuList'][] = [
-                            'id' => (string) $value->id,
-                            'label' => $label,
-                            'link' => (string) $value->url,
-                            'icon' => (string) $value->style,
+                            'id'      => (string) $value->id,
+                            'label'   => $label,
+                            'link'    => (string) $value->url,
+                            'icon'    => (string) $value->style,
                             'angular' => empty((string) $value->angular) ? 'false' : (string) $value->angular,
                         ];
                     }
@@ -321,10 +321,10 @@ abstract class ServiceModelAbstract
         $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
 
-        foreach($administrationApplication['supervision'] as $key => $value){
-            if($value['name'] == "Historique des batchs"){
+        foreach ($administrationApplication['supervision'] as $key => $value) {
+            if ($value['name'] == "Historique des batchs") {
                 array_splice($administrationApplication['supervision'], $key, 1);
-            }            
+            }
         }
         unset($key);
 
