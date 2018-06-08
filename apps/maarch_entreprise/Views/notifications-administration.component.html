@@ -154,7 +154,7 @@
                 <mat-chip-list #chipList class="mat-chip-list-stacked">
                     <span *ngFor="let notif of crontab;let i = index">
                         <mat-chip color="primary" *ngIf="notif.state == 'normal'" style="margin:5px;border-radius:0px;display:flex;"
-                            selectable="false" removable="true" (remove)="deleteCron(i)">
+                            selectable="false" removable="true" (removed)="deleteCron(i)">
                             {{notif.description}}
                             <span style="flex: 1 1 auto;"></span>
                             <b>{{notif.m}}&nbsp;&nbsp;{{notif.h}}&nbsp;&nbsp;{{notif.dom}}&nbsp;&nbsp;{{notif.mon}}&nbsp;&nbsp;{{notif.dow}}</b>
