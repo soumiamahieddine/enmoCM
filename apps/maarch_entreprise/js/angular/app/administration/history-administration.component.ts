@@ -21,8 +21,6 @@ export class HistoryAdministrationComponent implements OnInit {
     coreUrl                         : string;
     lang                            : any       = LANG;
     loading                         : boolean   = false;
-    loading1                        : boolean   = false;
-    loading2                        : boolean   = false;
     limitExceeded                   : boolean   = false;
     batchLimitExceeded              : boolean   = false;
 

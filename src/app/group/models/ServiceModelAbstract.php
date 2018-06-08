@@ -317,12 +317,11 @@ abstract class ServiceModelAbstract
         }
 
         $administration = [];
-//        $administrationMenu = ServiceModel::getApplicationAdministrationMenuByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
 
         foreach ($administrationApplication['supervision'] as $key => $value) {
-            if ($value['name'] == "Historique des batchs") {
+            if ($value['name'] === _HISTORY_BATCH) {
                 array_splice($administrationApplication['supervision'], $key, 1);
             }
         }
