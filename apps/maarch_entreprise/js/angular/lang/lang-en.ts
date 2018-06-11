@@ -517,5 +517,16 @@ export const LANG_EN = {
     "chooseContactType"                 : "Choose a contact type",
     "addContacts"                       : "Add contacts",
     "all"                               : "All",
+    "templateName"                      : "Template name",
+    "templateType"                      : "Template type",
+    "templateDeleted"                   : "Template deleted",
+    "templateTarget"                    : "Template target",
+    "templateModification"              : "Template modification",
+    "templateCreation"                  : "Template creation",
+    "templateDatasource"                : "Template datasource",
+    "defaultTemplate"                   : "Template nature",
+    "office"                            : "Office",
+    "html"                              : "HTML",
+    "txt"                               : "Texte",
 
 };

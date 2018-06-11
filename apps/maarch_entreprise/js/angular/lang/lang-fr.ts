@@ -538,5 +538,16 @@ export const LANG_FR = {
     "chooseContactType"                 : "Choisissez un type de contact",
     "addContacts"                       : "Ajouter des contacts",
     "all"                               : "Tous",
+    "templateName"                      : "Nom du modèle",
+    "templateType"                      : "Type de modèle",
+    "templateDeleted"                   : "Modèle supprimé",
+    "templateTarget"                    : "Cible du modèle",
+    "templateModification"              : "Modification du modèle",
+    "templateCreation"                  : "Création du modèle",
+    "templateDatasource"                : "Source de données",
+    "defaultTemplate"                   : "Nature du modèle",
+    "office"                            : "Office",
+    "html"                              : "HTML",
+    "txt"                               : "Texte",
 
 };

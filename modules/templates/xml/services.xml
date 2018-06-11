@@ -4,12 +4,13 @@
    <id>admin_templates</id>
    <name>_TEMPLATES</name>
    <comment>_ADMIN_TEMPLATES_DESC</comment>
-   <servicepage>index.php?page=templates_management_controler&amp;module=templates</servicepage>
+   <servicepage>/administration/templates</servicepage>
    <servicetype>admin</servicetype>
    <category>production</category>
    <system_service>false</system_service>
    <style>fa fa-file-alt</style>
    <enabled>true</enabled>
+   <angular>true</angular>
    <WHEREAMIUSED>
      <page>admin.php</page>
      <nature>listelement</nature>

@@ -30,7 +30,9 @@ import { ContactsGroupAdministrationComponent }         from './contacts-group-a
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docservers-administration.component';
 import { DocserverAdministrationComponent }            from './docserver-administration.component';
- 
+import { TemplatesAdministrationComponent }            from './templates-administration.component';
+import { TemplateAdministrationComponent }            from './template-administration.component';
+
 @NgModule({
     imports: [
         RouterModule.forChild([
@@ -73,6 +75,9 @@ import { DocserverAdministrationComponent }            from './docserver-adminis
             { path: 'administration/versions-update', component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', component: DocserversAdministrationComponent },
             { path: 'administration/docservers/new', component: DocserverAdministrationComponent },
+            { path: 'administration/templates', component: TemplatesAdministrationComponent },
+            { path: 'administration/templates/new', component: TemplateAdministrationComponent },
+            { path: 'administration/templates/:id', component: TemplateAdministrationComponent },
         ]),
     ],
     exports: [

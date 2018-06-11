@@ -1,0 +1,102 @@
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title" *ngIf="!creationMode">{{lang.templateModification}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{template.template_label}}</small>
+        </h1>
+        <h1 class="admin-toolbar-title" *ngIf="creationMode">{{lang.templateCreation}}
+            <small [class.hide-for-mobile]="mobileQuery.matches">{{template.template_label}}</small>
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <menu-top></menu-top>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true">
+            <menu-nav></menu-nav>
+            <mat-divider></mat-divider>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading" class="card-app-content">
+                <form class="form-horizontal" (ngSubmit)="onSubmit()" #templatesFormUp="ngForm">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <input matInput [(ngModel)]="template.template_label" required name="template_label" id="template_label" title="{{lang.templateName}}"
+                                    type="text" placeholder="{{lang.templateName}}" maxlength="255">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <textarea matInput [(ngModel)]="template.template_comment" name="template_comment" id="template_comment" placeholder="{{lang.description}}"
+                                    title="{{lang.description}}" matTextareaAutosize matAutosizeMinRows="3"
+                                    matAutosizeMaxRows="5">
+                                </textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="template_target" name="template_target" title="{{lang.templateTarget}}" placeholder="{{lang.templateTarget}}" [(ngModel)]="template.template_target">
+                                    <!-- <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
+                                        {{action.label}}
+                                    </mat-option> -->
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-radio-group required name="template_type" [(ngModel)]="template.template_type">
+                                <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='OFFICE'" value="OFFICE">{{lang.office}}</mat-radio-button>
+                                <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='HTML'" value="HTML">{{lang.html}}</mat-radio-button>
+                                <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='TXT'" value="TXT">{{lang.txt}}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <mat-select id="template_datasource" name="template_datasource" title="{{lang.templateDatasource}}" placeholder="{{lang.templateDatasource}}" [(ngModel)]="template.template_datasource">
+                                    <!-- <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
+                                        {{action.label}}
+                                    </mat-option> -->
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <div class="col-sm-12">
+                                <mat-form-field>
+                                    <mat-select id="defaultTemplate" name="defaultTemplate" title="{{lang.defaultTemplate}}" placeholder="{{lang.defaultTemplate}}">
+                                        <!-- <mat-option *ngFor="let action of actionPagesList.actionsPageList" [value]="action.name">
+                                            {{action.label}}
+                                        </mat-option> -->
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!templatesFormUp.form.valid">{{lang.save}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;">
+            <mat-list>
+                <h3 mat-subheader>Modèle(s)</h3>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
