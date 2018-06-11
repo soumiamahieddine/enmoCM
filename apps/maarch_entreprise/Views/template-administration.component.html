@@ -57,9 +57,31 @@
                         <div class="col-sm-12">
                             <mat-radio-group required name="template_type" [(ngModel)]="template.template_type">
                                 <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='OFFICE'" value="OFFICE">{{lang.office}}</mat-radio-button>
-                                <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='HTML'" value="HTML">{{lang.html}}</mat-radio-button>
+                                <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='HTML'" (click)="initMce()" value="HTML">{{lang.html}}</mat-radio-button>
                                 <mat-radio-button color="primary" name="template_type" [checked]="template.template_type=='TXT'" value="TXT">{{lang.txt}}</mat-radio-button>
                             </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="template.template_type=='OFFICE'">
+                        <div class="col-sm-12">
+                            Editer un modèle
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="template.template_type=='TXT'">
+                        <div class="col-sm-12">
+                            <mat-form-field>
+                                <textarea matInput [(ngModel)]="template.templateTxt" name="templateTxt" id="templateTxt" placeholder="{{lang.contentTxtTemplate}}"
+                                    title="{{lang.contentTxtTemplate}}" matTextareaAutosize matAutosizeMinRows="5"
+                                    matAutosizeMaxRows="5">
+                                </textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="template.template_type=='HTML'">
+                        <div class="col-sm-12">
+                            <div id="html_mode" style="display: block; width:100%;">
+                                <textarea [(ngModel)]="template.templateHtml" name="templateHtml" id="templateHtml" style="width:100%" rows="15" cols="60"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">

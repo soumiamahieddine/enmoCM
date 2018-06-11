@@ -549,5 +549,7 @@ export const LANG_FR = {
     "office"                            : "Office",
     "html"                              : "HTML",
     "txt"                               : "Texte",
+    "contentTxtTemplate"                : "Contenu du modèle texte",
+    "contentHtmlTemplate"               : "Contenu du modèle html",
 
 };

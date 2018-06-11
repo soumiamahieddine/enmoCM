@@ -528,5 +528,7 @@ export const LANG_EN = {
     "office"                            : "Office",
     "html"                              : "HTML",
     "txt"                               : "Texte",
+    "contentTxtTemplate"                : "Content text template",
+    "contentHtmlTemplate"               : "Content html template",
 
 };
