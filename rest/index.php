@@ -154,6 +154,7 @@ $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //Jnlp
+$app->post('/jnlp', \SrcCore\controllers\CoreController::class . ':generateJnlp');
 $app->get('/jnlp', \SrcCore\controllers\CoreController::class . ':renderJnlp');
 
 //Links
@@ -228,6 +229,7 @@ $app->get('/templates/{id}', \Template\controllers\TemplateController::class . '
 $app->put('/templates/{id}', \Template\controllers\TemplateController::class . ':update');
 $app->delete('/templates/{id}', \Template\controllers\TemplateController::class . ':delete');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
+$app->get('/templatesModels', \Template\controllers\TemplateController::class . ':getModels');
 
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');

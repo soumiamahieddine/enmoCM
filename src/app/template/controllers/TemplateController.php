@@ -21,6 +21,7 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 
@@ -192,5 +193,69 @@ class TemplateController
         $templateId = TemplateModel::create($template);
 
         return $response->withJson(['id' => $templateId]);
+    }
+
+    public function getModels(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $customId = CoreConfigModel::getCustomId();
+
+        $models = [];
+
+        if (is_dir("custom/{$customId}/modules/templates/templates/styles/office/")) {
+            $path = "custom/{$customId}/modules/templates/templates/styles/office/";
+        } else {
+            $path = 'modules/templates/templates/styles/office/';
+        }
+        $officeModels = scandir($path);
+        foreach ($officeModels as $value) {
+            if ($value != '.' && $value != '..') {
+                $file = explode('.', $value);
+                $models[] = [
+                    'fileName'  => $file[0],
+                    'fileExt'   => $file[1],
+                    'filePath'  => $path . $value,
+                ];
+            }
+        }
+
+        if (is_dir("custom/{$customId}/modules/templates/templates/styles/open_document/")) {
+            $path = "custom/{$customId}/modules/templates/templates/styles/open_document/";
+        } else {
+            $path = 'modules/templates/templates/styles/open_document/';
+        }
+        $openModels = scandir($path);
+        foreach ($openModels as $value) {
+            if ($value != '.' && $value != '..') {
+                $file = explode('.', $value);
+                $models[] = [
+                    'fileName'  => $file[0],
+                    'fileExt'   => $file[1],
+                    'filePath'  => $path . $value,
+                ];
+            }
+        }
+        if (is_dir("custom/{$customId}/modules/templates/templates/styles/txt/")) {
+            $path = "custom/{$customId}/modules/templates/templates/styles/txt/";
+        } else {
+            $path = 'modules/templates/templates/styles/txt/';
+        }
+
+        $txtModels = scandir($path);
+        foreach ($txtModels as $value) {
+            if ($value != '.' && $value != '..') {
+                $file = explode('.', $value);
+                $models[] = [
+                    'fileName'  => $file[0],
+                    'fileExt'   => $file[1],
+                    'filePath'  => $path . $value,
+                ];
+            }
+        }
+
+        return $response->withJson(['templatesModels' => $models]);
     }
 }
