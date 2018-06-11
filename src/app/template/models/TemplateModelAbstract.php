@@ -76,25 +76,52 @@ abstract class TemplateModelAbstract
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'templates_seq']);
 
-        DatabaseModel::insert(
-            [
-                'table'         => 'templates',
-                'columnsValues' => [
-                    'template_id'               => $nextSequenceId,
-                    'template_label'            => $aArgs['template_label'],
-                    'template_comment'          => $aArgs['template_comment'],
-                    'template_content'          => $aArgs['template_content'],
-                    'template_type'             => $aArgs['template_type'],
-                    'template_style'            => $aArgs['template_style'],
-                    'template_datasource'       => $aArgs['template_datasource'],
-                    'template_target'           => $aArgs['template_target'],
-                    'template_attachment_type'  => $aArgs['template_attachment_type'],
-                    'template_path'             => $aArgs['template_path'],
-                    'template_file_name'        => $aArgs['template_file_name'],
-                ]
+        DatabaseModel::insert([
+            'table'         => 'templates',
+            'columnsValues' => [
+                'template_id'               => $nextSequenceId,
+                'template_label'            => $aArgs['template_label'],
+                'template_comment'          => $aArgs['template_comment'],
+                'template_content'          => $aArgs['template_content'],
+                'template_type'             => $aArgs['template_type'],
+                'template_style'            => $aArgs['template_style'],
+                'template_datasource'       => $aArgs['template_datasource'],
+                'template_target'           => $aArgs['template_target'],
+                'template_attachment_type'  => $aArgs['template_attachment_type'],
+                'template_path'             => $aArgs['template_path'],
+                'template_file_name'        => $aArgs['template_file_name'],
             ]
-        );
+        ]);
 
         return $nextSequenceId;
+    }
+
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'templates',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'templates',
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
     }
 }

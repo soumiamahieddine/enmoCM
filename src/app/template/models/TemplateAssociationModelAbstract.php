@@ -36,34 +36,22 @@ abstract class TemplateAssociationModelAbstract
         return $aTemplates;
     }
 
-//    public static function create(array $aArgs)
-//    {
-//        ValidatorModel::notEmpty($aArgs, ['template_label']);
-//        ValidatorModel::stringType($aArgs, ['template_label']);
-//
-//        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'templates_seq']);
-//
-//        DatabaseModel::insert(
-//            [
-//                'table'         => 'templates',
-//                'columnsValues' => [
-//                    'template_id'               => $nextSequenceId,
-//                    'template_label'            => $aArgs['template_label'],
-//                    'template_comment'          => $aArgs['template_comment'],
-//                    'template_content'          => $aArgs['template_content'],
-//                    'template_type'             => $aArgs['template_type'],
-//                    'template_style'            => $aArgs['template_style'],
-//                    'template_datasource'       => $aArgs['template_datasource'],
-//                    'template_target'           => $aArgs['template_target'],
-//                    'template_attachment_type'  => $aArgs['template_attachment_type'],
-//                    'template_path'             => $aArgs['template_path'],
-//                    'template_file_name'        => $aArgs['template_file_name'],
-//                ]
-//            ]
-//        );
-//
-//        return $nextSequenceId;
-//    }
+    public static function create(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entityId', 'templateId']);
+        ValidatorModel::stringType($aArgs, ['entityId']);
+        ValidatorModel::intVal($aArgs, ['templateId']);
+
+        DatabaseModel::insert([
+            'table'         => 'templates_association',
+            'columnsValues' => [
+                'template_id'               => $aArgs['templateId'],
+                'value_field'               => $aArgs['entityId']
+            ]
+        ]);
+
+        return true;
+    }
 
     public static function update(array $aArgs)
     {
@@ -73,6 +61,20 @@ abstract class TemplateAssociationModelAbstract
         DatabaseModel::update([
             'table' => 'templates_association',
             'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'templates_association',
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
         ]);

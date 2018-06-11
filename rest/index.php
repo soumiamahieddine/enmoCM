@@ -223,6 +223,10 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
+$app->post('/templates', \Template\controllers\TemplateController::class . ':create');
+$app->get('/templates/{id}', \Template\controllers\TemplateController::class . ':getById');
+$app->put('/templates/{id}', \Template\controllers\TemplateController::class . ':update');
+$app->delete('/templates/{id}', \Template\controllers\TemplateController::class . ':delete');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 
 //Users

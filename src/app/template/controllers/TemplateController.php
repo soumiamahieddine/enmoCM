@@ -17,6 +17,8 @@ namespace Template\controllers;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Group\models\ServiceModel;
+use History\controllers\HistoryController;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateAssociationModel;
@@ -31,14 +33,130 @@ class TemplateController
         }
 
         $templates = TemplateModel::get();
-        foreach ($templates as $key => $template) {
-            $linkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
-            foreach ($linkedEntities as $linkedEntity) {
-                $templates[$key]['entities'][] = $linkedEntity['value_field'];
-            }
-        }
 
         return $response->withJson(['templates' => $templates]);
+    }
+
+    public function getById(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $template = TemplateModel::getById(['id' => $aArgs['id']]);
+        $template['entities'] = [];
+
+        $linkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
+        foreach ($linkedEntities as $linkedEntity) {
+            $template['entities'][] = $linkedEntity['value_field'];
+        }
+
+        return $response->withJson(['template' => $template]);
+    }
+
+    public function create(Request $request, Response $response)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_comment']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_type']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_datasource']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_target']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $id = TemplateModel::create($data);
+        if (!empty($data['entities']) && is_array($data['entities'])) {
+            foreach ($data['entities'] as $entity) {
+                TemplateAssociationModel::create(['templateId' => $id, 'entityId' => $entity]);
+            }
+        }
+        HistoryController::add([
+            'tableName' => 'templates',
+            'recordId'  => $id,
+            'eventType' => 'ADD',
+            'info'      => _TEMPLATE_ADDED . " : {$data['template_label']}",
+            'moduleId'  => 'template',
+            'eventId'   => 'templateCreation',
+        ]);
+
+        return $response->withJson(['template' => $id]);
+    }
+
+    public function update(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $data = $request->getParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_comment']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_type']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_datasource']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_target']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $template = TemplateModel::getById(['select' => [1], 'id' => $aArgs['id']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+
+        TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+        if (!empty($data['entities']) && is_array($data['entities'])) {
+            TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+            foreach ($data['entities'] as $entity) {
+                TemplateAssociationModel::create(['templateId' => $aArgs['id'], 'entityId' => $entity]);
+            }
+        }
+        HistoryController::add([
+            'tableName' => 'templates',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => _TEMPLATE_UPDATED . " : {$data['template_label']}",
+            'moduleId'  => 'template',
+            'eventId'   => 'templateModification',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
+    }
+
+    public function delete(Request $request, Response $response, array $aArgs)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $template = TemplateModel::getById(['select' => ['template_label'], 'id' => $aArgs['id']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+
+        TemplateModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+        TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+        HistoryController::add([
+            'tableName' => 'templates',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'DEL',
+            'info'      => _TEMPLATE_DELETED . " : {$template['template_label']}",
+            'moduleId'  => 'template',
+            'eventId'   => 'templateSuppression',
+        ]);
+
+        return $response->withJson(['success' => 'success']);
     }
 
     public function duplicate(Request $request, Response $response, array $aArgs)
