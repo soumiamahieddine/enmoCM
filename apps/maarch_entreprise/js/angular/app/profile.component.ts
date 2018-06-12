@@ -235,7 +235,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.get(this.coreUrl + 'rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = [];
-                this.contactsGroup = { public: false };
+                this.contactsGroup = { public: false, contacts:[] };
                 let i = 0;
                 data['contactsGroups'].forEach((ct: any) => {
                     if (ct.owner == angularGlobals.user.id) {
@@ -306,7 +306,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.http.get(this.coreUrl + 'rest/contactsGroups/' + contactsGroup.id)
             .subscribe((data: any) => {
                 this.contactsGroup = data.contactsGroup;
-
                 setTimeout(() => {
                     this.dataSourceContactsList = new MatTableDataSource(this.contactsGroup.contacts);
                     this.dataSourceContactsList.paginator = this.paginatorContactsList;
