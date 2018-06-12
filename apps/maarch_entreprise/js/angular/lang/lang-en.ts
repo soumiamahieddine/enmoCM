@@ -530,5 +530,7 @@ export const LANG_EN = {
     "txt"                               : "Texte",
     "contentTxtTemplate"                : "Content text template",
     "contentHtmlTemplate"               : "Content html template",
+    "noTarget"                          : "No target",
+    "doctypes"                          : "Document types",
 
 };
