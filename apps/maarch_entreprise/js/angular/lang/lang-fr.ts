@@ -551,7 +551,8 @@ export const LANG_FR = {
     "txt"                               : "Texte",
     "contentTxtTemplate"                : "Contenu du modèle texte",
     "contentHtmlTemplate"               : "Contenu du modèle html",
-    "noTarget"               : "Pas de cible",
-    "doctypes"               : "Types de documents",
-
+    "noTarget"                          : "Pas de cible",
+    "doctypes"                          : "Types de documents",
+    "attachmentType"                    : "Type d'attachement",
+    
 };
