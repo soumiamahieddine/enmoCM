@@ -97,6 +97,7 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'C' => 
         array (
             'Convert\\' => 8,
+            'ContentManagement\\' => 18,
             'Contact\\' => 8,
             'Clue\\StreamFilter\\' => 18,
         ),
@@ -253,6 +254,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Convert\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/convert',
+        ),
+        'ContentManagement\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/contentManagement',
         ),
         'Contact\\' => 
         array (

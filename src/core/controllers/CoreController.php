@@ -73,25 +73,4 @@ class CoreController
 
         return $response->withJson($administration);
     }
-
-    public function renderJnlp(Request $request, Response $response)
-    {
-        $data = $request->getQueryParams();
-
-        if (explode('.', $data['fileName'])[1] != 'jnlp') {
-            return $response->withStatus(403)->withJson(['errors' => 'File extension forbidden']);
-        } elseif (strpos($data['fileName'], "{$GLOBALS['userId']}_maarchCM_") === false) {
-            return $response->withStatus(403)->withJson(['errors' => 'File name forbidden']);
-        }
-
-        $tmpPath = CoreConfigModel::getTmpPath();
-        $jnlp = file_get_contents($tmpPath . $data['fileName']);
-        if ($jnlp === false) {
-            return $response->withStatus(404)->withJson(['errors' => 'Jnlp file not found on ' . $tmpPath]);
-        }
-
-        $response->write($jnlp);
-
-        return $response->withHeader('Content-Type', 'application/x-java-jnlp-file');
-    }
 }

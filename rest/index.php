@@ -154,8 +154,9 @@ $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
 //Jnlp
-$app->post('/jnlp', \SrcCore\controllers\CoreController::class . ':generateJnlp');
-$app->get('/jnlp', \SrcCore\controllers\CoreController::class . ':renderJnlp');
+$app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
+$app->get('/jnlp', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
+$app->post('/jnlp/{userUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
