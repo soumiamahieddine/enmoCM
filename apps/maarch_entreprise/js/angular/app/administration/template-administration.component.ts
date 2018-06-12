@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -25,14 +25,20 @@ export class TemplateAdministrationComponent implements OnInit {
     actionPagesList: any[] = [];
     categoriesList: any[] = [];
     keywordsList: any[] = [];
+    defaultTemplatesList: any;
+    attachmentTypesList: any;
+    datasourcesList: any;
 
     loading: boolean = false;
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
+        window['angularProfileComponent'] = {
+            componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
+        };
     }
 
     ngOnDestroy(): void {
@@ -47,31 +53,64 @@ export class TemplateAdministrationComponent implements OnInit {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
 
-                // this.http.get(this.coreUrl + 'rest/initAction')
-                //     .subscribe((data: any) => {
-                //         this.action = data.action;
-                //         this.categoriesList = data.categoriesList;
-                //         this.statuses = data.statuses;
+                this.http.get(this.coreUrl + 'rest/initTemplate')
+                    .subscribe((data: any) => {
+                        this.setInitialValue(data);
+                        this.template.template_target = '';
+                        this.template.template_type   = 'OFFICE';
+                        this.loading                  = false;
 
-                //         this.actionPagesList = data.action_pagesList;
-                //         this.keywordsList = data.keywordsList;
-                        this.loading = false;
-                //     });
-            }
-            else {
+                    });
+            } else {
                 this.creationMode = false;
                 this.http.get(this.coreUrl + 'rest/templates/' + params['id'])
                     .subscribe((data: any) => {
+                        this.setInitialValue(data);
                         this.template = data.template;
-                        // this.categoriesList = data.categoriesList;
-                        // this.statuses = data.statuses;
-
-                        // this.actionPagesList = data.action_pagesList;
-                        // this.keywordsList = data.keywordsList;
-                        this.loading = false;
+                        this.loading  = false;
+                        if(this.template.template_type=='HTML'){
+                            this.initMce();
+                        }
                     });
             }
+            if(!this.template.template_attachment_type){
+                this.template.template_attachment_type = 'all';
+            }
         });
+    }
+
+    setInitialValue(data:any){
+        this.defaultTemplatesList = data.templatesModels;
+        this.attachmentTypesList  = data.attachmentTypes;
+        this.datasourcesList      = data.datasources;
+        setTimeout(() => {
+            $j('#jstree').jstree({
+                "checkbox": {
+                    'deselect_all': true,
+                    "three_state": true // cascade selection
+                },
+                'core': {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    },
+                    'multiple': true,
+                    'data': data.entities
+                },
+                "plugins": ["checkbox", "search", "sort"]
+            });
+            var to: any = false;
+            $j('#jstree_search').keyup(function () {
+                if (to) { clearTimeout(to); }
+                to = setTimeout(function () {
+                    var v = $j('#jstree_search').val();
+                    $j('#jstree').jstree(true).search(v);
+                }, 250);
+            });
+            $j('#jstree')
+                // create the instance
+                .jstree();
+        }, 0);
     }
 
     initMce() {
@@ -102,9 +141,40 @@ export class TemplateAdministrationComponent implements OnInit {
                 theme_toolbar_align: "left",
                 theme_advanced_toolbar_location: "top",
                 theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
-
             });
-        }, 100);
+        }, 20);
+    }
+
+    clickOnUploader(id: string) {
+        $j('#' + id).click();
+    }
+
+    uploadFileTrigger(fileInput: any) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
+            this.template.uploadedFile = {};
+            this.template.uploadedFile.name = fileInput.target.files[0].name;
+            this.template.uploadedFile.size = fileInput.target.files[0].size;
+            this.template.uploadedFile.type = fileInput.target.files[0].type;
+            if (this.template.uploadedFile.label == "") {
+                this.template.uploadedFile.label = this.template.uploadedFile.name;
+            }
+            
+            var reader = new FileReader();
+            reader.readAsDataURL(fileInput.target.files[0]);
+            
+            reader.onload = function (value: any) {
+                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+            };
+        }
+    }
+
+    processAfterUpload(b64Content: any) {
+        this.zone.run(() => this.resfreshUpload(b64Content));
+    }
+
+    resfreshUpload(b64Content: any) {
+        this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
+        this.template.uploadedFile.base64ForJs = b64Content;
     }
 
     onSubmit() {
@@ -113,7 +183,6 @@ export class TemplateAdministrationComponent implements OnInit {
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);
                     this.notify.success(this.lang.templateAdded);
-
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -122,7 +191,6 @@ export class TemplateAdministrationComponent implements OnInit {
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);
                     this.notify.success(this.lang.templateUpdated);
-
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

@@ -554,5 +554,7 @@ export const LANG_FR = {
     "noTarget"                          : "Pas de cible",
     "doctypes"                          : "Types de documents",
     "attachmentType"                    : "Type d'attachement",
-    
+    "templateServiceInfo"               : "Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce modèle",
+    "templateAdded"                     : "Modèle ajouté",
+    "templateUpdated"                   : "Modèle mis à jour"
 };

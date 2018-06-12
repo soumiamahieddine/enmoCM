@@ -532,6 +532,8 @@ export const LANG_EN = {
     "contentHtmlTemplate"               : "Content html template",
     "noTarget"                          : "No target",
     "doctypes"                          : "Document types",
-    "attachmentType"                    : "Attachmet type",
+    "templateServiceInfo"               : "Choose the department(s) that you want to associate to this template",
+    "templateAdded"                     : "Template added",
+    "templateUpdated"                   : "Template updated"
 
 };

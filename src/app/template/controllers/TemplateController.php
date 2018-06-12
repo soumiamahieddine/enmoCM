@@ -24,6 +24,8 @@ use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
+use Attachment\models\AttachmentModel;
+use Entity\models\EntityModel;
 
 class TemplateController
 {
@@ -52,7 +54,21 @@ class TemplateController
             $template['entities'][] = $linkedEntity['value_field'];
         }
 
-        return $response->withJson(['template' => $template]);
+        $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentModelsTmp as $key => $value) {
+            $attachmentTypes[] = [
+                'label' => $value['label'],
+                'id'    => $key
+            ];
+        }
+
+        return $response->withJson([
+            'template'        => $template,
+            'templatesModels' => TemplateController::getModels(),
+            'attachmentTypes' => $attachmentTypes,
+            'datasources'     => '',
+            'entities'        => EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin'])
+        ]);
     }
 
     public function create(Request $request, Response $response)
@@ -163,6 +179,10 @@ class TemplateController
 
     public function duplicate(Request $request, Response $response, array $aArgs)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $template = TemplateModel::getById(['id' => $aArgs['id']]);
 
         if (empty($template)) {
@@ -196,12 +216,30 @@ class TemplateController
         return $response->withJson(['id' => $templateId]);
     }
 
-    public function getModels(Request $request, Response $response)
+    public function initTemplate(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentModelsTmp as $key => $value) {
+            $attachmentTypes[] = [
+                'label' => $value['label'],
+                'id'    => $key
+            ];
+        }
+
+        return $response->withJson([
+            'templatesModels' => TemplateController::getModels(),
+            'attachmentTypes' => $attachmentTypes,
+            'datasources'     => '',
+            'entities'        => EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']),
+        ]);
+    }
+
+    public function getModels()
+    {
         $customId = CoreConfigModel::getCustomId();
 
         $models = [];
@@ -217,7 +255,7 @@ class TemplateController
                 $file = explode('.', $value);
                 $models[] = [
                     'fileName'  => $file[0],
-                    'fileExt'   => $file[1],
+                    'fileExt'   => strtoupper($file[1]),
                     'filePath'  => $path . $value,
                 ];
             }
@@ -234,7 +272,7 @@ class TemplateController
                 $file = explode('.', $value);
                 $models[] = [
                     'fileName'  => $file[0],
-                    'fileExt'   => $file[1],
+                    'fileExt'   => strtoupper($file[1]),
                     'filePath'  => $path . $value,
                 ];
             }
@@ -251,12 +289,12 @@ class TemplateController
                 $file = explode('.', $value);
                 $models[] = [
                     'fileName'  => $file[0],
-                    'fileExt'   => $file[1],
+                    'fileExt'   => strtoupper($file[1]),
                     'filePath'  => $path . $value,
                 ];
             }
         }
 
-        return $response->withJson(['templatesModels' => $models]);
+        return $models;
     }
 }
