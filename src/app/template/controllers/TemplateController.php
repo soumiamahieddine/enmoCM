@@ -116,13 +116,14 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
 
-        TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         if (!empty($data['entities']) && is_array($data['entities'])) {
             TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
             foreach ($data['entities'] as $entity) {
                 TemplateAssociationModel::create(['templateId' => $aArgs['id'], 'entityId' => $entity]);
             }
         }
+        unset($data['entities']);
+        TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $aArgs['id'],
