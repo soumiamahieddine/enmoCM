@@ -63,6 +63,18 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     @ViewChild('snav2') sidenav: MatSidenav;
 
+    //Redirect Baskets
+    selectionBaskets = new SelectionModel<Element>(true, []);
+    masterToggleBaskets(event: any) {
+        if (event.checked) {  
+            this.user.baskets.forEach((basket: any) => {
+                this.selectionBaskets.select(basket.basket_id);   
+            });
+        } else {
+            this.selectionBaskets.clear();
+        }
+    }
+
     //Groups contacts
     contactsGroups: any[] = [];
     displayedColumnsGroupsList: string[] = ['label', 'description', 'actions'];
@@ -481,14 +493,21 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     }
 
-    addBasketRedirection(newUser: any, basket: any) {
+    addBasketRedirection(newUser: any) {
+        let basketsRedirect:any[] = [];
+        this.user.baskets.forEach((elem: any) => {
+            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1) {
+                basketsRedirect.push({newUser: newUser,basketId:elem.basket_id,basketOwner:this.user.user_id,virtual:elem.is_virtual})
+            }
+        });
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", [{ "newUser": newUser, "basketId": basket.basket_id, "basketOwner": this.user.user_id, "virtual": basket.is_virtual }])
+            this.http.post(this.coreUrl + "rest/users/" + this.user.id + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
+                    this.selectionBaskets.clear();
                     this.notify.success(this.lang.basketUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);

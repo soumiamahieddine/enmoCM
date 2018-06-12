@@ -501,7 +501,7 @@ export const LANG_FR = {
     "userReplacement"                   : "Utilisateur de remplacement",
     "users"                             : "Utilisateur(s)",
     "userSuspended"                     : "Utilisateur suspendu",
-    "userToRedirect"                    : "Cliquer ici pour rediriger",
+    "userToRedirect"                    : "Cliquer ici pour rediriger les bannettes sélectionnées",
     "userUpdated"                       : "Utilisateur modifié",
     "validate"                          : "Valider",
     "validateAction"                    : "Action(s) de qualification",

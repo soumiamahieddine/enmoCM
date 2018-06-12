@@ -183,14 +183,42 @@
                                 </mat-expansion-panel-header>
                                 <div class="col-sm-6" style="overflow:hidden;">
                                     <mat-list>
+                                        <mat-list-item>
+                                            <mat-icon mat-list-icon color="primary">
+                                                <mat-checkbox color="primary" (change)="$event ? masterToggleBaskets($event) : null" [checked]="selectionBaskets.hasValue()" matTooltip="{{lang.selectAll}}"></mat-checkbox>
+                                            </mat-icon>
+                                            <p mat-line>
+                                                <span *ngIf="!selectionBaskets.hasValue()" style="opacity: 0.5;font-style: italic;font-size: 80%;">
+                                                    {{lang.selectAll}}
+                                                </span>
+                                                <mat-form-field *ngIf="selectionBaskets.hasValue()">
+                                                    <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.userToRedirect }}"
+                                                        matInput [matAutocomplete]="auto" [formControl]="userCtrl">
+                                                    <mat-autocomplete #auto="matAutocomplete">
+                                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id)">
+                                                            <p mat-line matTooltip="{{ user.otherInfo }}">
+                                                                <span class="col-xm-1">
+                                                                    <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
+                                                                </span>
+                                                                <span class="col-xm-11">
+                                                                    {{ user.idToDisplay }}
+                                                                    <small>{{ user.otherInfo }}</small>
+                                                                </span>
+                                                            </p>
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                            </p>
+                                        </mat-list-item>
                                         <ng-container *ngFor="let basket of user.baskets;let i = index">
                                             <mat-list-item *ngIf="basket.group_id && basket.userToDisplay == ''">
-                                                <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled" style="margin-top:-70px;">
+                                                <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionBaskets.toggle(basket.basket_id) : null" [checked]="selectionBaskets.isSelected(basket.basket_id)" color="primary"></mat-checkbox>
                                                 </mat-icon>
                                                 <h4 mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" [attr.color]="basket.userToDisplay != '' ? 'primary': ''">{{basket.basket_name}}
                                                     <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                                                 </h4>
-                                                <p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
+                                                <!--<p mat-line [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}">
                                                     <mat-form-field *ngIf="basket.allowed" floatLabel="never">
                                                         <input matTooltip="{{lang.redirectWhenAbscence}}" matTooltipPosition="above" type="text" placeholder="{{ lang.userToRedirect }}"
                                                             matInput [matAutocomplete]="auto" [formControl]="userCtrl" [disabled]="!basket.allowed">
@@ -211,7 +239,7 @@
                                                     <mat-form-field>
                                                         <input type="text" color="warn" matInput disabled value="">
                                                     </mat-form-field>
-                                                </p>
+                                                </p>-->
                                             </mat-list-item>
                                         </ng-container>
                                     </mat-list>
@@ -574,7 +602,8 @@
                                             </mat-paginator>
                                         </div>
                                     </div>
-                                    <mat-table *ngIf="!contactsListMode" #tableGroupsListSort="matSort" [dataSource]="dataSourceGroupsList" matSort matSortActive="label" matSortDirection="asc">
+                                    <mat-table *ngIf="!contactsListMode" #tableGroupsListSort="matSort" [dataSource]="dataSourceGroupsList" matSort matSortActive="label"
+                                        matSortDirection="asc">
                                         <ng-container matColumnDef="label">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.label}}</mat-header-cell>
                                             <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.label}} </mat-cell>
@@ -616,29 +645,29 @@
                     </mat-tab>
                     <mat-tab label="Mon historique">
                         <ng-template matTabContent>
-                                <div class="row">
-                                        <div class="col-md-6 col-xs-6">
-                                            <mat-form-field>
-                                                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-6 col-xs-6">
-                                            <mat-paginator #paginatorHistory [length]="100" [pageSize]="10">
-                                            </mat-paginator>
-                                        </div>
-                                    </div>
-                                    <mat-table #tableHistorySort="matSort" [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
-                                        <ng-container matColumnDef="event_date">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.date}}</mat-header-cell>
-                                            <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef="info">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
-                                            <mat-cell *matCellDef="let element"> {{element.info}} </mat-cell>
-                                        </ng-container>
-                                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                                    </mat-table>
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6 col-xs-6">
+                                    <mat-paginator #paginatorHistory [length]="100" [pageSize]="10">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                            <mat-table #tableHistorySort="matSort" [dataSource]="dataSource" matSort matSortActive="event_date" matSortDirection="desc">
+                                <ng-container matColumnDef="event_date">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.date}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="info">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.info}} </mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                            </mat-table>
                         </ng-template>
                     </mat-tab>
                 </mat-tab-group>
