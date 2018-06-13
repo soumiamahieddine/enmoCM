@@ -7,6 +7,7 @@ import { NotificationService } from '../notification.service';
 import { MatSidenav, MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { SelectionModel } from '@angular/cdk/collections';
 
 declare function $j(selector: any): any;
 declare const angularGlobals: any;
@@ -62,6 +63,18 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
+    }
+
+    //Redirect Baskets
+    selectionBaskets = new SelectionModel<Element>(true, []);
+    masterToggleBaskets(event: any) {
+        if (event.checked) {  
+            this.user.baskets.forEach((basket: any) => {
+                this.selectionBaskets.select(basket.basket_id);   
+            });
+        } else {
+            this.selectionBaskets.clear();
+        }
     }
 
 
@@ -250,6 +263,14 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 
+    showActions(basket:any){
+        $j('#'+basket).show();
+    }
+
+    hideActions(basket:any){
+        $j('#'+basket).hide();
+    }
+
     updateGroup(group: any) {
         this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/groups/" + group.group_id, group)
             .subscribe((data: any) => {
@@ -403,14 +424,21 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 
-    addBasketRedirection(newUser:any, basket: any) {
+    addBasketRedirection(newUser:any) {
+        let basketsRedirect:any[] = [];
+        this.user.baskets.forEach((elem: any) => {
+            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1 && elem.allowed) {
+                basketsRedirect.push({newUser: newUser,basketId:elem.basket_id,basketOwner:this.user.user_id,virtual:elem.is_virtual})
+            }
+        });
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.redirectBasket);
 
         if (r) {
-            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", [{"newUser" : newUser, "basketId":basket.basket_id, "basketOwner":this.user.user_id, "virtual": basket.is_virtual}])
+            this.http.post(this.coreUrl + "rest/users/" + this.serialId + "/redirectedBaskets", basketsRedirect)
                 .subscribe((data: any) => {
                     this.userCtrl.setValue('');
                     this.user.baskets = data["baskets"];
+                    this.selectionBaskets.clear();
                     this.notify.success(this.lang.basketUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -448,9 +476,17 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
         }
     }
 
-    toggleBasket(basket: any) {
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"basketId" : basket.basket_id, "groupSerialId":basket.groupSerialId, "allowed":basket.allowed})
+    toggleBasket(state:boolean) {
+        let basketsDisable:any[] = [];
+        this.user.baskets.forEach((elem: any) => {
+            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1) {
+                elem.allowed = state;
+                basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state})
+            }
+        });
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", basketsDisable)
         .subscribe((data: any) => {
+            this.selectionBaskets.clear();
             this.notify.success(this.lang.basketUpdated);
         }, (err) => {
             this.notify.error(err.error.errors);

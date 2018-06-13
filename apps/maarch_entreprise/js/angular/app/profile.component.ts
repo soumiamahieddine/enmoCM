@@ -708,4 +708,12 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         this.selectedIndex = 0;
         this.showPassword = true;
     }
+
+    showActions(basket:any){
+        $j('#'+basket).show();
+    }
+
+    hideActions(basket:any){
+        $j('#'+basket).hide();
+    }
 }
