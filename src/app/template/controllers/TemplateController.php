@@ -153,14 +153,16 @@ class TemplateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getParams();
-        if (!TemplateController::checkData(['data' => $data])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $template = TemplateModel::getById(['select' => ['template_style'], 'id' => $aArgs['id']]);
+        $template = TemplateModel::getById(['select' => ['template_style', 'template_file_name', 'template_type', 'template_target'], 'id' => $aArgs['id']]);
         if (empty($template)) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+
+        $data = $request->getParams();
+        $data['template_type'] = $template['template_type'];
+        $data['template_target'] = $template['template_target'];
+        if (!TemplateController::checkData(['data' => $data])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         if ($data['template_type'] == 'OFFICE' && (!empty($data['userUniqueId']) || !empty($data['uploadedFile']))) {
@@ -168,8 +170,8 @@ class TemplateController
                 if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
-                $explodeStyle = explode(':', $data['template_style']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
+                $explodeStyle = explode('.', $data['template_file_name']);
+                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[count($explodeStyle - 1)]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -206,6 +208,7 @@ class TemplateController
         unset($data['uploadedFile']);
         unset($data['entities']);
         TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $aArgs['id'],
@@ -231,6 +234,7 @@ class TemplateController
 
         TemplateModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+        
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $aArgs['id'],
