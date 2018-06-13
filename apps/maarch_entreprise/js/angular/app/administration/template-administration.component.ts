@@ -245,4 +245,16 @@ export class TemplateAdministrationComponent implements OnInit {
         }
         return false;
     }
+
+    updateTemplateType()
+    {
+        if(this.template.template_target=='attachments'){
+            this.template.template_type='OFFICE';
+        } else if(this.template.template_target=='notifications' || this.template.template_target=='doctypes' || this.template.template_target=='sendmail'){
+            this.template.template_type='HTML';
+            this.initMce();
+        } else if (this.template.template_target=='notes') {
+            this.template.template_type='TXT';
+        }
+    }
 }

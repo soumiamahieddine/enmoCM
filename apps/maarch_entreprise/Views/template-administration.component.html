@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <mat-select id="template_target" name="template_target" title="{{lang.templateTarget}}" placeholder="{{lang.templateTarget}}" [(ngModel)]="template.template_target">
+                                    <mat-select id="template_target" name="template_target" title="{{lang.templateTarget}}" placeholder="{{lang.templateTarget}}" [(ngModel)]="template.template_target" (ngModelChange)="updateTemplateType()">
                                         <mat-option value="">{{lang.noTarget}}</mat-option>
                                         <mat-option value="attachments">{{lang.attachments}}</mat-option>
                                         <mat-option value="notifications">{{lang.notifications}}</mat-option>
@@ -69,12 +69,12 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" [hidden]="template.template_target=='attachments' || template.template_target=='notifications' || template.template_target=='doctypes' || template.template_target=='notes'">
                             <div class="col-sm-12">
                                 <mat-radio-group required name="template_type" [(ngModel)]="template.template_type">
-                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="OFFICE" [checked]="template.template_type=='OFFICE'" *ngIf="template.template_target == 'attachments' || template.template_target == ''">{{lang.office}}</mat-radio-button>
-                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="HTML" [checked]="template.template_type=='HTML'" *ngIf="template.template_target == 'sendmail' || template.template_target == 'doctypes' || template.template_target == 'notifications' || template.template_target == ''" (click)="initMce()">{{lang.html}}</mat-radio-button>
-                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="TXT" [checked]="template.template_type=='TXT'" *ngIf="template.template_target == 'sendmail' || template.template_target == 'notes' || template.template_target == ''">{{lang.txt}}</mat-radio-button>
+                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="OFFICE" [checked]="template.template_type=='OFFICE'" *ngIf="template.template_target=='attachments' || template.template_target==''">{{lang.office}}</mat-radio-button>
+                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="HTML" [checked]="template.template_type=='HTML'" *ngIf="template.template_target=='sendmail' || template.template_target=='doctypes' || template.template_target == 'notifications' || template.template_target == ''" (click)="initMce()">{{lang.html}}</mat-radio-button>
+                                    <mat-radio-button style="margin-left:10px" color="primary" name="template_type" value="TXT" [checked]="template.template_type=='TXT'" *ngIf="template.template_target=='sendmail' || template.template_target=='notes' || template.template_target == ''">{{lang.txt}}</mat-radio-button>
                                 </mat-radio-group>
                             </div>
                         </div>
