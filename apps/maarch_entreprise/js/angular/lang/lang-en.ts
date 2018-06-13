@@ -543,6 +543,8 @@ export const LANG_EN = {
     "duplicate"                         : "Duplicate",
     "confirmDuplicate"                  : "Do you really want to duplicate this template ?",
     "noDatasource"                      : "No datasources",
-    "templateDuplicated"                : "Template duplicated"
+    "templateDuplicated"                : "Template duplicated",
+    "chooseFile"                        : "Choose a file",
+    "allAttachments"                    : "All attachments"
 
 };

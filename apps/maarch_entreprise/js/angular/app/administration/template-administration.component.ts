@@ -171,6 +171,7 @@ export class TemplateAdministrationComponent implements OnInit {
     resfreshUpload(b64Content: any) {
         this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
         this.template.uploadedFile.base64ForJs = b64Content;
+        this.template.template_style = null;
     }
 
     startJnlp() {
@@ -187,10 +188,12 @@ export class TemplateAdministrationComponent implements OnInit {
         }
         this.jnlpValue.table    = 'templates';
         this.jnlpValue.uniqueId = 0;
+        this.jnlpValue.cookies = document.cookie;
 
         this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
         .subscribe((data: any) => {
             this.template.userUniqueId = data.userUniqueId;
+            this.template.uploadedFile = null;
             window.location.href       = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
         }, (err) => {
             this.notify.error(err.error.errors);
@@ -231,5 +234,15 @@ export class TemplateAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         }
+    }
+
+    displayDatasources(datasource:any)
+    {
+        if(datasource.target=='notification' && this.template.template_target == 'notifications'){
+            return true;
+        } else if(datasource.target=='document' && this.template.template_target != 'notifications'){
+            return true;
+        }
+        return false;
     }
 }
