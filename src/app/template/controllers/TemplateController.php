@@ -92,25 +92,37 @@ class TemplateController
         }
 
         if ($data['template_type'] == 'OFFICE') {
+            if (empty($data['userUniqueId']) && empty($data['uploadedFile'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
+            }
             if (!empty($data['userUniqueId'])) {
                 $explodeStyle = explode(':', $data['template_style']);
                 $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
-                $storeResult = DocserverController::storeResourceOnDocServer([
-                    'collId'            => 'templates',
-                    'docserverTypeId'   => 'TEMPLATES',
-                    'fileInfos'         => [
-                        'tmpDir'            => CoreConfigModel::getTmpPath(),
-                        'tmpFileName'       => $fileOnTmp,
-                    ]
-                ]);
-                if (!empty($storeResult['errors'])) {
-                    return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
-                }
-                $data['template_path'] = $storeResult['destination_dir'];
-                $data['template_file_name'] = $storeResult['file_destination_name'];
             } else {
-                return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
+                if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
+                }
+                $fileContent = base64_decode($data['uploadedFile']['base64']);
+                $fileOnTmp = rand() . $data['uploadedFile']['name'];
+                $file = fopen(CoreConfigModel::getTmpPath() . $fileOnTmp, 'w');
+                fwrite($file, $fileContent);
+                fclose($file);
             }
+
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'templates',
+                'docserverTypeId'   => 'TEMPLATES',
+                'fileInfos'         => [
+                    'tmpDir'            => CoreConfigModel::getTmpPath(),
+                    'tmpFileName'       => $fileOnTmp,
+                ]
+            ]);
+            if (!empty($storeResult['errors'])) {
+                return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
+            }
+
+            $data['template_path'] = $storeResult['destination_dir'];
+            $data['template_file_name'] = $storeResult['file_destination_name'];
         }
 
         $id = TemplateModel::create($data);
@@ -119,6 +131,7 @@ class TemplateController
                 TemplateAssociationModel::create(['templateId' => $id, 'entityId' => $entity]);
             }
         }
+
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $id,
@@ -147,24 +160,35 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
 
-        if ($data['template_type'] == 'OFFICE') {
+        if ($data['template_type'] == 'OFFICE' && (!empty($data['userUniqueId']) || !empty($data['uploadedFile']))) {
             if (!empty($data['userUniqueId'])) {
                 $explodeStyle = explode(':', $data['template_style']);
                 $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
-                $storeResult = DocserverController::storeResourceOnDocServer([
-                    'collId'            => 'templates',
-                    'docserverTypeId'   => 'TEMPLATES',
-                    'fileInfos'         => [
-                        'tmpDir'            => CoreConfigModel::getTmpPath(),
-                        'tmpFileName'       => $fileOnTmp,
-                    ]
-                ]);
-                if (!empty($storeResult['errors'])) {
-                    return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
+            } else {
+                if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
                 }
-                $data['template_path'] = $storeResult['destination_dir'];
-                $data['template_file_name'] = $storeResult['file_destination_name'];
+                $fileContent = base64_decode($data['uploadedFile']['base64']);
+                $fileOnTmp = rand() . $data['uploadedFile']['name'];
+                $file = fopen(CoreConfigModel::getTmpPath() . $fileOnTmp, 'w');
+                fwrite($file, $fileContent);
+                fclose($file);
             }
+
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'templates',
+                'docserverTypeId'   => 'TEMPLATES',
+                'fileInfos'         => [
+                    'tmpDir'            => CoreConfigModel::getTmpPath(),
+                    'tmpFileName'       => $fileOnTmp,
+                ]
+            ]);
+            if (!empty($storeResult['errors'])) {
+                return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
+            }
+
+            $data['template_path'] = $storeResult['destination_dir'];
+            $data['template_file_name'] = $storeResult['file_destination_name'];
         }
 
         if (!empty($data['entities']) && is_array($data['entities'])) {
@@ -173,6 +197,7 @@ class TemplateController
                 TemplateAssociationModel::create(['templateId' => $aArgs['id'], 'entityId' => $entity]);
             }
         }
+        unset($data['uploadedFile']);
         unset($data['entities']);
         TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         HistoryController::add([
@@ -353,7 +378,7 @@ class TemplateController
 
         if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
-        } else {
+        } elseif (empty($data['uploadedFile'])) {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_style']);
         }
 

@@ -32,7 +32,6 @@ class JnlpController
 
         $coreUrl = str_replace('rest/', '', \Url::coreurl());
         $tmpPath = CoreConfigModel::getTmpPath();
-        $appName = CoreConfigModel::getApplicationName();
         $userUniqueId = DatabaseModel::uniqueId();
         $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $userUniqueId;
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
@@ -43,6 +42,12 @@ class JnlpController
                 $allCookies .= '; ';
             }
             $allCookies .= $key . '=' . str_replace(' ', '+', $value);
+        }
+        if (!empty($data['cookies'])) {
+            if (!empty($allCookies)) {
+                $allCookies .= '; ';
+            }
+            $allCookies .= $data['cookies'];
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/content_management/xml/config.xml']);
@@ -125,8 +130,7 @@ class JnlpController
         $tagArg3 = $jnlpDocument->createElement('argument', $data['table']);
         $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']);
         $tagArg5 = $jnlpDocument->createElement('argument', $data['uniqueId']);
-
-        $tagArg6 = $jnlpDocument->createElement('argument', "{$appName}={$_COOKIE[$appName]}");
+        $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}");
         $tagArg7 = $jnlpDocument->createElement('argument', htmlentities($allCookies));
         $tagArg8 = $jnlpDocument->createElement('argument', $jnlpFileName);
         $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['userId']);
