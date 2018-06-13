@@ -566,7 +566,8 @@ export const LANG_FR = {
     "confirmDuplicate"                  : "Voulez-vous vraiment dupliquer ce template ?",
     "noDatasource"                      : "Aucune source de données",
     "templateDuplicated"                : "Modèle dupliqué",
-    "chooseFile"                        : "Choisissez un fichier",
-    "allAttachments"                    : "Tous les attachements"
+    "importFile"                        : "Importer un fichier",
+    "allAttachments"                    : "Tous les attachements",
+    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider"
     
 };

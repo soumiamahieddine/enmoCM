@@ -170,7 +170,6 @@ export class TemplateAdministrationComponent implements OnInit {
 
     resfreshUpload(b64Content: any) {
         this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
-        this.template.uploadedFile.base64ForJs = b64Content;
         this.template.template_style = null;
     }
 
@@ -217,6 +216,13 @@ export class TemplateAdministrationComponent implements OnInit {
 
     onSubmit() {
         this.template.entities = $j('#jstree').jstree(true).get_checked();
+        if(this.template.template_target!='notifications'){
+            this.template.template_datasource=='letterbox_attachment';
+        }
+        if(this.creationMode && this.template.template_style && !this.template.userUniqueId){
+            alert(this.lang.editModelFirst);
+            return;
+        }
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/templates', this.template)
                 .subscribe(() => {
