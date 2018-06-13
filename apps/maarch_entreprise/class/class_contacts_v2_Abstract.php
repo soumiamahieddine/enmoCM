@@ -1662,7 +1662,7 @@ abstract class contacts_v2_Abstract extends Database
             <tr>
                 <?php 
                             $contactController = new \Contact\controllers\ContactController();
-            if (!$numDepList = $contactController->availaibleReferential()) {
+            if (!$numDepList = $contactController->availableReferential()) {
                 $stateRef = 'disabled';
                 $stateRefInfo = _WARNING_REF;
                 $stateRefCss = 'opacity:0.5;';
@@ -1713,7 +1713,7 @@ abstract class contacts_v2_Abstract extends Database
                                 width: "10%",
                                 disable_search_threshold: 10
                             });
-                            reloadTypeahead($j("#numDep"));
+                            reloadTypeahead($j("#numDep")[0]);
                         </script>
                         <style>
                             .typeahead__cancel-button {

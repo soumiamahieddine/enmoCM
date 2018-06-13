@@ -98,19 +98,12 @@ abstract class templates_Abstract extends Database
 
         if(empty($field))
         {
-            $stmt = $db->query("select distinct what from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? ", 
-							array($template_id)
-					);
-            while($res = $stmt->fetchObject())
-            {
-                $items[$res->what] = array();
-            }
+            $items['destination'] = [];
             foreach(array_keys($items) as $key)
             {
-                $stmt2 = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = ? ", 
-									array($template_id,$key)
+                $stmt2 = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? ",
+									array($template_id)
 						);
-                $items[$key] = array();
                 while($res = $stmt2->fetchOject())
                 {
                     array_push($items[$key], $res->value_field);
@@ -119,9 +112,9 @@ abstract class templates_Abstract extends Database
         }
         else
         {
-            $items[$field] = array();
-            $stmt = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? and what = ? ", 
-							array($template_id,$field)
+            $items[$field] = [];
+            $stmt = $db->query("select value_field from ".$_SESSION['tablename']['temp_templates_association']." where template_id = ? ",
+							array($template_id)
 					);
             while($res = $stmt->fetchObject())
             {

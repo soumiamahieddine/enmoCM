@@ -109,7 +109,7 @@ abstract class AttachmentModelAbstract
 
         DatabaseModel::update([
             'table'     => $aArgs['table'],
-            'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => NULL],
+            'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => null],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

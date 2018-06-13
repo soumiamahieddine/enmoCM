@@ -69,10 +69,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="entity_del" >
-		<parameter name="page" value="entity_del"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="view_tree_entities" >
 		<parameter name="page" value="view_tree_entities"/>
 		<parameter name="module" value="entities"/>

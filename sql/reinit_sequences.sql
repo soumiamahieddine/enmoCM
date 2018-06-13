@@ -1,7 +1,6 @@
 
 Select setval('notifications_seq', (select max(notification_sid)+1 from notifications), false);
 Select setval('res_id_mlb_seq', (select max(res_id)+1 from res_letterbox), false);
-Select setval('templates_association_seq', (select max(system_id)+1 from templates_association), false);
 Select setval('user_signatures_seq', (select max(id)+1 from user_signatures), false);
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 Select setval('tag_id_seq', (select max(tag_id)+1 from tags), false);

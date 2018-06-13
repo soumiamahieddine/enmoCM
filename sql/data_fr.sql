@@ -1739,11 +1739,10 @@ Select setval('notifications_seq', (select max(notification_sid)+1 from notifica
 ------------
 TRUNCATE TABLE templates_association;
 INSERT INTO templates_association
-(template_id, what, value_field, maarch_module)
-SELECT template_id, 'destination', entity_id, 'entities'
+(template_id, value_field)
+SELECT template_id, entity_id
 FROM templates, entities
 WHERE template_type in ('OFFICE','TXT');
-Select setval('templates_association_seq', (select max(system_id)+1 from templates_association), false);
 -----
 -- Archive identifiers
 -----

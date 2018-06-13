@@ -50,7 +50,7 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-        if(empty($docserver)){
+        if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver not found']);
         }
 
@@ -93,7 +93,10 @@ class DocserverController
             'collId' => $data['coll_id']
         ]);
         $data['is_readonly'] = empty($existingCurrentDocserver) ? 'N' : 'Y';
-
+        
+        if (substr($data['path_template'], -1) != DIRECTORY_SEPARATOR) {
+            $data['path_template'] .= "/";
+        }
 
         $id = DocserverModel::create($data);
         HistoryController::add([
@@ -142,6 +145,10 @@ class DocserverController
             }
         }
 
+        if (substr($data['path_template'], -1) != DIRECTORY_SEPARATOR) {
+            $data['path_template'] .= "/";
+        }
+
         $updateData = [
             'id'                    => $aArgs['id'],
             'device_label'          => $data['device_label'],
@@ -172,7 +179,7 @@ class DocserverController
         }
 
         $docserver = DocserverModel::getById(['id' => $aArgs['id']]);
-        if(empty($docserver)){
+        if (empty($docserver)) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
@@ -194,9 +201,8 @@ class DocserverController
         ValidatorModel::notEmpty($aArgs, ['collId', 'docserverTypeId', 'fileInfos']);
         ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId']);
         ValidatorModel::arrayType($aArgs, ['fileInfos']);
-        ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'size', 'format', 'tmpFileName']);
-        ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'format', 'tmpFileName']);
-        ValidatorModel::intVal($aArgs['fileInfos'], ['size']);
+        ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
+        ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
 
         if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];

@@ -14,11 +14,29 @@
 
 namespace Template\models;
 
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
 abstract class TemplateModelAbstract
 {
+    public static function get(array $aArgs = [])
+    {
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
+
+        $aTemplates = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates'],
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+        ]);
+
+        return $aTemplates;
+    }
+
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -59,54 +77,72 @@ abstract class TemplateModelAbstract
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'templates_seq']);
 
-        DatabaseModel::insert(
-            [
-                'table'         => 'templates',
-                'columnsValues' => [
-                    'template_id'               => $nextSequenceId,
-                    'template_label'            => $aArgs['template_label'],
-                    'template_comment'          => $aArgs['template_comment'],
-                    'template_content'          => $aArgs['template_content'],
-                    'template_type'             => $aArgs['template_type'],
-                    'template_style'            => $aArgs['template_style'],
-                    'template_datasource'       => $aArgs['template_datasource'],
-                    'template_target'           => $aArgs['template_target'],
-                    'template_attachment_type'  => $aArgs['template_attachment_type'],
-                    'template_path'             => $aArgs['template_path'],
-                    'template_file_name'        => $aArgs['template_file_name'],
-                ]
+        DatabaseModel::insert([
+            'table'         => 'templates',
+            'columnsValues' => [
+                'template_id'               => $nextSequenceId,
+                'template_label'            => $aArgs['template_label'],
+                'template_comment'          => $aArgs['template_comment'],
+                'template_content'          => $aArgs['template_content'],
+                'template_type'             => $aArgs['template_type'],
+                'template_style'            => $aArgs['template_style'],
+                'template_datasource'       => $aArgs['template_datasource'],
+                'template_target'           => $aArgs['template_target'],
+                'template_attachment_type'  => $aArgs['template_attachment_type'],
+                'template_path'             => $aArgs['template_path'],
+                'template_file_name'        => $aArgs['template_file_name'],
             ]
-        );
+        ]);
 
         return $nextSequenceId;
     }
 
-    public static function getAssociation(array $aArgs = [])
-    {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
-
-        $aTemplatesAssociation = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['templates_association'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
-        ]);
-
-        return $aTemplatesAssociation;
-    }
-
-    public static function updateAssociation(array $aArgs)
+    public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
 
-        DatabaseModel::delete([
-            'table' => 'templates_association',
+        DatabaseModel::update([
+            'table' => 'templates',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
         ]);
 
         return true;
+    }
+
+    public static function delete(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'templates',
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
+    public static function getDatasources()
+    {
+        $datasources = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->datasource as $value) {
+                $value = (array)$value;
+                $datasources[] = [
+                    'id'        => (string)$value['id'],
+                    'label'     => (string)$value['label'],
+                    'script'    => (string)$value['script'],
+                    'target'    => (string)$value['target'],
+                ];
+            }
+        }
+
+        return $datasources;
     }
 }

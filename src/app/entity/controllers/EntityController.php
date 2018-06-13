@@ -24,6 +24,7 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
@@ -139,7 +140,7 @@ class EntityController
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $templates = TemplateModel::getAssociation(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
+        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         $entity['templates'] = count($templates);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $entity['instances'] = count($instances);
@@ -305,7 +306,7 @@ class EntityController
         $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
-        $templates = TemplateModel::getAssociation(['select' => [1], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
+        $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $redirects = BasketModel::getGroupActionRedirect(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
@@ -386,7 +387,7 @@ class EntityController
         //ListTemplates
         ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
         //Templates
-        TemplateModel::updateAssociation(['set' => ['value_field' => $aArgs['newEntityId']], 'where' => ['value_field = ?', 'what = ?'], 'data' => [$aArgs['id'], 'destination']]);
+        TemplateAssociationModel::update(['set' => ['value_field' => $aArgs['newEntityId']], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
 
 
         EntityModel::delete(['where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);

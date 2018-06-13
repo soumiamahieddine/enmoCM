@@ -200,8 +200,6 @@ class ProcessConvertController
             'collId'    => $collId,
             'fileInfos' => [
                 'tmpDir'        => $tmpDir,
-                'size'          => filesize($fileNameOnTmp),
-                'format'        => 'PDF',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.pdf',
             ],
             'docserverTypeId'   => 'CONVERT'

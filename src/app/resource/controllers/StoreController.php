@@ -51,9 +51,7 @@ class StoreController
                 'docserverTypeId'   => 'DOC',
                 'fileInfos'         => [
                     'tmpDir'            => CoreConfigModel::getTmpPath(),
-                    'size'              => filesize($tmpFilepath),
-                    'format'            => $aArgs['fileFormat'],
-                    'tmpFileName'       => $fileName,
+                    'tmpFileName'       => $fileName
                 ]
             ]);
             if (!empty($storeResult['errors'])) {

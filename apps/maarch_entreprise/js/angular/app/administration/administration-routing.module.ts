@@ -24,14 +24,15 @@ import { ReportsAdministrationComponent }               from './reports-administ
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
-import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { ContactsGroupsAdministrationComponent }        from './contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contacts-group-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docservers-administration.component';
 import { DocserverAdministrationComponent }            from './docserver-administration.component';
- 
+import { TemplatesAdministrationComponent }            from './templates-administration.component';
+import { TemplateAdministrationComponent }            from './template-administration.component';
+
 @NgModule({
     imports: [
         RouterModule.forChild([
@@ -67,7 +68,6 @@ import { DocserverAdministrationComponent }            from './docserver-adminis
             { path: 'administration/notifications/new', component: NotificationAdministrationComponent },
             { path: 'administration/notifications/:identifier', component: NotificationAdministrationComponent },
             { path: 'administration/history', component: HistoryAdministrationComponent },
-            { path: 'administration/historyBatch', component: BatchHistoryAdministrationComponent },
             { path: 'administration/update-status', component: UpdateStatusAdministrationComponent },
             { path: 'administration/contacts-groups', component: ContactsGroupsAdministrationComponent },
             { path: 'administration/contacts-groups/new', component: ContactsGroupAdministrationComponent },
@@ -75,6 +75,9 @@ import { DocserverAdministrationComponent }            from './docserver-adminis
             { path: 'administration/versions-update', component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', component: DocserversAdministrationComponent },
             { path: 'administration/docservers/new', component: DocserverAdministrationComponent },
+            { path: 'administration/templates', component: TemplatesAdministrationComponent },
+            { path: 'administration/templates/new', component: TemplateAdministrationComponent },
+            { path: 'administration/templates/:id', component: TemplateAdministrationComponent },
         ]),
     ],
     exports: [

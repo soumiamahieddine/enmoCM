@@ -31,7 +31,6 @@ import { PrioritiesAdministrationComponent }            from './priorities-admin
 import { PriorityAdministrationComponent }              from './priority-administration.component';
 import { ReportsAdministrationComponent }               from './reports-administration.component';
 import { HistoryAdministrationComponent }               from './history-administration.component';
-import { BatchHistoryAdministrationComponent }          from './batchHistory-administration.component';
 import { UpdateStatusAdministrationComponent }          from './update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notifications-administration.component';
 import { NotificationAdministrationComponent }          from './notification-administration.component';
@@ -40,6 +39,8 @@ import { ContactsGroupAdministrationComponent }         from './contacts-group-a
 import { VersionsUpdateAdministrationComponent }        from './versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docservers-administration.component';
 import { DocserverAdministrationComponent }             from './docserver-administration.component';
+import { TemplatesAdministrationComponent }             from './templates-administration.component';
+import { TemplateAdministrationComponent }              from './template-administration.component';
 
 @NgModule({
     imports:      [
@@ -69,7 +70,6 @@ import { DocserverAdministrationComponent }             from './docserver-admini
         PriorityAdministrationComponent,
         ReportsAdministrationComponent,
         HistoryAdministrationComponent,
-        BatchHistoryAdministrationComponent,
         UpdateStatusAdministrationComponent,
         ContactsGroupsAdministrationComponent,
         ContactsGroupAdministrationComponent,
@@ -88,6 +88,8 @@ import { DocserverAdministrationComponent }             from './docserver-admini
         VersionsUpdateAdministrationComponent,
         DocserversAdministrationComponent,
         DocserverAdministrationComponent,
+        TemplatesAdministrationComponent,
+        TemplateAdministrationComponent,
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

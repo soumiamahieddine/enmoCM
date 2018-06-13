@@ -9,24 +9,24 @@ declare function $j(selector: any): any;
 declare var angularGlobals: any;
 
 @Component({
-    templateUrl: "../../../../Views/actions-administration.component.html",
+    templateUrl: "../../../../Views/templates-administration.component.html",
     providers: [NotificationService]
 })
 
-export class ActionsAdministrationComponent implements OnInit {
+export class TemplatesAdministrationComponent implements OnInit {
     mobileQuery: MediaQueryList;
     private _mobileQueryListener: () => void;
     coreUrl: string;
     lang: any = LANG;
     search: string = null;
 
-    actions: any[] = [];
+    templates: any[] = [];
     titles: any[] = [];
 
     loading: boolean = false;
 
-    displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
-    dataSource = new MatTableDataSource(this.actions);
+    displayedColumns = ['template_label', 'template_comment', 'template_type', 'actions'];
+    dataSource = new MatTableDataSource(this.templates);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -51,12 +51,12 @@ export class ActionsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get(this.coreUrl + 'rest/actions')
+        this.http.get(this.coreUrl + 'rest/templates')
             .subscribe((data) => {
-                this.actions = data['actions'];
+                this.templates = data['templates'];
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.actions);
+                    this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
@@ -66,17 +66,22 @@ export class ActionsAdministrationComponent implements OnInit {
             });
     }
 
-    deleteAction(action: any) {
-        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + action.label_action + ' »');
+    deleteTemplate(template: any) {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + template.template_label + ' »');
 
         if (r) {
-            this.http.delete(this.coreUrl + 'rest/actions/' + action.id)
-                .subscribe((data: any) => {
-                    this.actions = data.actions;
-                    this.dataSource = new MatTableDataSource(this.actions);
+            this.http.delete(this.coreUrl + 'rest/templates/' + template.template_id)
+                .subscribe(() => {
+                    for (let i in this.templates) {
+                        if (this.templates[i].template_id == template.template_id) {
+                            this.templates.splice(Number(i), 1);
+                        }
+                    }
+                    this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.actionDeleted);
+
+                    this.notify.success(this.lang.templateDeleted);
 
                 }, (err) => {
                     this.notify.error(err.error.errors);

@@ -41,6 +41,7 @@ return array(
     'Doctype\\' => array($baseDir . '/src/app/doctype'),
     'Docserver\\' => array($baseDir . '/src/app/docserver'),
     'Convert\\' => array($baseDir . '/modules/convert'),
+    'ContentManagement\\' => array($baseDir . '/src/app/contentManagement'),
     'Contact\\' => array($baseDir . '/src/app/contact'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Buzz\\' => array($vendorDir . '/kriswallsmith/buzz/lib/Buzz'),
