@@ -97,7 +97,7 @@
                                 - ou -
                             </div>
                             <div class="col-sm-5">
-                                <mat-form-field *ngIf="template.template_style">
+                                <mat-form-field *ngIf="creationMode || template.template_style">
                                     <mat-select id="template_style" [disabled]="!creationMode" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.defaultTemplate}}" [(ngModel)]="template.template_style">
                                         <mat-option *ngFor="let default of defaultTemplatesList" value="{{default.fileExt}}: {{default.fileName}}">
                                             {{default.fileExt}}: {{default.fileName}}
