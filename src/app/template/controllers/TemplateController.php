@@ -171,7 +171,7 @@ class TemplateController
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
                 $explodeStyle = explode('.', $data['template_file_name']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[count($explodeStyle - 1)]);
+                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -206,6 +206,7 @@ class TemplateController
             }
         }
         unset($data['uploadedFile']);
+        unset($data['userUniqueId']);
         unset($data['entities']);
         TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
 
@@ -234,7 +235,7 @@ class TemplateController
 
         TemplateModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
-        
+
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $aArgs['id'],
