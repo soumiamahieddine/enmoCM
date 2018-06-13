@@ -533,8 +533,6 @@ class UserController
             'docserverTypeId'   => 'TEMPLATES',
             'fileInfos'         => [
                 'tmpDir'        => CoreConfigModel::getTmpPath(),
-                'size'          => $data['size'],
-                'format'        => $ext,
                 'tmpFileName'   => $tmpName,
             ]
         ]);

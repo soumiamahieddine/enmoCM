@@ -262,8 +262,6 @@ class ProcessFulltextController
             'collId'    => $collId,
             'fileInfos' => [
                 'tmpDir'        => $tmpDir,
-                'size'          => filesize($fileNameOnTmp),
-                'format'        => 'TXT',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.txt',
             ],
             'docserverTypeId'   => 'FULLTEXT'

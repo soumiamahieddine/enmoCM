@@ -14,6 +14,7 @@
 
 namespace Template\models;
 
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
@@ -123,5 +124,25 @@ abstract class TemplateModelAbstract
         ]);
 
         return true;
+    }
+
+    public static function getDatasources()
+    {
+        $datasources = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/templates/xml/datasources.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->datasource as $value) {
+                $value = (array)$value;
+                $datasources[] = [
+                    'id'        => (string)$value['id'],
+                    'label'     => (string)$value['label'],
+                    'script'    => (string)$value['script'],
+                    'target'    => (string)$value['target'],
+                ];
+            }
+        }
+
+        return $datasources;
     }
 }

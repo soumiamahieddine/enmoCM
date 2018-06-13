@@ -206,8 +206,6 @@ class ProcessThumbnailsController
             'collId'    => $collId,
             'fileInfos' => [
                 'tmpDir'        => $tmpDir,
-                'size'          => filesize($fileNameOnTmp),
-                'format'        => 'PNG',
                 'tmpFileName'   => pathinfo($fileNameOnTmp, PATHINFO_FILENAME) . '.png',
             ],
             'docserverTypeId'   => 'TNL'

@@ -201,9 +201,8 @@ class DocserverController
         ValidatorModel::notEmpty($aArgs, ['collId', 'docserverTypeId', 'fileInfos']);
         ValidatorModel::stringType($aArgs, ['collId', 'docserverTypeId']);
         ValidatorModel::arrayType($aArgs, ['fileInfos']);
-        ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'size', 'format', 'tmpFileName']);
-        ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'format', 'tmpFileName']);
-        ValidatorModel::intVal($aArgs['fileInfos'], ['size']);
+        ValidatorModel::notEmpty($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
+        ValidatorModel::stringType($aArgs['fileInfos'], ['tmpDir', 'tmpFileName']);
 
         if (!is_dir($aArgs['fileInfos']['tmpDir'])) {
             return ['errors' => '[storeRessourceOnDocserver] FileInfos.tmpDir does not exist'];

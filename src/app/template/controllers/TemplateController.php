@@ -22,6 +22,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 use Attachment\models\AttachmentModel;
@@ -75,7 +76,7 @@ class TemplateController
             'template'        => $template,
             'templatesModels' => TemplateController::getModels(),
             'attachmentTypes' => $attachmentTypes,
-            'datasources'     => ''
+            'datasources'     => TemplateModel::getDatasources()
         ]);
     }
 
@@ -86,16 +87,26 @@ class TemplateController
         }
 
         $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_comment']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_type']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_datasource']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_target']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
-        if (!$check) {
+        if (!TemplateController::checkData(['data' => $data])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        if ($data['template_type'] == 'OFFICE') {
+            $explodeStyle = explode(':', $data['template_style']);
+            $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'templates',
+                'docserverTypeId'   => 'TEMPLATES',
+                'fileInfos'         => [
+                    'tmpDir'            => CoreConfigModel::getTmpPath(),
+                    'tmpFileName'       => $fileOnTmp,
+                ]
+            ]);
+            if (!empty($storeResult['errors'])) {
+                return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
+            }
+            $data['template_path'] = $storeResult['destination_dir'];
+            $data['template_file_name'] = $storeResult['file_destination_name'];
         }
 
         $id = TemplateModel::create($data);
@@ -247,7 +258,7 @@ class TemplateController
         return $response->withJson([
             'templatesModels' => TemplateController::getModels(),
             'attachmentTypes' => $attachmentTypes,
-            'datasources'     => '',
+            'datasources'     => TemplateModel::getDatasources(),
             'entities'        => $entities,
         ]);
     }
@@ -310,5 +321,27 @@ class TemplateController
         }
 
         return $models;
+    }
+
+    private static function checkData(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['data']);
+        ValidatorModel::arrayType($aArgs, ['data']);
+
+        $availableTypes = ['HTML', 'TXT', 'OFFICE'];
+        $data = $aArgs['data'];
+
+        $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_comment']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_type']) && in_array($data['template_type'], $availableTypes);
+
+        if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
+        } else {
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['userUniqueId']);
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_style']);
+        }
+
+        return $check;
     }
 }
