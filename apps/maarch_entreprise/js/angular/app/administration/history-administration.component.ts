@@ -46,7 +46,6 @@ export class HistoryAdministrationComponent implements OnInit {
     @ViewChild('sort') sort: MatSort;
     @ViewChild('batchSort') batchSort: MatSort;
     applyFilter(filterValue: string, historyType : string) {
-        console.log(historyType);
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
         if(historyType == 'normal'){
@@ -94,7 +93,7 @@ export class HistoryAdministrationComponent implements OnInit {
             }, (data: any) => {
                 if(data['error'].errors == 'Service forbidden'){
                         this.loading = false;
-                        this.accessHistory = false;;
+                        this.accessHistory = false;
                 } else {
                     location.href = "index.php";
                 }                
@@ -129,7 +128,6 @@ export class HistoryAdministrationComponent implements OnInit {
     }
     
     _setDataSource(indexNumber : any) {
-        console.log("datasource");
         setTimeout(() => {
           switch (indexNumber) {
             case 0:
@@ -143,9 +141,8 @@ export class HistoryAdministrationComponent implements OnInit {
         });
       }
 
-    refreshHistory(historyType : string) {
-        
-        //console.log(historyType)
+    refreshHistory(historyType : string) 
+    {
         if(historyType == 'normal'){
             this.startDate.setHours(0,0,0,0);
             this.endDate.setHours(23,59,59,59);
@@ -163,7 +160,6 @@ export class HistoryAdministrationComponent implements OnInit {
                 location.href = "index.php";
             });
         } else {
-            console.log(historyType)
             this.batchStartDate.setHours(0,0,0,0);
             this.batchEndDate.setHours(23,59,59,59);
             this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
