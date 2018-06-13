@@ -28,6 +28,7 @@ export class TemplateAdministrationComponent implements OnInit {
     defaultTemplatesList: any;
     attachmentTypesList: any;
     datasourcesList: any;
+    jnlpValue: any = {};
 
     loading: boolean = false;
 
@@ -53,7 +54,7 @@ export class TemplateAdministrationComponent implements OnInit {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;
 
-                this.http.get(this.coreUrl + 'rest/initTemplate')
+                this.http.get(this.coreUrl + 'rest/administration/templates/new')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template.template_target = '';
@@ -63,7 +64,7 @@ export class TemplateAdministrationComponent implements OnInit {
                     });
             } else {
                 this.creationMode = false;
-                this.http.get(this.coreUrl + 'rest/templates/' + params['id'])
+                this.http.get(this.coreUrl + 'rest/templates/' + params['id'] + '/details')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = data.template;
@@ -86,15 +87,13 @@ export class TemplateAdministrationComponent implements OnInit {
         setTimeout(() => {
             $j('#jstree').jstree({
                 "checkbox": {
-                    'deselect_all': true,
-                    "three_state": true // cascade selection
+                    'three_state': 'down' // cascade selection
                 },
                 'core': {
                     'themes': {
                         'name': 'proton',
                         'responsive': true
                     },
-                    'multiple': true,
                     'data': data.entities
                 },
                 "plugins": ["checkbox", "search", "sort"]
@@ -107,9 +106,6 @@ export class TemplateAdministrationComponent implements OnInit {
                     $j('#jstree').jstree(true).search(v);
                 }, 250);
             });
-            $j('#jstree')
-                // create the instance
-                .jstree();
         }, 0);
     }
 
@@ -177,7 +173,47 @@ export class TemplateAdministrationComponent implements OnInit {
         this.template.uploadedFile.base64ForJs = b64Content;
     }
 
+    startJnlp() {
+        if (this.creationMode) {
+            this.jnlpValue.objectType = 'templateStyle';
+            for(let element of this.defaultTemplatesList){
+                if(this.template.template_style == element.fileExt + ': ' + element.fileName){
+                    this.jnlpValue.objectId = element.filePath;
+                }
+            }
+        } else {
+            this.jnlpValue.objectType = 'template';
+            this.jnlpValue.objectId   = this.template.template_style;
+        }
+        this.jnlpValue.table    = 'templates';
+        this.jnlpValue.uniqueId = 0;
+
+        this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
+        .subscribe((data: any) => {
+            this.template.userUniqueId = data.userUniqueId;
+            window.location.href       = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+        }, (err) => {
+            this.notify.error(err.error.errors);
+        });        
+    }
+
+    duplicateTemplate()
+    {
+        let r = confirm(this.lang.confirmDuplicate);
+
+        if (r) {
+            this.http.post(this.coreUrl + 'rest/templates/' + this.template.template_id + '/duplicate', {'id': this.template.template_id})
+            .subscribe((data:any) => {
+                this.notify.success(this.lang.templateDuplicated);
+                this.router.navigate(['/administration/templates/' + data.id]);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+        }
+    }
+
     onSubmit() {
+        this.template.entities = $j('#jstree').jstree(true).get_checked();
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/templates', this.template)
                 .subscribe(() => {

@@ -102,8 +102,8 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-sm-12">
-                                Editer un modèle
+                            <div class="col-sm-12" (click)="startJnlp()">
+                                <i class="fa fa-pencil fa-2x"></i>{{lang.templateEdition}}
                             </div>
                         </div>
                         <div class="form-group" *ngIf="template.template_type=='TXT'">
@@ -127,6 +127,7 @@
                             <div class="col-sm-12">
                                 <mat-form-field>
                                     <mat-select id="template_datasource" name="template_datasource" title="{{lang.templateDatasource}}" placeholder="{{lang.templateDatasource}}" [(ngModel)]="template.template_datasource">
+                                        <mat-option value="">{{lang.noDatasource}}</mat-option>
                                         <mat-option *ngFor="let datasource of datasourcesList" [value]="action.name">
                                             {{action.label}}
                                         </mat-option>
@@ -146,6 +147,11 @@
                     <div class="form-group">
                         <div class="col-sm-12" style="text-align:center;">
                             <button mat-raised-button color="primary" type="submit" [disabled]="!templatesFormUp.form.valid">{{lang.save}}</button>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="!creationMode">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <button mat-raised-button color="primary" type="button" (click)="duplicateTemplate()">{{lang.duplicate}}</button>
                         </div>
                     </div>
                 </form>

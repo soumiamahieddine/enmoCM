@@ -538,6 +538,11 @@ export const LANG_EN = {
     "doctypes"                          : "Document types",
     "templateServiceInfo"               : "Choose the department(s) that you want to associate to this template",
     "templateAdded"                     : "Template added",
-    "templateUpdated"                   : "Template updated"
+    "templateUpdated"                   : "Template updated",
+    "templateEdition"                   : "Template edition",
+    "duplicate"                         : "Duplicate",
+    "confirmDuplicate"                  : "Do you really want to duplicate this template ?",
+    "noDatasource"                      : "No datasources",
+    "templateDuplicated"                : "Template duplicated"
 
 };

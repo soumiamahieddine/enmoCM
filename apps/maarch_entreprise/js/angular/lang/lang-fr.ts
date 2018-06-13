@@ -560,5 +560,11 @@ export const LANG_FR = {
     "attachmentType"                    : "Type d'attachement",
     "templateServiceInfo"               : "Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce modèle",
     "templateAdded"                     : "Modèle ajouté",
-    "templateUpdated"                   : "Modèle mis à jour"
+    "templateUpdated"                   : "Modèle mis à jour",
+    "templateEdition"                   : "Edition du modèle",
+    "duplicate"                         : "Dupliquer",
+    "confirmDuplicate"                  : "Voulez-vous vraiment dupliquer ce template ?",
+    "noDatasource"                      : "Aucune source de données",
+    "templateDuplicated"                : "Modèle dupliqué"
+    
 };
