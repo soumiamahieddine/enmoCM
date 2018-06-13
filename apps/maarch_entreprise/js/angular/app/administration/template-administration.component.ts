@@ -184,7 +184,7 @@ export class TemplateAdministrationComponent implements OnInit {
             }
         } else {
             this.jnlpValue.objectType = 'template';
-            this.jnlpValue.objectId   = this.template.template_style;
+            this.jnlpValue.objectId   = this.template.template_id;
         }
         this.jnlpValue.table    = 'templates';
         this.jnlpValue.uniqueId = 0;
