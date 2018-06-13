@@ -128,10 +128,9 @@
                                 <mat-form-field>
                                     <mat-select id="template_datasource" name="template_datasource" title="{{lang.templateDatasource}}" placeholder="{{lang.templateDatasource}}" [(ngModel)]="template.template_datasource">
                                         <mat-option value="">{{lang.noDatasource}}</mat-option>
-                                        <mat-option *ngFor="let datasource of datasourcesList" [value]="action.name">
-                                            {{action.label}}
+                                        <mat-option *ngFor="let datasource of datasourcesList" [value]="datasource.id">
+                                            {{datasource.label}}
                                         </mat-option>
-                                        <mat-option value="letterbox_attachment">[réponse] Informations du courrier entrant</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -147,11 +146,7 @@
                     <div class="form-group">
                         <div class="col-sm-12" style="text-align:center;">
                             <button mat-raised-button color="primary" type="submit" [disabled]="!templatesFormUp.form.valid">{{lang.save}}</button>
-                        </div>
-                    </div>
-                    <div class="form-group" *ngIf="!creationMode">
-                        <div class="col-sm-12" style="text-align:center;">
-                            <button mat-raised-button color="primary" type="button" (click)="duplicateTemplate()">{{lang.duplicate}}</button>
+                            <button *ngIf="!creationMode" mat-raised-button color="primary" type="button" (click)="duplicateTemplate()">{{lang.duplicate}}</button>
                         </div>
                     </div>
                 </form>

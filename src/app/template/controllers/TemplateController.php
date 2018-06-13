@@ -56,9 +56,9 @@ class TemplateController
         }
         $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
         foreach ($entities as $key => $entity) {
-            $entities[$key]['selected'] = false;
+            $entities[$key]['state']['selected'] = false;
             if (in_array($entity['id'], $linkedEntities)) {
-                $entities[$key]['selected'] = true;
+                $entities[$key]['state']['selected'] = true;
             }
         }
 
@@ -268,7 +268,7 @@ class TemplateController
 
         $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
         foreach ($entities as $key => $entity) {
-            $entities[$key]['selected'] = false;
+            $entities[$key]['state']['selected'] = false;
         }
 
         return $response->withJson([
