@@ -40,21 +40,30 @@ class TemplateController
         return $response->withJson(['templates' => $templates]);
     }
 
-    public function getById(Request $request, Response $response, array $aArgs)
+    public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
         if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $template = TemplateModel::getById(['id' => $aArgs['id']]);
-        $template['entities'] = [];
 
-        $linkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
-        foreach ($linkedEntities as $linkedEntity) {
-            $template['entities'][] = $linkedEntity['value_field'];
+        $rawLinkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
+        $linkedEntities = [];
+        foreach ($rawLinkedEntities as $rawLinkedEntity) {
+            $linkedEntities[] = $rawLinkedEntity['value_field'];
         }
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['selected'] = false;
+            if (in_array($entity['id'], $linkedEntities)) {
+                $entities[$key]['selected'] = true;
+            }
+        }
+        $template['entities'] = $entities;
 
         $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentTypes = [];
         foreach ($attachmentModelsTmp as $key => $value) {
             $attachmentTypes[] = [
                 'label' => $value['label'],
@@ -66,8 +75,7 @@ class TemplateController
             'template'        => $template,
             'templatesModels' => TemplateController::getModels(),
             'attachmentTypes' => $attachmentTypes,
-            'datasources'     => '',
-            'entities'        => EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin'])
+            'datasources'     => ''
         ]);
     }
 
@@ -216,13 +224,14 @@ class TemplateController
         return $response->withJson(['id' => $templateId]);
     }
 
-    public function initTemplate(Request $request, Response $response)
+    public function initTemplates(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $attachmentModelsTmp = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentTypes = [];
         foreach ($attachmentModelsTmp as $key => $value) {
             $attachmentTypes[] = [
                 'label' => $value['label'],
@@ -230,15 +239,20 @@ class TemplateController
             ];
         }
 
+        $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']);
+        foreach ($entities as $key => $entity) {
+            $entities[$key]['selected'] = false;
+        }
+
         return $response->withJson([
             'templatesModels' => TemplateController::getModels(),
             'attachmentTypes' => $attachmentTypes,
             'datasources'     => '',
-            'entities'        => EntityModel::getAllowedEntitiesByUserId(['userId' => 'superadmin']),
+            'entities'        => $entities,
         ]);
     }
 
-    public function getModels()
+    public static function getModels()
     {
         $customId = CoreConfigModel::getCustomId();
 

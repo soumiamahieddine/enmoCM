@@ -14,7 +14,6 @@
 
 namespace ContentManagement\controllers;
 
-
 use Docserver\models\DocserverModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

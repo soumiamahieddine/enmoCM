@@ -32,7 +32,7 @@ class CoreControllerTest extends TestCase
     public function testrenderJnlp()
     {
         // ERROR FILE NAME
-        $coreController = new \SrcCore\controllers\CoreController();
+        $coreController = new \ContentManagement\controllers\JnlpController();
 
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);

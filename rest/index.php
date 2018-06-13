@@ -225,12 +225,12 @@ $app->get('/administration/statuses/new', \Status\controllers\StatusController::
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
-$app->get('/initTemplate', \Template\controllers\TemplateController::class . ':initTemplate');
 $app->post('/templates', \Template\controllers\TemplateController::class . ':create');
-$app->get('/templates/{id}', \Template\controllers\TemplateController::class . ':getById');
+$app->get('/templates/{id}/details', \Template\controllers\TemplateController::class . ':getDetailledById');
 $app->put('/templates/{id}', \Template\controllers\TemplateController::class . ':update');
 $app->delete('/templates/{id}', \Template\controllers\TemplateController::class . ':delete');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
+$app->get('/administration/templates/new', \Template\controllers\TemplateController::class . ':initTemplates');
 
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
