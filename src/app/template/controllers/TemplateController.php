@@ -96,6 +96,9 @@ class TemplateController
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
             if (!empty($data['userUniqueId'])) {
+                if (!Validator::stringType()->notEmpty()->validate($data['template_style'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
+                }
                 $explodeStyle = explode(':', $data['template_style']);
                 $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
@@ -155,13 +158,16 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $template = TemplateModel::getById(['select' => [1], 'id' => $aArgs['id']]);
+        $template = TemplateModel::getById(['select' => ['template_style'], 'id' => $aArgs['id']]);
         if (empty($template)) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
 
         if ($data['template_type'] == 'OFFICE' && (!empty($data['userUniqueId']) || !empty($data['uploadedFile']))) {
             if (!empty($data['userUniqueId'])) {
+                if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
+                }
                 $explodeStyle = explode(':', $data['template_style']);
                 $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
@@ -378,8 +384,6 @@ class TemplateController
 
         if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_content']);
-        } elseif (empty($data['uploadedFile'])) {
-            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_style']);
         }
 
         return $check;
