@@ -479,7 +479,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     toggleBasket(state:boolean) {
         let basketsDisable:any = [];
         this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1) {
+            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1 && elem.allowed != state) {
                 elem.allowed = state;
                 basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state});
             }
