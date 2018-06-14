@@ -64,7 +64,7 @@ abstract class NotificationScheduleModelAbstract
             $aArgs['setHiddenValue'] = true;
         }
 
-        $crontab  = shell_exec('crontab -l');
+        $crontab  = @shell_exec('crontab -l');
         $lines    = explode("\n", $crontab);
         $data     = [];
         $customId = CoreConfigModel::getCustomId();
