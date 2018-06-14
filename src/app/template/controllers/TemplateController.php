@@ -30,6 +30,17 @@ use Entity\models\EntityModel;
 
 class TemplateController
 {
+    const AUTHORIZED_MIMETYPES = [
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessing‌ml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel','application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml‌.slideshow',
+        'application/vnd.oasis.opendocument.text',
+        'application/vnd.oasis.opendocument.presentation',
+        'application/vnd.oasis.opendocument.spreadsheet'
+    ];
+
     public function get(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
@@ -106,6 +117,12 @@ class TemplateController
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
                 }
                 $fileContent = base64_decode($data['uploadedFile']['base64']);
+                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($fileContent);
+                if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
+                    return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
+                }
+
                 $fileOnTmp = rand() . $data['uploadedFile']['name'];
                 $file = fopen(CoreConfigModel::getTmpPath() . $fileOnTmp, 'w');
                 fwrite($file, $fileContent);

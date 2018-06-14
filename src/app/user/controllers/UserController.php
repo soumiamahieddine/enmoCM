@@ -244,17 +244,7 @@ class UserController
         $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']]);
         $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
         $user['canModifyPassword'] = true;
-
-        $baskets = [];
-        foreach ($user['baskets'] as $key => $basket) {
-            if (in_array($basket['basket_id'], $baskets) && $basket['basket_owner'] == $user['user_id']) {
-                unset($user['baskets'][$key]);
-            } else {
-                $baskets[] = $basket['basket_id'];
-            }
-        }
-        $user['baskets'] = array_values($user['baskets']);
-
+        
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if ($loggingMethod['id'] == 'ozwillo') {
             $user['canModifyPassword'] = false;
