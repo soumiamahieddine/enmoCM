@@ -15,6 +15,7 @@ before_script:
   - mkdir -p /usr/share/man/man7
   #- apt-get install apt-utils -yqq > /dev/null
   - apt-get install cron -yqq > /dev/null
+  - vi crontab -e
   #- apt-get install tar -yqq > /dev/null
   #- apt-get install wkhtmltopdf -yqq > /dev/null
   #- apt-get install wget -yqq > /dev/null
