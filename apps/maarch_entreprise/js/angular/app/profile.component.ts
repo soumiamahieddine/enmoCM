@@ -68,7 +68,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
-                this.selectionBaskets.select(basket.basket_id);   
+                this.selectionBaskets.select(basket);   
             });
         } else {
             this.selectionBaskets.clear();
@@ -495,7 +495,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     addBasketRedirection(newUser: any) {
         let basketsRedirect:any[] = [];
         this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1) {
+            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1) {
                 basketsRedirect.push({newUser: newUser,basketId:elem.basket_id,basketOwner:this.user.user_id,virtual:elem.is_virtual})
             }
         });
@@ -710,10 +710,10 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     showActions(basket:any){
-        $j('#'+basket).show();
+        $j('#'+basket.basket_id+'_'+basket.group_id).show();
     }
 
     hideActions(basket:any){
-        $j('#'+basket).hide();
+        $j('#'+basket.basket_id+'_'+basket.group_id).hide();
     }
 }

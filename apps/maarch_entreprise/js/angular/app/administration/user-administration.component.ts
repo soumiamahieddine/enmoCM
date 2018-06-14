@@ -70,7 +70,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
-                this.selectionBaskets.select(basket.basket_id);   
+                this.selectionBaskets.select(basket);   
             });
         } else {
             this.selectionBaskets.clear();
@@ -264,11 +264,11 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     showActions(basket:any){
-        $j('#'+basket).show();
+        $j('#'+basket.basket_id+'_'+basket.group_id).show();
     }
 
     hideActions(basket:any){
-        $j('#'+basket).hide();
+        $j('#'+basket.basket_id+'_'+basket.group_id).hide();
     }
 
     updateGroup(group: any) {
@@ -427,7 +427,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     addBasketRedirection(newUser:any) {
         let basketsRedirect:any[] = [];
         this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1 && elem.allowed) {
+            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1 && elem.allowed) {
                 basketsRedirect.push({newUser: newUser,basketId:elem.basket_id,basketOwner:this.user.user_id,virtual:elem.is_virtual})
             }
         });
@@ -477,14 +477,14 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     }
 
     toggleBasket(state:boolean) {
-        let basketsDisable:any[] = [];
+        let basketsDisable:any = [];
         this.user.baskets.forEach((elem: any) => {
-            if (this.selectionBaskets.selected.indexOf(elem.basket_id) != -1) {
+            if (this.selectionBaskets.selected.map((e:any) => { return e.basket_id; }).indexOf(elem.basket_id) != -1 && this.selectionBaskets.selected.map((e:any) => { return e.group_id; }).indexOf(elem.group_id) != -1) {
                 elem.allowed = state;
-                basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state})
+                basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state});
             }
         });
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", basketsDisable)
+        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"baskets" :basketsDisable})
         .subscribe((data: any) => {
             this.selectionBaskets.clear();
             this.notify.success(this.lang.basketUpdated);
