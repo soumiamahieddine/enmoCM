@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild }  from '@angular/core'
 import { HttpClient }                                       from '@angular/common/http';
 import { MediaMatcher }                                     from '@angular/cdk/layout';
 import { MatPaginator, MatTableDataSource, MatSort }        from '@angular/material';
-import { MatDatepickerInputEvent }                          from '@angular/material/datepicker';
 import { LANG }                                             from '../translate.component';
 
 declare function $j(selector: any): any;
@@ -129,59 +128,57 @@ export class HistoryAdministrationComponent implements OnInit {
     
     _setDataSource(indexNumber : any) {
         setTimeout(() => {
-          switch (indexNumber) {
-            case 0:
-              !this.dataSource.paginator ? this.dataSource.paginator = this.paginator : null;
-              !this.dataSource.sort ? this.dataSource.sort = this.sort : null;
-              break;
-            case 1:
-              !this.batchDataSource.paginator ? this.batchDataSource.paginator = this.batchPaginator : null;
-              !this.batchDataSource.sort ? this.batchDataSource.sort = this.batchSort : null;
-          }
+            switch (indexNumber) {
+                case 0:
+                  !this.dataSource.paginator ? this.dataSource.paginator = this.paginator : null;
+                  !this.dataSource.sort ? this.dataSource.sort = this.sort : null;
+                  break;
+                case 1:
+                  !this.batchDataSource.paginator ? this.batchDataSource.paginator = this.batchPaginator : null;
+                  !this.batchDataSource.sort ? this.batchDataSource.sort = this.batchSort : null;
+            }
         });
-      }
+    }
 
-    refreshHistory(historyType : string) 
-    {
-        if(historyType == 'normal'){
+    refreshHistory(historyType : string) {
+        if (historyType == 'normal') {
             this.startDate.setHours(0,0,0,0);
             this.endDate.setHours(23,59,59,59);
             this.http.get(this.coreUrl + 'rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
-            .subscribe((data: any) => {
-                this.data = data['histories'];
-                this.limitExceeded = data['limitExceeded'];
-                this.loading = false;
-                setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.data);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
-            }, () => {
-                location.href = "index.php";
-            });
+                .subscribe((data: any) => {
+                    this.data = data['histories'];
+                    this.limitExceeded = data['limitExceeded'];
+                    this.loading = false;
+                    setTimeout(() => {
+                        this.dataSource = new MatTableDataSource(this.data);
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }, 0);
+                }, () => {
+                    location.href = "index.php";
+                });
         } else {
             this.batchStartDate.setHours(0,0,0,0);
             this.batchEndDate.setHours(23,59,59,59);
             this.http.get(this.coreUrl + 'rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
-            .subscribe((data: any) => {
-                this.batchData = data['batchHistories'];
-                this.batchLimitExceeded = data['limitExceeded'];
-                this.loading = false;
-                setTimeout(() => {
-                    this.accessBatchHistory = true;
-                    this.batchDataSource = new MatTableDataSource(this.batchData);
-                    this.batchDataSource.paginator = this.batchPaginator;
-                    this.batchDataSource.sort = this.batchSort;
-                }, 0);
-            }, (data: any) => {
-                if(data['error'].errors == 'Service forbidden'){
-                        this.loading = false
+                .subscribe((data: any) => {
+                    this.batchData = data['batchHistories'];
+                    this.batchLimitExceeded = data['limitExceeded'];
+                    this.loading = false;
+                    setTimeout(() => {
+                        this.accessBatchHistory = true;
+                        this.batchDataSource = new MatTableDataSource(this.batchData);
+                        this.batchDataSource.paginator = this.batchPaginator;
+                        this.batchDataSource.sort = this.batchSort;
+                    }, 0);
+                }, (data: any) => {
+                    if(data['error'].errors == 'Service forbidden'){
+                        this.loading = false;
                         this.accessBatchHistory = false;
-                } else {
-                    location.href = "index.php";
-                }                
-            });
+                    } else {
+                        location.href = "index.php";
+                    }
+                });
         }
-        
     }
 }
