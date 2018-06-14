@@ -292,12 +292,10 @@ class JnlpController
         return $response->withHeader('Content-Type', 'application/xml');
     }
 
-    public function isLockFileExisting(Request $request, Response $response)
+    public function isLockFileExisting(Request $request, Response $response, array $aArgs)
     {
-        $data = $request->getParams();
-
         $tmpPath = CoreConfigModel::getTmpPath();
-        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$data['userUniqueId']}.lck";
+        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$aArgs['userUniqueId']}.lck";
 
         $fileFound = false;
         if (file_exists($tmpPath . $lockFileName)) {
