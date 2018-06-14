@@ -226,6 +226,9 @@ export class TemplateAdministrationComponent implements OnInit {
             alert(this.lang.editModelFirst);
             return;
         }
+        if (this.template.template_type=='HTML'){
+            this.template.template_content = tinymce.get('templateHtml').getContent();
+        }
         if (this.creationMode) {
             this.http.post(this.coreUrl + 'rest/templates', this.template)
                 .subscribe(() => {
