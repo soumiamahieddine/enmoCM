@@ -64,54 +64,54 @@ abstract class NotificationScheduleModelAbstract
             $aArgs['setHiddenValue'] = true;
         }
 
-        $crontab  = @shell_exec('crontab -l');
-        $lines    = explode("\n", $crontab);
+        // $crontab  = shell_exec('crontab -l');
+        // $lines    = explode("\n", $crontab);
         $data     = [];
         $customId = CoreConfigModel::getCustomId();
         $corePath = str_replace('custom/'.$customId.'/src/app/notification/models', '', __DIR__);
         $corePath = str_replace('src/app/notification/models', '', $corePath);
 
-        foreach ($lines as $cronLine) {
-            $cronLine = trim($cronLine);
-            if (strpos($cronLine, '#') !== false) {
-                $cronLine = substr($cronLine, 0, strpos($cronLine, '#'));
-            }
-            if (empty($cronLine)) {
-                continue;
-            }
-            $cronLine = preg_replace('![ \t]+!', ' ', $cronLine);
-            if ($cronLine[0] == '@') {
-                $explodeCronLine = explode(' ', $cronLine, 2);
-                $cmd = $explodeCronLine[1];
-            } else {
-                list($m, $h, $dom, $mon, $dow, $cmd) = explode(' ', $cronLine, 6);
-            }
+        // foreach ($lines as $cronLine) {
+        //     $cronLine = trim($cronLine);
+        //     if (strpos($cronLine, '#') !== false) {
+        //         $cronLine = substr($cronLine, 0, strpos($cronLine, '#'));
+        //     }
+        //     if (empty($cronLine)) {
+        //         continue;
+        //     }
+        //     $cronLine = preg_replace('![ \t]+!', ' ', $cronLine);
+        //     if ($cronLine[0] == '@') {
+        //         $explodeCronLine = explode(' ', $cronLine, 2);
+        //         $cmd = $explodeCronLine[1];
+        //     } else {
+        //         list($m, $h, $dom, $mon, $dow, $cmd) = explode(' ', $cronLine, 6);
+        //     }
 
-            if ($customId != '') {
-                $pathToFolow = $corePath.'custom/'.$customId.'/';
-            } else {
-                $pathToFolow = $corePath;
-            }
+        //     if ($customId != '') {
+        //         $pathToFolow = $corePath.'custom/'.$customId.'/';
+        //     } else {
+        //         $pathToFolow = $corePath;
+        //     }
 
-            $state = 'normal';
-            if (strpos($cmd, $pathToFolow.'modules/notifications/batch/scripts/') !== 0 && $aArgs['setHiddenValue']) {
-                $cmd = 'hidden';
-                $state = 'hidden';
-            }
+        //     $state = 'normal';
+        //     if (strpos($cmd, $pathToFolow.'modules/notifications/batch/scripts/') !== 0 && $aArgs['setHiddenValue']) {
+        //         $cmd = 'hidden';
+        //         $state = 'hidden';
+        //     }
 
-            $filename = explode('/', $cmd);
+        //     $filename = explode('/', $cmd);
 
-            $data[] = [
-                'm'           => $m,
-                'h'           => $h,
-                'dom'         => $dom,
-                'mon'         => $mon,
-                'dow'         => $dow,
-                'cmd'         => $cmd,
-                'description' => end($filename),
-                'state'       => $state,
-            ];
-        }
+        //     $data[] = [
+        //         'm'           => $m,
+        //         'h'           => $h,
+        //         'dom'         => $dom,
+        //         'mon'         => $mon,
+        //         'dow'         => $dow,
+        //         'cmd'         => $cmd,
+        //         'description' => end($filename),
+        //         'state'       => $state,
+        //     ];
+        // }
 
         return $data;
     }
