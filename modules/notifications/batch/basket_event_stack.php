@@ -53,15 +53,11 @@ while ($state != 'END') {
             $secCtrl = new SecurityControler();
             $entities = new entities();
 
-            $stmt = $db->query("SELECT basket_id, except_notif, basket_clause FROM baskets WHERE flag_notif = 'Y'");
+            $stmt = $db->query("SELECT basket_id, basket_clause FROM baskets WHERE flag_notif = 'Y'");
 
             while ($line = $stmt->fetchObject()) {
                 $logger->write('BASKET: '.$line->basket_id.' in progess ...', 'INFO');
-                $exceptUsers[$line->basket_id] = array();
-                if ($line->except_notif != '' || $line->except_notif != null) {
-                    $arrayExceptNotif = explode(',', $line->except_notif);
-                    $exceptUsers[$line->basket_id] = $arrayExceptNotif;
-                }
+                $exceptUsers[$line->basket_id] = [];
                 $stmt2 = $db->query('SELECT group_id FROM groupbasket WHERE basket_id = ?', array($line->basket_id));
 
                 $u = 1;

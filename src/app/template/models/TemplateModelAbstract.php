@@ -41,6 +41,7 @@ abstract class TemplateModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($aArgs, ['select']);
 
         $aTemplate = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],

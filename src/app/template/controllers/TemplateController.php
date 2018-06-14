@@ -58,7 +58,7 @@ class TemplateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $template = TemplateModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $template = TemplateModel::getById(['id' => $aArgs['id']]);
         if (empty($template)) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }

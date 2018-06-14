@@ -150,7 +150,6 @@ abstract class admin_basket_Abstract extends Database
                         $_SESSION['m_admin']['basket']['color'] = functions::show_string($line->color);
                     }
                     $_SESSION['m_admin']['basket']['clause'] = functions::show_string($line->basket_clause);
-                    $_SESSION['m_admin']['basket']['is_generic'] = functions::show_string($line->is_generic);
                     $_SESSION['m_admin']['basket']['is_visible'] = functions::show_string($line->is_visible);
                     $_SESSION['m_admin']['basket']['is_folder_basket'] = functions::show_string($line->is_folder_basket);
                     $_SESSION['m_admin']['basket']['coll_id'] = functions::show_string($line->coll_id);
@@ -257,13 +256,6 @@ abstract class admin_basket_Abstract extends Database
                                     <label><?php echo _DESC; ?> : </label>
                                     <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php functions::xecho($_SESSION['m_admin']['basket']['desc']); ?></textarea>
                                 </p>
-                                <?php if ($_SESSION['m_admin']['basket']['is_generic'] == 'Y') {
-                                            ?>
-                                    <p>
-                                        <em><?php echo _SYSTEM_BASKET_MESSAGE; ?>.</em>
-                                    </p>
-                                <?php
-                                        } ?>
                                 <p>
                                     <label><?php echo _BASKET_VIEW; ?> : </label>
                                     <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php functions::xecho($_SESSION['m_admin']['basket']['clause']); ?></textarea>

@@ -67,7 +67,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 <?php
 
 $select[$_SESSION['tablename']['bask_baskets']] = array();
-array_push($select[$_SESSION['tablename']['bask_baskets']],"basket_id","basket_name" ,"basket_desc","is_generic", "enabled");
+array_push($select[$_SESSION['tablename']['bask_baskets']],"basket_id","basket_name" ,"basket_desc", "enabled");
 
 $what = "";
 $where ="";
@@ -135,12 +135,6 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='basket_desc';
             }
-            if($tab[$i][$j][$value]=="is_generic")
-            {
-                $tab[$i][$j]["is_generic"]= $tab[$i][$j]['value'];
-                $tab[$i][$j]["show"]=false;
-                $tab[$i][$j]["order"]='is_generic';
-            }
             if($tab[$i][$j][$value]=="enabled")
             {
                 $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
@@ -183,18 +177,11 @@ $_SESSION['m_admin']['basket']['desc'] = "";
 $_SESSION['m_admin']['basket']['name'] = "";
 $_SESSION['m_admin']['basket']['clause'] = "";
 $_SESSION['m_admin']['basket']['table'] ="";
-$_SESSION['m_admin']['basket']['is_generic'] ="";
 $_SESSION['m_admin']['basket']['is_visible'] ="";
 $_SESSION['m_admin']['basket']['nbdays'] ="";
 $_SESSION['m_admin']['basket']['groups'] = array();
-$_SESSION['m_admin']['non_generic_basket'] = array();
 
 $db = new Database();
-$stmt = $db->query("select basket_id, basket_name from ".$_SESSION['tablename']['bask_baskets']." where is_generic = 'N' ");
-while($line = $stmt->fetchObject())
-{
-    array_push($_SESSION['m_admin']['non_generic_basket'], array("BASKET_ID" => $line->basket_id, "BASKET_NAME" => $request->show_string($line->basket_name)));
-}
 $stmt = $db->query("select group_id from ".$_SESSION['tablename']['usergroups']." where enabled = 'Y' order by group_desc");
 
 $_SESSION['groups'] = array();
