@@ -58,7 +58,7 @@ class TemplateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $template = TemplateModel::getById(['id' => $aArgs['id']]);
+        $template = TemplateModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
         if (empty($template)) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
@@ -225,8 +225,8 @@ class TemplateController
             $data['template_file_name'] = $storeResult['file_destination_name'];
         }
 
+        TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
         if (!empty($data['entities']) && is_array($data['entities'])) {
-            TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
             foreach ($data['entities'] as $entity) {
                 TemplateAssociationModel::create(['templateId' => $aArgs['id'], 'entityId' => $entity]);
             }

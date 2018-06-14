@@ -90,7 +90,7 @@
     <id>view_history_batch</id>
     <name>_HISTORY_BATCH</name>
     <comment>_ADMIN_HISTORY_BATCH_DESC</comment>
-    <servicepage>/administration/historyBatch</servicepage>
+    <servicepage>/administration</servicepage>
     <servicetype>admin</servicetype>
     <category>supervision</category>
     <system_service>false</system_service>
