@@ -194,6 +194,12 @@ class TemplateController
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
                 }
                 $fileContent = base64_decode($data['uploadedFile']['base64']);
+                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($fileContent);
+                if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
+                    return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
+                }
+
                 $fileOnTmp = rand() . $data['uploadedFile']['name'];
                 $file = fopen(CoreConfigModel::getTmpPath() . $fileOnTmp, 'w');
                 fwrite($file, $fileContent);

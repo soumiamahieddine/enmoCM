@@ -206,13 +206,13 @@ class JnlpController
         $tmpPath = CoreConfigModel::getTmpPath();
 
         if ($data['action'] == 'editObject') {
-            if ($data['objectType'] == 'templateStyle') {
+            if ($data['objectType'] == 'templateCreation') {
                 $explodeFile = explode('.', $data['objectId']);
                 $ext = $explodeFile[count($explodeFile) - 1];
                 $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['userUniqueId']}.{$ext}";
 
                 $pathToCopy = $data['objectId'];
-            } elseif ($data['objectType'] == 'template') {
+            } elseif ($data['objectType'] == 'templateModification') {
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
                 $template = TemplateModel::getById(['id' => $data['objectId'], 'select' => ['template_path', 'template_file_name']]);
 
