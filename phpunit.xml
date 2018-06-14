@@ -24,6 +24,7 @@
             <file>core/Test/UserControllerTest.php</file>
             <file>core/Test/VersionUpdateControllerTest.php</file>
             <file>core/Test/CoreControllerTest.php</file>
+            <file>core/Test/TemplateControllerTest.php</file>
             <!--<file>modules/convert/Test/ProcessConvertTest.php</file>-->
             <!--<file>modules/convert/Test/ProcessFulltextTest.php</file>-->
             <!--<file>modules/convert/Test/ProcessManageConvertTest.php</file>-->

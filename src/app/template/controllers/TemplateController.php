@@ -59,6 +59,9 @@ class TemplateController
         }
 
         $template = TemplateModel::getById(['id' => $aArgs['id']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
 
         $rawLinkedEntities = TemplateAssociationModel::get(['select' => ['value_field'], 'where' => ['template_id = ?'], 'data' => [$template['template_id']]]);
         $linkedEntities = [];
