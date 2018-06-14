@@ -88,7 +88,8 @@ export class TemplateAdministrationComponent implements OnInit {
         setTimeout(() => {
             $j('#jstree').jstree({
                 "checkbox": {
-                    'three_state': 'down' // cascade selection
+                    three_state: false,
+                    cascade: 'down'
                 },
                 'core': {
                     'themes': {
