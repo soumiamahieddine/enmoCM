@@ -30,6 +30,8 @@ export class TemplateAdministrationComponent implements OnInit {
     datasourcesList: any;
     jnlpValue: any = {};
     buttonFileName: any = this.lang.importFile;
+    lockFound: boolean = false;
+    intervalLockFile: any;
 
     loading: boolean = false;
 
@@ -38,8 +40,8 @@ export class TemplateAdministrationComponent implements OnInit {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
-        window['angularProfileComponent'] = {
-            componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
+        window['angularTemplateComponent'] = {
+            componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content)
         };
     }
 
@@ -161,7 +163,7 @@ export class TemplateAdministrationComponent implements OnInit {
             reader.readAsDataURL(fileInput.target.files[0]);
             
             reader.onload = function (value: any) {
-                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+                window['angularTemplateComponent'].componentAfterUpload(value.target.result);
             };
         }
     }
@@ -178,14 +180,14 @@ export class TemplateAdministrationComponent implements OnInit {
 
     startJnlp() {
         if (this.creationMode) {
-            this.jnlpValue.objectType = 'templateStyle';
+            this.jnlpValue.objectType = 'templateCreation';
             for(let element of this.defaultTemplatesList){
                 if(this.template.template_style == element.fileExt + ': ' + element.fileName){
                     this.jnlpValue.objectId = element.filePath;
                 }
             }
         } else {
-            this.jnlpValue.objectType = 'template';
+            this.jnlpValue.objectType = 'templateModification';
             this.jnlpValue.objectId   = this.template.template_id;
         }
         this.jnlpValue.table    = 'templates';
@@ -196,10 +198,23 @@ export class TemplateAdministrationComponent implements OnInit {
         .subscribe((data: any) => {
             this.template.userUniqueId = data.userUniqueId;
             this.fileToImport();
-            window.location.href       = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+            window.location.href = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+            this.checkLockFile();
         }, (err) => {
             this.notify.error(err.error.errors);
         });        
+    }
+
+    checkLockFile(){
+        this.intervalLockFile = setInterval(() => {
+            this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.userUniqueId)
+            .subscribe((data: any) => {
+                this.lockFound = data.lockFileFound;
+                if(!this.lockFound){
+                    clearInterval(this.intervalLockFile);
+                }
+            });
+        }, 1000)
     }
 
     duplicateTemplate()

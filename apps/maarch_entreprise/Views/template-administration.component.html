@@ -149,8 +149,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12" style="text-align:center;">
-                            <button mat-raised-button color="primary" type="submit" [disabled]="!templatesFormUp.form.valid">{{lang.save}}</button>
-                            <button *ngIf="!creationMode" mat-raised-button color="primary" type="button" (click)="duplicateTemplate()">{{lang.duplicate}}</button>
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!templatesFormUp.form.valid || lockFound">{{lang.save}}</button>
+                            <button *ngIf="!creationMode" mat-raised-button color="primary" type="button" (click)="duplicateTemplate()" [disabled]="lockFound">{{lang.duplicate}}</button>
                         </div>
                     </div>
                 </form>
