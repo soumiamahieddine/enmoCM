@@ -16,7 +16,7 @@ before_script:
   #- apt-get install apt-utils -yqq > /dev/null
   - apt-get install cron -yqq > /dev/null
   - apt-get install vim -yqq > /dev/null
-  - crontab -e
+  - touch /etc/cron.d/maarch
   #- apt-get install tar -yqq > /dev/null
   #- apt-get install wkhtmltopdf -yqq > /dev/null
   #- apt-get install wget -yqq > /dev/null
