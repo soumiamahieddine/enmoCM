@@ -962,58 +962,67 @@ class UserController
         }
 
         $data = $request->getParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['basketId']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['groupSerialId']);
-        $check = $check && Validator::boolType()->validate($data['allowed']);
+        $check = Validator::arrayType()->notEmpty()->validate($data['baskets']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $group = GroupModel::getById(['id' => $data['groupSerialId'], 'select' => ['group_id']]);
-        $basket = BasketModel::getById(['id' => $data['basketId'], 'select' => [1]]);
-        if (empty($group) || empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
+        foreach ($data['baskets'] as $basketContainer) {
+            $check = Validator::stringType()->notEmpty()->validate($basketContainer['basketId']);
+            $check = $check && Validator::intVal()->notEmpty()->validate($basketContainer['groupSerialId']);
+            $check = $check && Validator::boolType()->validate($basketContainer['allowed']);
+            if (!$check) {
+                return $response->withStatus(400)->withJson(['errors' => 'Element is missing']);
+            }
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['id'] == $data['groupSerialId']) {
-                $groupFound = true;
+        foreach ($data['baskets'] as $basketContainer) {
+            $group = GroupModel::getById(['id' => $basketContainer['groupSerialId'], 'select' => ['group_id']]);
+            $basket = BasketModel::getById(['id' => $basketContainer['basketId'], 'select' => [1]]);
+            if (empty($group) || empty($basket)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
             }
-        }
-        if (!$groupFound) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
-        }
-        $groups = GroupBasketModel::get(['where' => ['basket_id = ?'], 'data' => [$data['basketId']]]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['group_id'] == $group['group_id']) {
-                $groupFound = true;
-            }
-        }
-        if (!$groupFound) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
-        }
 
-        if ($data['allowed']) {
-            $preference = UserBasketPreferenceModel::get([
-                'select'    => [1],
-                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
-                'data'      => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
-            ]);
-            if (!empty($preference)) {
-                return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
+            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+            $groups = UserModel::getGroupsByUserId(['userId' => $user['user_id']]);
+            $groupFound = false;
+            foreach ($groups as $value) {
+                if ($value['id'] == $basketContainer['groupSerialId']) {
+                    $groupFound = true;
+                }
             }
-            $data['userSerialId'] = $aArgs['id'];
-            $data['display'] = 'true';
-            UserBasketPreferenceModel::create($data);
-        } else {
-            UserBasketPreferenceModel::delete([
-                'where' => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
-                'data'  => [$aArgs['id'], $data['groupSerialId'], $data['basketId']]
-            ]);
+            if (!$groupFound) {
+                return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
+            }
+            $groups = GroupBasketModel::get(['where' => ['basket_id = ?'], 'data' => [$basketContainer['basketId']]]);
+            $groupFound = false;
+            foreach ($groups as $value) {
+                if ($value['group_id'] == $group['group_id']) {
+                    $groupFound = true;
+                }
+            }
+            if (!$groupFound) {
+                return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this basket']);
+            }
+
+            if ($basketContainer['allowed']) {
+                $preference = UserBasketPreferenceModel::get([
+                    'select'    => [1],
+                    'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                    'data'      => [$aArgs['id'], $basketContainer['groupSerialId'], $basketContainer['basketId']]
+                ]);
+                if (!empty($preference)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Preference already exists']);
+                }
+                $basketContainer['userSerialId'] = $aArgs['id'];
+                $basketContainer['display'] = 'true';
+                UserBasketPreferenceModel::create($basketContainer);
+            } else {
+                UserBasketPreferenceModel::delete([
+                    'where' => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                    'data'  => [$aArgs['id'], $basketContainer['groupSerialId'], $basketContainer['basketId']]
+                ]);
+            }
         }
 
         return $response->withJson(['success' => 'success']);
