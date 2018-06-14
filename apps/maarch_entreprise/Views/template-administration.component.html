@@ -82,8 +82,7 @@
                             <div class="col-sm-5" style="overflow:hidden">
                                 <div class="form-group">
                                     <div class="col-sm-12" style="text-align:center;">
-                                        <button mat-raised-button color="primary" type="button" (click)="clickOnUploader('uploadSignFile')"><i class="fa fa-paperclip fa-2x"></i> {{lang.importFile}}</button>
-                                        <div *ngIf="template.uploadedFile"><h5>Fichier importé</h5></div>
+                                        <button mat-raised-button color="primary" type="button" (click)="clickOnUploader('uploadSignFile')"><i class="fa fa-paperclip fa-2x"></i> {{buttonFileName}}</button>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -94,18 +93,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2" style="margin-top: 10px">
+                            <div class="col-sm-2" style="margin-top: 10px" *ngIf="creationMode || (!creationMode && !template.uploadedFile)">
                                 - ou -
                             </div>
                             <div class="col-sm-5">
                                 <mat-form-field *ngIf="creationMode || template.template_style">
-                                    <mat-select id="template_style" [disabled]="!creationMode" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.defaultTemplate}}" [(ngModel)]="template.template_style">
+                                    <mat-select id="template_style" [disabled]="!creationMode" name="template_style" title="{{lang.defaultTemplate}}" placeholder="{{lang.defaultTemplate}}" [(ngModel)]="template.template_style" (ngModelChange)="resetFileUploaded()">
                                         <mat-option *ngFor="let default of defaultTemplatesList" value="{{default.fileExt}}: {{default.fileName}}">
                                             {{default.fileExt}}: {{default.fileName}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <div class="col-sm-12" (click)="startJnlp()" *ngIf="(creationMode && template.template_style) || !creationMode" style="text-align: center">
+                                <div class="col-sm-12" (click)="startJnlp()" *ngIf="(creationMode && template.template_style) || (!creationMode && !template.uploadedFile)" style="text-align: center">
                                     <button mat-raised-button color="primary" type="button"><i class="fas fa-pencil-alt fa-2x"></i> {{lang.templateEdition}}</button>
                                 </div>
                             </div>

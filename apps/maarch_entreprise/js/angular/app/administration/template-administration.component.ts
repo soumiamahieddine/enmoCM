@@ -29,6 +29,7 @@ export class TemplateAdministrationComponent implements OnInit {
     attachmentTypesList: any;
     datasourcesList: any;
     jnlpValue: any = {};
+    buttonFileName: any = this.lang.importFile;
 
     loading: boolean = false;
 
@@ -171,6 +172,7 @@ export class TemplateAdministrationComponent implements OnInit {
     resfreshUpload(b64Content: any) {
         this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
         this.template.template_style = null;
+        this.fileImported();
     }
 
     startJnlp() {
@@ -192,7 +194,7 @@ export class TemplateAdministrationComponent implements OnInit {
         this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
         .subscribe((data: any) => {
             this.template.userUniqueId = data.userUniqueId;
-            this.template.uploadedFile = null;
+            this.fileToImport();
             window.location.href       = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
         }, (err) => {
             this.notify.error(err.error.errors);
@@ -262,5 +264,21 @@ export class TemplateAdministrationComponent implements OnInit {
         } else if (this.template.template_target=='notes') {
             this.template.template_type='TXT';
         }
+    }
+
+    fileImported()
+    {
+        this.buttonFileName = this.template.uploadedFile.name;
+    }
+    
+    fileToImport()
+    {
+        this.buttonFileName = this.lang.importFile;
+    }
+
+    resetFileUploaded()
+    {
+        this.fileToImport();
+        this.template.uploadedFile = null;
     }
 }
