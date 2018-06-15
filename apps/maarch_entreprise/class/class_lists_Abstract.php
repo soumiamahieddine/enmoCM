@@ -3037,7 +3037,7 @@ abstract class lists_Abstract extends Database
     {
         $actionsList = '';
         $actionsList .= ' <p align="center">';
-        if (count($this->params['actions']) > 0) {
+        if (!empty($this->params['actions']) && is_array($this->params['actions']) && count($this->params['actions']) > 0) {
             $actionsList .= ' <b>'._ACTIONS.' :</b>';
             $actionsList .= ' <select name="action" id="action">';
             $actionsList .= ' <option value="">'._CHOOSE_ACTION.'</option>';
@@ -3204,6 +3204,9 @@ abstract class lists_Abstract extends Database
     protected function _checkTypeOfActionIcon($actionButtons, $type)
     {
         $isThisType = false;
+        if (empty($actionButtons) || !is_array($actionButtons)) {
+            return false;
+        }
         for ($button = 0; $button < count($actionButtons); ++$button) {
             if ($actionButtons[$button]['type'] == $type) {
                 $isThisType = true;
@@ -3614,12 +3617,10 @@ abstract class lists_Abstract extends Database
         if (count($resultArray) > 0 || $this->params['bool_showAddButton']) {
             //Need a form?
             $this->withForm = false;
-            if (
-                $this->params['bool_checkBox'] === true ||
-                $this->params['bool_radioButton'] === true ||
-                count($parameters['actions'] > 0) ||
-                count($parameters['buttons'] > 0) ||
-                !empty($parameters['defaultAction'])
+            if ($this->params['bool_checkBox'] === true || $this->params['bool_radioButton'] === true ||
+                (!empty($parameters['actions']) && is_array($parameters['actions']) && count($parameters['actions'] > 0)) ||
+                (!empty($parameters['buttons']) && is_array($parameters['buttons']) && count($parameters['buttons'] > 0))
+                || !empty($parameters['defaultAction'])
                 ) {
                 //Need a form!
                 $this->withForm = true;

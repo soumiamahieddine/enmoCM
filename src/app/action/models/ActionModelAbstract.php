@@ -112,12 +112,14 @@ abstract class ActionModelAbstract
 
         $tab['action_id'] = $aArgs['id'];
 
-        for ($i=0; $i < count($aArgs['actionCategories']); $i++) {
-            $tab['category_id'] = $aArgs['actionCategories'][$i];
-            DatabaseModel::insert([
-                'table'         => 'actions_categories',
-                'columnsValues' => $tab
-            ]);
+        if (!empty($aArgs['actionCategories'])) {
+            foreach ($aArgs['actionCategories'] as $actionCategory) {
+                $tab['category_id'] = $actionCategory;
+                DatabaseModel::insert([
+                    'table'         => 'actions_categories',
+                    'columnsValues' => $tab
+                ]);
+            }
         }
 
         return true;

@@ -100,8 +100,8 @@ class history
         $databasetype,
         $id_module = 'admin',
         $isTech = false,
-        $result = _OK,
-        $level = _LEVEL_DEBUG,
+        $result = 'ok',
+        $level = 'DEBUG',
         $user = ''
     ) {
         $db = new Database();
@@ -361,7 +361,7 @@ class history
 
         switch ($level) {
 
-            case _LEVEL_DEBUG:
+            case 'DEBUG':
                 $logger->debug(
                     $logLine
                 );

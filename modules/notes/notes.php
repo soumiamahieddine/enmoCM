@@ -287,7 +287,7 @@ if (isset($_REQUEST['load'])) {
                                     . "index.php?display=true&module=notes&page=notes_ajax_content"
                                     . "&mode=add&identifier=".$identifier."&origin=".$origin
                                     . $parameters."')",
-            "icon"          =>  'pencil',
+            "icon"          =>  'pencil-alt',
             "tooltip"       =>  _ADD_NOTE,
             "alwaysVisible" =>  true
             );
@@ -302,7 +302,7 @@ if (isset($_REQUEST['load'])) {
                                 ."&mode=up&id=@@id@@&identifier=".$identifier."&origin=".$origin
                                 . $parameters."');",
         "class"         =>  "read",
-        "icon"          =>  "pencil",
+        "icon"          =>  "pencil-alt",
         // "label"         =>  _UPDATE.'/'._DELETE,
         "tooltip"       =>  _UPDATE.'/'._DELETION,
         "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."'"

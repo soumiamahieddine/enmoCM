@@ -576,7 +576,7 @@ $_ENV['categories']['ged_doc']['subject'] = array(
 $_ENV['categories']['ged_doc']['type_contact'] = array(
     'type_form' => 'radio',
     'mandatory' => true,
-    'label' => _AUTHOR_TYPE,
+    'label' => 'type de contact',
     'table' => 'none',
     'values' => array(
         'internal',

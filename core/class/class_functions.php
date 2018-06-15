@@ -935,9 +935,11 @@ class functions
                 $to_del = array("\t", "\n", "&#0A;", "&#0D;", "\r");
                 $string = str_replace($to_del, ' ', $string);
             }
-            for($i=0;$i<count($chars_to_escape);$i++)
-            {
-                $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
+            if (!empty($chars_to_escape) && is_array($chars_to_escape)) {
+                for($i=0;$i<count($chars_to_escape);$i++)
+                {
+                    $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
+                }
             }
 
             if ($escape_quote) {
