@@ -63,10 +63,9 @@ class NotificationScheduleControllerTest extends TestCase
         $responseBody = json_decode((string) $response->getBody());
 
         // CREATE FAIL
-        $aArgs = [];
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 3).'/';
+        $corePath = dirname(__FILE__, 2).'/';
         $newCrontab = [
             'm' => 12,
             'h' => 23,
@@ -88,10 +87,9 @@ class NotificationScheduleControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [];
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 3).'/';
+        $corePath = dirname(__FILE__, 2).'/';
         $newCrontab = [
             'm' => 12,
             'h' => 23,
@@ -138,10 +136,9 @@ class NotificationScheduleControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [];
         $aArgs = $responseBody->crontab;
 
-        $corePath = dirname(__FILE__, 3).'/';
+        $corePath = dirname(__FILE__, 2).'/';
 
         $aArgs[count($aArgs) - 1] = [
             'm' => 35,
@@ -181,11 +178,10 @@ class NotificationScheduleControllerTest extends TestCase
         $response = $NotificationScheduleController->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string) $response->getBody());
 
-        $aArgs = [];
         $aArgs = $responseBody->crontab;
 
         foreach ($aArgs as $id => $value) {
-            if ($value->cmd == dirname(__FILE__, 3).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
+            if ($value->cmd == dirname(__FILE__, 2).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
                 $aArgs[$id]->state = 'hidden';
             }
         }
@@ -200,11 +196,10 @@ class NotificationScheduleControllerTest extends TestCase
         $this->assertSame('Problem with crontab', $responseBodyFail->errors);
 
         // DELETE
-        $aArgs = [];
         $aArgs = $responseBody->crontab;
 
         foreach ($aArgs as $id => $value) {
-            if ($value->cmd == dirname(__FILE__, 3).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
+            if ($value->cmd == dirname(__FILE__, 2).'/'.'modules/notifications/batch/scripts/notification_testtu.sh') {
                 $aArgs[$id]->state = 'deleted';
             }
         }
