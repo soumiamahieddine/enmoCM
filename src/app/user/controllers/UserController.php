@@ -40,6 +40,8 @@ use User\models\UserSignatureModel;
 
 class UserController
 {
+    const ALTERNATIVES_CONNECTIONS_METHODS = ['sso', 'cas', 'ldap', 'ozwillo'];
+
     public function get(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -109,6 +111,12 @@ class UserController
         $user['allEntities'] = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['history'] = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
+        $user['canModifyPassword'] = true;
+
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
+            $user['canModifyPassword'] = false;
+        }
 
         return $response->withJson($user);
     }
@@ -246,7 +254,7 @@ class UserController
         $user['canModifyPassword'] = true;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if ($loggingMethod['id'] == 'ozwillo') {
+        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
             $user['canModifyPassword'] = false;
         }
 

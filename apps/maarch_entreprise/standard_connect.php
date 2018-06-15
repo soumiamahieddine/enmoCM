@@ -10,73 +10,7 @@ function getHeaders()
     return $headers;
 }
 
-if ($restMode) {
-    $userLogin = [];
-    $http_header = getHeaders();
-    //HTTP AUTH
-    if (
-        (isset($_SERVER["PHP_AUTH_USER"])
-            && isset($_SERVER["PHP_AUTH_PW"])
-            && isset($_SERVER["HTTP_AUTHORIZATION"])
-        )
-        && $_SERVER["PHP_AUTH_USER"] && $_SERVER["PHP_AUTH_PW"]
-        && preg_match("/^Basic /", $_SERVER["HTTP_AUTHORIZATION"])
-    ) {
-        list($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])
-            = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
-    } elseif (isset($http_header['LOGIN']) && isset($http_header['PASSWORD'])) {
-        $force_login = $http_header['LOGIN'];
-        $force_psw = $http_header['PASSWORD'];
-    } elseif(!isset($_SERVER["PHP_AUTH_USER"])) {
-        header("WWW-Authenticate: Basic realm=\"Maarch WebServer Engine\"");
-        if (preg_match("/Microsoft/", $_SERVER["SERVER_SOFTWARE"])) {
-            header("Status: 401 Unauthorized");
-            exit();
-        } else {
-            header("HTTP/1.0 401 Unauthorized");
-            exit();
-        }
-    }
-    if (
-        (isset($_SERVER["PHP_AUTH_USER"])
-            && isset($_SERVER["PHP_AUTH_PW"])
-        )
-        && ($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"])
-    ) {
-        $_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
-        $password = $_SERVER["PHP_AUTH_PW"];
-    }
-
-    else if (isset($force_login) && isset($force_psw)){
-        $_SESSION['user']['UserId'] = $force_login;
-        $password = $force_psw;
-    }
-
-    $userLogin['user'] = $_SESSION['user']['UserId'];
-    $userLogin['password'] = $password;
-
-    require_once 'core/class/class_security.php';
-    $sec = new security();
-    $_SESSION['error'] = '';
-    $res = $sec->login($userLogin['user'], $userLogin['password'], 'restMode');
-    //var_dump($res);
-    $_SESSION['user'] = $res['user'];
-    if (!empty($res['error'])) {
-        $_SESSION['error'] = $res['error'];
-    } else {
-        require_once('core/class/class_history.php');
-        $trace = new history();
-        $trace->add(
-            "users",
-            $userLogin['user'],
-            "LOGIN",
-            _CONNECTION_STANDARD_OK,
-            $_SESSION['config']['databasetype'],
-            "ADMIN",
-            false
-        );
-    }
-} elseif (isset($_REQUEST['askRACode']) && $_REQUEST['askRACode'] == 'true') {
+if (isset($_REQUEST['askRACode']) && $_REQUEST['askRACode'] == 'true') {
     echo '<div>';
         echo '<p>';
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<br /><br /><br /><br /><br /><br />';
@@ -97,8 +31,7 @@ if ($restMode) {
             
         echo '</p>';
     echo '</div>';
-}
-elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 'true') {
+} elseif (isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 'true') {
     //generation du remote_access_code aléatoirement
     $authorized_characters = '123456789';
     $cpt_motDePasse = 1;
@@ -163,8 +96,7 @@ elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 
     echo '<a href="';
     echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=login';
     echo '">' . _CONFIRM_ASK_RA_CODE_8 . '</a>';
-}
-else {
+} else {
     $userId = '';
 echo '<form id="formlogin" method="post" action="'
     . $_SESSION['config']['businessappurl']

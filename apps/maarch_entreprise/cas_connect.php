@@ -106,40 +106,18 @@ $_SESSION['web_cas_url'] = $protocol. $cas_serveur . $cas_context .'/logout';
 
 /**** CONNECTION A MAARCH ****/
 $trace = new history();
-if ($restMode) {
-    $security = new security();
-    $_SESSION['error'] = '';
-    $res  = $security->login($userId, $loginArray['password'], 'restMode');
+header("location: log.php");
 
-    $_SESSION['user'] = $res['user'];
-    if (!empty($res['error'])) {
-        $_SESSION['error'] = $res['error'];
-    }
+//Traces fonctionnelles
+$trace->add(
+    "users",
+    $userId,
+    "LOGIN",
+    "userlogin",
+    _CONNECTION_CAS_OK,
+    $_SESSION['config']['databasetype'],
+    "ADMIN",
+    false
+);
 
-    //Traces fonctionnelles
-    $trace->add(
-        "users",
-        $loginArray['UserId'],
-        "LOGIN",
-        _CONNECTION_CAS_OK,
-        $_SESSION['config']['databasetype'],
-        "ADMIN",
-        false
-    );
-} else {
-    header("location: log.php");
-
-    //Traces fonctionnelles
-    $trace->add(
-        "users",
-        $userId,
-        "LOGIN",
-        "userlogin",
-        _CONNECTION_CAS_OK,
-        $_SESSION['config']['databasetype'],
-        "ADMIN",
-        false
-    );
-
-    exit();
-}
+exit();

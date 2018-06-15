@@ -25,7 +25,7 @@
                         {{lang.activateMyAbs}}
                     </p>
                 </a>
-                <a mat-list-item (click)="changePasswd();">
+                <a *ngIf="user.canModifyPassword" mat-list-item (click)="changePasswd();">
                     <mat-icon color="primary" mat-list-icon class="fa fa-key"></mat-icon>
                     <p mat-line>
                         {{lang.changeMyPassword}}
