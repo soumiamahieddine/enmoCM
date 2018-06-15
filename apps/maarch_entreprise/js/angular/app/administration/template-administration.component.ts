@@ -29,6 +29,7 @@ export class TemplateAdministrationComponent implements OnInit {
     attachmentTypesList: any;
     datasourcesList: any;
     jnlpValue: any = {};
+    extensionModels:any[] = [];
     buttonFileName: any = this.lang.importFile;
     lockFound: boolean = false;
     intervalLockFile: any;
@@ -75,6 +76,15 @@ export class TemplateAdministrationComponent implements OnInit {
                         if(this.template.template_type=='HTML'){
                             this.initMce();
                         }
+                        if (this.template.template_style == '') {
+                            this.buttonFileName = this.template.template_file_name;
+                        } else {
+                            this.buttonFileName = this.template.template_style;
+                        }
+
+                        if (this.template.template_style == '') {
+                            this.template.template_style = 'uploadFile';
+                        }
                     });
             }
             if(!this.template.template_attachment_type){
@@ -84,7 +94,14 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     setInitialValue(data:any){
+        this.extensionModels = [];
+        data.templatesModels.forEach((model: any) => {
+            if (this.extensionModels.indexOf(model.fileExt) == -1) {
+                this.extensionModels.push(model.fileExt);
+            } 
+        });
         this.defaultTemplatesList = data.templatesModels;
+
         this.attachmentTypesList  = data.attachmentTypes;
         this.datasourcesList      = data.datasources;
         setTimeout(() => {
@@ -126,7 +143,8 @@ export class TemplateAdministrationComponent implements OnInit {
                 language_url: "tools/tinymce/langs/fr_FR.js",
                 height: "200",
                 plugins: [
-                    "textcolor"
+                    "textcolor",
+                    "autoresize"
                 ],
                 external_plugins: {
                     'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
@@ -174,7 +192,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
     resfreshUpload(b64Content: any) {
         this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
-        this.template.template_style = null;
+        this.template.template_style = 'uploadFile';
         this.fileImported();
     }
 
@@ -237,7 +255,7 @@ export class TemplateAdministrationComponent implements OnInit {
         if(this.template.template_target!='notifications'){
             this.template.template_datasource=='letterbox_attachment';
         }
-        if(this.creationMode && this.template.template_style && !this.template.userUniqueId){
+        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId){
             alert(this.lang.editModelFirst);
             return;
         }
@@ -245,6 +263,9 @@ export class TemplateAdministrationComponent implements OnInit {
             this.template.template_content = tinymce.get('templateHtml').getContent();
         }
         if (this.creationMode) {
+            if (this.template.template_style == 'uploadFile') {
+                this.template.template_style = '';
+            }
             this.http.post(this.coreUrl + 'rest/templates', this.template)
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);
@@ -253,6 +274,9 @@ export class TemplateAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
+            if (this.template.template_style == 'uploadFile') {
+                this.template.template_style = '';
+            }
             this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);

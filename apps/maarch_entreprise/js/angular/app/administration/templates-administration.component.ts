@@ -25,7 +25,7 @@ export class TemplatesAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['template_label', 'template_comment', 'template_type', 'actions'];
+    displayedColumns = ['template_label', 'template_comment', 'template_type', 'template_target', 'actions'];
     dataSource = new MatTableDataSource(this.templates);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
