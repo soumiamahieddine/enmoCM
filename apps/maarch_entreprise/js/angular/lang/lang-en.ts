@@ -546,6 +546,7 @@ export const LANG_EN = {
     "confirmDuplicate"                  : "Do you really want to duplicate this template ?",
     "noDatasource"                      : "No datasources",
     "templateDuplicated"                : "Template duplicated",
+    "modelUpdated"                      : "Model updated",
     "importFile"                        : "Import a file",
     "allAttachments"                    : "All attachments",
     "editModelFirst"                    : "Please edit model first"

@@ -229,6 +229,7 @@ export class TemplateAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.lockFound = data.lockFileFound;
                 if(!this.lockFound){
+                    this.notify.success(this.lang.modelUpdated);
                     clearInterval(this.intervalLockFile);
                 }
             });
@@ -255,7 +256,7 @@ export class TemplateAdministrationComponent implements OnInit {
         if(this.template.template_target!='notifications'){
             this.template.template_datasource=='letterbox_attachment';
         }
-        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId){
+        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId && this.template.target == 'OFFICE'){
             alert(this.lang.editModelFirst);
             return;
         }
