@@ -488,7 +488,7 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
             this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"baskets" :basketsDisable})
             .subscribe((data: any) => {
                 this.selectionBaskets.clear();
-                this.notify.success(this.lang.basketUpdated);
+                this.notify.success(this.lang.basketsUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

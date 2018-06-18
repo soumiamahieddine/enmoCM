@@ -72,6 +72,7 @@ export const LANG_FR = {
     "basketsOrder"                      : "Gérer l'ordre des bannettes",
     "basketsRedirected"                 : "Bannettes redirigées à un autre utilisateur",
     "basketUpdated"                     : "Bannette modifiée",
+    "basketsUpdated"                    : "Bannette(s) modifiée(s)",
     "browsing"                          : "Navigation",
     "calDays"                           : "jour(s) calendaire(s)",
     "canBeModified"                     : "Modification des index",

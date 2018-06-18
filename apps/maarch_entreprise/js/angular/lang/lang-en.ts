@@ -62,6 +62,7 @@ export const LANG_EN = {
     "basketsOrder"                      : "Manage baskets order",
     "basketsRedirected"                 : "Redirected baskets",
     "basketUpdated"                     : "Basket updated",
+    "basketsUpdated"                    : "Basket(s) updated",
     "browsing"                          : "Browsing",
     "calDays"                           : "calendar days",
     "canBeModified"                     : "Index modification",
