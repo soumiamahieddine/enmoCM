@@ -168,6 +168,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     uploadFileTrigger(fileInput: any) {
+        this.template.userUniqueId = null;
         if (fileInput.target.files && fileInput.target.files[0]) {
             this.template.uploadedFile = {};
             this.template.uploadedFile.name = fileInput.target.files[0].name;

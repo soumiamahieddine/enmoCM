@@ -124,8 +124,8 @@
                                         </ng-container>
                                     </mat-select>
                                 </mat-form-field>
-                                <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();startJnlp()" *ngIf="((creationMode && template.template_style != 'uploadFile' && template.template_style) || (!creationMode && !template.uploadedFile))" [disabled]="lockFound">{{lang.templateEdition}}</button>
-                                <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();clickOnUploader('uploadSignFile')" *ngIf="((creationMode && template.template_style && template.template_style == 'uploadFile') || (!creationMode && !template.uploadedFile))">{{lang.importFile}}</button>        
+                                <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();startJnlp()" *ngIf="((creationMode && template.template_style != 'uploadFile' && template.template_style) || (!creationMode))" [disabled]="lockFound">{{lang.templateEdition}}</button>
+                                <button mat-raised-button color="default" type="button" (click)="$event.stopPropagation();clickOnUploader('uploadSignFile')" *ngIf="((creationMode && template.template_style && template.template_style == 'uploadFile') || (!creationMode))" [disabled]="lockFound">{{lang.importFile}}</button>        
                             </div>
 
                         </div>
