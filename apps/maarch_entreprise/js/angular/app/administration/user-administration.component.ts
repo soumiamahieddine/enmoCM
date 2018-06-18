@@ -484,13 +484,16 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
                 basketsDisable.push({"basketId" : elem.basket_id, "groupSerialId":elem.groupSerialId, "allowed":state});
             }
         });
-        this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"baskets" :basketsDisable})
-        .subscribe((data: any) => {
-            this.selectionBaskets.clear();
-            this.notify.success(this.lang.basketUpdated);
-        }, (err) => {
-            this.notify.error(err.error.errors);
-        });
+        if (basketsDisable.length > 0) {
+            this.http.put(this.coreUrl + "rest/users/" + this.serialId + "/baskets", {"baskets" :basketsDisable})
+            .subscribe((data: any) => {
+                this.selectionBaskets.clear();
+                this.notify.success(this.lang.basketUpdated);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+        }
+        
     }
 
     activateAbsence() {
