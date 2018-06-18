@@ -48,15 +48,15 @@
                     </ng-container>
                     <ng-container matColumnDef="template_comment">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:2;"> {{element.template_comment}} </mat-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.template_comment}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_target">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_type">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" style="flex:1;"> {{element.template_type}} </mat-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{element.template_type}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
