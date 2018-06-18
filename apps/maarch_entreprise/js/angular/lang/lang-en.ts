@@ -62,6 +62,7 @@ export const LANG_EN = {
     "basketsOrder"                      : "Manage baskets order",
     "basketsRedirected"                 : "Redirected baskets",
     "basketUpdated"                     : "Basket updated",
+    "basketsUpdated"                    : "Basket(s) updated",
     "browsing"                          : "Browsing",
     "calDays"                           : "calendar days",
     "canBeModified"                     : "Index modification",
@@ -73,8 +74,10 @@ export const LANG_EN = {
     "chooseCategoryAssociation"         : "Choose one or some associatedd categories",
     "chooseDefaultAction"               : "Choose main action",
     "chooseEntity"                      : "Choose a entity",
+    "chooseEntityAssociationModel"      : "Choose entities to link for this model",
     "chooseGroup"                       : "Choose a group",
     "chooseRedirectGroup"               : "Choose another group",
+    "chosenModel"                       : "Chosen model",
     "chronoNumber"                      : "Chrono number",
     "chrono"                            : "Chrono",
     "city"                              : "City",
@@ -543,6 +546,10 @@ export const LANG_EN = {
     "duplicate"                         : "Duplicate",
     "confirmDuplicate"                  : "Do you really want to duplicate this template ?",
     "noDatasource"                      : "No datasources",
-    "templateDuplicated"                : "Template duplicated"
+    "templateDuplicated"                : "Template duplicated",
+    "modelUpdated"                      : "Model updated",
+    "importFile"                        : "Import a file",
+    "allAttachments"                    : "All attachments",
+    "editModelFirst"                    : "Please edit model first"
 
 };

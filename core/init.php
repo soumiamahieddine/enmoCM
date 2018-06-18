@@ -153,7 +153,7 @@ function maarchFilesWhiteList($directory, $isCustom = false, $recursive = true, 
 }
 
 
-if ((!isset($_SESSION['maarchFilesWhiteList']) && count($_SESSION['maarchFilesWhiteList']) == 0) || $_SESSION['maarchFilesWhiteListTurn'] == 1 ) {
+if (!isset($_SESSION['maarchFilesWhiteList']) || $_SESSION['maarchFilesWhiteListTurn'] == 1 ) {
     $isCustom = false;
     if (
         is_dir('custom/' . $_SESSION['custom_override_id']) 

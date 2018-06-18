@@ -1,39 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <METHOD>
-        <ID>activex</ID>
-        <NAME>_ACTIVEX_LOGIN</NAME>
-        <SCRIPT>auto_connect_activex.php</SCRIPT>
-        <ENABLED>false</ENABLED>
-    </METHOD>
-    <METHOD>
         <ID>standard</ID>
         <NAME>_STANDARD_LOGIN</NAME>
         <SCRIPT>standard_connect.php</SCRIPT>
         <ENABLED>true</ENABLED>
     </METHOD>
-    <METHOD>
-        <ID>restMode</ID>
-        <NAME>_SERVICE_REST_LOGIN</NAME>
-        <SCRIPT>standard_connect.php</SCRIPT>
-        <ENABLED>true</ENABLED>
-    </METHOD>
-    <!--<METHOD>
-        <ID>sso</ID>
-        <NAME>_SSO_LOGIN</NAME>
-        <SCRIPT>sso_connect.php</SCRIPT>
-        <ENABLED>true</ENABLED>
-    </METHOD>-->
-<!--     <METHOD>
-        <ID>cas</ID>
-        <NAME>_CAS_LOGIN</NAME>
-        <SCRIPT>cas_connect.php</SCRIPT>
-        <ENABLED>true</ENABLED>
-    </METHOD> -->
     <!--<METHOD>-->
-    <!--<ID>ozwillo</ID>-->
-    <!--<NAME>Ozwillo</NAME>-->
-    <!--<SCRIPT>ozwilloConnect.php</SCRIPT>-->
-    <!--<ENABLED>true</ENABLED>-->
+        <!--<ID>sso</ID>-->
+        <!--<NAME>_SSO_LOGIN</NAME>-->
+        <!--<SCRIPT>sso_connect.php</SCRIPT>-->
+        <!--<ENABLED>true</ENABLED>-->
+    <!--</METHOD>-->
+    <!--<METHOD>-->
+        <!--<ID>cas</ID>-->
+        <!--<NAME>_CAS_LOGIN</NAME>-->
+        <!--<SCRIPT>cas_connect.php</SCRIPT>-->
+        <!--<ENABLED>true</ENABLED>-->
+    <!--</METHOD>-->
+    <!--<METHOD>-->
+        <!--<ID>ozwillo</ID>-->
+        <!--<NAME>Ozwillo</NAME>-->
+        <!--<SCRIPT>ozwilloConnect.php</SCRIPT>-->
+        <!--<ENABLED>true</ENABLED>-->
     <!--</METHOD>-->
 </ROOT>

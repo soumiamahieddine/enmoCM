@@ -21,7 +21,7 @@ class httpRequestCustom
         $json = json_encode($aArgs);
                
         $stream = fopen('php://memory', 'r+');
-        fputs($stream, $json);        
+        fputs($stream, $json);
         rewind($stream);
         $httpStream = new \Slim\Http\Stream($stream);
         $request = $request->withBody($httpStream);

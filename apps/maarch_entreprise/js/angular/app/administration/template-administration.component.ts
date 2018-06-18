@@ -29,6 +29,10 @@ export class TemplateAdministrationComponent implements OnInit {
     attachmentTypesList: any;
     datasourcesList: any;
     jnlpValue: any = {};
+    extensionModels:any[] = [];
+    buttonFileName: any = this.lang.importFile;
+    lockFound: boolean = false;
+    intervalLockFile: any;
 
     loading: boolean = false;
 
@@ -37,8 +41,8 @@ export class TemplateAdministrationComponent implements OnInit {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
-        window['angularProfileComponent'] = {
-            componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content),
+        window['angularTemplateComponent'] = {
+            componentAfterUpload: (base64Content: any) => this.processAfterUpload(base64Content)
         };
     }
 
@@ -72,6 +76,15 @@ export class TemplateAdministrationComponent implements OnInit {
                         if(this.template.template_type=='HTML'){
                             this.initMce();
                         }
+                        if (this.template.template_style == '') {
+                            this.buttonFileName = this.template.template_file_name;
+                        } else {
+                            this.buttonFileName = this.template.template_style;
+                        }
+
+                        if (this.template.template_style == '') {
+                            this.template.template_style = 'uploadFile';
+                        }
                     });
             }
             if(!this.template.template_attachment_type){
@@ -81,13 +94,21 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     setInitialValue(data:any){
+        this.extensionModels = [];
+        data.templatesModels.forEach((model: any) => {
+            if (this.extensionModels.indexOf(model.fileExt) == -1) {
+                this.extensionModels.push(model.fileExt);
+            } 
+        });
         this.defaultTemplatesList = data.templatesModels;
+
         this.attachmentTypesList  = data.attachmentTypes;
         this.datasourcesList      = data.datasources;
         setTimeout(() => {
             $j('#jstree').jstree({
                 "checkbox": {
-                    'three_state': 'down' // cascade selection
+                    three_state: false,
+                    cascade: 'down'
                 },
                 'core': {
                     'themes': {
@@ -122,7 +143,8 @@ export class TemplateAdministrationComponent implements OnInit {
                 language_url: "tools/tinymce/langs/fr_FR.js",
                 height: "200",
                 plugins: [
-                    "textcolor"
+                    "textcolor",
+                    "autoresize"
                 ],
                 external_plugins: {
                     'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
@@ -146,6 +168,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     uploadFileTrigger(fileInput: any) {
+        this.template.userUniqueId = null;
         if (fileInput.target.files && fileInput.target.files[0]) {
             this.template.uploadedFile = {};
             this.template.uploadedFile.name = fileInput.target.files[0].name;
@@ -159,7 +182,7 @@ export class TemplateAdministrationComponent implements OnInit {
             reader.readAsDataURL(fileInput.target.files[0]);
             
             reader.onload = function (value: any) {
-                window['angularProfileComponent'].componentAfterUpload(value.target.result);
+                window['angularTemplateComponent'].componentAfterUpload(value.target.result);
             };
         }
     }
@@ -170,31 +193,47 @@ export class TemplateAdministrationComponent implements OnInit {
 
     resfreshUpload(b64Content: any) {
         this.template.uploadedFile.base64 = b64Content.replace(/^data:.*?;base64,/, "");
-        this.template.uploadedFile.base64ForJs = b64Content;
+        this.template.template_style = 'uploadFile';
+        this.fileImported();
     }
 
     startJnlp() {
         if (this.creationMode) {
-            this.jnlpValue.objectType = 'templateStyle';
+            this.jnlpValue.objectType = 'templateCreation';
             for(let element of this.defaultTemplatesList){
                 if(this.template.template_style == element.fileExt + ': ' + element.fileName){
                     this.jnlpValue.objectId = element.filePath;
                 }
             }
         } else {
-            this.jnlpValue.objectType = 'template';
-            this.jnlpValue.objectId   = this.template.template_style;
+            this.jnlpValue.objectType = 'templateModification';
+            this.jnlpValue.objectId   = this.template.template_id;
         }
         this.jnlpValue.table    = 'templates';
         this.jnlpValue.uniqueId = 0;
+        this.jnlpValue.cookies = document.cookie;
 
         this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
         .subscribe((data: any) => {
             this.template.userUniqueId = data.userUniqueId;
-            window.location.href       = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+            this.fileToImport();
+            window.location.href = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+            this.checkLockFile();
         }, (err) => {
             this.notify.error(err.error.errors);
         });        
+    }
+
+    checkLockFile(){
+        this.intervalLockFile = setInterval(() => {
+            this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.userUniqueId)
+            .subscribe((data: any) => {
+                this.lockFound = data.lockFileFound;
+                if(!this.lockFound){
+                    clearInterval(this.intervalLockFile);
+                }
+            });
+        }, 1000)
     }
 
     duplicateTemplate()
@@ -214,7 +253,20 @@ export class TemplateAdministrationComponent implements OnInit {
 
     onSubmit() {
         this.template.entities = $j('#jstree').jstree(true).get_checked();
+        if(this.template.template_target!='notifications'){
+            this.template.template_datasource=='letterbox_attachment';
+        }
+        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId && this.template.template_type == 'OFFICE'){
+            alert(this.lang.editModelFirst);
+            return;
+        }
+        if (this.template.template_type=='HTML'){
+            this.template.template_content = tinymce.get('templateHtml').getContent();
+        }
         if (this.creationMode) {
+            if (this.template.template_style == 'uploadFile') {
+                this.template.template_style = '';
+            }
             this.http.post(this.coreUrl + 'rest/templates', this.template)
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);
@@ -223,6 +275,9 @@ export class TemplateAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
+            if (this.template.template_style == 'uploadFile') {
+                this.template.template_style = '';
+            }
             this.http.put(this.coreUrl + 'rest/templates/' + this.template.template_id, this.template)
                 .subscribe(() => {
                     this.router.navigate(['/administration/templates']);
@@ -231,5 +286,43 @@ export class TemplateAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         }
+    }
+
+    displayDatasources(datasource:any)
+    {
+        if(datasource.target=='notification' && this.template.template_target == 'notifications'){
+            return true;
+        } else if(datasource.target=='document' && this.template.template_target != 'notifications'){
+            return true;
+        }
+        return false;
+    }
+
+    updateTemplateType()
+    {
+        if(this.template.template_target=='attachments'){
+            this.template.template_type='OFFICE';
+        } else if(this.template.template_target=='notifications' || this.template.template_target=='doctypes' || this.template.template_target=='sendmail'){
+            this.template.template_type='HTML';
+            this.initMce();
+        } else if (this.template.template_target=='notes') {
+            this.template.template_type='TXT';
+        }
+    }
+
+    fileImported()
+    {
+        this.buttonFileName = this.template.uploadedFile.name;
+    }
+    
+    fileToImport()
+    {
+        this.buttonFileName = this.lang.importFile;
+    }
+
+    resetFileUploaded()
+    {
+        this.fileToImport();
+        this.template.uploadedFile = null;
     }
 }

@@ -221,7 +221,11 @@ abstract class diffusion_list_Abstract extends functions
 
             // users
             //**********************************************************************
-            for ($i = 0, $l = count($diffList[$role_id]['users']);
+            $l = 0;
+            if (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users'])) {
+                $l = count($diffList[$role_id]['users']);
+            }
+            for ($i = 0;
                 $i < $l;
                 ++$i
             ) {
@@ -245,7 +249,11 @@ abstract class diffusion_list_Abstract extends functions
             }
             // Entities
             //**********************************************************************
-            for ($i = 0, $l = count($diffList[$role_id]['entities']); $i < $l; ++$i) {
+            $l = 0;
+            if (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities'])) {
+                $l = count($diffList[$role_id]['entities']);
+            }
+            for ($i = 0; $i < $l; ++$i) {
                 $entity = $diffList[$role_id]['entities'][$i];
                 //print_r($description); exit;
                 $stmt = $db->query(
@@ -417,7 +425,10 @@ abstract class diffusion_list_Abstract extends functions
                 $item_mode = $role_id;
             }
 
-            $cptUsers = count($diffList[$role_id]['users']);
+            $cptUsers = 0;
+            if (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users'])) {
+                $cptUsers = count($diffList[$role_id]['users']);
+            }
             for ($i = 0; $i < $cptUsers; ++$i) {
                 $userFound = false;
                 $userId = trim($diffList[$role_id]['users'][$i]['user_id']);
@@ -429,7 +440,10 @@ abstract class diffusion_list_Abstract extends functions
                 $signatory = ($diffList[$role_id]['users'][$i]['signatory'] ? 'true' : 'false');
                 $requested_signature = ($diffList[$role_id]['users'][$i]['requested_signature'] ? 'true' : 'false');
 
-                $cptOldUsers = count($oldListInst[$role_id]['users']);
+                $cptOldUsers = 0;
+                if (!empty($oldListInst[$role_id]['users']) && is_array($oldListInst[$role_id]['users'])) {
+                    $cptOldUsers = count($oldListInst[$role_id]['users']);
+                }
                 for ($h = 0; $h < $cptOldUsers; ++$h) {
                     if ($userId == $oldListInst[$role_id]['users'][$h]['user_id']) {
                         $userFound = true;
@@ -500,13 +514,19 @@ abstract class diffusion_list_Abstract extends functions
             }
 
             //CUSTOM ENTITY ROLES
-            $cptEntities = count($diffList[$role_id]['entities']);
+            $cptEntities = 0;
+            if (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities'])) {
+                $cptEntities = count($diffList[$role_id]['entities']);
+            }
             for ($j = 0; $j < $cptEntities; ++$j) {
                 $entityFound = false;
                 $entityId = trim($diffList[$role_id]['entities'][$j]['entity_id']);
                 $visible = $diffList[$role_id]['entities'][$j]['visible'];
                 $viewed = (int) $diffList[$role_id]['entities'][$j]['viewed'];
-                $cptOldEntities = count($oldListInst[$role_id]['entities']);
+                $cptOldEntities = 0;
+                if (is_array($oldListInst[$role_id]['entities'])) {
+                    $cptOldEntities = count($oldListInst[$role_id]['entities']);
+                }
                 for ($g = 0; $g < $cptOldEntities; ++$g) {
                     if ($entityId == $oldListInst[$role_id]['entities'][$g]['entity_id']) {
                         $entityFound = true;

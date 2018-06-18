@@ -24,8 +24,8 @@ foreach ($roles as $role_id => $role_label) {
     if (($specific_role != $role_id && $specific_role.'_copy' != $role_id && $specific_role.'_info' != $role_id) && isset($specific_role) && $specific_role != '') {
         continue;
     }
-    if (count($difflist[$role_id]['users']) > 0
-        || count($difflist[$role_id]['entities']) > 0
+    if ((!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['users']) > 0)
+        || (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users']) && count($difflist[$role_id]['entities']) > 0)
     ) {
         ++$empty;
         $contentDiffList .= '<h3 class="sstit" style="font-size: 1.2em;">'.$role_label.'</h3>';
@@ -76,7 +76,7 @@ foreach ($roles as $role_id => $role_label) {
             }
             $contentDiffList .= '</table>';
         }
-        if (count($difflist[$role_id]['entities']) > 0) {
+        if (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities']) && count($difflist[$role_id]['entities']) > 0) {
             $contentDiffList .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec" style="width:100%;margin:0;">';
             $color = ' class="col"';
 

@@ -15,7 +15,7 @@
             <menu-nav></menu-nav>
             <mat-divider></mat-divider>
             <mat-nav-list>
-                <h3 mat-subheader>{{lang.templates}}</h3>
+                <h3 mat-subheader>{{lang.actions}}</h3>
                 <a mat-list-item routerLink="/administration/templates/new">
                     <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                     <p mat-line>
@@ -41,18 +41,22 @@
                         </mat-paginator>
                     </div>
                 </div>
-                <mat-table #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc">
+                <mat-table #table [dataSource]="dataSource" matSort matSortActive="template_label" matSortDirection="asc">
                     <ng-container matColumnDef="template_label">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.templateName}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.template_label}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:2;"> {{element.template_label}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_comment">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.description}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.template_comment}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.description}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.template_comment}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="template_target">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="template_type">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches">{{lang.templateType}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element"> {{element.template_type}} </mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;">{{lang.templateType}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:1;"> {{element.template_type}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>

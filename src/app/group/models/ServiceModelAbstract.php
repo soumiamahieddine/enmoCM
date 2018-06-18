@@ -77,7 +77,7 @@ abstract class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true') {
+                if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true' && (string)$value->id != 'view_history_batch') {
                     $category = (string) $value->category;
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
@@ -104,18 +104,29 @@ abstract class ServiceModelAbstract
         $applicationServices = [];
 
         if ($xmlfile) {
+            $hasHistory = false;
             foreach ($xmlfile->SERVICE as $value) {
                 if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices']))) {
-                    $category = (string) $value->category;
-                    $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
-                    $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
-                    $applicationServices[$category][] = [
-                        'name'        => $name,
-                        'comment'     => $comment,
-                        'servicepage' => (string) $value->servicepage,
-                        'style'       => (string) $value->style,
-                        'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
-                    ];
+                    if ((string)$value->id == 'view_history' || (string)$value->id == 'view_history_batch') {
+                        $hasHistory = true;
+                    }
+                }
+            }
+            foreach ($xmlfile->SERVICE as $value) {
+                $historyByPass = (string)$value->id == 'view_history' && $hasHistory;
+                if ($historyByPass || ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true' && ((string) $value->system_service == 'true' || in_array((string) $value->id, $aArgs['userServices'])))) {
+                    if ((string)$value->id != 'view_history_batch') {
+                        $category = (string) $value->category;
+                        $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
+                        $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
+                        $applicationServices[$category][] = [
+                            'name'        => $name,
+                            'comment'     => $comment,
+                            'servicepage' => (string) $value->servicepage,
+                            'style'       => (string) $value->style,
+                            'angular'     => empty((string) $value->angular) ? 'false' : (string) $value->angular,
+                        ];
+                    }
                 }
             }
         }
@@ -319,17 +330,7 @@ abstract class ServiceModelAbstract
         $administration = [];
         $administrationApplication = ServiceModel::getApplicationAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
         $administrationModule = ServiceModel::getModulesAdministrationServicesByUserServices(['userServices' => $servicesStoredInDB]);
-
-        foreach ($administrationApplication['supervision'] as $key => $value) {
-            if ($value['name'] === _HISTORY_BATCH) {
-                array_splice($administrationApplication['supervision'], $key, 1);
-            }
-        }
-        unset($key);
-
         $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-        
-        
 
         return $administration;
     }

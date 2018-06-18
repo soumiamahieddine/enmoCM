@@ -368,7 +368,6 @@ CREATE TABLE baskets
   basket_name character varying(255) NOT NULL,
   basket_desc character varying(255) NOT NULL,
   basket_clause text NOT NULL,
-  is_generic character varying(6) NOT NULL DEFAULT 'N'::character varying,
   is_visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
   is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
@@ -376,7 +375,6 @@ CREATE TABLE baskets
   color character varying(16),
   basket_res_order character varying(255),
   flag_notif character varying(1),
-  except_notif text,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
 WITH (OIDS=FALSE);

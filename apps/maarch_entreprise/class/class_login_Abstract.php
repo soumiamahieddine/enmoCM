@@ -88,7 +88,7 @@ abstract class login_Abstract extends functions
         return $login_method;
     }
 
-    public function execute_login_script($array_method, $restMode = false)
+    public function execute_login_script($array_method)
     {
         $tmp_engine = array();
         $_SESSION['login_method_bool'] = false;

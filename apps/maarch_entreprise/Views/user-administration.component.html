@@ -34,7 +34,7 @@
                         {{lang.desactivateAbsence}}
                     </p>
                 </a>
-                <a mat-list-item *ngIf="!creationMode && !loading" (click)="resetPassword(user)">
+                <a mat-list-item *ngIf="!creationMode && !loading && user.canModifyPassword" (click)="resetPassword(user)">
                     <mat-icon color="primary" mat-list-icon class="fa fa-key"></mat-icon>
                     <p mat-line>
                         {{lang.reinitPassword}}
@@ -193,27 +193,27 @@
                                 </mat-list-item>
                                 <mat-divider></mat-divider>
                                 <ng-container *ngFor="let basket of user.baskets;let i = index">
-                                    <mat-list-item *ngIf="basket.group_id && basket.userToDisplay == ''" (mouseover)="showActions(basket.basket_id)" (mouseout)="hideActions(basket.basket_id)"
+                                    <mat-list-item *ngIf="basket.group_id && basket.userToDisplay == ''" (mouseover)="showActions(basket)" (mouseout)="hideActions(basket)"
                                         style="cursor: pointer;">
                                         <mat-icon mat-list-icon color="primary" *ngIf="basket.enabled">
-                                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionBaskets.toggle(basket.basket_id) : null" [checked]="selectionBaskets.isSelected(basket.basket_id)"
+                                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionBaskets.toggle(basket) : null" [checked]="selectionBaskets.isSelected(basket)"
                                                 color="primary"></mat-checkbox>
                                         </mat-icon>
                                         <h4 mat-line [attr.color]="basket.userToDisplay != '' ? 'primary': ''" style="display: flex;align-items: center;">
-                                            <span (click)="selectionBaskets.toggle(basket.basket_id);" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
+                                            <span (click)="selectionBaskets.toggle(basket);" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
                                                 {{basket.basket_name}}
                                                 <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                                             </span>
 
-                                            <span id="{{basket.basket_id}}" style="display:none;flex:1;background: white;text-align: right">
+                                            <span id="{{basket.basket_id}}_{{basket.group_id}}" style="display:none;flex:1;background: white;text-align: right">
                                                 <i class="fa fa-ellipsis-v" style="opacity: 0.2;"></i>
-                                                <button *ngIf="basket.allowed" color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket.basket_id);toggleBasket(false)">
+                                                <button *ngIf="basket.allowed" color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);toggleBasket(false)">
                                                     <mat-icon class="fa fa-ban"></mat-icon>
                                                 </button>
-                                                <button *ngIf="!basket.allowed" color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket.basket_id);toggleBasket(true)">
+                                                <button *ngIf="!basket.allowed" color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);toggleBasket(true)">
                                                     <mat-icon class="fa fa-check"></mat-icon>
                                                 </button>
-                                                <button [matMenuTriggerFor]="menu2" mat-icon-button matTooltip="{{lang.redirectBasket}}e" (click)="selectionBaskets.clear();selectionBaskets.select(basket.basket_id);">
+                                                <button [matMenuTriggerFor]="menu2" mat-icon-button matTooltip="{{lang.redirectBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);">
                                                     <mat-icon class="fa fa-reply"></mat-icon>
                                                 </button>
                                                 <mat-menu #menu2="matMenu">

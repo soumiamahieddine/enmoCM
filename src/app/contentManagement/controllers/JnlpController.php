@@ -32,7 +32,6 @@ class JnlpController
 
         $coreUrl = str_replace('rest/', '', \Url::coreurl());
         $tmpPath = CoreConfigModel::getTmpPath();
-        $appName = CoreConfigModel::getApplicationName();
         $userUniqueId = DatabaseModel::uniqueId();
         $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $userUniqueId;
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
@@ -43,6 +42,12 @@ class JnlpController
                 $allCookies .= '; ';
             }
             $allCookies .= $key . '=' . str_replace(' ', '+', $value);
+        }
+        if (!empty($data['cookies'])) {
+            if (!empty($allCookies)) {
+                $allCookies .= '; ';
+            }
+            $allCookies .= $data['cookies'];
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/content_management/xml/config.xml']);
@@ -125,8 +130,7 @@ class JnlpController
         $tagArg3 = $jnlpDocument->createElement('argument', $data['table']);
         $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']);
         $tagArg5 = $jnlpDocument->createElement('argument', $data['uniqueId']);
-
-        $tagArg6 = $jnlpDocument->createElement('argument', "{$appName}={$_COOKIE[$appName]}");
+        $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}");
         $tagArg7 = $jnlpDocument->createElement('argument', htmlentities($allCookies));
         $tagArg8 = $jnlpDocument->createElement('argument', $jnlpFileName);
         $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['userId']);
@@ -202,13 +206,13 @@ class JnlpController
         $tmpPath = CoreConfigModel::getTmpPath();
 
         if ($data['action'] == 'editObject') {
-            if ($data['objectType'] == 'templateStyle') {
+            if ($data['objectType'] == 'templateCreation') {
                 $explodeFile = explode('.', $data['objectId']);
                 $ext = $explodeFile[count($explodeFile) - 1];
                 $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['userUniqueId']}.{$ext}";
 
                 $pathToCopy = $data['objectId'];
-            } elseif ($data['objectType'] == 'template') {
+            } elseif ($data['objectType'] == 'templateModification') {
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
                 $template = TemplateModel::getById(['id' => $data['objectId'], 'select' => ['template_path', 'template_file_name']]);
 
@@ -286,6 +290,19 @@ class JnlpController
         $response->write($xmlResponse);
 
         return $response->withHeader('Content-Type', 'application/xml');
+    }
+
+    public function isLockFileExisting(Request $request, Response $response, array $aArgs)
+    {
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$aArgs['userUniqueId']}.lck";
+
+        $fileFound = false;
+        if (file_exists($tmpPath . $lockFileName)) {
+            $fileFound = true;
+        }
+
+        return $response->withJson(['lockFileFound' => $fileFound]);
     }
 
     private static function generateResponse(array $aArgs)

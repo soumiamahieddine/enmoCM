@@ -72,6 +72,7 @@ export const LANG_FR = {
     "basketsOrder"                      : "Gérer l'ordre des bannettes",
     "basketsRedirected"                 : "Bannettes redirigées à un autre utilisateur",
     "basketUpdated"                     : "Bannette modifiée",
+    "basketsUpdated"                    : "Bannette(s) modifiée(s)",
     "browsing"                          : "Navigation",
     "calDays"                           : "jour(s) calendaire(s)",
     "canBeModified"                     : "Modification des index",
@@ -87,9 +88,11 @@ export const LANG_FR = {
     "chooseColor"                       : "Choisissez une couleur",
     "chooseDefaultAction"               : "Choisissez une action principale",
     "chooseEntity"                      : "Choisissez une entité",
+    "chooseEntityAssociationModel"      : "Attribuer le modèle au(x) service(s)",
     "chooseGroup"                       : "Choisissez un groupe",
     "chooseModel"                       : "Choisissez un modèle",
     "chooseRedirectGroup"               : "Choisissez un groupe de remplacement",
+    "chosenModel"                       : "Modèle utilisé",
     "chronoNumber"                      : "Numéro chrono",
     "chrono"                            : "Chrono",
     "city"                              : "Ville",
@@ -565,6 +568,10 @@ export const LANG_FR = {
     "duplicate"                         : "Dupliquer",
     "confirmDuplicate"                  : "Voulez-vous vraiment dupliquer ce template ?",
     "noDatasource"                      : "Aucune source de données",
-    "templateDuplicated"                : "Modèle dupliqué"
+    "templateDuplicated"                : "Modèle dupliqué",
+    "modelUpdated"                      : "Le Modèle a été mis à jour",
+    "importFile"                        : "Importer un fichier",
+    "allAttachments"                    : "Tous les attachements",
+    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider"
     
 };

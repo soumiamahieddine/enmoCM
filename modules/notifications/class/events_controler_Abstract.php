@@ -87,7 +87,8 @@ abstract class events_controler_Abstract extends ObjectControler
                 $notifications[] = $notification;
             }
         }
-        if (count($notifications) == 0) return;
+        if (empty($notifications) || !is_array($notifications) || count($notifications) == 0)
+            return;
         foreach ($notifications as $notification) {
             $dbConn->query(
                 "INSERT INTO "

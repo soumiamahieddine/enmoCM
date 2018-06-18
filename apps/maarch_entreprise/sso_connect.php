@@ -276,13 +276,10 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 "ADMIN",
                 true);
                 
-    if (!$restMode) {
-        header("location: " . $loginRequestArray['WEB_SSO_URL']
-         . "index.php?errorId=" . $errorId 
-         . "&errorMsg=" . $_SESSION['error']);  
-        exit;
-    }
-    
+    header("location: " . $loginRequestArray['WEB_SSO_URL']
+     . "index.php?errorId=" . $errorId
+     . "&errorMsg=" . $_SESSION['error']);
+    exit;
 }
 
 /**********************************************************************/
@@ -350,13 +347,9 @@ if(!empty($control['error']) && $control['error'] <> 1) {
                 $_SESSION['config']['databasetype'],
                 "ADMIN",
                 true);
-    if ($restMode) {
-
-    } else {
-        header("location: " . $loginRequestArray['WEB_SSO_URL']
-                . "index.php?errorId=" . $loginArray['databaseError']);
-        exit;
-    }
+    header("location: " . $loginRequestArray['WEB_SSO_URL']
+            . "index.php?errorId=" . $loginArray['databaseError']);
+    exit;
 } else {
 
     /**/
@@ -382,38 +375,19 @@ if(!empty($control['error']) && $control['error'] <> 1) {
 /**********************************************************************/
 /**** CONNECTION A MAARCH ****/
     $_SESSION['web_sso_url'] = $loginRequestArray['WEB_SSO_URL'];
-    if ($restMode) {
-        $security = new security();
-        $_SESSION['error'] = '';
-        $res = $security->login($loginArray['UserId'] , $loginArray['password'], 'restMode');
-        //$core->show_array($res);
-        $_SESSION['user'] = $res['user'];
-        if (!empty($res['error'])) {
-            $_SESSION['error'] = $res['error'];
-        }
-        //Traces fonctionnelles
-        $trace->add("users",
-                    $loginArray['UserId'],
-                    "LOGIN",
-                    _CONNECTION_SSO_OK,
-                    $_SESSION['config']['databasetype'],
-                    "ADMIN",
-                    false);
-    } else {
-        $_SESSION['sso']['userId'] = $loginArray['UserId'];
-        header("location: " . $_SESSION['config']['businessappurl'] 
-            . "log.php");
+    $_SESSION['sso']['userId'] = $loginArray['UserId'];
+    header("location: " . $_SESSION['config']['businessappurl']
+        . "log.php");
 
-        //Traces fonctionnelles
-        $trace->add("users",
-                    $loginArray['UserId'],
-                    "LOGIN",
-                    _CONNECTION_SSO_OK,
-                    $_SESSION['config']['databasetype'],
-                    "ADMIN",
-                    false);
-        exit();
-    }
+    //Traces fonctionnelles
+    $trace->add("users",
+                $loginArray['UserId'],
+                "LOGIN",
+                _CONNECTION_SSO_OK,
+                $_SESSION['config']['databasetype'],
+                "ADMIN",
+                false);
+    exit();
 }
 
 
@@ -530,9 +504,11 @@ function read_ssoXml($fichier,$item,$champs) {
 // Function to record groups in the array (in order to update users)
 function fillGroupArray($loginArray,$recordProfils)
 {
-    $groupArray = array();
-    $tmp = array();
-    
+    $groupArray = [];
+
+    if (empty($loginArray['profil_separator'])) {
+        return [];
+    }
     $tmp = explode($loginArray['profil_separator'],$recordProfils);
 
     //$tmp = $loginArray['userGroup'];
