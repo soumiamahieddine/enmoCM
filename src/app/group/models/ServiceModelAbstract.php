@@ -77,7 +77,7 @@ abstract class ServiceModelAbstract
 
         if ($xmlfile) {
             foreach ($xmlfile->SERVICE as $value) {
-                if ((string) $value->servicetype == 'admin' && (string) $value->enabled === 'true') {
+                if ((string)$value->servicetype == 'admin' && (string)$value->enabled === 'true' && (string)$value->id != 'view_history_batch') {
                     $category = (string) $value->category;
                     $name = defined((string) $value->name) ? constant((string) $value->name) : (string) $value->name;
                     $comment = defined((string) $value->comment) ? constant((string) $value->comment) : (string) $value->comment;
