@@ -256,7 +256,7 @@ export class TemplateAdministrationComponent implements OnInit {
         if(this.template.template_target!='notifications'){
             this.template.template_datasource=='letterbox_attachment';
         }
-        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId && this.template.target == 'OFFICE'){
+        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId && this.template.template_type == 'OFFICE'){
             alert(this.lang.editModelFirst);
             return;
         }
