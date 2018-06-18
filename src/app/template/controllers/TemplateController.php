@@ -347,13 +347,13 @@ class TemplateController
 
         $models = [];
 
-        if (is_dir("custom/{$customId}/modules/templates/templates/styles/office/")) {
-            $path = "custom/{$customId}/modules/templates/templates/styles/office/";
+        if (is_dir("custom/{$customId}/modules/templates/templates/styles/")) {
+            $path = "custom/{$customId}/modules/templates/templates/styles/";
         } else {
-            $path = 'modules/templates/templates/styles/office/';
+            $path = 'modules/templates/templates/styles/';
         }
-        $officeModels = scandir($path);
-        foreach ($officeModels as $value) {
+        $templateModels = scandir($path);
+        foreach ($templateModels as $value) {
             if ($value != '.' && $value != '..') {
                 $file = explode('.', $value);
                 $models[] = [
@@ -363,41 +363,7 @@ class TemplateController
                 ];
             }
         }
-
-        if (is_dir("custom/{$customId}/modules/templates/templates/styles/open_document/")) {
-            $path = "custom/{$customId}/modules/templates/templates/styles/open_document/";
-        } else {
-            $path = 'modules/templates/templates/styles/open_document/';
-        }
-        $openModels = scandir($path);
-        foreach ($openModels as $value) {
-            if ($value != '.' && $value != '..') {
-                $file = explode('.', $value);
-                $models[] = [
-                    'fileName'  => $file[0],
-                    'fileExt'   => strtoupper($file[1]),
-                    'filePath'  => $path . $value,
-                ];
-            }
-        }
-        if (is_dir("custom/{$customId}/modules/templates/templates/styles/txt/")) {
-            $path = "custom/{$customId}/modules/templates/templates/styles/txt/";
-        } else {
-            $path = 'modules/templates/templates/styles/txt/';
-        }
-
-        $txtModels = scandir($path);
-        foreach ($txtModels as $value) {
-            if ($value != '.' && $value != '..') {
-                $file = explode('.', $value);
-                $models[] = [
-                    'fileName'  => $file[0],
-                    'fileExt'   => strtoupper($file[1]),
-                    'filePath'  => $path . $value,
-                ];
-            }
-        }
-
+        
         return $models;
     }
 
