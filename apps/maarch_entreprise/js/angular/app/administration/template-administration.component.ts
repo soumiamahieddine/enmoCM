@@ -230,7 +230,6 @@ export class TemplateAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.lockFound = data.lockFileFound;
                 if(!this.lockFound){
-                    this.notify.success(this.lang.modelUpdated);
                     clearInterval(this.intervalLockFile);
                 }
             });
