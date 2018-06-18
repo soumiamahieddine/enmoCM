@@ -146,4 +146,31 @@ abstract class TemplateModelAbstract
 
         return $datasources;
     }
+
+    public static function getModels()
+    {
+        $customId = CoreConfigModel::getCustomId();
+
+        if (is_dir("custom/{$customId}/modules/templates/templates/styles/")) {
+            $path = "custom/{$customId}/modules/templates/templates/styles/";
+        } else {
+            $path = 'modules/templates/templates/styles/';
+        }
+
+        $templateModels = scandir($path);
+        $models = [];
+        foreach ($templateModels as $value) {
+            if ($value != '.' && $value != '..') {
+                $file = implode('.', explode('.', $value, -1));
+                $ext = explode('.', $value);
+                $models[] = [
+                    'fileName'  => $file,
+                    'fileExt'   => strtoupper($ext[count($ext) - 1]),
+                    'filePath'  => $path . $value,
+                ];
+            }
+        }
+
+        return $models;
+    }
 }

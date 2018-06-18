@@ -87,7 +87,7 @@ class TemplateController
 
         return $response->withJson([
             'template'          => $template,
-            'templatesModels'   => TemplateController::getModels(),
+            'templatesModels'   => TemplateModel::getModels(),
             'attachmentTypes'   => $attachmentTypes,
             'datasources'       => TemplateModel::getDatasources(),
             'entities'          => $entities
@@ -334,37 +334,11 @@ class TemplateController
         }
 
         return $response->withJson([
-            'templatesModels' => TemplateController::getModels(),
+            'templatesModels' => TemplateModel::getModels(),
             'attachmentTypes' => $attachmentTypes,
             'datasources'     => TemplateModel::getDatasources(),
             'entities'        => $entities,
         ]);
-    }
-
-    public static function getModels()
-    {
-        $customId = CoreConfigModel::getCustomId();
-
-        $models = [];
-
-        if (is_dir("custom/{$customId}/modules/templates/templates/styles/")) {
-            $path = "custom/{$customId}/modules/templates/templates/styles/";
-        } else {
-            $path = 'modules/templates/templates/styles/';
-        }
-        $templateModels = scandir($path);
-        foreach ($templateModels as $value) {
-            if ($value != '.' && $value != '..') {
-                $file = explode('.', $value);
-                $models[] = [
-                    'fileName'  => $file[0],
-                    'fileExt'   => strtoupper($file[1]),
-                    'filePath'  => $path . $value,
-                ];
-            }
-        }
-        
-        return $models;
     }
 
     private static function checkData(array $aArgs)
