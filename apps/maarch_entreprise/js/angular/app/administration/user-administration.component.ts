@@ -70,7 +70,9 @@ export class UserAdministrationComponent extends AutoCompletePlugin implements O
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
-                this.selectionBaskets.select(basket);   
+                if (basket.userToDisplay == '') {
+                    this.selectionBaskets.select(basket); 
+                }      
             });
         } else {
             this.selectionBaskets.clear();
