@@ -74,3 +74,6 @@ DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
+
+UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
+UPDATE templates SET template_content = REPLACE(template_content, '___', '--');

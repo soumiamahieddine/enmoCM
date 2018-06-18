@@ -1396,44 +1396,44 @@ INSERT INTO tags_entities (tag_id, entity_id) VALUES (13, 'COU');
 --TEMPLATES
 ------------
 TRUNCATE TABLE templates;
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'AppelTel', 'Appel téléphonique', '<h2><span style="color: #000000###"><strong>Appel t&eacute###l&eacute###phonique</strong></span></h2>
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'AppelTel', 'Appel téléphonique', '<h2><span style="color: #000000;"><strong>Appel t&eacute;l&eacute;phonique</strong></span></h2>
 <hr />
-<p>&nbsp###</p>
+<p>&nbsp;</p>
 <p>Bonjour,</p>
-<p>Vous avez re&ccedil###u un appel t&eacute###l&eacute###phonique dont voici les informations :</p>
-<table style="height: 61px### border-color: #f0f0f0###" border="1" width="597"><caption>&nbsp###</caption>
+<p>Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</p>
+<table style="height: 61px; border-color: #f0f0f0;" border="1" width="597"><caption>&nbsp;</caption>
 <tbody>
 <tr>
-<td style="text-align: center###"><strong>Date</strong></td>
-<td style="text-align: center###"><strong>Heure</strong></td>
-<td style="text-align: center###"><strong>Soci&eacute###t&eacute###</strong></td>
-<td style="text-align: center###"><strong>Contact</strong></td>
+<td style="text-align: center;"><strong>Date</strong></td>
+<td style="text-align: center;"><strong>Heure</strong></td>
+<td style="text-align: center;"><strong>Soci&eacute;t&eacute;</strong></td>
+<td style="text-align: center;"><strong>Contact</strong></td>
 </tr>
 <tr>
-<td>&nbsp###</td>
-<td>&nbsp###</td>
-<td>&nbsp###</td>
-<td>&nbsp###</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
-<p>&nbsp###</p>
+<p>&nbsp;</p>
 <h4>Notes :</h4>
-<p>&nbsp###</p>', 'HTML', NULL, NULL, '', '', 'doctypes', 'all');
+<p>&nbsp;</p>', 'HTML', NULL, NULL, '', '', 'doctypes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système',
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p><font face="verdana,geneva" size="1"> </font></p>
-<p><font face="verdana,geneva" size="1">Voici la liste des &eacute###v&eacute###nements de l''application qui vous sont notifi&eacute###s ([notification.description]) :</font></p>
-<table style="width: 800px### height: 36px###" border="0" cellspacing="1" cellpadding="1">
+<p><font face="verdana,geneva" size="1">Voici la liste des &eacute;v&eacute;nements de l''application qui vous sont notifi&eacute;s ([notification.description]) :</font></p>
+<table style="width: 800px; height: 36px;" border="0" cellspacing="1" cellpadding="1">
 <tbody>
 <tr>
-<td style="width: 150px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Date</font></strong></font></td>
-<td style="width: 150px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Utilisateur </font></strong></font><font face="verdana,geneva" size="1"><strong></strong></font></td>
-<td style="width: 500px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Description</font></strong></font></td>
+<td style="width: 150px; background-color: #0099ff;"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Date</font></strong></font></td>
+<td style="width: 150px; background-color: #0099ff;"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Utilisateur </font></strong></font><font face="verdana,geneva" size="1"><strong></strong></font></td>
+<td style="width: 500px; background-color: #0099ff;"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Description</font></strong></font></td>
 </tr>
 <tr>
-<td><font face="verdana,geneva" size="1">[events.event_date###block=tr###frm=dd/mm/yyyy hh:nn:ss]</font></td>
+<td><font face="verdana,geneva" size="1">[events.event_date;block=tr;frm=dd/mm/yyyy hh:nn:ss]</font></td>
 <td><font face="verdana,geneva" size="1">[events.user_id]</font></td>
 <td><font face="verdana,geneva" size="1">[events.event_info]</font></td>
 </tr>
@@ -1444,7 +1444,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des courriers dont la date limite de traitement est dépassée :n</font></p>
-<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<table style="border: 1pt solid #000000; width: 1582px; height: 77px;" border="1" cellspacing="1" cellpadding="5" frame="box">
 <tbody>
 <tr>
 <td><font face="arial,helvetica,sans-serif"><strong><font size="2">Référence</font></strong></font></td>
@@ -1462,7 +1462,7 @@ VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><f
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
 </td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
@@ -1476,7 +1476,7 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des courriers toujours en attente de traitement :</font></p>
 <p> </p>
-<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<table style="border: 1pt solid #000000; width: 1582px; height: 77px;" border="1" cellspacing="1" cellpadding="5" frame="box">
 <tbody>
 <tr>
 <td><font face="arial,helvetica,sans-serif"><strong><font size="2">Référence</font></strong></font></td>
@@ -1494,7 +1494,7 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
 </td>
-<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
@@ -1502,134 +1502,134 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
-<p>&nbsp###</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici la liste des nouveaux courriers pr&eacute###sents dans cette bannette :</p>
-<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
+VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+<p>&nbsp;</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Voici la liste des nouveaux courriers pr&eacute;sents dans cette bannette :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%;">
 <tbody>
 <tr>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Origine</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Emetteur</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Type</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">R&eacute;f&eacute;rence</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Origine</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Emetteur</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Date</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Objet</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Type</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">&nbsp;</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.res_id]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.typist]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.subject]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[res_letterbox.type_label]</td>
-<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.res_id]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.typist]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.subject]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.type_label]</td>
+<td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><a style="text-decoration: none; background: #135f7f; padding: 5px; color: white; -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75);" href="[res_letterbox.linktodetail]" name="detail">D&eacute;tail</a> <a style="text-decoration: none; background: #135f7f; padding: 5px; color: white; -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75);" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
 </table>
-<p>&nbsp###</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+<p>&nbsp;</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
-<p>&nbsp###</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif###">Voici les nouvelles annotations sur les courriers suivants :</p>
-<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### border-collapse: collapse### width: 100%###">
+VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+<p>&nbsp;</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Voici les nouvelles annotations sur les courriers suivants :</p>
+<table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%;">
 <tbody>
 <tr>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">R&eacute###f&eacute###rence</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Num</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Date</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Objet</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Note</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Ajout&eacute### par</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">Contact</th>
-<th style="border: 1px solid #ddd### padding: 8px### padding-top: 12px### padding-bottom: 12px### text-align: left### background-color: #135f7f### color: white###">&nbsp###</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">R&eacute;f&eacute;rence</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Num</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Date</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Objet</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Note</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Ajout&eacute; par</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">Contact</th>
+<th style="border: 1px solid #ddd; padding: 8px; padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #135f7f; color: white;">&nbsp;</th>
 </tr>
 <tr>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.identifier]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.# ###frm=0000]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.subject]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.note_text]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.user_id]</td>
-<td style="border: 1px solid #ddd### padding: 8px###">[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
-<td style="border: 1px solid #ddd### padding: 8px### text-align: right###"><a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodetail]" name="detail">D&eacute###tail</a> <a style="text-decoration: none### background: #135f7f### padding: 5px### color: white### -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)### box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75)###" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.identifier]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.# ;frm=0000]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.doc_date;block=tr;frm=dd/mm/yyyy]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.subject]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.note_text]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.user_id]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
+<td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><a style="text-decoration: none; background: #135f7f; padding: 5px; color: white; -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75);" href="[res_letterbox.linktodetail]" name="detail">D&eacute;tail</a> <a style="text-decoration: none; background: #135f7f; padding: 5px; color: white; -webkit-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); -moz-box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75); box-shadow: 6px 4px 5px 0px rgba(0,0,0,0.75);" href="[res_letterbox.linktodoc]" name="doc">Afficher</a></td>
 </tr>
 </tbody>
 </table>
-<p>&nbsp###</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif### width: 100%### text-align: center### font-size: 9px### font-style: italic### opacity: 0.5###">Message g&eacute###n&eacute###r&eacute### via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
+<p>&nbsp;</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (9, 'Demande - Voirie', 'Demande - Voirie', '<h2>Demande Intervention VOIRIE</h2>
 <hr />
-<table style="border: 1pt solid #000000### width: 597px### background-color: #f0f0f0### height: 172px###" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp###</caption>
+<table style="border: 1pt solid #000000; width: 597px; background-color: #f0f0f0; height: 172px;" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp;</caption>
 <tbody>
 <tr>
-<td style="width: 200px### background-color: #ffffff###"><strong>NOM, PRENOM demandeur</strong></td>
-<td style="width: 200px### background-color: #ffffff###">&nbsp###</td>
+<td style="width: 200px; background-color: #ffffff;"><strong>NOM, PRENOM demandeur</strong></td>
+<td style="width: 200px; background-color: #ffffff;">&nbsp;</td>
 </tr>
-<tr style="background-color: #ffffff###">
-<td style="width: 200px###">Adresse</td>
-<td>&nbsp###</td>
+<tr style="background-color: #ffffff;">
+<td style="width: 200px;">Adresse</td>
+<td>&nbsp;</td>
 </tr>
-<tr style="background-color: #ffffff###">
-<td style="width: 200px###"><strong>Contact</strong></td>
-<td>&nbsp###</td>
+<tr style="background-color: #ffffff;">
+<td style="width: 200px;"><strong>Contact</strong></td>
+<td>&nbsp;</td>
 </tr>
-<tr style="background-color: #ffffff###">
-<td style="width: 200px###"><strong>Intitul&eacute### demande</strong></td>
-<td>&nbsp###</td>
+<tr style="background-color: #ffffff;">
+<td style="width: 200px;"><strong>Intitul&eacute; demande</strong></td>
+<td>&nbsp;</td>
 </tr>
-<tr style="background-color: #ffffff###">
-<td style="width: 200px###">Compl&eacute###ment</td>
-<td>&nbsp###</td>
+<tr style="background-color: #ffffff;">
+<td style="width: 200px;">Compl&eacute;ment</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes', 'all');
-INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
-<p style="text-align: center###">&nbsp###</p>
-<table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
+INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left;"><span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="text-decoration: underline;"><span style="font-size: small;">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
+<p style="text-align: center;">&nbsp;</p>
+<table style="background-color: #a8c33c; width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
 <tbody>
 <tr>
-<td style="width: 200px###">CLOTURE&nbsp###DE LA DEMANDE</td>
+<td style="width: 200px;">CLOTURE&nbsp;DE LA DEMANDE</td>
 <td>DATE: [dates]</td>
 <td>HEURE: [time]</td>
 </tr>
 </tbody>
 </table>
-<table style="width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
+<table style="width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
 <tbody>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">OBJET</td>
-<td style="background-color: #e1f787###">&nbsp###[res_letterbox.subject]</td>
+<td style="width: 200px; background-color: #a8c33c;">OBJET</td>
+<td style="background-color: #e1f787;">&nbsp;[res_letterbox.subject]</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">ACTIONS CONDUITES</td>
-<td>&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">ACTIONS CONDUITES</td>
+<td>&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">DATE DE REMISE EN ETAT / SERVICE</td>
-<td style="background-color: #e1f787###">&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">DATE DE REMISE EN ETAT / SERVICE</td>
+<td style="background-color: #e1f787;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">CONSIGNES COMPLEMENTAIRES</td>
-<td>&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">CONSIGNES COMPLEMENTAIRES</td>
+<td>&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">AUTRES OBSERVATIONS</td>
-<td style="background-color: #e1f787###">&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">AUTRES OBSERVATIONS</td>
+<td style="background-color: #e1f787;">&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">&nbsp###</td>
-<td>&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 <tr>
-<td style="width: 200px### background-color: #a8c33c###">&nbsp###</td>
-<td style="background-color: #e1f787###">&nbsp###</td>
+<td style="width: 200px; background-color: #a8c33c;">&nbsp;</td>
+<td style="background-color: #e1f787;">&nbsp;</td>
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (20, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
-<p>En r&eacute###ponse &agrave### votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute###ponse en pi&egrave###ce-jointe.</p>
+<p>En r&eacute;ponse &agrave; votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute;ponse en pi&egrave;ce-jointe.</p>
 <p>Cordialement,</p>
 <p><strong>Ville de Maarch-les-Bains</strong><br /><em>[user.firstname] [user.lastname]</em><br /><em>[user.phone]</em></p>', 'HTML', NULL, NULL, 'DOCX: standard_nosign', 'letterbox_attachment', 'sendmail', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (21, 'AR dérogation LO', 'AR derogation carte scolaire', '', 'OFFICE', '0000#', 'ar_derogation.odt', 'ODT: ARderogation', 'letterbox_attachment', 'attachments', 'response_project');
@@ -1658,48 +1658,48 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains</h2>
 <p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui ne rel&egrave###ve pas de sa comp&eacute###tence.</p>
+<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui ne rel&egrave;ve pas de sa comp&eacute;tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
-<p>Cette demande a &eacute###t&eacute### transmise &agrave### (veuillez renseigner le nom de l''AUTORITE COMPETENTE).</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
+<p>Cette demande a &eacute;t&eacute; transmise &agrave; (veuillez renseigner le nom de l''AUTORITE COMPETENTE).</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
 INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '[MAIL] AR TYPE dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains</h2>
 <p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
+<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
 <p>Votre demande concerne : [res_letterbox.subject].</p>
-<p>Le pr&eacute###sent accus&eacute### r&eacute###ception atteste la r&eacute###ception de votre demande, il ne pr&eacute###juge pas de la conformit&eacute### de son contenu qui d&eacute###pend entre autres de l''&eacute###tude des pi&egrave###ces fournies. Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>
-<p>Votre demande est susceptible de faire l''objet d''une d&eacute###cision implicite de rejet en l''absence de r&eacute###ponse dans les (XX) jours suivant sa r&eacute###ception, soit le [res_letterbox.process_limit_date].</p>
-<p>Si l''instruction de votre demande n&eacute###cessite des informations ou pi&egrave###ces compl&eacute###mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute###lai de production qui sera fix&eacute###.</p>
-<p>Dans ce cas, le d&eacute###lai de d&eacute###cision implicite de rejet serait alors suspendu le temps de produire les pi&egrave###ces demand&eacute###es.</p>
-<p>Si vous estimez que la d&eacute###cision qui sera prise par l''administration est contestable, vous pourrez formuler :</p>
-<p>- Soit un recours gracieux devant l''auteur de la d&eacute###cision</p>
-<p>- Soit un recours hi&eacute###rarchique devant le Maire</p>
-<p>- Soit un recours contentieux devant le Tribunal Administratif territorialement comp&eacute###tent.</p>
-<p>Le recours gracieux ou le recours hi&eacute###rarchique peuvent &ecirc###tre faits sans condition de d&eacute###lais.</p>
-<p>Le recours contentieux doit intervenir dans un d&eacute###lai de deux mois &agrave### compter de la notification de la d&eacute###cision.</p>
-<p>Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute###rarchique former un recours contentieux, ce recours gracieux ou hi&eacute###rarchique devra avoir &eacute###t&eacute### introduit dans le d&eacute###lai sus-indiqu&eacute### du recours contentieux.</p>
-<p>Vous conserverez ainsi la possibilit&eacute### de former un recours contentieux, dans un d&eacute###lai de deux mois &agrave### compter de la d&eacute###cision intervenue sur ledit recours gracieux ou hi&eacute###rarchique.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
+<p>Le pr&eacute;sent accus&eacute; r&eacute;ception atteste la r&eacute;ception de votre demande, il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''&eacute;tude des pi&egrave;ces fournies. Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [users.phone] ou par messagerie [users.mail].</p>
+<p>Votre demande est susceptible de faire l''objet d''une d&eacute;cision implicite de rejet en l''absence de r&eacute;ponse dans les (XX) jours suivant sa r&eacute;ception, soit le [res_letterbox.process_limit_date].</p>
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
+<p>Dans ce cas, le d&eacute;lai de d&eacute;cision implicite de rejet serait alors suspendu le temps de produire les pi&egrave;ces demand&eacute;es.</p>
+<p>Si vous estimez que la d&eacute;cision qui sera prise par l''administration est contestable, vous pourrez formuler :</p>
+<p>- Soit un recours gracieux devant l''auteur de la d&eacute;cision</p>
+<p>- Soit un recours hi&eacute;rarchique devant le Maire</p>
+<p>- Soit un recours contentieux devant le Tribunal Administratif territorialement comp&eacute;tent.</p>
+<p>Le recours gracieux ou le recours hi&eacute;rarchique peuvent &ecirc;tre faits sans condition de d&eacute;lais.</p>
+<p>Le recours contentieux doit intervenir dans un d&eacute;lai de deux mois &agrave; compter de la notification de la d&eacute;cision.</p>
+<p>Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute;rarchique former un recours contentieux, ce recours gracieux ou hi&eacute;rarchique devra avoir &eacute;t&eacute; introduit dans le d&eacute;lai sus-indiqu&eacute; du recours contentieux.</p>
+<p>Vous conserverez ainsi la possibilit&eacute; de former un recours contentieux, dans un d&eacute;lai de deux mois &agrave; compter de la d&eacute;cision intervenue sur ledit recours gracieux ou hi&eacute;rarchique.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
 INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '[MAIL] AR TYPE dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains</h2>
 <p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
+<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
-<p>Le pr&eacute###sent accus&eacute### de r&eacute###ception atteste de la r&eacute###ception de votre demande. il ne pr&eacute###juge pas de la conformit&eacute### de son contenu qui d&eacute###pend entre autres de l''''&eacute###tude des pi&egrave###ces fournies.</p>
-<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>
-<p>Votre demande est susceptible de faire l''objet d''''une d&eacute###cision implicite d''''acceptation en l''absence de r&eacute###ponse dans les (XX) jours suivant sa r&eacute###ception, soit le [res_letterbox.process_limit_date].</p>
-<p>Si l''instruction de votre demande n&eacute###cessite des informations ou pi&egrave###ces compl&eacute###mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute###lai de production qui sera fix&eacute###.</p>
-<p>Le cas &eacute###ch&eacute###ant, le d&eacute###lai de d&eacute###cision implicite d''acceptation ne d&eacute###butera qu''''apr&egrave###s la production des pi&egrave###ces demand&eacute###es.</p>
-<p>En cas de d&eacute###cision implicite d''''acceptation vous avez la possibilit&eacute### de demander au service charg&eacute### du dossier une attestation conform&eacute###ment aux dispositions de l''article 22 de la loi n&deg### 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute###e.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
+<p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.</p>
+<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [users.phone] ou par messagerie [users.mail].</p>
+<p>Votre demande est susceptible de faire l''objet d''''une d&eacute;cision implicite d''''acceptation en l''absence de r&eacute;ponse dans les (XX) jours suivant sa r&eacute;ception, soit le [res_letterbox.process_limit_date].</p>
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
+<p>Le cas &eacute;ch&eacute;ant, le d&eacute;lai de d&eacute;cision implicite d''acceptation ne d&eacute;butera qu''''apr&egrave;s la production des pi&egrave;ces demand&eacute;es.</p>
+<p>En cas de d&eacute;cision implicite d''''acceptation vous avez la possibilit&eacute; de demander au service charg&eacute; du dossier une attestation conform&eacute;ment aux dispositions de l''article 22 de la loi n&deg; 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute;e.</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
 --
 INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '[MAIL] AR TYPE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains</h2>
 <p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute###lectronique &agrave### la Ville une demande qui rel&egrave###ve de sa comp&eacute###tence.</p>
+<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
-<p>Le pr&eacute###sent accus&eacute### de r&eacute###ception atteste de la r&eacute###ception de votre demande. Il ne pr&eacute###juge pas de la conformit&eacute### de son contenu qui d&eacute###pend entre autres de l''&eacute###tude des pi&egrave###ces fournies.</p>
-<p>Si l''instruction de votre demande n&eacute###cessite des informations ou pi&egrave###ces compl&eacute###mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute###lai de production qui sera fix&eacute###.</p>
-<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute### du dossier par t&eacute###l&eacute###phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
+<p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. Il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''&eacute;tude des pi&egrave;ces fournies.</p>
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
+<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [users.phone] ou par messagerie [users.mail].</p>', 'HTML', NULL, NULL, 'TXT: document_texte', 'letterbox_attachment', 'sendmail', 'all');
 
 INSERT INTO templates (template_label, template_comment, template_content, template_type, template_style, template_target, template_attachment_type) VALUES ('Quota d''utilisateur', 'Modèle de notification pour le quota utilisateur', '<p>Quota utilisateur atteint</p>', 'HTML', 'ODT: rep_standard', 'notifications', 'all');
 ------------
