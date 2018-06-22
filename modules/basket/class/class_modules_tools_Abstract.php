@@ -641,11 +641,19 @@ abstract class basket_Abstract extends Database
             // Browsing the current basket actions to build the actions array
             for ($i = 0; $i < count($_SESSION['current_basket']['actions']); $i++) {
                 $noFilterOnCat = true;
-                if (count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0) {
+                if (!empty($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
+                    && is_array($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
+                    && count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0)
+                {
                     $noFilterOnCat = false;
                 }
                 $categoryIdForActions = '';
-                for ($cptCat=0; $cptCat < count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']); $cptCat++) {
+                $cl = 0;
+                if (!empty($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) && is_array($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])) {
+                    $cl = count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']);
+                }
+
+                for ($cptCat=0; $cptCat < $cl; $cptCat++) {
                     if ($_SESSION['current_basket']['actions'][$i]['CATEGORIES'][$cptCat] == $_SESSION['category_id']) {
                         $categoryIdForActions = $_SESSION['category_id'];
                     }

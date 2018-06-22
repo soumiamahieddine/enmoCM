@@ -12,10 +12,8 @@
 */
 
 //DECLARATIONS
-require_once 'core/manage_bitmask.php';
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
-require_once 'apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php';
 require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_list_show.php';
 require_once 'core/class/class_history.php';
 require_once 'core/class/LinkController.php';

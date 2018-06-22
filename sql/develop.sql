@@ -76,4 +76,10 @@ DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
-
+ALTER TABLE security DROP COLUMN IF EXISTS can_insert;
+ALTER TABLE security DROP COLUMN IF EXISTS can_update;
+ALTER TABLE security DROP COLUMN IF EXISTS can_delete;
+ALTER TABLE security DROP COLUMN IF EXISTS rights_bitmask;
+ALTER TABLE security DROP COLUMN IF EXISTS mr_start_date;
+ALTER TABLE security DROP COLUMN IF EXISTS mr_stop_date;
+ALTER TABLE security DROP COLUMN IF EXISTS where_target;

@@ -84,7 +84,6 @@ abstract class GroupModelAbstract
                 'coll_id'           => 'letterbox_coll',
                 'where_clause'      => $aArgs['clause'],
                 'maarch_comment'    => $aArgs['comment'],
-                'where_target'      => 'DOC',
             ]
         ]);
 
@@ -223,7 +222,7 @@ abstract class GroupModelAbstract
         ValidatorModel::stringType($aArgs, ['groupId']);
 
         $aData = DatabaseModel::select([
-            'select'    => ['where_clause', 'maarch_comment', 'mr_start_date', 'mr_stop_date'],
+            'select'    => ['where_clause', 'maarch_comment'],
             'table'     => ['security'],
             'where'     => ['group_id = ?'],
             'data'      => [$aArgs['groupId']]

@@ -973,23 +973,23 @@ INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', '
 -- Create Security
 TRUNCATE TABLE security;
 DELETE FROM security WHERE group_id = 'COURRIER';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('COURRIER', 'letterbox_coll', 'typist=@user', 'Les courriers que j''ai numérisé, pendant 3 mois','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('COURRIER', 'letterbox_coll', 'typist=@user', 'Les courriers que j''ai numérisé, pendant 3 mois');
 DELETE FROM security WHERE group_id = 'AGENT';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('AGENT', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers non confidentiels de mes services et sous-services','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('AGENT', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers non confidentiels de mes services et sous-services');
 DELETE FROM security WHERE group_id = 'RESP_COURRIER';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('RESP_COURRIER', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 9, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('RESP_COURRIER', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'RESPONSABLE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('RESPONSABLE', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers de mes services et sous-services','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('RESPONSABLE', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers de mes services et sous-services');
 DELETE FROM security WHERE group_id = 'ADMINISTRATEUR';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ADMINISTRATEUR', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 24, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ADMINISTRATEUR', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'DIRECTEUR';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('DIRECTEUR', 'letterbox_coll', '1=0', 'Tous les courriers','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('DIRECTEUR', 'letterbox_coll', '1=0', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'ELU';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ELU', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ELU', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'ARCHIVISTE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier');
 
 -- Donnees manuelles
 ------------

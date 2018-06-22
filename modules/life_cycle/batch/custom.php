@@ -78,18 +78,6 @@ function createPDI($resInContainer)
             'COMMENT', $securityRecordset->maarch_comment
         );
         $accessRight->appendChild($comment);
-        $canInsert = $docXML->createElement(
-            'CAN_INSERT', $securityRecordset->can_insert
-        );
-        $accessRight->appendChild($canInsert);
-        $canUpdate = $docXML->createElement(
-            'CAN_UPDATE', $securityRecordset->can_update
-        );
-        $accessRight->appendChild($canUpdate);
-        $canDelete = $docXML->createElement(
-            'CAN_DELETE', $securityRecordset->can_delete
-        );
-        $accessRight->appendChild($canDelete);
     }
     for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
         //a record

@@ -919,7 +919,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
     }
     //DIFFLIST
-    if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0) {
+    if ($core->is_module_loaded('entities') && (empty($_SESSION['redirect']['diff_list']) || !is_array($_SESSION['redirect']['diff_list']) || count($_SESSION['redirect']['diff_list']) == 0)) {
         require_once 'modules/entities/class/class_manage_listdiff.php';
 
         $list = new diffusion_list();

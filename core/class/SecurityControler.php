@@ -32,7 +32,6 @@
 // Loads the required class
 try {
     require_once 'core/core_tables.php';
-    require_once 'core/manage_bitmask.php';
     require_once 'core/class/class_db.php';
     require_once 'core/class/users_controler.php';
     require_once 'core/class/session_security_controler.php';
@@ -287,7 +286,7 @@ class SecurityControler
         );
     }
 
-    public function check_where_clause($collId, $target, $whereClause,
+    public function check_where_clause($collId, $whereClause,
        $view, $userId)
     {
         $res = array(
@@ -295,7 +294,7 @@ class SecurityControler
             'TXT' => '',
         );
 
-        if (empty($collId) || empty($target) || empty($whereClause)) {
+        if (empty($collId) || empty($whereClause)) {
             $res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
             return $res;
         }
@@ -308,13 +307,7 @@ class SecurityControler
         $where = str_replace('where', ' ', $where);
         $db = new Database();
 
-        if ($target == 'ALL' || $target == 'DOC') {
-            $query = 'select res_id from ' . $view . ' where ' . $where;
-        }
-        if ($target == 'ALL' || $target == 'CLASS') {
-            $query = 'select mr_aggregation_id from ' . $view
-                   . ' where  '. $where;
-        }
+        $query = 'select res_id from ' . $view . ' where ' . $where;
 
         $ok = $db->query($query, array(), true);
         if (!$ok) {
@@ -436,24 +429,19 @@ class SecurityControler
     */
     public function load_security($userId)
     {
-        require_once 'apps/' . $_SESSION['config']['app_id']
-            . '/security_bitmask.php';
         $tab['collections'] = array();
         $tab['security'] = array();
         $func = new functions();
 
         if ($userId == "superadmin") {
             for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
-                $tab['security'][ $_SESSION['collections'][$i]['id']] = array();
-                foreach (array_keys($_ENV['targets']) as $key) {
-                    $tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array(
-                        'table'  => $_SESSION['collections'][$i]['table'],
-                        'label_coll' => $_SESSION['collections'][$i]['label'],
-                        'view'  => $_SESSION['collections'][$i]['view'],
-                        'where' => " (1=1) ",
-                        'securityBitmask' => MAX_BITMASK,
-                    );
-                }
+                $tab['security'][$_SESSION['collections'][$i]['id']] = array();
+                $tab['security'][$_SESSION['collections'][$i]['id']]['DOC'] = array(
+                    'table'  => $_SESSION['collections'][$i]['table'],
+                    'label_coll' => $_SESSION['collections'][$i]['label'],
+                    'view'  => $_SESSION['collections'][$i]['view'],
+                    'where' => " (1=1) ",
+                );
                 array_push(
                     $tab['collections'], $_SESSION['collections'][$i]['id']
                 );
@@ -471,11 +459,6 @@ class SecurityControler
             }
             for ($i = 0; $i < count($access); $i ++) {
                 // TO DO : vérifier les dates
-                $startDate = $access[$i]->__get('mr_start_date');
-                $stopDate = $access[$i]->__get('mr_stop_date');
-
-                $bitmask = $access[$i] ->__get('rights_bitmask');
-                $target = $access[$i]->__get('where_target');
                 $collId = $access[$i]->__get('coll_id');
                 $whereClause = $access[$i]->__get('where_clause');
                 $whereClause = $this->process_security_where_clause(
@@ -493,64 +476,25 @@ class SecurityControler
                 if (! in_array($collId, $tab['collections'])) {
                     $tab['security'][$collId] = array();
 
-                    if ($target == 'ALL') {
-                        foreach (array_keys($_ENV['targets']) as $key) {
-                            $tab['security'][$collId][$key] = array(
-                                'table'  => $_SESSION['collections'][$ind]['table'],
-                                'label_coll'  => $_SESSION['collections'][$ind]['label'],
-                                'view'  => $_SESSION['collections'][$ind]['view'],
-                                'where'  => $where,
-                                'securityBitmask' => $bitmask,
-                            );
-                        }
-                    } else {
-                        $tab['security'][$collId][$target] = array(
-                            'table'  => $_SESSION['collections'][$ind]['table'],
-                            'label_coll'  => $_SESSION['collections'][$ind]['label'],
-                            'view'  => $_SESSION['collections'][$ind]['view'],
-                            'where'  => $where,
-                            'securityBitmask' => $bitmask,
-                        );
-                    }
+                    $tab['security'][$collId]['DOC'] = array(
+                        'table'  => $_SESSION['collections'][$ind]['table'],
+                        'label_coll'  => $_SESSION['collections'][$ind]['label'],
+                        'view'  => $_SESSION['collections'][$ind]['view'],
+                        'where'  => $where,
+                    );
                     array_push($tab['collections'], $collId);
                 } else {
-                    if (isset($tab['security'][$collId][$target])
-                        && count($tab['security'][$collId][$target]) > 0
+                    if (isset($tab['security'][$collId]['DOC'])
+                        && count($tab['security'][$collId]['DOC']) > 0
                     ) {
-                        $tab['security'][ $collId][$target]['securityBitmask'] = set_right(
-                            $tab['security'][ $collId][$target]['securityBitmask'],
-                            $bitmask
-                        );
-                        $tab['security'][ $collId][$target]['where'] .= " or "
+                        $tab['security'][ $collId]['DOC']['where'] .= " or "
                             . $where;
-                    } else if ($target == 'ALL') {
-                        foreach (array_keys($_ENV['targets']) as $key) {
-                            if (isset($tab['security'][$collId][$key])
-                                && count($tab['security'][$collId][$key]) > 0
-                            ) {
-                                $tab['security'][ $collId][$target]['securityBitmask'] = set_right(
-                                    $tab['security'][ $collId][$target]['securityBitmask'],
-                                    $bitmask
-                                );
-                                $tab['security'][$collId][$key]['where'] .= " or "
-                                    . $where;
-                            } else {
-                                $tab['security'][$collId][$key] = array(
-                                    'table'  => $_SESSION['collections'][$ind]['table'],
-                                    'label_coll'  => $_SESSION['collections'][$ind]['label'],
-                                    'view'  => $_SESSION['collections'][$ind]['view'],
-                                    'where'  => $where,
-                                    'securityBitmask' => $bitmask,
-                                );
-                            }
-                        }
                     } else {
-                        $tab['security'][$collId][$target] = array(
+                        $tab['security'][$collId]['DOC'] = array(
                             'table'  => $_SESSION['collections'][$ind]['table'],
                             'label_coll'  => $_SESSION['collections'][$ind]['label'],
                             'view'  => $_SESSION['collections'][$ind]['view'],
                             'where'  => $where,
-                            'securityBitmask' => $bitmask,
                         );
                     }
                 }
@@ -577,126 +521,6 @@ class SecurityControler
     }
 
 
-    /**
-     * Give action bitmask for given $userId over given
-     * object
-     * @param string $userId
-     * @param bigint $objectId
-     * @return bitmask
-     */
-    public function getActions($userId, $objectId, $objectType='aggregation')
-    {
-        $ctrl = new session_security_controler();
-        // Select from security session table
-        $sessionSec = $ctrl->get($userId);
-        if ($sessionSec->__get('last_object_id') == $objectId) {
-            return $sessionSec->__get('last_available_bitmask');
-        } else {
-            return $this->setActions($userId, $objectId, $objectType);
-        }
-    }
-
-    /**
-     * Update security session table with
-     * bitmask, according with given user
-     * and aggregation.
-     * Return computed bitmask
-     * @param string $userId
-     * @param bigint $objectId
-     * @return bitmask
-     */
-    public function setActions($userId, $objectId, $objectType)
-    {
-        if ($userId == 'superadmin') {
-            return MAX_BITMASK;
-        }
-        // Compute action bitmask
-        $fullBitmask = 0;
-        $uc = new users_controler();
-        $groups = $uc->getGroups($userId);
-        //print_r($groups);
-
-        $fullWhere = "";
-        for ($i = 0; $i < count($groups); $i ++) {
-            $access = $this->getAccessForGroup($groups[$i]['GROUP_ID']);
-            //var_dump($access);
-            for ($j = 0; $j < count($access); $j ++) {
-                $target = $access[$j]->__get('where_target');
-                $collId = $access[$j]->__get('coll_id');
-                $whereClause = $access[$j]->__get('where_clause');
-                $whereClause = $this->process_security_where_clause(
-                    $whereClause, $userId
-                );
-                $whereClause = str_replace('where', '', $whereClause);
-                $bitmask = $access[$j]->__get('rights_bitmask');
-
-                $ind = $this->get_ind_collection($collId);
-                if (trim($whereClause) == "") {
-                    $where = "-1";
-                } else {
-                    $where = "( " . $this->show_string($whereClause) . " )";
-                }
-
-                $query = '';
-                if ($objectType == 'aggregation'
-                    && ($target == 'CLASS' || $target == 'ALL')
-                ) {
-                    $query = "select mr_aggregation_id from "
-                           . _CLASSIFICATION_SCHEME_VIEW . " where (" . $where
-                           . ') ';
-                    if (isset($objectId) && ! empty($objectId)) {
-                        $query .= 'and mr_aggregation_id = ' . $objectId;
-                    }
-                } else if ($objectType == 'classification_scheme'
-                    && ($target == 'CLASS' || $target == 'ALL')
-                ) {
-                    $query = "select mr_classification_scheme_id from "
-                           . _CLASSIFICATION_SCHEME_VIEW . " where (" . $where
-                           . ') and mr_classification_scheme_id = ' . $objectId;
-                } else if ($objectType == 'doc'
-                    && ($target == 'DOC' || $target == 'ALL')
-                ) {
-                    $query = "select res_id from "
-                           . $_SESSION['collections'][$ind]['view'] . " where ("
-                           . $where . ') and res_id = ?';
-                }
-                $db = new Database();
-                
-                if (! empty($query)) {
-                    $stmt = $db->query($query, array($objectId));
-                }
-                if ($stmt->rowCount() > 0) {
-                    if ($bitmask > 0) {
-                        $fullBitmask = set_right($fullBitmask, $bitmask);
-                    }
-
-                    if (! empty($fullWhere)) {
-                        $fullWhere .= " and (" . $where . ") ";
-                    } else {
-                        $fullWhere .= $where;
-                    }
-                }
-            }
-        }
-
-        // Update security session table
-        $func = new functions();
-        $sessionSecurity = new session_security();
-        $sessionSecurity->setArray(
-            array(
-                'user_id' => $userId,
-                'session_begin_date' => date("Y-m-d H:i"),
-                'full_where_clause' => $fullWhere,
-                'last_available_bitmask' => $fullBitmask,
-                'last_object_id' => $objectId
-            )
-        ); // TO DO : calculate the session_end_date
-        $ctrl = new session_security_controler();
-        $ctrl->save($sessionSecurity);
-
-        return $fullBitmask;
-    }
-    
     /**
     * Check the where clause syntax
     *

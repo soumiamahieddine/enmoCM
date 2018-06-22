@@ -47,7 +47,6 @@ require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/class_history.php';
 require_once 'core/class/SecurityControler.php';
 require_once 'core/class/class_core_tools.php';
-require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
 if (isset($_SESSION['config']['app_id'])) {
     require_once 'apps/'.$_SESSION['config']['app_id']
@@ -56,6 +55,8 @@ if (isset($_SESSION['config']['app_id'])) {
 require_once 'core/class/usergroups_controler.php';
 require_once 'core/class/ServiceControler.php';
 
+$core = new core_tools();
+$core->load_lang();
 //require_once('lib/FirePHP/Init.php');
 
 class security extends Database
@@ -715,7 +716,7 @@ class security extends Database
     {
         $arr = array();
         for ($i = 0; $i < count($_SESSION['user']['security']); ++$i) {
-            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y') {
+            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table'])) {
                 $ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
                 array_push($arr, array('coll_id' => $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'], 'table' => $_SESSION['user']['security'][$i]['table']));
             }
@@ -728,7 +729,6 @@ class security extends Database
      * Checks if the current user can do the action on the collection.
      *
      * @param string $coll_id Collection identifier
-     * @param string $action  can_insert, can_update, can_delete
      *
      * @return true if the user can do the action on the collection, False otherwise
      */

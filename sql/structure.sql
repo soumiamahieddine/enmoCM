@@ -157,13 +157,6 @@ CREATE TABLE "security"
   coll_id character varying(32) NOT NULL,
   where_clause text,
   maarch_comment text,
-  can_insert character(1) NOT NULL DEFAULT 'N'::bpchar,
-  can_update character(1) NOT NULL DEFAULT 'N'::bpchar,
-  can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,
-  rights_bitmask integer NOT NULL DEFAULT 0,
-  mr_start_date timestamp without time zone DEFAULT NULL,
-  mr_stop_date timestamp without time zone DEFAULT NULL,
-  where_target character varying(15) DEFAULT 'DOC'::character varying,
   CONSTRAINT security_pkey PRIMARY KEY (security_id)
 )
 WITH (OIDS=FALSE);
