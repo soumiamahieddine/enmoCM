@@ -9,32 +9,35 @@ declare function $j(selector: any): any;
 declare var tinymce: any;
 declare var angularGlobals: any;
 
+
 @Component({
     templateUrl: "../../../../Views/template-administration.component.html",
     providers: [NotificationService]
 })
 export class TemplateAdministrationComponent implements OnInit {
 
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    lang: any = LANG;
-    coreUrl: string;
-    creationMode: boolean;
-    template: any = {};
-    statuses: any[] = [];
-    actionPagesList: any[] = [];
-    categoriesList: any[] = [];
-    keywordsList: any[] = [];
-    defaultTemplatesList: any;
-    attachmentTypesList: any;
-    datasourcesList: any;
-    jnlpValue: any = {};
-    extensionModels:any[] = [];
-    buttonFileName: any = this.lang.importFile;
-    lockFound: boolean = false;
-    intervalLockFile: any;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
 
-    loading: boolean = false;
+    coreUrl                 : string;
+    lang                    : any = LANG;
+    loading                 : boolean = false;
+
+    creationMode            : boolean;
+    template                : any       = {};
+    statuses                : any[]     = [];
+    actionPagesList         : any[]     = [];
+    categoriesList          : any[]     = [];
+    keywordsList            : any[]     = [];
+    defaultTemplatesList    : any;
+    attachmentTypesList     : any;
+    datasourcesList         : any;
+    jnlpValue               : any       = {};
+    extensionModels         : any[]     = [];
+    buttonFileName          : any       = this.lang.importFile;
+    lockFound               : boolean   = false;
+    intervalLockFile        : any;
+
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
         $j("link[href='merged_css.php']").remove();
@@ -93,7 +96,40 @@ export class TemplateAdministrationComponent implements OnInit {
         });
     }
 
-    setInitialValue(data:any){
+    initMce() {
+        setTimeout(() => {
+            tinymce.remove('textarea');
+            //LOAD EDITOR TINYMCE for MAIL SIGN
+            tinymce.baseURL = "../../node_modules/tinymce";
+            tinymce.suffix = '.min';
+            tinymce.init({
+                selector: "textarea#templateHtml",
+                statusbar: false,
+                language: "fr_FR",
+                language_url: "tools/tinymce/langs/fr_FR.js",
+                height: "200",
+                plugins: [
+                    "textcolor",
+                    "autoresize"
+                ],
+                external_plugins: {
+                    'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+                },
+                menubar: false,
+                toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
+                theme_buttons1_add: "fontselect,fontsizeselect",
+                theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
+                theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+                theme_buttons3_add_before: "tablecontrols,separator",
+                theme_buttons3_add: "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
+                theme_toolbar_align: "left",
+                theme_advanced_toolbar_location: "top",
+                theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
+            });
+        }, 20);
+    }
+
+    setInitialValue(data:any) {
         this.extensionModels = [];
         data.templatesModels.forEach((model: any) => {
             if (this.extensionModels.indexOf(model.fileExt) == -1) {
@@ -130,45 +166,12 @@ export class TemplateAdministrationComponent implements OnInit {
         }, 0);
     }
 
-    initMce() {
-        setTimeout(() => {
-            tinymce.remove('textarea');
-            //LOAD EDITOR TINYMCE for MAIL SIGN
-            tinymce.baseURL = "../../node_modules/tinymce";
-            tinymce.suffix = '.min';
-            tinymce.init({
-                selector: "textarea#templateHtml",
-                statusbar: false,
-                language: "fr_FR",
-                language_url: "tools/tinymce/langs/fr_FR.js",
-                height: "200",
-                plugins: [
-                    "textcolor",
-                    "autoresize"
-                ],
-                external_plugins: {
-                    'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
-                },
-                menubar: false,
-                toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor",
-                theme_buttons1_add: "fontselect,fontsizeselect",
-                theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
-                theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
-                theme_buttons3_add_before: "tablecontrols,separator",
-                theme_buttons3_add: "separator,print,separator,ltr,rtl,separator,fullscreen,separator,insertlayer,moveforward,movebackward,absolut",
-                theme_toolbar_align: "left",
-                theme_advanced_toolbar_location: "top",
-                theme_styles: "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1"
-            });
-        }, 20);
-    }
-
     clickOnUploader(id: string) {
         $j('#' + id).click();
     }
 
     uploadFileTrigger(fileInput: any) {
-        this.template.userUniqueId = null;
+        this.template.jnlpUniqueId = null;
         if (fileInput.target.files && fileInput.target.files[0]) {
             this.template.uploadedFile = {};
             this.template.uploadedFile.name = fileInput.target.files[0].name;
@@ -214,19 +217,19 @@ export class TemplateAdministrationComponent implements OnInit {
         this.jnlpValue.cookies = document.cookie;
 
         this.http.post(this.coreUrl + 'rest/jnlp', this.jnlpValue)
-        .subscribe((data: any) => {
-            this.template.userUniqueId = data.userUniqueId;
-            this.fileToImport();
-            window.location.href = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
-            this.checkLockFile();
-        }, (err) => {
-            this.notify.error(err.error.errors);
-        });        
+            .subscribe((data: any) => {
+                this.template.jnlpUniqueId = data.jnlpUniqueId;
+                this.fileToImport();
+                window.location.href = this.coreUrl + 'rest/jnlp?fileName=' + data.generatedJnlp;
+                this.checkLockFile();
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
-    checkLockFile(){
+    checkLockFile() {
         this.intervalLockFile = setInterval(() => {
-            this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.userUniqueId)
+            this.http.get(this.coreUrl + 'rest/jnlp/lock/' + this.template.jnlpUniqueId)
             .subscribe((data: any) => {
                 this.lockFound = data.lockFileFound;
                 if(!this.lockFound){
@@ -236,8 +239,7 @@ export class TemplateAdministrationComponent implements OnInit {
         }, 1000)
     }
 
-    duplicateTemplate()
-    {
+    duplicateTemplate() {
         let r = confirm(this.lang.confirmDuplicate);
 
         if (r) {
@@ -253,14 +255,14 @@ export class TemplateAdministrationComponent implements OnInit {
 
     onSubmit() {
         this.template.entities = $j('#jstree').jstree(true).get_checked();
-        if(this.template.template_target!='notifications'){
-            this.template.template_datasource=='letterbox_attachment';
+        if (this.template.template_target != 'notifications') {
+            this.template.template_datasource = 'letterbox_attachment';
         }
-        if(this.creationMode && this.template.template_style != 'uploadFile' && !this.template.userUniqueId && this.template.template_type == 'OFFICE'){
+        if (this.creationMode && this.template.template_style != 'uploadFile' && !this.template.jnlpUniqueId && this.template.template_type == 'OFFICE') {
             alert(this.lang.editModelFirst);
             return;
         }
-        if (this.template.template_type=='HTML'){
+        if (this.template.template_type=='HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
         }
         if (this.creationMode) {
@@ -288,40 +290,35 @@ export class TemplateAdministrationComponent implements OnInit {
         }
     }
 
-    displayDatasources(datasource:any)
-    {
-        if(datasource.target=='notification' && this.template.template_target == 'notifications'){
+    displayDatasources(datasource:any) {
+        if (datasource.target=='notification' && this.template.template_target == 'notifications') {
             return true;
-        } else if(datasource.target=='document' && this.template.template_target != 'notifications'){
+        } else if (datasource.target=='document' && this.template.template_target != 'notifications') {
             return true;
         }
         return false;
     }
 
-    updateTemplateType()
-    {
-        if(this.template.template_target=='attachments'){
-            this.template.template_type='OFFICE';
-        } else if(this.template.template_target=='notifications' || this.template.template_target=='doctypes' || this.template.template_target=='sendmail'){
-            this.template.template_type='HTML';
+    updateTemplateType() {
+        if (this.template.template_target == 'attachments') {
+            this.template.template_type = 'OFFICE';
+        } else if (this.template.template_target == 'notifications' || this.template.template_target == 'doctypes' || this.template.template_target == 'sendmail') {
+            this.template.template_type = 'HTML';
             this.initMce();
-        } else if (this.template.template_target=='notes') {
-            this.template.template_type='TXT';
+        } else if (this.template.template_target == 'notes') {
+            this.template.template_type = 'TXT';
         }
     }
 
-    fileImported()
-    {
+    fileImported() {
         this.buttonFileName = this.template.uploadedFile.name;
     }
     
-    fileToImport()
-    {
+    fileToImport() {
         this.buttonFileName = this.lang.importFile;
     }
 
-    resetFileUploaded()
-    {
+    resetFileUploaded() {
         this.fileToImport();
         this.template.uploadedFile = null;
     }

@@ -32,8 +32,8 @@ class JnlpController
 
         $coreUrl = str_replace('rest/', '', \Url::coreurl());
         $tmpPath = CoreConfigModel::getTmpPath();
-        $userUniqueId = DatabaseModel::uniqueId();
-        $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $userUniqueId;
+        $jnlpUniqueId = DatabaseModel::uniqueId();
+        $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $jnlpUniqueId;
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
 
         $allCookies = '';
@@ -125,7 +125,7 @@ class JnlpController
         $newAttribute->value = 'com.maarch.MaarchCM';
         $tagApplication->appendChild($newAttribute);
 
-        $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $userUniqueId);
+        $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $jnlpUniqueId);
         $tagArg2 = $jnlpDocument->createElement('argument', $data['objectType']);
         $tagArg3 = $jnlpDocument->createElement('argument', $data['table']);
         $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']);
@@ -175,7 +175,7 @@ class JnlpController
 
         fopen($tmpPath . $jnlpFileName . '.lck', 'w+');
 
-        return $response->withJson(['generatedJnlp' => $jnlpFileNameExt, 'userUniqueId' => $userUniqueId]);
+        return $response->withJson(['generatedJnlp' => $jnlpFileNameExt, 'jnlpUniqueId' => $jnlpUniqueId]);
     }
 
     public function renderJnlp(Request $request, Response $response)
@@ -209,7 +209,7 @@ class JnlpController
             if ($data['objectType'] == 'templateCreation') {
                 $explodeFile = explode('.', $data['objectId']);
                 $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['userUniqueId']}.{$ext}";
+                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
 
                 $pathToCopy = $data['objectId'];
             } elseif ($data['objectType'] == 'templateModification') {
@@ -218,7 +218,7 @@ class JnlpController
 
                 $explodeFile = explode('.', $template['template_file_name']);
                 $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['userUniqueId']}.{$ext}";
+                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
 
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
             } else {
@@ -259,14 +259,14 @@ class JnlpController
             $encodedFileContent = str_replace(' ', '+', $data['fileContent']);
             $ext = str_replace(["\\", "/", '..'], '', $data['fileExtension']);
             $fileContent = base64_decode($encodedFileContent);
-            $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['userUniqueId']}.{$ext}";
+            $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
 
             $file = fopen($tmpPath . $fileOnTmp, 'w');
             fwrite($file, $fileContent);
             fclose($file);
 
             if (!empty($data['step']) && $data['step'] == 'end') {
-                unlink($tmpPath . $GLOBALS['userId'] . '_maarchCM_' . $aArgs['userUniqueId'] . '.lck');
+                unlink($tmpPath . $GLOBALS['userId'] . '_maarchCM_' . $aArgs['jnlpUniqueId'] . '.lck');
             }
 
             $result = ['END_MESSAGE' => 'Update ok'];
@@ -295,7 +295,7 @@ class JnlpController
     public function isLockFileExisting(Request $request, Response $response, array $aArgs)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
-        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$aArgs['userUniqueId']}.lck";
+        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck";
 
         $fileFound = false;
         if (file_exists($tmpPath . $lockFileName)) {

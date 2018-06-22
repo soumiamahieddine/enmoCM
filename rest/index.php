@@ -156,8 +156,8 @@ $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryControl
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
-$app->post('/jnlp/{userUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
-$app->get('/jnlp/lock/{userUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
+$app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');

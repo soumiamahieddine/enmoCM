@@ -34,7 +34,8 @@ class TemplateController
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessing‌ml.document',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-excel','application/vnd.ms-powerpoint',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-powerpoint',
         'application/vnd.openxmlformats-officedocument.presentationml‌.slideshow',
         'application/vnd.oasis.opendocument.text',
         'application/vnd.oasis.opendocument.presentation',
@@ -106,15 +107,15 @@ class TemplateController
         }
 
         if ($data['template_type'] == 'OFFICE') {
-            if (empty($data['userUniqueId']) && empty($data['uploadedFile'])) {
+            if (empty($data['jnlpUniqueId']) && empty($data['uploadedFile'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Template file is missing']);
             }
-            if (!empty($data['userUniqueId'])) {
+            if (!empty($data['jnlpUniqueId'])) {
                 if (!Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
                 $explodeStyle = explode(':', $data['template_style']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[0]);
+                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -185,13 +186,13 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE' && (!empty($data['userUniqueId']) || !empty($data['uploadedFile']))) {
-            if (!empty($data['userUniqueId'])) {
+        if ($data['template_type'] == 'OFFICE' && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
+            if (!empty($data['jnlpUniqueId'])) {
                 if (!empty($template['template_style']) && !Validator::stringType()->notEmpty()->validate($data['template_style'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
                 $explodeStyle = explode('.', $data['template_file_name']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['userUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
+                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -232,7 +233,7 @@ class TemplateController
             }
         }
         unset($data['uploadedFile']);
-        unset($data['userUniqueId']);
+        unset($data['jnlpUniqueId']);
         unset($data['entities']);
         TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
 

@@ -58,6 +58,8 @@ ALTER TABLE templates_association DROP COLUMN IF EXISTS what;
 ALTER TABLE templates_association DROP COLUMN IF EXISTS maarch_module;
 ALTER TABLE templates_association ADD COLUMN id serial;
 ALTER TABLE templates_association ADD UNIQUE (id);
+UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
+UPDATE templates SET template_content = REPLACE(template_content, '___', '--');
 
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
@@ -75,5 +77,3 @@ DROP TABLE IF EXISTS adr_x;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
 
-UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
-UPDATE templates SET template_content = REPLACE(template_content, '___', '--');
