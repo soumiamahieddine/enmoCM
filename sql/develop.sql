@@ -83,3 +83,5 @@ ALTER TABLE security DROP COLUMN IF EXISTS rights_bitmask;
 ALTER TABLE security DROP COLUMN IF EXISTS mr_start_date;
 ALTER TABLE security DROP COLUMN IF EXISTS mr_stop_date;
 ALTER TABLE security DROP COLUMN IF EXISTS where_target;
+ALTER TABLE users DROP COLUMN IF EXISTS ra_code;
+ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;

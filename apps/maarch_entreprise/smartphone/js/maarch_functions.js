@@ -563,25 +563,6 @@ function loadDeviceInfos() {
     });
 }
 
-function valid_sign(res_id){
-  var path_manage_script = 'valid_sign.php';
-  new Ajax.Request(path_manage_script,
-      {
-          method:'post',
-          parameters: { 'res_id' : res_id, 'code_session' : document.getElementById("code_session").value },
-          onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            if (response.status == 1) {
-              document.getElementById("link_recap").click();
-            }
-            else if (response.status == 0) {
-             console.log('Erreur de validation');
-            }
-          }
-      }
-  );
-}
-
 function save_sign(){
   var path_manage_script = 'saveSign.php';
   new Ajax.Request(path_manage_script,

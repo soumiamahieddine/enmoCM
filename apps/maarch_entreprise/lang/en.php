@@ -3914,52 +3914,6 @@ if (!defined('_PUT_DOC_ON_VALIDATION')) {
 if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) {
     define('_REALLY_PUT_DOC_ON_VALIDATION', 'Confirm the sending for validation');
 }
-
-/*******************************************************************************
- * RA_CODE
-*******************************************************************************/
-if (!defined('_ASK_RA_CODE_1')) {
-    define('_ASK_RA_CODE_1', 'A mail will be sent to the address: ');
-}
-if (!defined('_ASK_RA_CODE_2')) {
-    define('_ASK_RA_CODE_2', 'Once the code be known, please try again your connection attempt.');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_1')) {
-    define('_CONFIRM_ASK_RA_CODE_1', 'Good morning, ');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_2')) {
-    define('_CONFIRM_ASK_RA_CODE_2', 'Your distant connection code for Maarch application is : ');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_3')) {
-    define('_CONFIRM_ASK_RA_CODE_3', 'This code remain valid until ');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_4')) {
-    define('_CONFIRM_ASK_RA_CODE_4', 'To log on, ');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_5')) {
-    define('_CONFIRM_ASK_RA_CODE_5', 'click here');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_6')) {
-    define('_CONFIRM_ASK_RA_CODE_6', 'Your Maarch connection code');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_7')) {
-    define('_CONFIRM_ASK_RA_CODE_7', 'A mail has been sent to your email address');
-}
-if (!defined('_CONFIRM_ASK_RA_CODE_8')) {
-    define('_CONFIRM_ASK_RA_CODE_8', 'Reconnection attempt');
-}
-if (!defined('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP')) {
-    define('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP', 'you attempt to connect from a no identified place.');
-}
-if (!defined('_PLEASE_ENTER_YOUR_RA_CODE')) {
-    define('_PLEASE_ENTER_YOUR_RA_CODE', 'Please enter the further access code.');
-}
-if (!defined('_ASK_AN_RA_CODE')) {
-    define('_ASK_AN_RA_CODE', 'Ask an access code');
-}
-if (!defined('_RA_CODE_1')) {
-    define('_RA_CODE_1', 'Further code');
-}
 if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
     define('_CAN_T_CONNECT_WITH_THIS_IP', 'You cannot connect from a no identified place.');
 }

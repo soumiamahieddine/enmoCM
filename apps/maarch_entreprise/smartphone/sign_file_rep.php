@@ -65,10 +65,6 @@ $_SESSION['doc_id'] = $res_id_master;
 $db = new Database();
 $stmt = $db->query("SELECT * from res_view_attachments WHERE res_id = ? AND status <> 'SIGN' AND attachment_type IN ('response_project','outgoing_mail','sva') ORDER BY relation desc", array($res_id_attach));
 
-if ($_SESSION['modules_loaded']['visa']['confirm_sign_by_email'] == 'true') {
-    $codeSession = $_SESSION['user']['code_session'];
-}
-
 while($line = $stmt->fetchObject()){
 	$objectId = $line->res_id;
 	

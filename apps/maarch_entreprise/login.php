@@ -19,17 +19,6 @@ if (isset($_GET['target_page']) && trim($_GET['target_page']) != '') {
     }
 }
 
-if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQUEST']['withRA_CODE'])) {
-    $_SESSION['error'] = _IP_NOT_ALLOWED;
-    $_SESSION['withRA_CODE'] = 'ok';
-    $_SESSION['HTTP_REQUEST'] = array();
-    header(
-        'location: '.$_SESSION['config']['businessappurl']
-        .'index.php?display=true&page=login'
-    );
-    exit;
-}
-
 $serverPath = '';
 
 if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'

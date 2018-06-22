@@ -233,8 +233,6 @@ CREATE TABLE users
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
   thumbprint text DEFAULT NULL::character varying,
-  ra_code character varying(255) DEFAULT NULL::character varying,
-  ra_expiration_date timestamp without time zone,
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
   CONSTRAINT users_id_key UNIQUE (id)
 )

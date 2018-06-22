@@ -329,7 +329,6 @@
     <validationRule name="login" mode="error">
       <parameter name="login" type="login" />
       <parameter name="pass" type="string" />
-      <parameter name="ra_code" type="integer" />
       <parameter name="display" type="identifier" />
       <parameter name="page" type="identifier" />
       <parameter name="submit" type="string" />
