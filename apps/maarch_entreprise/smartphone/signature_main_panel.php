@@ -87,7 +87,7 @@ $subject = $res->subject;
                 $_SESSION['user']['pathToSignature'] = \User\models\UserSignatureModel::get(['select' => ['id'], 'where' => ['user_serial_id = ?'], 'data' => [$userInfos[0]['id']]]);
                 if (count($_SESSION['user']['pathToSignature']) > 0) {
                     foreach ($_SESSION['user']['pathToSignature'] as $sign) {
-                        echo '<img src="'.$_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
+                        echo '<img src="'.$_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'/content" alt="signature" style="width:99px;background:#FFF;" onclick="loadImgSign(this);"/>';
                     }
                 }
             ?>

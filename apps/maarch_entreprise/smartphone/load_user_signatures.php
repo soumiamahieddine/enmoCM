@@ -83,7 +83,7 @@ $subject = $res->subject;
       foreach ($_SESSION['user']['pathToSignature'] as $sign) {
           echo '<a href="signature_main_panel.php?id='.$s_id.'&collId='.$_SESSION['collection_id_choice'].'&tableName='.$_SESSION['res_table'].'&res_id_attach='.$att_id.'">';
 
-          echo '<img src="'. $_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'" alt="signature" style="width:20%;margin:10px;float:left;border:1px solid black;cursor:pointer;" />';
+          echo '<img src="'. $_SESSION['config']['coreurl'].'rest/users/'.$userInfos[0]['id'].'/signatures/'.$sign['id'].'/content" alt="signature" style="width:20%;margin:10px;float:left;border:1px solid black;cursor:pointer;" />';
           echo '</a>';
       }
     ?>

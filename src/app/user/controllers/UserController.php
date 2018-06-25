@@ -452,7 +452,7 @@ class UserController
         return $response->withJson(['user' => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])]);
     }
 
-    public function getImageSignature(Request $request, Response $response, array $aArgs)
+    public function getImageContent(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {

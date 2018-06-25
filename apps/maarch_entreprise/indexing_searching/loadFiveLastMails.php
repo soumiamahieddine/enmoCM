@@ -87,7 +87,11 @@ if($selectedTemplate <> 'none') $extension_icon = "_big";
 
 //Result Array
 
-for ($i=0;$i<count($tab);$i++) {
+$ct = 0;
+if (!empty($tab) && is_array($tab)) {
+    $ct = count($tab);
+}
+for ($i = 0; $i < $ct; $i++) {
 
     for ($j=0;$j<count($tab[$i]);$j++) {
 

@@ -205,6 +205,7 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 //Ressources
 $app->post('/res', \Resource\controllers\ResController::class . ':create');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
+$app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
@@ -256,7 +257,7 @@ $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\Use
 $app->get('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':isEntityDeletable');
 $app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
 $app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
-$app->get('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':getImageSignature');
+$app->get('/users/{id}/signatures/{signatureId}/content', \User\controllers\UserController::class . ':getImageContent');
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');

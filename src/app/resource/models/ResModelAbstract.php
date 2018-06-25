@@ -65,6 +65,10 @@ abstract class ResModelAbstract
             'data'      => [$aArgs['resId']]
         ]);
 
+        if (empty($aResources[0])) {
+            return [];
+        }
+
         return $aResources[0];
     }
 
