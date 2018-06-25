@@ -125,17 +125,18 @@ class JnlpController
         $newAttribute->value = 'com.maarch.MaarchCM';
         $tagApplication->appendChild($newAttribute);
 
-        $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $jnlpUniqueId);
-        $tagArg2 = $jnlpDocument->createElement('argument', $data['objectType']);
-        $tagArg3 = $jnlpDocument->createElement('argument', $data['table']);
-        $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']);
+        $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $jnlpUniqueId); //ProcessJnlp
+        $tagArg2 = $jnlpDocument->createElement('argument', $data['objectType']); //Type
+        $tagArg3 = $jnlpDocument->createElement('argument', $data['table']); //Table
+        $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']); //ObjectId
         $tagArg5 = $jnlpDocument->createElement('argument', $data['uniqueId']);
-        $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}");
-        $tagArg7 = $jnlpDocument->createElement('argument', htmlentities($allCookies));
-        $tagArg8 = $jnlpDocument->createElement('argument', $jnlpFileName);
-        $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['userId']);
-        $tagArg10 = $jnlpDocument->createElement('argument', 'false');
-        $tagArg11 = $jnlpDocument->createElement('argument', 'false');
+        $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}"); //MaarchCookie
+        $tagArg7 = $jnlpDocument->createElement('argument', htmlentities($allCookies)); //AllCookies
+        $tagArg8 = $jnlpDocument->createElement('argument', $jnlpFileName); //JnlpFileName
+        $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['userId']); //CurrentUser
+        $tagArg10 = $jnlpDocument->createElement('argument', 'false'); //ConvertPdf
+        $tagArg11 = $jnlpDocument->createElement('argument', 'false'); //OnlyConvert
+        $tagArg12 = $jnlpDocument->createElement('argument', 0); //HashFile
 
 
         $tagJnlp->appendChild($tagInformation);
@@ -168,6 +169,7 @@ class JnlpController
         $tagApplication->appendChild($tagArg9);
         $tagApplication->appendChild($tagArg10);
         $tagApplication->appendChild($tagArg11);
+        $tagApplication->appendChild($tagArg12);
 
         $jnlpDocument->appendChild($tagJnlp);
 
