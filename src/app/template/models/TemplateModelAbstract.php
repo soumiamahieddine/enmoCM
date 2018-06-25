@@ -71,6 +71,21 @@ abstract class TemplateModelAbstract
         return $aTemplate;
     }
 
+    public static function getByEntity(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['entities']);
+        ValidatorModel::arrayType($aArgs, ['select', 'entities']);
+
+        $aTemplate = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['templates t, templates_association ta'],
+            'where'     => ['t.template_id = ta.template_id', 'ta.value_field in (?)'],
+            'data'      => [$aArgs['entities']],
+        ]);
+
+        return $aTemplate;
+    }
+
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['template_label']);

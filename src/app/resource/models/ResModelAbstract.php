@@ -118,6 +118,21 @@ abstract class ResModelAbstract
         return true;
     }
 
+    public static function updateExt(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table' => 'mlb_coll_ext',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
@@ -179,7 +194,7 @@ abstract class ResModelAbstract
 
     public static function getDocsByClause(array $aArgs = [])
     {
-		ValidatorModel::notEmpty($aArgs, ['clause']);
+        ValidatorModel::notEmpty($aArgs, ['clause']);
 
         if (!empty($aArgs['table'])) {
             $table = $aArgs['table'];

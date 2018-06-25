@@ -31,31 +31,111 @@
 */
 
 /**
-* $confirm  bool true
+* $confirm  bool false
 */
- $confirm = true;
+$confirm    = false;
+$etapes     = array('form');
+$frm_width  = '285px';
+$frm_height = 'auto';
 
-/**
-* $etapes  array Contains only one etap, the status modification
-*/
- $etapes = array('close');
-
-
-function manage_close($arr_id, $history, $id_action, $label_action, $status)
+function get_form_txt($values, $path_manage_action, $id_action, $table, $module, $coll_id, $mode)
 {
-	$result = '';
-	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
-	$sec = new security();
-	$db = new Database();
+    $labelAction = '';
+    if ($id_action <> '') {
+        $resAction   = \Action\models\ActionModel::getById(['id' => $id_action]);
+        $labelAction = functions::show_string($resAction['label_action']);
+    }
+    
+    $values_str = '';
+    if (empty($_SESSION['stockCheckbox'])) {
+        for ($i=0; $i < count($values); $i++) {
+            $values_str .= $values[$i].', ';
+        }
+    } else {
+        for ($i=0; $i < count($_SESSION['stockCheckbox']); $i++) {
+            $values_str .= $_SESSION['stockCheckbox'][$i].', ';
+        }
+    }
+    $values_str = preg_replace('/, $/', '', $values_str);
+  
+    $templates = array();
+    $destination = \Resource\models\ResModel::get(['select' => ['destination'], 'where' => ['res_id in (?)'], 'data' => [explode(", ", $values_str)]]);
 
-	$ind_coll = $sec->get_ind_collection($_POST['coll_id']);
-	$ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
-	for($i=0; $i<count($arr_id );$i++)
-	{
-		$result .= $arr_id[$i].'#';
-		$db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
+    if ($destination <> '') {
+        $aDestination = [];
+        foreach ($destination as $value) {
+            $aDestination[] = $value['destination'];
+        }
+        $templates = \Template\models\TemplateModel::getByEntity(['select' => ['t.*'], 'entities' => $aDestination]);
+    } else {
+        $templates = \Template\models\TemplateModel::get();
+    }
+    $frm_str .='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.$labelAction.' ?</b></center><br/>';
+    if ($_SESSION['current_basket']['id'] != 'IndexingBasket') {
+        $frm_str .='<b>'._PROCESS_NOTES.':</b><br/>';
+        $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
+                    . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
+                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                    . '&module=templates&page=templates_ajax_content_for_notes\');document.getElementById(\'notes\').focus();">';
+        $frm_str .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
+        foreach ($templates as $value) {
+            if ($value['template_type'] == 'TXT' && ($value['template_target'] == 'notes' || $value['template_target'] == '')) {
+                $frm_str .= '<option value="';
+                $frm_str .= $value['template_id'];
+                $frm_str .= '">';
+                $frm_str .= $value['template_label'];
+            }
+            $frm_str .= '</option>';
+        }
+        $frm_str .= '</select><br />';
 
-	}
-	return array('result' => $result, 'history_msg' => '');
- }
+        $frm_str .= '<textarea placeholder="motif de la clôture (optionnel) ..." style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_users\').value=document.getElementById(\'notes\').value;"></textarea>';
+    }
+    $frm_str .='<div id="form2" style="border:none;">';
+    $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
+    $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
+    $frm_str .= '<input type="hidden" name="note_content_to_users" id="note_content_to_users" />';
+    $frm_str .='</form>';
+    $frm_str .='</div>';
+
+    $frm_str .='<div align="center">';
+    $frm_str .=' <input type="button" name="redirect_dep" value="'._VALIDATE.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
+    $frm_str .=' <input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();actions_status.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
+    $frm_str .='</div>';
+    return addslashes($frm_str);
+}
+
+function check_form($form_id, $values)
+{
+    return true;
+}
+
+function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form)
+{
+    if (empty($values_form) || count($arr_id) < 1) {
+        return false;
+    }
+    
+    $formValues = array();
+    for ($i=0; $i<count($values_form); $i++) {
+        $formValue       = $values_form[$i];
+        $id              = $formValue['ID'];
+        $value           = $formValue['VALUE'];
+        $formValues[$id] = $value;
+    }
+    
+    $_SESSION['action_error'] = '';
+    $result = '';
+
+    foreach ($arr_id as $res_id) {
+        $result .= $res_id.'#';
+        \Resource\models\ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+        
+        # save note
+        if ($formValues['note_content_to_users'] != '') {
+            \Note\models\NoteModel::create(['identifier' => $res_id, 'tablename' => 'res_letterbox', 'user_id' => $_SESSION['user']['UserId'], 'coll_id' => 'letterbox_coll', 'note_text' => $formValues['note_content_to_users']]);
+        }
+    }
+
+    return array('result' => $result, 'history_msg' => '');
+}
