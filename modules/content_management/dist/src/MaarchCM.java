@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -768,7 +769,9 @@ public class MaarchCM {
     public void editObject_v2() throws InterruptedException, IOException, PrivilegedActionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, Exception {
         String urlToSend;
         if (checksumFile(md5File) == false) {
-            logger.log("The file is not here in maarchTmp folder.", Level.INFO);
+            System.out.println("The file is not found in maarchTmp folder.");
+            logger.log("The file is not found in maarchTmp folder.", Level.INFO);
+            System.out.println("RETRIEVE DOCUMENT ...");
             logger.log("RETRIEVE DOCUMENT ...", Level.INFO);
             
             urlToSend = url + "?action=editObject&objectType=" + objectType
@@ -783,9 +786,15 @@ public class MaarchCM {
             logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
 
             //fileToEdit = "thefile_" + idApplet + "." + fileExtension;
+            if (md5File.equals("0")) {
+               md5File =  "thefile_" + idApplet;
+            }
             fileToEdit = md5File + "." + fileExtension;
 
             fM.createFile(fileContent, userLocalDirTmp + File.separator + fileToEdit);
+        } else {
+            System.out.println("Document found in maarchTmp folder !");
+            logger.log("Document found in maarchTmp folder !", Level.INFO);
         }   
         
         //fileToDelete.add(userLocalDirTmp + File.separator + fileToEdit);
@@ -916,13 +925,23 @@ public class MaarchCM {
                                     endMessage = endMessage + " mais la conversion pdf n'a pas fonctionné (le document ne pourra pas être signé)";
                                 }
                             }
-                            File fileToRename = new File(userLocalDirTmp + File.separator + fileToEdit);
+                            logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
+                            
+                            logger.log("----------CREATE NEW TMP FILE----------", Level.INFO);
                             String newMd5 = getchecksumFile(userLocalDirTmp + File.separator + fileToEdit);
-                            fileToRename.renameTo(new File(userLocalDirTmp + File.separator + newMd5 + "." + fileExtension));
+                            
+                            if (os.equals("win")) {
+                                fileContent = FileManager.encodeFile(userLocalDirTmp + File.separator + fileToEdit);
+                                fM.createFile(fileContent,userLocalDirTmp + File.separator + newMd5 + "." + fileExtension);
+                            } else {
+                                Files.move(new File(userLocalDirTmp + File.separator + fileToEdit).toPath(), new File(userLocalDirTmp + File.separator + newMd5 + "." + fileExtension).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                            }
+                            
                             FileManager.deleteSpecificFilesOnDir(fileToDelete);
                             FileManager.deleteEnvDir(userLocalDirTmp + File.separator + idApplet + "_conv");
                             FileManager.deleteFilesOnDirWithTime(userLocalDirTmp);
-                            logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
+                          
+                            
                             return;
                         }
                     }
@@ -1026,6 +1045,7 @@ public class MaarchCM {
                 System.out.println("MD5 checksum file found ! " + checksum);
                 if (checksum.equals(md5)) {
                     fileToEdit = child.getName().toString();
+                    fileExtension = FileManager.getFileExtension(child);
                     return true;
                 } else {
                     return false;
