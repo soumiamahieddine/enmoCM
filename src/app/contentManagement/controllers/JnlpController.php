@@ -271,6 +271,11 @@ class JnlpController
 
             $result = ['END_MESSAGE' => 'Update ok'];
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
+        } elseif ($data['action'] == 'terminate') {
+            unlink($tmpPath . $GLOBALS['userId'] . '_maarchCM_' . $aArgs['jnlpUniqueId'] . '.lck');
+
+            $result = ['END_MESSAGE' => 'Terminate ok'];
+            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
         } else {
             $result = [
                 'STATUS' => 'ko',
