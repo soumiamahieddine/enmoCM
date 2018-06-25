@@ -11,13 +11,17 @@ package com.maarch;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.FileVisitResult;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import org.apache.commons.codec.binary.Base64;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 /**
@@ -57,22 +61,6 @@ public class FileManager {
             msg = "ERROR";
         }
         return msg;
-    }
-    
-    /**
-    * Controls the existance of psExec file in tmp dir
-    * @param path path to the tmp dir
-    * @return boolean
-    */
-    public boolean isPsExecFileExists(String path) throws IOException {
-        File file=new File(path);
-        if (!file.exists()) {
-            System.out.println("psExec on path " + path + " not exists so the applet will create it");
-            return false;
-        } else {
-            System.out.println("psExec on path " + path + " already exists");
-            return true;
-        }
     }
     
     /**
@@ -197,54 +185,7 @@ public class FileManager {
             }
         );
     }
-    
-    /**
-    * Launchs a command to execute
-    * @param launchCommand the command to launch
-    * @return process
-    */
-    /*public Process launchApp(final String launchCommand) throws PrivilegedActionException {
-        System.out.println("COMMAND : " + launchCommand);
-        Object proc = new Object();
-        try{
-            proc = AccessController.doPrivileged(
-            new PrivilegedExceptionAction() {
-
-                public Object run() throws IOException {
-
-                    Runtime rt = Runtime.getRuntime();
-                    Process proc = rt.exec(launchCommand);
-                    String line;
-                    BufferedReader in = new BufferedReader(
-                        new InputStreamReader(proc.getInputStream()) );
-                    System.out.println("INFO: LAUNCH OF THE COMMAND -->");
-                    while ((line = in.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    System.out.println("<--");
-                    in.close();
-
-                    in = new BufferedReader(
-                        new InputStreamReader(proc.getErrorStream()) );
-                    System.out.println("INFO: ERROR ON THE COMMAND -->");
-                    while ((line = in.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                    System.out.println("<--");
-                    in.close();
-                    
-                    return  proc;
-                    
-                }
-            }
-        );
-        } catch (Throwable t)
-        {
-            t.printStackTrace();
-        }
-        return (Process) proc;
-    }*/
-    
+  
     /**
     * Retrieves the right program to edit the template with his extension
     * @param ext extension of the template
@@ -356,5 +297,26 @@ public class FileManager {
             }
         }
     }
+    
+    public static void deleteEnvDir (String path) throws IOException {
+        File dir_app_conv = new File(path);
+        if (dir_app_conv.exists()) {
+            Path directory = Paths.get(path);
+         
+            Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                }
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+    }
+    
     
 }
