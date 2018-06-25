@@ -285,7 +285,12 @@ class ReceiveMessageExchangeController
         array_push($aDataContact, ['column' => 'external_contact_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
         array_push($aDataContact, ['column' => 'departement',         'value' => $transferringAgencyMetadata->Name,                'type' => 'string',  'table' => 'contact_addresses']);
 
-        $contactAlreadyCreated = ContactModel::getAddressByExternalContactId(['externalContactId' => $transferringAgency->Identifier->value]);
+        $contactAlreadyCreated = ContactModel::getOnView([
+            'select'    => ['contact_id', 'ca_id'],
+            'where'     => ['external_contact_id = ?'],
+            'data'      => [$transferringAgency->Identifier->value],
+            'limit'     => 1
+        ]);
         if (!empty($contactAlreadyCreated)) {
             $contact['contactId'] = $contactAlreadyCreated['contact_id'];
             $contact['addressId'] = $contactAlreadyCreated['ca_id'];

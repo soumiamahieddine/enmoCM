@@ -29,10 +29,10 @@ abstract class ContactModelAbstract
         $aContacts = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['view_contacts'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? null : $aArgs['orderBy'],
-            'limit'     => $aArgs['limit']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aContacts;
@@ -220,24 +220,6 @@ abstract class ContactModelAbstract
             'table'     => ['contact_communication'],
             'where'     => ['value = ?'],
             'data'      => [$aArgs['communicationValue']],
-        ]);
-
-        if (empty($aReturn)) {
-            return '';
-        } else {
-            return $aReturn[0];
-        }
-    }
-
-    public static function getAddressByExternalContactId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['externalContactId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['*'],
-            'table'     => ['view_contacts'],
-            'where'     => ['external_contact_id = ?'],
-            'data'      => [$aArgs['externalContactId']],
         ]);
 
         if (empty($aReturn)) {

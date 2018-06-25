@@ -66,7 +66,7 @@ abstract class NoteModelAbstract
         return $nb;
     }
 
-    public static function create(array $aArgs = [])
+    public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['identifier', 'tablename', 'user_id', 'coll_id', 'note_text']);
         ValidatorModel::intVal($aArgs, ['identifier']);

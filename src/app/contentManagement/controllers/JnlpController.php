@@ -266,13 +266,17 @@ class JnlpController
             fclose($file);
 
             if (!empty($data['step']) && $data['step'] == 'end') {
-                unlink($tmpPath . $GLOBALS['userId'] . '_maarchCM_' . $aArgs['jnlpUniqueId'] . '.lck');
+                if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
+                    unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
+                }
             }
 
             $result = ['END_MESSAGE' => 'Update ok'];
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
         } elseif ($data['action'] == 'terminate') {
-            unlink($tmpPath . $GLOBALS['userId'] . '_maarchCM_' . $aArgs['jnlpUniqueId'] . '.lck');
+            if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
+                unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
+            }
 
             $result = ['END_MESSAGE' => 'Terminate ok'];
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
