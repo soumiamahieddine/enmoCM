@@ -296,7 +296,11 @@ abstract class ContactModelAbstract
             'order_by'  => ['creation_date'],
         ]);
 
-        return $aContacts;
+        if (empty($aContacts[0])) {
+            return [];
+        }
+
+        return $aContacts[0];
     }
 
     public static function purgeContact($aArgs)
