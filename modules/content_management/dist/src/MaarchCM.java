@@ -31,6 +31,8 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,6 +82,7 @@ public class MaarchCM {
     protected String uniqueId;
     protected String convertPdf;
     protected String onlyConvert;
+    protected String md5File;
 
     protected String domain;
     protected String userLocalDirTmp;
@@ -111,6 +114,7 @@ public class MaarchCM {
     public String fileToEdit;
     public String editMode;    
     public String programName;
+    
     SystemTray tray = SystemTray.getSystemTray();
     //If the icon is a file
     Image image = Toolkit.getDefaultToolkit().createImage(this.getClass().getResource("logo_only.png"));
@@ -198,6 +202,7 @@ public class MaarchCM {
         userMaarch = args[8];
         convertPdf = args[9];
         onlyConvert = args[10];
+        md5File = args[11];
 
         System.out.println("URL : " + url);
         System.out.println("OBJECT TYPE : " + objectType);
@@ -210,6 +215,7 @@ public class MaarchCM {
         System.out.println("USERMAARCH : " + userMaarch);
         System.out.println("CONVERTPDF : " + convertPdf);
         System.out.println("ONLYCONVERT : " + onlyConvert);
+        System.out.println("MD5FILE : " + md5File);
         System.out.println("----------CONTROL PARAMETERS----------");
     }
     public void getClientEnv() throws InterruptedException, IOException {
@@ -559,6 +565,7 @@ public class MaarchCM {
         while (itValue.hasNext()) {
             String value = (String) itValue.next();
             String key = (String) itKey.next();
+
             logger.log(key + " : " + value, Level.INFO);
             if ("STATUS".equals(key)) status = value;
             if ("OBJECT_TYPE".equals(key)) objectType = value;
@@ -759,29 +766,29 @@ public class MaarchCM {
     }
     
     public void editObject_v2() throws InterruptedException, IOException, PrivilegedActionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, Exception {
-
-        
-        logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
-        
         String urlToSend;
+        if (checksumFile(md5File) == false) {
+            logger.log("The file is not here in maarchTmp folder.", Level.INFO);
+            logger.log("RETRIEVE DOCUMENT ...", Level.INFO);
+            
+            urlToSend = url + "?action=editObject&objectType=" + objectType
+                + "&objectTable=" + objectTable + "&objectId=" + objectId
+                + "&uniqueId=" + uniqueId;
 
-        urlToSend = url + "?action=editObject&objectType=" + objectType
-            + "&objectTable=" + objectTable + "&objectId=" + objectId
-            + "&uniqueId=" + uniqueId;
+            logger.log("FIRST URL CALL : " + urlToSend, Level.INFO);
+            sendHttpRequest(urlToSend, "none", false);
+            logger.log("MESSAGE STATUS : " + messageStatus, Level.INFO);
+            logger.log("MESSAGE RESULT : ", Level.INFO);
+            processReturn(messageResult);
+            logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
 
+            //fileToEdit = "thefile_" + idApplet + "." + fileExtension;
+            fileToEdit = md5File + "." + fileExtension;
 
-        logger.log("FIRST URL CALL : " + urlToSend, Level.INFO);
-        sendHttpRequest(urlToSend, "none", false);
-        logger.log("MESSAGE STATUS : " + messageStatus, Level.INFO);
-        logger.log("MESSAGE RESULT : ", Level.INFO);
-        processReturn(messageResult);
-        logger.log("----------END OPEN REQUEST----------", Level.INFO);
-        logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
+            fM.createFile(fileContent, userLocalDirTmp + File.separator + fileToEdit);
+        }   
         
-        fileToEdit = "thefile_" + idApplet + "." + fileExtension;
-        //fileToEdit = "test.odt";
-        fM.createFile(fileContent, userLocalDirTmp + File.separator + fileToEdit);
-        fileToDelete.add(userLocalDirTmp + File.separator + fileToEdit);
+        //fileToDelete.add(userLocalDirTmp + File.separator + fileToEdit);
         fileContentTosend = "";
                         
         launchProcess();
@@ -872,7 +879,8 @@ public class MaarchCM {
                             if ("true".equals(convertPdf)) {
                                 if ((fileExtension.equalsIgnoreCase("docx") || fileExtension.equalsIgnoreCase("doc") || fileExtension.equalsIgnoreCase("docm") || fileExtension.equalsIgnoreCase("odt") || fileExtension.equalsIgnoreCase("ott"))) {
                                     logger.log("----------CONVERSION PDF----------", Level.INFO);
-                                    String pdfFile = userLocalDirTmp + File.separator + "thefile_" + idApplet + ".pdf";
+                                    //String pdfFile = userLocalDirTmp + File.separator + "thefile_" + idApplet + ".pdf";
+                                    String pdfFile = userLocalDirTmp + File.separator + md5File + ".pdf";                                    
                                     createPDF(userLocalDirTmp + File.separator + fileToEdit, userLocalDirTmp, os);
                                     File file=new File(pdfFile);
                                     if (file.exists()) {
@@ -908,8 +916,12 @@ public class MaarchCM {
                                     endMessage = endMessage + " mais la conversion pdf n'a pas fonctionné (le document ne pourra pas être signé)";
                                 }
                             }
+                            File fileToRename = new File(userLocalDirTmp + File.separator + fileToEdit);
+                            String newMd5 = getchecksumFile(userLocalDirTmp + File.separator + fileToEdit);
+                            fileToRename.renameTo(new File(userLocalDirTmp + File.separator + newMd5 + "." + fileExtension));
                             FileManager.deleteSpecificFilesOnDir(fileToDelete);
                             FileManager.deleteEnvDir(userLocalDirTmp + File.separator + idApplet + "_conv");
+                            FileManager.deleteFilesOnDirWithTime(userLocalDirTmp);
                             logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
                             return;
                         }
@@ -998,5 +1010,52 @@ public class MaarchCM {
         return;
     }
     
+    public Boolean checksumFile(String md5) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+        if (md5.equals("0")) {
+            return false;
+        }
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        FileInputStream fis = null;
+        File dir = new File(userLocalDirTmp);
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+          for (File child : directoryListing) {
+            if (child.toString().contains(md5)) {
+                
+                String checksum = getchecksumFile(child.toString());
+                System.out.println("MD5 checksum file found ! " + checksum);
+                if (checksum.equals(md5)) {
+                    fileToEdit = child.getName().toString();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+          }
+        }
+        return false;
+    }
     
-}
+    public String getchecksumFile(String fileName) throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        
+        FileInputStream fis = new FileInputStream(fileName);
+
+        byte[] dataBytes = new byte[1024];
+
+        int nread = 0; 
+        while ((nread = fis.read(dataBytes)) != -1) {
+          md.update(dataBytes, 0, nread);
+        };
+        byte[] mdbytes = md.digest();
+
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < mdbytes.length; i++) {
+          sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        System.out.println("MD5 checksum file : " + sb.toString());
+        return sb.toString();
+    }
+} 

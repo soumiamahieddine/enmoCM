@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -318,5 +319,26 @@ public class FileManager {
         }
     }
     
-    
+    /**
+    * Deletes file in the tmp dir
+    * @param directory path of the tmp dir
+    * @param pattern pattern of files to delete
+    */
+    public static void deleteFilesOnDirWithTime (String directory) throws IOException {
+        File dir = new File(directory);
+        File[] directoryListing = dir.listFiles();
+        long now = Calendar.getInstance().getTimeInMillis();
+        long oneDay = 1000L * 60L * 60L * 24L;
+        long twoDays = 2L * oneDay;
+        if (directoryListing != null) {
+          for (File child : directoryListing) {
+            //System.out.println("a file : " + child);
+            long diff = now - child.lastModified();
+            if (!child.toString().contains(".log") && diff >= twoDays) {
+                System.out.println("a file with pattern : " + child);
+                child.delete();
+            }
+          }
+        }
+    } 
 }
