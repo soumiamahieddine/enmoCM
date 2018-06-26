@@ -809,7 +809,6 @@ function showContactInfo(target,contactTarget,addressTarget) {
 }
 
 function checkEffectiveDateStatus(effectiveDateStatus) {
-    console.log($j('#'+effectiveDateStatus.id).val());
     if ($j('#'+effectiveDateStatus.id).val() == 'NO_RTURN') {
         $j('#'+effectiveDateStatus.id).parent().find('[name=back_date\\[\\]]').val('');
         $j('#'+effectiveDateStatus.id).parent().find('[name=back_date\\[\\]]').prop('disabled',true);
