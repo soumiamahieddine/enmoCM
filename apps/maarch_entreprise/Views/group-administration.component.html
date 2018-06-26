@@ -91,56 +91,77 @@
                         </mat-tab-group>
                     </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
-                            <div class="row" style="margin:0px;">
-                                <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
-                                    <mat-form-field>
-                                        <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
-                                        <input class="autocompleteSearch" #autocompleteFilter placeholder="{{lang.linkUser}}" type="text" matInput [matAutocomplete]="auto"
-                                            [formControl]="userCtrl">
-                                        <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
-                                                <p mat-line style="margin:0;">
-                                                    <span class="col-xm-1" style="padding-right:5px;">
-                                                        <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
-                                                    </span>
-                                                    <span class="col-xm-11">
-                                                        {{ user.idToDisplay }}
-                                                        <small>{{ user.otherInfo }}</small>
-                                                    </span>
-                                                </p>
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                    <hr/>
-                                </div>
-                                <div class="col-md-6 col-xs-6">
-                                    <mat-form-field>
-                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-6 col-xs-6">
-                                    <mat-paginator #paginator [length]="100" [pageSize]="10">
-                                    </mat-paginator>
-                                </div>
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
+                                <mat-form-field>
+                                    <span matPrefix><mat-icon class="fa fa-user-plus" color="primary"></mat-icon>&nbsp;&nbsp;</span>
+                                    <input class="autocompleteSearch" #autocompleteFilter placeholder="{{lang.linkUser}}" type="text" matInput [matAutocomplete]="auto"
+                                        [formControl]="userCtrl">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user.idToDisplay" (click)="linkUser(user)">
+                                            <p mat-line style="margin:0;">
+                                                <span class="col-xm-1" style="padding-right:5px;">
+                                                    <mat-icon color="primary" [class]="user.type == 'entity' ? 'fa fa-sitemap fa-2x' : 'fa fa-user fa-2x'" style="margin-right:0px;"></mat-icon>
+                                                </span>
+                                                <span class="col-xm-11">
+                                                    {{ user.idToDisplay }}
+                                                    <small>{{ user.otherInfo }}</small>
+                                                </span>
+                                            </p>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <hr/>
                             </div>
-                            <mat-table #table [dataSource]="dataSource" matSort matSortActive="lastname" matSortDirection="asc">
-                                <ng-container matColumnDef="user_id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.id}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.user_id}} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="firstname">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="lastname">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
-                                </ng-container>
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
-                                    style="cursor:pointer;"></mat-row>
-                            </mat-table>
-                        </mat-tab>
+                            <div class="col-md-6 col-xs-6">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <mat-paginator #paginator [length]="100" [pageSize]="10">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <mat-table #table [dataSource]="usersDataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                            <ng-container matColumnDef="firstname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="lastname">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="usersDisplayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: usersDisplayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                                style="cursor:pointer;"></mat-row>
+                        </mat-table>
+                    </mat-tab>
+                    <mat-tab label="{{lang.relatedBaskets}}" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-6 col-xs-6">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyBasketsFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <mat-paginator #paginatorBaskets [length]="100" [pageSize]="10">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                        <mat-table #table [dataSource]="basketsDataSource" matSort matSortActive="basket_name" matSortDirection="asc">
+                            <ng-container matColumnDef="basket_name">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="basket_desc">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.basket_desc}} </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="basketsDisplayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;" routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}" style="cursor:pointer;"></mat-row>
+                        </mat-table>
+                    </mat-tab>
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>

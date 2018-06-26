@@ -51,6 +51,12 @@ class GroupControllerTest extends TestCase
         $this->assertSame('Y', $responseBody->group->enabled);
         $this->assertSame('1=2', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche', $responseBody->group->security->maarch_comment);
+        $this->assertInternalType('array', $responseBody->group->users);
+        $this->assertInternalType('array', $responseBody->group->baskets);
+        $this->assertEmpty($responseBody->group->users);
+        $this->assertEmpty($responseBody->group->baskets);
+        $this->assertSame(true, $responseBody->group->canAdminUsers);
+        $this->assertSame(true, $responseBody->group->canAdminBaskets);
     }
 
     public function testUpdate()
@@ -86,6 +92,12 @@ class GroupControllerTest extends TestCase
         $this->assertSame('Y', $responseBody->group->enabled);
         $this->assertSame('1=3', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche #2', $responseBody->group->security->maarch_comment);
+        $this->assertInternalType('array', $responseBody->group->users);
+        $this->assertInternalType('array', $responseBody->group->baskets);
+        $this->assertEmpty($responseBody->group->users);
+        $this->assertEmpty($responseBody->group->baskets);
+        $this->assertSame(true, $responseBody->group->canAdminUsers);
+        $this->assertSame(true, $responseBody->group->canAdminBaskets);
     }
 
     public function testDelete()
