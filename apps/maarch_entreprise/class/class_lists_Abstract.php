@@ -3623,9 +3623,9 @@ abstract class lists_Abstract extends Database
             //Need a form?
             $this->withForm = false;
             if ($this->params['bool_checkBox'] === true || $this->params['bool_radioButton'] === true ||
-                (!empty($parameters['actions']) && is_array($parameters['actions']) && count($parameters['actions'] > 0)) ||
-                (!empty($parameters['buttons']) && is_array($parameters['buttons']) && count($parameters['buttons'] > 0))
-                || !empty($parameters['defaultAction'])
+                (!empty($parameters['actions']) && is_array($parameters['actions']) && count($parameters['actions']) > 0) ||
+                (!empty($parameters['buttons']) && is_array($parameters['buttons']) && count($parameters['buttons']) > 0)
+                || !empty($this->params['defaultAction'])
                 ) {
                 //Need a form!
                 $this->withForm = true;
