@@ -550,6 +550,6 @@ export const LANG_EN = {
     "modelUpdated"                      : "Model updated",
     "importFile"                        : "Import a file",
     "allAttachments"                    : "All attachments",
-    "editModelFirst"                    : "Please edit model first"
-
+    "editModelFirst"                    : "Please edit model first",
+    "visa"                              : "Visa"
 };

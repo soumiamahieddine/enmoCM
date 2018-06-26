@@ -572,6 +572,6 @@ export const LANG_FR = {
     "modelUpdated"                      : "Le Modèle a été mis à jour",
     "importFile"                        : "Importer un fichier",
     "allAttachments"                    : "Tous les attachements",
-    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider"
-    
+    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider",
+    "visa"                              : "Visa"
 };
