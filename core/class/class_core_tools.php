@@ -1542,7 +1542,7 @@ class core_tools extends functions
     private function load_css()
     {
         ?>
-        <link rel="stylesheet" href="css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css" media="screen" />
+        <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />
         <link rel="stylesheet" href="css/font-awesome-maarch/css/font-maarch.css" media="screen" />
         <link rel="stylesheet" type="text/css" href="merged_css.php" media="screen" />
         <?php
@@ -2325,8 +2325,8 @@ class core_tools extends functions
         ?>
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
         <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
-            .'css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['coreurl']
+            .'node_modules/@fortawesome/fontawesome-free/css/all.css'; ?>" media="screen" />
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
             .'css/font-awesome-maarch/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />

@@ -40,6 +40,7 @@
     "@angular/platform-browser-dynamic": "^6.0.6",
     "@angular/platform-server": "^6.0.6",
     "@angular/router": "^6.0.6",
+    "@fortawesome/fontawesome-free": "^5.1.0",
     "@types/datatables.net": "^1.10.11",
     "@types/jquery": "^2.0.49",
     "@types/node": "^7.0.66",

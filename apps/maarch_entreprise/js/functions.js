@@ -3767,7 +3767,7 @@ function print_current_result_list(path){
     alert("Cela imprimera la liste actuellement affichée");
     var mywindow = window.open('', 'my div', 'height=400,width=600');
     mywindow.document.write('<html><head><title>MAARCH</title>');
-    mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css" media="all"/>');
+    mywindow.document.write('<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" type="text/css" media="all"/>');
     mywindow.document.write('<link rel="stylesheet" href="'+path+'/css/font-awesome-maarch/css/font-maarch.css" type="text/css" media="all"/>');
     mywindow.document.write('<link rel="stylesheet" href="'+path+'/merged_css.php" type="text/css" media="all"/>');
     mywindow.document.write('</head><body >');
