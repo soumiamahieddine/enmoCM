@@ -182,9 +182,12 @@ class ResController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+
         $response->write($fileContent);
 
-        return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+        return $response->withHeader('Content-Type', $mimeType);
     }
 
     public function updateExternalInfos(Request $request, Response $response)

@@ -482,9 +482,12 @@ class UserController
             return $response->withStatus(404)->withJson(['errors' => 'Signature not found on docserver']);
         }
 
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($image);
+
         $response->write($image);
 
-        return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+        return $response->withHeader('Content-Type', $mimeType);
     }
 
     public function addSignature(Request $request, Response $response, array $aArgs)
