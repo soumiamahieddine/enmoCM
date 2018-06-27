@@ -153,25 +153,29 @@ class CoreConfigModel
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
 
-        $categoriesTypes = [];
-        $categories      = $loadedXml->COLLECTION->categories;
-        if (count($categories) > 0) {
-            foreach ($categories->category as $category) {
-                $categoriesTmp = [
-                    'id'    => (string)$category->id,
-                    'label' => defined((string)$category->label) ? constant((string)$category->label) : (string)$category->label
-                ];
+        $categories = [];
 
-                if ($category->id == (string)$categories->default_category) {
-                    $categoriesTmp['default_category'] = true;
-                } else {
-                    $categoriesTmp['default_category'] = false;
+        foreach ($loadedXml->COLLECTION as $collection) {
+            if ($collection->id == 'letterbox_coll') {
+                foreach ($collection->categories->category as $category) {
+                    if ($category->id == (string)$collection->categories->default_category) {
+                        $categories[] = [
+                            'id'                => (string)$category->id,
+                            'label'             => defined($category->label) ? constant($category->label) : $category->label,
+                            'defaultCategory'   => true
+                        ];
+                    } else {
+                        $categories[] = [
+                            'id'                => (string)$category->id,
+                            'label'             => defined($category->label) ? constant($category->label) : $category->label,
+                            'defaultCategory'   => false
+                        ];
+                    }
                 }
-                $categoriesTypes[] = $categoriesTmp;
             }
         }
 
-        return $categoriesTypes;
+        return $categories;
     }
 
     public static function getXmlLoaded(array $aArgs)

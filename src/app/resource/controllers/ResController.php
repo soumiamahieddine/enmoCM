@@ -20,6 +20,7 @@ use Docserver\models\DocserverModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
+use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
 use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
@@ -374,5 +375,10 @@ class ResController
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
+    }
+
+    public function getCategories(Request $request, Response $response)
+    {
+        return $response->withJson(['categories' => CoreConfigModel::getLettersBoxCategories()]);
     }
 }
