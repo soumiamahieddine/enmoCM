@@ -234,7 +234,7 @@ class JnlpController
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            if (!file_exists($tmpPath . $newFileOnTmp) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
+            if (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Failed to copy on {$tmpPath} : {$pathToCopy}"]]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
