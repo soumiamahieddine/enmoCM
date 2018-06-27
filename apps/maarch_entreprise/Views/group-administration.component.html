@@ -123,7 +123,7 @@
                                 </mat-paginator>
                             </div>
                         </div>
-                        <mat-table #table [dataSource]="usersDataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                        <mat-table #sortUsers="matSort" [dataSource]="usersDataSource" matSort matSortActive="lastname" matSortDirection="asc">
                             <ng-container matColumnDef="firstname">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
@@ -149,7 +149,7 @@
                                 </mat-paginator>
                             </div>
                         </div>
-                        <mat-table #table [dataSource]="basketsDataSource" matSort matSortActive="basket_name" matSortDirection="asc">
+                        <mat-table #sortBaskets="matSort" [dataSource]="basketsDataSource" matSort matSortActive="basket_name" matSortDirection="asc">
                             <ng-container matColumnDef="basket_name">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>

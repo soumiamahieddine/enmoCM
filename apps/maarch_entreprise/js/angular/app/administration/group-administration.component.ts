@@ -37,8 +37,9 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
 
 
     @ViewChild('paginatorBaskets') paginatorBaskets: MatPaginator;
+    @ViewChild('sortBaskets') sortBaskets: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('sortUsers') sortUsers: MatSort;
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
@@ -80,10 +81,10 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                         setTimeout(() => {
                             this.usersDataSource = new MatTableDataSource(this.group.users);
                             this.usersDataSource.paginator = this.paginator;
-                            this.usersDataSource.sort = this.sort;
+                            this.usersDataSource.sort = this.sortUsers;
                             this.basketsDataSource = new MatTableDataSource(this.group.baskets);
                             this.basketsDataSource.paginator = this.paginatorBaskets;
-                            this.basketsDataSource.sort = this.sort;
+                            this.basketsDataSource.sort = this.sortBaskets;
                         }, 0);
 
                     }, () => {
@@ -141,7 +142,7 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                 this.group.users.push(user);
                 this.usersDataSource = new MatTableDataSource(this.group.users);
                 this.usersDataSource.paginator = this.paginator;
-                this.usersDataSource.sort = this.sort;
+                this.usersDataSource.sort = this.sortUsers;
                 this.notify.success(this.lang.userAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
