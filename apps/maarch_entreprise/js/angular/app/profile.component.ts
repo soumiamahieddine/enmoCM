@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MatSidenav, MatExpansionPanel } from '@angular/material';
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -65,6 +65,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
 
     //Redirect Baskets
     selectionBaskets = new SelectionModel<Element>(true, []);
+    myBasketExpansionPanel: boolean = false;
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
@@ -74,6 +75,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             this.selectionBaskets.clear();
         }
     }
+
+    @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     //Groups contacts
     contactsGroups: any[] = [];
@@ -179,6 +182,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     initComponents(event: any) {
+        this.selectedIndex = event.index;
         if (event.index == 2) {
             this.sidenav.open();
             //if (this.histories.length == 0) {
@@ -258,7 +262,6 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     contactsGroupSubmit() {
-
         this.http.post(this.coreUrl + 'rest/contactsGroups', this.contactsGroup)
             .subscribe((data: any) => {
                 this.initGroupsContact();
@@ -557,7 +560,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     activateAbsence() {
-        let r = confirm('Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté.');
+        let r = confirm(this.lang.confirmToBeAbsent);
 
         if (r) {
             this.http.put(this.coreUrl + 'rest/users/' + this.user.id + '/status', { "status": "ABS" })
@@ -571,11 +574,14 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     askRedirectBasket() {
-        let r = confirm('Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?');
-
+        this.myBasketExpansionPanel = false;
+        this.viewPanels.forEach(p => p.close());
+        let r = confirm(this.lang.askRedirectBasketBeforeAbsence);
         if (r) {
-            this.selectedIndex = 2;
-            $j('#redirectBasketCard').click();
+            this.selectedIndex = 1;
+            setTimeout(() => {
+                this.myBasketExpansionPanel = true;
+            }, 0);
         } else {
             this.activateAbsence();
         }
@@ -633,7 +639,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     deleteEmailSignature() {
-        let r = confirm('Voulez-vous vraiment supprimer la signature de mail ?');
+        let r = confirm(this.lang.confirmDeleteMailSignature);
 
         if (r) {
             var id = this.user.emailSignatures[this.mailSignatureModel.selected].id;
@@ -684,7 +690,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     deleteSignature(id: number) {
-        let r = confirm('Voulez-vous vraiment supprimer la signature ?');
+        let r = confirm(this.lang.confirmDeleteSignature);
 
         if (r) {
             this.http.delete(this.coreUrl + "rest/users/" + this.user.id + "/signatures/" + id)

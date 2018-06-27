@@ -574,5 +574,9 @@ export const LANG_FR = {
     "importFile"                        : "Importer un fichier",
     "allAttachments"                    : "Tous les attachements",
     "editModelFirst"                    : "Veuillez éditer le modèle avant de valider",
-    "visa"                              : "Visa"
+    "visa"                              : "Visa",
+    "askRedirectBasketBeforeAbsence"    : "Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?",
+    "confirmToBeAbsent"                 : "Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté",
+    "confirmDeleteMailSignature"        : "Voulez-vous vraiment supprimer la signature de mail ?",
+    "confirmDeleteSignature"            : "Voulez-vous vraiment supprimer la signature ?"
 };
