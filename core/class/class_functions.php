@@ -410,7 +410,7 @@ class functions
         }
 
         $_SESSION['location_bar']['level1']['path'] = "index.php?reinit=true";
-        $_SESSION['location_bar']['level1']['label'] = $_SESSION['config']['applicationname'];
+        $_SESSION['location_bar']['level1']['label'] = 'Accueil';
         $_SESSION['location_bar']['level1']['id'] = "welcome";
 
         if(!empty($level))

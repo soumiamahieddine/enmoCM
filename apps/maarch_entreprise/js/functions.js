@@ -962,31 +962,6 @@ function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     $j("input[type='button']").prop("disabled", false).css("opacity", "1");
 }
 
-function test_form()
-{
-    var error_num = check_form_baskets("redirect_my_baskets_to");
-    if( error_num == 1)
-    {
-        document.getElementById('redirect_my_baskets_to').submit();
-    }
-    else if(error_num == 2)
-    {
-        alert("Un champ n'est pas dans le bon format : Nom, Prénom (Identifiant)");
-    }
-    else if(error_num == 3)
-    {
-        alert("Le propriétaire des bannettes n'est pas défini.");
-    }
-    else if(error_num == 4)
-    {
-        alert("Vous devez rediriger au moins une des bannettes vers un utilisateur.");
-    }
-    else
-    {
-        alert("Erreur dans la transmission du formulaire...");
-    }
-}
-
 /**
  * Destroy a modal window
  *

@@ -294,18 +294,6 @@
     </requestDefinition-->
 
 
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_templates_entities">
-		<parameter name="page" value="param_templates_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="param_templates_entities">
-		<parameter name="page" value="param_templates_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
     <!--requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
 		<parameter name="page" value="param_workflow"/>
 		<parameter name="display" value="true"/>

@@ -51,7 +51,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'associate_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'folder_search');
@@ -99,7 +98,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_re
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'associate_folder');
@@ -145,7 +143,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'associate_folder');
@@ -181,7 +178,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'j
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'associate_folder');
@@ -247,7 +243,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR',
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_cases');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'associate_folder');
@@ -307,7 +302,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('DIRECTEUR', 'vie
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'update_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'use_mail_services');
@@ -326,7 +320,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'cr
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_full_history');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'avis_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'tag_view');
