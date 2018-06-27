@@ -217,6 +217,11 @@ class JnlpController
             } elseif ($data['objectType'] == 'templateModification') {
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
                 $template = TemplateModel::getById(['id' => $data['objectId'], 'select' => ['template_path', 'template_file_name']]);
+                if (empty($template)) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Template does not exist"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
 
                 $explodeFile = explode('.', $template['template_file_name']);
                 $ext = $explodeFile[count($explodeFile) - 1];
@@ -229,7 +234,7 @@ class JnlpController
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            if (!copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
+            if (!file_exists($tmpPath . $newFileOnTmp) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Failed to copy on {$tmpPath} : {$pathToCopy}"]]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
