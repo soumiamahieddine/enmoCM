@@ -57,6 +57,7 @@ UPDATE docservers set is_readonly = 'Y' WHERE docserver_id = 'FASTHD_AI';
 ALTER TABLE templates_association DROP COLUMN IF EXISTS system_id;
 ALTER TABLE templates_association DROP COLUMN IF EXISTS what;
 ALTER TABLE templates_association DROP COLUMN IF EXISTS maarch_module;
+ALTER TABLE templates_association DROP COLUMN IF EXISTS id;
 ALTER TABLE templates_association ADD COLUMN id serial;
 ALTER TABLE templates_association ADD UNIQUE (id);
 UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
