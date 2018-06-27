@@ -1221,6 +1221,7 @@ th.ref {
 }
 
 #viewdoc {
+    padding-bottom: 0px !important;
     float: right;
     text-align: right;
     margin-right: 0px;
