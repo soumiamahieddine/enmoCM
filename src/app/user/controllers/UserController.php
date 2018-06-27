@@ -454,6 +454,9 @@ class UserController
 
     public function getImageContent(Request $request, Response $response, array $aArgs)
     {
+        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::intVal()->validate($aArgs['signatureId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
