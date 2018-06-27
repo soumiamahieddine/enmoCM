@@ -2,6 +2,7 @@
 
 UPDATE actions_groupbaskets set used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
 UPDATE actions_groupbaskets set used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
+DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
 
 DROP TABLE IF EXISTS contacts_groups;
 CREATE TABLE contacts_groups
@@ -56,6 +57,7 @@ UPDATE docservers set is_readonly = 'Y' WHERE docserver_id = 'FASTHD_AI';
 ALTER TABLE templates_association DROP COLUMN IF EXISTS system_id;
 ALTER TABLE templates_association DROP COLUMN IF EXISTS what;
 ALTER TABLE templates_association DROP COLUMN IF EXISTS maarch_module;
+ALTER TABLE templates_association DROP COLUMN IF EXISTS id;
 ALTER TABLE templates_association ADD COLUMN id serial;
 ALTER TABLE templates_association ADD UNIQUE (id);
 UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
@@ -76,4 +78,12 @@ DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
-
+ALTER TABLE security DROP COLUMN IF EXISTS can_insert;
+ALTER TABLE security DROP COLUMN IF EXISTS can_update;
+ALTER TABLE security DROP COLUMN IF EXISTS can_delete;
+ALTER TABLE security DROP COLUMN IF EXISTS rights_bitmask;
+ALTER TABLE security DROP COLUMN IF EXISTS mr_start_date;
+ALTER TABLE security DROP COLUMN IF EXISTS mr_stop_date;
+ALTER TABLE security DROP COLUMN IF EXISTS where_target;
+ALTER TABLE users DROP COLUMN IF EXISTS ra_code;
+ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;

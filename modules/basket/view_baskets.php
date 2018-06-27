@@ -121,7 +121,6 @@ require_once 'core/class/class_db.php';
 $core = new core_tools();
 $core->test_user();
 $core->load_lang();
-$core->test_service('view_baskets', "basket");
 if (! isset($_REQUEST['noinit'])) {
     $_SESSION['current_basket'] = array();
 }

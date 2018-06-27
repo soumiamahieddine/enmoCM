@@ -23,13 +23,15 @@ abstract class GroupBasketModelAbstract
     public static function get(array $aArgs)
     {
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aGroupsBaskets = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['groupbasket'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aGroupsBaskets;
@@ -90,5 +92,21 @@ abstract class GroupBasketModelAbstract
         }
 
         return true;
+    }
+
+    public static function getBasketsByGroupId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['groupId']);
+        ValidatorModel::stringType($aArgs, ['groupId']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aGroupsBaskets = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['groupbasket, baskets'],
+            'where'     => ['groupbasket.group_id = ?', 'groupbasket.basket_id = baskets.basket_id'],
+            'data'      => [$aArgs['groupId']]
+        ]);
+
+        return $aGroupsBaskets;
     }
 }

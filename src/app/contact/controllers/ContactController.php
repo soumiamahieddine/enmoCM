@@ -48,7 +48,8 @@ class ContactController
         } else {
             $data['addressFirstname'] = $data['firstname'];
             $data['addressLastname'] = $data['lastname'];
-            unset($data['firstname'], $data['lastname']);
+            $data['addressTitle'] = $data['title'];
+            unset($data['firstname'], $data['lastname'], $data['title']);
         }
 
         if (empty($data['isPrivate'])) {

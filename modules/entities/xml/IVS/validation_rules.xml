@@ -269,17 +269,6 @@
 		<parameter name="form_values" type="string" />
     </validationRule>
 
-    <validationRule name="param_index_difflist_types" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="group" type="identifier" />
-		<parameter name="old_group" type="identifier" />
-    </validationRule>
-
-    <validationRule name="param_templates_entities" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="entities_chosen" type="identifier" />
-    </validationRule>
-
     <validationRule name="entities_list_by_label" extends="standardForm" mode="error"/>
 
     <validationRule name="entity_add" extends="standardForm" mode="error" />

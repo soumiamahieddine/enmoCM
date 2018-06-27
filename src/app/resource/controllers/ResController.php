@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use Basket\models\BasketModel;
+use Docserver\models\DocserverModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
@@ -159,6 +160,36 @@ class ResController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getFileContent(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
+        if (empty($document)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+        $fileContent = file_get_contents($pathToDocument);
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+
+        $response->write($fileContent);
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
     public function updateExternalInfos(Request $request, Response $response)
     {
         $data = $request->getParams();
@@ -247,9 +278,13 @@ class ResController
         }
 
         if (!empty($basketsClause)) {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
-            if (!empty($res)) {
-                return true;
+            try {
+                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$aArgs['resId']]]);
+                if (!empty($res)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                return false;
             }
         }
 

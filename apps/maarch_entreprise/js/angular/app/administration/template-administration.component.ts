@@ -141,20 +141,23 @@ export class TemplateAdministrationComponent implements OnInit {
         this.attachmentTypesList  = data.attachmentTypes;
         this.datasourcesList      = data.datasources;
         setTimeout(() => {
-            $j('#jstree').jstree({
-                "checkbox": {
-                    three_state: false,
-                    cascade: 'down'
-                },
-                'core': {
-                    'themes': {
-                        'name': 'proton',
-                        'responsive': true
+            $j('#jstree')
+                .on('select_node.jstree', function (e: any, data: any) {
+                    if (data.event) {
+                        data.instance.select_node(data.node.children_d);
+                    }
+                })
+                .jstree({
+                    "checkbox": { three_state: false },
+                    'core': {
+                        'themes': {
+                            'name': 'proton',
+                            'responsive': true
+                        },
+                        'data': data.entities
                     },
-                    'data': data.entities
-                },
-                "plugins": ["checkbox", "search", "sort"]
-            });
+                    "plugins": ["checkbox", "search", "sort"]
+                });
             var to: any = false;
             $j('#jstree_search').keyup(function () {
                 if (to) { clearTimeout(to); }

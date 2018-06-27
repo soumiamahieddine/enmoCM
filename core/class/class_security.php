@@ -47,7 +47,6 @@ require_once 'core/class/class_db_pdo.php';
 require_once 'core/class/class_history.php';
 require_once 'core/class/SecurityControler.php';
 require_once 'core/class/class_core_tools.php';
-require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
 if (isset($_SESSION['config']['app_id'])) {
     require_once 'apps/'.$_SESSION['config']['app_id']
@@ -56,6 +55,8 @@ if (isset($_SESSION['config']['app_id'])) {
 require_once 'core/class/usergroups_controler.php';
 require_once 'core/class/ServiceControler.php';
 
+$core = new core_tools();
+$core->load_lang();
 //require_once('lib/FirePHP/Init.php');
 
 class security extends Database
@@ -111,25 +112,11 @@ class security extends Database
                 $comp = " and STATUS <> 'DEL'";
                 $params = [];
             } else {
-                if ($ra_code != false) {
-                    $comp = ' and '
-                        .'ra_code = :ra_code and ra_expiration_date >= :ra_expiration_date '
-                        .'and status <> :status '
-                        .'and (loginmode = :loginmode1 or loginmode = :loginmode2)';
-                    $params = array(
-                        'ra_code' => $this->getPasswordHash($ra_code),
-                        'ra_expiration_date' => date('Y-m-d 00:00:00'),
-                        'status' => 'DEL',
-                        'loginmode1' => 'standard',
-                        'loginmode2' => 'sso',
-                    );
-                } else {
-                    $comp = " and STATUS <> 'DEL' "
-                          .'and loginmode in (:loginmode1)';
-                    $params = ['loginmode1' => ['standard', 'sso', 'cas']];
-                    if ($method == 'restMode') {
-                        array_push($params['loginmode1'], 'restMode');
-                    }
+                $comp = " and STATUS <> 'DEL' "
+                      .'and loginmode in (:loginmode1)';
+                $params = ['loginmode1' => ['standard', 'sso', 'cas']];
+                if ($method == 'restMode') {
+                    array_push($params['loginmode1'], 'restMode');
                 }
             }
         } else {
@@ -170,7 +157,6 @@ class security extends Database
                         array_push($_SESSION['user']['pathToSignature'], $path);
                     }
 
-                    $_SESSION['user']['code_session'] = $ra_code;
                 }
                 $array = array(
                     'change_pass' => $user->__get('change_password'),
@@ -284,102 +270,6 @@ class security extends Database
                 'error' => $error,
                 'url' => 'index.php?display=true&page=login',
             );
-        }
-    }
-
-    public function generateRaCode($login, $password = '', $redirect = true)
-    {
-        require_once 'apps/maarch_entreprise/class/class_users.php';
-        $users = new class_users();
-        $userInfo = $users->get_user($_SESSION['user']['UserId']);
-
-        $authorized_characters = '0123456789';
-        $cpt_motDePasse = 1;
-        $cptMax_motDePasse = 4;
-        $max_rand = strlen($authorized_characters);
-        $raCodeGenerated = '';
-        while (strlen($raCodeGenerated) < $cptMax_motDePasse) {
-            $raCodeGenerated .= rand(1, $max_rand);
-            ++$cpt_motDePasse;
-        }
-        $expireTSamp = mktime(date('H'), date('i') + 15, date('s'), date('m'), date('d'), date('Y'));
-        $expiration_date = date('d-m-Y H:i:s', $expireTSamp);
-
-        $db = new Database();
-        $db->query('UPDATE users set ra_code = ? WHERE user_id = ?', array($this->getPasswordHash($raCodeGenerated), $_SESSION['user']['UserId']), false);
-        $db->query('UPDATE users set ra_expiration_date = ? WHERE user_id = ?', array($expiration_date, $_SESSION['user']['UserId']), false);
-
-        /* GENERATION DU MAIL */
-        $mailToSend = '<html>';
-        $mailToSend .= '<body>';
-        $mailToSend .= '<p>';
-        $mailToSend .= _CONFIRM_ASK_RA_CODE_1.'<br />';
-        $mailToSend .= _CONFIRM_ASK_RA_CODE_2.$raCodeGenerated.' <br />';
-        $mailToSend .= _CONFIRM_ASK_RA_CODE_3.$expiration_date.'<br />';
-        $mailToSend .= '</p>';
-        $mailToSend .= '</body>';
-        $mailToSend .= '</html>';
-
-        if (file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
-            .$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'
-            .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-            .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml')) {
-            $path_to_config = $_SESSION['config']['corepath']
-                .'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
-                .DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR
-                .$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml';
-        } else {
-            $path_to_config = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-            .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config_sendmail_security.xml';
-        }
-
-        $xmlconfig = simplexml_load_file($path_to_config);
-        $mailerParams = $xmlconfig->MAILER;
-
-        require_once (string) $mailerParams->path_to_mailer;
-        $mailer = new PHPMailerOAuth();
-        $mailer->SMTPDebug = 0;
-
-        $mailer->Debugoutput = 'html';
-        $mailer->Host = (string) $mailerParams->smtp_host;
-        $mailer->Port = (string) $mailerParams->smtp_port;
-        $mailer->SMTPSecure = (string) $mailerParams->smtp_secure;
-        $mailer->SMTPAuth = filter_var($mailerParams->smtp_auth, FILTER_VALIDATE_BOOLEAN);
-
-        $mailer->Username = (string) $mailerParams->smtp_user;
-        $mailer->Password = (string) $mailerParams->smtp_password;
-        $mailer->Helo = (string) $mailerParams->domains;
-
-        if ((string) $mailerParams->type == 'smtp') {
-            $mailer->isSMTP();
-        }
-        $mailer->setFrom((string) $mailerParams->mailfrom, (string) $mailerParams->mailfromname);
-        $mailer->addReplyTo((string) $mailerParams->mailfrom, (string) $mailerParams->mailfromname);
-        $mailer->addAddress($userInfo['mail']);
-        $mailer->Subject = (string) $mailerParams->subject;
-        $mailer->CharSet = (string) $mailerParams->charset;
-        $mailer->msgHTML($mailToSend);
-        if (!$mailer->send()) {
-            $_SESSION['error'] .= ' mail not send to '.$userInfo['mail'].': '.$mailer->ErrorInfo;
-
-            if ($redirect) {
-                if ($_SESSION['isSmartphone']) {
-                    header('location: smartphone/index.php?page=login');
-                } else {
-                    header('location: index.php?page=login&display=true');
-                }
-            }
-        } else {
-            $_SESSION['error'] .= ' '._CONFIRM_ASK_RA_CODE_7;
-            $_SESSION['recup_user']['login'] = $login;
-            $_SESSION['recup_user']['password'] = $password;
-            if ($redirect) {
-                if ($_SESSION['isSmartphone']) {
-                    header('location: smartphone/index.php?page=login&withRA_CODE=true');
-                } else {
-                    header('location: index.php?page=login&withRA_CODE=true&display=true');
-                }
-            }
         }
     }
 
@@ -715,7 +605,7 @@ class security extends Database
     {
         $arr = array();
         for ($i = 0; $i < count($_SESSION['user']['security']); ++$i) {
-            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y') {
+            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table'])) {
                 $ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
                 array_push($arr, array('coll_id' => $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'], 'table' => $_SESSION['user']['security'][$i]['table']));
             }
@@ -728,7 +618,6 @@ class security extends Database
      * Checks if the current user can do the action on the collection.
      *
      * @param string $coll_id Collection identifier
-     * @param string $action  can_insert, can_update, can_delete
      *
      * @return true if the user can do the action on the collection, False otherwise
      */

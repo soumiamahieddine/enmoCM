@@ -192,14 +192,18 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
             } 
             // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && isset($_REQUEST['priority']))
+            elseif ($tab_id_fields[$j] == 'priority_chosen' && isset($_REQUEST['priority_chosen']))
             {
-                $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
-                $prio = $func->wash($_REQUEST['priority'],"alphanum",_THE_PRIORITY,"no");
-                $where_request .= " priority = :priority ";
-                $arrayPDO = array_merge($arrayPDO, array(":priority" => $prio));
+                $json_txt .= " 'priority_chosen' : [";
 
+                for ($get_i = 0; $get_i <count($_REQUEST['priority_chosen']); $get_i++) {
+                    $json_txt .= "'".$_REQUEST['priority_chosen'][$get_i]."',";
+                }                
+                $json_txt = substr($json_txt, 0, -1);
+                $where_request .= " priority IN  (:priorityChosen) ";
                 $where_request .=" and  ";
+                $arrayPDO = array_merge($arrayPDO, array(":priorityChosen" => $_REQUEST['priority_chosen']));
+                $json_txt .= '],';
             }
             // SIGNATORY GROUP
             elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group']))

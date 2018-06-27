@@ -59,8 +59,7 @@ class request extends dbquery
     public function PDOselect($select, $where, $parameters = null, $other, $database_type, $limit="default", $left_join=false, $first_join_table="", $second_join_table="", $join_key="", $add_security = true, $catch_error = false, $distinct_argument = false)
     {
         $db = new Database();
-        if($limit == 0 || $limit == "default")
-        {
+        if ($limit == 0 || $limit == "default") {
             $limit = $_SESSION['config']['databasesearchlimit'];
         }
       
@@ -69,18 +68,16 @@ class request extends dbquery
         $table = '';
         $table_string = '';
         $field_string = '';
-        foreach (array_keys($select) as $value)
-        {
+        foreach (array_keys($select) as $value) {
             $table = $value;
             $table_string .= $table.",";
-            foreach ($select[$value] as $subvalue)
-            {
+            foreach ($select[$value] as $subvalue) {
                 $field = $subvalue;
 
                 $field_string .= $table.".".$field.",";
 
                 //fix order by alt_identifier
-                if($field == 'alt_identifier'){
+                if ($field == 'alt_identifier') {
                     $field_string .= "order_alphanum(alt_identifier),";
                 }
             }
@@ -91,26 +88,20 @@ class request extends dbquery
         $field_string = substr($field_string, 0, -1);
 
         //Extracts data from the second argument : the where clause
-        if (trim($where) <> "")
-        {
+        if (trim($where) <> "") {
             $where_string = $where;
             //$where_string = " where ".$where;
-        }
-        else
-        {
+        } else {
             $where_string = "";
         }
-         $join = '';
-        if($left_join)
-        {
+        $join = '';
+        if ($left_join) {
             //Reste table string
             $table_string = "";
 
             //Add more table in join syntax
-            foreach (array_keys($select) as $value)
-            {
-                if ($value <> $first_join_table && $value <> $second_join_table)
-                {
+            foreach (array_keys($select) as $value) {
+                if ($value <> $first_join_table && $value <> $second_join_table) {
                     $table_string = $value.",";
                 }
             }
@@ -120,21 +111,14 @@ class request extends dbquery
             $join .= $second_join_table." on ".$second_join_table.".".$join_key." = ".$first_join_table.".".$join_key;
         }
 
-        if($add_security)
-        {
-            foreach(array_keys($_SESSION['user']['security']) as $coll)
-            {
-                if(isset($_SESSION['user']['security'][$coll]['DOC']['table']))
-                {
-                    if(preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['table'].'/',$table_string) || preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['view'].'/',$table_string) )
-                    {
-                        if(empty($where_string))
-                        {
+        if ($add_security) {
+            foreach (array_keys($_SESSION['user']['security']) as $coll) {
+                if (isset($_SESSION['user']['security'][$coll]['DOC']['table'])) {
+                    if (preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['table'].'/', $table_string) || preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['view'].'/', $table_string)) {
+                        if (empty($where_string)) {
                             $where_string = "( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
                             //$where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
-                        }
-                        else
-                        {
+                        } else {
                             $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
                         }
                         break;
@@ -145,8 +129,7 @@ class request extends dbquery
         //Time to create the SQL Query
         $query = "";
         $dist = '';
-        if($distinct_argument == true)
-        {
+        if ($distinct_argument == true) {
             $dist = " distinct ";
         }
         
@@ -159,18 +142,14 @@ class request extends dbquery
 
         $res_query = $db->query($query, $parameters, $catch_error);
 
-        if($catch_error && !$res_query)
-        {
+        if ($catch_error && !$res_query) {
             return false;
         }
         $result=array();
-        while($line = $res_query->fetch(PDO::FETCH_ASSOC))
-        {
+        while ($line = $res_query->fetch(PDO::FETCH_ASSOC)) {
             $temp= array();
-            foreach (array_keys($line) as $resval)
-            {
-                if (!is_int($resval))
-                {
+            foreach (array_keys($line) as $resval) {
+                if (!is_int($resval)) {
                     array_push(
                         $temp,
                         array(
@@ -180,10 +159,9 @@ class request extends dbquery
                     );
                 }
             }
-            array_push($result,$temp);
+            array_push($result, $temp);
         }
-        if(count($result) == 0 && $catch_error)
-        {
+        if (count($result) == 0 && $catch_error) {
             return true;
         }
         return $result;
@@ -204,7 +182,7 @@ class request extends dbquery
         $value_string = "( ";
         $parameters = array();
         for ($i=0;$i<count($data);$i++) {
-            if(
+            if (
                 trim(strtoupper($data[$i]['value'])) == "SYSDATE"
                 || trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP"
             ) {
@@ -247,13 +225,13 @@ class request extends dbquery
         $parameters = array();
         for ($i=0; $i < count($data);$i++) {
             if ($data[$i]['type'] == "string" || $data[$i]['type'] == "date") {
-                if ($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date" 
+                if ($databasetype == "POSTGRESQL" && $data[$i]['type'] == "date"
                     && ($data[$i]['value'] == '' || $data[$i]['value'] == ' ')) {
                     $update_string .= $data[$i]['column']."=NULL,";
                 } else {
                     if (trim(strtoupper($data[$i]['value'])) == "SYSDATE") {
                         $update_string .= $data[$i]['column']."=sysdate,";
-                    } elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP") {
+                    } elseif (trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP") {
                         $update_string .= $data[$i]['column']."=CURRENT_TIMESTAMP,";
                     } else {
                         $update_string .= $data[$i]['column']."=?,";
@@ -262,10 +240,10 @@ class request extends dbquery
                 }
             } else {
                 if ($data[$i]['value'] == 'NULL') {
-                    $update_string .= $data[$i]['column']."=NULL,";   
+                    $update_string .= $data[$i]['column']."=NULL,";
                 } else {
                     $update_string .= $data[$i]['column']."=?,";
-                    $parameters[] = $data[$i]['value']; 
+                    $parameters[] = $data[$i]['value'];
                 }
             }
         }
@@ -304,14 +282,12 @@ class request extends dbquery
     *************************************************************************/
     public function extract_date($date_field, $arg = '')
     {
-        switch ($_SESSION['config']['databasetype'])
-        {
+        switch ($_SESSION['config']['databasetype']) {
         case "SQLSERVER":
             return '';
         
         case "MYSQL":
-            switch($arg) 
-            {
+            switch ($arg) {
             case 'year'     : return ' date_format('.$date_field.', %Y)';
             case 'month'    : return ' date_format('.$date_field.', %m)';
             case 'day'      : return ' date_format('.$date_field.', %d)';
@@ -322,8 +298,7 @@ class request extends dbquery
             }
         
         case "POSTGRESQL":
-            switch($arg) 
-            {
+            switch ($arg) {
             case 'year'     : return " date_part( 'year', ".$date_field.")";
             case 'month'    : return " date_part( 'month', ".$date_field.")";
             case 'day'      : return " date_part( 'day', ".$date_field.")";
@@ -334,8 +309,7 @@ class request extends dbquery
             }
         
         case "ORACLE":
-            switch($arg) 
-            {
+            switch ($arg) {
             case 'year'     : return " to_char(".$date_field.", 'YYYY')";
             case 'month'    : return " to_char(".$date_field.", 'MM')";
             case 'day'      : return " to_char(".$date_field.", 'DD')";

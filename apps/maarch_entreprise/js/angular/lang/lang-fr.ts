@@ -401,6 +401,7 @@ export const LANG_FR = {
     "redirectWhenAbscence"              : "Rediriger la bannette à une personne",
     "reinitPassword"                    : "Réinitialiser le mot de passe",
     "relatedUsers"                      : "Utilisateur(s) associé(s)",
+    "relatedBaskets"                    : "Bannette(s) associée(s)",
     "removeUserRedirect"                : "Supprimer la personne (liste de diffusion + modèle de l'entité)",
     "renewPsw"                          : "Retaper le mot de passe",
     "reports"                           : "Statistiques",
@@ -572,6 +573,10 @@ export const LANG_FR = {
     "modelUpdated"                      : "Le Modèle a été mis à jour",
     "importFile"                        : "Importer un fichier",
     "allAttachments"                    : "Tous les attachements",
-    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider"
-    
+    "editModelFirst"                    : "Veuillez éditer le modèle avant de valider",
+    "visa"                              : "Visa",
+    "askRedirectBasketBeforeAbsence"    : "Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?",
+    "confirmToBeAbsent"                 : "Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté",
+    "confirmDeleteMailSignature"        : "Voulez-vous vraiment supprimer la signature de mail ?",
+    "confirmDeleteSignature"            : "Voulez-vous vraiment supprimer la signature ?"
 };

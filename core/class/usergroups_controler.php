@@ -228,11 +228,6 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     *       'COLL_ID' => collection identifier,
     *       'WHERE_CLAUSE' => where clause on the view,
     *       'COMMENT' => comment on the access,
-    *       'WHERE_TARGET' => target view (DOC = view of the collection),
-    *       'RIGHTS_BITMASK' => Access bitmask = rights allowed for the access
-    *           on the where target,
-    *       'START_DATE' => Start date of the access(NOT FULLY IMPLEMENTED YET),
-    *       'STOP_DATE' => Start date of the access (NOT FULLY IMPLEMENTED YET)
     *                                               )
     * @param  $services Array of services identifier
     * @param  $mode Mode (add or up)
@@ -253,7 +248,6 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     public function save($group, $security = array(), $services = array(),
         $mode = '', $params = array())
     {
-        $control = array();
         $secCtrl = new SecurityControler();
         $sec = new security();
         $func = new functions();
@@ -297,8 +291,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                 );
             } else {
                $res = $secCtrl->check_where_clause(
-                    $security[$i]['COLL_ID'], $security[$i]['WHERE_TARGET'],
-                    $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']
+                    $security[$i]['COLL_ID'], $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']
                 );
             }
             if ($res['RESULT'] == false) {
@@ -321,31 +314,8 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                         'coll_id'        => $security[$i]['COLL_ID'],
                         'where_clause'   => $security[$i]['WHERE_CLAUSE'],
                         'maarch_comment' => $security[$i]['COMMENT'],
-                        'where_target'   => $security[$i]['WHERE_TARGET']
                         );
 
-                    $bitmask = '0';
-                    if (isset($security[$i]['RIGHTS_BITMASK'])
-                        && !empty($security[$i]['RIGHTS_BITMASK'])
-                    ) {
-                        $bitmask = (string) $security[$i]['RIGHTS_BITMASK'];
-                    }
-                    $values['rights_bitmask'] = $bitmask;
-
-                    if (isset($security[$i]['START_DATE'])
-                        && !empty($security[$i]['START_DATE'])
-                    ) {
-                        $values['mr_start_date'] = $func->format_date_db(
-                            $security[$i]['START_DATE']
-                        );
-                    }
-                    if (isset($security[$i]['STOP_DATE'])
-                        && !empty($security[$i]['STOP_DATE'])
-                    ) {
-                        $values['mr_stop_date'] = $func->format_date_db(
-                            $security[$i]['STOP_DATE']
-                        );
-                    }
 
                     $sec = new SecurityObj();
                     $sec->setArray($values);

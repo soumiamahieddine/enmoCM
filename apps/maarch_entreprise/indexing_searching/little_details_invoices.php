@@ -13,9 +13,6 @@ require 'core/class/class_request.php';
 require 'apps/'.$_SESSION['config']['app_id'].'/class/class_list_show.php';
 require_once 'core/class/class_security.php';
 require_once 'core/class/class_history.php';
-require_once 'core/manage_bitmask.php';
-require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-    .DIRECTORY_SEPARATOR.'security_bitmask.php';
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
     .'class_indexing_searching_app.php';

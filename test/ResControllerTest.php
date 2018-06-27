@@ -369,6 +369,7 @@ class ResControllerTest extends TestCase
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
-        $this->assertSame(null, $res);
+        $this->assertInternalType('array', $res);
+        $this->assertEmpty($res);
     }
 }

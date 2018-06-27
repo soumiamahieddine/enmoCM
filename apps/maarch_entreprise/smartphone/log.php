@@ -64,11 +64,6 @@ if (isset($_REQUEST['pass'])) {
 } else {
     $password = '';
 }
-if (isset($_REQUEST['ra_code'])) {
-    $ra_code = $func->wash($_REQUEST['ra_code'], 'no', _RA_CODE, 'yes');
-} else {
-    $ra_code = '';
-}
 require_once 'core/class/class_security.php';
 require_once 'core/class/class_request.php';
 require_once 'apps/'.$_SESSION['config']['app_id']
@@ -221,33 +216,6 @@ if (!empty($_SESSION['error'])) {
                 .'index.php?display=true&page=login'
             );
             exit;
-        }
-    } elseif (isset($_REQUEST['ra_code'])) {
-        if (empty($login) || empty($password) || empty($ra_code)) {
-            $_SESSION['error'] = _IP_NOT_ALLOWED;
-            header(
-                'location: '.$_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=login'
-            );
-            exit;
-        } else {
-            $_SESSION['error'] = '';
-            $res = $sec->login($login, $password, false, $ra_code);
-            //$core->show_array($res);
-            $_SESSION['user'] = $res['user'];
-            if ($res['error'] == '') {
-                // $businessAppTools->load_app_var_session($_SESSION['user']);
-                //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
-                $core->load_menu($_SESSION['modules']);
-                // exit;
-            }
-            if (empty($_SESSION['error'])) {
-                $_SESSION['error'] = $res['error'];
-            }
-            header(
-                'location: '.$_SESSION['config']['businessappurl'].$res['url']
-            );
-            exit();
         }
     } else {
         if (empty($login) || empty($password)) {

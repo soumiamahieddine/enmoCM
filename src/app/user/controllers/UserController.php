@@ -452,8 +452,11 @@ class UserController
         return $response->withJson(['user' => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])]);
     }
 
-    public function getImageSignature(Request $request, Response $response, array $aArgs)
+    public function getImageContent(Request $request, Response $response, array $aArgs)
     {
+        if (!Validator::intVal()->validate($aArgs['id']) || !Validator::intVal()->validate($aArgs['signatureId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -479,9 +482,12 @@ class UserController
             return $response->withStatus(404)->withJson(['errors' => 'Signature not found on docserver']);
         }
 
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($image);
+
         $response->write($image);
 
-        return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+        return $response->withHeader('Content-Type', $mimeType);
     }
 
     public function addSignature(Request $request, Response $response, array $aArgs)

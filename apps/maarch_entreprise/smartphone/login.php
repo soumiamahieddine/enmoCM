@@ -28,9 +28,6 @@ $core->load_lang();
             ;?>" target="_self">
             <fieldset>
 					<table>
-						<?php
-						if ($_REQUEST['withRA_CODE'] != 'true'){
-						?>
 						<tr>
 							<td style="width:50%;text-align:left;">
 								<label><b><?php echo _ID; ?></b></label>
@@ -51,37 +48,6 @@ $core->load_lang();
 							</td>
 						</tr>
 						<?php
-						}
-						if ($_REQUEST['withRA_CODE'] == 'true'){
-						?>
-						<tr style="display:none">
-							<td style="width:50%;text-align:left;">
-								<label><b><?php echo _ID; ?></b></label>
-							</td>
-							<td style="width:50%;">
-								<input style="text-align:left;" type="text" name="login" value="<?php echo $_SESSION['recup_user']['login']; ?>" style="width:100%;"/>
-							</td>
-						</tr>
-						
-						<tr style="display:none">
-							<td style="width:50%;text-align:left;">
-								<label><b><?php echo _PASSWORD; ?></b></label>
-							</td>
-							<td style="width:50%;">
-								<input type="password" name="pass" value="<?php echo $_SESSION['recup_user']['password']; ?>" style="width:100%;" />
-							</td>
-						</tr>
-						
-						<tr>
-							<td style="width:50%;text-align:left;">
-								<label><b><?php echo _RA_CODE_1; ?></b></label>
-							</td>
-							<td style="width:50%;">
-								<input type="password" name="ra_code" value="" style="width:100%;" />
-							</td>
-						</tr>
-						<?php
-						}
 						unset($_SESSION['recup_user']);
 						?>
 					</table>

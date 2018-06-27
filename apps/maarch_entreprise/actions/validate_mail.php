@@ -168,7 +168,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $EntitiesIdExclusion = array();
         $load_listmodel = true;
 
-        if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0) {
+        if (is_array($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) && count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0) {
             $stmt = $db->query(
                 'SELECT entity_id FROM '
                 .ENT_ENTITIES.' WHERE entity_id not in ('
@@ -917,7 +917,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         $owner_usr_grp = $_SESSION['user']['primarygroup'];
         $owner_basket_id = $_SESSION['current_basket']['id'];
     }
-    $query = 'SELECT status_id, label_status FROM '.GROUPBASKET_STATUS.' left join '.$_SESSION['tablename']['status']
+    $query = 'SELECT status_id, label_status FROM groupbasket_status left join '.$_SESSION['tablename']['status']
         .' on status_id = id '
         .' where basket_id= ? and group_id = ? and action_id = ?';
     $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $id_action));
@@ -1542,7 +1542,11 @@ function process_category_check($cat_id, $values)
  **/
 function get_value_fields($values, $field)
 {
-    for ($i = 0; $i < count($values); ++$i) {
+    $ct = 0;
+    if (!empty($values) && is_array($values)) {
+        $ct = count($values);
+    }
+    for ($i = 0; $i < $ct; ++$i) {
         if ($values[$i]['ID'] == $field) {
             return  $values[$i]['VALUE'];
         }

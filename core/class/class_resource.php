@@ -37,7 +37,7 @@
 * @ingroup core
 */
  class resource extends request
-{
+ {
 
     /**
     * Resource identifier
@@ -129,11 +129,11 @@
     * @param  $data  array Data array
     * @param  $databasetype string Type of the db (MYSQL, SQLSERVER, ...)
     */
-    function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype, $calledByWs=false)
+    public function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype, $calledByWs=false)
     {
         $filetmp = $docserver_path;
         $tmp = $path;
-        $tmp = str_replace('#',DIRECTORY_SEPARATOR,$tmp);
+        $tmp = str_replace('#', DIRECTORY_SEPARATOR, $tmp);
         $filetmp .= $tmp;
         $filetmp .= $filename;
         $db = new Database();
@@ -151,26 +151,20 @@
         array_push($data, array('column' => "path", 'value' => $path, 'type' => "string"));
         array_push($data, array('column' => "filename", 'value' => $filename, 'type' => "string"));
         array_push($data, array('column' => 'creation_date', 'value' => $db->current_datetime(), 'type' => "function"));
-        if(!$this->check_basic_fields($data))
-        {
+        if (!$this->check_basic_fields($data)) {
             $_SESSION['error'] = $this->error;
             functions::xecho($this->error);
             return false;
-        }
-        else
-        {
-            if(!$this->insert($table_res, $data, $_SESSION['config']['databasetype']))
-            {
+        } else {
+            if (!$this->insert($table_res, $data, $_SESSION['config']['databasetype'])) {
                 if (!$calledByWs) {
                     $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
                 }
                 return false;
-            }
-            else
-            {
+            } else {
                 $db2 = new Database();
                 $stmt = $db2->query(
-                    "select res_id from " . $table_res 
+                    "select res_id from " . $table_res
                         . " where docserver_id = ? and path = ? and filename= ?  order by res_id desc ",
                     array(
                         $docserver_id,
@@ -179,8 +173,7 @@
                     )
                 );
                 $res = $stmt->fetchObject();
-
-                 if($table_res == 'res_letterbox'){
+                if ($table_res == 'res_letterbox') {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     $hist = new history();
                     $hist->add(
@@ -226,77 +219,49 @@
         $find_fingerprint = false;
         $find_filesize = false;
         $find_status = false;
-        for($i=0; $i < count($data);$i++)
-        {
-            if($data[$i]['column'] == 'format')
-            {
+        for ($i=0; $i < count($data);$i++) {
+            if ($data[$i]['column'] == 'format') {
                 $find_format = true;
                 // must be tested in the file_index.php file (module = indexing_searching)
-            }
-            elseif($data[$i]['column'] == 'typist' )
-            {
+            } elseif ($data[$i]['column'] == 'typist') {
                 $find_typist = true;
-            }
-            elseif($data[$i]['column'] == 'creation_date')
-            {
+            } elseif ($data[$i]['column'] == 'creation_date') {
                 $find_creation_date = true;
-                if($data[$i]['value'] <> $db->current_datetime())
-                {
+                if ($data[$i]['value'] <> $db->current_datetime()) {
                     $error .= _CREATION_DATE_ERROR.'<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == 'docserver_id')
-            {
+            } elseif ($data[$i]['column'] == 'docserver_id') {
                 $find_docserver_id =  true;
                 $db = new Database();
-                if(!$db->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value'])))
-                {
+                if (!$db->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = ?", array($data[$i]['value']))) {
                     $error .= _DOCSERVER_ID_ERROR.'<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == 'path' )
-            {
+            } elseif ($data[$i]['column'] == 'path') {
                 $find_path = true;
-                if( empty($data[$i]['value']))
-                {
+                if (empty($data[$i]['value'])) {
                     $error .= _PATH_ERROR.'<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == 'filename' )
-            {
+            } elseif ($data[$i]['column'] == 'filename') {
                 $find_filename = true;
                 //if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
-                if(!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $data[$i]['value']))
-                {
+                if (!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $data[$i]['value'])) {
                     $error .= _FILENAME_ERROR . ' ' . $data[$i]['value'] . '<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == "offset_doc")
-            {
+            } elseif ($data[$i]['column'] == "offset_doc") {
                 $find_offset = true;
-            }
-            elseif($data[$i]['column'] == 'logical_adr')
-            {
+            } elseif ($data[$i]['column'] == 'logical_adr') {
                 $find_logical_adr = true;
-            }
-            elseif($data[$i]['column'] == 'fingerprint'  )
-            {
+            } elseif ($data[$i]['column'] == 'fingerprint') {
                 $find_fingerprint  = true;
-                if(!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value']))
-                {
+                if (!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value'])) {
                     $error .= _FINGERPRINT_ERROR.'<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == 'filesize'  )
-            {
+            } elseif ($data[$i]['column'] == 'filesize') {
                 $find_filesize = true;
-                if( $data[$i]['value'] <= 0)
-                {
+                if ($data[$i]['value'] <= 0) {
                     $error .= _FILESIZE_ERROR.'<br/>';
                 }
-            }
-            elseif($data[$i]['column'] == 'status' )
-            {
+            } elseif ($data[$i]['column'] == 'status') {
                 $find_status = true;
                 /*if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
                 {
@@ -305,58 +270,44 @@
             }
         }
 
-        if($find_format == false)
-        {
+        if ($find_format == false) {
             $error .= _MISSING_FORMAT.'<br/>';
         }
-        if($find_typist == false)
-        {
+        if ($find_typist == false) {
             $error .= _MISSING_TYPIST.'<br/>';
         }
-        if($find_creation_date == false)
-        {
+        if ($find_creation_date == false) {
             $error .= _MISSING_CREATION_DATE.'<br/>';
         }
-        if($find_docserver_id == false)
-        {
+        if ($find_docserver_id == false) {
             $error .= _MISSING_DOCSERVER_ID.'<br/>';
         }
-        if($find_path == false)
-        {
+        if ($find_path == false) {
             $error .= _MISSING_PATH.'<br/>';
         }
-        if($find_filename == false)
-        {
+        if ($find_filename == false) {
             $error .= _MISSING_FILENAME.'<br/>';
         }
-        if($find_offset == false)
-        {
+        if ($find_offset == false) {
             $error .= _MISSING_OFFSET.'<br/>';
         }
-        if($find_logical_adr == false)
-        {
+        if ($find_logical_adr == false) {
             $error .= _MISSING_LOGICAL_ADR.'<br/>';
         }
-        if($find_fingerprint == false)
-        {
+        if ($find_fingerprint == false) {
             $error .= _MISSING_FINGERPRINT.'<br/>';
         }
-        if($find_filesize == false)
-        {
+        if ($find_filesize == false) {
             $error .= _MISSING_FILESIZE.'<br/>';
         }
-        if($find_status == false)
-        {
+        if ($find_status == false) {
             $error .= _MISSING_STATUS.'<br/>';
         }
 
         $this->error = $error;
-        if(!empty($error))
-        {
+        if (!empty($error)) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -369,22 +320,22 @@
     * @param $whereClause security clause
     * @return array of adr fields if is ok
     */
-    public function getResourceAdr($view, $resId, $whereClause, $adrTable) {
-
+    public function getResourceAdr($view, $resId, $whereClause, $adrTable)
+    {
         $control = array();
-        if(!isset($view) || empty($resId) || empty($whereClause)) {
+        if (!isset($view) || empty($resId) || empty($whereClause)) {
             $control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
             return $control;
         }
         $docserverAdr = array();
         $db = new Database();
-        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view 
+        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view
             . " where res_id = ? ". $whereClause;
         $stmt = $db->query($query, array($resId));
         if ($stmt->rowCount() > 0) {
             $line = $stmt->fetchObject();
             $format = $line->format;
-            if($line->is_multi_docservers == "Y") {
+            if ($line->is_multi_docservers == "Y") {
                 if (
                     $adrTable == 'adr_letterbox' ||
                     $adrTable == 'adr_attachments' ||
@@ -394,11 +345,11 @@
                     if ($adrTable == 'adr_x') {
                         $adrTable = 'adr_letterbox';
                     }
-                    $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " 
+                    $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from "
                         . $adrTable . " where res_id = ? order by adr_priority";
                     $stmt = $db->query($query, array($resId));
                     if ($stmt->rowCount() > 0) {
-                        while($line = $stmt->fetchObject()) {
+                        while ($line = $stmt->fetchObject()) {
                             array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
                         }
                     } else {
@@ -419,4 +370,4 @@
             return $control;
         }
     }
-}
+ }

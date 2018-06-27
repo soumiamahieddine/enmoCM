@@ -3402,7 +3402,7 @@ abstract class lists_Abstract extends Database
     public function showList($resultArray, $parameters = array(), $listKey = '', $currentBasket = array())
     {
         //Put in different arrays: label, show, sort of columns
-        if (count($resultArray) > 0 && isset($resultArray[0])) {
+        if (!empty($resultArray) && is_array($resultArray) && count($resultArray) > 0 && isset($resultArray[0])) {
             $listColumn = array();
             $showColumn = array();
             $sortColumn = array();
@@ -3534,7 +3534,11 @@ abstract class lists_Abstract extends Database
         }
         $this->formId = $parameters['formId'];
         $this->haveAction = false;
-        $this->countResult = count($resultArray);
+
+        $this->countResult = 0;
+        if (!empty($resultArray) && is_array($resultArray)) {
+            $this->countResult = count($resultArray);
+        }
         if (count($currentBasket) > 0) {
             $this->currentBasket = $currentBasket;
         }
@@ -3614,13 +3618,14 @@ abstract class lists_Abstract extends Database
         }
 
         //If there some results
-        if (count($resultArray) > 0 || $this->params['bool_showAddButton']) {
+
+        if ((!empty($resultArray) && is_array($resultArray) && count($resultArray) > 0) || $this->params['bool_showAddButton']) {
             //Need a form?
             $this->withForm = false;
             if ($this->params['bool_checkBox'] === true || $this->params['bool_radioButton'] === true ||
-                (!empty($parameters['actions']) && is_array($parameters['actions']) && count($parameters['actions'] > 0)) ||
-                (!empty($parameters['buttons']) && is_array($parameters['buttons']) && count($parameters['buttons'] > 0))
-                || !empty($parameters['defaultAction'])
+                (!empty($parameters['actions']) && is_array($parameters['actions']) && count($parameters['actions']) > 0) ||
+                (!empty($parameters['buttons']) && is_array($parameters['buttons']) && count($parameters['buttons']) > 0)
+                || !empty($this->params['defaultAction'])
                 ) {
                 //Need a form!
                 $this->withForm = true;

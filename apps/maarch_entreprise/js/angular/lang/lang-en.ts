@@ -319,6 +319,7 @@ export const LANG_EN = {
     "redirects"                         : "Redirections",
     "reinitPassword"                    : "Reset password",
     "relatedUsers"                      : "Related users",
+    "relatedBaskets"                    : "Related basket(s)",
     "removeUserRedirect"                : "Remove user (diffusion list + diffusion model entity)",
     "renewPsw"                          : "Enter the password again",
     "reports"                           : "Reports",
@@ -550,6 +551,10 @@ export const LANG_EN = {
     "modelUpdated"                      : "Model updated",
     "importFile"                        : "Import a file",
     "allAttachments"                    : "All attachments",
-    "editModelFirst"                    : "Please edit model first"
-
+    "editModelFirst"                    : "Please edit model first",
+    "visa"                              : "Visa",
+    "askRedirectBasketBeforeAbsence"    : "Do you want to redirect your baskets before to be absent ?",
+    "confirmToBeAbsent"                 : "Do you really want to be absent ? You will be automatically logout",
+    "confirmDeleteMailSignature"        : "Do you really want to delete mail signature ?",
+    "confirmDeleteSignature"            : "Do you really want to delete signature ?"
 };

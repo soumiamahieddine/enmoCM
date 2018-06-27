@@ -660,7 +660,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             $frm_str .= '<span onclick="loadTab(\''.$res_id.'\',\''.$coll_id.'\',\''.urlencode(_AVIS_WORKFLOW).'\',\''.$pathScriptTab.'\',\'avis\');return false;" '
                 .'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="avis_tab" class="tab_module" style="color:#1C99C5;"><i class="fa fa-plus-square"></i></span><b>&nbsp;'
-                .'<i id="avis_tab_img" class="fa fa-commenting-alt fa-2x" title="'._AVIS_WORKFLOW.'"></i><span id="avis_tab_badge"></span>';
+                .'<i id="avis_tab_img" class="fa fa-comment-alt fa-2x" title="'._AVIS_WORKFLOW.'"></i><span id="avis_tab_badge"></span>';
             $frm_str .= '</span>';
             $frm_str .= '</td>';
 
@@ -919,7 +919,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
     }
     //DIFFLIST
-    if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0) {
+    if ($core->is_module_loaded('entities') && (empty($_SESSION['redirect']['diff_list']) || !is_array($_SESSION['redirect']['diff_list']) || count($_SESSION['redirect']['diff_list']) == 0)) {
         require_once 'modules/entities/class/class_manage_listdiff.php';
 
         $list = new diffusion_list();

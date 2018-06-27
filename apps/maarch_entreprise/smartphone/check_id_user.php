@@ -67,7 +67,6 @@ if (!$right) {
 
 $db = new Database();
 
-$sec->generateRaCode($_SESSION['user']['UserId'], '', false);
 
 $res_db = $db->query("SELECT * FROM " . $view . " WHERE res_id = ? ", array($s_id));
 
@@ -88,7 +87,7 @@ $ra_code = $_SESSION['recup_user']['ra_code'];
           <input type="text" id="code_session" name="code_session" />
         </div>
         <div align="center">
-          <input type="button" class="whiteButton" onclick="valid_sign(<?php echo functions::xecho($s_id);?>);" value="Valider la signature" />
+          <input type="button" class="whiteButton" value="Deprecated" />
         </div>
     </fieldset>
     <a href="signature_recap.php?id=<?php echo $s_id;?>&res_id_attach=<?php functions::xecho($att_id);?>" id="link_recap" style="display:none;" />

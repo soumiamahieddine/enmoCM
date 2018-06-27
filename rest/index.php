@@ -17,35 +17,40 @@ require '../vendor/autoload.php';
 //Root application position
 chdir('..');
 
-$userId = null;
-if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-    if (\SrcCore\models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
-        $userId = $_SERVER['PHP_AUTH_USER'];
-    }
-} else {
-    $cookie = \SrcCore\models\SecurityModel::getCookieAuth();
-    if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
-        \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
-        $userId = $cookie['userId'];
-    }
-}
-
-if (empty($userId)) {
-    echo 'Authentication Failed';
-    exit();
-}
-
-$language = \SrcCore\models\CoreConfigModel::getLanguage();
 
 $customId = \SrcCore\models\CoreConfigModel::getCustomId();
+$language = \SrcCore\models\CoreConfigModel::getLanguage();
 if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
     require_once("custom/{$customId}/src/core/lang/lang-{$language}.php");
 }
-
 require_once("src/core/lang/lang-{$language}.php");
 
 
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
+
+//Authentication
+$app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
+    $userId = null;
+    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+        if (\SrcCore\models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+            $userId = $_SERVER['PHP_AUTH_USER'];
+        }
+    } else {
+        $cookie = \SrcCore\models\SecurityModel::getCookieAuth();
+        if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
+            \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+            $userId = $cookie['userId'];
+        }
+    }
+
+    if (!empty($userId)) {
+        $GLOBALS['userId'] = $userId;
+        $response = $next($request, $response);
+        return $response;
+    } else {
+        return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
+    }
+});
 
 
 //Initialize
@@ -200,6 +205,7 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 //Ressources
 $app->post('/res', \Resource\controllers\ResController::class . ':create');
 $app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
+$app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/lock', \Resource\controllers\ResController::class . ':isLock');
@@ -251,7 +257,7 @@ $app->put('/users/{id}/entities/{entityId}/primaryEntity', \User\controllers\Use
 $app->get('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':isEntityDeletable');
 $app->delete('/users/{id}/entities/{entityId}', \User\controllers\UserController::class . ':deleteEntity');
 $app->post('/users/{id}/signatures', \User\controllers\UserController::class . ':addSignature');
-$app->get('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':getImageSignature');
+$app->get('/users/{id}/signatures/{signatureId}/content', \User\controllers\UserController::class . ':getImageContent');
 $app->put('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':updateSignature');
 $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserController::class . ':deleteSignature');
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');

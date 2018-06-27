@@ -51,7 +51,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'associate_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'folder_search');
@@ -99,7 +98,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_re
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'associate_folder');
@@ -145,7 +143,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'associate_folder');
@@ -181,7 +178,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'j
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'associate_folder');
@@ -247,7 +243,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR',
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_cases');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'associate_folder');
@@ -307,7 +302,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('DIRECTEUR', 'vie
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'update_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'use_mail_services');
@@ -326,7 +320,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'cr
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_full_history');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'avis_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'tag_view');
@@ -973,23 +966,23 @@ INSERT INTO groupbasket (group_id, basket_id, result_page) VALUES ('COURRIER', '
 -- Create Security
 TRUNCATE TABLE security;
 DELETE FROM security WHERE group_id = 'COURRIER';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('COURRIER', 'letterbox_coll', 'typist=@user', 'Les courriers que j''ai numérisé, pendant 3 mois','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('COURRIER', 'letterbox_coll', 'typist=@user', 'Les courriers que j''ai numérisé, pendant 3 mois');
 DELETE FROM security WHERE group_id = 'AGENT';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('AGENT', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers non confidentiels de mes services et sous-services','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('AGENT', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers non confidentiels de mes services et sous-services');
 DELETE FROM security WHERE group_id = 'RESP_COURRIER';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('RESP_COURRIER', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 9, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('RESP_COURRIER', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'RESPONSABLE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('RESPONSABLE', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers de mes services et sous-services','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('RESPONSABLE', 'letterbox_coll', 'destination in (@my_entities, @subentities[@my_primary_entity])', 'Les courriers de mes services et sous-services');
 DELETE FROM security WHERE group_id = 'ADMINISTRATEUR';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ADMINISTRATEUR', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 24, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ADMINISTRATEUR', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'DIRECTEUR';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('DIRECTEUR', 'letterbox_coll', '1=0', 'Tous les courriers','N','N','N', 25, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('DIRECTEUR', 'letterbox_coll', '1=0', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'ELU';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ELU', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ELU', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'ARCHIVISTE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('ARCHIVISTE', 'letterbox_coll', '1=1', 'Tous les courriers');
 DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier','N','N','N', 0, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier');
 
 -- Donnees manuelles
 ------------

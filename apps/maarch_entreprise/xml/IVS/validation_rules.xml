@@ -329,7 +329,6 @@
     <validationRule name="login" mode="error">
       <parameter name="login" type="login" />
       <parameter name="pass" type="string" />
-      <parameter name="ra_code" type="integer" />
       <parameter name="display" type="identifier" />
       <parameter name="page" type="identifier" />
       <parameter name="submit" type="string" />
@@ -437,6 +436,7 @@
       <parameter name="services_chosen" type="identifier" />
       <parameter name="services_available" type="identifier" />
       <parameter name="initiatorServices_chosen" type="identifier" />
+      <parameter name="priority_chosen" type="identifier" />
       <parameter name="initiatorServices_available" type="identifier" />
       <parameter name="market" type="string" />
       <parameter name="status_chosen" type="identifier" />

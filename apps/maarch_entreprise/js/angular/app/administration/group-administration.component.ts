@@ -30,16 +30,26 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
     };
     creationMode                    : boolean;
 
-    displayedColumns    = ['firstname', 'lastname'];
-    dataSource          : any;
+    usersDisplayedColumns           = ['firstname', 'lastname'];
+    basketsDisplayedColumns         = ['basket_name', 'basket_desc'];
+    usersDataSource                 : any;
+    basketsDataSource               : any;
 
 
+    @ViewChild('paginatorBaskets') paginatorBaskets: MatPaginator;
+    @ViewChild('sortBaskets') sortBaskets: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild('sortUsers') sortUsers: MatSort;
+
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
-        this.dataSource.filter = filterValue;
+        this.usersDataSource.filter = filterValue;
+    }
+    applyBasketsFilter(filterValue: string) {
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
+        this.basketsDataSource.filter = filterValue;
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,public http: HttpClient, private route: ActivatedRoute, private router: Router, private notify: NotificationService) {
@@ -69,9 +79,12 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                         this.group = data['group'];
                         this.loading = false;
                         setTimeout(() => {
-                            this.dataSource = new MatTableDataSource(this.group.users);
-                            this.dataSource.paginator = this.paginator;
-                            this.dataSource.sort = this.sort;
+                            this.usersDataSource = new MatTableDataSource(this.group.users);
+                            this.usersDataSource.paginator = this.paginator;
+                            this.usersDataSource.sort = this.sortUsers;
+                            this.basketsDataSource = new MatTableDataSource(this.group.baskets);
+                            this.basketsDataSource.paginator = this.paginatorBaskets;
+                            this.basketsDataSource.sort = this.sortBaskets;
                         }, 0);
 
                     }, () => {
@@ -98,7 +111,6 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
                     this.notify.error(err.error.errors);
                 });
         }
-
     }
 
     updateService(service: any) {
@@ -115,22 +127,22 @@ export class GroupAdministrationComponent  extends AutoCompletePlugin implements
         this.userCtrl.setValue('');
         $j('.autocompleteSearch').blur();
         var groupReq = {
-            "groupId": this.group.group_id,
-            "role": this.group.role
+            "groupId"   : this.group.group_id,
+            "role"      : this.group.role
         };
         this.http.post(this.coreUrl + "rest/users/" + newUser.id + "/groups", groupReq)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 var displayName = newUser.idToDisplay.split(" ");
                 var user = {
                     id : newUser.id,
                     user_id : newUser.otherInfo,
                     firstname : displayName[0],
                     lastname : displayName[1]
-                }
+                };
                 this.group.users.push(user);
-                this.dataSource = new MatTableDataSource(this.group.users);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+                this.usersDataSource = new MatTableDataSource(this.group.users);
+                this.usersDataSource.paginator = this.paginator;
+                this.usersDataSource.sort = this.sortUsers;
                 this.notify.success(this.lang.userAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
