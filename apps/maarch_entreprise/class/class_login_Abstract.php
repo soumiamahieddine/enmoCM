@@ -84,7 +84,6 @@ abstract class login_Abstract extends functions
             );
         }
 
-        $_SESSION['login_method_memory'] = $login_method;
         return $login_method;
     }
 

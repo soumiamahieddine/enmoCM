@@ -109,7 +109,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['config']['defaultPage']         = (string) $config->defaultPage;
             $_SESSION['config']['exportdirectory']     = (string) $config->exportdirectory;
             $_SESSION['config']['cookietime']          = (string) $config->CookieTime;
-            $_SESSION['config']['ldap']                = (string) $config->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
             $_SESSION['config']['usePHPIDS']           = (string) $config->usePHPIDS;
             if (isset($config->showfooter)) {
