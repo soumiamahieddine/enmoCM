@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use History\controllers\HistoryController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use SrcCore\models\CoreConfigModel;
@@ -52,7 +53,7 @@ class ActionController
             }
             $obj['action']['actionCategories'] = $actionCategories;
 
-            $obj['categoriesList'] = CoreConfigModel::getLettersBoxCategories();
+            $obj['categoriesList'] = ResModel::getCategories();
             if (empty($obj['action']['actionCategories'])) {
                 $categoriesList = [];
                 foreach ($obj['categoriesList'] as $key => $category) {
@@ -203,7 +204,7 @@ class ActionController
         $obj['action']['is_folder_action'] = false;
         $obj['action']['action_page']      = '';
         $obj['action']['id_status']        = '_NOSTATUS_';
-        $obj['categoriesList']             = CoreConfigModel::getLettersBoxCategories();
+        $obj['categoriesList']             = ResModel::getCategories();
 
         foreach ($obj['categoriesList'] as $key => $value) {
             $obj['categoriesList'][$key]['selected'] = true;

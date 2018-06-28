@@ -307,4 +307,54 @@ abstract class ResModelAbstract
 
         return $date->format('Y-m-d H:i:s');
     }
+
+    public static function getCategories()
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
+
+        $categories = [];
+
+        if ($loadedXml) {
+            foreach ($loadedXml->COLLECTION as $collection) {
+                $collection = (array)$collection;
+
+                if ($collection['id'] == 'letterbox_coll') {
+                    foreach ($collection['categories']->category as $category) {
+                        $category = (array)$category;
+
+                        $categories[] = [
+                            'id'                => $category['id'],
+                            'label'             => defined($category['label']) ? constant($category['label']) : $category['label'],
+                            'defaultCategory'   => $category['id'] == $collection['categories']->default_category
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $categories;
+    }
+
+    public static function getNatures()
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
+
+        $natures = [];
+
+        if ($loadedXml) {
+            foreach ($loadedXml->mail_natures->nature as $nature) {
+                $withReference = (string)$nature['with_reference'] == 'true' ? true : false;
+                $nature = (array)$nature;
+
+                $natures[] = [
+                    'id'            => $nature['id'],
+                    'label'         => defined($nature['label']) ? constant($nature['label']) : $nature['label'],
+                    'withReference' => $withReference,
+                    'defaultNature' => $nature['id'] == $loadedXml->mail_natures->default_nature
+                ];
+            }
+        }
+
+        return $natures;
+    }
 }

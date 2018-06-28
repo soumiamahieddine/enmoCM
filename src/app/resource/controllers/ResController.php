@@ -379,6 +379,11 @@ class ResController
 
     public function getCategories(Request $request, Response $response)
     {
-        return $response->withJson(['categories' => CoreConfigModel::getLettersBoxCategories()]);
+        return $response->withJson(['categories' => ResModel::getCategories()]);
+    }
+
+    public function getNatures(Request $request, Response $response)
+    {
+        return $response->withJson(['natures' => ResModel::getNatures()]);
     }
 }
