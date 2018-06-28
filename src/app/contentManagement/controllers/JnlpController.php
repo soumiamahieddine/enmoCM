@@ -278,15 +278,13 @@ class JnlpController
                 }
             }
 
-            $result = ['END_MESSAGE' => 'Update ok'];
-            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
+            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Update ok']]);
         } elseif ($data['action'] == 'terminate') {
             if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
                 unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
             }
 
-            $result = ['END_MESSAGE' => 'Terminate ok'];
-            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
+            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Terminate ok']]);
         } else {
             $result = [
                 'STATUS' => 'ko',
