@@ -274,8 +274,7 @@ if ($mode == 'normal') {
 
     if (isset($_SESSION['where_from_contact_check']) && $_SESSION['where_from_contact_check'] != '' && (isset($_REQUEST['fromContactCheck']) || $_SESSION['fromContactCheck'] == 'ok')) {
         for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); ++$ind_bask) {
-            if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $_SESSION['collection_id_choice']
-            && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
+            if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $_SESSION['collection_id_choice']) {
                 if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) != '') {
                     $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                 }

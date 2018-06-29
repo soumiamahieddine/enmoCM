@@ -321,9 +321,7 @@ if (!defined("_SEARCH_FOLDER_TREE"))
     define("_SEARCH_FOLDER_TREE", "Search folders");
 if (!defined("_NB_DOCS_IN_FOLDER"))                 
     define("_NB_DOCS_IN_FOLDER", "Files number");
-if (!defined("_IS_FOLDER_BASKET"))                  
-    define("_IS_FOLDER_BASKET", "Folder's basket");
-if (!defined("_IS_FOLDER_STATUS"))                  
+if (!defined("_IS_FOLDER_STATUS"))
     define("_IS_FOLDER_STATUS", "Folder's status");
 if (!defined("_IS_FOLDER_ACTION"))                  
     define("_IS_FOLDER_ACTION", "Folder's action");

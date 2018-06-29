@@ -28,7 +28,6 @@ class BasketControllerTest extends TestCase
             'basket_desc'       => 'TEST BASKET123 DESCRIPTION',
             'clause'            => '1=2',
             'isSearchBasket'    => true,
-            'isFolderBasket'    => true,
             'color'             => '#123456'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -49,7 +48,6 @@ class BasketControllerTest extends TestCase
         $this->assertSame('TEST BASKET123 DESCRIPTION', $responseBody->basket->basket_desc);
         $this->assertSame('1=2', $responseBody->basket->basket_clause);
         $this->assertSame('N', $responseBody->basket->is_visible);
-        $this->assertSame('Y', $responseBody->basket->is_folder_basket);
         $this->assertSame('N', $responseBody->basket->flag_notif);
         $this->assertSame('#123456', $responseBody->basket->color);
     }
@@ -66,7 +64,6 @@ class BasketControllerTest extends TestCase
             'basket_desc'       => 'TEST BASKET123 DESCRIPTION UPDATED',
             'clause'            => '1=3',
             'isSearchBasket'    => false,
-            'isFolderBasket'    => false,
             'flagNotif'         => true,
             'color'             => '#111222'
         ];
@@ -88,7 +85,6 @@ class BasketControllerTest extends TestCase
         $this->assertSame('TEST BASKET123 DESCRIPTION UPDATED', $responseBody->basket->basket_desc);
         $this->assertSame('1=3', $responseBody->basket->basket_clause);
         $this->assertSame('Y', $responseBody->basket->is_visible);
-        $this->assertSame('N', $responseBody->basket->is_folder_basket);
         $this->assertSame('Y', $responseBody->basket->flag_notif);
         $this->assertSame('#111222', $responseBody->basket->color);
     }

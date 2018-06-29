@@ -360,7 +360,6 @@ CREATE TABLE baskets
   basket_desc character varying(255) NOT NULL,
   basket_clause text NOT NULL,
   is_visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
   color character varying(16),

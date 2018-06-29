@@ -439,7 +439,6 @@ abstract class basket_Abstract extends Database
            // $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
             $_SESSION['current_basket']['basket_owner'] = $_SESSION['user']['baskets'][$ind]['basket_owner'];
             $_SESSION['current_basket']['abs_basket'] = $_SESSION['user']['baskets'][$ind]['abs_basket'];
-            $_SESSION['current_basket']['is_folder_basket'] = $_SESSION['user']['baskets'][$ind]['is_folder_basket'];
             $_SESSION['current_basket']['lock_list'] = $_SESSION['user']['baskets'][$ind]['lock_list'];
             $_SESSION['current_basket']['lock_sublist'] = $_SESSION['user']['baskets'][$ind]['lock_suvlist'];
             $_SESSION['current_basket']['group_id'] = $_SESSION['user']['baskets'][$ind]['group_id'];
@@ -780,26 +779,19 @@ abstract class basket_Abstract extends Database
         $secCtrl = new SecurityControler();
         $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
-            . "basket_clause, is_visible, is_folder_basket, color, basket_res_order from "
+            . "basket_clause, is_visible, color, basket_res_order from "
             . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
         $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
-        $core = new core_tools();
-        if ($core->is_module_loaded('folder') === true && $res->is_folder_basket == 'Y') {
-            $tab['table'] = 'folders';
-            $tab['view'] = 'view_folders';
-        } else {
-            $tab['table'] =  $sec->retrieve_table_from_coll($tab['coll_id']);
-            $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
-        }
+        $tab['table'] =  $sec->retrieve_table_from_coll($tab['coll_id']);
+        $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
         $tab['desc'] = $this->show_string($res->basket_desc);
         $tab['name'] = $this->show_string($res->basket_name);
         $tab['color'] = $this->show_string($res->color);
         $tab['basket_res_order'] = $this->show_string($res->basket_res_order);
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
-        $tab['is_folder_basket'] = $res->is_folder_basket;
         $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
@@ -885,23 +877,18 @@ abstract class basket_Abstract extends Database
         $secCtrl = new SecurityControler();
         $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-            . ", is_folder_basket from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
+            . " from " . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",array($basketId));
 
         $res = $stmt->fetchObject();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
         $tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
-        if($res->is_folder_basket == 'Y'){
-            $tab['view'] = "view_folders";
-        }else{
-            $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
-        }
+        $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
 
         $tab['desc'] = $res->basket_desc;
         $tab['name'] = $res->basket_name;
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
-        $tab['is_folder_basket'] = $res->is_folder_basket;
         $stmt = $db->query(
             "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
             . " where basket_id = ? and new_user = ? and system_id = ?", array($basketId,$userId,$systemId));

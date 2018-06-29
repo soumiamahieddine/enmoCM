@@ -149,29 +149,16 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     $abs_basket = true;
                                 }
                                 
-                                if ($core_tools->is_module_loaded('folder') && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'Y') {
-                                    echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
-                                        . $_SESSION['config']['businessappurl']
-                                        . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
-                                        . $_SESSION['user']['baskets'][$i]['id'] . '&amp;groupId=' . $_SESSION['user']['baskets'][$i]['group_id']
-                                        . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                        . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                        . '"><i class="fa-li fa fa-spinner fa-spin" style="margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
-                                        . '</span></b> <i class="fa-li fa fa-folder" style="padding-top: 5px;padding-bottom: 5px;"></i>'
-                                        . '<span style="color: ' .$color . ';font-weight: '.$fontweight.'">' . functions::xssafe($_SESSION['user']['baskets'][$i]['name']) . '</span>'
-                                        . ' </a></li>';
-                                } else {
-                                    echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
-                                        . $_SESSION['config']['businessappurl']
-                                        . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
-                                        . $_SESSION['user']['baskets'][$i]['id'] . '&amp;groupId=' . $_SESSION['user']['baskets'][$i]['group_id']
-                                        . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                        . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                        . '"><i class="fa-li fa fa-spinner fa-spin" style=";margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
-                                        . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
-                                        . '<span style="color: ' .$color . ';font-weight: '.$fontweight.'">' . functions::xssafe($_SESSION['user']['baskets'][$i]['name']) . '</span>'
-                                        . ' </a></li>';
-                                }
+                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'" href="'
+                                    . $_SESSION['config']['businessappurl']
+                                    . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
+                                    . $_SESSION['user']['baskets'][$i]['id'] . '&amp;groupId=' . $_SESSION['user']['baskets'][$i]['group_id']
+                                    . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
+                                    . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
+                                    . '"><i class="fa-li fa fa-spinner fa-spin" style=";margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
+                                    . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
+                                    . '<span style="color: ' .$color . ';font-weight: '.$fontweight.'">' . functions::xssafe($_SESSION['user']['baskets'][$i]['name']) . '</span>'
+                                    . ' </a></li>';
                             } else if(!$_SESSION['user']['baskets'][$i]['abs_basket']){
                                 echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a title="'.$_SESSION['user']['baskets'][$i]['desc'].'"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']

@@ -78,6 +78,7 @@ DROP TABLE IF EXISTS res_version_x;
 DROP TABLE IF EXISTS adr_x;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
+ALTER TABLE baskets DROP COLUMN IF EXISTS is_folder_basket;
 ALTER TABLE security DROP COLUMN IF EXISTS can_insert;
 ALTER TABLE security DROP COLUMN IF EXISTS can_update;
 ALTER TABLE security DROP COLUMN IF EXISTS can_delete;

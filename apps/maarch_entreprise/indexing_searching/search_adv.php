@@ -537,7 +537,6 @@ if (isset($_REQUEST['nodetails'])) {
                                         for ($i = 0; $i < count($_SESSION['user']['baskets']); ++$i) {
                                             if (
                                                 $_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id
-                                                && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N'
                                                 && $_SESSION['user']['baskets'][$i]['id'] != 'IndexingBasket'
                                                 && $_SESSION['user']['baskets'][$i]['id'] != 'EmailsToQualify'
                                                 && $_SESSION['user']['baskets'][$i]['id'] != 'InitBasket'
