@@ -70,7 +70,7 @@ class AutoCompleteController
 
         $data = [];
         foreach ($contacts as $contact) {
-            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];;
+            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];
         }
 
         return $response->withJson($data);
