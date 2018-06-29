@@ -166,7 +166,6 @@ CREATE TABLE status
   id character varying(10) NOT NULL,
   label_status character varying(50) NOT NULL,
   is_system character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  is_folder_status character(1) NOT NULL default 'N'::bpchar,
   img_filename character varying(255),
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
   can_be_searched character(1) NOT NULL DEFAULT 'Y'::bpchar,

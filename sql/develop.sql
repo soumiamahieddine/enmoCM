@@ -80,6 +80,7 @@ ALTER TABLE baskets DROP COLUMN IF EXISTS is_generic;
 ALTER TABLE baskets DROP COLUMN IF EXISTS except_notif;
 ALTER TABLE baskets DROP COLUMN IF EXISTS is_folder_basket;
 ALTER TABLE actions DROP COLUMN IF EXISTS is_folder_action;
+ALTER TABLE status DROP COLUMN IF EXISTS is_folder_status;
 ALTER TABLE security DROP COLUMN IF EXISTS can_insert;
 ALTER TABLE security DROP COLUMN IF EXISTS can_update;
 ALTER TABLE security DROP COLUMN IF EXISTS can_delete;

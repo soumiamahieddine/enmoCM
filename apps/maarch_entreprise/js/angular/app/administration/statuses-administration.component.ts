@@ -14,17 +14,19 @@ declare var angularGlobals: any;
     providers: [NotificationService]
 })
 export class StatusesAdministrationComponent implements OnInit {
-    mobileQuery: MediaQueryList;
-    private _mobileQueryListener: () => void;
-    coreUrl: string;
-    lang: any = LANG;
 
-    statuses: Status[] = [];
+    mobileQuery                     : MediaQueryList;
+    private _mobileQueryListener    : () => void;
 
-    loading: boolean = false;
+    coreUrl     : string;
+    lang        : any = LANG;
+    loading     : boolean = false;
+
+    statuses    : Status[] = [];
 
     displayedColumns = ['img_filename', 'id', 'label_status', 'identifier'];
     dataSource = new MatTableDataSource(this.statuses);
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     applyFilter(filterValue: string) {
@@ -88,7 +90,6 @@ export interface Status {
     can_be_searchead: string;
     identifier: number;
     img_filename: string;
-    is_folder_status: string;
     is_system: string;
     label_status: string;
     maarch_module: string;

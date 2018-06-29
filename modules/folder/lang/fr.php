@@ -324,8 +324,6 @@ if (!defined("_SEARCH_FOLDER_TREE"))
     define("_SEARCH_FOLDER_TREE", "Recherche Dossiers");
 if (!defined("_NB_DOCS_IN_FOLDER"))                 
     define("_NB_DOCS_IN_FOLDER", "Nombre de documents");
-if (!defined("_IS_FOLDER_STATUS"))
-    define("_IS_FOLDER_STATUS", "Statut de dossier");
 if (!defined("_CONFIRM_FOLDER_STATUS"))
     define("_CONFIRM_FOLDER_STATUS", "Confirmation simple (dossiers)");
 if (!defined("_REDIRECT_FOLDER"))                   

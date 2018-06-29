@@ -29,7 +29,6 @@ export class StatusAdministrationComponent implements OnInit {
         label_status: null,
         can_be_searched: null,
         can_be_modified: null,
-        is_folder_status: null,
         img_filename: null
     };
     statusImages: any = "";
@@ -93,11 +92,6 @@ export class StatusAdministrationComponent implements OnInit {
                     this.status.can_be_modified = true;
                 } else {
                     this.status.can_be_modified = false;
-                }
-                if (this.status.is_folder_status == 'Y') {
-                    this.status.is_folder_status = true;
-                } else {
-                    this.status.is_folder_status = false;
                 }
                 this.statusImages = data['statusImages'];
             }, (err) => {

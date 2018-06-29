@@ -222,20 +222,6 @@
       <parameter name="coll_id" type="collection_list" />
     </validationRule>
 
-    <validationRule name="admin_status" extends="standardForm" mode="error">
-      <parameter name="can_be_modified" type="YN" />
-      <parameter name="can_be_searched" type="YN" />
-      <parameter name="img_filename" type="filename" />
-      <parameter name="img_related" type="filename" />
-      <parameter name="is_folder_status" type="YN" />
-      <parameter name="is_system" type="YN" />
-      <parameter name="label" type="string" />
-      <parameter name="status_id" type="identifier" />
-      <parameter name="status_submit" type="string" />
-      <parameter name="Submit" type="string" />
-      <parameter name="what" type="string" />
-    </validationRule>
-
     <validationRule name="contactAddressDel" extends="standardForm" mode="error">
       <parameter name="id" type="integer" />
       <parameter name="move" type="string" />
