@@ -98,7 +98,6 @@ abstract class ActionModelAbstract
                 'id_status'         => $aArgs['id_status'],
                 'action_page'       => $aArgs['action_page'],
                 'history'           => $aArgs['history'],
-                'is_folder_action'  => $aArgs['is_folder_action']
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

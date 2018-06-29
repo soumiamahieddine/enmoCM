@@ -27,7 +27,6 @@ CREATE TABLE actions
   label_action character varying(255),
   id_status character varying(10),
   is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
-  is_folder_action character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   action_page character varying(255),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,

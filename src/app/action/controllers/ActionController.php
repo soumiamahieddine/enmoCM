@@ -42,7 +42,6 @@ class ActionController
         $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
 
         if (!empty($obj['action'])) {
-            $obj['action']['is_folder_action'] = ($obj['action']['is_folder_action'] == 'Y');
             $obj['action']['history'] = ($obj['action']['history'] == 'Y');
             $obj['action']['is_system'] = ($obj['action']['is_system'] == 'Y');
             $obj['action']['create_id'] = ($obj['action']['create_id'] == 'Y');
@@ -201,7 +200,6 @@ class ActionController
         //default data
         $obj['action']['history']          = true;
         $obj['action']['keyword']          = '';
-        $obj['action']['is_folder_action'] = false;
         $obj['action']['action_page']      = '';
         $obj['action']['id_status']        = '_NOSTATUS_';
         $obj['categoriesList']             = ResModel::getCategories();
@@ -222,7 +220,7 @@ class ActionController
     protected function manageValue($request)
     {
         foreach ($request  as $key => $value) {
-            if (in_array($key, ['is_folder_action', 'history'])) {
+            if (in_array($key, ['history'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
                 } else {

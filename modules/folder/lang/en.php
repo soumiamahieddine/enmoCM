@@ -323,9 +323,7 @@ if (!defined("_NB_DOCS_IN_FOLDER"))
     define("_NB_DOCS_IN_FOLDER", "Files number");
 if (!defined("_IS_FOLDER_STATUS"))
     define("_IS_FOLDER_STATUS", "Folder's status");
-if (!defined("_IS_FOLDER_ACTION"))                  
-    define("_IS_FOLDER_ACTION", "Folder's action");
-if (!defined("_CONFIRM_FOLDER_STATUS"))             
+if (!defined("_CONFIRM_FOLDER_STATUS"))
     define("_CONFIRM_FOLDER_STATUS", "Simple confirmation (folders)");
 if (!defined("_REDIRECT_FOLDER"))                   
     define("_REDIRECT_FOLDER", "Folder redirection");

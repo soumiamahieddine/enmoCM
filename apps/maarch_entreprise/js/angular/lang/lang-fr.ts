@@ -232,8 +232,6 @@ export const LANG_FR = {
     "isAssociatedTo"                    : "est associé à",
     "isCopyTo"                          : "est en copie de",
     "isDestTo"                          : "est en destination de",
-    "isFolderAction"                    : "Action de dossier",
-    "isFolderActionDesc"                : "Permet d'utiliser cette action dans une bannette de dossier",
     "isFolderStatus"                    : "Statut de dossier",
     "isLinkedTo"                        : "Est associé à",
     "isSearchBasket"                    : "Bannette de recherche uniquement",

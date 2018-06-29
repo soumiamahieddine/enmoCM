@@ -341,13 +341,12 @@ abstract class basket_Abstract extends Database
         $stmt = $db->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page, a.is_folder_action from " . ACTIONS_TABLE . " a, "
+            . "a.action_page from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = ? and agb.basket_id = ? and a.enabled = 'Y' and "
             . "agb.default_action_list ='N'",array($groupId,$basketId));
         require_once('core/class/ActionControler.php');
         $actionControler = new actionControler();
-        $sec = new security();
         $secCtrl = new SecurityControler();
 
         while ($res = $stmt->fetchObject()) {
@@ -359,7 +358,6 @@ abstract class basket_Abstract extends Database
             } else {
                 $whereClause = $res->where_clause;
             }
-            $categories = array();
             $categories = $actionControler->getAllCategoriesLinkedToAction($res->id_action);
             array_push(
                 $actions,
@@ -371,7 +369,6 @@ abstract class basket_Abstract extends Database
                     'PAGE_USE' => $res->used_in_action_page,
                     'ID_STATUS' => $res->id_status,
                     'ACTION_PAGE' => $res->action_page,
-                    'IS_FOLDER_ACTION' => $res->is_folder_action,
                     'CATEGORIES' => $categories
                 )
             );

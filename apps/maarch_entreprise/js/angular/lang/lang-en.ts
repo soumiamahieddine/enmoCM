@@ -171,8 +171,6 @@ export const LANG_EN = {
     "isAssociatedTo"                    : "is associated to",
     "isCopyTo"                          : "is in copy to",
     "isDestTo"                          : "is in destination to",
-    "isFolderAction"                    : "Folder action",
-    "isFolderActionDesc"                : "Use this action in a folder folder",
     "isFolderStatus"                    : "Folder status",
     "isLinkedTo"                        : "Is linked to",
     "isSearchBasket"                    : "Only search basket",
