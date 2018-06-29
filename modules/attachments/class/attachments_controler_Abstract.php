@@ -137,14 +137,6 @@ abstract class attachments_controler_Abstract
                         array_push(
                             $_SESSION['data'],
                             array(
-                                'column' => "logical_adr",
-                                'value' => ' ',
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
                                 'column' => "title",
                                 'value' => strtolower($title),
                                 'type' => "string",

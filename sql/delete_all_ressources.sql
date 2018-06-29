@@ -43,8 +43,6 @@ TRUNCATE TABLE mlb_coll_ext;
 TRUNCATE TABLE res_letterbox;
 ALTER SEQUENCE res_id_mlb_seq restart WITH 1;
 
-TRUNCATE TABLE res_version_letterbox;
-
 TRUNCATE TABLE res_attachments;
 ALTER SEQUENCE res_attachment_res_id_seq restart WITH 1;
 

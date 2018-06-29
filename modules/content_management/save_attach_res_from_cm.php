@@ -101,14 +101,6 @@ if (empty($docserver)) {
             array_push(
                 $_SESSION['data'],
                 array(
-                    'column' => 'logical_adr',
-                    'value' => ' ',
-                    'type' => 'string',
-                )
-            );
-            array_push(
-                $_SESSION['data'],
-                array(
                     'column' => 'title',
                     'value' => $_SESSION['cm']['templateStyle'],
                     'type' => 'string',

@@ -110,14 +110,6 @@ if (empty($docserver)) {
             array_push(
                 $_SESSION['data'],
                 array(
-                    'column' => 'logical_adr',
-                    'value' => ' ',
-                    'type' => 'string',
-                )
-            );
-            array_push(
-                $_SESSION['data'],
-                array(
                     'column' => 'title',
                     'value' => $_SESSION['visa']['last_resId_signed']['title'],
                     'type' => 'string',

@@ -198,14 +198,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                 array_push(
                                     $_SESSION['data'],
                                     array(
-                                        'column' => 'logical_adr',
-                                        'value' => ' ',
-                                        'type' => 'string',
-                                    )
-                                );
-                                array_push(
-                                    $_SESSION['data'],
-                                    array(
                                         'column' => 'title',
                                         'value' => $title,
                                         'type' => 'string',
@@ -396,14 +388,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         $_SESSION['data_pdf'],
                                         array(
                                             'column' => 'offset_doc',
-                                            'value' => ' ',
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data_pdf'],
-                                        array(
-                                            'column' => 'logical_adr',
                                             'value' => ' ',
                                             'type' => 'string',
                                         )
@@ -669,14 +653,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $_SESSION['data'],
                 array(
                     'column' => 'offset_doc',
-                    'value' => ' ',
-                    'type' => 'string',
-                )
-            );
-            array_push(
-                $_SESSION['data'],
-                array(
-                    'column' => 'logical_adr',
                     'value' => ' ',
                     'type' => 'string',
                 )
@@ -1007,14 +983,6 @@ if (isset($_POST['add']) && $_POST['add']) {
             $_SESSION['data_pdf'],
             array(
                 'column' => 'offset_doc',
-                'value' => ' ',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data_pdf'],
-            array(
-                'column' => 'logical_adr',
                 'value' => ' ',
                 'type' => 'string',
             )

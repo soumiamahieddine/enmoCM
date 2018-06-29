@@ -75,13 +75,11 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
     $offsetDoc = $res->offset_doc;
     $workBatch = $res->work_batch;
     $pageCount = $res->page_count;
-    $isPaper = $res->is_paper;
     $scanDate = functions::format_date_db($res->scan_date);
     $scanUser = $res->scan_user;
     $scanLocation = $res->scan_location;
     $scanWkstation = $res->scan_wkstation;
     $scanBatch = $res->scan_batch;
-    $docLanguage = $res->doc_language;
     $policyId = $res->policy_id;
     $cycleId = $res->cycle_id;
     $isMultiDs = $res->is_multi_docservers;

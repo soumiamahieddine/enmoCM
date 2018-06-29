@@ -343,14 +343,6 @@ class resources_controler
         array_push(
             $data,
             array(
-                'column' => 'logical_adr',
-                'value' => '',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $data,
-            array(
                 'column' => 'docserver_id',
                 'value' => $docserverId,
                 'type' => 'string',

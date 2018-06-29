@@ -154,14 +154,6 @@ function ajout_bdd($tmpFolderFile, $res_id_master){
 				array_push(
 					$_SESSION['data'],
 					array(
-						'column' => "logical_adr",
-						'value' => ' ',
-						'type' => "string",
-					)
-				);
-				array_push(
-					$_SESSION['data'],
-					array(
 						'column' => "title",
 						'value' => $title,
 						'type' => "string",

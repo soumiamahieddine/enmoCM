@@ -247,11 +247,6 @@ class StoreController
             'type'      => 'string'
         ];
         $aArgs['data'][] = [
-            'column'    => 'logical_adr',
-            'value'     => '',
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
             'column'    => 'docserver_id',
             'value'     => $aArgs['docserverId'],
             'type'      => 'string'

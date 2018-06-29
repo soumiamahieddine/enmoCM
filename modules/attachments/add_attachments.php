@@ -189,14 +189,6 @@ for ($i = 0; $i <= count($aArgs['data']); $i++) {
 array_push(
     $aArgs['data'],
     array(
-        'column' => 'logical_adr',
-        'value' => '',
-        'type' => 'string',
-    )
-);
-array_push(
-    $aArgs['data'],
-    array(
         'column' => 'offset_doc',
         'value' => '',
         'type' => 'integer',
