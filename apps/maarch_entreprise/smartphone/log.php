@@ -97,7 +97,8 @@ if (!empty($_SESSION['error'])) {
     );
     exit();
 } else {
-    if ($_SESSION['config']['ldap'] == 'true' && $login != 'superadmin') {
+    $loginMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+    if ($loginMethod['id'] == 'ldap' && $login != 'superadmin') {
         //Extraction de /root/config dans le fichier de conf
         if (file_exists($_SESSION['config']['corepath']
             .'/custom/'.$_SESSION['custom_override_id']

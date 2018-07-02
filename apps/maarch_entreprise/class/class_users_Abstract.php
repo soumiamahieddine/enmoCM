@@ -128,9 +128,7 @@ abstract class class_users_Abstract extends Database
                 ) {
                     if(
                         isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
-                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
-                        ) <> '' 
-                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
+                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> ''
                     ) {
                         $basketQuery .= ' or (' 
                             . $_SESSION['user']['baskets'][$ind_bask]['clause'] 

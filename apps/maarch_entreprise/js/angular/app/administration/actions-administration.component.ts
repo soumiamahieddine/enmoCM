@@ -25,7 +25,7 @@ export class ActionsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['id', 'label_action', 'history', 'is_folder_action', 'actions'];
+    displayedColumns = ['id', 'label_action', 'history', 'actions'];
     dataSource = new MatTableDataSource(this.actions);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

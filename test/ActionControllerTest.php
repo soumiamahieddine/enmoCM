@@ -28,7 +28,6 @@ class ActionsControllerTest extends TestCase
             'keyword'          => 'indexing',
             'label_action'     => 'TEST-LABEL',
             'id_status'        => '_NOSTATUS_',
-            'is_folder_action' => false,
             'action_page'      => 'index_mlb',
             'history'          => true,
             'origin'           => 'apps',
@@ -47,7 +46,6 @@ class ActionsControllerTest extends TestCase
             'keyword'          => 'indexing',
             'label_action'     => '',
             'id_status'        => '',
-            'is_folder_action' => false,
             'action_page'      => 'index_mlb',
             'history'          => true,
             'origin'           => 'apps',
@@ -78,7 +76,6 @@ class ActionsControllerTest extends TestCase
         $this->assertSame('TEST-LABEL', $responseBody->action->label_action);
         $this->assertSame('_NOSTATUS_', $responseBody->action->id_status);
         $this->assertSame(false, $responseBody->action->is_system);
-        $this->assertSame(false, $responseBody->action->is_folder_action);
         $this->assertSame('Y', $responseBody->action->enabled);
         $this->assertSame('index_mlb', $responseBody->action->action_page);
         $this->assertSame(true, $responseBody->action->history);
@@ -114,7 +111,6 @@ class ActionsControllerTest extends TestCase
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'is_folder_action' => true,
             'action_page'      => 'process',
             'history'          => false,
             'origin'           => 'apps',
@@ -132,7 +128,6 @@ class ActionsControllerTest extends TestCase
             'keyword'          => '',
             'label_action'     => 'TEST-LABEL_UPDATED',
             'id_status'        => 'COU',
-            'is_folder_action' => true,
             'action_page'      => 'process',
             'history'          => false,
             'origin'           => 'apps',

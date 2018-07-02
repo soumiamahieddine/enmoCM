@@ -870,8 +870,7 @@ if (count($_REQUEST['meta']) > 0) {
                     
                 case 'true':
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                       if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
-                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
+                       if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id) {
                             if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                             }
@@ -885,8 +884,7 @@ if (count($_REQUEST['meta']) > 0) {
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']
-                            && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
                             if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
                             } 

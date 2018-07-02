@@ -5,7 +5,6 @@
       <enumeration value="res_attachments" />
       <enumeration value="mlb_coll_ext" />
       <enumeration value="business_coll_ext" />
-      <enumeration value="res_version_letterbox" />
       <enumeration value="res_view_attachments" />
       <enumeration value="res_view_letterbox" />
       <enumeration value="res_view_business" />

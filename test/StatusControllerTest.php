@@ -21,7 +21,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'TEST',
             'label_status'     => 'TEST',
             'img_filename'     => 'fm-letter-end',
-            'is_folder_status' => '',
             'can_be_searched'  => 'true',
             'can_be_modified'  => '',
         ];
@@ -38,7 +37,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'TEST',
             'label_status'     => 'TEST',
             'is_system'        => 'N',
-            'is_folder_status' => 'N',
             'img_filename'     => 'fm-letter-end',
             'maarch_module'    => 'apps',
             'can_be_searched'  => 'Y',
@@ -54,7 +52,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'TEST',
             'label_status'     => 'TEST',
             'img_filename'     => 'fm-letter-end',
-            'is_folder_status' => ''
         ];
         $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -69,7 +66,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'papa',
             'label_status'     => '',
             'img_filename'     => 'fm-letter-end',
-            'is_folder_status' => ''
         ];
         $fullRequest  = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -114,7 +110,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'TEST',
             'label_status'     => 'TEST',
             'is_system'        => 'N',
-            'is_folder_status' => 'N',
             'img_filename'     => 'fm-letter-end',
             'maarch_module'    => 'apps',
             'can_be_searched'  => 'Y',
@@ -151,7 +146,6 @@ class StatusControllerTest extends TestCase
             'id'               => 'TEST',
             'label_status'     => 'TEST AFTER UP',
             'is_system'        => 'N',
-            'is_folder_status' => 'N',
             'img_filename'     => 'fm-letter-end',
             'maarch_module'    => 'apps',
             'can_be_searched'  => 'Y',

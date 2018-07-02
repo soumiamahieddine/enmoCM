@@ -234,7 +234,7 @@ class JnlpController
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            if (!file_exists($tmpPath . $newFileOnTmp) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
+            if (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Failed to copy on {$tmpPath} : {$pathToCopy}"]]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
@@ -278,15 +278,13 @@ class JnlpController
                 }
             }
 
-            $result = ['END_MESSAGE' => 'Update ok'];
-            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
+            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Update ok']]);
         } elseif ($data['action'] == 'terminate') {
             if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
                 unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
             }
 
-            $result = ['END_MESSAGE' => 'Terminate ok'];
-            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
+            $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Terminate ok']]);
         } else {
             $result = [
                 'STATUS' => 'ko',

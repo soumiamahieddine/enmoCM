@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Docserver\models\DocserverModel;
 use Group\controllers\GroupController;
@@ -167,8 +168,31 @@ class ResController
         }
 
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
-        if (empty($document)) {
+        $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+        if (empty($document) || empty($extDocument)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        if ($extDocument['category_id'] == 'outgoing') {
+            $attachment = AttachmentModel::getOnView([
+                'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+                'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
+                'limit'     => 1
+            ]);
+            if (!empty($attachment[0])) {
+                $attachmentTodisplay = $attachment[0];
+                $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
+                $isVersion = (empty($attachmentTodisplay['res_id']) ? true : false);
+
+                $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'id' => $id, 'isVersion' => $isVersion]);
+                if (!empty($convertedAttachment)) {
+                    $attachmentTodisplay = $convertedAttachment;
+                }
+                $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
+                $document['path'] = $attachmentTodisplay['path'];
+                $document['filename'] = $attachmentTodisplay['filename'];
+            }
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template']]);
@@ -184,8 +208,10 @@ class ResController
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
 
         $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         return $response->withHeader('Content-Type', $mimeType);
     }
@@ -348,5 +374,15 @@ class ResController
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
+    }
+
+    public function getCategories(Request $request, Response $response)
+    {
+        return $response->withJson(['categories' => ResModel::getCategories()]);
+    }
+
+    public function getNatures(Request $request, Response $response)
+    {
+        return $response->withJson(['natures' => ResModel::getNatures()]);
     }
 }

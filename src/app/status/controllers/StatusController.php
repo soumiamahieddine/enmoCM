@@ -168,7 +168,7 @@ class StatusController
     protected static function manageValue($request)
     {
         foreach ($request  as $key => $value) {
-            if (in_array($key, ['is_system', 'is_folder_status', 'can_be_searched', 'can_be_modified'])) {
+            if (in_array($key, ['is_system', 'can_be_searched', 'can_be_modified'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
                 } else {
@@ -224,13 +224,6 @@ class StatusController
             !Validator::contains('N')->validate($request['is_system'])
         ) {
             array_push($errors, 'Invalid is_system value');
-        }
-
-        if (Validator::notEmpty()->validate($request['is_folder_status']) &&
-            !Validator::contains('Y')->validate($request['is_folder_status']) &&
-            !Validator::contains('N')->validate($request['is_folder_status'])
-        ) {
-            array_push($errors, 'Invalid is_folder_status value');
         }
 
         if (!Validator::notEmpty()->validate($request['img_filename']) ||

@@ -82,7 +82,6 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.description = data.basket.basket_desc;
                         this.basket.clause = data.basket.basket_clause;
                         this.basket.isSearchBasket = data.basket.is_visible != "Y";
-                        this.basket.isFolderBasket = data.basket.is_folder_basket == "Y";
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
 
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")

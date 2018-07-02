@@ -34,9 +34,6 @@ if (!defined('_VIEW_VISA_WORKFLOW_DESC')) {
 if (!defined('_CONFIG_VISA_WORKFLOW')) {
     define('_CONFIG_VISA_WORKFLOW', 'Visa workflow setting');
 }
-if (!defined('_CONFIG_VISA_WORKFLOW_DESC')) {
-    define('_CONFIG_VISA_WORKFLOW_DESC', 'Allows to set up visa flow which the mail will have to follow');
-}
 if (!defined('_EMPTY_USER_LIST')) {
     define('_EMPTY_USER_LIST', 'Users list is empty');
 }
@@ -117,14 +114,6 @@ if (!defined('_VISA_BY')) {
 
 if (!defined('_INSTEAD_OF')) {
     define('_INSTEAD_OF', 'Instead of');
-}
-
-if (!defined('_CONFIG_VISA_WORKFLOW_IN_DETAIL')) {
-    define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuration du circuit de visa depuis la fiche détaillée');
-}
-
-if (!defined('_CONFIG_VISA_WORKFLOW_DESC')) {
-    define('_CONFIG_VISA_WORKFLOW_DESC', 'Allows to set the visa flow up from the detailed card');
 }
 
 if (!defined('_WAITING_FOR_SIGN')) {

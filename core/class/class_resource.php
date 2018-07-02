@@ -215,7 +215,6 @@
         $find_path = false;
         $find_filename = false;
         $find_offset = false;
-        $find_logical_adr = false;
         $find_fingerprint = false;
         $find_filesize = false;
         $find_status = false;
@@ -249,8 +248,6 @@
                 }
             } elseif ($data[$i]['column'] == "offset_doc") {
                 $find_offset = true;
-            } elseif ($data[$i]['column'] == 'logical_adr') {
-                $find_logical_adr = true;
             } elseif ($data[$i]['column'] == 'fingerprint') {
                 $find_fingerprint  = true;
                 if (!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value'])) {
@@ -290,9 +287,6 @@
         }
         if ($find_offset == false) {
             $error .= _MISSING_OFFSET.'<br/>';
-        }
-        if ($find_logical_adr == false) {
-            $error .= _MISSING_LOGICAL_ADR.'<br/>';
         }
         if ($find_fingerprint == false) {
             $error .= _MISSING_FINGERPRINT.'<br/>';

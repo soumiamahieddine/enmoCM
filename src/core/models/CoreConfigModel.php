@@ -149,31 +149,6 @@ class CoreConfigModel
         return $ozwilloConfig;
     }
 
-    public static function getLettersBoxCategories()
-    {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/config.xml']);
-
-        $categoriesTypes = [];
-        $categories      = $loadedXml->COLLECTION->categories;
-        if (count($categories) > 0) {
-            foreach ($categories->category as $category) {
-                $categoriesTmp = [
-                    'id'    => (string)$category->id,
-                    'label' => defined((string)$category->label) ? constant((string)$category->label) : (string)$category->label
-                ];
-
-                if ($category->id == (string)$categories->default_category) {
-                    $categoriesTmp['default_category'] = true;
-                } else {
-                    $categoriesTmp['default_category'] = false;
-                }
-                $categoriesTypes[] = $categoriesTmp;
-            }
-        }
-
-        return $categoriesTypes;
-    }
-
     public static function getXmlLoaded(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['path']);

@@ -24,13 +24,15 @@ abstract class AttachmentModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit']);
 
         $aAttachments = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['res_view_attachments'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aAttachments;
@@ -77,6 +79,35 @@ abstract class AttachmentModelAbstract
         ]);
 
         return $nextSequenceId;
+    }
+
+    public static function getConvertedPdfById(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $originalAttachment = AttachmentModel::getById([
+            'select'    => ['path', 'filename'],
+            'id'        => $aArgs['id'],
+            'isVersion' => (empty($aArgs['isVersion']) ? 'false' : 'true')
+        ]);
+
+        $PdfFilename = substr($originalAttachment['filename'], 0, strrpos($originalAttachment['filename'], '.')) . '.pdf';
+
+        $attachment = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['res_attachments'],
+            'where'     => ['path = ?', 'filename = ?', 'attachment_type = ?', 'status != ?'],
+            'data'      => [$originalAttachment['path'], $PdfFilename, 'converted_pdf', 'DEL'],
+        ]);
+
+        if (empty($attachment[0])) {
+            return [];
+        }
+
+        return $attachment[0];
     }
 
     public static function getAttachmentsTypesByXML()

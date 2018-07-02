@@ -61,8 +61,8 @@ abstract class BasketModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
 
         DatabaseModel::insert([
             'table'         => 'baskets',
@@ -72,7 +72,6 @@ abstract class BasketModelAbstract
                 'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
                 'is_visible'        => $aArgs['isVisible'],
-                'is_folder_basket'  => $aArgs['isFolderBasket'],
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
                 'coll_id'           => 'letterbox_coll',
@@ -84,8 +83,8 @@ abstract class BasketModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'isFolderBasket', 'flagNotif']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
 
         DatabaseModel::update([
             'table'     => 'baskets',
@@ -94,7 +93,6 @@ abstract class BasketModelAbstract
                 'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
                 'is_visible'        => $aArgs['isVisible'],
-                'is_folder_basket'  => $aArgs['isFolderBasket'],
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
                 'coll_id'           => 'letterbox_coll',

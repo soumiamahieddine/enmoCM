@@ -22,10 +22,10 @@
 *   @author <dev@maarch.org>
 */
 
-if (
-    file_exists('..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR. '..' 
-                . DIRECTORY_SEPARATOR . 'core'. DIRECTORY_SEPARATOR . 'init.php'
-    )
+if (file_exists(
+    '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR. '..'
+        . DIRECTORY_SEPARATOR . 'core'. DIRECTORY_SEPARATOR . 'init.php'
+)
 ) {
     include_once '../../../../core/init.php';
 } else {
@@ -54,12 +54,12 @@ function createXML($rootName, $parameters)
         $cM->closeReservation($_SESSION['cm']['reservationId']);
     }
     global $debug, $debugFile;
-    $rXml = new DomDocument("1.0","UTF-8");
+    $rXml = new DomDocument("1.0", "UTF-8");
     $rRootNode = $rXml->createElement($rootName);
     $rXml->appendChild($rRootNode);
     if (is_array($parameters)) {
         foreach ($parameters as $kPar => $dPar) {
-            $node = $rXml->createElement($kPar,$dPar);
+            $node = $rXml->createElement($kPar, $dPar);
             $rRootNode->appendChild($node);
         }
     } else {
@@ -78,13 +78,13 @@ function createXML($rootName, $parameters)
             'a'
         );
         fwrite(
-            $inF, 
+            $inF,
             '------------------' . PHP_EOL
             . 'EXECUTE JNLP------------------'
             . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
         );
         fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN|||||||||||||||||' . PHP_EOL);
-        foreach($_SERVER as $key => $value) {
+        foreach ($_SERVER as $key => $value) {
             fwrite($inF, $key . " : " . $value . PHP_EOL);
         }
         fwrite($inF, '|||||||||||||||||SERVER DETAILS END|||||||||||||||||' . PHP_EOL);
@@ -96,7 +96,7 @@ function createXML($rootName, $parameters)
             }
         }
         fwrite($inF, '|||||||||||||||||REQUEST DETAILS BEGIN|||||||||||||||||' . PHP_EOL);
-        foreach($_REQUEST as $key => $value) {
+        foreach ($_REQUEST as $key => $value) {
             fwrite($inF, $key . " : " . $value . PHP_EOL);
         }
         fwrite($inF, '|||||||||||||||||REQUEST DETAILS END|||||||||||||||||' . PHP_EOL);
@@ -129,8 +129,7 @@ if (!empty($_REQUEST['action'])
     && !empty($_REQUEST['objectType'])
     && !empty($_REQUEST['objectTable'])
     && !empty($_REQUEST['objectId'])
-    && isset($_REQUEST['uniqueId']))
-{
+    && isset($_REQUEST['uniqueId'])) {
     $objectType = $_REQUEST['objectType'];
     $objectTable = $_REQUEST['objectTable'];
     // $_REQUEST['objectId'] = str_replace("\\", "", $_REQUEST['objectId']);
@@ -145,8 +144,7 @@ if (!empty($_REQUEST['action'])
         $core_tools->test_user();
         $core_tools->load_lang();
         $function = new functions();
-        if (
-            $objectType <> 'template' 
+        if ($objectType <> 'template'
             && $objectType <> 'templateStyle'
             && $objectType <> 'attachmentFromTemplate'
             && $objectType <> 'attachment'
@@ -170,92 +168,87 @@ if (!empty($_REQUEST['action'])
         }
         $status = 'ok';
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);
-		$encodedContent = base64_encode($content);
+        $encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
-		
-		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
-			
-			if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false"){
-				//Transmission du fichier VBS de conversion
-				if (
-					file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
-								. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
-								. DIRECTORY_SEPARATOR . 'DOC2PDF_VBS.vbs'
-					)
-				) {
-					$vbsFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/DOC2PDF_VBS.vbs';
-				} else {
-					$vbsFile = 'modules/content_management/DOC2PDF_VBS.vbs';
-				}		
-				$content_vbsFile = file_get_contents($vbsFile, FILE_BINARY);
-				$encodedContent_vbsFile = base64_encode($content_vbsFile);
-			}
-			else{
-				if (
-					file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
-								. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
-								. DIRECTORY_SEPARATOR . 'dist' . DIRECTORY_SEPARATOR . 'Word2Pdf.exe'
-					)
-				) {
-					$exeFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/dist/Word2Pdf.exe';
-				} else {
-					$exeFile = 'modules/content_management/dist/Word2Pdf.exe';
-				}		
-				$content_exeFile = file_get_contents($exeFile, FILE_BINARY);
-				$encodedContent_exeFile = base64_encode($content_exeFile);
-			}
-			
-		}
-		        
-		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
-			if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false"){
-				$result = array(
-					'STATUS' => $status,
-					'OBJECT_TYPE' => $objectType,
-					'OBJECT_TABLE' => $objectTable,
-					'OBJECT_ID' => $objectId,
-					'UNIQUE_ID' => $uniqueId,
-					'APP_PATH' => $appPath,
-					'FILE_CONTENT' => $fileContent,
-					'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
-					'VBS_PATH' => $_SESSION['modules_loaded']['attachments']['vbs_convert_path'],
-					'USE_EXE_CONVERT' => "false",
-					'FILE_EXTENSION' => $fileExtension,
-					'ERROR' => '',
-					'END_MESSAGE' => '',
-				);
-			}
-			else{
-				$result = array(
-					'STATUS' => $status,
-					'OBJECT_TYPE' => $objectType,
-					'OBJECT_TABLE' => $objectTable,
-					'OBJECT_ID' => $objectId,
-					'UNIQUE_ID' => $uniqueId,
-					'APP_PATH' => $appPath,
-					'FILE_CONTENT' => $fileContent,
-					'FILE_CONTENT_EXE' => $encodedContent_exeFile,
-					'USE_EXE_CONVERT' => "true",
-					'FILE_EXTENSION' => $fileExtension,
-					'ERROR' => '',
-					'END_MESSAGE' => '',
-				);
-			}
-		}
-		else{
-			$result = array(
-				'STATUS' => $status,
-				'OBJECT_TYPE' => $objectType,
-				'OBJECT_TABLE' => $objectTable,
-				'OBJECT_ID' => $objectId,
-				'UNIQUE_ID' => $uniqueId,
-				'APP_PATH' => $appPath,
-				'FILE_CONTENT' => $fileContent,
-				'FILE_EXTENSION' => $fileExtension,
-				'ERROR' => '',
-				'END_MESSAGE' => '',
-			);
-		}
+        
+        if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true") {
+            if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false") {
+                //Transmission du fichier VBS de conversion
+                if (file_exists(
+                    'custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+                            . DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+                            . DIRECTORY_SEPARATOR . 'DOC2PDF_VBS.vbs'
+                )
+                ) {
+                    $vbsFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/DOC2PDF_VBS.vbs';
+                } else {
+                    $vbsFile = 'modules/content_management/DOC2PDF_VBS.vbs';
+                }
+                $content_vbsFile = file_get_contents($vbsFile, FILE_BINARY);
+                $encodedContent_vbsFile = base64_encode($content_vbsFile);
+            } else {
+                if (file_exists(
+                    'custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+                            . DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+                            . DIRECTORY_SEPARATOR . 'dist' . DIRECTORY_SEPARATOR . 'Word2Pdf.exe'
+                )
+                ) {
+                    $exeFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/dist/Word2Pdf.exe';
+                } else {
+                    $exeFile = 'modules/content_management/dist/Word2Pdf.exe';
+                }
+                $content_exeFile = file_get_contents($exeFile, FILE_BINARY);
+                $encodedContent_exeFile = base64_encode($content_exeFile);
+            }
+        }
+                
+        if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true") {
+            if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false") {
+                $result = array(
+                    'STATUS' => $status,
+                    'OBJECT_TYPE' => $objectType,
+                    'OBJECT_TABLE' => $objectTable,
+                    'OBJECT_ID' => $objectId,
+                    'UNIQUE_ID' => $uniqueId,
+                    'APP_PATH' => $appPath,
+                    'FILE_CONTENT' => $fileContent,
+                    'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
+                    'VBS_PATH' => $_SESSION['modules_loaded']['attachments']['vbs_convert_path'],
+                    'USE_EXE_CONVERT' => "false",
+                    'FILE_EXTENSION' => $fileExtension,
+                    'ERROR' => '',
+                    'END_MESSAGE' => '',
+                );
+            } else {
+                $result = array(
+                    'STATUS' => $status,
+                    'OBJECT_TYPE' => $objectType,
+                    'OBJECT_TABLE' => $objectTable,
+                    'OBJECT_ID' => $objectId,
+                    'UNIQUE_ID' => $uniqueId,
+                    'APP_PATH' => $appPath,
+                    'FILE_CONTENT' => $fileContent,
+                    'FILE_CONTENT_EXE' => $encodedContent_exeFile,
+                    'USE_EXE_CONVERT' => "true",
+                    'FILE_EXTENSION' => $fileExtension,
+                    'ERROR' => '',
+                    'END_MESSAGE' => '',
+                );
+            }
+        } else {
+            $result = array(
+                'STATUS' => $status,
+                'OBJECT_TYPE' => $objectType,
+                'OBJECT_TABLE' => $objectTable,
+                'OBJECT_ID' => $objectId,
+                'UNIQUE_ID' => $uniqueId,
+                'APP_PATH' => $appPath,
+                'FILE_CONTENT' => $fileContent,
+                'FILE_EXTENSION' => $fileExtension,
+                'ERROR' => '',
+                'END_MESSAGE' => '',
+            );
+        }
         // $file = fopen('cm_xml_begin.log', a);
         // fwrite($file, '[' . date('Y-m-d H:i:s') . '] ------BEGIN------- ' . PHP_EOL);
         // foreach ($result as $key => $value) {
@@ -267,8 +260,7 @@ if (!empty($_REQUEST['action'])
         //unlink($filePathOnTmp);
         createXML('SUCCESS', $result);
     } elseif ($_REQUEST['action'] == 'saveObject') {
-        if (
-            !empty($_REQUEST['fileContent'])
+        if (!empty($_REQUEST['fileContent'])
             && !empty($_REQUEST['fileExtension'])
             && preg_match('/[0-9a-z]{1,5}$/i', $_REQUEST['fileExtension'])
         ) {
@@ -288,23 +280,23 @@ if (!empty($_REQUEST['action'])
             $inF = fopen($_SESSION['config']['tmppath'] . $tmpFileName, 'w');
             fwrite($inF, $fileContent);
             fclose($inF);
-			
-			//Récupération de la version pdf du document
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit' || $objectType == 'transmission' || $objectType == 'newAttachment') && isset($_REQUEST['pdfContent'])){
-				$pdfEncodedContent = str_replace(
-					' ',
-					'+',
-					$_REQUEST['pdfContent']
-				);
-				$pdfContent = base64_decode($pdfEncodedContent);
-				//copy file on Maarch tmp dir
-				$tmpFilePdfName = 'cm_tmp_file_pdf_' . $_SESSION['user']['UserId']
-					. '_' . rand() . '.pdf';
-				$inFpdf = fopen($_SESSION['config']['tmppath'] . $tmpFilePdfName, 'w');
-				fwrite($inFpdf, $pdfContent);
-				fclose($inFpdf);
-			}
-			
+            
+            //Récupération de la version pdf du document
+            if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion' || $objectType == 'outgoingMail' || $objectType == 'resourceEdit' || $objectType == 'transmission' || $objectType == 'newAttachment') && isset($_REQUEST['pdfContent'])) {
+                $pdfEncodedContent = str_replace(
+                    ' ',
+                    '+',
+                    $_REQUEST['pdfContent']
+                );
+                $pdfContent = base64_decode($pdfEncodedContent);
+                //copy file on Maarch tmp dir
+                $tmpFilePdfName = 'cm_tmp_file_pdf_' . $_SESSION['user']['UserId']
+                    . '_' . rand() . '.pdf';
+                $inFpdf = fopen($_SESSION['config']['tmppath'] . $tmpFilePdfName, 'w');
+                fwrite($inFpdf, $pdfContent);
+                fclose($inFpdf);
+            }
+            
             $arrayIsAllowed = array();
             $arrayIsAllowed = Ds_isFileTypeAllowed(
                 $_SESSION['config']['tmppath'] . $tmpFileName
@@ -323,7 +315,7 @@ if (!empty($_REQUEST['action'])
                 //EDIT ATTACHMENT (???)
                 if ($objectType == 'resourceEdit') {
                     include 'modules/content_management/save_editRes_from_cm.php';
-                //ADD NEW ATTACHMENT (???)  
+                //ADD NEW ATTACHMENT (???)
                 } elseif ($objectType == 'attachmentFromTemplate') {
                     include 'modules/content_management/save_attach_res_from_cm.php';
                 //(???)
@@ -346,12 +338,14 @@ if (!empty($_REQUEST['action'])
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
                     $result = array(
+                        'ERROR' => '',
                         'END_MESSAGE' => $_SESSION['error'] . _END_OF_EDITION,
                     );
                     createXML('ERROR', $result);
                 } else {
                     $cM->closeReservation($_SESSION['cm']['reservationId']);
                     $result = array(
+                        'ERROR' => '',
                         'END_MESSAGE' => _UPDATE_OK,
                     );
                     createXML('SUCCESS', $result);
@@ -363,6 +357,13 @@ if (!empty($_REQUEST['action'])
             );
             createXML('ERROR', $result);
         }
+    } elseif ($_REQUEST['action'] == 'terminate') {
+        if (file_exists($file)) {
+            unset($_SESSION['cm_applet'][$_SESSION['user']['UserId']][$_REQUEST['idApplet']]);
+            unlink($file);
+        }
+
+        createXML('SUCCESS', ['END_MESSAGE' => 'Terminate ok']);
     } elseif ($_REQUEST['action'] == 'sendPsExec') {
         $pathToPsExec = 'modules/content_management/dist/PsExec.exe';
         if (file_exists($pathToPsExec)) {

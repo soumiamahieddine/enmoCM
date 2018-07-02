@@ -245,8 +245,8 @@ if ($core->is_module_loaded('cases') == true) {
 }
 $stmt = $db->query(
     'SELECT status, format, typist, creation_date, fingerprint, filesize, '
-    .'res_id, destination, work_batch, page_count, is_paper, scan_date, scan_user, '
-    .'scan_location, scan_wkstation, scan_batch, source, doc_language, '
+    .'res_id, destination, work_batch, page_count, scan_date, scan_user, '
+    .'scan_location, scan_wkstation, scan_batch, source, '
     .'description, closing_date, alt_identifier, initiator, entity_label '.$comp_fields
     .$case_sql_complementary.' FROM '.$table.' WHERE res_id = ?',
     array($s_id)
@@ -296,13 +296,11 @@ if ($stmt->rowCount() == 0) {
     $work_batch = $res->work_batch;
     $destination = $res->destination;
     $page_count = $res->page_count;
-    $is_paper = $res->is_paper;
     $scan_date = functions::format_date_db($res->scan_date);
     $scan_user = $res->scan_user;
     $scan_location = $res->scan_location;
     $scan_wkstation = $res->scan_wkstation;
     $scan_batch = $res->scan_batch;
-    $doc_language = $res->doc_language;
     $closing_date = functions::format_date_db($res->closing_date, false);
     $indexes = $type->get_indexes($type_id, $coll_id);
     $entityLabel = $res->entity_label;
@@ -613,61 +611,6 @@ if ($stmt->rowCount() == 0) {
         $sendmail .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
 
         echo $sendmail;
-    }
-
-    //VERSIONS TAB
-    if ($core->test_service('view_version_letterbox', 'apps', false)) {
-        $version = '';
-        $versionTable = $security->retrieve_version_table_from_coll_id(
-                $coll_id
-            );
-        $selectVersions = 'SELECT res_id FROM '
-                .$versionTable." WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
-
-        $stmt = $db->query($selectVersions, array($s_id));
-        $nb_versions_for_title = $stmt->rowCount();
-        $lineLastVersion = $stmt->fetchObject();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion != '') {
-            $objectId = $lastVersion;
-            $objectTable = $versionTable;
-        } else {
-            $objectTable = $security->retrieve_table_from_coll(
-                    $coll_id
-                );
-            $objectId = $s_id;
-            $_SESSION['cm']['objectId4List'] = $s_id;
-        }
-        if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '0';
-            $class = 'nbResZero';
-            if ($nbAttach == 0 && strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-                $style = 'visibility:hidden;font-size: 10px;';
-            } else {
-                $style = 'display:none;font-size: 10px;';
-            }
-
-            $style2 = 'color:#9AA7AB;font-size:2em;padding-left: 15px;padding-right: 15px;';
-        } else {
-            $extend_title_for_versions = $nb_versions_for_title;
-            $class = 'nbRes';
-            $style = 'font-size: 10px;';
-        }
-        $_SESSION['cm']['resMaster'] = '';
-
-        $pathScriptTab = $_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=show_versions_tab&collId='.$coll_id.'&resId='.$s_id.'&objectTable='.$objectTable;
-        $version .= '<div  class="fa fa-code-branch DetailsTabFunc" id="DetailsCodeForkTab" style="font-size:2em;padding-left: 15px;';
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome')) {
-            $version .= 'padding-right: 0px;';
-        } else {
-            $version .= 'padding-right: 15px;';
-        }
-        $version .= '"title="'._VERSIONS.'" onclick="loadSpecificTab(\'uniqueDetailsIframe\',\''.$pathScriptTab.'\');tabClicked(\'DetailsCodeForkTab\',true);">';
-        $version .= ' <sup><span id="nbVersions" ';
-        $version .= 'class="'.$class.'" style="'.$styleBadge.'">'.$extend_title_for_versions.'</span></sup>';
-        $version .= '</div>';
-        echo $version;
     }
 
     //LINKS TAB

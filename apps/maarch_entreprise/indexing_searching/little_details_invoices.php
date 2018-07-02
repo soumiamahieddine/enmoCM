@@ -121,8 +121,8 @@ if (empty($_SESSION['error'])) {
     }
     $stmt = $db->query(
         'SELECT status, format, typist, creation_date, fingerprint, filesize, '
-        .'res_id, work_batch, page_count, is_paper, scan_date, scan_user, '
-        .'scan_location, scan_wkstation, scan_batch, source, doc_language, '
+        .'res_id, work_batch, page_count, scan_date, scan_user, '
+        .'scan_location, scan_wkstation, scan_batch, source, '
         .'description, closing_date, type_id '.$compFields
         .$caseSqlComplementary.' FROM '.$table.' WHERE res_id = ?',
          array($resId)
@@ -169,7 +169,6 @@ if (!empty($_SESSION['error'])) {
             'img_process_limit_date' => true,
             'img_author' => true,
             'img_destination' => true,
-            'img_arbox_id' => true,
             'img_project' => true,
         );
 
@@ -182,13 +181,11 @@ if (!empty($_SESSION['error'])) {
             $fingerprint = $res->fingerprint;
             $workBatch = $res->work_batch;
             $pageCount = $res->page_count;
-            $isPaper = $res->is_paper;
             $scanDate = functions::format_date_db($res->scan_date);
             $scanUser = $res->scan_user;
             $scanLocation = $res->scan_location;
             $scanWkstation = $res->scan_wkstation;
             $scanBatch = $res->scan_batch;
-            $docLanguage = $res->doc_language;
             $closingDate = functions::format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($typeId, $collId);
 

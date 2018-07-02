@@ -18,7 +18,6 @@
     <COLLECTION>
         <Id>letterbox_coll</Id>
         <Table>res_letterbox</Table>
-		<VersionTable>res_version_letterbox</VersionTable>
         <View>res_view_letterbox</View>
         <Adr>adr_letterbox</Adr>
 		<Extension>mlb_coll_ext</Extension>

@@ -78,7 +78,6 @@ class BasketController
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
-        $data['isFolderBasket'] = empty($data['isFolderBasket']) ? 'N' : 'Y';
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         BasketModel::create($data);
         HistoryController::add([
@@ -119,7 +118,6 @@ class BasketController
         }
 
         $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
-        $data['isFolderBasket'] = empty($data['isFolderBasket']) ? 'N' : 'Y';
         $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
         $data['id'] = $aArgs['id'];
         BasketModel::update($data);

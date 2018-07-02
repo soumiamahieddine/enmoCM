@@ -85,32 +85,27 @@ $j=0;
 $basketClause = false;
 if (count($_SESSION['user']['baskets']) > 0) {
     while($j<=count($_SESSION['user']['baskets'])) {
-    	if ($_SESSION['user']['baskets'][$j]['is_folder_basket'] == 'N') {
-	    	//controle for basket that has empty whereclause ' '
-	    	$basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
+        //controle for basket that has empty whereclause ' '
+        $basketClauseReplace = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j]['clause']);
 
-	        if($basketClauseReplace <> "") {
-	            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
-	            $basketClause = true;
-	            
-	    		$basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
+        if($basketClauseReplace <> "") {
+            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
+            $basketClause = true;
 
-				$jplus = $j + 1;
-				$normalBasketsRemaining = false;
-				while ($_SESSION['user']['baskets'][$jplus]) {
-					if ($_SESSION['user']['baskets'][$jplus]['is_folder_basket'] == 'N') {
-						$normalBasketsRemaining = true;
-						break;
-					}
-					$jplus++;
-				}
-	            if ($j + 1 < count($_SESSION['user']['baskets']) && $basketClauseReplace1 != "" && $normalBasketsRemaining) {
-	                $where_request .= " or ";
-	            }
-	        } else if ($j > 0) {
-	        	$where_request .= " or ";
-	        }
-	    }
+            $basketClauseReplace1 = str_replace(array(" ", '"', "'"), array("", "", ""), $_SESSION['user']['baskets'][$j+1]['clause']);
+
+            $jplus = $j + 1;
+            $normalBasketsRemaining = false;
+            while ($_SESSION['user']['baskets'][$jplus]) {
+                $normalBasketsRemaining = true;
+                break;
+            }
+            if ($j + 1 < count($_SESSION['user']['baskets']) && $basketClauseReplace1 != "" && $normalBasketsRemaining) {
+                $where_request .= " or ";
+            }
+        } else if ($j > 0) {
+            $where_request .= " or ";
+        }
         $j++;
     }
 }

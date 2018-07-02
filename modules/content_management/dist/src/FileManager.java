@@ -326,17 +326,43 @@ public class FileManager {
     */
     public static void deleteFilesOnDirWithTime (String directory) throws IOException {
         File dir = new File(directory);
-        File[] directoryListing = dir.listFiles();
+        File[] directoryListing = dir.listFiles(); 
         long now = Calendar.getInstance().getTimeInMillis();
         long oneDay = 1000L * 60L * 60L * 24L;
         long twoDays = 2L * oneDay;
         if (directoryListing != null) {
+            Integer i = 1;
           for (File child : directoryListing) {
             //System.out.println("a file : " + child);
             long diff = now - child.lastModified();
-            if (!child.toString().contains(".log") && diff >= twoDays) {
+            if (!child.toString().contains(".log") && diff >= twoDays && i >= 20) {
                 System.out.println("a file with pattern : " + child);
                 child.delete();
+                i++;
+            }
+          }
+        }
+    }
+    /**
+    * Deletes file in the tmp dir
+    * @param directory path of the tmp dir
+    * @param pattern pattern of files to delete
+    */
+    public static void deleteLogsOnDirWithTime (String directory) throws IOException {
+        File dir = new File(directory + File.separator + "logs");
+        File[] directoryListing = dir.listFiles(); 
+        long now = Calendar.getInstance().getTimeInMillis();
+        long oneDay = 1000L * 60L * 60L * 24L;
+        long sevenDays = 7L * oneDay;
+        if (directoryListing != null) {
+            Integer i = 1;
+          for (File child : directoryListing) {
+            //System.out.println("a file : " + child);
+            long diff = now - child.lastModified();
+            if (diff >= sevenDays) {
+                System.out.println("a file with pattern : " + child);
+                child.delete();
+                i++;
             }
           }
         }

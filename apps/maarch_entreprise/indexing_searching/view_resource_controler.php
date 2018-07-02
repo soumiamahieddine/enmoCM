@@ -220,7 +220,7 @@ if ($s_id == '') {
         exit();
     }
     if (
-        $versionTable <> '' 
+        $versionTable <> '' && $versionTable == 'res_version_attachments'
         && !isset($_REQUEST['original'])
         && !isset($_REQUEST['aVersion'])
     ) {

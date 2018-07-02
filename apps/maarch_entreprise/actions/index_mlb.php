@@ -1564,14 +1564,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             'type' => 'string',
         )
     );
-    array_push(
-        $_SESSION['data'],
-        array(
-            'column' => 'logical_adr',
-            'value' => '',
-            'type' => 'string',
-        )
-    );
 
     if (isset($_SESSION['origin']) && $_SESSION['origin'] == 'scan') {
         array_push(

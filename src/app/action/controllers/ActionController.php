@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use History\controllers\HistoryController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use SrcCore\models\CoreConfigModel;
@@ -41,7 +42,6 @@ class ActionController
         $obj['action'] = ActionModel::getById(['id' => $aArgs['id']]);
 
         if (!empty($obj['action'])) {
-            $obj['action']['is_folder_action'] = ($obj['action']['is_folder_action'] == 'Y');
             $obj['action']['history'] = ($obj['action']['history'] == 'Y');
             $obj['action']['is_system'] = ($obj['action']['is_system'] == 'Y');
             $obj['action']['create_id'] = ($obj['action']['create_id'] == 'Y');
@@ -52,7 +52,7 @@ class ActionController
             }
             $obj['action']['actionCategories'] = $actionCategories;
 
-            $obj['categoriesList'] = CoreConfigModel::getLettersBoxCategories();
+            $obj['categoriesList'] = ResModel::getCategories();
             if (empty($obj['action']['actionCategories'])) {
                 $categoriesList = [];
                 foreach ($obj['categoriesList'] as $key => $category) {
@@ -200,10 +200,9 @@ class ActionController
         //default data
         $obj['action']['history']          = true;
         $obj['action']['keyword']          = '';
-        $obj['action']['is_folder_action'] = false;
         $obj['action']['action_page']      = '';
         $obj['action']['id_status']        = '_NOSTATUS_';
-        $obj['categoriesList']             = CoreConfigModel::getLettersBoxCategories();
+        $obj['categoriesList']             = ResModel::getCategories();
 
         foreach ($obj['categoriesList'] as $key => $value) {
             $obj['categoriesList'][$key]['selected'] = true;
@@ -221,7 +220,7 @@ class ActionController
     protected function manageValue($request)
     {
         foreach ($request  as $key => $value) {
-            if (in_array($key, ['is_folder_action', 'history'])) {
+            if (in_array($key, ['history'])) {
                 if (empty($value)) {
                     $request[$key] = 'N';
                 } else {

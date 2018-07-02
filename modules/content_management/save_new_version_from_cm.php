@@ -127,14 +127,6 @@ if (empty($docserver)) {
                 array_push(
                     $_SESSION['data'],
                     array(
-                        'column' => 'logical_adr',
-                        'value' => ' ',
-                        'type' => 'string',
-                    )
-                );
-                array_push(
-                    $_SESSION['data'],
-                    array(
                         'column' => 'title',
                         'value' => 'new version of original resource',
                         'type' => 'string',

@@ -674,7 +674,6 @@ class security extends Database
 
         for ($ind_bask = 0; $ind_bask < $userBaskets; ++$ind_bask) {
             if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
-                && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
                 && isset($_SESSION['user']['baskets'][$ind_bask]['clause'])
                 && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) != '') {
                 $basketWhereClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
@@ -785,9 +784,7 @@ class security extends Database
                 ) {
                     if (
                         isset($_SESSION['user']['baskets'][$ind_bask]['clause'])
-                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
-                        ) != ''
-                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
+                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) != ''
                     ) {
                         $basketQuery .= ' or ('
                             .$_SESSION['user']['baskets'][$ind_bask]['clause']
