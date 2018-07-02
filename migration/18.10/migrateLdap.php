@@ -21,18 +21,16 @@ foreach ($customs as $custom) {
         $loginMethodPath = "custom/{$custom}/apps/maarch_entreprise/xml/login_method.xml";
 
         if (!file_exists($loginMethodPath)) {
-            $newXml = new DomDocument("1.0", "UTF-8");
-            $rRootNode = $newXml->createElement('ROOT');
-            $newXml->appendChild($rRootNode);
-            $newXml->save($loginMethodPath);
+            copy('apps/maarch_entreprise/xml/login_method.xml', "custom/{$custom}/apps/maarch_entreprise/xml/login_method.xml");
         }
         $loginXmlfile = simplexml_load_file($loginMethodPath);
 
-        $newloginMethod = $loginXmlfile->addChild('METHOD');
-        $newloginMethod->addChild('ID', 'ldap');
-        $newloginMethod->addChild('NAME', '_STANDARD_LOGIN');
-        $newloginMethod->addChild('SCRIPT', 'standard_connect.php');
-        $newloginMethod->addChild('ENABLED', 'true');
+        foreach ($loginXmlfile->METHOD as $method) {
+            $method->ENABLED = 'false';
+            if ($method->ID == 'ldap') {
+                $method->ENABLED = 'true';
+            }
+        }
 
         $res = $loginXmlfile->asXML();
         $fp = @fopen($loginMethodPath, "w+");
