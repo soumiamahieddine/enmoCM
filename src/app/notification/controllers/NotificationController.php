@@ -244,7 +244,10 @@ class NotificationController
                 NotificationScheduleModel::saveCrontab($cronTab);
             }
 
-            unlink($pathToFolow.'modules/notifications/batch/scripts/'.$filename);
+            $filePath = $pathToFolow.'modules/notifications/batch/scripts/'.$filename;
+            if (file_exist($filePath)) {
+                unlink($filePath);
+            }
         }
 
         return $response->withJson([
