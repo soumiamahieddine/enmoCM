@@ -89,8 +89,8 @@ abstract class AttachmentModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $originalAttachment = AttachmentModel::getById([
-            'select' => ['path', 'filename'],
-            'id' => $aArgs['id'],
+            'select'    => ['path', 'filename'],
+            'id'        => $aArgs['id'],
             'isVersion' => (empty($aArgs['isVersion']) ? 'false' : 'true')
         ]);
 
@@ -99,8 +99,8 @@ abstract class AttachmentModelAbstract
         $attachment = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['res_attachments'],
-            'where'     => ['path = ?', 'filename = ?', 'attachment_type = ?'],
-            'data'      => [$originalAttachment['path'], $PdfFilename, 'converted_pdf'],
+            'where'     => ['path = ?', 'filename = ?', 'attachment_type = ?', 'status != ?'],
+            'data'      => [$originalAttachment['path'], $PdfFilename, 'converted_pdf', 'DEL'],
         ]);
 
         if (empty($attachment[0])) {

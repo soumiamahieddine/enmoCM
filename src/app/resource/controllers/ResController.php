@@ -176,8 +176,8 @@ class ResController
         if ($extDocument['category_id'] == 'outgoing') {
             $attachment = AttachmentModel::getOnView([
                 'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
-                'where'     => ['res_id_master = ?', 'attachment_type = ?'],
-                'data'      => [$aArgs['resId'], 'outgoing_mail'],
+                'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                 'limit'     => 1
             ]);
             if (!empty($attachment[0])) {
