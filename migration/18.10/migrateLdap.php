@@ -12,7 +12,8 @@ foreach ($customs as $custom) {
     }
 
     $xmlfile = null;
-    if (file_exists("custom/{$custom}/apps/maarch_entreprise/xml/config.xml")) {
+    $path = "custom/{$custom}/apps/maarch_entreprise/xml/config.xml";
+    if (file_exists($path)) {
         $xmlfile = simplexml_load_file($path);
     }
 
