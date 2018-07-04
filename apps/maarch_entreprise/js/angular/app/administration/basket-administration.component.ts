@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,6 +6,7 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
+import { FormControl } from '@angular/forms';
 
 declare function $j(selector: any): any;
 declare var angularGlobals: any;
@@ -276,10 +277,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
     lang        : any   = LANG;
     allEntities : any[] = [];
     statuses    : any;
+    selectedStatuses    : any[] = [];
+    statusCtrl = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
-        super(http, ['users']);
+        super(http, ['users','statuses']);
     }
+
+    @ViewChild('statusInput') statusInput: ElementRef;
 
     ngOnInit(): void {
         this.http.get(this.coreUrl + "rest/entities")
@@ -352,10 +357,41 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 location.href = "index.php";
             });
         this.http.get(this.coreUrl + 'rest/statuses')
-            .subscribe((data: any) => {
-                this.statuses = data.statuses;
+            .subscribe((response: any) => {
+                this.statuses = response.statuses;
+                response.statuses.forEach((status: any) => {
+                    if (this.data.action.statuses.indexOf(status.id) > -1) {
+                        this.selectedStatuses.push({idToDisplay:status.label_status,id:status.id});
+                    }
+                });
             });
     }
+
+      remove(index: number): void {
+
+        this.selectedStatuses.splice(index, 1);
+        this.statusCtrl.setValue(null);
+        this.statusInput.nativeElement.value = '';
+    
+      }
+
+      add(status: any): void {
+        let isIn = false;
+
+        this.selectedStatuses.forEach((statusList: any) => {
+            if (status.id == statusList.id) {
+                isIn = true;
+            }
+        });
+        if(!isIn) {
+            this.selectedStatuses.push(status);
+            this.statusCtrl.setValue(null);
+            this.statusInput.nativeElement.value = '';
+        } 
+      }
+
+
+
     initService() {
         this.allEntities.forEach((entity: any) => {
             entity.state = { "opened": false, "selected": false };
@@ -382,14 +418,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         });
         $j('#jstree')
             // listen for event
-            .on('select_node.jstree', (e: any, data: any) => {
+            .on('select_node.jstree', (data: any) => {
                 if (data.node.original.keyword) {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: '', keyword: data.node.id, redirect_mode: 'ENTITY' })
                 } else {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: data.node.id, keyword: '', redirect_mode: 'ENTITY' })
                 }
 
-            }).on('deselect_node.jstree', (e: any, data: any) => {
+            }).on('deselect_node.jstree', (data: any) => {
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {
@@ -443,14 +479,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
         });
         $j('#jstree2')
             // listen for event
-            .on('select_node.jstree', (e: any, data: any) => {
+            .on('select_node.jstree', (data: any) => {
                 if (data.node.original.keyword) {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: '', keyword: data.node.id, redirect_mode: 'USERS' })
                 } else {
                     this.data.action.redirects.push({ action_id: this.data.action.id, entity_id: data.node.id, keyword: '', redirect_mode: 'USERS' })
                 }
 
-            }).on('deselect_node.jstree', (e: any, data: any) => {
+            }).on('deselect_node.jstree', (data: any) => {
                 this.data.action.redirects.forEach((redirect: any) => {
                     if (data.node.original.keyword) {
                         if (redirect.keyword == data.node.original.keyword) {
@@ -477,6 +513,14 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 $j('#jstree2').jstree(true).search(v);
             }, 250);
         });
+    }
+
+    saveSettings() {
+        this.data.action.statuses = [];
+        this.selectedStatuses.forEach((status: any) => {
+            this.data.action.statuses.push(status.id);
+        });
+        this.dialogRef.close(this.data);
     }
 }
 
