@@ -59,7 +59,11 @@ export class TemplatesAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
+                    this.dataSource.filterPredicate = function(template, filter: string): boolean {
+                        return template.template_comment.toLowerCase().includes(filter) ||  template.template_label.toLowerCase().includes(filter) || template.template_type.toLowerCase().includes(filter) || template.template_target.toLowerCase().includes(filter);
+                    };
                 }, 0);
+                
             }, (err) => {
                 console.log(err);
                 location.href = "index.php";
