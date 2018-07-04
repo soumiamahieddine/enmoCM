@@ -68,6 +68,7 @@ define('_PARAMETER_CREATION', 'Création paramètre');
 define('_PARAMETER_MODIFICATION', 'Modification paramètre');
 define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
 define('_PARAMETER_ID_ALREADY_EXISTS', 'Ce paramètre existe déjà');
+define('_PASSWORD_RULE_UPDATED', 'Règle de mot de passe modifiée');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
@@ -180,6 +181,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
+define('_SECURITY_PASSWORD', 'Sécurisation des mots de passe');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');

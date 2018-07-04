@@ -68,6 +68,7 @@ define('_PARAMETER_CREATION', 'Parameter creation');
 define('_PARAMETER_MODIFICATION', 'Parameter modification');
 define('_PARAMETER_SUPPRESSION', 'Parameter suppression');
 define('_PARAMETER_ID_ALREADY_EXISTS', 'Parameter already exists');
+define('_PASSWORD_RULE_UPDATED', 'Password rule updated');
 define('_PRIORITY_CREATION', 'Priority creation');
 define('_PRIORITY_MODIFICATION', 'Priority modification');
 define('_PRIORITY_SUPPRESSION', 'Priority suppression');
@@ -180,6 +181,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications based on application events");
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
+define('_SECURITY_PASSWORD', 'Password security');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

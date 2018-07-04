@@ -1749,6 +1749,9 @@ UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
 UPDATE doctypes SET duration_current_use = 12;
 
+/* Password Management */
+INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
+
 
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise

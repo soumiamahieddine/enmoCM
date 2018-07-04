@@ -70,6 +70,22 @@ ALTER TABLE templates_association ADD UNIQUE (id);
 UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
 UPDATE templates SET template_content = REPLACE(template_content, '___', '--');
 
+/* Password Management */
+DROP TABLE IF EXISTS password_rules;
+CREATE TABLE password_rules
+(
+  id serial,
+  label character varying(64) NOT NULL,
+  "value" integer NOT NULL,
+  enabled boolean DEFAULT FALSE,
+  CONSTRAINT password_rules_pkey PRIMARY KEY (id),
+  CONSTRAINT password_rules_label_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
+ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
+ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;
+
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;

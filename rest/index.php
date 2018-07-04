@@ -188,6 +188,10 @@ $app->get('/parameters/{id}', \Parameter\controllers\ParameterController::class 
 $app->put('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':update');
 $app->delete('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':delete');
 
+//PasswordRules
+$app->get('/passwordRules', \SrcCore\controllers\PasswordController::class . ':getRules');
+$app->put('/passwordRules/{id}', \SrcCore\controllers\PasswordController::class . ':updateRule');
+
 //Priorities
 $app->get('/priorities', \Priority\controllers\PriorityController::class . ':get');
 $app->post('/priorities', \Priority\controllers\PriorityController::class . ':create');

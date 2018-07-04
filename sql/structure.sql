@@ -227,6 +227,7 @@ CREATE TABLE users
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  password_modification_date timestamp without time zone,
   loginmode character varying(50) DEFAULT NULL::character varying,
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
@@ -2192,4 +2193,16 @@ CREATE TABLE indexingmodels
 WITH (
   OIDS=FALSE
 );
+
+CREATE TABLE password_rules
+(
+  id serial,
+  label character varying(64) NOT NULL,
+  "value" integer NOT NULL,
+  enabled boolean DEFAULT FALSE,
+  CONSTRAINT password_rules_pkey PRIMARY KEY (id),
+  CONSTRAINT password_rules_label_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
 

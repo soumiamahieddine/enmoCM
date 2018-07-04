@@ -65,18 +65,19 @@ abstract class UserModelAbstract
         DatabaseModel::insert([
             'table'         => 'users',
             'columnsValues' => [
-                'user_id'           => $aArgs['user']['userId'],
-                'firstname'         => $aArgs['user']['firstname'],
-                'lastname'          => $aArgs['user']['lastname'],
-                'mail'              => $aArgs['user']['mail'],
-                'phone'             => $aArgs['user']['phone'],
-                'initials'          => $aArgs['user']['initials'],
-                'thumbprint'        => $aArgs['user']['thumbprint'],
-                'enabled'           => 'Y',
-                'status'            => 'OK',
-                'change_password'   => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
-                'loginmode'         => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
-                'password'          => SecurityModel::getPasswordHash('maarch')
+                'user_id'                       => $aArgs['user']['userId'],
+                'firstname'                     => $aArgs['user']['firstname'],
+                'lastname'                      => $aArgs['user']['lastname'],
+                'mail'                          => $aArgs['user']['mail'],
+                'phone'                         => $aArgs['user']['phone'],
+                'initials'                      => $aArgs['user']['initials'],
+                'thumbprint'                    => $aArgs['user']['thumbprint'],
+                'enabled'                       => 'Y',
+                'status'                        => 'OK',
+                'change_password'               => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
+                'loginmode'                     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
+                'password'                      => SecurityModel::getPasswordHash('maarch'),
+                'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ]
         ]);
 
@@ -170,7 +171,8 @@ abstract class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'  => SecurityModel::getPasswordHash($aArgs['password'])
+                'password'                      => SecurityModel::getPasswordHash($aArgs['password']),
+                'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
@@ -187,8 +189,9 @@ abstract class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'          => SecurityModel::getPasswordHash('maarch'),
-                'change_password'   => 'Y',
+                'password'                      => SecurityModel::getPasswordHash('maarch'),
+                'change_password'               => 'Y',
+                'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

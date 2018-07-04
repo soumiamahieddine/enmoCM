@@ -99,13 +99,11 @@ class BasketController
         }
 
         $basket = BasketModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
-
         if (empty($basket)) {
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found']);
         }
 
         $data = $request->getParams();
-
         $check = Validator::stringType()->notEmpty()->validate($data['basket_name']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['basket_desc']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['clause']);
@@ -339,12 +337,13 @@ class BasketController
                 ]);
 
                 if (!empty($groupAction['statuses'])) {
-                    foreach ($groupAction['statuses'] as $status) {
+                    foreach ($groupAction['statuses'] as $key => $status) {
                         BasketModel::createGroupActionStatus([
                             'id'        => $aArgs['id'],
                             'groupId'   => $data['group_id'],
                             'actionId'  => $groupAction['id'],
-                            'statusId'  => $status
+                            'statusId'  => $status,
+                            'order'     => $key
                         ]);
                     }
                 }
