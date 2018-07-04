@@ -254,6 +254,7 @@ abstract class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'statusId']);
         ValidatorModel::stringType($aArgs, ['id', 'groupId', 'statusId']);
         ValidatorModel::intVal($aArgs, ['actionId']);
+        ValidatorModel::intType($aArgs, ['order']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket_status',
@@ -261,7 +262,8 @@ abstract class BasketModelAbstract
                 'action_id'     => $aArgs['actionId'],
                 'group_id'      => $aArgs['groupId'],
                 'basket_id'     => $aArgs['id'],
-                'status_id'     => $aArgs['statusId']
+                'status_id'     => $aArgs['statusId'],
+                '"order"'       => $aArgs['order']
             ]
         ]);
 

@@ -1491,6 +1491,7 @@ CREATE TABLE groupbasket_status
   basket_id character varying(32) NOT NULL,
   action_id integer NOT NULL,
   status_id character varying(32),
+  "order" integer NOT NULL,
   CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
 )
 WITH (

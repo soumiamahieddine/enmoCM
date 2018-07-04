@@ -2,10 +2,6 @@
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS res_view_attachments;
 
-UPDATE actions_groupbaskets set used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
-UPDATE actions_groupbaskets set used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
-DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
-
 DROP TABLE IF EXISTS contacts_groups;
 CREATE TABLE contacts_groups
 (
@@ -30,6 +26,15 @@ CREATE TABLE contacts_groups_lists
   CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
 )
 WITH (OIDS=FALSE);
+
+UPDATE actions_groupbaskets SET used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
+UPDATE actions_groupbaskets SET used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
+DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
+ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
+ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
+UPDATE groupbasket_status SET "order" = 1;
+ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
+
 
 /* Docservers */
 ALTER TABLE docservers DROP COLUMN IF EXISTS docserver_location_id;

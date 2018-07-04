@@ -429,12 +429,13 @@ class BasketController
                 ]);
 
                 if (!empty($groupAction['statuses'])) {
-                    foreach ($groupAction['statuses'] as $status) {
+                    foreach ($groupAction['statuses'] as $key => $status) {
                         BasketModel::createGroupActionStatus([
                             'id'        => $aArgs['id'],
                             'groupId'   => $aArgs['groupId'],
                             'actionId'  => $groupAction['id'],
-                            'statusId'  => $status
+                            'statusId'  => $status,
+                            'order'     => $key
                         ]);
                     }
                 }

@@ -150,12 +150,11 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
         $owner_usr_grp = $grp_status->group_id;
         $owner_basket_id = str_replace('_'.$_SESSION['current_basket']['basket_owner'], '', $_SESSION['current_basket']['id']);
     } else {
-        $owner_usr_grp = $_SESSION['user']['primarygroup'];
+        $owner_usr_grp = $_SESSION['current_basket']['group_id'];
         $owner_basket_id = $_SESSION['current_basket']['id'];
     }
-    $query = 'SELECT status_id, label_status FROM '.GROUPBASKET_STATUS.' left join '.$_SESSION['tablename']['status']
-        .' on status_id = id '
-        .' WHERE basket_id= ? and (group_id = ?) and action_id = ?';
+    $query = 'SELECT status_id, label_status FROM groupbasket_status left join status on status_id = id '
+        .' WHERE basket_id= ? and (group_id = ?) and action_id = ? ORDER BY groupbasket_status.order';
     $stmt = $db->query($query, array($owner_basket_id, $owner_usr_grp, $actionId));
 
     if ($stmt->rowCount() > 0) {
@@ -820,9 +819,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
         //$frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
         for ($i = 0; $i < count($statuses); ++$i) {
             $frmStr .= '<option value="'.functions::xssafe($statuses[$i]['ID']).'" ';
-            if ($statuses[$i]['ID'] == 'NEW') {
-                $frmStr .= 'selected="selected"';
-            }
             $frmStr .= '>'.functions::xssafe($statuses[$i]['LABEL']).'</option>';
         }
         $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
