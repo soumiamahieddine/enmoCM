@@ -64,6 +64,20 @@
                                 <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
                                     (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
+                            <div class="row">
+                                <div class="col-md-6 col-xs-6 text-center">
+                                    <mat-form-field >
+                                        <mat-select placeholder="{{lang.defaultSort}}" [(ngModel)]="orderColumnsSelected" (selectionChange)="onOrderChange()" [formControl]="columnsFormControl" name="basket_res_order" multiple>
+                                                <mat-option *ngFor="let column of orderColumns" [value]="column">{{lang[langVarName[orderColumns.indexOf(column)]]}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>                                        
+                                <div class="col-md-6 col-xs-6 text-center">
+                                    <mat-chip *ngFor="let column of orderColumnsSelected" color="primary">  
+                                            <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{lang[langVarName[orderColumns.indexOf(column)]]}}
+                                    </mat-chip>
+                                </div>
+                            </div>               
                             <div class="col-md-6 col-xs-6 text-center">
                                 <mat-slide-toggle [ngStyle]="{'opacity': basket.isSearchBasket ? '' : '0.3'}" color="primary" matTooltip="{{lang.isSearchBasket}}" name="isSearchBasket" [(ngModel)]="basket.isSearchBasket">
                                     &nbsp;

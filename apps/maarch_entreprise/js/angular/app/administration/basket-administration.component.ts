@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Inject, ViewChild, ElementRef } f
 import { MediaMatcher } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { AutoCompletePlugin } from '../../plugins/autocomplete.plugin';
@@ -38,8 +38,13 @@ export class BasketAdministrationComponent implements OnInit {
     resultPages                     : any[]     = [];
     creationMode                    : boolean;
 
-    displayedColumns    = ['label_action', 'actions'];
-    dataSource          : any;
+    displayedColumns        = ['label_action', 'actions'];
+    orderColumns            = ['alt_identifier','creation_date','format','priority','process_limit_date','res_id','subject','title','type_id'];
+    langVarName             = ['chrono','creationDate','format','priority','processLimitDate','id','object','title','type']
+    orderColumnsSelected    : string[] = [];
+    selection               : string[] = [];
+    columnsFormControl      : FormControl = new FormControl();
+    dataSource              : any;
 
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -84,7 +89,13 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.clause = data.basket.basket_clause;
                         this.basket.isSearchBasket = data.basket.is_visible != "Y";
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
-
+                        if(this.basket.basket_res_order == '' || this.basket.basket_res_order == null){                            
+                            this.orderColumnsSelected = null;
+                        }
+                        else{
+                            this.orderColumnsSelected = this.basket.basket_res_order.split(',');
+                        }
+                        
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
                             .subscribe((data: any) => {
                                 this.allGroups = data.allGroups;
@@ -153,7 +164,12 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onSubmit() {
+    onSubmit() {        
+        if(this.orderColumnsSelected !== null){
+            this.basket.basket_res_order = this.orderColumnsSelected.join(',')
+        } else {
+            this.basket.basket_res_order = '';
+        }        
         if (this.creationMode) {
             this.http.post(this.coreUrl + "rest/baskets", this.basket)
                 .subscribe(() => {
@@ -170,6 +186,14 @@ export class BasketAdministrationComponent implements OnInit {
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
+        }
+    }
+
+    onOrderChange(){            
+        if (this.columnsFormControl.value.length < 3) {
+            this.selection = this.columnsFormControl.value;
+        } else {
+            this.columnsFormControl.setValue(this.selection);
         }
     }
 
