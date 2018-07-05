@@ -123,6 +123,7 @@ define('_OTHER', 'Other');
 define('_NOTIFICATION_ALREADY_EXIST', 'Notification already exists');
 define('_WRONG_PSW', 'Wrong password');
 define('_ALREADY_USED_PSW', 'The password has already been used');
+define('_BAD_LOGIN_OR_PSW', 'Wrong user name or wrong password');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
 define('_BACK_FROM_VACATION', 'back from vacation');

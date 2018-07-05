@@ -102,6 +102,10 @@ INSERT INTO password_rules (label, "value") VALUES ('useNumber', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
 ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;
+ALTER TABLE users DROP COLUMN IF EXISTS failed_authentication;
+ALTER TABLE users ADD COLUMN failed_authentication INTEGER DEFAULT 0;
+ALTER TABLE users DROP COLUMN IF EXISTS locked_until;
+ALTER TABLE users ADD COLUMN locked_until TIMESTAMP without time zone;
 
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;

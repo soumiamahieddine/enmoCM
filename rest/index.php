@@ -32,7 +32,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
     $userId = null;
     if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-        if (\SrcCore\models\SecurityModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+        if (\SrcCore\models\AuthenticationModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
             $userId = $_SERVER['PHP_AUTH_USER'];
         }
     } else {

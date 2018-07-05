@@ -20,26 +20,7 @@ class SecurityModel
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }
-
-    public static function authentication(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['userId', 'password']);
-        ValidatorModel::stringType($args, ['userId', 'password']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => ['password'],
-            'table'     => ['users'],
-            'where'     => ['user_id = ?', 'status != ?'],
-            'data'      => [$args['userId'], 'DEL']
-        ]);
-
-        if (empty($aReturn[0])) {
-            return false;
-        }
-
-        return password_verify($args['password'], $aReturn[0]['password']);
-    }
-
+    
     public static function getCookieAuth()
     {
         $rawCookie = $_COOKIE['maarchCourrierAuth'];

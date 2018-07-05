@@ -241,14 +241,11 @@ if (!empty($_SESSION['error'])) {
         } else {
             $_SESSION['error'] = '';
             $res = $sec->login($login, $password);
-            //$core->show_array($res);
             $_SESSION['user'] = $res['user'];
             if ($res['error'] == '') {
                 \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
-                // $businessAppTools->load_app_var_session($_SESSION['user']);
-                //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
+                \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                 $core->load_menu($_SESSION['modules']);
-                // exit;
             } else {
                 $_SESSION['error'] = $res['error'];
             }
