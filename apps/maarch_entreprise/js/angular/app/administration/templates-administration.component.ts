@@ -33,6 +33,16 @@ export class TemplatesAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+        var disCol = this.displayedColumns;
+        this.dataSource.filterPredicate = function(template, filter: string): boolean {
+            var filterReturn = false;
+            disCol.forEach(function(column:any){
+                if(column != 'actions'){
+                    filterReturn = filterReturn || template[column].toLowerCase().includes(filter) ;
+                }
+            })
+            return filterReturn;
+        };
     }
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
@@ -58,10 +68,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.dataSource.filterPredicate = function(template, filter: string): boolean {
-                        return template.template_comment.toLowerCase().includes(filter) ||  template.template_label.toLowerCase().includes(filter) || template.template_type.toLowerCase().includes(filter) || template.template_target.toLowerCase().includes(filter);
-                    };
+                    this.dataSource.sort = this.sort;                    
                 }, 0);
                 
             }, (err) => {
