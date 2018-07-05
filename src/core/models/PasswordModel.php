@@ -86,33 +86,63 @@ class PasswordModel
         return true;
     }
 
-    public static function isPasswordValid(array $aArgs)
+    public static function isPasswordHistoryValid(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['password']);
+        ValidatorModel::notEmpty($aArgs, ['password', 'userSerialId']);
         ValidatorModel::stringType($aArgs, ['password']);
+        ValidatorModel::intVal($aArgs, ['userSerialId']);
 
         $passwordRules = PasswordModel::getEnabledRules();
 
-        if (!empty($passwordRules['minLength'])) {
-            if (strlen($aArgs['password']) < $passwordRules['minLength']) {
-                return false;
+        if (!empty($passwordRules['useNumber'])) {
+            $passwordHistory = DatabaseModel::select([
+                'select'    => ['password'],
+                'table'     => ['password_history'],
+                'where'     => ['user_serial_id = ?'],
+                'data'      => [$aArgs['userSerialId']],
+                'order_by'  => ['id DESC'],
+                'limit'     => $passwordRules['useNumber']
+            ]);
+
+            foreach ($passwordHistory as $value) {
+                if (password_verify($aArgs['password'], $value['password'])) {
+                    return false;
+                }
             }
         }
-        if (!empty($passwordRules['complexityUpper'])) {
-            if (!preg_match('/[A-Z]/', $aArgs['password'])) {
-                return false;
-            }
+
+        return true;
+    }
+
+    public static function setHistoryPassword(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['password', 'userSerialId']);
+        ValidatorModel::stringType($aArgs, ['password']);
+        ValidatorModel::intVal($aArgs, ['userSerialId']);
+
+        $passwordHistory = DatabaseModel::select([
+            'select'    => ['id'],
+            'table'     => ['password_history'],
+            'where'     => ['user_serial_id = ?'],
+            'data'      => [$aArgs['userSerialId']],
+            'order_by'  => ['id DESC']
+        ]);
+
+        if (count($passwordHistory) >= 10) {
+            DatabaseModel::delete([
+                'table'     => 'password_history',
+                'where'     => ['id < ?', 'user_serial_id = ?'],
+                'data'      => [$passwordHistory[8], $aArgs['userSerialId']]
+            ]);
         }
-        if (!empty($passwordRules['complexityNumber'])) {
-            if (!preg_match('/[0-9]/', $aArgs['password'])) {
-                return false;
-            }
-        }
-        if (!empty($passwordRules['complexitySpecial'])) {
-            if (!preg_match('/[^a-zA-Z0-9]/', $aArgs['password'])) {
-                return false;
-            }
-        }
+
+        DatabaseModel::insert([
+            'table'     => 'password_history',
+            'columnsValues'     => [
+                'user_serial_id'    => $aArgs['userSerialId'],
+                'password'          => SecurityModel::getPasswordHash($aArgs['password'])
+            ],
+        ]);
 
         return true;
     }

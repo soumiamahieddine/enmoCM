@@ -20,6 +20,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\PasswordModel;
+use SrcCore\models\ValidatorModel;
 
 class PasswordController
 {
@@ -69,5 +70,36 @@ class PasswordController
         ]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function isPasswordValid(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['password']);
+        ValidatorModel::stringType($aArgs, ['password']);
+
+        $passwordRules = PasswordModel::getEnabledRules();
+
+        if (!empty($passwordRules['minLength'])) {
+            if (strlen($aArgs['password']) < $passwordRules['minLength']) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexityUpper'])) {
+            if (!preg_match('/[A-Z]/', $aArgs['password'])) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexityNumber'])) {
+            if (!preg_match('/[0-9]/', $aArgs['password'])) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexitySpecial'])) {
+            if (!preg_match('/[^a-zA-Z0-9]/', $aArgs['password'])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

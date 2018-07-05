@@ -77,10 +77,19 @@ CREATE TABLE password_rules
 (
   id serial,
   label character varying(64) NOT NULL,
-  "value" integer NOT NULL,
+  "value" INTEGER NOT NULL,
   enabled boolean DEFAULT FALSE,
   CONSTRAINT password_rules_pkey PRIMARY KEY (id),
   CONSTRAINT password_rules_label_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS password_history;
+CREATE TABLE password_history
+(
+  id serial,
+  user_serial_id INTEGER NOT NULL,
+  password character varying(255) NOT NULL,
+  CONSTRAINT password_history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
@@ -89,7 +98,7 @@ INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
 INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);
 INSERT INTO password_rules (label, "value") VALUES ('lockAttempts', 3);
 INSERT INTO password_rules (label, "value") VALUES ('lockTime', 5);
-INSERT INTO password_rules (label, "value") VALUES ('UseNumber', 2);
+INSERT INTO password_rules (label, "value") VALUES ('useNumber', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
 ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;

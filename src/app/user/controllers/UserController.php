@@ -31,6 +31,7 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PasswordController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\SecurityModel;
@@ -303,16 +304,20 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bas request']);
         }
 
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         } elseif (!SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => $data['currentPassword']])) {
             return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
-        } elseif (PasswordModel::isPasswordValid(['password' => $data['newPassword']])) {
+        } elseif (!PasswordController::isPasswordValid(['password' => $data['newPassword']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
+        } elseif (!PasswordModel::isPasswordHistoryValid(['password' => $data['newPassword'], 'userSerialId' => $user['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => _ALREADY_USED_PSW]);
         }
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         UserModel::updatePassword(['id' => $user['id'], 'password' => $data['newPassword']]);
+        PasswordModel::setHistoryPassword(['userSerialId' => $user['id'], 'password' => $data['newPassword']]);
 
         return $response->withJson(['success' => 'success']);
     }
