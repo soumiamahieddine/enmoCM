@@ -190,7 +190,7 @@ $app->delete('/parameters/{id}', \Parameter\controllers\ParameterController::cla
 
 //PasswordRules
 $app->get('/passwordRules', \SrcCore\controllers\PasswordController::class . ':getRules');
-$app->put('/passwordRules/{id}', \SrcCore\controllers\PasswordController::class . ':updateRule');
+$app->put('/passwordRules', \SrcCore\controllers\PasswordController::class . ':updateRules');
 
 //Priorities
 $app->get('/priorities', \Priority\controllers\PriorityController::class . ':get');

@@ -30,6 +30,27 @@ class PasswordModel
         return $aRules;
     }
 
+    public static function getEnabledRules()
+    {
+        $aRules = DatabaseModel::select([
+            'select'    => ['label', 'value'],
+            'table'     => ['password_rules'],
+            'where'     => ['enabled = ?'],
+            'data'      => [true],
+        ]);
+
+        $formattedRules = [];
+        foreach ($aRules as $rule) {
+            if (strpos($rule['label'], 'complexity') === false) {
+                $formattedRules[$rule['label']] = $rule['value'];
+            } else {
+                $formattedRules[$rule['label']] = true;
+            }
+        }
+
+        return $formattedRules;
+    }
+
     public static function getRuleById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -61,6 +82,37 @@ class PasswordModel
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
+
+        return true;
+    }
+
+    public static function isPasswordValid(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['password']);
+        ValidatorModel::stringType($aArgs, ['password']);
+
+        $passwordRules = PasswordModel::getEnabledRules();
+
+        if (!empty($passwordRules['minLength'])) {
+            if (strlen($aArgs['password']) < $passwordRules['minLength']) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexityUpper'])) {
+            if (!preg_match('/[A-Z]/', $aArgs['password'])) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexityNumber'])) {
+            if (!preg_match('/[0-9]/', $aArgs['password'])) {
+                return false;
+            }
+        }
+        if (!empty($passwordRules['complexitySpecial'])) {
+            if (!preg_match('/[^a-zA-Z0-9]/', $aArgs['password'])) {
+                return false;
+            }
+        }
 
         return true;
     }

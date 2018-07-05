@@ -32,34 +32,40 @@ class PasswordController
         return $response->withJson(['rules' => PasswordModel::getRules()]);
     }
 
-    public function updateRule(Request $request, Response $response, array $aArgs)
+    public function updateRules(Request $request, Response $response)
     {
         if (!ServiceModel::hasService(['id' => 'admin_password_rules', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $rule = PasswordModel::getRuleById(['id' => $aArgs['id'], 'select' => [1]]);
-        if (empty($rule)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Rule does not exist']);
-        }
-
         $data = $request->getParams();
-        $check = Validator::intVal()->validate($data['value']);
-        $check = $check && Validator::boolType()->validate($data['enabled']);
+        $check = Validator::arrayType()->notEmpty()->validate($data['rules']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $data['id'] = $aArgs['id'];
-        PasswordModel::updateRule($data);
+        foreach ($data['rules'] as $rule) {
+            $existingRule = PasswordModel::getRuleById(['id' => $rule['id'], 'select' => [1]]);
+            if (empty($existingRule)) {
+                continue;
+            }
+
+            $check = Validator::intVal()->validate($rule['value']);
+            $check = $check && Validator::boolType()->validate($rule['enabled']);
+            if (!$check) {
+                continue;
+            }
+
+            PasswordModel::updateRule($rule);
+        }
 
         HistoryController::add([
             'tableName' => 'password_rules',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => 'rules',
             'eventType' => 'UP',
-            'info'      => _PASSWORD_RULE_UPDATED . " : {$data['label']}",
+            'info'      => _PASSWORD_RULES_UPDATED,
             'moduleId'  => 'core',
-            'eventId'   => 'passwordRuleModification',
+            'eventId'   => 'passwordRulesModification',
         ]);
 
         return $response->withJson(['success' => 'success']);

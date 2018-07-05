@@ -32,7 +32,8 @@ UPDATE actions_groupbaskets SET used_in_action_page = 'Y' WHERE used_in_basketli
 DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
 ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
 ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
-UPDATE groupbasket_status SET "order" = 1;
+UPDATE groupbasket_status SET "order" = 0 WHERE status_id = 'NEW';
+UPDATE groupbasket_status SET "order" = 1 WHERE status_id != 'NEW';
 ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
 
 
@@ -82,6 +83,13 @@ CREATE TABLE password_rules
   CONSTRAINT password_rules_label_key UNIQUE (label)
 )
 WITH (OIDS=FALSE);
+INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
+INSERT INTO password_rules (label, "value") VALUES ('complexityUpper', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);
+INSERT INTO password_rules (label, "value") VALUES ('lockAttempts', 3);
+INSERT INTO password_rules (label, "value") VALUES ('lockTime', 5);
+INSERT INTO password_rules (label, "value") VALUES ('UseNumber', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
 ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;

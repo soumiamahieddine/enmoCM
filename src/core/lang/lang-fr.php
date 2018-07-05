@@ -68,7 +68,7 @@ define('_PARAMETER_CREATION', 'Création paramètre');
 define('_PARAMETER_MODIFICATION', 'Modification paramètre');
 define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
 define('_PARAMETER_ID_ALREADY_EXISTS', 'Ce paramètre existe déjà');
-define('_PASSWORD_RULE_UPDATED', 'Règle de mot de passe modifiée');
+define('_PASSWORD_RULES_UPDATED', 'Règles de mot de passe modifiées');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');

@@ -1750,6 +1750,13 @@ UPDATE doctypes SET retention_rule = 'compta_3_03';
 UPDATE doctypes SET duration_current_use = 12;
 
 /* Password Management */
+INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
+INSERT INTO password_rules (label, "value") VALUES ('complexityUpper', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);
+INSERT INTO password_rules (label, "value") VALUES ('lockAttempts', 3);
+INSERT INTO password_rules (label, "value") VALUES ('lockTime', 5);
+INSERT INTO password_rules (label, "value") VALUES ('UseNumber', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 
 
