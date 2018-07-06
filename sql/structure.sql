@@ -231,6 +231,8 @@ CREATE TABLE users
   loginmode character varying(50) DEFAULT NULL::character varying,
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
+  failed_authentication INTEGER DEFAULT 0,
+  locked_until TIMESTAMP without time zone,
   thumbprint text DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
   CONSTRAINT users_id_key UNIQUE (id)
@@ -2205,4 +2207,12 @@ CREATE TABLE password_rules
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE password_history
+(
+  id serial,
+  user_serial_id INTEGER NOT NULL,
+  password character varying(255) NOT NULL,
+  CONSTRAINT password_history_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
