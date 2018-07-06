@@ -34,22 +34,33 @@
                         <div id="jstree"></div>
                     </mat-expansion-panel>
                     <mat-expansion-panel *ngIf="data.action.keyword == 'indexing'" [disabled]="data.action.id_status != '_NOSTATUS_'">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    {{lang.toStatuses}} &nbsp;<mat-icon *ngIf="data.action.id_status != '_NOSTATUS_'" color="warn" class="fa fa-exclamation-circle" matTooltip="{{lang.toStatusesDesc}}"
-                                    style="cursor:help"></mat-icon>
-                                </mat-panel-title>
-    
-                            </mat-expansion-panel-header>
-                            <mat-form-field>
-                                    <mat-select id="statuses" [(ngModel)]="data.action.statuses" name="statuses" placeholder="{{lang.availableStatuses}}" multiple>
-                                        <mat-option *ngFor="let status of this.statuses" [value]="status.id">
-                                            {{status.label_status}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{lang.toStatuses}} &nbsp;
+                                <mat-icon *ngIf="data.action.id_status != '_NOSTATUS_'" color="warn"
+                                    class="fa fa-exclamation-circle" matTooltip="{{lang.toStatusesDesc}}" style="cursor:help"></mat-icon>
+                            </mat-panel-title>
 
-                        </mat-expansion-panel>
+                        </mat-expansion-panel-header>
+                        <mat-form-field class="example-chip-list">
+                            <mat-chip-list #chipList class="mat-chip-list-stacked">
+                                <mat-chip *ngFor="let status of selectedStatuses;let i = index" selectable="true" removable="true" (removed)="remove(i)"
+                                    style="cursor:pointer;margin:5px;border-radius:0px;display:flex;">
+                                    <b>{{i+1}})</b>&nbsp;{{status.idToDisplay}}
+                                    <span style="flex: 1 1 auto;"></span>
+                                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                                </mat-chip>
+                                <input placeholder="{{lang.availableStatuses}}" #statusInput [formControl]="statusCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                    style="flex: 1 0 0px;width: 100%;">
+                            </mat-chip-list>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let status of filteredStatuses | async" [value]="status.id" (click)="add(status)">
+                                    {{status.idToDisplay}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                    </mat-expansion-panel>
                     <mat-expansion-panel (opened)="initService2()" *ngIf="data.action.keyword == 'redirect'">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -65,8 +76,8 @@
             </mat-tab>
             <mat-tab label="{{lang.otherParameters}}">
                 <mat-form-field>
-                    <textarea matInput name="clause" title="{{lang.whereClauseAction}}" placeholder="{{lang.whereClauseAction}}"
-                        [(ngModel)]="data.action.where_clause" matTextareaAutosize matAutosizeMinRows="1"></textarea>
+                    <textarea matInput name="clause" title="{{lang.whereClauseAction}}" placeholder="{{lang.whereClauseAction}}" [(ngModel)]="data.action.where_clause"
+                        matTextareaAutosize matAutosizeMinRows="1"></textarea>
                 </mat-form-field>
                 <mat-accordion>
                     <mat-expansion-panel>
@@ -100,14 +111,14 @@
                             <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_9}}</p>
                             <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',..., 'entity_id'] :</h4>
                             <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_10}}</p>
-                        </mat-list>  
+                        </mat-list>
                     </mat-expansion-panel>
-                </mat-accordion>                      
+                </mat-accordion>
             </mat-tab>
         </mat-tab-group>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-raised-button type="submit" [disabled]="!data.action.used_in_basketlist && !data.action.used_in_action_page" color="primary" style="margin:auto;"
-        (click)="dialogRef.close(data)">{{lang.validate}}</button>
+    <button mat-raised-button type="submit" [disabled]="!data.action.used_in_basketlist && !data.action.used_in_action_page"
+        color="primary" style="margin:auto;" (click)="saveSettings()">{{lang.validate}}</button>
 </mat-dialog-actions>

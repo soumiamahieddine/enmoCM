@@ -181,7 +181,7 @@ class webService {
             $userID = str_replace('>', '', $userID);
             $userID = str_replace('<', '', $userID);
 
-            $authenticated = \SrcCore\models\SecurityModel::authentication(['userId' => $userID, 'password' => $password]);
+            $authenticated = \SrcCore\models\AuthenticationModel::authentication(['userId' => $userID, 'password' => $password]);
         }
         return $authenticated;
     }

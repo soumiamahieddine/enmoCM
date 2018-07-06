@@ -2,10 +2,6 @@
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS res_view_attachments;
 
-UPDATE actions_groupbaskets set used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
-UPDATE actions_groupbaskets set used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
-DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
-
 DROP TABLE IF EXISTS contacts_groups;
 CREATE TABLE contacts_groups
 (
@@ -30,6 +26,16 @@ CREATE TABLE contacts_groups_lists
   CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
 )
 WITH (OIDS=FALSE);
+
+UPDATE actions_groupbaskets SET used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
+UPDATE actions_groupbaskets SET used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
+DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
+ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
+ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
+UPDATE groupbasket_status SET "order" = 0 WHERE status_id = 'NEW';
+UPDATE groupbasket_status SET "order" = 1 WHERE status_id != 'NEW';
+ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
+
 
 /* Docservers */
 ALTER TABLE docservers DROP COLUMN IF EXISTS docserver_location_id;
@@ -64,6 +70,42 @@ ALTER TABLE templates_association ADD COLUMN id serial;
 ALTER TABLE templates_association ADD UNIQUE (id);
 UPDATE templates SET template_content = REPLACE(template_content, '###', ';');
 UPDATE templates SET template_content = REPLACE(template_content, '___', '--');
+
+/* Password Management */
+DROP TABLE IF EXISTS password_rules;
+CREATE TABLE password_rules
+(
+  id serial,
+  label character varying(64) NOT NULL,
+  "value" INTEGER NOT NULL,
+  enabled boolean DEFAULT FALSE,
+  CONSTRAINT password_rules_pkey PRIMARY KEY (id),
+  CONSTRAINT password_rules_label_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+DROP TABLE IF EXISTS password_history;
+CREATE TABLE password_history
+(
+  id serial,
+  user_serial_id INTEGER NOT NULL,
+  password character varying(255) NOT NULL,
+  CONSTRAINT password_history_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
+INSERT INTO password_rules (label, "value") VALUES ('complexityUpper', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
+INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);
+INSERT INTO password_rules (label, "value") VALUES ('lockAttempts', 3);
+INSERT INTO password_rules (label, "value") VALUES ('lockTime', 5);
+INSERT INTO password_rules (label, "value") VALUES ('useNumber', 2);
+INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
+ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
+ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;
+ALTER TABLE users DROP COLUMN IF EXISTS failed_authentication;
+ALTER TABLE users ADD COLUMN failed_authentication INTEGER DEFAULT 0;
+ALTER TABLE users DROP COLUMN IF EXISTS locked_until;
+ALTER TABLE users ADD COLUMN locked_until TIMESTAMP without time zone;
 
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;

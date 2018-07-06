@@ -227,9 +227,12 @@ CREATE TABLE users
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  password_modification_date timestamp without time zone,
   loginmode character varying(50) DEFAULT NULL::character varying,
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
+  failed_authentication INTEGER DEFAULT 0,
+  locked_until TIMESTAMP without time zone,
   thumbprint text DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
   CONSTRAINT users_id_key UNIQUE (id)
@@ -1491,6 +1494,7 @@ CREATE TABLE groupbasket_status
   basket_id character varying(32) NOT NULL,
   action_id integer NOT NULL,
   status_id character varying(32),
+  "order" integer NOT NULL,
   CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
 )
 WITH (
@@ -2191,4 +2195,24 @@ CREATE TABLE indexingmodels
 WITH (
   OIDS=FALSE
 );
+
+CREATE TABLE password_rules
+(
+  id serial,
+  label character varying(64) NOT NULL,
+  "value" integer NOT NULL,
+  enabled boolean DEFAULT FALSE,
+  CONSTRAINT password_rules_pkey PRIMARY KEY (id),
+  CONSTRAINT password_rules_label_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE password_history
+(
+  id serial,
+  user_serial_id INTEGER NOT NULL,
+  password character varying(255) NOT NULL,
+  CONSTRAINT password_history_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 

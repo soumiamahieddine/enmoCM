@@ -124,7 +124,7 @@ class security extends Database
             $params = [];
         }
 
-        $check = \SrcCore\models\SecurityModel::authentication(['userId' => $s_login, 'password' => $pass]);
+        $check = \SrcCore\models\AuthenticationModel::authentication(['userId' => $s_login, 'password' => $pass]);
         if ($check || $method == 'ldap') {
             $user = $uc->getWithComp($s_login, $comp, $params);
         }
@@ -263,7 +263,7 @@ class security extends Database
                 );
             }
         } else {
-            $error = _BAD_LOGIN_OR_PSW;
+            $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $s_login]);
 
             return array(
                 'user' => $array,

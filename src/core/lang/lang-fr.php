@@ -68,6 +68,7 @@ define('_PARAMETER_CREATION', 'Création paramètre');
 define('_PARAMETER_MODIFICATION', 'Modification paramètre');
 define('_PARAMETER_SUPPRESSION', 'Suppression paramètre');
 define('_PARAMETER_ID_ALREADY_EXISTS', 'Ce paramètre existe déjà');
+define('_PASSWORD_RULES_UPDATED', 'Règles de mot de passe modifiées');
 define('_PRIORITY_CREATION', 'Création priorité');
 define('_PRIORITY_MODIFICATION', 'Modification priorité');
 define('_PRIORITY_SUPPRESSION', 'Suppression priorité');
@@ -121,6 +122,8 @@ define('_NUMERIC_PACKAGE', 'Pli numérique');
 define('_OTHER', 'Autre');
 define('_NOTIFICATION_ALREADY_EXIST', 'Notification déjà existante');
 define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
+define('_ALREADY_USED_PSW', 'Le mot de passe a déjà été utilisé');
+define('_BAD_LOGIN_OR_PSW', 'Mauvais nom d\'utilisateur ou mauvais mot de passe');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
@@ -180,6 +183,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
+define('_SECURITY_PASSWORD', 'Sécurisation des mots de passe');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');

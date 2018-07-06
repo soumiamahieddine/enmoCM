@@ -85,13 +85,14 @@ abstract class BasketModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
         ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-
+        //ValidatorModel::arrayType($aArgs,['basket_res_order']);
         DatabaseModel::update([
             'table'     => 'baskets',
             'set'       => [
                 'basket_name'       => $aArgs['basket_name'],
                 'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
+                'basket_res_order'  => $aArgs['basket_res_order'],
                 'is_visible'        => $aArgs['isVisible'],
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
@@ -254,6 +255,7 @@ abstract class BasketModelAbstract
         ValidatorModel::notEmpty($aArgs, ['id', 'groupId', 'actionId', 'statusId']);
         ValidatorModel::stringType($aArgs, ['id', 'groupId', 'statusId']);
         ValidatorModel::intVal($aArgs, ['actionId']);
+        ValidatorModel::intType($aArgs, ['order']);
 
         DatabaseModel::insert([
             'table'         => 'groupbasket_status',
@@ -261,7 +263,8 @@ abstract class BasketModelAbstract
                 'action_id'     => $aArgs['actionId'],
                 'group_id'      => $aArgs['groupId'],
                 'basket_id'     => $aArgs['id'],
-                'status_id'     => $aArgs['statusId']
+                'status_id'     => $aArgs['statusId'],
+                '"order"'       => $aArgs['order']
             ]
         ]);
 

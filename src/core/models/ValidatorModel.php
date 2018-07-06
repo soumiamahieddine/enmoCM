@@ -33,7 +33,7 @@ class ValidatorModel
     public static function intVal(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {
-            if (empty($aArgs[$key])) {
+            if (!isset($aArgs[$key])) {
                 continue;
             }
             if (!Validator::intVal()->validate($aArgs[$key])) {
@@ -45,7 +45,7 @@ class ValidatorModel
     public static function intType(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {
-            if (empty($aArgs[$key])) {
+            if (!isset($aArgs[$key])) {
                 continue;
             }
             if (!Validator::intType()->validate($aArgs[$key])) {
@@ -57,7 +57,7 @@ class ValidatorModel
     public static function stringType(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {
-            if (empty($aArgs[$key])) {
+            if (!isset($aArgs[$key])) {
                 continue;
             }
             if (!Validator::stringType()->validate($aArgs[$key])) {
@@ -69,7 +69,7 @@ class ValidatorModel
     public static function arrayType(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {
-            if (empty($aArgs[$key])) {
+            if (!isset($aArgs[$key])) {
                 continue;
             }
             if (!Validator::arrayType()->validate($aArgs[$key])) {
@@ -81,7 +81,7 @@ class ValidatorModel
     public static function boolType(array $aArgs, $aKeys)
     {
         foreach ($aKeys as $key) {
-            if (empty($aArgs[$key])) {
+            if (!isset($aArgs[$key])) {
                 continue;
             }
             if (!Validator::boolType()->validate($aArgs[$key])) {

@@ -31,7 +31,10 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PasswordController;
+use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\PasswordModel;
 use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
@@ -251,6 +254,7 @@ class UserController
         $user['baskets'] = BasketModel::getBasketsByUserId(['userId' => $user['user_id'], 'unneededBasketId' => ['IndexingBasket']]);
         $user['redirectedBaskets'] = BasketModel::getRedirectedBasketsByUserId(['userId' => $user['user_id']]);
         $user['regroupedBaskets'] = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
+        $user['passwordRules'] = PasswordModel::getEnabledRules();
         $user['canModifyPassword'] = true;
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
@@ -301,14 +305,20 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bas request']);
         }
 
+        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
+
         if ($data['newPassword'] != $data['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        } elseif (!SecurityModel::authentication(['userId' => $GLOBALS['userId'], 'password' => $data['currentPassword']])) {
+        } elseif (!AuthenticationModel::authentication(['userId' => $GLOBALS['userId'], 'password' => $data['currentPassword']])) {
             return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
+        } elseif (!PasswordController::isPasswordValid(['password' => $data['newPassword']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
+        } elseif (!PasswordModel::isPasswordHistoryValid(['password' => $data['newPassword'], 'userSerialId' => $user['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => _ALREADY_USED_PSW]);
         }
 
-        $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
         UserModel::updatePassword(['id' => $user['id'], 'password' => $data['newPassword']]);
+        PasswordModel::setHistoryPassword(['userSerialId' => $user['id'], 'password' => $data['newPassword']]);
 
         return $response->withJson(['success' => 'success']);
     }
