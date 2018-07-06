@@ -67,7 +67,7 @@ class PasswordModel
         return $aRules;
     }
 
-    public static function updateRule(array $aArgs)
+    public static function updateRuleById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id', 'value']);

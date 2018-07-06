@@ -242,7 +242,8 @@ class BasketController
                 $statuses = BasketModel::getGroupActionStatus([
                     'select'    => ['status_id', 'action_id'],
                     'where'     => ['basket_id = ?', 'group_id = ?', 'action_id in (?)'],
-                    'data'      => [$aArgs['id'], $group['group_id'], $actionIds]
+                    'data'      => [$aArgs['id'], $group['group_id'], $actionIds],
+                    'orderBy'   => ['"order"']
                 ]);
                 $redirects = BasketModel::getGroupActionRedirect([
                     'select'    => ['entity_id', 'action_id', 'keyword', 'redirect_mode'],

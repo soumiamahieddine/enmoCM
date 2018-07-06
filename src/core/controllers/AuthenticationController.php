@@ -39,7 +39,7 @@ class AuthenticationController
                         AuthenticationModel::resetFailedAuthentication(['userId' => $aArgs['userId']]);
                         $user['failed_authentication'] = 0;
                     } else {
-                        return "Nombre de tentatives de connexion dépassée. Compte vérouillé jusqu'au {$lockedDate->format('d/m/Y H:i')}";
+                        return _ACCOUNT_LOCKED_UNTIL . " {$lockedDate->format('d/m/Y H:i')}";
                     }
                 }
 
@@ -48,7 +48,7 @@ class AuthenticationController
                 if (!empty($user['failed_authentication']) && ($user['failed_authentication'] + 1) >= $passwordRules['lockAttempts'] && !empty($passwordRules['lockTime'])) {
                     $lockedUntil = time() + 60 * $passwordRules['lockTime'];
                     AuthenticationModel::lockUser(['userId' => $aArgs['userId'], 'lockedUntil' => $lockedUntil]);
-                    return "Nombre de tentatives de connexion dépassée. Votre compte est vérouillé pendant {$passwordRules['lockTime']} minutes.";
+                    return _ACCOUNT_LOCKED_FOR . " {$passwordRules['lockTime']} mn";
                 }
             }
         }

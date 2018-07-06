@@ -69,7 +69,7 @@ if (isset($_SESSION['web_cas_url'])) {
     $login = '';
 }
 if (isset($_REQUEST['pass'])) {
-    $password = $func->wash($_REQUEST['pass'], 'no', _PASSWORD_FOR_USER, 'yes');
+    $password = $_REQUEST['pass'];
 } else {
     $password = '';
 }

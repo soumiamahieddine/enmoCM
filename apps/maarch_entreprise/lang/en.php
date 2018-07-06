@@ -1446,6 +1446,8 @@ if (!defined('_SUSPENDED_ACCOUNT')) {
 if (!defined('_BAD_LOGIN_OR_PSW')) {
     define('_BAD_LOGIN_OR_PSW', 'Wrong user name or wrong password');
 }
+define('_ACCOUNT_LOCKED_FOR', 'Too many connections attemps. Your account is locked for');
+define('_ACCOUNT_LOCKED_UNTIL', 'Too many connections attemps. Account locked until');
 if (!defined('_AUTORIZED_USER')) {
     define('_AUTORIZED_USER', 'Authorized user');
 }

@@ -1454,6 +1454,8 @@ if (!defined('_SUSPENDED_ACCOUNT')) {
 if (!defined('_BAD_LOGIN_OR_PSW')) {
     define('_BAD_LOGIN_OR_PSW', "Mauvais nom d'utilisateur ou mauvais mot de passe");
 }
+define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Votre compte est vérouillé pendant');
+define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte vérouillé jusqu\'au');
 if (!defined('_EMPTY_PSW')) {
     define('_EMPTY_PSW', 'Mot de passe actuel vide');
 }

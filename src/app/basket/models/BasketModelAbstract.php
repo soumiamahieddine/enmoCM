@@ -238,13 +238,14 @@ abstract class BasketModelAbstract
     public static function getGroupActionStatus(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aStatuses = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['groupbasket_status'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
 
         return $aStatuses;

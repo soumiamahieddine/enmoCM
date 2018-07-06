@@ -92,7 +92,7 @@ CREATE TABLE password_history
   CONSTRAINT password_history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
+INSERT INTO password_rules (label, "value", enabled) VALUES ('minLength', 6, true);
 INSERT INTO password_rules (label, "value") VALUES ('complexityUpper', 0);
 INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
 INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);

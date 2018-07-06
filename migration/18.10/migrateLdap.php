@@ -4,8 +4,8 @@ require '../../vendor/autoload.php';
 
 chdir('../..');
 
+$migrated = 0;
 $customs =  scandir('custom');
-
 foreach ($customs as $custom) {
     if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
         continue;
@@ -37,5 +37,9 @@ foreach ($customs as $custom) {
         if ($fp) {
             fwrite($fp, $res);
         }
+
+        $migrated++;
     }
 }
+
+printf($migrated . " customs utilisant la connexion LDAP trouvés et migrés.\n");

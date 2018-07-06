@@ -394,8 +394,8 @@
   </SERVICE>
   <SERVICE>
     <id>admin_password_rules</id>
-    <name>_SECURITY_PASSWORD</name>
-    <comment>_SECURITY_PASSWORD</comment>
+    <name>_SECURITY</name>
+    <comment>_SECURITY</comment>
     <servicepage></servicepage>
     <servicetype>admin</servicetype>
     <category>supervision</category>

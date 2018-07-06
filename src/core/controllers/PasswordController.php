@@ -57,7 +57,7 @@ class PasswordController
                 continue;
             }
 
-            PasswordModel::updateRule($rule);
+            PasswordModel::updateRuleById($rule);
         }
 
         HistoryController::add([
