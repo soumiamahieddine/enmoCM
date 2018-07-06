@@ -39,8 +39,8 @@ export class BasketAdministrationComponent implements OnInit {
     creationMode                    : boolean;
 
     displayedColumns        = ['label_action', 'actions'];
-    orderColumns            = ['alt_identifier','creation_date','format','priority','process_limit_date','res_id','subject','title','type_id'];
-    langVarName             = ['chrono','creationDate','format','priority','processLimitDate','id','object','title','type']
+    orderColumns            = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
+    langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
     orderColumnsSelected    : string[] = [];
     selection               : string[] = [];
     columnsFormControl      : FormControl = new FormControl();
