@@ -579,5 +579,12 @@ export const LANG_FR = {
     "askRedirectBasketBeforeAbsence"    : "Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?",
     "confirmToBeAbsent"                 : "Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté",
     "confirmDeleteMailSignature"        : "Voulez-vous vraiment supprimer la signature de mail ?",
-    "confirmDeleteSignature"            : "Voulez-vous vraiment supprimer la signature ?"
+    "confirmDeleteSignature"            : "Voulez-vous vraiment supprimer la signature ?",
+    "passwordminLength"                 : "charactère(s) au minimum",
+    "passwordcomplexityUpper"           : "1 majuscule au minimum",
+    "passwordcomplexityNumber"          : "1 chiffre au minimum",
+    "passwordcomplexitySpecial"         : "1 charactère spécial au minimum",
+    "passwordrenewal"                   : "Veuillez notez que ce nouveau mot de passe ne sera valide que",
+    "password2renewal"                  : "Passé ce délai, vous devrez en choisir un nouveau.",
+    "days"                              : "jour(s)",
 };
