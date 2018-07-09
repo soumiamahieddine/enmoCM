@@ -229,12 +229,28 @@ class security extends Database
                     );
                 }
 
+                $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
+
+                if (!empty($passwordRules['renewal'])) {
+                    $currentDate = new \DateTime();
+                    $lastModificationDate = new \DateTime($user->__get('password_modification_date'));
+                    $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
+
+                    if ($currentDate > $lastModificationDate) {
+                        return [
+                            'user'  => $array,
+                            'error' => $error,
+                            'url'   => 'index.php?trigger=changePass',
+                        ];
+                    }
+                }
+
                 $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
                 if ($array['change_pass'] == 'Y' && !in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
                     return array(
                         'user' => $array,
                         'error' => $error,
-                        'url' => 'index.php?display=true&page=change_pass',
+                        'url' => 'index.php?trigger=changePass',
                     );
                 } elseif (isset($_SESSION['requestUri'])
                     && trim($_SESSION['requestUri']) != ''

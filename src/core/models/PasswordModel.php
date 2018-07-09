@@ -94,14 +94,14 @@ class PasswordModel
 
         $passwordRules = PasswordModel::getEnabledRules();
 
-        if (!empty($passwordRules['useNumber'])) {
+        if (!empty($passwordRules['historyLastUse'])) {
             $passwordHistory = DatabaseModel::select([
                 'select'    => ['password'],
                 'table'     => ['password_history'],
                 'where'     => ['user_serial_id = ?'],
                 'data'      => [$aArgs['userSerialId']],
                 'order_by'  => ['id DESC'],
-                'limit'     => $passwordRules['useNumber']
+                'limit'     => $passwordRules['historyLastUse']
             ]);
 
             foreach ($passwordHistory as $value) {

@@ -335,7 +335,7 @@ if (file_exists($path)) {
                 && $_SESSION['abs_user_status'] == true) {
                 include
                     'modules/basket/advert_missing.php';
-            } else {
+            } elseif (empty($_REQUEST['trigger'])) {
                 $core->insert_page();
             }
             ?>
@@ -359,7 +359,9 @@ if (file_exists($path)) {
     </div>
 </body>
     <?php
-    if ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
+    if (!empty($_REQUEST['trigger']) && $_REQUEST['trigger'] == 'changePass') {
+        ?><script>triggerAngular('#/password-modification')</script><?php
+    } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?>
         <script>triggerAngular('#/administration')</script>
     <?php
