@@ -171,6 +171,7 @@ class security extends Database
                     'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
                     'cookie_date' => $user->__get('cookie_date'),
+                    'password_modification_date' => $user->__get('password_modification_date')
                 );
 
                 $array['primarygroup'] = $ugc->getPrimaryGroup(
@@ -227,22 +228,6 @@ class security extends Database
                         _LOGIN_HISTORY.' '.$s_login.' IP : '.$ip,
                         $_SESSION['config']['databasetype']
                     );
-                }
-
-                $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
-
-                if (!empty($passwordRules['renewal'])) {
-                    $currentDate = new \DateTime();
-                    $lastModificationDate = new \DateTime($user->__get('password_modification_date'));
-                    $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
-
-                    if ($currentDate > $lastModificationDate) {
-                        return [
-                            'user'  => $array,
-                            'error' => $error,
-                            'url'   => 'index.php?trigger=changePass',
-                        ];
-                    }
                 }
 
                 $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();

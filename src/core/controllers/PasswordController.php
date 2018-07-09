@@ -26,10 +26,6 @@ class PasswordController
 {
     public function getRules(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_password_rules', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         return $response->withJson(['rules' => PasswordModel::getRules()]);
     }
 

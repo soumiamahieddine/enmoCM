@@ -89,10 +89,8 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.clause = data.basket.basket_clause;
                         this.basket.isSearchBasket = data.basket.is_visible != "Y";
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
-                        if(this.basket.basket_res_order == '' || this.basket.basket_res_order == null){                            
-                            this.orderColumnsSelected = null;
-                        }
-                        else{
+                        this.orderColumnsSelected = null;
+                        if (this.basket.basket_res_order != '' && this.basket.basket_res_order != null) {
                             this.orderColumnsSelected = this.basket.basket_res_order.split(',');
                         }
                         
@@ -189,7 +187,7 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onOrderChange(){            
+    onOrderChange() {
         if (this.columnsFormControl.value.length < 3) {
             this.selection = this.columnsFormControl.value;
         } else {
@@ -298,11 +296,11 @@ export class BasketAdministrationComponent implements OnInit {
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
 
-    lang        : any   = LANG;
-    allEntities : any[] = [];
-    statuses    : any;
+    lang                : any   = LANG;
+    allEntities         : any[] = [];
+    statuses            : any;
     selectedStatuses    : any[] = [];
-    statusCtrl = new FormControl();
+    statusCtrl          = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
         super(http, ['users','statuses']);
@@ -391,15 +389,13 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             });
     }
 
-      remove(index: number): void {
-
+    remove(index: number): void {
         this.selectedStatuses.splice(index, 1);
         this.statusCtrl.setValue(null);
         this.statusInput.nativeElement.value = '';
-    
-      }
+    }
 
-      add(status: any): void {
+    add(status: any): void {
         let isIn = false;
 
         this.selectedStatuses.forEach((statusList: any) => {
@@ -411,10 +407,8 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             this.selectedStatuses.push(status);
             this.statusCtrl.setValue(null);
             this.statusInput.nativeElement.value = '';
-        } 
-      }
-
-
+        }
+    }
 
     initService() {
         this.allEntities.forEach((entity: any) => {
