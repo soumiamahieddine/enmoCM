@@ -266,11 +266,11 @@ class security extends Database
         } else {
             $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $s_login]);
 
-            return array(
-                'user' => $array,
+            return [
+                'user'  => $array,
                 'error' => $error,
-                'url' => 'index.php?display=true&page=login',
-            );
+                'url'   => 'index.php?display=true&page=login'
+            ];
         }
     }
 
