@@ -396,10 +396,10 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 this.statuses = response.statuses;
                 response.statuses.forEach((status: any) => {
                     if (this.data.action.statuses.indexOf(status.id) > -1) {
-                        this.selectedStatuses.push({idToDisplay:status.label_status,id:status.id});
+                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)]= {idToDisplay:status.label_status,id:status.id};
                     }
                 });
-            });
+            });            
     }
 
     remove(index: number): void {
