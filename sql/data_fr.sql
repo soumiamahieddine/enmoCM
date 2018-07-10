@@ -1317,18 +1317,18 @@ Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 fro
 --GROUPBASKET_STATUS
 ------------
 TRUNCATE TABLE groupbasket_status;
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'VAL');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'NEW');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'IndexingBasket', 112, 'PJQUAL');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'NumericBasket', 18, 'VAL');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('COURRIER', 'NumericBasket', 18, 'NEW');
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'VAL', 2);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'NEW', 1);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'IndexingBasket', 112, 'PJQUAL', 3);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'VAL', 4);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'QualificationBasket', 18, 'NEW', 5);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'VAL', 6);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('COURRIER', 'NumericBasket', 18, 'NEW', 7);
 
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('AGENT', 'IndexingBasket', 112, 'END');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('AGENT', 'IndexingBasket', 112, 'NEW');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'END');
-INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id) VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'NEW');
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'END', 2);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('AGENT', 'IndexingBasket', 112, 'NEW', 1);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'END', 2);
+INSERT INTO groupbasket_status (group_id, basket_id, action_id, status_id, "order") VALUES ('RESPONSABLE', 'IndexingBasket', 112, 'NEW', 1);
 Select setval('groupbasket_status_system_id_seq', (select max(system_id)+1 from groupbasket_status), false);
 ------------
 --FOLDERTYPES
