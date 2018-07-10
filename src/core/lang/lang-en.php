@@ -185,7 +185,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications based on application events");
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
-define('_SECURITY', 'Security');
+define('_SECURITIES', 'Securities');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

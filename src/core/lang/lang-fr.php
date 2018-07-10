@@ -185,7 +185,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 define('_TEMPLATES', 'Modèles de documents');
 define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
-define('_SECURITY', 'Sécurité');
+define('_SECURITIES', 'Sécurités');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
