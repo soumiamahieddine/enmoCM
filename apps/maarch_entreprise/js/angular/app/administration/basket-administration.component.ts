@@ -89,9 +89,13 @@ export class BasketAdministrationComponent implements OnInit {
                         this.basket.clause = data.basket.basket_clause;
                         this.basket.isSearchBasket = data.basket.is_visible != "Y";
                         this.basket.flagNotif = data.basket.flag_notif == "Y";
-                        this.orderColumnsSelected = null;
-                        if (this.basket.basket_res_order != '' && this.basket.basket_res_order != null) {
+                        if(this.basket.basket_res_order == '' || this.basket.basket_res_order == null){                            
+                            this.orderColumnsSelected = null;
+                        }
+                        else{
+                            this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
                             this.orderColumnsSelected = this.basket.basket_res_order.split(',');
+                            this.selection = this.orderColumnsSelected;
                         }
                         
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
@@ -162,9 +166,10 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onSubmit() {        
-        if(this.orderColumnsSelected !== null){
+    onSubmit() {
+        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0){
             this.basket.basket_res_order = this.orderColumnsSelected.join(',')
+            this.basket.basket_res_order += ' DESC';
         } else {
             this.basket.basket_res_order = '';
         }        
@@ -187,7 +192,15 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onOrderChange() {
+    removeColumn(column: string){
+        var index = this.orderColumnsSelected.indexOf(column);
+        if (index >= 0) {
+            this.orderColumnsSelected.splice(index, 1);
+        }
+        this.columnsFormControl.setValue(this.orderColumnsSelected);
+     }
+
+    onOrderChange(){
         if (this.columnsFormControl.value.length < 3) {
             this.selection = this.columnsFormControl.value;
         } else {
