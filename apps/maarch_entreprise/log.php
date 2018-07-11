@@ -168,7 +168,7 @@ if (!empty($_SESSION['error'])) {
                 $ad = new LDAP($domain, $login_admin, $pass, $ssl);
             }
         } catch (Exception $conFailure) {
-            if (!empty($standardConnect)) {
+            if (!empty($standardConnect) && $standardConnect == 'true') {
                 $res = $sec->login($login, $password);
                 $_SESSION['user'] = $res['user'];
                 if (empty($res['error'])) {
