@@ -170,8 +170,7 @@ class security extends Database
                     'thumbprint' => $user->__get('thumbprint'),
                     'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
-                    'cookie_date' => $user->__get('cookie_date'),
-                    'password_modification_date' => $user->__get('password_modification_date')
+                    'cookie_date' => $user->__get('cookie_date')
                 );
 
                 $array['primarygroup'] = $ugc->getPrimaryGroup(
