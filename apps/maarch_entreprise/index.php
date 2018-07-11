@@ -177,7 +177,7 @@ if ($_REQUEST['triggerAngular'] != 'changePass' || isset($_REQUEST['page'])) {
     if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
 
-        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['user_id'], 'select' => ['password_modification_date', 'change_password']]);
+        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password']]);
         if ($user['change_password'] == 'Y') {
             header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
             exit();
