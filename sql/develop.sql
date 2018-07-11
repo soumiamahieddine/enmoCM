@@ -92,16 +92,16 @@ CREATE TABLE password_history
   CONSTRAINT password_history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-INSERT INTO password_rules (label, "value") VALUES ('minLength', 6);
+INSERT INTO password_rules (label, "value", enabled) VALUES ('minLength', 6, true);
 INSERT INTO password_rules (label, "value") VALUES ('complexityUpper', 0);
 INSERT INTO password_rules (label, "value") VALUES ('complexityNumber', 0);
 INSERT INTO password_rules (label, "value") VALUES ('complexitySpecial', 0);
 INSERT INTO password_rules (label, "value") VALUES ('lockAttempts', 3);
 INSERT INTO password_rules (label, "value") VALUES ('lockTime', 5);
-INSERT INTO password_rules (label, "value") VALUES ('useNumber', 2);
+INSERT INTO password_rules (label, "value") VALUES ('historyLastUse', 2);
 INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 ALTER TABLE users DROP COLUMN IF EXISTS password_modification_date;
-ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone;
+ALTER TABLE users ADD COLUMN password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE users DROP COLUMN IF EXISTS failed_authentication;
 ALTER TABLE users ADD COLUMN failed_authentication INTEGER DEFAULT 0;
 ALTER TABLE users DROP COLUMN IF EXISTS locked_until;

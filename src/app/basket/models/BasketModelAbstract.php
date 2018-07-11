@@ -84,8 +84,8 @@ abstract class BasketModelAbstract
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-        //ValidatorModel::arrayType($aArgs,['basket_res_order']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif','basket_res_order']);
+        
         DatabaseModel::update([
             'table'     => 'baskets',
             'set'       => [
@@ -238,13 +238,14 @@ abstract class BasketModelAbstract
     public static function getGroupActionStatus(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
 
         $aStatuses = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['groupbasket_status'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
 
         return $aStatuses;
@@ -353,6 +354,12 @@ abstract class BasketModelAbstract
             ]);
 
             $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
+            $userPrefs = UserBasketPreferenceModel::get([
+                'select'    => ['group_serial_id', 'basket_id'],
+                'where'     => ['user_serial_id = ?'],
+                'data'      => [$user['id']]
+            ]);
+
             foreach ($aBaskets as $key => $value) {
                 unset($aBaskets[$key]['groupserialid']);
                 $aBaskets[$key]['groupSerialId'] = $value['groupserialid'];
@@ -366,12 +373,12 @@ abstract class BasketModelAbstract
                 ]);
                 $aBaskets[$key]['userToDisplay'] = UserModel::getLabelledUserById(['userId' => $aBaskets2[0]['new_user']]);
                 $aBaskets[$key]['enabled'] = true;
-                $userPref = UserBasketPreferenceModel::get([
-                    'select'    => [1],
-                    'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
-                    'data'      => [$user['id'], $value['groupserialid'], $value['basket_id']]
-                ]);
-                $aBaskets[$key]['allowed'] = !empty($userPref);
+                $aBaskets[$key]['allowed'] = false;
+                foreach ($userPrefs as $userPref) {
+                    if ($userPref['group_serial_id'] == $value['groupserialid'] && $userPref['basket_id'] == $value['basket_id']) {
+                        $aBaskets[$key]['allowed'] = true;
+                    }
+                }
             }
             if (empty($aArgs['absenceUneeded'])) {
                 $aBaskets = array_merge($aBaskets, BasketModel::getAbsBasketsByUserId(['userId' => $aArgs['userId']]));

@@ -39,8 +39,8 @@ export class BasketAdministrationComponent implements OnInit {
     creationMode                    : boolean;
 
     displayedColumns        = ['label_action', 'actions'];
-    orderColumns            = ['alt_identifier','creation_date','format','priority','process_limit_date','res_id','subject','title','type_id'];
-    langVarName             = ['chrono','creationDate','format','priority','processLimitDate','id','object','title','type']
+    orderColumns            = ['alt_identifier', 'creation_date', 'process_limit_date', 'res_id', 'priority'];
+    langVarName             = [this.lang.chrono, this.lang.creationDate, this.lang.processLimitDate, this.lang.id, this.lang.priority];
     orderColumnsSelected    : string[] = [];
     selection               : string[] = [];
     columnsFormControl      : FormControl = new FormControl();
@@ -93,7 +93,9 @@ export class BasketAdministrationComponent implements OnInit {
                             this.orderColumnsSelected = null;
                         }
                         else{
+                            this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
                             this.orderColumnsSelected = this.basket.basket_res_order.split(',');
+                            this.selection = this.orderColumnsSelected;
                         }
                         
                         this.http.get(this.coreUrl + "rest/baskets/" + this.id + "/groups")
@@ -164,9 +166,10 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onSubmit() {        
-        if(this.orderColumnsSelected !== null){
+    onSubmit() {
+        if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0){
             this.basket.basket_res_order = this.orderColumnsSelected.join(',')
+            this.basket.basket_res_order += ' DESC';
         } else {
             this.basket.basket_res_order = '';
         }        
@@ -189,7 +192,15 @@ export class BasketAdministrationComponent implements OnInit {
         }
     }
 
-    onOrderChange(){            
+    removeColumn(column: string){
+        var index = this.orderColumnsSelected.indexOf(column);
+        if (index >= 0) {
+            this.orderColumnsSelected.splice(index, 1);
+        }
+        this.columnsFormControl.setValue(this.orderColumnsSelected);
+     }
+
+    onOrderChange(){
         if (this.columnsFormControl.value.length < 3) {
             this.selection = this.columnsFormControl.value;
         } else {
@@ -298,11 +309,11 @@ export class BasketAdministrationComponent implements OnInit {
 })
 export class BasketAdministrationSettingsModalComponent extends AutoCompletePlugin {
 
-    lang        : any   = LANG;
-    allEntities : any[] = [];
-    statuses    : any;
+    lang                : any   = LANG;
+    allEntities         : any[] = [];
+    statuses            : any;
     selectedStatuses    : any[] = [];
-    statusCtrl = new FormControl();
+    statusCtrl          = new FormControl();
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
         super(http, ['users','statuses']);
@@ -385,21 +396,19 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
                 this.statuses = response.statuses;
                 response.statuses.forEach((status: any) => {
                     if (this.data.action.statuses.indexOf(status.id) > -1) {
-                        this.selectedStatuses.push({idToDisplay:status.label_status,id:status.id});
+                        this.selectedStatuses[this.data.action.statuses.indexOf(status.id)]= {idToDisplay:status.label_status,id:status.id};
                     }
                 });
-            });
+            });            
     }
 
-      remove(index: number): void {
-
+    remove(index: number): void {
         this.selectedStatuses.splice(index, 1);
         this.statusCtrl.setValue(null);
         this.statusInput.nativeElement.value = '';
-    
-      }
+    }
 
-      add(status: any): void {
+    add(status: any): void {
         let isIn = false;
 
         this.selectedStatuses.forEach((statusList: any) => {
@@ -411,10 +420,8 @@ export class BasketAdministrationSettingsModalComponent extends AutoCompletePlug
             this.selectedStatuses.push(status);
             this.statusCtrl.setValue(null);
             this.statusInput.nativeElement.value = '';
-        } 
-      }
-
-
+        }
+    }
 
     initService() {
         this.allEntities.forEach((entity: any) => {

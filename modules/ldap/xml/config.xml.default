@@ -23,6 +23,7 @@
         <lost_users>false</lost_users>
         <!-- Si LDAP est desactive alors le pass de chaque utilisateur est son login -->
         <pass_is_login>true</pass_is_login>
+        <standardConnect>false</standardConnect>
     </config>
     
    <!-- Est utile uniquement pour la synchroniqation des donnees -->

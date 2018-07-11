@@ -171,6 +171,7 @@ class security extends Database
                     'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
                     'cookie_date' => $user->__get('cookie_date'),
+                    'password_modification_date' => $user->__get('password_modification_date')
                 );
 
                 $array['primarygroup'] = $ugc->getPrimaryGroup(
@@ -234,7 +235,7 @@ class security extends Database
                     return array(
                         'user' => $array,
                         'error' => $error,
-                        'url' => 'index.php?display=true&page=change_pass',
+                        'url' => 'index.php?trigger=changePass',
                     );
                 } elseif (isset($_SESSION['requestUri'])
                     && trim($_SESSION['requestUri']) != ''
@@ -265,11 +266,11 @@ class security extends Database
         } else {
             $error = \SrcCore\controllers\AuthenticationController::handleFailedAuthentication(['userId' => $s_login]);
 
-            return array(
-                'user' => $array,
+            return [
+                'user'  => $array,
                 'error' => $error,
-                'url' => 'index.php?display=true&page=login',
-            );
+                'url'   => 'index.php?display=true&page=login'
+            ];
         }
     }
 

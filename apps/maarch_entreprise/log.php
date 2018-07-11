@@ -69,7 +69,7 @@ if (isset($_SESSION['web_cas_url'])) {
     $login = '';
 }
 if (isset($_REQUEST['pass'])) {
-    $password = $func->wash($_REQUEST['pass'], 'no', _PASSWORD_FOR_USER, 'yes');
+    $password = $_REQUEST['pass'];
 } else {
     $password = '';
 }
@@ -152,26 +152,38 @@ if (!empty($_SESSION['error'])) {
             }
         }
 
-        if ($prefix_login != '') {
+        if (!empty($prefix_login)) {
             $login_admin = $prefix_login.'\\'.$login_admin;
         }
 
-        if ($suffix_login != '') {
+        if (!empty($suffix_login)) {
             $login_admin = $login_admin.$suffix_login;
         }
 
         //Try to create a new ldap instance
-        if (strtolower($type_ldap) == 'openldap') {
-            try {
+        try {
+            if (strtolower($type_ldap) == 'openldap') {
                 $ad = new LDAP($domain, $login_admin, $pass, $ssl, $hostname);
-            } catch (Exception $conFailure) {
-                echo functions::xssafe($conFailure->getMessage());
-                exit;
-            }
-        } else {
-            try {
+            } else {
                 $ad = new LDAP($domain, $login_admin, $pass, $ssl);
-            } catch (Exception $conFailure) {
+            }
+        } catch (Exception $conFailure) {
+            if (!empty($standardConnect) && $standardConnect == 'true') {
+                $res = $sec->login($login, $password);
+                $_SESSION['user'] = $res['user'];
+                if (empty($res['error'])) {
+                    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+                    \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+                    $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
+                    \User\models\UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
+                    $core->load_menu($_SESSION['modules']);
+                } else {
+                    $_SESSION['error'] = $res['error'];
+                }
+
+                header('location: '.$_SESSION['config']['businessappurl'].$res['url']);
+                exit();
+            } else {
                 echo functions::xssafe($conFailure->getMessage());
                 exit;
             }
@@ -242,7 +254,7 @@ if (!empty($_SESSION['error'])) {
             $_SESSION['error'] = '';
             $res = $sec->login($login, $password);
             $_SESSION['user'] = $res['user'];
-            if ($res['error'] == '') {
+            if (empty($res['error'])) {
                 \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
                 \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                 $core->load_menu($_SESSION['modules']);
@@ -250,43 +262,10 @@ if (!empty($_SESSION['error'])) {
                 $_SESSION['error'] = $res['error'];
             }
 
-            $pathToIPFilter = '';
-            if (file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')) {
-                $pathToIPFilter = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml';
-            } elseif (file_exists('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')) {
-                $pathToIPFilter = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml';
-            } else {
-                $ipArray = array();
-                $ipArray['enabled'] = 'false';
-                $ipArray['duration'] = '0';
-            }
-            $ipArray = array();
-            $ipArray = $func->object2array(simplexml_load_file($pathToIPFilter));
-            //print_r($ipArray);
-            if ($ipArray['enabled'] == 'true') {
-                $isAllowed = false;
-                if ($ipArray['IP'] != '') {
-                    $isAllowed = preg_match($ipArray['IP'], $_SERVER['REMOTE_ADDR']);
-                }
-
-                if (empty($_SESSION['error'])) {
-                    $_SESSION['error'] = $res['error'];
-                }
-                if (!$isAllowed && $res['error'] == '') {
-                    if ($ipArray['duration'] == 0) {
-                        $_SESSION['error'] = _IP_NOT_ALLOWED_NO_RA_CODE;
-                    } else {
-                        $_SESSION['error'] = _IP_NOT_ALLOWED;
-                    }
-                    $res['url'] = 'index.php?display=true&page=login';
-                }
-            }
             if ($_SESSION['user']['UserId'] == 'superadmin') {
                 $res['url'] .= '?administration=true';
             }
-            header(
-                'location: '.$_SESSION['config']['businessappurl'].$res['url']
-            );
+            header('location: '.$_SESSION['config']['businessappurl'].$res['url']);
             exit();
         }
     }

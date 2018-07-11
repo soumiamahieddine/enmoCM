@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith ,  map } from 'rxjs/operators';
+import { Observable, empty } from 'rxjs';
+import { startWith, map, debounceTime, filter, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 declare const angularGlobals: any;
 
@@ -26,17 +26,21 @@ export class AutoCompletePlugin {
 
         if (target.indexOf('users') != -1) {
             this.userCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/autocomplete/users')
-                .subscribe((data: any) => {
-                    this.userList = data;
-                    this.filteredUsers = this.userCtrl.valueChanges
-                        .pipe(
-                            startWith(''),
-                            map(user => user ? this.autocompleteFilterUser(user) : this.userList.slice())
-                        );
-                }, () => {
-                    location.href = "index.php";
-                });
+            this.userCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                if (response.length == 0) {
+                    this.userCtrl.setErrors({'noResult': true})
+                }
+                this.filteredUsers = this.userCtrl.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(user => user ? this.autocompleteFilterUser(user) : response.slice())
+                    );
+            });
         }
         if (target.indexOf('adminUsers') != -1) {
             this.userCtrl = new FormControl();
@@ -52,8 +56,8 @@ export class AutoCompletePlugin {
                     location.href = "index.php";
                 });
         }
-        
-        if (target.indexOf('statuses')  != -1) {
+
+        if (target.indexOf('statuses') != -1) {
             this.statusCtrl = new FormControl();
             this.http.get(this.coreUrl + 'rest/autocomplete/statuses')
                 .subscribe((data: any) => {

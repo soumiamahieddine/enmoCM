@@ -68,14 +68,17 @@
                                 <div class="col-md-6 col-xs-6 text-center">
                                     <mat-form-field >
                                         <mat-select placeholder="{{lang.defaultSort}}" [(ngModel)]="orderColumnsSelected" (selectionChange)="onOrderChange()" [formControl]="columnsFormControl" name="basket_res_order" multiple>
-                                                <mat-option *ngFor="let column of orderColumns" [value]="column">{{lang[langVarName[orderColumns.indexOf(column)]]}}</mat-option>
+                                                <mat-option *ngFor="let column of orderColumns" [value]="column">{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>                                        
                                 <div class="col-md-6 col-xs-6 text-center">
-                                    <mat-chip *ngFor="let column of orderColumnsSelected" color="primary">  
-                                            <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{lang[langVarName[orderColumns.indexOf(column)]]}}
-                                    </mat-chip>
+                                    <mat-chip-list [(ngModel)]="orderColumnsSelected" name="basket_res_order_chips" #chipList>
+                                        <mat-chip *ngFor="let column of orderColumnsSelected" color="primary" [removable]="true" (removed)="removeColumn(column)">  
+                                                <span class="badge badge-pill badge-dark">{{orderColumnsSelected.indexOf(column)+1}}</span> &nbsp;{{langVarName[orderColumns.indexOf(column)]}}
+                                                <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>                                    
                                 </div>
                             </div>               
                             <div class="col-md-6 col-xs-6 text-center">

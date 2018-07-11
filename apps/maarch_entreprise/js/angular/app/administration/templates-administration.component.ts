@@ -33,14 +33,13 @@ export class TemplatesAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
-        var disCol = this.displayedColumns;
-        this.dataSource.filterPredicate = function(template, filter: string): boolean {
+        this.dataSource.filterPredicate = (template, filter: string) => {
             var filterReturn = false;
-            disCol.forEach(function(column:any){
-                if(column != 'actions'){
-                    filterReturn = filterReturn || template[column].toLowerCase().includes(filter) ;
+            this.displayedColumns.forEach(function(column:any) {
+                if (column != 'actions') {
+                    filterReturn = filterReturn || template[column].toLowerCase().includes(filter);
                 }
-            })
+            });
             return filterReturn;
         };
     }

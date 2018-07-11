@@ -618,7 +618,7 @@ if (!defined('_SEARCH_SCOPE')) {
     define('_SEARCH_SCOPE', 'Search impact');
 }
 if (!defined('_SEARCH_SCOPE_HELP')) {
-    define('_SEARCH_SCOPE_HELP', 'Expand the search to baskets; authorizes the actions if a specific basket is selected');
+    define('_SEARCH_SCOPE_HELP', 'The scope corresponds to mails visible by my group or in my baskets');
 }
 if (!defined('_RESULTS')) {
     define('_RESULTS', 'Result(s)');
@@ -1446,6 +1446,8 @@ if (!defined('_SUSPENDED_ACCOUNT')) {
 if (!defined('_BAD_LOGIN_OR_PSW')) {
     define('_BAD_LOGIN_OR_PSW', 'Wrong user name or wrong password');
 }
+define('_ACCOUNT_LOCKED_FOR', 'Too many connections attemps. Your account is locked for');
+define('_ACCOUNT_LOCKED_UNTIL', 'Too many connections attemps. Account locked until');
 if (!defined('_AUTORIZED_USER')) {
     define('_AUTORIZED_USER', 'Authorized user');
 }

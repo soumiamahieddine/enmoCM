@@ -150,11 +150,11 @@ if (!defined("_CLICK_LINE_BASKET1"))
 
 //DIFFUSION LIST
 if (!defined("_CHOOSE_DEPARTMENT_FIRST"))
-    define("_CHOOSE_DEPARTMENT_FIRST", "Vous devez d'abord choisir un service avant de pouvoir accéder à la liste diffusion");
+    define("_CHOOSE_DEPARTMENT_FIRST", "Vous devez d'abord choisir une entité avant de pouvoir accéder à la liste diffusion");
 if (!defined("_NO_LIST_DEFINED__FOR_THIS_MAIL"))
     define("_NO_LIST_DEFINED__FOR_THIS_MAIL", "Aucune liste n'est définie pour ce courrier");
 if (!defined("_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT"))
-    define("_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT", "Aucune liste n'est définie pour ce service");
+    define("_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT", "Aucune liste n'est définie pour cette entité");
 if (!defined("_NO_LIST_DEFINED"))
     define("_NO_LIST_DEFINED", "Pas de liste définie");
 if (!defined("_REDIRECT_MAIL"))
@@ -162,23 +162,23 @@ if (!defined("_REDIRECT_MAIL"))
 if (!defined("_DISTRIBUTE_MAIL"))
     define("_DISTRIBUTE_MAIL", "Ventilation du document");
 if (!defined("_REDIRECT_TO_OTHER_DEP"))
-    define("_REDIRECT_TO_OTHER_DEP", "Vers un autre service");
+    define("_REDIRECT_TO_OTHER_DEP", "Vers une autre entité");
 if (!defined("_REDIRECT_TO_USER"))
     define("_REDIRECT_TO_USER", "Vers un utilisateur");
 if (!defined("_LETTER_SERVICE_REDIRECT"))
-    define("_LETTER_SERVICE_REDIRECT","Rediriger vers le service émetteur");
+    define("_LETTER_SERVICE_REDIRECT","Rediriger vers l'entité émettrice");
 if (!defined("_LETTER_SERVICE_REDIRECT_VALIDATION"))
-    define("_LETTER_SERVICE_REDIRECT_VALIDATION","Souhaitez-vous vraiment rediriger vers le service émetteur");
+    define("_LETTER_SERVICE_REDIRECT_VALIDATION","Souhaitez-vous vraiment rediriger vers l'entité émettrice");
 if (!defined("_DOC_REDIRECT_TO_SENDER_ENTITY"))
-    define("_DOC_REDIRECT_TO_SENDER_ENTITY", "Document redirigé vers service émetteur");
+    define("_DOC_REDIRECT_TO_SENDER_ENTITY", "Document redirigé vers l'entité émettrice");
 if (!defined("_DOC_REDIRECT_TO_ENTITY"))
-    define("_DOC_REDIRECT_TO_ENTITY", "Document redirigé vers service");
+    define("_DOC_REDIRECT_TO_ENTITY", "Document redirigé vers l'entité");
 if (!defined("_DOC_REDIRECT_TO_USER"))
     define("_DOC_REDIRECT_TO_USER", "Document redirigé vers utilisateur");
 if (!defined("_WELCOME_DIFF_LIST"))
     define("_WELCOME_DIFF_LIST", "Bienvenue dans l'outil de diffusion de courrier");
 if (!defined("_START_DIFF_EXPLANATION"))
-    define("_START_DIFF_EXPLANATION", "Pour demarrer la diffusion, utilisez la navigation par service ou par utilisateur ci-dessus");
+    define("_START_DIFF_EXPLANATION", "Pour demarrer la diffusion, utilisez la navigation par entité ou par utilisateur ci-dessus");
 if (!defined("_ADD_USER_TO_LIST_EXPLANATION"))
     define("_ADD_USER_TO_LIST_EXPLANATION", "Pour ajouter un utilisateur à la liste de diffusion");
 if (!defined("_REMOVE_USER_FROM_LIST_EXPLANATION"))
@@ -196,7 +196,7 @@ if (!defined("_CREATE_LIST"))
 if (!defined("_MODIFY_LIST"))
     define("_MODIFY_LIST", "Modifier la liste");
 if (!defined("_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST"))
-    define("_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST", "Le service sélectionné n'a pas de modèle de liste de diffusion associée");
+    define("_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST", "L'entité sélectionnée n'a pas de modèle de liste de diffusion associée");
 
 //LIST MODEL
 if (!defined("_MANAGE_MODEL_LIST_TITLE"))
@@ -206,7 +206,7 @@ if (!defined("_SORT_BY"))
 if (!defined("_WELCOME_MODEL_LIST_TITLE"))
     define("_WELCOME_MODEL_LIST_TITLE", "Bienvenue dans l'outil de crétion de modèle de liste de diffusion");
 if (!defined("_MODEL_LIST_EXPLANATION1"))
-    define("_MODEL_LIST_EXPLANATION1", "Pour démarrer la crétion, utilisez la navigation par service ou par utilisateur cidessus");
+    define("_MODEL_LIST_EXPLANATION1", "Pour démarrer la création, utilisez la navigation par entité ou par utilisateur ci-dessus");
 if (!defined("_VALID_LIST"))
     define("_VALID_LIST", "Valider la liste");
 
@@ -220,11 +220,11 @@ if (!defined("_CLICK_LINE_TO_VIEW"))
 if (!defined("_CLICK_LINE_TO_PROCESS"))
     define("_CLICK_LINE_TO_PROCESS", "Cliquez sur une ligne pour traiter");
 if (!defined("_REDIRECT_TO_SENDER_ENTITY"))
-    define("_REDIRECT_TO_SENDER_ENTITY", "Redirection vers le service émetteur");
+    define("_REDIRECT_TO_SENDER_ENTITY", "Redirection vers l'entité émetteur");
 if (!defined("_CHOOSE_DEPARTMENT"))
-    define("_CHOOSE_DEPARTMENT", "Choisissez un service");
+    define("_CHOOSE_DEPARTMENT", "Choisissez une entité");
 if (!defined("_ENTITY_UPDATE"))
-    define("_ENTITY_UPDATE", "Service mis à jour");
+    define("_ENTITY_UPDATE", "Entité mise à jour");
 
 // USER ABS
 if (!defined("_MY_ABS"))
@@ -298,7 +298,7 @@ if (!defined("_WHERE_CLAUSE_ACTION_TEXT"))
 if (!defined("_IN_ACTION"))
     define("_IN_ACTION", " dans l'action");
 if (!defined("_TO_ENTITIES"))
-    define("_TO_ENTITIES", "Vers des services");
+    define("_TO_ENTITIES", "Vers des entités");
 if (!defined("_TO_USERGROUPS"))
     define("_TO_USERGROUPS", "Vers des groupes d'utilisateur");
 if (!defined("_USE_IN_MASS"))
@@ -308,11 +308,11 @@ if (!defined("_USE_ONE"))
 if (!defined("_MUST_CHOOSE_WHERE_USE_ACTION"))
     define("_MUST_CHOOSE_WHERE_USE_ACTION","Vous devez définir où vous souhaitez utiliser l'action ");
 if (!defined("_MUST_CHOOSE_DEP"))
-    define("_MUST_CHOOSE_DEP", "Vous devez sélectionner un service!");
+    define("_MUST_CHOOSE_DEP", "Vous devez sélectionner une entité!");
 if (!defined("_MUST_CHOOSE_USER"))
     define("_MUST_CHOOSE_USER", "Vous devez sélectionner un utilisateur!");
 if (!defined("_REDIRECT_TO_DEP_OK"))
-    define("_REDIRECT_TO_DEP_OK", "vers un service");
+    define("_REDIRECT_TO_DEP_OK", "vers une entité");
 if (!defined("_REDIRECT_TO_USER_OK"))
     define("_REDIRECT_TO_USER_OK", "vers un utilisateur");
 if (!defined("_SAVE_CHANGES"))
@@ -362,13 +362,13 @@ if (!defined("_REALLY_ABS_MODE"))
 if (!defined("_DOCUMENTS_LIST_WITH_FILTERS"))
     define("_DOCUMENTS_LIST_WITH_FILTERS", "Liste avec filtres");
 if (!defined("_AUTHORISED_ENTITIES"))
-    define("_AUTHORISED_ENTITIES", "Liste services autorisés");
+    define("_AUTHORISED_ENTITIES", "Liste entités autorisés");
 if (!defined("_ARCHIVE_LIST"))
     define("_ARCHIVE_LIST", "Liste d'unités d'archive");
 if (!defined("_COUNT_LIST"))
     define("_COUNT_LIST", "Liste des copies");
 if (!defined("_FILTER_BY_ENTITY"))
-    define("_FILTER_BY_ENTITY", "Filtrer par service");
+    define("_FILTER_BY_ENTITY", "Filtrer par entité");
 if (!defined("_FILTER_BY"))
     define("_FILTER_BY", "Filtrer par");
 if (!defined("_OTHER_BASKETS"))

@@ -67,7 +67,7 @@ class PasswordModel
         return $aRules;
     }
 
-    public static function updateRule(array $aArgs)
+    public static function updateRuleById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id', 'value']);
@@ -94,14 +94,14 @@ class PasswordModel
 
         $passwordRules = PasswordModel::getEnabledRules();
 
-        if (!empty($passwordRules['useNumber'])) {
+        if (!empty($passwordRules['historyLastUse'])) {
             $passwordHistory = DatabaseModel::select([
                 'select'    => ['password'],
                 'table'     => ['password_history'],
                 'where'     => ['user_serial_id = ?'],
                 'data'      => [$aArgs['userSerialId']],
                 'order_by'  => ['id DESC'],
-                'limit'     => $passwordRules['useNumber']
+                'limit'     => $passwordRules['historyLastUse']
             ]);
 
             foreach ($passwordHistory as $value) {
@@ -127,12 +127,12 @@ class PasswordModel
             'data'      => [$aArgs['userSerialId']],
             'order_by'  => ['id DESC']
         ]);
-
+        
         if (count($passwordHistory) >= 10) {
             DatabaseModel::delete([
                 'table'     => 'password_history',
                 'where'     => ['id < ?', 'user_serial_id = ?'],
-                'data'      => [$passwordHistory[8], $aArgs['userSerialId']]
+                'data'      => [$passwordHistory[8]['id'], $aArgs['userSerialId']]
             ]);
         }
 

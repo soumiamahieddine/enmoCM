@@ -124,6 +124,8 @@ define('_NOTIFICATION_ALREADY_EXIST', 'Notification already exists');
 define('_WRONG_PSW', 'Wrong password');
 define('_ALREADY_USED_PSW', 'The password has already been used');
 define('_BAD_LOGIN_OR_PSW', 'Wrong user name or wrong password');
+define('_ACCOUNT_LOCKED_FOR', 'Too many connections attemps. Your account is locked for');
+define('_ACCOUNT_LOCKED_UNTIL', 'Too many connections attemps. Account locked until');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
 define('_BACK_FROM_VACATION', 'back from vacation');
@@ -183,7 +185,7 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_ADMIN_NOTIFICATIONS_DESC', " Create and manage users' notifications based on application events");
 define('_TEMPLATES', 'Templates');
 define('_ADMIN_TEMPLATES_DESC', 'Manage templates for attachments, notifications, document generation, sendmail and notes');
-define('_SECURITY_PASSWORD', 'Password security');
+define('_SECURITIES', 'Securities');
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Redirect to an action');

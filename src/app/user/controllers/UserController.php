@@ -301,8 +301,11 @@ class UserController
     {
         $data = $request->getParams();
 
-        if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['currentPassword', 'newPassword', 'reNewPassword']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bas request']);
+        $check = Validator::stringType()->notEmpty()->validate($data['currentPassword']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['newPassword']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['reNewPassword']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);

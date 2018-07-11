@@ -16,7 +16,7 @@ if (!defined('_ADMIN_TEMPLATE_ANSWER')) {
     define('_ADMIN_TEMPLATE_ANSWER', 'Administrer les modèles');
 }
 if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les notes");
+    define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les annotations");
 }
 /*********************** Menu ***********************************/
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER')) {
@@ -50,7 +50,7 @@ if (!defined('_TEMPLATE_ID')) {
     define('_TEMPLATE_ID', 'ID du modèle');
 }
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY')) {
-    define('_ATTACH_TEMPLATE_TO_ENTITY', 'Le modèle doit être rattaché à au moins un service');
+    define('_ATTACH_TEMPLATE_TO_ENTITY', 'Le modèle doit être rattaché à au moins une entité');
 }
 if (!defined('_TEMPLATE_DATASOURCE')) {
     define('_TEMPLATE_DATASOURCE', 'Source de données');
@@ -103,7 +103,7 @@ if (!defined('_TEMPLATE_UPDATED')) {
     define('_TEMPLATE_UPDATED', 'Modèle modifié');
 }
 if (!defined('_CHOOSE_ENTITY_TEMPLATE')) {
-    define('_CHOOSE_ENTITY_TEMPLATE', 'Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce modèle');
+    define('_CHOOSE_ENTITY_TEMPLATE', 'Choisissez le(s) entité(s) au(x)quelle(s) vous souhaitez associer ce modèle');
 }
 if (!defined('_REALLY_DEL_TEMPLATE')) {
     define('_REALLY_DEL_TEMPLATE', 'Voulez vous vraiment supprimer ce modèle ?');

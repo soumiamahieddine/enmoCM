@@ -162,7 +162,7 @@ class DoctypeControllerTest extends TestCase
             'delay1'                      => '10',
             'delay2'                      => '5',
             'process_mode'                => 'NORMAL',
-            'template_id'                 => '',
+            'template_id'                 => 0,
             'is_generated'                => 'N',
             'indexes' => [
                 0 => [
@@ -222,7 +222,7 @@ class DoctypeControllerTest extends TestCase
             'delay1'                      => '',
             'delay2'                      => '',
             'process_mode'                => '',
-            'template_id'                 => '',
+            'template_id'                 => 0,
             'is_generated'                => 'N',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -339,7 +339,7 @@ class DoctypeControllerTest extends TestCase
             'delay1'                      => '11',
             'delay2'                      => '6',
             'process_mode'                => 'SVR',
-            'template_id'                 => '',
+            'template_id'                 => 0,
             'is_generated'                => 'N',
             'indexes' => [
                 0 => [
@@ -399,7 +399,7 @@ class DoctypeControllerTest extends TestCase
             'delay1'                      => '',
             'delay2'                      => '',
             'process_mode'                => '',
-            'template_id'                 => '',
+            'template_id'                 => 0,
             'is_generated'                => 'N',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -507,7 +507,7 @@ class DoctypeControllerTest extends TestCase
             'delay1'                      => '10',
             'delay2'                      => '5',
             'process_mode'                => 'NORMAL',
-            'template_id'                 => '',
+            'template_id'                 => 0,
             'is_generated'                => 'N',
             'indexes' => [
                 0 => [

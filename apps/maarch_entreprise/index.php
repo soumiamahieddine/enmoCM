@@ -173,6 +173,23 @@ if (
     exit();
 }
 
+if ($_REQUEST['trigger'] != 'changePass' || isset($_REQUEST['page'])) {
+    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && !empty($_SESSION['user']['UserId'])) {
+        $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
+
+        if (!empty($passwordRules['renewal'])) {
+            $currentDate = new \DateTime();
+            $lastModificationDate = new \DateTime($_SESSION['user']['password_modification_date']);
+            $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
+
+            if ($currentDate > $lastModificationDate) {
+                header('location: '.$_SESSION['config']['businessappurl'].'index.php?trigger=changePass');
+                exit();
+            }
+        }
+    }
+}
+
 if (isset($_REQUEST['display'])) {
     $core->insert_page();
     exit();
@@ -335,7 +352,7 @@ if (file_exists($path)) {
                 && $_SESSION['abs_user_status'] == true) {
                 include
                     'modules/basket/advert_missing.php';
-            } else {
+            } elseif (empty($_REQUEST['trigger'])) {
                 $core->insert_page();
             }
             ?>
@@ -359,7 +376,9 @@ if (file_exists($path)) {
     </div>
 </body>
     <?php
-    if ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
+    if (!empty($_REQUEST['trigger']) && $_REQUEST['trigger'] == 'changePass') {
+        ?><script>triggerAngular('#/password-modification')</script><?php
+    } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?>
         <script>triggerAngular('#/administration')</script>
     <?php

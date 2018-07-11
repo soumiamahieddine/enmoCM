@@ -227,7 +227,7 @@ CREATE TABLE users
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  password_modification_date timestamp without time zone,
+  password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
   loginmode character varying(50) DEFAULT NULL::character varying,
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
