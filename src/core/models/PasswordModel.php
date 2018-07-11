@@ -127,7 +127,7 @@ class PasswordModel
             'data'      => [$aArgs['userSerialId']],
             'order_by'  => ['id DESC']
         ]);
-
+        
         if (count($passwordHistory) >= 10) {
             DatabaseModel::delete([
                 'table'     => 'password_history',
