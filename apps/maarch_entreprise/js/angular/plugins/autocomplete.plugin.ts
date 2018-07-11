@@ -44,17 +44,21 @@ export class AutoCompletePlugin {
         }
         if (target.indexOf('adminUsers') != -1) {
             this.userCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/autocomplete/users/administration')
-                .subscribe((data: any) => {
-                    this.userList = data;
-                    this.filteredUsers = this.userCtrl.valueChanges
-                        .pipe(
-                            startWith(''),
-                            map(user => user ? this.autocompleteFilterUser(user) : this.userList.slice())
-                        );
-                }, () => {
-                    location.href = "index.php";
-                });
+            this.userCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users/administration', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                if (response.length == 0) {
+                    this.userCtrl.setErrors({'noResult': true})
+                }
+                this.filteredUsers = this.userCtrl.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(user => user ? this.autocompleteFilterUser(user) : response.slice())
+                    );
+            });
         }
 
         if (target.indexOf('statuses') != -1) {
@@ -75,55 +79,68 @@ export class AutoCompletePlugin {
             this.elementCtrl = new FormControl();
             this.elemList = [];
 
-            this.http.get(this.coreUrl + 'rest/autocomplete/users')
-                .subscribe((data: any) => {
-                    this.elemList = data;
+            this.elementCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                this.elemList = response;
+            });
 
-                    this.http.get(this.coreUrl + 'rest/autocomplete/entities')
-                        .subscribe((data: any) => {
-                            this.elemList = this.elemList.concat(data);
-                            this.filteredElements = this.elementCtrl.valueChanges
-                                .pipe(
-                                    startWith(''),
-                                    map(elem => elem ? this.autocompleteFilterElements(elem) : this.elemList.slice())
-                                );
-                        }, () => {
-                            location.href = "index.php";
-                        });
-
-                }, () => {
-                    location.href = "index.php";
-                });
-
+            this.elementCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/entities', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                this.elemList = this.elemList.concat(response);
+                if (this.elemList.length == 0) {
+                    this.elementCtrl.setErrors({'noResult': true})
+                }
+                this.filteredElements = this.elementCtrl.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(elem => elem ? this.autocompleteFilterUser(elem) : this.elemList.slice())
+                    );
+            });
         }
         if (target.indexOf('entities') != -1) {
             this.elementCtrl = new FormControl();
-            this.elemList = [];
-            this.http.get(this.coreUrl + 'rest/autocomplete/entities')
-                .subscribe((data: any) => {
-                    this.elemList = data;
-                    this.filteredElements = this.elementCtrl.valueChanges
-                        .pipe(
-                            startWith(''),
-                            map(elem => elem ? this.autocompleteFilterElements(elem) : this.elemList.slice())
-                        );
-                }, () => {
-                    location.href = "index.php";
-                });
+            this.elementCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/entities', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                if (response.length == 0) {
+                    this.elementCtrl.setErrors({'noResult': true})
+                }
+                this.filteredElements = this.elementCtrl.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(elem => elem ? this.autocompleteFilterUser(elem) : response.slice())
+                    );
+            });
 
         } else if (target.indexOf('visaUsers') != -1) {
             this.visaUserCtrl = new FormControl();
-            this.http.get(this.coreUrl + 'rest/autocomplete/users/visa')
-                .subscribe((data: any) => {
-                    this.visaUserList = data;
-                    this.filteredVisaUsers = this.visaUserCtrl.valueChanges
-                        .pipe(
-                            startWith(''),
-                            map(user => user ? this.autocompleteFilterUser(user) : this.visaUserList.slice())
-                        );
-                }, () => {
-                    location.href = "index.php";
-                });
+            this.visaUserCtrl.valueChanges.pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                switchMap(data => this.http.get(this.coreUrl + 'rest/autocomplete/users/visa', { params: { "search": data } }))
+            ).subscribe((response: any) => {
+                if (response.length == 0) {
+                    this.visaUserCtrl.setErrors({'noResult': true})
+                }
+                this.filteredVisaUsers = this.visaUserCtrl.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(user => user ? this.autocompleteFilterUser(user) : response.slice())
+                    );
+            });
+
         } else {
 
         }
