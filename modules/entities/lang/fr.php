@@ -208,7 +208,7 @@ if (!defined('_ENTITY_TYPE')) {
     define('_ENTITY_TYPE', "Type de l'entité");
 }
 if (!defined('_TO_USERS_OF_ENTITIES')) {
-    define('_TO_USERS_OF_ENTITIES', 'Vers des utilisateurs des services');
+    define('_TO_USERS_OF_ENTITIES', 'Vers des utilisateurs des entités');
 }
 if (!defined('_ALL_ENTITIES')) {
     define('_ALL_ENTITIES', 'Toutes les entités');
@@ -235,10 +235,10 @@ if (!defined('_SAME_LEVEL_ENTITIES')) {
     define('_SAME_LEVEL_ENTITIES', "Même niveau de l'entité primaire");
 }
 if (!defined('_INDEXING_ENTITIES')) {
-    define('_INDEXING_ENTITIES', 'Indexer pour les services');
+    define('_INDEXING_ENTITIES', 'Indexer pour les entités');
 }
 if (!defined('_SEARCH_DIFF_LIST')) {
-    define('_SEARCH_DIFF_LIST', 'Rechercher un service ou un utilisateur');
+    define('_SEARCH_DIFF_LIST', 'Rechercher une entité ou un utilisateur');
 }
 if (!defined('_ADD_CC')) {
     define('_ADD_CC', 'Ajouter en copie');
@@ -339,7 +339,7 @@ if (!defined('_HELP_KEYWORDS')) {
     define('_HELP_KEYWORDS', 'Aide sur les mots clés');
 }
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE')) {
-    define('_HELP_KEYWORD_EXEMPLE_TITLE', "Exemple dans la définition de la sécurité d'un groupe (where clause) : accès sur les ressources concernant le service d'appartenance principal de l'utilisateur connecté, ou les sous-services de ce service.");
+    define('_HELP_KEYWORD_EXEMPLE_TITLE', "Exemple dans la définition de la sécurité d'un groupe (where clause) : accès sur les ressources concernant l'entité d'appartenance principal de l'utilisateur connecté, ou les sous-entités de cette entité.");
 }
 if (!defined('_HELP_KEYWORD_EXEMPLE')) {
     define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))');
@@ -360,7 +360,7 @@ if (!defined('_LISTMODELS_OCCURS_LINKED_TO')) {
     define('_LISTMODELS_OCCURS_LINKED_TO', "modèle de diffusion associé à l'entité");
 }
 if (!defined('_CHOOSE_REPLACEMENT_DEPARTMENT')) {
-    define('_CHOOSE_REPLACEMENT_DEPARTMENT', 'Choisissez un service remplaçant');
+    define('_CHOOSE_REPLACEMENT_DEPARTMENT', 'Choisissez une entité remplaçante');
 }
 
 /******************** For reports ************/
@@ -368,13 +368,13 @@ if (!defined('_ENTITY_VOL_STAT')) {
     define('_ENTITY_VOL_STAT', 'Volume des courriers par entité');
 }
 if (!defined('_ENTITY_VOL_STAT_DESC')) {
-    define('_ENTITY_VOL_STAT_DESC', "Permet d'afficher le nombre de courriers enregistrés par service.");
+    define('_ENTITY_VOL_STAT_DESC', "Permet d'afficher le nombre de courriers enregistrés par entité.");
 }
 if (!defined('_NO_DATA_MESSAGE')) {
     define('_NO_DATA_MESSAGE', 'Pas assez de données');
 }
 if (!defined('_MAIL_VOL_BY_ENT_REPORT')) {
-    define('_MAIL_VOL_BY_ENT_REPORT', 'Volume de courriers par service');
+    define('_MAIL_VOL_BY_ENT_REPORT', 'Volume de courriers par entité');
 }
 if (!defined('_WRONG_DATE_FORMAT')) {
     define('_WRONG_DATE_FORMAT', 'Format de date incorrect');
@@ -444,7 +444,7 @@ if (!defined('_DIFFLIST_TYPE_LABEL')) {
     define('_DIFFLIST_TYPE_LABEL', 'Description');
 }
 if (!defined('_ALLOW_ENTITIES')) {
-    define('_ALLOW_ENTITIES', 'Autoriser les services');
+    define('_ALLOW_ENTITIES', 'Autoriser les entités');
 }
 
  /******************** Listmodels ***********/
@@ -613,13 +613,13 @@ if (!defined('_PRINT_SEPS')) {
     define('_PRINT_SEPS', 'Impression des séparateurs');
 }
 if (!defined('_CHOOSE_ENTITIES')) {
-    define('_CHOOSE_ENTITIES', 'Choisissez les services');
+    define('_CHOOSE_ENTITIES', 'Choisissez les entités');
 }
 if (!defined('_PRINT_SEPS_BUTTON')) {
     define('_PRINT_SEPS_BUTTON', 'Imprimer les séparateurs');
 }
 if (!defined('_ENTITIES_PRINT_SEP_MLB')) {
-    define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par service');
+    define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des séparateurs par entité');
 }
 if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC')) {
     define('_ENTITIES_PRINT_SEP_MLB_GENERIC', 'Imprimer séparateur générique COURRIER');
@@ -664,7 +664,7 @@ if (!defined('_ARCHIVAL_AGREEMENT')) {
     define('_ARCHIVAL_AGREEMENT', "Convention d'archivage");
 }
 if (!defined('_ARCHIVAL_AGENCY')) {
-    define('_ARCHIVAL_AGENCY', "Service d'archive");
+    define('_ARCHIVAL_AGENCY', "Entité d'archive");
 }
 
 if (!defined('_GO_TO_CC')) {

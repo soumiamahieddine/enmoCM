@@ -71,7 +71,7 @@ if (!defined("_FOLDERSYSTEMID"))
 if (!defined("_FOLDERID_LONG"))
     define("_FOLDERID_LONG", "Identifiant du dossier");
 if (!defined("_FOLDER_DESTINATION_QUESTION"))
-    define("_FOLDER_DESTINATION_QUESTION", "Rendre ce dossier uniquement accessible à votre service ?");
+    define("_FOLDER_DESTINATION_QUESTION", "Rendre ce dossier uniquement accessible à votre entité ?");
 if (!defined("_FOLDER_DESTINATION_SHORT"))
     define("_FOLDER_DESTINATION_SHORT", "Dossier de service");
 if (!defined("_FOLDERNAME"))
@@ -333,6 +333,6 @@ if (!defined("_REDIRECT_ALL_DOCUMENTS_IN_FOLDER"))
 if (!defined("_CHOOSE_ONE_FOLDER"))                 
     define("_CHOOSE_ONE_FOLDER", "Choisissez au moins un dossier");
 if (!defined("_MUST_CHOOSE_DEP_OR_USER"))           
-    define("_MUST_CHOOSE_DEP_OR_USER", "Vous devez sélectionner un service ou un utilisateur!");
+    define("_MUST_CHOOSE_DEP_OR_USER", "Vous devez sélectionner une entité ou un utilisateur!");
 if (!defined('_LABEL'))
     define("_LABEL", "libellé");

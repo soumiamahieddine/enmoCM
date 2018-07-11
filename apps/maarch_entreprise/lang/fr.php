@@ -250,7 +250,7 @@ if (!defined('_REDIRECTION')) {
     define('_REDIRECTION', 'Rediriger');
 }
 if (!defined('_REDIRECTION_DESC')) {
-    define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
+    define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir l\'entité traitante avec une nouvelle liste de diffusion.');
 }
 if (!defined('_DUPLICATION')) {
     define('_DUPLICATION', 'Duplication');
@@ -393,7 +393,7 @@ if (!defined('_WARNING_MESSAGE_DEL_USER')) {
     define('_WARNING_MESSAGE_DEL_USER', 'Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :');
 }
 if (!defined('_INFO_MESSAGE_UPDATE_USER')) {
-    define('_INFO_MESSAGE_UPDATE_USER', 'Afin de garder la confidentialité des courriers en cours de traitement du service, il est recommandé de réaffecter ceux-ci à un autre utilisateur');
+    define('_INFO_MESSAGE_UPDATE_USER', 'Afin de garder la confidentialité des courriers en cours de traitement de l\'entité, il est recommandé de réaffecter ceux-ci à un autre utilisateur');
 }
 if (!defined('_INFO_MESSAGE_UPDATE_USER2')) {
     define('_INFO_MESSAGE_UPDATE_USER2', 'Les courriers confidentiels que vous avez créés ne seront pas affectés');
@@ -628,7 +628,7 @@ if (!defined('_GROUPS_LIST_SHORT')) {
     define('_GROUPS_LIST_SHORT', 'Liste groupes');
 }
 if (!defined('_DEPARTMENTS_LIST_SHORT')) {
-    define('_DEPARTMENTS_LIST_SHORT', 'Liste services');
+    define('_DEPARTMENTS_LIST_SHORT', 'Liste entités');
 }
 if (!defined('_BITMASK')) {
     define('_BITMASK', 'Paramètre Bitmask');
@@ -871,7 +871,7 @@ if (!defined('_MODIFY_USER')) {
 }
 
 if (!defined('_NOTES')) {
-    define('_NOTES', 'Notes');
+    define('_NOTES', 'Annotations');
 }
 if (!defined('_NOTE1')) {
     define('_NOTE1', 'Les champs obligatoires sont marqués par un astérisque rouge ');
@@ -923,7 +923,7 @@ if (!defined('_MODIFICATION_PSW_SNTE')) {
     define('_MODIFICATION_PSW_SNTE', 'Pour modifier votre mot de passe, vous devez confirmer celui-ci.');
 }
 if (!defined('_USER_ACCESS_DEPARTMENT')) {
-    define('_USER_ACCESS_DEPARTMENT', "L'utilisateur a accès aux services suivants");
+    define('_USER_ACCESS_DEPARTMENT', "L'utilisateur a accès aux entités suivantes");
 }
 if (!defined('_FIRST_PSW')) {
     define('_FIRST_PSW', 'Le premier mot de passe ');
@@ -1319,10 +1319,10 @@ if (!defined('_ADMIN_ACTIONS')) {
     define('_ADMIN_ACTIONS', 'Actions');
 }
 if (!defined('_KEYWORD_REDIRECT_DESC')) {
-    define('_KEYWORD_REDIRECT_DESC', "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les services et / ou les utilisateurs disponibles pour la redirection.");
+    define('_KEYWORD_REDIRECT_DESC', "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les entités et / ou les utilisateurs disponibles pour la redirection.");
 }
 if (!defined('_KEYWORD_INDEXING_DESC')) {
-    define('_KEYWORD_INDEXING_DESC', "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les services traitant disponibles et le/les statut(s) potentiels pour un enregistrement / modification de document.");
+    define('_KEYWORD_INDEXING_DESC', "Permet de définir les options disponibles sur l'action depuis la bannette, notamment les entités traitant disponibles et le/les statut(s) potentiels pour un enregistrement / modification de document.");
 }
 
 /************** Historique**************/
@@ -1788,13 +1788,13 @@ if (!defined('_ACTION_CONFIRM')) {
     define('_ACTION_CONFIRM', "Voulez-vous effectuer l'action suivante : ");
 }
 if (!defined('_ADD_ATTACHMENT_OR_NOTE')) {
-    define('_ADD_ATTACHMENT_OR_NOTE', 'Ajoutez une pièce jointe ou une note pour ce(s) courrier(s)');
+    define('_ADD_ATTACHMENT_OR_NOTE', 'Ajoutez une pièce jointe ou une annotation pour ce(s) courrier(s)');
 }
 if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT')) {
     define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
 }
 if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) {
-    define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un document ('closing_date' de la table mlb_coll_ext) avec présence OBLIGATOIRE de pièce(s) jointe(s) / note(s).");
+    define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un document ('closing_date' de la table mlb_coll_ext) avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).");
 }
 if (!defined('_ACTION_NOT_IN_DB')) {
     define('_ACTION_NOT_IN_DB', 'Action non enregistrée en base');
@@ -1925,10 +1925,10 @@ if (!defined('_PROCESS_LIMIT_DATE_USE')) {
     define('_PROCESS_LIMIT_DATE_USE', 'Activer la date limite');
 }
 if (!defined('_DEPARTMENT_DEST')) {
-    define('_DEPARTMENT_DEST', 'Service traitant');
+    define('_DEPARTMENT_DEST', 'Entité traitante');
 }
 if (!defined('_DEPARTMENT_EXP')) {
-    define('_DEPARTMENT_EXP', 'Service expéditeur');
+    define('_DEPARTMENT_EXP', 'Entité expéditrice');
 }
 
 // Mail Categories
@@ -2080,7 +2080,7 @@ if (!defined('_FOLLOWED_INFO')) {
 }
 
 if (!defined('_PROCESS_NOTES')) {
-    define('_PROCESS_NOTES', 'Notes de traitement');
+    define('_PROCESS_NOTES', 'Annotations de traitement');
 }
 if (!defined('_DIRECT_CONTACT')) {
     define('_DIRECT_CONTACT', 'Prise de contact direct');
@@ -2126,7 +2126,7 @@ if (!defined('_CHOOSE_PARAMETERS')) {
     define('_CHOOSE_PARAMETERS', 'Choisissez vos critères');
 }
 if (!defined('_CHOOSE_ENTITES_SEARCH_TITLE')) {
-    define('_CHOOSE_ENTITES_SEARCH_TITLE', 'Ajoutez le/les service(s) désiré(s) pour restreindre la recherche');
+    define('_CHOOSE_ENTITES_SEARCH_TITLE', 'Ajoutez le/les entité(s) désirée(s) pour restreindre la recherche');
 }
 if (!defined('_CHOOSE_DOCTYPES_SEARCH_TITLE')) {
     define('_CHOOSE_DOCTYPES_SEARCH_TITLE', 'Ajoutez le(s) type(s) de document désiré(s) pour restreindre la recherche');
@@ -2135,7 +2135,7 @@ if (!defined('_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE')) {
     define('_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE', 'Ajoutez le(s) type(s) de courrier désiré(s) pour restreindre la recherche');
 }
 if (!defined('_DESTINATION_SEARCH')) {
-    define('_DESTINATION_SEARCH', 'Service(s) affecté(s)');
+    define('_DESTINATION_SEARCH', 'Entité(s) affectée(s)');
 }
 if (!defined('_ADD_PARAMETERS_HELP')) {
     define('_ADD_PARAMETERS_HELP', 'Pour affiner le résultat, vous pouvez ajouter des critères à votre recherche... ');
@@ -2153,7 +2153,7 @@ if (!defined('_MULTI_FIELD')) {
     define('_MULTI_FIELD', 'Multi-champs');
 }
 if (!defined('_MULTI_FIELD_HELP')) {
-    define('_MULTI_FIELD_HELP', 'Objet, description, titre, Num GED, Num chrono, notes de traitement...');
+    define('_MULTI_FIELD_HELP', 'Objet, description, titre, Num GED, Num chrono, annotations de traitement...');
 }
 if (!defined('_SAVE_QUERY')) {
     define('_SAVE_QUERY', 'Enregistrer ma recherche');
@@ -3944,13 +3944,13 @@ if (!defined('_DETAILS_PRINT')) {
     define('_DETAILS_PRINT', 'Fiche de liaison N°');
 }
 if (!defined('_NOTES_1')) {
-    define('_NOTES_1', 'Exemple Notes service 1');
+    define('_NOTES_1', 'Exemple Annotations service 1');
 }
 if (!defined('_NOTES_2')) {
-    define('_NOTES_2', 'Exemple Notes service 2');
+    define('_NOTES_2', 'Exemple Annotations service 2');
 }
 if (!defined('_NOTES_3')) {
-    define('_NOTES_3', 'Exemple Notes service 3');
+    define('_NOTES_3', 'Exemple Annotations service 3');
 }
 if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
     define('_WHERE_CLAUSE_NOT_SECURE', 'Clause where non sécurisée');
@@ -4219,10 +4219,10 @@ if (!defined('_HELP_KEYWORD_EMAIL')) {
 }
 
 if (!defined('_INITIATOR')) {
-    define('_INITIATOR', 'Service initiateur');
+    define('_INITIATOR', 'Entité initiatrice');
 }
 if (!defined('_INITIATORS')) {
-    define('_INITIATORS', 'Service(s) initiateur(s)');
+    define('_INITIATORS', 'Entité(s) initiatrice(s)');
 }
 
 if (!defined('_QUALIF_BUSINESS')) {
@@ -4243,7 +4243,7 @@ if (!defined('_ADV_SEARCH_BUSINESS')) {
 }
 
 if (!defined('_DEPARTMENT_OWNER')) {
-    define('_DEPARTMENT_OWNER', 'Service propriétaire');
+    define('_DEPARTMENT_OWNER', 'Entité propriétaire');
 }
 
 /********************Parameters **************/
@@ -4446,19 +4446,19 @@ if (!defined('_PRINT_TYPIST')) {
     define('_PRINT_TYPIST', 'Opérateur');
 }
 if (!defined('_PRINT_FREE_NOTES')) {
-    define('_PRINT_FREE_NOTES', 'NOTES LIBRES');
+    define('_PRINT_FREE_NOTES', 'ANNOTATIONS LIBRES');
 }
 if (!defined('_PRINT_COPIES')) {
     define('_PRINT_COPIES', 'COPIES');
 }
 if (!defined('_PRINT_NOTES')) {
-    define('_PRINT_NOTES', 'NOTES');
+    define('_PRINT_NOTES', 'ANNOTATIONS');
 }
 if (!defined('_PRINT_PROCESS_ENTITY')) {
-    define('_PRINT_PROCESS_ENTITY', 'SERVICE TRAITANT');
+    define('_PRINT_PROCESS_ENTITY', 'ENTITE TRAITANTE');
 }
 if (!defined('_PRINT_PRIVATE_NOTE')) {
-    define('_PRINT_PRIVATE_NOTE', 'Note privée');
+    define('_PRINT_PRIVATE_NOTE', 'Annotation privée');
 }
 if (!defined('_PRINT_THE')) {
     define('_PRINT_THE', 'Le');

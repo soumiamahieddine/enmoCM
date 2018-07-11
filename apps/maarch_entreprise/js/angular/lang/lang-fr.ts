@@ -323,7 +323,7 @@ export const LANG_FR = {
     "noRecord"                          : "Aucun élément",
     "noReplacement"                     : "Aucun remplacement",
     "noResult"                          : "Aucun résultat",
-    "notes"                             : "Notes",
+    "notes"                             : "Annotations",
     "notificationAdded"                 : "Notification ajoutée",
     "notificationCreation"              : "Création d'une notification",
     "notificationDeleted"               : "Notification supprimée",

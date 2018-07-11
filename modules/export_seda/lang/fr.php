@@ -36,9 +36,9 @@ if (!defined("_MESSAGE_TITLE_EMPTY"))
 if (!defined("_MESSAGE_IDENTIFIER"))
     define("_MESSAGE_IDENTIFIER", "Identifiant bordereau");
 if (!defined("_ARCHIVAL_AGENCY_SIREN"))
-    define("_ARCHIVAL_AGENCY_SIREN", "Numéro SIREN service d'archive");
+    define("_ARCHIVAL_AGENCY_SIREN", "Numéro SIREN entité d'archive");
 if (!defined("_TRANSFERRING_AGENCY_SIREN"))
-    define("_TRANSFERRING_AGENCY_SIREN", "Numéro SIREN service de transfert");
+    define("_TRANSFERRING_AGENCY_SIREN", "Numéro SIREN entité de transfert");
 
 if (!defined("_INFORMATION_ARCHIVE"))
     define("_INFORMATION_ARCHIVE", "Information archive");
@@ -96,10 +96,10 @@ if (!defined("_DIRECTORY_MESSAGE_REQUIRED"))
     define("_DIRECTORY_MESSAGE_REQUIRED", "Répertoire des messages non configuré");
 
 if (!defined("_TRANSFERRING_AGENCY_SIREN_REQUIRED"))
-    define("_TRANSFERRING_AGENCY_SIREN_REQUIRED", "Numéro SIREN service versant obligatoire");
+    define("_TRANSFERRING_AGENCY_SIREN_REQUIRED", "Numéro SIREN entité versante obligatoire");
 
 if (!defined("_ARCHIVAL_AGENCY_SIREN_REQUIRED"))
-    define("_ARCHIVAL_AGENCY_SIREN_REQUIRED", "Numéro SIREN service d'archive obligatoire");
+    define("_ARCHIVAL_AGENCY_SIREN_REQUIRED", "Numéro SIREN entité d'archive obligatoire");
 
 if (!defined("_ARCHIVAL_AGREEMENT_REQUIRED"))
     define("_ARCHIVAL_AGREEMENT_REQUIRED", "Convention d'archivage obligatoire");

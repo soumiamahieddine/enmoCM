@@ -407,5 +407,5 @@ if (!defined('_REQUESTED_SIGNATURE')) {
 }
 
 if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
-    define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
+    define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans l'entité racine de l'application).");
 }
