@@ -517,7 +517,7 @@ if ($stmt->rowCount() == 0) {
     //ATTACHMENTS TAB
     if ($core->is_module_loaded('attachments')) {
         $attachments_frame = '';
-        $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder';
+        $extraParam = '&attach_type_exclude=response_project,signed_response,outgoing_mail_signed,converted_pdf,outgoing_mail,print_folder,aihp';
         $pathScriptTab = $_SESSION['config']['businessappurl']
                 .'index.php?display=true&page=show_attachments_details_tab&module=attachments&resId='
                 .$s_id.'&collId='.$coll_id.'&fromDetail=attachments'.$extraParam;
@@ -534,7 +534,7 @@ if ($stmt->rowCount() == 0) {
     //RESPONSES TAB
     if ($core->is_module_loaded('attachments')) {
         $responses_frame = '';
-        $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail';
+        $extraParam = '&attach_type=response_project,outgoing_mail_signed,signed_response,outgoing_mail,aihp';
         $pathScriptTab = $_SESSION['config']['businessappurl']
                     .'index.php?display=true&page=show_attachments_details_tab&module=attachments&fromDetail=response&resId='
                     .$s_id.'&collId='.$coll_id.$extraParam;
@@ -929,15 +929,17 @@ if ($stmt->rowCount() == 0) {
     echo '</td>';
 
     //CHRONO NUMBER
-    echo '<th align="left" class="picto">';
-    echo '<i class="fa fa-compass fa-2x" title="'._CHRONO_NUMBER.'" ></i>';
-    echo '</th>';
-    echo '<td align="left" width="200px">';
-    echo _CHRONO_NUMBER;
-    echo '</td>';
-    echo '<td>';
-    echo "<input type='text' class='readonly' readonly='readonly' value='{$chrono_number}' title='{$chrono_number}' alt='{$chrono_number}' size='40'";
-    echo '</td>';
+    if (_ID_TO_DISPLAY == 'res_id') {
+        echo '<th align="left" class="picto">';
+        echo '<i class="fa fa-compass fa-2x" title="'._CHRONO_NUMBER.'" ></i>';
+        echo '</th>';
+        echo '<td align="left" width="200px">';
+        echo _CHRONO_NUMBER;
+        echo '</td>';
+        echo '<td>';
+        echo "<input type='text' class='readonly' readonly='readonly' value='{$chrono_number}' title='{$chrono_number}' alt='{$chrono_number}' size='40'";
+        echo '</td>';
+    }
     echo '</tr>';
 
     //OTHER DATAS INITIATOR, TYPIST
