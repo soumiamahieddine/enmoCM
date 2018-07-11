@@ -90,10 +90,23 @@ class AutoCompleteController
                 'orderBy'   => ['lastname']
             ]);
         } else {
+            $searchItems = explode(' ', $data['search']);
+
+            $fields = '(firstname ilike ? OR lastname ilike ?)';
+            $where = ['enabled = ?', 'status != ?', 'user_id not in (?)'];
+            $requestData = ['Y', 'DEL', $excludedUsers];
+            foreach ($searchItems as $item) {
+                if (strlen($item) >= 2) {
+                    $where[] = $fields;
+                    $requestData[] = "%{$item}%";
+                    $requestData[] = "%{$item}%";
+                }
+            }
+
             $users = UserModel::get([
                 'select'    => ['user_id', 'firstname', 'lastname'],
-                'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)', '(firstname ilike ? OR lastname ilike ?)'],
-                'data'      => ['Y', 'DEL', $excludedUsers, "%{$data['search']}%", "%{$data['search']}%"],
+                'where'     => $where,
+                'data'      => $requestData,
                 'orderBy'   => ['lastname']
             ]);
         }
