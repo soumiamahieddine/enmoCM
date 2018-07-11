@@ -132,7 +132,7 @@ class PasswordModel
             DatabaseModel::delete([
                 'table'     => 'password_history',
                 'where'     => ['id < ?', 'user_serial_id = ?'],
-                'data'      => [$passwordHistory[8], $aArgs['userSerialId']]
+                'data'      => [$passwordHistory[8]['id'], $aArgs['userSerialId']]
             ]);
         }
 

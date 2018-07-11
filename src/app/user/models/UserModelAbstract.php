@@ -172,7 +172,8 @@ abstract class UserModelAbstract
             'table'     => 'users',
             'set'       => [
                 'password'                      => SecurityModel::getPasswordHash($aArgs['password']),
-                'password_modification_date'    => 'CURRENT_TIMESTAMP'
+                'password_modification_date'    => 'CURRENT_TIMESTAMP',
+                'change_password'               => 'N',
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
