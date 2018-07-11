@@ -78,14 +78,25 @@ class AutoCompleteController
 
     public static function getUsers(Request $request, Response $response)
     {
+        $data = $request->getQueryParams();
+
         $excludedUsers = ['superadmin'];
 
-        $users = UserModel::get([
-            'select'    => ['user_id', 'firstname', 'lastname'],
-            'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-            'data'      => ['Y', 'DEL', $excludedUsers],
-            'orderBy'   => ['lastname']
-        ]);
+        if (empty($data['search'])) {
+            $users = UserModel::get([
+                'select'    => ['user_id', 'firstname', 'lastname'],
+                'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
+                'data'      => ['Y', 'DEL', $excludedUsers],
+                'orderBy'   => ['lastname']
+            ]);
+        } else {
+            $users = UserModel::get([
+                'select'    => ['user_id', 'firstname', 'lastname'],
+                'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)', '(firstname ilike ? OR lastname ilike ?)'],
+                'data'      => ['Y', 'DEL', $excludedUsers, "%{$data['search']}%", "%{$data['search']}%"],
+                'orderBy'   => ['lastname']
+            ]);
+        }
 
         $data = [];
         foreach ($users as $value) {
