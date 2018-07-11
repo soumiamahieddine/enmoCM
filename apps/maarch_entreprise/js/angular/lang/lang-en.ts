@@ -570,7 +570,7 @@ export const LANG_EN = {
     "passwordValid"                     : "Password is valid",
     "passwordMatch"                     : "These passwords match",
     "passwordNotMatch"                  : "These passwords don't match",
-    "reconnect"                         : "Reconnect",
+    "homePage"                          : "Home page",
     "passwordChanged"                   : "Your password has changed",
     "typeCurrentPassword"               : "Type your current password",
     "typeNewPassword"                   : "Type a new password",

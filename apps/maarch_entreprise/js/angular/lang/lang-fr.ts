@@ -592,7 +592,7 @@ export const LANG_FR = {
     "passwordValid"                     : "Mot de passe conforme",
     "passwordMatch"                     : "Les mots de passe sont identiques",
     "passwordNotMatch"                  : "Les mots de passe ne correspondent pas",
-    "reconnect"                         : "Se re-connecter",
+    "homePage"                          : "Page d'accueil",
     "passwordChanged"                   : "Votre mot de passe a été changé",
     "typeCurrentPassword"               : "Entrez votre mot de passe actuel",
     "typeNewPassword"                   : "Entrez un nouveau mot de passe",

@@ -225,7 +225,7 @@ export class InfoChangePasswordModalComponent {
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<InfoChangePasswordModalComponent>) {
     }
 
-    logout() {
-        location.href = "index.php?display=true&page=logout&logout=true";
+    redirect() {
+        location.href = "index.php";
     }
 }
