@@ -33,7 +33,7 @@ class PasswordControllerTest extends TestCase
                 [
                     'id'        =>  1,
                     'value'     =>  5,
-                    'enabled'   =>  'true',
+                    'enabled'   =>  true,
                 ]
             ]
         ];

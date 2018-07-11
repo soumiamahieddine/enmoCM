@@ -71,8 +71,8 @@ class PasswordModel
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id', 'value']);
-        ValidatorModel::boolType($aArgs, ['enabled']);
-
+        ValidatorModel::stringType($aArgs, ['enabled']);
+        
         DatabaseModel::update([
             'table'     => 'password_rules',
             'set'       => [
