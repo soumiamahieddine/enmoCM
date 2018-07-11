@@ -79,37 +79,32 @@ class AutoCompleteController
     public static function getUsers(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
+        $check = Validator::stringType()->notEmpty()->validate($data['search']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
 
         $excludedUsers = ['superadmin'];
 
-        if (empty($data['search'])) {
-            $users = UserModel::get([
-                'select'    => ['user_id', 'firstname', 'lastname'],
-                'where'     => ['enabled = ?', 'status != ?', 'user_id not in (?)'],
-                'data'      => ['Y', 'DEL', $excludedUsers],
-                'orderBy'   => ['lastname']
-            ]);
-        } else {
-            $searchItems = explode(' ', $data['search']);
+        $searchItems = explode(' ', $data['search']);
 
-            $fields = '(firstname ilike ? OR lastname ilike ?)';
-            $where = ['enabled = ?', 'status != ?', 'user_id not in (?)'];
-            $requestData = ['Y', 'DEL', $excludedUsers];
-            foreach ($searchItems as $item) {
-                if (strlen($item) >= 2) {
-                    $where[] = $fields;
-                    $requestData[] = "%{$item}%";
-                    $requestData[] = "%{$item}%";
-                }
+        $fields = '(firstname ilike ? OR lastname ilike ?)';
+        $where = ['enabled = ?', 'status != ?', 'user_id not in (?)'];
+        $requestData = ['Y', 'DEL', $excludedUsers];
+        foreach ($searchItems as $item) {
+            if (strlen($item) >= 2) {
+                $where[] = $fields;
+                $requestData[] = "%{$item}%";
+                $requestData[] = "%{$item}%";
             }
-
-            $users = UserModel::get([
-                'select'    => ['user_id', 'firstname', 'lastname'],
-                'where'     => $where,
-                'data'      => $requestData,
-                'orderBy'   => ['lastname']
-            ]);
         }
+
+        $users = UserModel::get([
+            'select'    => ['user_id', 'firstname', 'lastname'],
+            'where'     => $where,
+            'data'      => $requestData,
+            'orderBy'   => ['lastname']
+        ]);
 
         $data = [];
         foreach ($users as $value) {

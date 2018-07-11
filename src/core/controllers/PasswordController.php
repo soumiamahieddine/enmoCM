@@ -53,6 +53,7 @@ class PasswordController
                 continue;
             }
 
+            $rule['enabled'] = $rule['enabled'] ? 'true' : 'false';
             PasswordModel::updateRuleById($rule);
         }
 
