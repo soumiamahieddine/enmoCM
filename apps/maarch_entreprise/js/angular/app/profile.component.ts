@@ -8,7 +8,7 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog, MatDialogRef, Mat
 
 import { AutoCompletePlugin } from '../plugins/autocomplete.plugin';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 
 declare function $j(selector: any): any;
 
@@ -26,7 +26,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
     dialogRef: MatDialogRef<any>;
-
+    mobileMode                      : boolean   = false;
     coreUrl: string;
     lang: any = LANG;
 
@@ -38,6 +38,19 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
         currentPassword: "",
         newPassword: "",
         reNewPassword: "",
+    };
+    firstFormGroup: FormGroup;
+    ruleText: string = '';
+    OtherRuleText: string;
+    validPassword: Boolean = false;
+    matchPassword: Boolean = false;
+    hidePassword: Boolean = true;
+    passwordRules: any = {
+        minLength: { enabled: false, value: 0 },
+        complexityUpper: { enabled: false, value: 0 },
+        complexityNumber: { enabled: false, value: 0 },
+        complexitySpecial: { enabled: false, value: 0 },
+        renewal: { enabled: false, value: 0 },
     };
     signatureModel: any = {
         base64: "",
@@ -144,8 +157,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
 
-    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog) {
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private zone: NgZone, private notify: NotificationService, public dialog: MatDialog, private _formBuilder: FormBuilder) {
         super(http, ['users']);
+        this.mobileMode = angularGlobals.mobileMode;
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -184,7 +198,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     initComponents(event: any) {
         this.selectedIndex = event.index;
         if (event.index == 2) {
-            this.sidenav.open();
+            if (!this.mobileMode) {
+                this.sidenav.open();
+            } 
             //if (this.histories.length == 0) {
                 this.http.get(this.coreUrl + 'rest/histories/users/' + this.user.id)
                     .subscribe((data: any) => {
@@ -200,7 +216,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             //}
         } else if(event.index == 1) {
             this.sidenav.close();
-        } else {
+        } else if(!this.mobileMode){
             this.sidenav.open();
         }
     }
@@ -588,6 +604,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     updatePassword() {
+        this.passwordModel.currentPassword = this.firstFormGroup.controls['currentPasswordCtrl'].value;
+        this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
+        this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
         this.http.put(this.coreUrl + 'rest/currentUser/password', this.passwordModel)
             .subscribe((data: any) => {
                 this.showPassword = false;
@@ -712,9 +731,121 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             });
     }
 
+    regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            const valid = regex.test(control.value);
+            return valid ? null : error;
+        };
+    }
+
     changePasswd() {
+        this.http.get(this.coreUrl + 'rest/passwordRules')
+            .subscribe((data: any) => {
+                let ruleTextArr: String[] = [];
+                data.rules.forEach((rule: any) => {
+                    if (rule.label == 'minLength') {
+                        this.passwordRules.minLength.enabled = rule.enabled;
+                        this.passwordRules.minLength.value = rule.value;
+                        if (rule.enabled) {
+                            ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
+                        }
+                        
+
+                    } else if (rule.label == 'complexityUpper') {
+                        this.passwordRules.complexityUpper.enabled = rule.enabled;
+                        this.passwordRules.complexityUpper.value = rule.value;
+                        if (rule.enabled) {
+                            ruleTextArr.push(this.lang['password' + rule.label]);
+                        }
+                        
+
+                    } else if (rule.label == 'complexityNumber') {
+                        this.passwordRules.complexityNumber.enabled = rule.enabled;
+                        this.passwordRules.complexityNumber.value = rule.value;
+                        if (rule.enabled) {
+                            ruleTextArr.push(this.lang['password' + rule.label]);
+                        }
+                        
+
+                    } else if (rule.label == 'complexitySpecial') {
+                        this.passwordRules.complexitySpecial.enabled = rule.enabled;
+                        this.passwordRules.complexitySpecial.value = rule.value;
+                        if (rule.enabled) {
+                            ruleTextArr.push(this.lang['password' + rule.label]);
+                        }
+                        
+
+                    } else if (rule.label == 'renewal') {
+                        this.passwordRules.renewal.enabled = rule.enabled;
+                        this.passwordRules.renewal.value = rule.value;
+                        this.OtherRuleText = this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label];
+                    }
+
+                });
+                this.ruleText = ruleTextArr.join(', ');
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+
+            this.firstFormGroup = this._formBuilder.group({
+                newPasswordCtrl: [
+                    '',
+                    Validators.compose([Validators.minLength(6), this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }), this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }), this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' })])
+                ],
+                retypePasswordCtrl: [
+                    '',
+                    Validators.compose([Validators.required])
+                ],
+                currentPasswordCtrl: [
+                    '',
+                    Validators.compose([Validators.required])
+                ]
+    
+            }, {
+                    validator: this.matchValidator
+                });
+        this.validPassword =false;
+        this.firstFormGroup.controls['currentPasswordCtrl'].setErrors(null)
+        this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null)
+        this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null)
         this.selectedIndex = 0;
         this.showPassword = true;
+    }
+
+    matchValidator(group: FormGroup) {
+
+        if (group.controls['newPasswordCtrl'].value == group.controls['retypePasswordCtrl'].value) {
+            return false;
+        } else {
+            group.controls['retypePasswordCtrl'].setErrors({'mismatch': true})
+            return {'mismatch': true};
+        }
+    }
+
+    getErrorMessage() {
+        if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
+            return this.lang.requiredField + ' !';
+
+        } else if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('minlength') && this.passwordRules.minLength.enabled) {
+            return this.passwordRules.minLength.value + ' ' + this.lang.passwordminLength + ' !';
+
+        } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexityUpper !== undefined && this.passwordRules.complexityUpper.enabled) {
+            return this.lang.passwordcomplexityUpper + ' !';
+
+        } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexityNumber !== undefined && this.passwordRules.complexityNumber.enabled) {
+            return this.lang.passwordcomplexityNumber + ' !';
+
+        } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexitySpecial !== undefined && this.passwordRules.complexitySpecial.enabled) {
+            return this.lang.passwordcomplexitySpecial + ' !';
+
+        } else {
+            this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null)
+            this.validPassword = true;
+            return '';
+        }
     }
 
     showActions(basket:any){

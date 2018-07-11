@@ -10,6 +10,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
     touchendHideDelay: 0,
 };
 
+declare const angularGlobals: any;
 @Component({
     selector: 'my-app',
     template: `<router-outlet></router-outlet>`,
@@ -30,5 +31,10 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class AppComponent {
     constructor(iconReg: MatIconRegistry, sanitizer: DomSanitizer) {
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('img/logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            angularGlobals.mobileMode = true;
+        } else {
+            angularGlobals.mobileMode = false;
+        } 
     }
 }

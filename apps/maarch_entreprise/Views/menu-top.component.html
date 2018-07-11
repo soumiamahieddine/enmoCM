@@ -1,4 +1,4 @@
-<button mat-button [matMenuTriggerFor]="menu">
+<button mat-button [matMenuTriggerFor]="menu" *ngIf="!mobileMode">
     <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>{{user.firstname.charAt(0) | uppercase}}. {{user.lastname | uppercase}}</button>
 <mat-menu #menu="matMenu" class="headerMaarch">
     <canvas class="header-bg" width="250" height="70" style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>

@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
+
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
 
@@ -16,6 +17,7 @@ import { AppMaterialModule }                    from './app-material.module';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
 import { MenuTopComponent }                     from './menu/menu-top.component';
+import { MenuShortcutComponent }                from './menu/menu-shortcut.component';
 
 
 @NgModule({
@@ -31,13 +33,15 @@ import { MenuTopComponent }                     from './menu/menu-top.component'
     declarations: [
         MenuComponent,
         MenuNavComponent,
-        MenuTopComponent
+        MenuTopComponent,
+        MenuShortcutComponent
     ],
     exports: [
         CommonModule,
         MenuComponent,
         MenuNavComponent,
         MenuTopComponent,
+        MenuShortcutComponent,
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,

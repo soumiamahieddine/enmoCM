@@ -10,29 +10,24 @@ declare var angularGlobals : any;
 
 
 @Component({
-    selector: 'menu-nav',
-    templateUrl :   "../../../../Views/menuNav.component.html",
+    selector: 'menu-shortcut',
+    templateUrl :   "../../../../Views/menuShortcut.component.html",
 })
-export class MenuNavComponent implements OnInit {
+export class MenuShortcutComponent implements OnInit {
 
     lang: any = LANG;
-    coreUrl                     : string;
     mobileMode                      : boolean   = false;
+    coreUrl                     : string;
     router :any;
     user       : any       = {};
 
     constructor(public http: HttpClient, private _location: Location, private _router: Router, private activatedRoute:ActivatedRoute) {
+        this.mobileMode = angularGlobals.mobileMode;
         this.router = _router;
     }
 
-    ngOnInit(): void {
-        
-        this.mobileMode = angularGlobals.mobileMode;      
+    ngOnInit(): void {      
         this.coreUrl = angularGlobals.coreUrl;
-        this.user = angularGlobals.user;
     }
 
-    backClicked() {
-        this.router.navigate(['../'],{ relativeTo: this.activatedRoute });
-    }
 }
