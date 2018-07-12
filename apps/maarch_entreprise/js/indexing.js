@@ -268,6 +268,27 @@ function checkRealDate(arg) {
             var current_month = date3.getMonth()+1;
             $('admission_date').value = (("0" + date3.getDate()).slice(-2)) + "-" + ("0" + current_month).slice(-2) + "-" + date3.getFullYear();
         }
+    } else if (cat == 'outgoing') {
+        if($('departure_date')) {
+            departureDate = $('departure_date').value;
+            var date2 = new Date();
+            date2.setFullYear(departureDate.substr(6,4));
+            date2.setMonth(departureDate.substr(3,2));
+            date2.setDate(departureDate.substr(0,2));
+            date2.setHours(0);
+            date2.setMinutes(0);
+            var d2_departureDate=date2.getTime();
+        }
+
+        if(departureDate != "" && docDate != "" && d2_docDate > d2_departureDate) {          
+            alert("La date du courrier doit être antérieure à la date de départ du courrier ");
+            if(arg == 'custom_d1'){
+                $('custom_d1').value = "";
+            }
+            if(arg == 'docDate'){
+                $('doc_date').value = "";
+            }    
+        }
     }
 }
 
@@ -361,9 +382,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     if (typeof (origin) == "undefined") {
         origin = '';
     }
-    if (cat_id == 'internal' || cat_id == 'incoming') {
-        $('type_contact_external').checked = true;
-    }
+    // if (cat_id == 'internal' || cat_id == 'incoming') {
+    //     $('type_contact_external').checked = true;
+    // };
     if ($('type_contact_internal')) {
         if ($('type_contact_internal').checked == true) {
             var typeContactInternal = 'checked';
@@ -389,6 +410,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'doctype_mail', type:'label', state:'display'},
         {id:'doctype_res', type:'label', state:'hide'},
         {id:'priority_tr', type:'tr', state:'display'},
+        {id:'external_id_tr', type:'tr', state:'display'},
+        {id:'external_id_mandatory', type:'tr', state:'display'},
         {id:'doc_date_label', type:'label', state:'hide'},
         {id:'mail_date_label', type:'label', state:'display'},
         {id:'author_tr', type:'tr', state:'hide'},
@@ -414,7 +437,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'dest_multi_contact', type:'label', state:'hide'},
         {id:'exp_multi_contact', type:'label', state:'display'},
         {id:'author_contact', type:'label', state:'hide'},
-        {id:'type_multi_contact_external_icon', type:'label', state:'hide'},
+        {id:'type_multi_contact_external_icon', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
@@ -423,6 +446,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'departure_date_mandatory', type:'label', state:'hide'},
+        {id:'departure_date_tr', type:'tr', state:'hide'},
         {id:'author_mandatory', type:'label', state:'hide'},
         {id:'admission_date_mandatory', type:'label', state:'display'},
         {id:'type_contact_mandatory', type:'label', state:'display'},
@@ -445,6 +470,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'doctype_mail', type:'label', state:'display'},
         {id:'doctype_res', type:'label', state:'hide'},
         {id:'priority_tr', type:'tr', state:'display'},
+        {id:'external_id_tr', type:'tr', state:'hide'},
+        {id:'external_id_mandatory', type:'tr', state:'hide'},
         {id:'doc_date_label', type:'label', state:'hide'},
         {id:'mail_date_label', type:'label', state:'display'},
         {id:'author_tr', type:'tr', state:'hide'},
@@ -479,6 +506,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'departure_date_mandatory', type:'label', state:'hide'},
+        {id:'departure_date_tr', type:'tr', state:'hide'},
         {id:'author_mandatory', type:'label', state:'hide'},
         {id:'admission_date_mandatory', type:'label', state:'hide'},
         {id:'type_contact_mandatory', type:'label', state:'display'},
@@ -759,6 +788,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'doctype_mail', type:'label', state:'display'},
             {id:'doctype_res', type:'label', state:'hide'},
             {id:'priority_tr', type:'tr', state:'hide'},
+            {id:'external_id_tr', type:'tr', state:'hide'},
+            {id:'external_id_mandatory', type:'tr', state:'hide'},
             {id:'doc_date_label', type:'label', state:'hide'},
             {id:'doc_date_tr', type:'label', state:'hide'},
             {id:'mail_date_label', type:'label', state:'hide'},
@@ -808,6 +839,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             {id:'folder_mandatory', type:'label', state:'hide'},
             {id:'res_id_link', type:'label', state:'hide'},
             {id:'status', type:'tr', state:'hide'},
+            {id:'departure_date_mandatory', type:'label', state:'hide'},
+            {id:'departure_date_tr', type:'tr', state:'hide'},
             {id:'add_multi_contact_tr', type:'tr', state:'hide'},
             {id:'show_multi_contact_tr', type:'tr', state:'hide'}
         ];
@@ -988,11 +1021,35 @@ function process_category(category, display_value_tr, params_cat)
 var contact_autocompleter;
 
 /**
+ * Launch the Ajax autocomplete object to activate autocompletion on contacts
+ *
+ * @param path_script String Path to the Ajax script
+ **/
+function launch_autocompleter_contacts(path_script, id_text, id_div, cat_id)
+{
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    var params = get_contacts_params();
+    
+    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+        contact_autocompleter.options.defaultParams = params;
+    else if(path_script)
+        contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+            method:'get',
+            paramName:'Input',
+            parameters: params,
+            minChars: 2
+        });
+    else return false;
+}
+
+/**
  * Launch the Ajax autocomplete object to activate autocompletion on contacts en put address_id and contact_id in an hidden input
  *
  * @param path_script String Path to the Ajax script
  **/
-function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, contact_id, address_id)
+function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, contact_id, address_id, path_script2)
 {
     var input  = id_text || 'contact';
     var div    = id_div  || 'show_contacts';
@@ -1020,6 +1077,9 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
                 if (typeof (parent.$(contact_id).onchange) == 'function')
                     parent.$(contact_id).onchange();
                 parent.$(address_id).value = res[1];
+                if (path_script2 && res[1]) {
+                    getDepartment(path_script2, res[1]);
+                };
             }
         });
     else return false;
@@ -1055,6 +1115,40 @@ function launch_autocompleter2_contacts_v2(path_script, id_text, id_div, cat_id,
     else {
         return false;
     }
+}
+
+function getDepartment(path_script, address_id) {
+    new Ajax.Request(path_script,
+    {
+        method:'post',
+        parameters: { address_id : address_id
+                    },
+            onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0 ) {
+                parent.$("department_number").value = response.departement_name;
+                parent.$("department_number_id").value = response.departement_id;
+            }
+        }
+    });
+}
+
+function launch_autocompleter_choose_contact(path_script, id_text, id_div, cat_id, contact_id){
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    // var params = get_contacts_params();
+
+    contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+        method:'get',
+        paramName:'what',
+        // parameters: params,
+        minChars: 2,
+        afterUpdateElement: function (text, li){
+            $(contact_id).value = li.id;
+        }
+    });
+
 }
 
 function putInSessionContact(path_script){
@@ -1454,7 +1548,8 @@ function updateMultiContacts(path, action, contact, target, array_index, address
 function update_contact_type_session(path)
 {
     var check = 'type_contact';
-    var arr = get_checked_values(check);
+    // var arr = get_checked_values(check);
+    var arr = ["multi_external"];
     var params = '';
     
     if (arr.length == 0) {
@@ -1563,6 +1658,7 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
             } else if (parent.$('transmissionAddressidAttach'+transmission)){
                 parent.$('transmissionAddressidAttach'+transmission).value = response.addressId;
             }
+            getDepartment('index.php?display=true&page=getDepartment', response.addressId);
         }       
     });
     }else{
@@ -1604,6 +1700,7 @@ function set_new_contact_address(path_manage_script, id_div, close,transmission)
             } else if (parent.parent.$('addressid')){
                 parent.parent.$('addressid').value = response.addressId;
             }
+            getDepartment('index.php?display=true&page=getDepartment', response.addressId);
         }       
     });
     }

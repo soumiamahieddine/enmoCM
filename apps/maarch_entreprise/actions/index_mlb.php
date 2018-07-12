@@ -484,6 +484,15 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
             .'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr >';
+    /*** Reference courrier externe ***/
+    $frmStr .= '<tr id="external_id_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+            . '</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><input name="external_id" type="text" '
+            . 'id="external_id"/></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '</tr>';
 
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:'.$displayValue.';">';
@@ -515,6 +524,19 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
 
+    /*** date de depart ***/
+    $frmStr .= '<tr id="departure_date_tr" style="display:' . $displayValue
+            . ';">';
+    $frmStr .= '<td><label for="departure_date" class="form_title" >'
+            . _EXP_DATE . '</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><input name="departure_date" '
+            . 'type="text" id="departure_date" value="" onclick="clear_error(\'frm_error_' . $actionId . '\');'
+            . 'showCalender(this);" onChange="checkRealDate(\'departure_date\');" onFocus="checkRealDate(\'departure_date\');" /></td>';
+    $frmStr .= '<td><span class="red_asterisk" id="departure_date_mandatory" '
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
+    $frmStr .= '</tr>';
+	
     /*** Contact ***/
     $frmStr .= '<tr id="contact_choose_tr" style="display:'.$displayValue
             .';">';
@@ -921,6 +943,28 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
 
         /*****************/
     }
+
+    /*** Description ***/
+    $frmStr .= '<tr id="description_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td colspan="3">' . _OTHERS_INFORMATIONS . '</td>';
+    $frmStr .= '</tr>';
+    $frmStr .= '<tr>';
+    $frmStr .= '<td colspan="2" class="indexing_field"><textarea style="width:97%;resize:vertical" name="description" '
+            . 'id="description"  rows="2" onchange="clear_error(\'frm_error_'
+            . $actionId . '\');" ></textarea></td>';
+    $frmStr .= '</tr>';
+
+    //Departement concerne
+    $frmStr .= '<tr id="department_number_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td colspan="3">' . _DEPARTMENT_NUMBER . '</td>';
+    $frmStr .= '</tr>';
+    $frmStr .= '<tr>';
+    $frmStr .= '<td  colspan="2" class="indexing_field"><input style="width:97%;" type="text" onkeyup="erase_contact_external_id(\'department_number\', \'department_number_id\');"'
+            . 'name="department_number" id="department_number" /><div id="show_department_number" '
+            . 'class="autocomplete autocompleteIndex"></div></td>';
+    $frmStr .= '</tr>';
+    $frmStr .= '<input type="hidden" id="department_number_id" />';
+    // Fin
     /*** Tags ***/
     if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1) && ($core->test_service('add_tag_to_res', 'tags', false) == 1)
     ) {
@@ -979,11 +1023,19 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'&resId='.$resId.'&collId='.$collId.'\',\'none\',\''.$collId.'\',document.getElementById(\'category_id\').options[document.getElementById(\'category_id\').selectedIndex].value);'
             .'launch_autocompleter_contacts_v2(\''
             .$_SESSION['config']['businessappurl'].'index.php?display=true'
-            .'&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';
+            .'&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\', \''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&page=getDepartment\');';
+
+    $frmStr .= ' initList_hidden_input(\'department_number\', \'show_department_number\',\''
+                . $_SESSION['config']['businessappurl'] . 'index.php?display='
+                . 'true&page=autocomplete_department_number\','
+                . ' \'Input\', \'2\', \'department_number_id\');';
 
     $frmStr .= '$j(\'#baskets\').css(\'visibility\',\'hidden\');'
             .'var item  = $j(\'#index_div\')[0]; if(item)'
             .'{item.style.display=\'block\';}</script>';
+
 
     /*** Extra CSS ***/
     $frmStr .= '<style>';
@@ -1653,14 +1705,25 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             && $_ENV['categories'][$catId][$tmpId]['table'] != 'none'
         ) {
             if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => $tmpId,
-                        'value' => functions::format_date_db($formValues[$i]['VALUE']),
-                        'type' => 'date',
-                    )
-                );
+                if(!empty($formValues[$i]['VALUE'])){
+                    array_push(
+                        $_SESSION['data'],
+                        array(
+                            'column' => $tmpId,
+                            'value' => functions::format_date_db($formValues[$i]['VALUE']),
+                            'type' => 'date',
+                        )
+                    );
+                } else {
+                    array_push(
+                        $_SESSION['data'],
+                        array(
+                            'column' => $tmpId,
+                            'value' => null,
+                            'type' => 'date',
+                        )
+                    );
+                }
             } elseif ($_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext') {
                 $queryExtFields .= $formValues[$i]['ID'].',';
                 $queryExtValues .= ' ? ,';

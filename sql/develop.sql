@@ -157,6 +157,13 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_paper;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_paper;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS is_paper;
 
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS departure_date;
+ALTER TABLE res_letterbox ADD COLUMN departure_date timestamp without time zone;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS department_number_id;
+ALTER TABLE res_letterbox ADD COLUMN department_number_id text;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS barcode;
+ALTER TABLE res_letterbox ADD COLUMN barcode text;
+
 CREATE OR REPLACE VIEW res_view_letterbox AS
  SELECT r.tablename,
     r.is_multi_docservers,
@@ -202,6 +209,9 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.reference_number,
     r.external_id,
     r.external_link,
+    r.departure_date,
+    r.department_number_id,
+    r.barcode,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,

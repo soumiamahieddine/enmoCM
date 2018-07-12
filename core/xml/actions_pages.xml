@@ -62,6 +62,18 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>confirm_status_with_update_date</ID>
+        <LABEL>_SIMPLE_CONFIRM_WITH_UPDATE_DATE</LABEL>
+        <NAME>confirm_status_with_update_date</NAME>
+        <DESC>_SIMPLE_CONFIRM_DESC</DESC>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>process</ID>
         <LABEL>_PROCESS_ACTION</LABEL>
         <NAME>process</NAME>

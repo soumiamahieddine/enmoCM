@@ -163,9 +163,11 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
         return false;
     }
 
-    if(empty($_SESSION['process']['diff_list']['avis']['users'])){
-        $_SESSION['action_error'] = _AVIS_USER. " " . _IS_EMPTY;
-        return false;
+    if(empty($_SESSION['redirect']['diff_list']['avis']['users'][0])){
+        if(empty($_SESSION['redirect']['diff_list']['avis_info']['users'][0])){
+            $_SESSION['action_error'] = _RECOMMENDATION_USER. " " . _MANDATORY;
+            return false;
+        }
     }
     return true;
  }

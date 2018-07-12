@@ -158,8 +158,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 function check_form($form_id,$values)
 {
     if (empty($_SESSION['redirect']['diff_list']['avis']['users'][0])) {
-        $_SESSION['action_error'] = _RECOMMENDATION_USER. " " . _MANDATORY;
-        return false;
+        if(empty($_SESSION['redirect']['diff_list']['avis_info']['users'][0])){
+            $_SESSION['action_error'] = _RECOMMENDATION_USER. " " . _MANDATORY;
+            return false;
+        }
     }
     $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
     if ($recommendation_limit_date == null || $recommendation_limit_date == '') {

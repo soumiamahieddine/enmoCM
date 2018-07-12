@@ -5172,3 +5172,22 @@ if (!defined('_IMG_ALREADY_UPLOADED')) {
 if (!defined('_FILE_FORMAT_NOT_ALLOWED')) {
     define('_FILE_FORMAT_NOT_ALLOWED', "Format d'image non autorisé");
 }
+
+if (!defined('_SIMPLE_CONFIRM_WITH_UPDATE_DATE')) {
+    define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', "Confirmation et mise à jour de la date de départ");
+}
+if (!defined('_BARCODE')) {
+    define('_BARCODE', "Code à barres");
+}
+if (!defined('_CHOOSE_DEPARTMENT_NUMBER')) {
+    define('_CHOOSE_DEPARTMENT_NUMBER', "Choisissez le département concerné");
+}
+if (!defined('_DEPARTMENT_NUMBER')) {
+    define('_DEPARTMENT_NUMBER', "Département concerné");
+}
+if (!defined('_CHRONO_NUMBER_HELP')) {
+    define('_CHRONO_NUMBER_HELP', "Exemple : MAARCH/2018A/36");
+}
+if (!defined('_BARCODE_HELP')) {
+    define('_BARCODE_HELP', "Exemple : ABC000004");
+}
