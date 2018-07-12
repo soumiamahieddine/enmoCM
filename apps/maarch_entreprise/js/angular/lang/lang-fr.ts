@@ -599,4 +599,16 @@ export const LANG_FR = {
     "retypeNewPassword"                 : "Re-entrez le nouveau mot de passe",
     "hello"                             : "Bonjour",
     "changePasswordInfo"                : "vous êtes invité à changer de mot de passe",
+    "securityConstraints"               : "Contraintes de sécurité",
+    "passwordminLengthRequired"         : "Longueur minimale",
+    "passwordcomplexityUpperRequired"   : "Majuscule requis",
+    "passwordcomplexityNumberRequired"  : "Chiffre requis",
+    "passwordcomplexitySpecialRequired" : "Caratère spécial requis",
+    "passwordrenewalRequired"           : "Expiration du mot de passe",
+    "passwordhistoryLastUseRequired"    : "Nombre de mot passe sauvegardé",
+    "passwordlockAttemptsRequired"      : "Nombre de tentative de connexion",
+    "passwordlockTimeRequired"          : "Temps de blocage",
+    "securitiesAdministration"          : "Administration de la sécurité",
+    "passwordRulesUpdated"              : "Contraintes de sécurité mises à jour",
+    
 };
