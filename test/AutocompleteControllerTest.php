@@ -47,7 +47,12 @@ class AutocompleteControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $autocompleteController->getUsers($request, new \Slim\Http\Response());
+        $aArgs = [
+            'search'    => 'bain'
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $autocompleteController->getUsers($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);
@@ -69,7 +74,12 @@ class AutocompleteControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $autocompleteController->getUsersForAdministration($request, new \Slim\Http\Response());
+        $aArgs = [
+            'search'    => 'bern',
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $autocompleteController->getUsersForAdministration($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);
@@ -90,7 +100,12 @@ class AutocompleteControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $autocompleteController->getUsersForVisa($request, new \Slim\Http\Response());
+        $aArgs = [
+            'search'    => 'dau',
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $autocompleteController->getUsersForVisa($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);
@@ -112,7 +127,12 @@ class AutocompleteControllerTest extends TestCase
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $autocompleteController->getEntities($request, new \Slim\Http\Response());
+        $aArgs = [
+            'search'    => 'mai',
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+
+        $response     = $autocompleteController->getEntities($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);

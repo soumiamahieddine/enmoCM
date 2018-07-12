@@ -29,6 +29,8 @@ use User\models\UserModel;
 
 class AutoCompleteController
 {
+    const LIMIT = 50;
+
     public static function getContacts(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
@@ -98,7 +100,8 @@ class AutoCompleteController
             'select'    => ['user_id', 'firstname', 'lastname'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
-            'orderBy'   => ['lastname']
+            'orderBy'   => ['lastname'],
+            'limit'     => self::LIMIT
         ]);
 
         $data = [];
@@ -144,31 +147,34 @@ class AutoCompleteController
                 'select'    => ['DISTINCT users.user_id', 'users.id', 'users.firstname', 'users.lastname'],
                 'table'     => ['users, users_entities'],
                 'where'     => $requestData['where'],
-                'data'      => $requestData['data']
+                'data'      => $requestData['data'],
+                'limit'     => self::LIMIT
             ]);
 
-            $requestData = AutoCompleteController::getDataForRequest([
-                'search'        => $data['search'],
-                'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
-                'where'         => [
-                    'users_entities IS NULL',
-                    'users.user_id not in (?)',
-                    'users.status != ?',
-                    'users.enabled = ?'
-                ],
-                'data'          => [$excludedUsers, 'DEL', 'Y'],
-                'fieldsNumber'  => 2,
-            ]);
+            if (count($users) == self::LIMIT) {
+                $requestData = AutoCompleteController::getDataForRequest([
+                    'search'        => $data['search'],
+                    'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
+                    'where'         => [
+                        'users_entities IS NULL',
+                        'users.user_id not in (?)',
+                        'users.status != ?',
+                        'users.enabled = ?'
+                    ],
+                    'data'          => [$excludedUsers, 'DEL', 'Y'],
+                    'fieldsNumber'  => 2,
+                ]);
 
-            $usersNoEntities = DatabaseModel::select([
-                'select'    => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname'],
-                'table'     => ['users', 'users_entities'],
-                'left_join' => ['users.user_id = users_entities.user_id'],
-                'where'     => $requestData['where'],
-                'data'      => $requestData['data']
-            ]);
+                $usersNoEntities = DatabaseModel::select([
+                    'select'    => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname'],
+                    'table'     => ['users', 'users_entities'],
+                    'left_join' => ['users.user_id = users_entities.user_id'],
+                    'where'     => $requestData['where'],
+                    'data'      => $requestData['data']
+                ]);
 
-            $users = array_merge($users, $usersNoEntities);
+                $users = array_merge($users, $usersNoEntities);
+            }
         } else {
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $data['search'],
@@ -179,10 +185,11 @@ class AutoCompleteController
             ]);
 
             $users = UserModel::get([
-                'select'    => ['user_id', 'firstname', 'lastname'],
+                'select'    => ['id', 'user_id', 'firstname', 'lastname'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
-                'orderBy'   => ['lastname']
+                'orderBy'   => ['lastname'],
+                'limit'     => self::LIMIT
             ]);
         }
 
@@ -229,7 +236,8 @@ class AutoCompleteController
             'table'     => ['users, usergroup_content, usergroups_services'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
-            'order_by'  => ['users.lastname']
+            'order_by'  => ['users.lastname'],
+            'limit'     => self::LIMIT
         ]);
 
         $data = [];
@@ -265,7 +273,8 @@ class AutoCompleteController
             'select'    => ['entity_id', 'entity_label', 'short_label'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
-            'orderBy'   => ['entity_label']
+            'orderBy'   => ['entity_label'],
+            'limit'     => self::LIMIT
         ]);
 
         $data = [];
