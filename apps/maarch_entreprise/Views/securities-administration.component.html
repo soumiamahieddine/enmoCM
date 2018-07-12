@@ -1,0 +1,76 @@
+<div class="admin-container" [class.admin-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="admin-toolbar">
+        <button mat-button (click)="snav.toggle()">
+            <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
+        </button>
+        <h1 class="admin-toolbar-title">{{lang.securitiesAdministration}}
+        </h1>
+        <span style="flex: 1 1 auto;"></span>
+        <menu-top></menu-top>
+    </mat-toolbar>
+    <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            [opened]="mobileQuery.matches ? false : true" style="width:400px;">
+            <menu-nav></menu-nav>
+            <mat-divider></mat-divider>
+            <mat-nav-list>
+                <h3 mat-subheader>{{lang.securityConstraints}}</h3>
+                <ng-container *ngFor="let rule of passwordRulesList">
+                    <a mat-list-item disableRipple="true" *ngIf="rule.label != 'lockTime'">
+                        <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
+                            <mat-slide-toggle [checked]="rule.enabled" color="primary" (change)="toggleRule(rule);"></mat-slide-toggle>
+                        </mat-icon>
+                        <p mat-line [ngStyle]="{'opacity': rule.enabled ? '' : '0.5'}" (click)="toggleRule(rule);">
+                            {{passwordRules[rule.label].label}}
+                        </p>
+                    </a>
+                </ng-container>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <div *ngIf="loading" style="display:flex;height:100%;">
+                <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <mat-card *ngIf="!loading" class="card-app-content">
+                <mat-tab-group>
+                    <mat-tab label="Mot de passe">
+                        <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
+                            <ng-container *ngFor="let rule of passwordRulesList">
+                                <mat-form-field style="padding:10px;" *ngIf="rule.enabled && (rule.label == 'minLength' || rule.label == 'historyLastUse' || rule.label == 'renewal')">
+                                    <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                        required>
+                                    <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;caractère(s)</span>
+                                    <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;jour(s)</span>
+                                </mat-form-field>
+                                <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockAttempts'">
+                                    <mat-form-field>
+                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                            required>
+                                        <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;caractère(s)</span>
+                                        <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;jour(s)</span>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockTime'">
+                                    <mat-form-field>
+                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                            required>
+                                        <span matSuffix>&nbsp;minute(s)</span>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                            <div class="col-md-12 text-center" style="padding:10px;">
+                                <button mat-raised-button type="submit" color="primary" [disabled]="!passwordForm.valid || checkModif()">{{lang.validate}}</button>
+                                <button mat-raised-button type="button" color="default" [disabled]="checkModif()" (click)="cancelModification()">{{lang.cancel}}</button>
+                            </div>
+                        </form>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+            position='end' [opened]="mobileQuery.matches ? false : false" style="overflow-x:hidden;max-width:500px;">
+            <mat-list>
+            </mat-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
