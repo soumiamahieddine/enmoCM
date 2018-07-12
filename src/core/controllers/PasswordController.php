@@ -42,18 +42,19 @@ class PasswordController
         }
 
         foreach ($data['rules'] as $rule) {
-            $existingRule = PasswordModel::getRuleById(['id' => $rule['id'], 'select' => [1]]);
-            if (empty($existingRule)) {
-                continue;
-            }
-
             $check = Validator::intVal()->validate($rule['value']);
+            $check = $check && Validator::stringType()->validate($rule['label']);
             $check = $check && Validator::boolType()->validate($rule['enabled']);
             if (!$check) {
                 continue;
             }
 
-            $rule['enabled'] = $rule['enabled'] ? 'true' : 'false';
+            $existingRule = PasswordModel::getRuleById(['id' => $rule['id'], 'select' => ['label']]);
+            if (empty($existingRule) || $existingRule['label'] != $rule['label']) {
+                continue;
+            }
+
+            $rule['enabled'] = empty($rule['enabled']) ? 'false' : 'true';
             PasswordModel::updateRuleById($rule);
         }
 

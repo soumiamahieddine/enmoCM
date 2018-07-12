@@ -9,6 +9,7 @@
             <file>test/ContactControllerTest.php</file>
             <file>test/ContactGroupControllerTest.php</file>
             <file>test/ContactTypeControllerTest.php</file>
+            <file>test/CoreControllerTest.php</file>
             <file>test/DocserverControllerTest.php</file>
             <file>test/DoctypeControllerTest.php</file>
             <file>test/EntityControllerTest.php</file>
@@ -17,13 +18,13 @@
             <file>test/NotificationControllerTest.php</file>
             <file>test/NotificationScheduleControllerTest.php</file>
             <file>test/ParameterControllerTest.php</file>
+            <file>test/PasswordControllerTest.php</file>
             <file>test/PriorityControllerTest.php</file>
             <file>test/ReportControllerTest.php</file>
             <file>test/ResControllerTest.php</file>
             <file>test/StatusControllerTest.php</file>
             <file>test/UserControllerTest.php</file>
             <file>test/VersionUpdateControllerTest.php</file>
-            <file>test/CoreControllerTest.php</file>
             <file>test/TemplateControllerTest.php</file>
             <!-- The last one should be history -->
             <file>test/HistoryControllerTest.php</file>

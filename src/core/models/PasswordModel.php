@@ -57,14 +57,18 @@ class PasswordModel
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aRules = DatabaseModel::select([
+        $rules = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['password_rules'],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']],
         ]);
 
-        return $aRules;
+        if (empty($rules[0])) {
+            return [];
+        }
+
+        return $rules[0];
     }
 
     public static function updateRuleById(array $aArgs)

@@ -2201,7 +2201,7 @@ CREATE TABLE password_rules
   id serial,
   label character varying(64) NOT NULL,
   "value" integer NOT NULL,
-  enabled boolean DEFAULT FALSE,
+  enabled boolean DEFAULT FALSE NOT NULL,
   CONSTRAINT password_rules_pkey PRIMARY KEY (id),
   CONSTRAINT password_rules_label_key UNIQUE (label)
 )
