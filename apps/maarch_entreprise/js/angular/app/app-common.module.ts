@@ -10,6 +10,9 @@ import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
 
+/*PLUGINS IMPORTS*/
+import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
+
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
 
@@ -28,13 +31,14 @@ import { MenuShortcutComponent }                from './menu/menu-shortcut.compo
         FormsModule,
         HttpClientModule,
         RouterModule,
-        AppMaterialModule,
+        AppMaterialModule
     ],
     declarations: [
         MenuComponent,
         MenuNavComponent,
         MenuTopComponent,
-        MenuShortcutComponent
+        MenuShortcutComponent,
+        TimeAgoPipe
     ],
     exports: [
         CommonModule,
@@ -48,7 +52,8 @@ import { MenuShortcutComponent }                from './menu/menu-shortcut.compo
         ReactiveFormsModule,
         HttpClientModule,
         RouterModule,
-        AppMaterialModule
+        AppMaterialModule,
+        TimeAgoPipe
     ]
 })
 export class SharedModule { }
