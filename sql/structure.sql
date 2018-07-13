@@ -1403,6 +1403,9 @@ CREATE TABLE res_letterbox
   ocr_result character varying(10) DEFAULT NULL::character varying,
   external_id character varying(255) DEFAULT NULL::character varying,
   external_link character varying(255) DEFAULT NULL::character varying,
+  departure_date timestamp without time zone,
+  department_number_id text,
+  barcode text,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1701,6 +1704,9 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.reference_number,
     r.external_id,
     r.external_link,
+    r.departure_date,
+    r.department_number_id,
+    r.barcode,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
