@@ -550,7 +550,7 @@ try {
                 $visa_list_arr, // viseurs
                 $signataire->user, 
                 $signataire->process_date, 
-                format_date_db(str_replace("/", "-",$selectedFile->doc_custom_d1), "", $GLOBALS['databasetype']), // date de départ
+                format_date_db(str_replace("/", "-",$selectedFile->departure_date), "", $GLOBALS['databasetype']), // date de départ
                 $NbTransmission, 
                 $arrayTransmission[0]['identifier'], //"Numéro chrono transmission 1", 
                 $arrayTransmission[0]['dest_contact'], //"Destinataire transmission 1", 

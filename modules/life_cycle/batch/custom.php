@@ -335,15 +335,15 @@ function createPDI($resInContainer)
             $customN1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $customN1->setAttributeNode(new DOMAttr('LABEL', _AMOUNT));
             $reference->appendChild($customN1);
-            if (isset($resRecordset->doc_custom_d1)) {
+            if (isset($resRecordset->departure_date)) {
                 $customD1 = $docXML->createElement(
-                    'CUSTOM_D1', $resRecordset->doc_custom_d1
+                    'DEPARTURE_DATE', $resRecordset->departure_date
                 );
             } else {
-                $customD1 = $docXML->createElement('CUSTOM_D1', '');
+                $customD1 = $docXML->createElement('DEPARTURE_DATE', '');
             }
             $customD1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $customD1->setAttributeNode(new DOMAttr('LABEL', _CUSTOM_D1));
+            $customD1->setAttributeNode(new DOMAttr('LABEL', _DEPARTURE_DATE));
             $reference->appendChild($customD1);
             if (isset($resRecordset->doc_custom_t2)) {
                 $customT2 = $docXML->createElement(

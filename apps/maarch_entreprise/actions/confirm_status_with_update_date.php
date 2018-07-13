@@ -49,7 +49,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templates = $templatesControler->getAllTemplatesForSelect();
     }
     $frm_str .='<center style="font-size:15px;">'._ACTION_CONFIRM.'<br/><br/><b>'.strtoupper($labelAction).' ?</b></center><br/>';
-    $frm_str .='<b>'._NOTE.':</b><br/>';
+    $frm_str .='<b>'._PROCESS_NOTES.':</b><br/>';
     $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                 . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
