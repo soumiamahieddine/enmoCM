@@ -1130,10 +1130,8 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 	require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."department_list.php");
 
 	$frm_str .= '<tr id="department_number_tr" style="display:' . $display_value . ';">';
-	$frm_str .= '<td colspan="3">' . _DEPARTMENT_NUMBER . '</td>';
-    $frm_str .= '</tr>';
-    $frm_str .= '<tr>';
-	$frm_str .= '<td class="indexing_field" colspan="2"><input type="text" style="width:97%;" onkeyup="erase_contact_external_id(\'department_number\', \'department_number_id\');"'
+	$frm_str .= '<td >' . _DEPARTMENT_NUMBER . '</td>';
+	$frm_str .= '<td class="indexing_field" ><input type="text" style="width:97%;" onkeyup="erase_contact_external_id(\'department_number\', \'department_number_id\');"'
 	. 'name="department_number" id="department_number" value="';
 	if( isset($data['department_number']) && !empty($data['department_number'])) {
 	$frm_str .= $data['department_number'] . ' - ' . $depts[$data['department_number']];
