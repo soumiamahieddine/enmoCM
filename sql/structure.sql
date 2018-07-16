@@ -1790,7 +1790,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     cont.lastname AS contact_lastname,
     cont.society AS contact_society,
     u.lastname AS user_lastname,
-    u.firstname AS user_firstname,
+    u.firstname AS user_firstname
    FROM doctypes d,
     doctypes_first_level dfl,
     doctypes_second_level dsl,
