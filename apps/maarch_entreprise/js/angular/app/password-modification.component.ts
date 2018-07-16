@@ -103,6 +103,7 @@ export class PasswordModificationComponent implements OnInit {
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
                         this.passwordRules.minLength.value = rule.value;
+                        this.firstFormGroup.controls["newPasswordCtrl"].setValidators([Validators.minLength(this.passwordRules.minLength.value)])
                         if (rule.enabled) {
                             ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
                         }
@@ -147,7 +148,7 @@ export class PasswordModificationComponent implements OnInit {
         this.firstFormGroup = this._formBuilder.group({
             newPasswordCtrl: [
                 '',
-                Validators.compose([Validators.minLength(6), this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }), this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }), this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' })])
+                Validators.compose([Validators.minLength(1), this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }), this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }), this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' })])
             ],
             retypePasswordCtrl: [
                 '',
@@ -161,7 +162,6 @@ export class PasswordModificationComponent implements OnInit {
         }, {
                 validator: this.matchValidator
             });
-        //console.log(this.passwordRules);
     }
 
     matchValidator(group: FormGroup) {
@@ -175,7 +175,6 @@ export class PasswordModificationComponent implements OnInit {
     }
 
     getErrorMessage() {
-        console.log(this.firstFormGroup.controls['newPasswordCtrl'].errors);
         if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
             return this.lang.requiredField + ' !';
 
