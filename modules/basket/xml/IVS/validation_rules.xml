@@ -13,8 +13,6 @@
       <parameter name="taille_fichier" type="integer" />
       <parameter name="md5" type="string" />
       <parameter name="Ftp_File" type="string" />
-      <parameter name="scan_user" type="string" />
-      <parameter name="scan_wkstation" type="string" />
       <parameter name="tmp_file" type="filename" />
       <parameter name="noinit" type="identifier" />
       <parameter name="reinit" type="identifier" />

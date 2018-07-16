@@ -1613,24 +1613,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         )
     );
 
-    if (isset($_SESSION['origin']) && $_SESSION['origin'] == 'scan') {
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'scan_user',
-                'value' => $_SESSION['user']['UserId'],
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'scan_date',
-                'value' => $req->current_datetime(),
-                'type' => 'function',
-            )
-        );
-    }
     //without file case
     if (
         isset($_SESSION['with_file'])

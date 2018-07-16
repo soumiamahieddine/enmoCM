@@ -73,15 +73,6 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
     $creationDate = functions::format_date_db($res->creation_date, false);
     $fingerprint = $res->fingerprint;
     $offsetDoc = $res->offset_doc;
-    $workBatch = $res->work_batch;
-    $pageCount = $res->page_count;
-    $scanDate = functions::format_date_db($res->scan_date);
-    $scanUser = $res->scan_user;
-    $scanLocation = $res->scan_location;
-    $scanWkstation = $res->scan_wkstation;
-    $scanBatch = $res->scan_batch;
-    $policyId = $res->policy_id;
-    $cycleId = $res->cycle_id;
     $isMultiDs = $res->is_multi_docservers;
     if ($isMultiDs == 'Y') {
         $adr = array();
@@ -140,40 +131,8 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                 </th>
                 <td align="left"><?php echo _FINGERPRINT; ?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>"  title="<?php functions::xecho($fingerprint); ?>" alt="<?php functions::xecho($fingerprint); ?>" /></td>
-
-                <th align="left" class="picto">
-                    <i class="fa fa-cogs fa-2x" title="<?php echo _WORK_BATCH; ?>"></i>
-                </th>
-                <td align="left"><?php echo _WORK_BATCH; ?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($workBatch); ?>" title="<?php functions::xecho($workBatch); ?>" alt="<?php functions::xecho($workBatch); ?>" /></td>
             </tr>
         </table>
-        <br>
-        <?php 
-        if ($coreTools->is_module_loaded('life_cycle')) {
-            ?>
-            <h2>
-            <span class="date">
-                <b><?php echo _LIFE_CYCLE; ?></b>
-            </span>
-            </h2>
-            <br/>
-            <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-                <tr>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _LC_POLICY_ID; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($policyId); ?>"  /></td>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _CYCLE_ID; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($cycleId); ?>" /></td>
-                </tr>
-            </table>
-            <?php
-        } ?>
         <br>
         <h2>
         <span class="date">

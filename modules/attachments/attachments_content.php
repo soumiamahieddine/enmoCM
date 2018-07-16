@@ -242,24 +242,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                         'type' => 'integer',
                                     )
                                 );
-                                if ($_SESSION['origin'] == 'scan') {
-                                    array_push(
-                                        $_SESSION['data'],
-                                        array(
-                                            'column' => 'scan_user',
-                                            'value' => $_SESSION['user']['UserId'],
-                                            'type' => 'string',
-                                        )
-                                    );
-                                    array_push(
-                                        $_SESSION['data'],
-                                        array(
-                                            'column' => 'scan_date',
-                                            'value' => $req->current_datetime(),
-                                            'type' => 'function',
-                                        )
-                                    );
-                                }
                                 if (isset($back_date) && $back_date != '') {
                                     array_push(
                                         $_SESSION['data'],
@@ -718,25 +700,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                         'column' => 'attachment_id_master',
                         'value' => (int) $previous_attachment->attachment_id_master,
                         'type' => 'integer',
-                    )
-                );
-            }
-
-            if ($_SESSION['origin'] == 'scan') {
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => 'scan_user',
-                        'value' => $_SESSION['user']['UserId'],
-                        'type' => 'string',
-                    )
-                );
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => 'scan_date',
-                        'value' => $req->current_datetime(),
-                        'type' => 'function',
                     )
                 );
             }
