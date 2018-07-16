@@ -9,6 +9,9 @@ ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
 ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
 UPDATE groupbasket_status SET "order" = 0 WHERE status_id = 'NEW';
 UPDATE groupbasket_status SET "order" = 1 WHERE status_id != 'NEW';
+UPDATE baskets SET basket_res_order = 'res_id DESC' WHERE basket_res_order IS NULL;
+ALTER TABLE baskets ALTER COLUMN basket_res_order SET NOT NULL;
+ALTER TABLE baskets ALTER COLUMN basket_res_order SET DEFAULT 'res_id DESC';
 ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
 
 /* Custom To Standard*/
