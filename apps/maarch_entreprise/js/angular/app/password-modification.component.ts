@@ -37,6 +37,7 @@ export class PasswordModificationComponent implements OnInit {
         complexityNumber: { enabled: false, value: 0 },
         complexitySpecial: { enabled: false, value: 0 },
         renewal: { enabled: false, value: 0 },
+        historyLastUse: {enabled:false, value:0},
     };
 
     passwordModel: any = {
@@ -137,6 +138,12 @@ export class PasswordModificationComponent implements OnInit {
                         this.passwordRules.renewal.enabled = rule.enabled;
                         this.passwordRules.renewal.value = rule.value;
                         this.OtherRuleText = this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label];
+                    } else if (rule.label == 'historyLastUse') {
+                        this.passwordRules.historyLastUse.enabled = rule.enabled;
+                        this.passwordRules.historyLastUse.value = rule.value
+                        if (rule.enabled) {
+                            ruleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' ' + rule.value + ' ' + this.lang['passwordhistoryLastUseDesc2']);
+                        }
                     }
 
                 });
