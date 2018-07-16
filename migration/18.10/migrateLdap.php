@@ -54,4 +54,4 @@ foreach ($customs as $custom) {
     }
 }
 
-printf($migrated . " customs utilisant la connexion LDAP trouvés et migrés.\n");
+printf($migrated . " custom(s) utilisant la connexion LDAP trouvé(s) et migré(s).\n");

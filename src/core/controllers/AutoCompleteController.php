@@ -151,7 +151,7 @@ class AutoCompleteController
                 'limit'     => self::LIMIT
             ]);
 
-            if (count($users) == self::LIMIT) {
+            if (count($users) < self::LIMIT) {
                 $requestData = AutoCompleteController::getDataForRequest([
                     'search'        => $data['search'],
                     'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
@@ -170,7 +170,8 @@ class AutoCompleteController
                     'table'     => ['users', 'users_entities'],
                     'left_join' => ['users.user_id = users_entities.user_id'],
                     'where'     => $requestData['where'],
-                    'data'      => $requestData['data']
+                    'data'      => $requestData['data'],
+                    'limit'     => (self::LIMIT - count($users))
                 ]);
 
                 $users = array_merge($users, $usersNoEntities);
