@@ -15,14 +15,14 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		let minuteNumber = ('0' + d.getMinutes()).slice(-2)
 		let now = new Date();
 		let month = new Array();
-		month[0] = "Jav.";
+		month[0] = "Jan.";
 		month[1] = "Fév.";
 		month[2] = "Mars";
 		month[3] = "Avr.";
 		month[4] = "Mai";
 		month[5] = "Juin";
 		month[6] = "Juil.";
-		month[7] = "Aoû.";
+		month[7] = "Août";
 		month[8] = "Sept.";
 		month[9] = "Oct.";
 		month[10] = "Nov.";
