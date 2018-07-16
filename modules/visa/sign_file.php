@@ -94,6 +94,12 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
         $_SESSION['visa']['last_resId_signed']['dest_address'] = $line->dest_address_id;
         $_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
 
+        if (isset($_REQUEST['isOutgoing']) || $line->attachment_type == 'response_project') {
+	    //Update outgoing date
+	    $date = date("Y-m-d");
+	    $db->query("update res_letterbox SET departure_date = ? where res_id = ?", array($date,$line->res_id_master));
+	}
+
         include 'modules/visa/retrieve_attachment_from_cm.php';
 
         //ADD CURRENT DATE IN SIGN IMG FILE

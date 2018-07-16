@@ -194,17 +194,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     return addslashes($frm_str);
 }
 
- function check_form($form_id,$values)
- {
-    if (empty($_SESSION['redirect']['diff_list']['avis']['users'][0])) {
-        $_SESSION['action_error'] = _RECOMMENDATION_USER. " " . _MANDATORY;
-        return false;
-    }
-    $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
-    if ($recommendation_limit_date == null || $recommendation_limit_date == '') {
-        $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _MANDATORY;
-        return false;
-    }
+function check_form($form_id,$values)
+{
+   if (empty($_SESSION['redirect']['diff_list']['avis']['users'][0])) {
+       if(empty($_SESSION['redirect']['diff_list']['avis_info']['users'][0])){
+		$_SESSION['action_error'] = _RECOMMENDATION_USER. " " . _MANDATORY;
+       return false;
+       }
+   }
+   $recommendation_limit_date = get_value_fields($values, 'recommendation_limit_date');
+   if ($recommendation_limit_date == null || $recommendation_limit_date == '') {
+       $_SESSION['action_error'] = _RECOMMENDATION_LIMIT_DATE. " " . _MANDATORY;
+       return false;
+   }
 
     $notes_content = get_value_fields($values, 'note_content_to_users');
     if ($notes_content == null || $notes_content == '') {
@@ -370,22 +372,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $_SESSION['indexing']['diff_list'] = $new_difflist;
     $_SESSION['action_error'] = $message;
     return array('result' => implode('#', $arr_id), 'history_msg' => $message);
-}
-
-function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
-{
-    $db = new Database();
-    for ($i=0; $i<count($arr_id);$i++) {
-
-        $req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ?", array($arr_id[$i]));
-
-        if (!$req) {
-
-            $_SESSION['action_error'] = _SQL_ERROR;
-            return false;
-        }
-    }
-    return true;
 }
 
  /**

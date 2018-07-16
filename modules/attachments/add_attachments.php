@@ -45,7 +45,6 @@ $aArgs['data'] = array();
 foreach ($queryChildInfos as $key => $value) {
     if ($value != ''
         && $key != 'modification_date'
-        && $key != 'is_frozen'
         && $key != 'tablename'
         && $key != 'locker_user_id'
         && $key != 'locker_time'

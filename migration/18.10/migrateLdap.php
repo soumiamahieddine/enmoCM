@@ -38,8 +38,20 @@ foreach ($customs as $custom) {
             fwrite($fp, $res);
         }
 
+        if (file_exists("custom/{$custom}/modules/ldap/xml/config.xml")) {
+            $configXmlfile = simplexml_load_file("custom/{$custom}/modules/ldap/xml/config.xml");
+
+            $configXmlfile->config->addChild('standardConnect', 'false');
+
+            $res = $configXmlfile->asXML();
+            $fp = @fopen("custom/{$custom}/modules/ldap/xml/config.xml", "w+");
+            if ($fp) {
+                fwrite($fp, $res);
+            }
+        }
+
         $migrated++;
     }
 }
 
-printf($migrated . " customs utilisant la connexion LDAP trouvés et migrés.\n");
+printf($migrated . " custom(s) utilisant la connexion LDAP trouvé(s) et migré(s).\n");

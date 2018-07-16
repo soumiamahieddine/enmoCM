@@ -153,10 +153,6 @@ if ($arrayIsAllowed['status'] == false) {
                 }
                 
 
-                if ($_SESSION['origin'] == "scan") {
-                    array_push($_SESSION['data'], array( 'column' => "scan_user", 	'value' => $_SESSION['user']['UserId'], 			'type' => "string" ) );
-                    array_push($_SESSION['data'], array( 'column' => "scan_date", 	'value' => $req->current_datetime(), 				'type' => "function" ) );
-                }
                 if (isset($_SESSION['attachmentInfo'][$i]['back_date']) && $_SESSION['attachmentInfo'][$i]['back_date'] <> '') {
                     array_push($_SESSION['data'], array( 'column' => "validation_date", 'value' => $func->format_date_db($_SESSION['attachmentInfo'][$i]['back_date']), 'type' => "date", ) );
                 }

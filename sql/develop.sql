@@ -2,6 +2,24 @@
 DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS res_view_attachments;
 
+UPDATE actions_groupbaskets SET used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
+UPDATE actions_groupbaskets SET used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
+DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
+ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
+ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
+UPDATE groupbasket_status SET "order" = 0 WHERE status_id = 'NEW';
+UPDATE groupbasket_status SET "order" = 1 WHERE status_id != 'NEW';
+ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
+
+/* Custom To Standard*/
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS departure_date;
+ALTER TABLE res_letterbox ADD COLUMN departure_date timestamp without time zone;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS department_number_id;
+ALTER TABLE res_letterbox ADD COLUMN department_number_id text;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS barcode;
+ALTER TABLE res_letterbox ADD COLUMN barcode text;
+
+/* Contact Groups*/
 DROP TABLE IF EXISTS contacts_groups;
 CREATE TABLE contacts_groups
 (
@@ -15,7 +33,6 @@ CREATE TABLE contacts_groups
   CONSTRAINT contacts_groups_key UNIQUE (label, owner)
 )
 WITH (OIDS=FALSE);
-
 DROP TABLE IF EXISTS contacts_groups_lists;
 CREATE TABLE contacts_groups_lists
 (
@@ -26,16 +43,6 @@ CREATE TABLE contacts_groups_lists
   CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
 )
 WITH (OIDS=FALSE);
-
-UPDATE actions_groupbaskets SET used_in_basketlist = 'Y', used_in_action_page = 'Y' WHERE default_action_list = 'Y';
-UPDATE actions_groupbaskets SET used_in_action_page = 'Y' WHERE used_in_basketlist = 'N' AND used_in_action_page = 'N';
-DELETE FROM usergroups_services WHERE service_id = 'view_baskets';
-ALTER TABLE groupbasket_status DROP COLUMN IF EXISTS "order";
-ALTER TABLE groupbasket_status ADD COLUMN "order" integer;
-UPDATE groupbasket_status SET "order" = 0 WHERE status_id = 'NEW';
-UPDATE groupbasket_status SET "order" = 1 WHERE status_id != 'NEW';
-ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
-
 
 /* Docservers */
 ALTER TABLE docservers DROP COLUMN IF EXISTS docserver_location_id;
@@ -78,7 +85,7 @@ CREATE TABLE password_rules
   id serial,
   label character varying(64) NOT NULL,
   "value" INTEGER NOT NULL,
-  enabled boolean DEFAULT FALSE,
+  enabled boolean DEFAULT FALSE NOT NULL,
   CONSTRAINT password_rules_pkey PRIMARY KEY (id),
   CONSTRAINT password_rules_label_key UNIQUE (label)
 )
@@ -156,6 +163,64 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS logical_adr;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_paper;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_paper;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS is_paper;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS page_count;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS page_count;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS page_count;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_date;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_date;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_date;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_user;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_user;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_user;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_location;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_location;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_location;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_wkstation;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_wkstation;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_wkstation;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_batch;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_batch;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_batch;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS burn_batch;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS burn_batch;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS burn_batch;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_postmark;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS scan_postmark;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS scan_postmark;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS envelop_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS envelop_id;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS envelop_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS approver;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS approver;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS approver;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS work_batch;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS work_batch;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS work_batch;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_ingoing;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_ingoing;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS is_ingoing;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS arbatch_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS arbatch_id;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS arbatch_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS cycle_date;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS cycle_date;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS cycle_date;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_frozen;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_frozen;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS is_frozen;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS video_batch;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS video_batch;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_batch;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS video_time;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS video_time;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_time;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS video_user;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS video_user;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_user;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS video_date;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS video_date;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_date;
+
 
 CREATE OR REPLACE VIEW res_view_letterbox AS
  SELECT r.tablename,
@@ -187,21 +252,16 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.offset_doc,
     r.filesize,
     r.status,
-    r.work_batch,
-    r.arbatch_id,
-    r.page_count,
     r.doc_date,
-    r.scan_date,
-    r.scan_user,
-    r.scan_location,
-    r.scan_wkstation,
-    r.scan_batch,
     r.description,
     r.source,
     r.author,
     r.reference_number,
     r.external_id,
     r.external_link,
+    r.departure_date,
+    r.department_number_id,
+    r.barcode,
     r.custom_t1 AS doc_custom_t1,
     r.custom_t2 AS doc_custom_t2,
     r.custom_t3 AS doc_custom_t3,
@@ -307,9 +367,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.flag_alarm1,
     mlb.flag_alarm2,
     mlb.is_multicontacts,
-    r.video_user,
-    r.video_time,
-    r.video_batch,
     r.subject,
     r.identifier,
     r.title,
@@ -327,8 +384,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     cont.lastname AS contact_lastname,
     cont.society AS contact_society,
     u.lastname AS user_lastname,
-    u.firstname AS user_firstname,
-    r.is_frozen AS res_is_frozen
+    u.firstname AS user_firstname
    FROM doctypes d,
     doctypes_first_level dfl,
     doctypes_second_level dsl,
@@ -346,16 +402,12 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
-  filename, offset_doc, fingerprint, filesize, page_count,
-  scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
-  filename, offset_doc, fingerprint, filesize, page_count,
-  scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
-  envelop_id, status, destination, approver, validation_date, effective_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;

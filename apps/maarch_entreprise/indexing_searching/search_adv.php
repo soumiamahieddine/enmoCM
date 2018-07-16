@@ -165,6 +165,10 @@ $param['creation_date'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _CLOSING_DATE, 'type' => 'date_range', 'param' => array('field_label' => _CLOSING_DATE, 'id1' => 'closing_date_from', 'id2' => 'closing_date_to'));
 $param['closing_date'] = $arr_tmp2;
 
+//Departure date
+$arr_tmp2 = array('label' => _EXP_DATE, 'type' => 'date_range', 'param' => array('field_label' => _EXP_DATE, 'id1' => 'exp_date_from', 'id2' =>'exp_date_to'));
+$param['exp_date'] = $arr_tmp2;
+
 //Document date
 $arr_tmp2 = array('label' => _DOC_DATE, 'type' => 'date_range', 'param' => array('field_label' => _DOC_DATE, 'id1' => 'doc_date_from', 'id2' => 'doc_date_to'));
 $param['doc_date'] = $arr_tmp2;
@@ -307,13 +311,9 @@ if ($core_tools->is_module_loaded('folder')) {
 $arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => array('field_label' => _PROCESS_NOTES, 'other' => $size, 'id' => 'process_notes'));
 $param['process_notes'] = $arr_tmp2;
 
-// chrono
-$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER.' <span class="green_asterisk" ><i class="fa fa-star" style="vertical-align:50%"></i></span>', 'other' => $size));
-$param['chrono'] = $arr_tmp2;
-
-// identifier
+// Reference courrier externe
 $arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
-$param['identifier'] = $arr_tmp2;
+$param['external_id'] = $arr_tmp2;
 
 // description
 $arr_tmp2 = array('label' => _OTHERS_INFORMATIONS, 'type' => 'input_text', 'param' => array('field_label' => _OTHERS_INFORMATIONS, 'other' => $size));
@@ -322,6 +322,21 @@ $param['description'] = $arr_tmp2;
 // Monitoring number
 $arr_tmp2 = array('label' => _MONITORING_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _MONITORING_NUMBER, 'other' => $size));
 $param['reference_number'] = $arr_tmp2;
+
+// Department number
+include("apps/maarch_entreprise/department_list.php");
+
+$arr_tmp = array();
+foreach($depts as $key => $value){
+    array_push($arr_tmp, array('VALUE' => $key, 'LABEL' => $key . " - " . $value));
+}
+
+$param['department_number_mu'] = array('label' => _DEPARTMENT_NUMBER, 'type' => 'select_multiple', 'param' => array('field_label' => _DEPARTMENT_NUMBER, 'label_title' => _CHOOSE_DEPARTMENT_NUMBER,
+'id' => 'department_number','options' => $arr_tmp));
+
+// GED Number
+$arr_tmp2 = array('label' => _N_GED, 'type' => 'input_text', 'param' => array('field_label' => _N_GED, 'other' => $size));
+$param['numged'] = $arr_tmp2;
 
 //status
 $status = $status_obj->get_searchable_status();
@@ -389,10 +404,6 @@ for ($iGroups = 0; $iGroups < count($array_groups); ++$iGroups) {
 }
 $arr_tmp2 = array('label' => _SIGNATORY_GROUP, 'type' => 'select_simple', 'param' => array('field_label' => _SIGNATORY_GROUP, 'default_label' => addslashes(_CHOOSE_GROUP), 'options' => $arr_tmp));
 $param['signatory_group'] = $arr_tmp2;
-
-// signatory name
-$arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' => array('field_label' => _SIGNATORY_NAME, 'other' => $size, 'autocompletion' => true));
-$param['signatory_name'] = $arr_tmp2;
 
 //Visa user
 $arr_tmp2 = array('label' => _VISA_USER_SEARCH_MIN, 'type' => 'input_text', 'param' => array('field_label' => _VISA_USER_SEARCH_MIN, 'other' => $size, 'autocompletion' => true));
@@ -499,7 +510,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
                 <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
@@ -628,14 +639,67 @@ if (isset($_REQUEST['nodetails'])) {
         <h2><?php echo _LETTER_INFO; ?></h2>
             <table border = "0" width="100%" class="content" style="position:relative;">
                 <tr>
-                    <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT; ?>:</label>
+                    <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT; ?></label>
                         <input type="text" name="subject" id="subject" <?php functions::xecho($size); ?>  />
                         <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                     </td>
                     <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
                 </tr>
                 <tr>
-                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT; ?>:</label>
+                    <td width="70%"><label for="chrono" class="bold"><?php echo _CHRONO_NUMBER;?></label>
+                        <input type="text" name="chrono" id="chrono" <?php echo $size; ?>  />
+                        <input type="hidden" name="meta[]" value="chrono#chrono#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
+                    </td>
+                    <td><em><?php echo _CHRONO_NUMBER_HELP; ?></em></td>
+                </tr>
+                <tr>
+                    <td width="70%"><label for="barcode" class="bold"><?php echo _BARCODE;?></label>
+                        <input type="text" name="barcode" id="barcode" <?php echo $size; ?>  />
+                        <input type="hidden" name="meta[]" value="barcode#barcode#input_text" />
+                    </td>
+                    <td><em><?php echo _BARCODE_HELP; ?></em></td>
+                </tr>
+                <tr>
+                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL; ?></label>
+                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
+                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
+                        <div id="contactListByName" class="autocomplete"></div>
+                        <script type="text/javascript">
+                            initList_hidden_input('contactid', 'contactListByName', '<?php 
+                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'contactid_external');
+                        </script>
+                        <input id="contactid_external" name="contactid_external" type="hidden" />
+                    </td>
+                    <td><em><?php echo ''; ?></em></td>
+                </tr>
+                <tr>
+                    <td width="70%"><label for="contactid_internal" class="bold"><?php echo _CONTACT_INTERNAL; ?></label>
+                        <input type="text" name="contactid_internal" id="contactid_internal" onkeyup="erase_contact_external_id('contactid_internal', 'contact_internal_id');"/>
+                        <input type="hidden" name="meta[]" value="contactid_internal#contactid_internal#input_text" />
+                        <div id="contactInternalListByName" class="autocomplete"></div>
+                        <script type="text/javascript">
+                            initList_hidden_input('contactid_internal', 'contactInternalListByName', '<?php 
+                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
+                        </script>
+                        <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
+                    </td>
+                    <td><em><?php echo ''; ?></em></td>
+                </tr>
+                <tr>
+                    <td width="70%"><label for="signatory_name" class="bold"><?php echo _SIGNATORY_NAME;?></label>
+                        <input type="text" name="signatory_name" id="signatory_name" onkeyup="erase_contact_external_id('signatory_name', 'ac_signatory_name');"/>
+                        <input type="hidden" name="meta[]" value="signatory_name#signatory_name#input_text" />
+                        <div id="signatoryNameList" class="autocomplete"></div>
+                        <script type="text/javascript">
+                            initList_hidden_input('signatory_name', 'signatoryNameList', '<?php 
+                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'ac_signatory_name');
+                        </script>
+                        <input id="ac_signatory_name" name="ac_signatory_name" type="hidden" />
+                    </td>
+                    <td><em><?php echo  ""; ?></em></td>
+                </tr>
+                <tr>
+                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT; ?></label>
                         <input type="text" name="fulltext" id="fulltext" <?php functions::xecho($size); ?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
                         <a href="javascript::" onclick="new Effect.toggle('iframe_fulltext_help', 'blind', {delay:0.2})"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
@@ -650,44 +714,11 @@ if (isset($_REQUEST['nodetails'])) {
                     </td>
                 </tr>
                 <tr>
-                    <td width="70%"><label for="numged" class="bold"><?php echo _N_GED; ?>:</label>
-                        <input type="text" name="numged" id="numged" <?php functions::xecho($size); ?>  />
-                        <input type="hidden" name="meta[]" value="numged#numged#input_text" />
-                    </td>
-                    <td><em><?php echo _N_GED_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD; ?>:</label>
+                    <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD; ?></label>
                         <input type="text" name="multifield" id="multifield" <?php functions::xecho($size); ?>  />
                         <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
                     </td>
                     <td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL; ?>:</label>
-                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
-                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
-                        <div id="contactListByName" class="autocomplete"></div>
-                        <script type="text/javascript">
-                            initList_hidden_input('contactid', 'contactListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'contactid_external');
-                        </script>
-                        <input id="contactid_external" name="contactid_external" type="hidden" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="contactid_internal" class="bold"><?php echo _CONTACT_INTERNAL; ?>:</label>
-                        <input type="text" name="contactid_internal" id="contactid_internal" onkeyup="erase_contact_external_id('contactid_internal', 'contact_internal_id');"/>
-                        <input type="hidden" name="meta[]" value="contactid_internal#contactid_internal#input_text" />
-                        <div id="contactInternalListByName" class="autocomplete"></div>
-                        <script type="text/javascript">
-                            initList_hidden_input('contactid_internal', 'contactInternalListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
-                        </script>
-                        <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
                 </tr>
             </table>
             </div>
@@ -716,7 +747,7 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name');">
              <i class="fa fa-sync fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
@@ -735,7 +766,7 @@ if (isset($_REQUEST['nodetails'])) {
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie; ?>', '<?php echo _ERROR_IE_SEARCH; ?>');
 <?php if (isset($_REQUEST['init_search'])) {
-            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id'); <?php
+            ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');erase_contact_external_id('signatory_name', 'ac_signatory_name') <?php
         }?>
 </script>
 

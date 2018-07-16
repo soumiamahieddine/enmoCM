@@ -107,6 +107,16 @@ $_ENV['categories']['incoming']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
+$_ENV['categories']['incoming']['external_id'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _REFERENCE_MAIL,
+    'table' => 'res',
+    'img' => 'file',
+    'modify' => false,
+    'form_show' => 'textfield'
+);
 $_ENV['categories']['incoming']['admission_date'] = array(
     'type_form' => 'date',
     'type_field' => 'date',
@@ -116,6 +126,16 @@ $_ENV['categories']['incoming']['admission_date'] = array(
     'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
+);
+$_ENV['categories']['incoming']['departure_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => false,
+    'label' => _EXP_DATE,
+    'table' => 'res',
+    'img' => 'calendar',
+    'modify' => true,
+    'form_show' => 'date'
 );
 $_ENV['categories']['incoming']['nature_id'] = array(
     'type_form' => 'string',
@@ -136,6 +156,16 @@ $_ENV['categories']['incoming']['reference_number'] = array(
     'img' => 'barcode',
     'modify' => false,
     'form_show' => 'textfield',
+);
+$_ENV['categories']['incoming']['description'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _OTHERS_INFORMATIONS,
+    'table' => 'res',
+    'img' => 'info-circle',
+    'modify' => true,
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['incoming']['subject'] = array(
     'type_form' => 'string',
@@ -175,6 +205,7 @@ $_ENV['categories']['incoming']['type_contact'] = array(
     'values' => array(
         'internal',
         'external',
+        'multi_external',
     ),
     'modify' => false,
 );
@@ -184,9 +215,29 @@ $_ENV['categories']['incoming']['other_cases']['contact'] = array(
     'mandatory' => true,
     'label' => _SHIPPER,
     'table' => 'coll_ext',
-    'special' => 'exp_user_id,exp_contact_id',
+    'special' => 'exp_user_id,exp_contact_id,is_multicontacts',
     'modify' => true,
     'img' => 'book',
+    'form_show' => 'textfield',
+);
+$_ENV['categories']['incoming']['department_number_id'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _DEPARTMENT_NUMBER,
+    'table' => 'res',
+    'img' => 'road',
+    'modify' => false,
+    'form_show' => 'textfield'
+);
+$_ENV['categories']['incoming']['barcode'] = array(
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _BARCODE,
+    'table' => 'res',
+    'img' => 'barcode',
+    'modify' => false,
     'form_show' => 'textfield',
 );
 $_ENV['categories']['incoming']['confidentiality'] = array(
@@ -308,6 +359,16 @@ $_ENV['categories']['outgoing']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
+$_ENV['categories']['outgoing']['departure_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => false,
+    'label' => _EXP_DATE,
+    'table' => 'res',
+    'img' => 'calendar',
+    'modify' => true,
+    'form_show' => 'date'
+);
 $_ENV['categories']['outgoing']['nature_id'] = array(
     'type_form' => 'string',
     'type_field' => 'string',
@@ -323,6 +384,36 @@ $_ENV['categories']['outgoing']['reference_number'] = array(
     'type_field' => 'string',
     'mandatory' => false,
     'label' => _MONITORING_NUMBER,
+    'table' => 'res',
+    'img' => 'barcode',
+    'modify' => false,
+    'form_show' => 'textfield',
+);
+$_ENV['categories']['outgoing']['description'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _OTHERS_INFORMATIONS,
+    'table' => 'res',
+    'img' => 'info-circle',
+    'modify' => true,
+    'form_show' => 'textarea'
+);
+$_ENV['categories']['outgoing']['department_number_id'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _DEPARTMENT_NUMBER,
+    'table' => 'res',
+    'img' => 'road',
+    'modify' => false,
+    'form_show' => 'textfield'
+);
+$_ENV['categories']['outgoing']['barcode'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _BARCODE,
     'table' => 'res',
     'img' => 'barcode',
     'modify' => false,
@@ -487,6 +578,7 @@ $_ENV['categories']['internal']['type_contact'] = array(
     'values' => array(
         'internal',
         'external',
+        'multi_external'
     ),
     'modify' => false,
 );
@@ -496,7 +588,7 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array(
     'mandatory' => true,
     'label' => _SHIPPER,
     'table' => 'coll_ext',
-    'special' => 'exp_user_id,exp_contact_id',
+    'special' => 'exp_user_id,exp_contact_id,is_multicontacts',
     'modify' => true,
     'img' => 'book',
     'form_show' => 'textfield',
@@ -914,7 +1006,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                     'img' => $_ENV['categories'][$cat_id][$field]['img'],
                 );
                 array_push($arr, $field);
-                if ($field == 'subject' || $field == 'destination') {
+                if ($field == 'subject' || $field == 'description' || $field == 'destination') {
                     $data[$field]['display'] = 'textarea';
                 }
                 $data[$field]['readonly'] = true;
@@ -1088,7 +1180,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             if (isset($line->{$arr[$i]})) {
                 $data[$arr[$i]]['value'] = $line->{$arr[$i]};
             }
-            if ($arr[$i] != 'folder') {
+            if ($arr[$i] != 'folder' || $arr[$i] <> 'description') {
                 $data[$arr[$i]]['show_value'] = functions::show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
@@ -1112,6 +1204,15 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                     }
                 }
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$fakeId];
+            } else if ($arr[$i] == 'department_number_id') {
+                require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."department_list.php");
+                if (!empty($line->{$arr[$i]})) {
+                    $data[$arr[$i]]['show_value'] = $line->{$arr[$i]} . ' - ' . $depts[$line->{$arr[$i]}];
+                }               
+            } else if ($arr[$i] == 'departure_date') {
+                if (!empty($line->{$arr[$i]})) {
+                    $data[$arr[$i]]['show_value'] = functions::format_date_db($line->{$arr[$i]},false);
+                }               
             } elseif ($arr[$i] == 'destination') {
                 $stmt2 = $db->query('SELECT entity_label FROM '.$_SESSION['tablename']['ent_entities'].' WHERE entity_id = ?', array($line->{$arr[$i]}));
                 if ($stmt2->rowCount() == 1) {

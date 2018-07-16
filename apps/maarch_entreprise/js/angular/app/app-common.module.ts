@@ -9,6 +9,10 @@ import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { HttpClientModule }                     from '@angular/common/http';
 import { RouterModule }                         from '@angular/router';
 
+
+/*PLUGINS IMPORTS*/
+import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
+
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
 
@@ -16,6 +20,7 @@ import { AppMaterialModule }                    from './app-material.module';
 import { MenuComponent }                        from './menu/menu.component';
 import { MenuNavComponent }                     from './menu/menu-nav.component';
 import { MenuTopComponent }                     from './menu/menu-top.component';
+import { MenuShortcutComponent }                from './menu/menu-shortcut.component';
 
 
 @NgModule({
@@ -26,25 +31,29 @@ import { MenuTopComponent }                     from './menu/menu-top.component'
         FormsModule,
         HttpClientModule,
         RouterModule,
-        AppMaterialModule,
+        AppMaterialModule
     ],
     declarations: [
         MenuComponent,
         MenuNavComponent,
-        MenuTopComponent
+        MenuTopComponent,
+        MenuShortcutComponent,
+        TimeAgoPipe
     ],
     exports: [
         CommonModule,
         MenuComponent,
         MenuNavComponent,
         MenuTopComponent,
+        MenuShortcutComponent,
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
         RouterModule,
-        AppMaterialModule
+        AppMaterialModule,
+        TimeAgoPipe
     ]
 })
 export class SharedModule { }

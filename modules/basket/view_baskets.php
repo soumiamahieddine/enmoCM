@@ -103,13 +103,6 @@ if (isset($_REQUEST['md5'])) {
     $_SESSION['FILE']['md5'] = $_REQUEST['md5'];
 }
 //scan user
-if (isset($_REQUEST['scan_user'])) {
-    $_SESSION['FILE']['scan_user'] = $_REQUEST['scan_user'];
-}
-//scan workstation
-if (isset($_REQUEST['scan_wkstation'])) {
-    $_SESSION['FILE']['scan_wkstation'] = $_REQUEST['scan_wkstation'];
-}
 if (isset($_REQUEST['tmp_file'])) {
     $_SESSION['FILE']['tmp_file'] = $_REQUEST['tmp_file'];
 }

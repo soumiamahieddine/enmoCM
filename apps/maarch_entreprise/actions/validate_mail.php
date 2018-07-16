@@ -387,6 +387,18 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '</tr>';
     // END NCH01
 
+    /*** CODE BARRE ***/
+    $barcode = '';
+    if(isset($data['barcode'])&& !empty($data['barcode'])) {
+        $barcode = $data['barcode'];
+    }
+
+    $frm_str .= '<tr id="barcode_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td><label for="barcode" class="form_title" >'. _BARCODE . '</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input name="barcode" ' . 'type="text" id="barcode" value="'.$barcode.'" readonly="readonly" class="readonly"' . ' /></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '</tr>';
     /*** Category ***/
     $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
@@ -541,12 +553,23 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<td class="indexing_field"><input name="doc_date" type="text" id="doc_date" value="';
     if (isset($data['doc_date']) && !empty($data['doc_date'])) {
         $frm_str .= $data['doc_date'];
-    } else {
-        $frm_str .= $today;
     }
     $frm_str .= '" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr >';
+    /*** Reference courrier ***/
+    $frm_str .= '<tr id="external_id_tr" style="display:' . $display_value . ';">';
+    $frm_str .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+            . '</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input name="external_id" type="text" value="';
+        if( isset($data['external_id']) && !empty($data['external_id']))
+        {
+            $frm_str .= $data['external_id'];
+        }                    
+        $frm_str .= '" id="external_id"/></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '</tr>';
 
     /*** Author ***/
     $frm_str .= '<tr id="author_tr" style="display:'.$display_value.';">';
@@ -570,7 +593,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if (isset($data['admission_date']) && !empty($data['admission_date'])) {
         $frm_str .= $data['admission_date'];
     } else {
-        $frm_str .= $today;
+        $frm_str .= $creation_date;
     }
     $frm_str .= '" onclick="clear_error(\'frm_error_'.$actionId.'\');'
         .'showCalender(this);" onChange="checkRealDate(\'admissionDate\');updateProcessDate(\''
@@ -579,6 +602,23 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .$_SESSION['config']['businessappurl'].'index.php?display=true'
         .'&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+     
+    /*** Date de depart ***/
+    $frm_str .= '<tr id="departure_date_tr" style="display:' . $displayValue
+            . ';">';
+    $frm_str .= '<td><label for="departure_date" class="form_title" >'
+            . _EXP_DATE . '</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input name="departure_date" '
+            . 'type="text" id="departure_date" onclick="clear_error(\'frm_error_' . $id_action . '\');'
+            . 'showCalender(this);" onChange="checkRealDate(\'departure_date\');" onFocus="checkRealDate(\'departure_date\');" value="';        
+            if( isset($data['departure_date']) && !empty($data['departure_date'])) {
+                $frm_str .= $data['departure_date'];
+            }   
+            $frm_str .= '"/></td>';
+    $frm_str .= '<td><span class="red_asterisk" id="departure_date_mandatory" '
+            . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
 
     /*** Contact ***/
@@ -1071,6 +1111,41 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         /*****************/
     }
 
+
+	/*** Description ***/
+	$frm_str .= '<tr id="description_tr" style="display:' . $display_value . ';">';
+	$frm_str .= '<td colspan="3">' . _OTHERS_INFORMATIONS . '</label></td>';
+	$frm_str .= '</tr>';
+    $frm_str .= '<tr>';
+	$frm_str .= '<td class="indexing_field" colspan="2"><textarea style="width:97%;resize:vertical" name="description" '
+	. 'id="description"  rows="2" onchange="clear_error(\'frm_error_'
+	. $id_action . '\');" >';
+	if( isset($data['subject']) && !empty($data['subject'])) {
+	$frm_str .= $data['description'];
+	}
+	$frm_str .= '</textarea></td>';
+	$frm_str .= '</tr>';
+
+	//Departement concerne
+	require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."department_list.php");
+
+	$frm_str .= '<tr id="department_number_tr" style="display:' . $display_value . ';">';
+	$frm_str .= '<td >' . _DEPARTMENT_NUMBER . '</td>';
+	$frm_str .= '<td class="indexing_field" ><input type="text" style="width:97%;" onkeyup="erase_contact_external_id(\'department_number\', \'department_number_id\');"'
+	. 'name="department_number" id="department_number" value="';
+	if( isset($data['department_number']) && !empty($data['department_number'])) {
+	$frm_str .= $data['department_number'] . ' - ' . $depts[$data['department_number']];
+	}                
+	$frm_str .= '"/><div id="show_department_number" '
+	. 'class="autocomplete autocompleteIndex"></div></td>';
+	$frm_str .= '</tr>';
+	$frm_str .= '<input type="hidden" id="department_number_id" value="';
+	if( isset($data['department_number']) && !empty($data['department_number'])) {
+	$frm_str .= $data['department_number'];
+	}                
+	$frm_str .= '"/>';
+	/*****************/
+
     if ($core_tools->is_module_loaded('tags') && ($core_tools->test_service('tag_view', 'tags', false) == 1)) {
         //INITIALIZE
         $tags = get_value_fields($formValues, 'tag_userform');
@@ -1273,12 +1348,15 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if ($data['type_contact'] != 'internal') {
         $frm_str .= "check_date_exp('".$path_to_script."','".$path_check_date_link."');";
     }
-    $frm_str .= 'launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'\', \'\', \'\', \'contactid\', \'addressid\');update_contact_type_session(\''
+    $frm_str .='launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'\', \'\', \'\', \'contactid\', \'addressid\', \''. $_SESSION['config']['businessappurl'] . 'index.php?display=true'. '&page=getDepartment\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
     $frm_str .= 'affiche_reference();';
-
-    $frm_str .= '</script>';
+    $frm_str .= 'initList_hidden_input(\'department_number\', \'show_department_number\',\''
+         . $_SESSION['config']['businessappurl'] . 'index.php?display='
+         . 'true&page=autocomplete_department_number\','
+         . ' \'Input\', \'2\', \'department_number_id\');';
+    $frm_str .='</script>';
     /*** Extra CSS ***/
     $frm_str .= '<style>';
     $frm_str .= '#destination_chosen .chosen-drop{width:400px;}#folder_chosen .chosen-drop{width:400px;}';
@@ -1623,6 +1701,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if ($values_form[$i]['ID'] == 'destination' && $_SESSION['ListDiffFromRedirect'] == true) {
             //fix redirect action in validate_page
         } else {
+            if($values_form[$i]['ID'] != 'departure_date' && $cat_id != 'outgoing'){
             if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] != 'none') {
                 if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res') {
                     $query_res .= ', '.$values_form[$i]['ID'].' = ? ';
@@ -1647,6 +1726,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     $query_ext .= ', '.$values_form[$i]['ID'].' = ?';
                     $arrayPDOext = array_merge($arrayPDOext, array($values_form[$i]['VALUE']));
                 }
+                }
             }
         }
     }
@@ -1658,10 +1738,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     }
 
     ///////////////////////// Other cases
-    $type->inits_opt_indexes($coll_id, $res_id);
+    //$type->inits_opt_indexes($coll_id, $res_id);
 
     for ($i = 0; $i < count($indexes); ++$i) {
+        if($indexes[$i] != 'departure_date'){
         $val_indexes[$indexes[$i]] = get_value_fields($values_form, $indexes[$i]);
+        }
     }
     $query_res .= $type->get_sql_update($type_id, $coll_id, $val_indexes);
 

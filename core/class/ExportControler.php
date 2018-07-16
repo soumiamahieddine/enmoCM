@@ -104,6 +104,9 @@ class ExportControler extends ExportFunctions
             if ($line->process_limit_date) {
                 $line->process_limit_date = substr($line->process_limit_date, 0, 10);
             }
+            if ($line->departure_date) {
+                $line->departure_date = substr($line->departure_date, 0,10);
+            }
             $this->object_export->{$this->pos} = $line;
 
             //STEP 3 : EXPORT OTHER DATA
@@ -318,6 +321,38 @@ class ExportFunctions
         $result = $stmt->fetchObject();
 
         $this->object_export->{$this->pos}->get_status = $result->label_status;
+    }
+
+    function get_department($libelle)
+    {
+
+        $query_status = "SELECT department_number_id FROM res_view_letterbox WHERE res_id = ##res_id## ";
+
+        $db = new Database();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_department = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', '?', $query_status);
+            $stmt = $db->query($query, array($res_id));
+
+            $result = $stmt->fetchObject();
+
+            $deptName = "";
+
+            require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."department_list.php");
+            if ($result->department_number_id <> '') {
+                $deptName = $result->department_number_id . ' - ' . $depts[$result->department_number_id];
+            }
+
+            $line_value->get_department = $deptName;
+        }
     }
 
     public function get_tags($libelle, $res_id)

@@ -41,6 +41,7 @@ import { DocserversAdministrationComponent }            from './docservers-admin
 import { DocserverAdministrationComponent }             from './docserver-administration.component';
 import { TemplatesAdministrationComponent }             from './templates-administration.component';
 import { TemplateAdministrationComponent }              from './template-administration.component';
+import { SecuritiesAdministrationComponent }              from './securities-administration.component';
 
 @NgModule({
     imports:      [
@@ -90,6 +91,7 @@ import { TemplateAdministrationComponent }              from './template-adminis
         DocserverAdministrationComponent,
         TemplatesAdministrationComponent,
         TemplateAdministrationComponent,
+        SecuritiesAdministrationComponent,
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

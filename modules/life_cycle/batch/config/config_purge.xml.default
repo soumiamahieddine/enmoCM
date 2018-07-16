@@ -7,7 +7,7 @@
         <LogLevel>INFO</LogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit> <!-- on doc -->
-        <WhereClause>status = 'PUR' and current_date &gt;= custom_d1</WhereClause> <!-- use if PurgeMode = documents or both -->
+        <WhereClause>status = 'PUR' and current_date &gt;= departure_date</WhereClause> <!-- use if PurgeMode = documents or both -->
         <ExportFolder>c:\xampp\htdocs\mep12\modules\</ExportFolder>
         <CleanContactsMoral>false</CleanContactsMoral> <!-- if true, remove useless moral contacts and addresses. use if PurgeMode = contacts or both -->
         <CleanContactsNonMoral>false</CleanContactsNonMoral> <!-- if true, remove useless non moral contacts and addresses. use if PurgeMode = contacts or both -->

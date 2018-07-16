@@ -32,6 +32,7 @@ import { DocserversAdministrationComponent }            from './docservers-admin
 import { DocserverAdministrationComponent }            from './docserver-administration.component';
 import { TemplatesAdministrationComponent }            from './templates-administration.component';
 import { TemplateAdministrationComponent }            from './template-administration.component';
+import { SecuritiesAdministrationComponent }            from './securities-administration.component';
 
 @NgModule({
     imports: [
@@ -78,6 +79,7 @@ import { TemplateAdministrationComponent }            from './template-administr
             { path: 'administration/templates', component: TemplatesAdministrationComponent },
             { path: 'administration/templates/new', component: TemplateAdministrationComponent },
             { path: 'administration/templates/:id', component: TemplateAdministrationComponent },
+            { path: 'administration/securities', component: SecuritiesAdministrationComponent },
         ]),
     ],
     exports: [

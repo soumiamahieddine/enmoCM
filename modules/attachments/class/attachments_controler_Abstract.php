@@ -158,24 +158,6 @@ abstract class attachments_controler_Abstract
                                 'type' => "integer",
                             )
                         );
-                        if ($_SESSION['origin'] == "scan") {
-                            array_push(
-                                $_SESSION['data'],
-                                array(
-                                    'column' => "scan_user",
-                                    'value' => $_SESSION['user']['UserId'],
-                                    'type' => "string",
-                                )
-                            );
-                            array_push(
-                                $_SESSION['data'],
-                                array(
-                                    'column' => "scan_date",
-                                    'value' => $req->current_datetime(),
-                                    'type' => "function",
-                                )
-                            );
-                        }
                         array_push(
                             $_SESSION['data'],
                             array(

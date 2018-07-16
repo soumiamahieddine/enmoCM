@@ -145,6 +145,8 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
                     ."or lower(title) LIKE lower(:multifield) "
                     ."or lower(doc_custom_t1) LIKE lower(:multifield) "
+                    ."or lower(description) LIKE lower(:multifield) "
+                    ."or lower(barcode) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "                    
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield) AND status NOT IN ('DEL','OBS','TMP')))) ";       
                 if (ctype_digit($_REQUEST['multifield']))
@@ -191,6 +193,15 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":chrono" => "%".$chrono."%"));
                 $where_request .=" and  ";
             } 
+
+            // CODE A BARRES
+            elseif ($tab_id_fields[$j] == 'barcode' && !empty($_REQUEST['barcode'])) {
+                $json_txt .= " 'barcode' : ['".addslashes(trim($_REQUEST['barcode']))."'],";
+                $barcode = $func->wash($_REQUEST['barcode'],"no",_BARCODE,"no");
+                $where_request .= " lower(barcode) like lower(:barcode) ";
+		$arrayPDO = array_merge($arrayPDO, array(":barcode" => "%".$barcode."%"));
+                $where_request .=" and  ";
+            }
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority_chosen' && isset($_REQUEST['priority_chosen']))
             {
@@ -232,11 +243,11 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (lower(process_notes) LIKE lower(:processNotes) ) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":processNotes" => "%".$s_process_notes."%"));
             }
-            // IDENTIFIER
-            elseif ($tab_id_fields[$j] == 'identifier' && !empty($_REQUEST['identifier'])) {
-                $json_txt .= "'identifier' : ['".addslashes(trim($_REQUEST['identifier']))."'],";
-                $where_request .=" (lower(identifier) LIKE lower(:identifier) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":identifier" => "%".$_REQUEST['identifier']."%"));
+            // REFERENCE COURRIER EXTERNE
+            elseif ($tab_id_fields[$j] == 'external_id' && !empty($_REQUEST['external_id'])) {
+                $json_txt .= "'external_id' : ['".addslashes(trim($_REQUEST['external_id']))."'],";
+                $where_request .=" (lower(external_id) LIKE lower(:external_id) ) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":external_id" => "%".$_REQUEST['external_id']."%"));
             }
             // DESCRIPTION
             elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
@@ -249,6 +260,22 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
                 $where_request .=" (lower(reference_number) LIKE lower(:referenceNumber) ) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$_REQUEST['reference_number']."%"));
+            }            
+            // DEPARTMENT NUMBER
+            elseif ($tab_id_fields[$j] == 'department_number_chosen' && !empty($_REQUEST['department_number_chosen'])) {
+
+                $json_txt .= " 'department_number_chosen' : [";
+
+                for ($get_i = 0; $get_i <count($_REQUEST['department_number_chosen']); $get_i++)
+                {
+                    $json_txt .= "'".$_REQUEST['department_number_chosen'][$get_i]."',";
+                }
+
+                $json_txt = substr($json_txt, 0, -1);
+                $json_txt .= '],';
+
+                $where_request .=" (department_number_id in (:department_number)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":department_number" => $_REQUEST['department_number_chosen']));
             }
             // NOTES
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
@@ -479,9 +506,11 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
-                    ."or lower(identifier) LIKE lower(:multifieldWelcome) "
+                    ."or lower(external_id) LIKE lower(:multifieldWelcome) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(title) LIKE lower(:multifieldWelcome) "
+                    ."or lower(description) LIKE lower(:multifieldWelcome) "
+                    ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
                     ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
@@ -582,6 +611,34 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (".$req->extract_date("creation_date")." <= :creationDateTo) and ";
                     $arrayPDO = array_merge($arrayPDO, array(":creationDateTo" => $func->format_date_db($_REQUEST['creation_date_to'])));
                     $json_txt .= " 'creation_date_to' : ['".trim($_REQUEST['creation_date_to'])."'],";
+                }
+            }
+            // EXP DATE : FROM
+            elseif ($tab_id_fields[$j] == 'exp_date_from' && !empty($_REQUEST['exp_date_from']))
+            {
+                if ( preg_match($_ENV['date_pattern'],$_REQUEST['exp_date_from'])==false )
+                {
+                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['exp_date_from'];
+                }
+                else
+                {
+                    $where_request .= " (".$req->extract_date("departure_date")." >= :expDateFrom) and ";
+		    $arrayPDO = array_merge($arrayPDO, array(":expDateFrom" => $func->format_date_db($_REQUEST['exp_date_from'])));
+                    $json_txt .= " 'exp_date_from' : ['".trim($_REQUEST['exp_date_from'])."'],";
+                }
+            }
+            // EXP DATE : TO
+            elseif ($tab_id_fields[$j] == 'exp_date_to' && !empty($_REQUEST['exp_date_to']))
+            {
+                if ( preg_match($_ENV['date_pattern'],$_REQUEST['exp_date_to'])==false )
+                {
+                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['exp_date_to'];
+                }
+                else
+                {
+                    $where_request .= " (".$req->extract_date("departure_date")." <= :expDateTo) and ";
+		    $arrayPDO = array_merge($arrayPDO, array(":expDateTo" => $func->format_date_db($_REQUEST['exp_date_to'])));
+		    $json_txt .= " 'exp_date_to' : ['".trim($_REQUEST['exp_date_to'])."'],";
                 }
             }
             // PROCESS DATE : FROM (closing_date)

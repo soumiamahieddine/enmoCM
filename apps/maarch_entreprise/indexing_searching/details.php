@@ -245,8 +245,7 @@ if ($core->is_module_loaded('cases') == true) {
 }
 $stmt = $db->query(
     'SELECT status, format, typist, creation_date, fingerprint, filesize, '
-    .'res_id, destination, work_batch, page_count, scan_date, scan_user, '
-    .'scan_location, scan_wkstation, scan_batch, source, '
+    .'res_id, destination, source, '
     .'description, closing_date, alt_identifier, initiator, entity_label '.$comp_fields
     .$case_sql_complementary.' FROM '.$table.' WHERE res_id = ?',
     array($s_id)
@@ -293,14 +292,7 @@ if ($stmt->rowCount() == 0) {
     $chrono_number = $res->alt_identifier;
     $initiator = $res->initiator;
     $fingerprint = $res->fingerprint;
-    $work_batch = $res->work_batch;
     $destination = $res->destination;
-    $page_count = $res->page_count;
-    $scan_date = functions::format_date_db($res->scan_date);
-    $scan_user = $res->scan_user;
-    $scan_location = $res->scan_location;
-    $scan_wkstation = $res->scan_wkstation;
-    $scan_batch = $res->scan_batch;
     $closing_date = functions::format_date_db($res->closing_date, false);
     $indexes = $type->get_indexes($type_id, $coll_id);
     $entityLabel = $res->entity_label;

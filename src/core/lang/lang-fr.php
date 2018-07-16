@@ -377,13 +377,14 @@ define('_CHECK_ACKNOWLEDGEMENT', 'Vérification de l\'accusé de reception');
 define('_CHECK_REPLY', 'Vérification de la réponse au transfert');
 define('_PURGE_LETTER', 'Purger le courrier apres l\'archivage');
 define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
+define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirmation et mise à jour de la date de départ');
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
 define('_ENTITY_VOL_STAT', 'Volume des courriers par entité');
 define('_ENTITY_VOL_STAT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par service.');
 define('_RESPONSE_RATE_BY_ENTITIES', 'Taux de réponse par entité');
-define('_RESPONSE_RATE_BY_ENTITIES_DESC', 'Permet d\'afficher le pourcentage de courrier dont une réponse a été effectuée. Cette statistique se base sur le nombre de courriers dont une date de départ a été inscrite (il faut utiliser le champ custom_d1)');
+define('_RESPONSE_RATE_BY_ENTITIES_DESC', 'Permet d\'afficher le pourcentage de courrier dont une réponse a été effectuée. Cette statistique se base sur le nombre de courriers dont une date de départ a été inscrite (utilise le champ departure_date)');
 define('_ENTITY_LATE_MAIL', 'Volume de courriers en retard par entité');
 define('_ENTITY_PROCESS_DELAY', 'Délai moyen de traitement par entité');
 define('_USERS_LOGS', 'Liste des accès à l\'application par agent');

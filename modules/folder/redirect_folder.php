@@ -358,18 +358,6 @@ function redirect_documents($id, $field, $value, $coll_id, $history_msg='') {
                     $what, $_SESSION['config']['databasetype'], $_POST['module']);
     }   
 }
-            
-function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
-{
-    $db = new Database();
-
-    for($i=0; $i<count($arr_id );$i++)
-    {
-        $db->query("UPDATE ".$table. " SET video_user = '', video_time = 0 WHERE folders_system_id = ?", array($arr_id[$i]));
-
-    }
-    return true;
- }
 
  /**
  * Get the value of a given field in the values returned by the form

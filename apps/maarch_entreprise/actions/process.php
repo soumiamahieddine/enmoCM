@@ -98,12 +98,14 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $_SESSION['req'] = 'action';
     $res_id = $values[0];
     $doctypes = $type->getArrayTypes($coll_id);
-    $params_data = array('show_folder' => true);
+    $params_data = array('show_folder' => true, 'show_description' => false, 'show_department_number_id' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
     $_SESSION['save_list']['fromProcess'] = 'true';
     $_SESSION['count_view_baskets'] = 0;
     $chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
     $_SESSION['doc_id'] = $res_id;
+    $stmt = $db->query("SELECT department_number_id, description FROM res_letterbox WHERE res_id = ?", array($res_id));
+    $resOther = $stmt->fetchObject();
 
     //LAUNCH DOCLOCKER
     $docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
@@ -481,6 +483,36 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
         $frm_str .= '</script>';
     }
+
+	//AUTRES INFORMATIONS
+	$frm_str .= '<tr id="description_tr" style="display:'.$display_value.';">';
+        $frm_str .= '<td colspan="2">' . _OTHERS_INFORMATIONS . '</td>';
+    $frm_str .= '</tr>';
+    $frm_str .= '<tr>';
+        $frm_str .= '<td class="indexing_field"><textarea style="width:97%;resize:vertical" type="text" name="description" id="description" rows="2"/>'.$resOther->description.'</textarea></td>';
+    $frm_str .= '</tr>';
+
+	//DEPARTEMENT CONCERNE
+	require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."department_list.php");
+	$frm_str .= '<tr id="department_number_tr" style="display:'.$display_value.';">';
+        $frm_str .= '<td colspan="2">' . _DEPARTMENT_NUMBER . '</td>';
+    $frm_str .= '</tr>';
+    $frm_str .= '<tr>';
+        $frm_str .= '<td class="indexing_field"><input type="text" style="width:97%;" onkeyup="erase_contact_external_id(\'department_number\', \'department_number_id\');" name="department_number" id="department_number" value="';
+            if( isset($resOther->department_number_id) && !empty($resOther->department_number_id)) {
+                $frm_str .= $resOther->department_number_id . ' - ' . $depts[$resOther->department_number_id];
+            }                
+            $frm_str .= '"/><div id="show_department_number" class="autocomplete"></div></td>';
+    $frm_str .= '</tr>';
+	$frm_str .= '<input type="hidden" id="department_number_id" value="'.$resOther->department_number_id.'"/>';
+	$frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
+	//script
+        $frm_str .= '<script>';
+            $frm_str .= ' initList_hidden_input(\'department_number\', \'show_department_number\',\''
+				. $_SESSION['config']['businessappurl'] . 'index.php?display='
+				. 'true&page=autocomplete_department_number\','
+				. ' \'Input\', \'2\', \'department_number_id\');';
+        $frm_str .= '</script>';
     $frm_str .= '</table>';
     $frm_str .= '</div>';
 
@@ -867,6 +899,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if ($values_form[$j]['ID'] == 'folder') {
             $folder = $values_form[$j]['VALUE'];
         }
+        if ($values_form[$j]['ID'] == "description") {
+            $description = $values_form[$j]['VALUE'];
+        }
+        if ($values_form[$j]['ID'] == "department_number_id") {
+            $department_number_id = $values_form[$j]['VALUE'];
+        }
         if ($values_form[$j]['ID'] == 'tag_userform') {
             $tags = $values_form[$j]['VALUE'];
         }
@@ -874,6 +912,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $thesaurusList = $values_form[$j]['VALUE'];
         }
     }
+
+    //DEPARTEMENT CONCERNE et DESCRIPTION
+    $db->query("UPDATE res_letterbox SET department_number_id = ?, description = ? WHERE res_id= ?",
+	array($department_number_id, $description, $arr_id[0]));
 
     if ($core->is_module_loaded('tags')) {
         $tags_list = explode('__', $tags);
@@ -936,18 +978,4 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     array($bitmask, $process_notes, $other_txt, $arr_id[0]));
 
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
-}
-
-function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
-{
-    $db = new Database();
-
-    $result = '';
-
-    for ($i = 0; $i < count($arr_id); ++$i) {
-        $result .= $arr_id[$i].'#';
-        $db->query('UPDATE '.$table." SET video_user = '', video_time = 0 WHERE res_id = ?", array($arr_id[$i]));
-    }
-
-    return array('result' => $result, 'history_msg' => '');
 }

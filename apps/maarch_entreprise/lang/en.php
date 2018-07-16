@@ -5013,3 +5013,21 @@ if (!defined('_IMG_ALREADY_UPLOADED')) {
 if (!defined('_FILE_FORMAT_NOT_ALLOWED')) {
     define('_FILE_FORMAT_NOT_ALLOWED', "Image format not allowed");
 }
+if (!defined('_SIMPLE_CONFIRM_WITH_UPDATE_DATE')) {
+    define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', "Confirm and update departure date");
+}
+if (!defined('_BARCODE')) {
+    define('_BARCODE', "Bar code");
+}
+if (!defined('_CHOOSE_DEPARTMENT_NUMBER')) {
+    define('_CHOOSE_DEPARTMENT_NUMBER', "Choose department number");
+}
+if (!defined('_DEPARTMENT_NUMBER')) {
+    define('_DEPARTMENT_NUMBER', "Department number");
+}
+if (!defined('_CHRONO_NUMBER_HELP')) {
+    define('_CHRONO_NUMBER_HELP', "Example : MAARCH/2018A/36");
+}
+if (!defined('_BARCODE_HELP')) {
+    define('_BARCODE_HELP', "Example : ABC000004");
+}

@@ -11,12 +11,14 @@ declare var angularGlobals : any;
 })
 export class MenuTopComponent implements OnInit {
 
-    coreUrl : string;
-    lang    : any       = LANG;
-    user    : any       = {};
+    coreUrl    : string;
+    lang       : any       = LANG;
+    user       : any       = {};
+    mobileMode : boolean   = false;
 
 
     constructor() {
+        this.mobileMode = angularGlobals.mobileMode;
     }
 
     ngOnInit(): void {

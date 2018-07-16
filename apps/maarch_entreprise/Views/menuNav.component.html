@@ -1,4 +1,32 @@
 <mat-nav-list>
+    <ng-container *ngIf="mobileMode">
+        <canvas class="header-bg" width="250" height="70" style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>
+        <i title="{{lang.myProfileAccess}}" routerLink="/profile" style="cursor:pointer;z-index:1;color:white;position: absolute;left: 85px;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;"></i>
+        <mat-expansion-panel style="margin-top:-7px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="justify-content: center;">
+                    {{user.firstname}} {{user.lastname | uppercase}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let group of user.groups">
+                    <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
+                </mat-list-item>
+                <h3 mat-subheader style="color:#666;">{{lang.groups}}</h3>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let group of user.groups">
+                    <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
+                </mat-list-item>
+                <h3 mat-subheader style="color:#666;">{{lang.entities}}</h3>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let entity of user.entities">
+                    <p mat-line style="color:#666;opacity:0.5;"> {{entity.entity_label}} </p>
+                </mat-list-item>
+            </mat-list>
+        </mat-expansion-panel>
+    </ng-container>
+
     <h3 mat-subheader>{{lang.browsing}}</h3>
     <a mat-list-item href="index.php">
         <mat-icon color="primary" mat-list-icon class="fa fa-home"></mat-icon>

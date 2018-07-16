@@ -87,7 +87,7 @@ if (!defined("_MANAGE_BASKETS_APP"))
 
 /************** Bannette : Liste + Formulaire**************/
 if (!defined("_ALL_BASKETS"))
-    define("_ALL_BASKETS", "Toutes les bannettes");
+    define("_ALL_BASKETS", "Tout mon périmètre");
 if (!defined("_BASKET_LIST"))
     define("_BASKET_LIST", "Liste des bannettes");
 if (!defined("_ADD_BASKET"))
@@ -374,7 +374,7 @@ if (!defined("_FILTER_BY"))
 if (!defined("_OTHER_BASKETS"))
     define("_OTHER_BASKETS", "Autres bannettes");
 if (!defined("_SPREAD_SEARCH_TO_BASKETS"))
-    define("_SPREAD_SEARCH_TO_BASKETS", "Etendre la recherche aux bannettes");
+    define("_SPREAD_SEARCH_TO_BASKETS", "Etendue de la recherche");
 if (!defined("_BASKET_WELCOME_TXT1"))
     define("_BASKET_WELCOME_TXT1", "Durant votre navigation dans les bannettes,");
 if (!defined("_BASKET_WELCOME_TXT2"))

@@ -396,7 +396,7 @@
     <id>admin_password_rules</id>
     <name>_SECURITIES</name>
     <comment>_SECURITIES</comment>
-    <servicepage></servicepage>
+    <servicepage>/administration/securities</servicepage>
     <servicetype>admin</servicetype>
     <category>supervision</category>
     <system_service>false</system_service>

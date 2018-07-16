@@ -243,7 +243,7 @@ for($i=0; $i<$totalEntities; $i++)
 	$nbResIncoming = $res->nb_res_incoming;
         
 	//NB RES CUSTOM_D1 (if response)
-	$stmt = $db->query("select count(res_id) as nb_response_incoming from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') AND (admission_date is not null and doc_custom_d1 is not null) AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
+	$stmt = $db->query("select count(res_id) as nb_response_incoming from ".$view." where destination = ? and ".$view.".status not in ('DEL','BAD') AND (admission_date is not null and departure_date is not null) AND category_id = 'incoming'".$where_date." ".$where_status." ".$where_priority . $where_clause,array($entities[$i]['ID']));
 	$res = $stmt->fetchObject();
 	$nbResponseIncoming = $res->nb_response_incoming;
         

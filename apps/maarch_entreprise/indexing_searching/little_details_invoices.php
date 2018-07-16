@@ -121,8 +121,7 @@ if (empty($_SESSION['error'])) {
     }
     $stmt = $db->query(
         'SELECT status, format, typist, creation_date, fingerprint, filesize, '
-        .'res_id, work_batch, page_count, scan_date, scan_user, '
-        .'scan_location, scan_wkstation, scan_batch, source, '
+        .'res_id, source, '
         .'description, closing_date, type_id '.$compFields
         .$caseSqlComplementary.' FROM '.$table.' WHERE res_id = ?',
          array($resId)
@@ -179,13 +178,6 @@ if (!empty($_SESSION['error'])) {
             $filesize = $res->filesize;
             $creationDate = functions::format_date_db($res->creation_date, false);
             $fingerprint = $res->fingerprint;
-            $workBatch = $res->work_batch;
-            $pageCount = $res->page_count;
-            $scanDate = functions::format_date_db($res->scan_date);
-            $scanUser = $res->scan_user;
-            $scanLocation = $res->scan_location;
-            $scanWkstation = $res->scan_wkstation;
-            $scanBatch = $res->scan_batch;
             $closingDate = functions::format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($typeId, $collId);
 

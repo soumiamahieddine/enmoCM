@@ -143,66 +143,6 @@ function createPDI($resInContainer)
             }
             $source->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $provenance->appendChild($source);
-            if (isset($resRecordset->scan_date)) {
-                $scanDate = $docXML->createElement(
-                    'SCAN_DATE', $resRecordset->scan_date
-                );
-            } else {
-                $scanDate = $docXML->createElement('SCAN_DATE', '');
-            }    
-            $scanDate->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($scanDate);
-            if (isset($resRecordset->scan_user)) {
-                $scanUser = $docXML->createElement(
-                    'SCAN_USER', $resRecordset->scan_user
-                );
-            } else {
-                $scanUser = $docXML->createElement('SCAN_USER', '');
-            }
-            $scanUser->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($scanUser);
-            if (isset($resRecordset->scan_location)) {
-                $scanLocation = $docXML->createElement(
-                    'SCAN_LOCATION', $resRecordset->scan_location
-                );
-            } else {
-                $scanLocation = $docXML->createElement(
-                    'SCAN_LOCATION', ''
-                );
-            }
-            $scanLocation->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($scanLocation);
-            if (isset($resRecordset->scan_wkstation)) {
-                $scanWkstation = $docXML->createElement(
-                    'SCAN_WKSTATION', $resRecordset->scan_wkstation
-                );
-            } else {
-                $scanWkstation = $docXML->createElement(
-                    'SCAN_WKSTATION', ''
-                );
-            }
-            $scanWkstation->setAttributeNode(
-                new DOMAttr('SOURCE', 'RES')
-            );
-            $provenance->appendChild($scanWkstation);
-            if (isset($resRecordset->scan_batch)) {
-                $scanBatch = $docXML->createElement(
-                    'SCAN_BATCH', $resRecordset->scan_batch
-                );
-            } else {
-                $scanBatch = $docXML->createElement('SCAN_BATCH', '');
-            }
-            $scanBatch->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($scanBatch);
-            if (isset($resRecordset->envelop_id)) {
-                $envelopId = $docXML->createElement(
-                    'ENVELOP_ID', $resRecordset->envelop_id
-                );
-            } else {
-                $envelopId = $docXML->createElement('ENVELOP_ID', '');
-            }
-            $envelopId->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($envelopId);
             if (isset($resRecordset->origin)) {
                 $origin = $docXML->createElement(
                     'ORIGIN', $resRecordset->origin
@@ -212,15 +152,6 @@ function createPDI($resInContainer)
             }
             $origin->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $provenance->appendChild($origin);
-            if (isset($resRecordset->is_ingoing)) {
-                $isIngoing = $docXML->createElement(
-                    'IS_INGOING', $resRecordset->is_ingoing
-                );
-            } else {
-                $isIngoing = $docXML->createElement('IS_INGOING', '');
-            }
-            $isIngoing->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($isIngoing);
             if ($GLOBALS['enableHistory']) {
                 if (isset($resRecordset->history)) {
                     $history = $docXML->createElement(
@@ -335,15 +266,15 @@ function createPDI($resInContainer)
             $customN1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $customN1->setAttributeNode(new DOMAttr('LABEL', _AMOUNT));
             $reference->appendChild($customN1);
-            if (isset($resRecordset->doc_custom_d1)) {
+            if (isset($resRecordset->departure_date)) {
                 $customD1 = $docXML->createElement(
-                    'CUSTOM_D1', $resRecordset->doc_custom_d1
+                    'DEPARTURE_DATE', $resRecordset->departure_date
                 );
             } else {
-                $customD1 = $docXML->createElement('CUSTOM_D1', '');
+                $customD1 = $docXML->createElement('DEPARTURE_DATE', '');
             }
             $customD1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $customD1->setAttributeNode(new DOMAttr('LABEL', _CUSTOM_D1));
+            $customD1->setAttributeNode(new DOMAttr('LABEL', _DEPARTURE_DATE));
             $reference->appendChild($customD1);
             if (isset($resRecordset->doc_custom_t2)) {
                 $customT2 = $docXML->createElement(
@@ -399,17 +330,6 @@ function createPDI($resInContainer)
             }
             $fingerprint->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $fixity->appendChild($fingerprint);
-            if (isset($resRecordset->scan_postmark)) {
-                $scanPostmark = $docXML->createElement(
-                    'SCAN_POSTMARK', $resRecordset->scan_postmark
-                );
-            } else {
-                $scanPostmark = $docXML->createElement(
-                    'SCAN_POSTMARK', ''
-                );
-            }
-            $scanPostmark->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $fixity->appendChild($scanPostmark);
             if (isset($resRecordset->filesize)) {
                 $filesize = $docXML->createElement(
                     'FILESIZE', $resRecordset->filesize
@@ -419,15 +339,6 @@ function createPDI($resInContainer)
             }
             $filesize->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $fixity->appendChild($filesize);
-            if (isset($resRecordset->page_count)) {
-                $pageCount = $docXML->createElement(
-                    'PAGE_COUNT', $resRecordset->page_count
-                );
-            } else {
-                $pageCount = $docXML->createElement('PAGE_COUNT', '');
-            }
-            $pageCount->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $fixity->appendChild($pageCount);
             //a context
             $context = $docXML->createElement('CONTEXT');
             $pdi->appendChild($context);
