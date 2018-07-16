@@ -580,10 +580,10 @@ export const LANG_FR = {
     "confirmToBeAbsent"                 : "Voulez-vous vraiment activer votre absence ? Vous serez automatiquement déconnecté",
     "confirmDeleteMailSignature"        : "Voulez-vous vraiment supprimer la signature de mail ?",
     "confirmDeleteSignature"            : "Voulez-vous vraiment supprimer la signature ?",
-    "passwordminLength"                 : "charactère(s) au minimum",
+    "passwordminLength"                 : "caractère(s) au minimum",
     "passwordcomplexityUpper"           : "1 majuscule au minimum",
     "passwordcomplexityNumber"          : "1 chiffre au minimum",
-    "passwordcomplexitySpecial"         : "1 charactère spécial au minimum",
+    "passwordcomplexitySpecial"         : "1 caractère spécial au minimum",
     "passwordrenewal"                   : "Veuillez notez que ce nouveau mot de passe ne sera valide que",
     "password2renewal"                  : "Passé ce délai, vous devrez en choisir un nouveau.",
     "days"                              : "jour(s)",
@@ -610,5 +610,5 @@ export const LANG_FR = {
     "passwordlockTimeRequired"          : "Temps de blocage",
     "securitiesAdministration"          : "Administration de la sécurité",
     "passwordRulesUpdated"              : "Contraintes de sécurité mises à jour",
-    
+    "chars"                             : "caractère(s)", 
 };

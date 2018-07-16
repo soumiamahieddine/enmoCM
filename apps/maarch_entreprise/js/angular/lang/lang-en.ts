@@ -587,4 +587,5 @@ export const LANG_EN = {
     "passwordlockTimeRequired"          : "Time freeze",
     "securitiesAdministration"          : "Security administration",
     "passwordRulesUpdated"              : "Sécurity constraints updated",
+    "chars"                             : "char(s)", 
 };

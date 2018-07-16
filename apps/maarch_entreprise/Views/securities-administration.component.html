@@ -39,15 +39,15 @@
                                 <mat-form-field style="padding:10px;" *ngIf="rule.enabled && (rule.label == 'minLength' || rule.label == 'historyLastUse' || rule.label == 'renewal')">
                                     <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
                                         required>
-                                    <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;caractère(s)</span>
-                                    <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;jour(s)</span>
+                                    <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
+                                    <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
                                 </mat-form-field>
                                 <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockAttempts'">
                                     <mat-form-field>
                                         <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
                                             required>
-                                        <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;caractère(s)</span>
-                                        <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;jour(s)</span>
+                                        <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
+                                        <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockTime'">
