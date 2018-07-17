@@ -188,7 +188,7 @@ export class PasswordModificationComponent implements OnInit {
     }
 
     getErrorMessage() {
-        console.log(this.firstFormGroup.controls['newPasswordCtrl'].errors);
+        //console.log(this.firstFormGroup.controls['newPasswordCtrl'].errors);
         if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
             return this.lang.requiredField + ' !';
 
