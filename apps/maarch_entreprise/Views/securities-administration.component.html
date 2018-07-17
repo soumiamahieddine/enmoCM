@@ -10,22 +10,9 @@
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
-            [opened]="mobileQuery.matches ? false : true" style="width:400px;">
+            [opened]="mobileQuery.matches ? false : true">
             <menu-nav></menu-nav>
             <mat-divider></mat-divider>
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.securityConstraints}}</h3>
-                <ng-container *ngFor="let rule of passwordRulesList">
-                    <a mat-list-item disableRipple="true" *ngIf="rule.label != 'lockTime'">
-                        <mat-icon color="primary" mat-list-icon style="margin-bottom: 20px;">
-                            <mat-slide-toggle [checked]="rule.enabled" color="primary" (change)="toggleRule(rule);"></mat-slide-toggle>
-                        </mat-icon>
-                        <p mat-line [ngStyle]="{'opacity': rule.enabled ? '' : '0.5'}" (click)="toggleRule(rule);">
-                            {{passwordRules[rule.label].label}}
-                        </p>
-                    </a>
-                </ng-container>
-            </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
@@ -33,30 +20,39 @@
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
                 <mat-tab-group>
-                    <mat-tab label="Mot de passe">
+                    <mat-tab label="{{lang.password}}">
                         <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
                             <ng-container *ngFor="let rule of passwordRulesList">
-                                <mat-form-field style="padding:10px;" *ngIf="rule.enabled && (rule.label == 'minLength' || rule.label == 'historyLastUse' || rule.label == 'renewal')">
-                                    <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
-                                        required>
-                                    <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
-                                    <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
-                                </mat-form-field>
-                                <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockAttempts'">
-                                    <mat-form-field>
-                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
-                                            required>
-                                        <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
-                                        <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
-                                    </mat-form-field>
+                                <div class="row" style="min-height: 60px;">
+                                        <div class="col-md-4" style="margin-top: 15px;">
+                                                <mat-slide-toggle *ngIf="rule.label != 'lockTime'" [checked]="rule.enabled" color="primary" (change)="toggleRule(rule);">{{passwordRules[rule.label].label}}</mat-slide-toggle>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <mat-form-field style="padding:10px;" *ngIf="rule.enabled && (rule.label == 'minLength' || rule.label == 'historyLastUse' || rule.label == 'renewal')">
+                                                    <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                                        required>
+                                                    <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
+                                                    <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
+                                                </mat-form-field>
+                                                <div *ngIf="rule.enabled && rule.label == 'lockAttempts'">
+                                                    <mat-form-field>
+                                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                                            required>
+                                                        <span matSuffix *ngIf="rule.label == 'minLength'">&nbsp;{{lang.chars}}</span>
+                                                        <span matSuffix *ngIf="rule.label == 'renewal'">&nbsp;{{lang.days}}</span>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div *ngIf="rule.enabled && rule.label == 'lockTime'">
+                                                    <mat-form-field>
+                                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
+                                                            required>
+                                                        <span matSuffix>&nbsp;{{lang.minutes}}</span>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
                                 </div>
-                                <div class="col-md-6" *ngIf="rule.enabled && rule.label == 'lockTime'">
-                                    <mat-form-field>
-                                        <input type="number" [name]="rule.label" [(ngModel)]="rule.value" min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules[rule.label].label}}"
-                                            required>
-                                        <span matSuffix>&nbsp;minute(s)</span>
-                                    </mat-form-field>
-                                </div>
+                                
+
                             </ng-container>
                             <div class="col-md-12 text-center" style="padding:10px;">
                                 <button mat-raised-button type="submit" color="primary" [disabled]="!passwordForm.valid || checkModif()">{{lang.validate}}</button>
