@@ -55,6 +55,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="form-group">
+                                    <div style="text-align:center;color: rgba(0,0,0,0.54);font-size: 75%;">{{this.ruleText}}</div>
                                     <div class="col-sm-6" style="padding-left:0px;padding-right: 0px;">
                                         <mat-form-field style="padding:10px;">
                                             <input matInput #inputPasswd placeholder="{{lang.typeNewPassword}}" formControlName="newPasswordCtrl" required [type]="hidePassword ? 'password' : 'text'">
@@ -63,7 +64,6 @@
                                                 <i color="accent" class="fa fa-check"></i>
                                                 <span color="accent">{{lang.passwordValid}}</span>
                                             </mat-hint>
-                                            <mat-hint *ngIf="!validPassword">{{this.ruleText}}</mat-hint>
                                             <mat-error>{{getErrorMessage()}}</mat-error>
                                         </mat-form-field>
                                     </div>
@@ -79,6 +79,11 @@
                                             <mat-error>{{lang.passwordNotMatch}} !</mat-error>
                                         </mat-form-field>
                                     </div>
+                                </div>
+                                <div *ngIf="passwordRules.renewal.enabled || passwordRules.historyLastUse.enabled" class="form-group">
+                                    <div class="col-sm-12" style="padding-left:0px;padding-right:0px;">
+                                        <div class="alert alert-warning" role="alert" [innerHTML]="otherRuleText" style="text-align:center;"></div>
+                                    </div>      
                                 </div>
                                 <div class="form-group">
                                     <div style="text-align:center;">

@@ -41,7 +41,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     };
     firstFormGroup: FormGroup;
     ruleText: string = '';
-    OtherRuleText: string;
+    otherRuleText: string;
     validPassword: Boolean = false;
     matchPassword: Boolean = false;
     hidePassword: Boolean = true;
@@ -747,6 +747,10 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
             .subscribe((data: any) => {
                 let valArr : ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];
+                let otherRuleTextArr: String[] = [];
+
+                valArr.push(Validators.required);
+
                 data.rules.forEach((rule: any) => {
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
@@ -782,22 +786,23 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                         if (rule.enabled) {
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
-
                     } else if (rule.label == 'renewal') {
                         this.passwordRules.renewal.enabled = rule.enabled;
                         this.passwordRules.renewal.value = rule.value;
-                        this.OtherRuleText = this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label];
+                        if (rule.enabled) {
+                            otherRuleTextArr.push(this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label]+'.');
+                        }
                     } else if (rule.label == 'historyLastUse') {
                         this.passwordRules.historyLastUse.enabled = rule.enabled;
                         this.passwordRules.historyLastUse.value = rule.value
                         if (rule.enabled) {
-                            ruleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' ' + rule.value + ' ' + this.lang['passwordhistoryLastUseDesc2']);
+                            otherRuleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' <b>' + rule.value + '</b> ' + this.lang['passwordhistoryLastUseDesc2']+'.');
                         }
                     }
 
                 });
                 this.ruleText = ruleTextArr.join(', ');
+                this.otherRuleText = otherRuleTextArr.join('<br/>');
                 this.firstFormGroup.controls["newPasswordCtrl"].setValidators(valArr);
             }, (err) => {
                 this.notify.error(err.error.errors);
