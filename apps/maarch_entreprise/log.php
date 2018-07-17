@@ -99,11 +99,11 @@ if (count($_SESSION['config']) <= 0) {
     $core->load_menu($_SESSION['modules']);
 }
 
+if (empty($login) || empty($password)) {
+    $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
+}
 if (!empty($_SESSION['error'])) {
-    header(
-        'location: '.$_SESSION['config']['businessappurl']
-        .'index.php?display=true&page=login'
-    );
+    header('location: '.$_SESSION['config']['businessappurl'] .'index.php?display=true&page=login');
     exit();
 } else {
     $loginMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
@@ -243,30 +243,21 @@ if (!empty($_SESSION['error'])) {
             exit;
         }
     } else {
-        if (empty($login) || empty($password)) {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW.'...';
-            header(
-                'location: '.$_SESSION['config']['businessappurl']
-                .'index.php?display=true&page=login'
-            );
-            exit;
+        $_SESSION['error'] = '';
+        $res = $sec->login($login, $password);
+        $_SESSION['user'] = $res['user'];
+        if (empty($res['error'])) {
+            \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+            \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
+            $core->load_menu($_SESSION['modules']);
         } else {
-            $_SESSION['error'] = '';
-            $res = $sec->login($login, $password);
-            $_SESSION['user'] = $res['user'];
-            if (empty($res['error'])) {
-                \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
-                \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-                $core->load_menu($_SESSION['modules']);
-            } else {
-                $_SESSION['error'] = $res['error'];
-            }
-
-            if ($_SESSION['user']['UserId'] == 'superadmin') {
-                $res['url'] .= '?administration=true';
-            }
-            header('location: '.$_SESSION['config']['businessappurl'].$res['url']);
-            exit();
+            $_SESSION['error'] = $res['error'];
         }
+
+        if ($_SESSION['user']['UserId'] == 'superadmin') {
+            $res['url'] .= '?administration=true';
+        }
+        header('location: '.$_SESSION['config']['businessappurl'].$res['url']);
+        exit();
     }
 }

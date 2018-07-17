@@ -84,7 +84,7 @@ abstract class BasketModelAbstract
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif','basket_res_order']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif', 'basket_res_order']);
         
         DatabaseModel::update([
             'table'     => 'baskets',
@@ -92,7 +92,7 @@ abstract class BasketModelAbstract
                 'basket_name'       => $aArgs['basket_name'],
                 'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
-                'basket_res_order'  => $aArgs['basket_res_order'],
+                'basket_res_order'  => empty($aArgs['basket_res_order']) ? 'res_id DESC' : $aArgs['basket_res_order'],
                 'is_visible'        => $aArgs['isVisible'],
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
