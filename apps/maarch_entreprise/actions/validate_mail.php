@@ -391,14 +391,14 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $barcode = '';
     if(isset($data['barcode'])&& !empty($data['barcode'])) {
         $barcode = $data['barcode'];
+        $frm_str .= '<tr id="barcode_tr" style="display:' . $displayValue . ';">';
+        $frm_str .= '<td><label for="barcode" class="form_title" >'. _BARCODE . '</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '<td class="indexing_field"><input name="barcode" ' . 'type="text" id="barcode" value="'.$barcode.'" readonly="readonly" class="readonly"' . ' /></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '</tr>';
     }
-
-    $frm_str .= '<tr id="barcode_tr" style="display:' . $displayValue . ';">';
-    $frm_str .= '<td><label for="barcode" class="form_title" >'. _BARCODE . '</label></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '<td class="indexing_field"><input name="barcode" ' . 'type="text" id="barcode" value="'.$barcode.'" readonly="readonly" class="readonly"' . ' /></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '</tr>';
+    
     /*** Category ***/
     $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
