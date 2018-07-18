@@ -426,7 +426,7 @@ abstract class diffusion_list_Abstract extends functions
             }
 
             $cptUsers = 0;
-            if (!empty($difflist[$role_id]['users']) && is_array($difflist[$role_id]['users'])) {
+            if (!empty($diffList[$role_id]['users']) && is_array($diffList[$role_id]['users'])) {
                 $cptUsers = count($diffList[$role_id]['users']);
             }
             for ($i = 0; $i < $cptUsers; ++$i) {
