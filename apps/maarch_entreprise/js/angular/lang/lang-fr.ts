@@ -613,4 +613,6 @@ export const LANG_FR = {
     "securitiesAdministration"          : "Administration de la sécurité",
     "passwordRulesUpdated"              : "Contraintes de sécurité mises à jour",
     "chars"                             : "caractère(s)", 
+    "minutes"                           : "minute(s)", 
+    "password"                          : "Mot de passe", 
 };
