@@ -515,7 +515,7 @@ abstract class diffusion_list_Abstract extends functions
 
             //CUSTOM ENTITY ROLES
             $cptEntities = 0;
-            if (!empty($difflist[$role_id]['entities']) && is_array($difflist[$role_id]['entities'])) {
+            if (!empty($diffList[$role_id]['entities']) && is_array($diffList[$role_id]['entities'])) {
                 $cptEntities = count($diffList[$role_id]['entities']);
             }
             for ($j = 0; $j < $cptEntities; ++$j) {
