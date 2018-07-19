@@ -17,7 +17,7 @@
             "tsConfig": "apps/maarch_entreprise/js/angular/tsconfig.app.json",
             "styles": [],
             "scripts": [
-              "node_modules/hammerjs/hammer.min.js"
+              "node_modules/hammerjs/hammer.js"
             ]
           },
           "configurations": {
