@@ -67,6 +67,18 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $mandatoryColumns = ['type_id'];
+        foreach ($data['data'] as $value) {
+            foreach ($mandatoryColumns as $columnKey => $column) {
+                if ($column == $value['column']) {
+                    unset($mandatoryColumns[$columnKey]);
+                }
+            }
+        }
+        if (!empty($mandatoryColumns)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data array needs column(s) [' . implode(', ', $mandatoryColumns) . ']']);
+        }
+
         $resId = StoreController::storeResource($data);
 
         if (empty($resId) || !empty($resId['errors'])) {

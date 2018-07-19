@@ -126,6 +126,7 @@ $app->post('/doctypes/secondLevel', \Doctype\controllers\SecondLevelController::
 $app->get('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':getById');
 $app->put('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':update');
 $app->delete('/doctypes/secondLevel/{id}', \Doctype\controllers\SecondLevelController::class . ':delete');
+$app->get('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':get');
 $app->post('/doctypes/types', \Doctype\controllers\DoctypeController::class . ':create');
 $app->get('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':getById');
 $app->put('/doctypes/types/{id}', \Doctype\controllers\DoctypeController::class . ':update');
