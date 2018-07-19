@@ -1034,7 +1034,7 @@ class Install extends functions
 
 
 ######################THUMBNAILS####################################################
-* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh
+*/5 5-21 * * 1-5       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/thumbnails/scripts/launch_batch_thumbnails.sh
 15 12 * * 0        rm -Rf '.realpath('.').'/modules/thumbnails/log/*.log
 
 ######################notification#################################################
@@ -1052,14 +1052,14 @@ class Install extends functions
 11 12 * * 0        rm -Rf '.realpath('.').'/modules/notifications/batch/logs/process_email_stack/*.log
 ######################sendmail####################################################
 
-* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
+*/2 * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/sendmail/batch/scripts/sendmail.sh >/dev/null 2>&1
 
 0 12 * * 0     rm -Rf '.realpath('.').'/modules/sendmail/batch/logs/*.log
 
 
 ######################fulltext###################################################
 
-* * * * *       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh
+*/5 5-21 * * 1-5       '.realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/modules/full_text/scripts/launch_fulltext.sh
 20 12 * * 0        rm -Rf '.realpath('.').'/modules/full_text/log/*.log
 ';
         fwrite($file, $cron);
