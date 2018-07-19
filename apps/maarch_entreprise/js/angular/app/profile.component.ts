@@ -567,7 +567,7 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     updateBasketColor(i: number, y: number) {
-        this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
+        this.http.put(this.coreUrl + "rest/currentUser/groups/" + this.user.regroupedBaskets[i].groupSerialId + "/baskets/" + this.user.regroupedBaskets[i].baskets[y].basket_id, { "color": this.user.regroupedBaskets[i].baskets[y].color })
             .subscribe((data: any) => {
                 this.user.regroupedBaskets = data.userBaskets;
                 this.notify.success(this.lang.modificationSaved);

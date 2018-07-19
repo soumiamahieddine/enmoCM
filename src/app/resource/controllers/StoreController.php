@@ -126,7 +126,6 @@ class StoreController
 
         $statusFound        = false;
         $typistFound        = false;
-        $typeIdFound        = false;
         $toAddressFound     = false;
         $userPrimaryEntity  = false;
 
@@ -148,8 +147,6 @@ class StoreController
                 $statusFound = true;
             } elseif ($value['column'] == 'typist') {
                 $typistFound = true;
-            } elseif ($value['column'] == 'type_id') {
-                $typeIdFound = true;
             } elseif ($value['column'] == 'custom_t10') {
                 $theString = str_replace('>', '', $value['value']);
                 $mail = explode("<", $theString);
@@ -178,13 +175,6 @@ class StoreController
             $aArgs['data'][] = [
                 'column'    => 'typist',
                 'value'     => 'auto',
-                'type'      => 'string'
-            ];
-        }
-        if (!$typeIdFound) {
-            $aArgs['data'][] = [
-                'column'    => 'type_id',
-                'value'     => '10',
                 'type'      => 'string'
             ];
         }

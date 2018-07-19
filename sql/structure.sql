@@ -2082,18 +2082,6 @@ CREATE TABLE unit_identifier
   disposition text default NULL
 );
 
-DROP TABLE IF EXISTS users_baskets;
-CREATE TABLE users_baskets
-(
-  id serial NOT NULL,
-  user_serial_id integer NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  group_id character varying(32) NOT NULL,
-  color character varying(16),
-  CONSTRAINT users_baskets_pkey PRIMARY KEY (id)
-)
-WITH (OIDS=FALSE);
-
 DROP TABLE IF EXISTS users_baskets_preferences;
 CREATE TABLE users_baskets_preferences
 (

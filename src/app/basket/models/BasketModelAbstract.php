@@ -499,11 +499,10 @@ abstract class BasketModelAbstract
                 'data'      => [$group['group_id'], 'Y', 'IndexingBasket'],
                 'order_by'  => ['baskets.basket_order', 'baskets.basket_name']
             ]);
-            $coloredBaskets = DatabaseModel::select([
+            $coloredBaskets = UserBasketPreferenceModel::get([
                 'select'    => ['basket_id', 'color'],
-                'table'     => ['users_baskets'],
-                'where'     => ['user_serial_id = ?', 'group_id = ?', 'color is not null'],
-                'data'      => [$user['id'], $group['group_id']]
+                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'color is not null'],
+                'data'      => [$user['id'], $group['id']]
             ]);
 
             foreach ($baskets as $kBasket => $basket) {
@@ -518,30 +517,14 @@ abstract class BasketModelAbstract
             }
 
             $regroupedBaskets[] = [
-                'groupId'     => $group['group_id'],
-                'groupDesc'   => $group['group_desc'],
-                'baskets'     => $baskets
+                'groupSerialId' => $group['id'],
+                'groupId'       => $group['group_id'],
+                'groupDesc'     => $group['group_desc'],
+                'baskets'       => $baskets
             ];
         }
 
         return $regroupedBaskets;
-    }
-
-    public static function getColoredBasketsByUserId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
-
-        $coloredBaskets = DatabaseModel::select([
-            'select'    => ['basket_id', 'group_id', 'color'],
-            'table'     => ['users_baskets'],
-            'where'     => ['user_serial_id = ?', 'color is not null'],
-            'data'      => [$user['id']]
-        ]);
-
-        return $coloredBaskets;
     }
 
     public static function getBasketPages(array $aArgs = [])

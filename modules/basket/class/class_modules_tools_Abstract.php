@@ -829,16 +829,13 @@ abstract class basket_Abstract extends Database
 
         $db = new Database();
         $stmt = $db->query(
-            "select group_desc from "
-            . USERGROUPS_TABLE
-            . " where group_id = ?",array($groupId));
+            "select id, group_desc from usergroups where group_id = ?",array($groupId));
         $res = $stmt->fetchObject();
         $groupDesc = $res->group_desc;
 
         $tab['group_id'] = $groupId;
-
+        $tab['group_serial_id'] = $res->id;
         $tab['group_desc'] = $groupDesc;
-
         $tab['is_secondary'] = $isSecondary;
 		
         return $tab;

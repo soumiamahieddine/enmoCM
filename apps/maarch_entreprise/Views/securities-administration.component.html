@@ -33,6 +33,20 @@
                                 </p>
                                 <mat-list-item style="margin-top: 15px;margin-bottom: 15px;">
                                     <mat-icon mat-list-icon>
+                                        <mat-slide-toggle style="position: relative;top:-10px;" [checked]="passwordRules['minLength'].enabled"
+                                                          color="primary" (change)="toggleRule(passwordRules['minLength']);"></mat-slide-toggle>
+                                    </mat-icon>
+                                    <p mat-line>
+                                        <mat-form-field>
+                                            <input type="number" [disabled]="!passwordRules['minLength'].enabled" [name]="passwordRules['minLength'].label" [(ngModel)]="passwordRules['minLength'].value"
+                                                   min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules['minLength'].label}}"
+                                                   required>
+                                            <span matSuffix>&nbsp;{{lang.chars}}</span>
+                                        </mat-form-field>
+                                    </p>
+                                </mat-list-item>
+                                <mat-list-item style="margin-top: 15px;margin-bottom: 15px;">
+                                    <mat-icon mat-list-icon>
                                         <mat-slide-toggle style="position: relative;top:-10px;" [checked]="passwordRules['lockAttempts'].enabled"
                                             color="primary" (change)="toggleRule(passwordRules['lockAttempts']);"></mat-slide-toggle>
                                     </mat-icon>
@@ -74,20 +88,6 @@
                                             <input type="number" [disabled]="!passwordRules['historyLastUse'].enabled" [name]="passwordRules['historyLastUse'].label"
                                                 [(ngModel)]="passwordRules['historyLastUse'].value" min="1" pattern="^[1-9][0-9]*"
                                                 matInput placeholder="{{passwordRules['historyLastUse'].label}}" required>
-                                        </mat-form-field>
-                                    </p>
-                                </mat-list-item>
-                                <mat-list-item style="margin-top: 15px;margin-bottom: 15px;">
-                                    <mat-icon mat-list-icon>
-                                        <mat-slide-toggle style="position: relative;top:-10px;" [checked]="passwordRules['minLength'].enabled"
-                                            color="primary" (change)="toggleRule(passwordRules['minLength']);"></mat-slide-toggle>
-                                    </mat-icon>
-                                    <p mat-line>
-                                        <mat-form-field>
-                                            <input type="number" [disabled]="!passwordRules['minLength'].enabled" [name]="passwordRules['minLength'].label" [(ngModel)]="passwordRules['minLength'].value"
-                                                min="1" pattern="^[1-9][0-9]*" matInput placeholder="{{passwordRules['minLength'].label}}"
-                                                required>
-                                            <span matSuffix>&nbsp;{{lang.chars}}</span>
                                         </mat-form-field>
                                     </p>
                                 </mat-list-item>

@@ -1055,16 +1055,24 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function updateBasketPreference(Request $request, Response $response, array $aArgs)
+    public function updateCurrentUserBasketPreferences(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getParams();
 
         $user = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id']]);
 
         if (isset($data['color']) && $data['color'] == '') {
-            UserModel::eraseBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId']]);
+            UserBasketPreferenceModel::update([
+                'set'   => ['color' => null],
+                'where' => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                'data'  => [$user['id'], $aArgs['groupId'], $aArgs['basketId']]
+            ]);
         } elseif (!empty($data['color'])) {
-            UserModel::updateBasketColor(['id' => $user['id'], 'groupId' => $aArgs['groupId'], 'basketId' => $aArgs['basketId'], 'color' => $data['color']]);
+            UserBasketPreferenceModel::update([
+                'set'   => ['color' => $data['color']],
+                'where' => ['user_serial_id = ?', 'group_serial_id = ?', 'basket_id = ?'],
+                'data'  => [$user['id'], $aArgs['groupId'], $aArgs['basketId']]
+            ]);
         }
 
         return $response->withJson([

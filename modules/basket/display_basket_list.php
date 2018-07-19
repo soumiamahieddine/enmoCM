@@ -80,7 +80,13 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             
             <?php
             $redirectedBaskets = \Basket\models\BasketModel::getRedirectedBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
-            $coloredBaskets    = \Basket\models\BasketModel::getColoredBasketsByUserId(['userId' => $_SESSION['user']['UserId']]);
+            $user = \User\models\UserModel::getByUserId(['select' => ['id'], 'userId' => $_SESSION['user']['UserId']]);
+            $coloredBaskets = \User\models\UserBasketPreferenceModel::get([
+                'select'    => ['group_serial_id', 'basket_id', 'color'],
+                'where'     => ['user_serial_id = ?', 'color IS NOT NULL'],
+                'data'      => [$user['id']]
+            ]);
+
             $countColl         = count($collWithUserBaskets);
             $currentGroup = '';
             for ($cpt=0;$cpt<$countColl;$cpt++) {
@@ -131,7 +137,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
 
                             $color = $_SESSION['user']['baskets'][$i]['color'];
                             foreach ($coloredBaskets as $coloredBasket) {
-                                if ($coloredBasket['basket_id'] == $_SESSION['user']['baskets'][$i]['id'] && $coloredBasket['group_id'] == $_SESSION['user']['baskets'][$i]['group_id']) {
+                                if ($coloredBasket['basket_id'] == $_SESSION['user']['baskets'][$i]['id'] && $coloredBasket['group_serial_id'] == $_SESSION['user']['baskets'][$i]['group_serial_id']) {
                                     $color = $coloredBasket['color'];
                                 }
                             }

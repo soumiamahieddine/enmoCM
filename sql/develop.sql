@@ -13,6 +13,18 @@ UPDATE baskets SET basket_res_order = 'res_id DESC' WHERE basket_res_order IS NU
 ALTER TABLE baskets ALTER COLUMN basket_res_order SET NOT NULL;
 ALTER TABLE baskets ALTER COLUMN basket_res_order SET DEFAULT 'res_id DESC';
 ALTER TABLE groupbasket_status ALTER COLUMN "order" SET NOT NULL;
+DO $$ BEGIN
+  IF (SELECT count(TABLE_NAME)  FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'users_baskets') = 1 THEN
+    UPDATE users_baskets_preferences set color =
+    (
+      SELECT color FROM users_baskets
+      WHERE users_baskets_preferences.user_serial_id = users_baskets.user_serial_id
+      AND users_baskets_preferences.basket_id = users_baskets.basket_id
+      AND users_baskets.group_id = (select group_id from usergroups where users_baskets_preferences.group_serial_id = usergroups.id)
+    );
+    DROP TABLE IF EXISTS users_baskets;
+  END IF;
+END$$;
 
 /* Custom To Standard*/
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS departure_date;
