@@ -615,4 +615,14 @@ export const LANG_FR = {
     "chars"                             : "caractère(s)", 
     "minutes"                           : "minute(s)", 
     "password"                          : "Mot de passe", 
+    "aboutUs"                           : "A propos de Maarch",
+    "thanksToCommunity"                 : "Et toute la communauté Maarch !",
+    "thanksToExtDev"                    : "Maarch s'appuie sur quelques composants externes. Merci à leurs développeurs !",
+    "externalComponents"                : "Composants externes",
+    "documentation"                     : "Documentation",
+    "community"                         : "Communauté",
+    "officialWebsite"                   : "Site officiel",
+    "maarchLicence"                     : "Maarch est diffusé sous les termes de la",
+    "groupeCompany"                     : "société du groupe Archiveco"
+
 };
