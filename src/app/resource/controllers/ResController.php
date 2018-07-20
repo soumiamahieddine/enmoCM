@@ -70,7 +70,7 @@ class ResController
         $mandatoryColumns = ['type_id'];
         foreach ($data['data'] as $value) {
             foreach ($mandatoryColumns as $columnKey => $column) {
-                if ($column == $value['column']) {
+                if ($column == $value['column'] && !empty($value['value'])) {
                     unset($mandatoryColumns[$columnKey]);
                 }
             }

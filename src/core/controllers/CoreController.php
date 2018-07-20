@@ -35,20 +35,32 @@ class CoreController
         $aInit['user']['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
 
         $aInit['scriptsToinject'] = [];
+        $scriptsToInject = [];
 
-        $scriptsToInject = scandir('dist');
-        foreach ($scriptsToInject as $value) {
+        $scripts = scandir('dist');
+        foreach ($scripts as $value) {
             if (strstr($value, 'runtime.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {
                 if (strstr($value, '.js.map') === false) {
-                    $aInit['scriptsToinject'][] = $value;
+                    $scriptsToInject[] = $value;
                 }
             }
         }
 
-        if (!empty($aInit['scriptsToinject'][3]) && strstr($aInit['scriptsToinject'][3], 'vendor.') !== false) {
-            $tmp = $aInit['scriptsToinject'][1];
-            $aInit['scriptsToinject'][1] = $aInit['scriptsToinject'][2];
-            $aInit['scriptsToinject'][2] = $tmp;
+        for ($i = 0; $i < count($scriptsToInject); $i++) {
+            foreach ($scriptsToInject as $value) {
+                if ($i == 0 && strstr($value, 'scripts.') !== false) {
+                    $aInit['scriptsToinject'][] = $value;
+                }
+                if ($i == 1 && strstr($value, 'main.') !== false) {
+                    $aInit['scriptsToinject'][] = $value;
+                }
+                if ($i == 2 && strstr($value, 'runtime.') !== false) {
+                    $aInit['scriptsToinject'][] = $value;
+                }
+                if ($i == 3 && strstr($value, 'vendor.') !== false) {
+                    $aInit['scriptsToinject'][] = $value;
+                }
+            }
         }
 
         return $response->withJson($aInit);
