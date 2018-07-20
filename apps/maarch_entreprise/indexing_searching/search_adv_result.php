@@ -234,15 +234,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":attachmentTypes" => $_REQUEST['attachment_types']));
                 $where_request .=" and  ";
             }
-
-            // PROCESS NOTES
-            elseif ($tab_id_fields[$j] == 'process_notes' && !empty($_REQUEST['process_notes']))
-            {
-                $json_txt .= " 'process_notes' : ['".addslashes(trim($_REQUEST['process_notes']))."'],";
-                $s_process_notes = $func->wash($_REQUEST['process_notes'], "no", _PROCESS_NOTES,"no");
-                $where_request .= " (lower(process_notes) LIKE lower(:processNotes) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":processNotes" => "%".$s_process_notes."%"));
-            }
             // REFERENCE COURRIER EXTERNE
             elseif ($tab_id_fields[$j] == 'external_id' && !empty($_REQUEST['external_id'])) {
                 $json_txt .= "'external_id' : ['".addslashes(trim($_REQUEST['external_id']))."'],";
@@ -730,52 +721,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt = substr($json_txt, 0, -1);
                 $where_request .=") and ";
                 $json_txt .= '],';
-            }
-            // ANSWER TYPE BITMASK
-            /**
-             * Answer type bitmask
-             * 0 0 0 0 0 0
-             * | | | | | |_ Simple Mail
-             * | | | | |___ Registered mail
-             * | | | |_____ Direct Contact
-             * | | |_______ Email
-             * | |_________ Fax
-             * |___________ Other Answer
-             **/
-            elseif ($tab_id_fields[$j] == 'AR' && !empty($_REQUEST['AR']))
-            {
-                $where_request .= " answer_type_bitmask like '____1_' AND ";
-                $json_txt .= " 'AR' : ['".addslashes(trim($_REQUEST['AR']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'fax' && !empty($_REQUEST['fax']))
-            {
-                $where_request .= " answer_type_bitmask like '_1____' AND ";
-                $json_txt .= " 'fax' : ['".addslashes(trim($_REQUEST['fax']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'courriel' && !empty($_REQUEST['courriel']))
-            {
-                $where_request .= " answer_type_bitmask like '__1___' AND ";
-                $json_txt .= " 'courriel' : ['".addslashes(trim($_REQUEST['courriel']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'autre' && !empty($_REQUEST['autre']))
-            {
-                $where_request .= " answer_type_bitmask like '1_____' AND ";
-                $json_txt .= " 'autre' : ['".addslashes(trim($_REQUEST['autre']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'direct' && !empty($_REQUEST['direct']))
-            {
-                $where_request .= " answer_type_bitmask like '___1__' AND ";
-                $json_txt .= " 'direct' : ['".addslashes(trim($_REQUEST['direct']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'simple_mail' && !empty($_REQUEST['simple_mail']))
-            {
-                $where_request .= " answer_type_bitmask like '_____1' AND ";
-                $json_txt .= " 'simple_mail' : ['".addslashes(trim($_REQUEST['simple_mail']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'norep' && !empty($_REQUEST['norep']))
-            {
-                $where_request .= " answer_type_bitmask = '000000' AND ";
-                $json_txt .= " 'norep' : ['".addslashes(trim($_REQUEST['norep']))."'],";
             }
             // MAIL CATEGORY
             elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category']))

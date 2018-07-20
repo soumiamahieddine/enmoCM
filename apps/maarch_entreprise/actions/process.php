@@ -887,15 +887,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $res_table = $sec->retrieve_table_from_coll($coll_id);
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
-    $other_txt = '';
-    $process_notes = '';
     $folder = '';
     $thesaurusList = '';
 
     for ($j = 0; $j < count($values_form); ++$j) {
-        if ($values_form[$j]['ID'] == 'process_notes') {
-            $process_notes = $values_form[$j]['VALUE'];
-        }
         if ($values_form[$j]['ID'] == 'folder') {
             $folder = $values_form[$j]['VALUE'];
         }
@@ -974,8 +969,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $_SESSION['redirect']['diff_list'] = array();
     unset($_SESSION['redirection']);
     unset($_SESSION['redirect']);
-    $db->query('UPDATE '.$table.' SET answer_type_bitmask = ?, process_notes = ?, other_answer_desc = ? WHERE res_id= ?',
-    array($bitmask, $process_notes, $other_txt, $arr_id[0]));
 
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
 }

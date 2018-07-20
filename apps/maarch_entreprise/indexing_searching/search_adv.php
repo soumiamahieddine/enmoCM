@@ -307,10 +307,6 @@ if ($core_tools->is_module_loaded('folder')) {
     $param['project'] = $arr_tmp2;
 }
 
-//process notes
-$arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => array('field_label' => _PROCESS_NOTES, 'other' => $size, 'id' => 'process_notes'));
-$param['process_notes'] = $arr_tmp2;
-
 // Reference courrier externe
 $arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
 $param['external_id'] = $arr_tmp2;

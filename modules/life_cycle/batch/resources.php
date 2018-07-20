@@ -272,9 +272,6 @@ function esign($resId)
             $opstatus = $signatureExResponse->signatureExResult->opStatus;
             //D2SStatus
             $D2SStatus = $signatureExResponse->signatureExResult->D2SStatus;
-            //theSignature
-            $theSignature = $signatureExResponse->signatureExResult->D2SSignature->value->_;
-            $resultDataSignatureEx['esign_content'] = $theSignature;
             //D2SArchiveId
             $D2SArchiveId = $signatureExResponse->signatureExResult->D2SArchiveId;
             $resultDataSignatureEx['esign_proof_id'] = $D2SArchiveId;

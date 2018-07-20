@@ -306,18 +306,6 @@ if ($core->is_module_loaded('entities')) {
     $param['destination_mu'] = $arrTmp2;
 }
 
-//process notes
-$arrTmp2 = array(
-    'label' => _PROCESS_NOTES,
-    'type'  => 'textarea',
-	'param' => array(
-		'field_label' => _PROCESS_NOTES,
-		'other' => $size,
-		'id' => 'process_notes'
-    )
-);
-$param['process_notes'] = $arrTmp2;
-
 // chrono
 $arrTmp2 = array(
     'label' => _CHRONO_NUMBER,

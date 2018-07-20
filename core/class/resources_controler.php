@@ -335,14 +335,6 @@ class resources_controler
         array_push(
             $data,
             array(
-                'column' => 'offset_doc',
-                'value' => '',
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $data,
-            array(
                 'column' => 'docserver_id',
                 'value' => $docserverId,
                 'type' => 'string',
@@ -366,23 +358,12 @@ class resources_controler
                 $parameters = array();
 	            $db = new Database();
                 $findProcessLimitDate = false;
-                $findProcessNotes = false;
                 $delayProcessNotes = 0;
 
                 for ($i=0;$i<count($data);$i++) {
                     if ($data[$i]['column'] == 'process_limit_date') {
                         $findProcessLimitDate = true;
                     }
-                    // if ($data[$i]['column'] == 'process_notes') {
-                    //     $findProcessNotes = true;
-                    //     $delayProcessNotes = $data[$i]['value'];
-                    // }
-					if ($data[$i]['column'] == 'process_notes') {
-		                $findProcessNotes = true;
-		                $donnees = explode(',',$data[$i]['value']);
-		                $delayProcessNotes = $donnees['0'];
-		                $calendarType = $donnees['1'];
-		            }
                 }
 
                 if ($table == 'mlb_coll_ext') {

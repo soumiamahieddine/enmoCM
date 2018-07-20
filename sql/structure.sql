@@ -264,7 +264,6 @@ CREATE TABLE res_attachments
   identifier character varying(255) DEFAULT NULL::character varying,
   source character varying(255) DEFAULT NULL::character varying,
   relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
   folders_system_id bigint,
@@ -299,7 +298,6 @@ CREATE TABLE res_attachments
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1298,7 +1296,6 @@ CREATE TABLE res_letterbox
   identifier character varying(255) DEFAULT NULL::character varying,
   source character varying(255) DEFAULT NULL::character varying,
   relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
   folders_system_id bigint,
@@ -1354,10 +1351,6 @@ CREATE TABLE res_letterbox
   tablename character varying(32) DEFAULT 'res_letterbox'::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
   dest_user character varying(128) DEFAULT NULL::character varying,
-  esign_proof_id character varying(255),
-  esign_proof_content text,
-  esign_content text,
-  esign_date timestamp without time zone,
   locker_user_id character varying(255) DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
   confidentiality character(1),
@@ -1369,7 +1362,6 @@ CREATE TABLE res_letterbox
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
   external_id character varying(255) DEFAULT NULL::character varying,
   external_link character varying(255) DEFAULT NULL::character varying,
   departure_date timestamp without time zone,
@@ -1424,11 +1416,8 @@ CREATE TABLE mlb_coll_ext (
   admission_date timestamp without time zone,
   sve_start_date timestamp without time zone default NULL,
   sve_identifier character varying(255)  default NULL,
-  answer_type_bitmask character varying(7)  default NULL,
-  other_answer_desc character varying(255)  DEFAULT NULL::character varying,
   process_limit_date timestamp without time zone default NULL,
   recommendation_limit_date timestamp without time zone default NULL,
-  process_notes text,
   closing_date timestamp without time zone default NULL,
   alarm1_date timestamp without time zone default NULL,
   alarm2_date timestamp without time zone default NULL,
@@ -1760,8 +1749,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.nature_id,
     mlb.alt_identifier,
     mlb.admission_date,
-    mlb.answer_type_bitmask,
-    mlb.other_answer_desc,
     mlb.sve_start_date,
     mlb.sve_identifier,
     mlb.process_limit_date,
@@ -1777,7 +1764,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.identifier,
     r.title,
     r.priority,
-    mlb.process_notes,
     r.locker_user_id,
     r.locker_time,
     ca.case_id,
@@ -1874,7 +1860,6 @@ CREATE TABLE res_version_attachments
   identifier character varying(255) DEFAULT NULL::character varying,
   source character varying(255) DEFAULT NULL::character varying,
   relation bigint,
-  coverage character varying(255) DEFAULT NULL::character varying,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
   folders_system_id bigint,
@@ -1946,7 +1931,6 @@ CREATE TABLE res_version_attachments
   fulltext_attempts integer DEFAULT NULL::integer,
   tnl_result character varying(10) DEFAULT NULL::character varying,
   tnl_attempts integer DEFAULT NULL::integer,
-  ocr_result character varying(10) DEFAULT NULL::character varying,
   CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (
@@ -1971,13 +1955,13 @@ WITH (OIDS=FALSE);
 DROP VIEW IF EXISTS res_view_attachments;
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;

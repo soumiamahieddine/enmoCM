@@ -157,6 +157,9 @@ ALTER TABLE security DROP COLUMN IF EXISTS mr_stop_date;
 ALTER TABLE security DROP COLUMN IF EXISTS where_target;
 ALTER TABLE users DROP COLUMN IF EXISTS ra_code;
 ALTER TABLE users DROP COLUMN IF EXISTS ra_expiration_date;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS answer_type_bitmask;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS other_answer_desc;
+ALTER TABLE mlb_coll_ext DROP COLUMN IF EXISTS process_notes;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS publisher;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS publisher;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS publisher;
@@ -235,6 +238,16 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_user;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS video_date;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS video_date;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS video_date;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS ocr_result;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS ocr_result;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS ocr_result;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS coverage;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS coverage;
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS coverage;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_proof_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_proof_content;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_content;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS esign_date;
 
 
 CREATE OR REPLACE VIEW res_view_letterbox AS
@@ -369,8 +382,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     mlb.nature_id,
     mlb.alt_identifier,
     mlb.admission_date,
-    mlb.answer_type_bitmask,
-    mlb.other_answer_desc,
     mlb.sve_start_date,
     mlb.sve_identifier,
     mlb.process_limit_date,
@@ -386,7 +397,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.identifier,
     r.title,
     r.priority,
-    mlb.process_notes,
     r.locker_user_id,
     r.locker_time,
     ca.case_id,
@@ -416,13 +426,13 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, ocr_result, author, identifier, source, relation, coverage, doc_date, docserver_id, folders_system_id, path,
+  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;

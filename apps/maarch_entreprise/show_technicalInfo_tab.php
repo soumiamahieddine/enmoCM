@@ -81,7 +81,6 @@ $db = new Database();
     $fileName = $res->filename;
     $creationDate = functions::format_date_db($res->creation_date, false);
     $fingerprint = $res->fingerprint;
-    $offsetDoc = $res->offset_doc;
     $isMultiDs = $res->is_multi_docservers;
     if ($isMultiDs == 'Y') {
         $adr = array();
@@ -187,11 +186,6 @@ $db = new Database();
                         <th align="left" class="picto">
                             &nbsp;
                         </th>
-                        <td align="left" width="200px"><?php echo _OFFSET; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['offset_doc']); ?>"/></td>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
                         <td align="left" width="200px"><?php echo _ADR_PRIORITY; ?> :</td>
                         <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['adr_priority']); ?>" /></td>
                     </tr>
@@ -228,11 +222,6 @@ $db = new Database();
                     <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>" /></td>
                 </tr>
                 <tr>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _OFFSET; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($offsetDoc); ?>"/></td>
                     <th align="left" class="picto">
                         &nbsp;
                     </th>
