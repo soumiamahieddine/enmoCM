@@ -24,7 +24,7 @@ export class PasswordModificationComponent implements OnInit {
     config                          : any       = {};
     coreUrl: string;
     ruleText: string = '';
-    OtherRuleText: string;
+    otherRuleText: string;
     lang: any = LANG;
     loading: boolean = false;
     user: any = {};
@@ -37,6 +37,7 @@ export class PasswordModificationComponent implements OnInit {
         complexityNumber: { enabled: false, value: 0 },
         complexitySpecial: { enabled: false, value: 0 },
         renewal: { enabled: false, value: 0 },
+        historyLastUse: {enabled:false, value:0},
     };
 
     passwordModel: any = {
@@ -96,14 +97,21 @@ export class PasswordModificationComponent implements OnInit {
         this.coreUrl = angularGlobals.coreUrl;
         this.http.get(this.coreUrl + 'rest/passwordRules')
             .subscribe((data: any) => {
+                let valArr : ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];
+                let otherRuleTextArr: String[] = [];
+
+                valArr.push(Validators.required);
+                
                 data.rules.forEach((rule: any) => {
 
 
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
                         this.passwordRules.minLength.value = rule.value;
+                        
                         if (rule.enabled) {
+                            valArr.push(Validators.minLength(this.passwordRules.minLength.value));
                             ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
                         }
                         
@@ -111,7 +119,9 @@ export class PasswordModificationComponent implements OnInit {
                     } else if (rule.label == 'complexityUpper') {
                         this.passwordRules.complexityUpper.enabled = rule.enabled;
                         this.passwordRules.complexityUpper.value = rule.value;
+                        
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                         
@@ -120,6 +130,7 @@ export class PasswordModificationComponent implements OnInit {
                         this.passwordRules.complexityNumber.enabled = rule.enabled;
                         this.passwordRules.complexityNumber.value = rule.value;
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                         
@@ -127,7 +138,9 @@ export class PasswordModificationComponent implements OnInit {
                     } else if (rule.label == 'complexitySpecial') {
                         this.passwordRules.complexitySpecial.enabled = rule.enabled;
                         this.passwordRules.complexitySpecial.value = rule.value;
+                        
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                         
@@ -135,19 +148,27 @@ export class PasswordModificationComponent implements OnInit {
                     } else if (rule.label == 'renewal') {
                         this.passwordRules.renewal.enabled = rule.enabled;
                         this.passwordRules.renewal.value = rule.value;
-                        this.OtherRuleText = this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label];
+                        if (rule.enabled) {
+                            otherRuleTextArr.push(this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label]+'.');
+                        }
+                    } else if (rule.label == 'historyLastUse') {
+                        this.passwordRules.historyLastUse.enabled = rule.enabled;
+                        this.passwordRules.historyLastUse.value = rule.value
+                        if (rule.enabled) {
+                            otherRuleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' <b>' + rule.value + '</b> ' + this.lang['passwordhistoryLastUseDesc2']+'.');
+                        }
                     }
-
                 });
                 this.ruleText = ruleTextArr.join(', ');
+                this.otherRuleText = otherRuleTextArr.join('<br/>');
+                this.firstFormGroup.controls["newPasswordCtrl"].setValidators(valArr);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
 
         this.firstFormGroup = this._formBuilder.group({
             newPasswordCtrl: [
-                '',
-                Validators.compose([Validators.minLength(6), this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }), this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }), this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' })])
+                ''
             ],
             retypePasswordCtrl: [
                 '',
@@ -161,7 +182,6 @@ export class PasswordModificationComponent implements OnInit {
         }, {
                 validator: this.matchValidator
             });
-        //console.log(this.passwordRules);
     }
 
     matchValidator(group: FormGroup) {
@@ -175,7 +195,11 @@ export class PasswordModificationComponent implements OnInit {
     }
 
     getErrorMessage() {
-        console.log(this.firstFormGroup.controls['newPasswordCtrl'].errors);
+        if (this.firstFormGroup.controls['newPasswordCtrl'].value != this.firstFormGroup.controls['retypePasswordCtrl'].value) {
+            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors({'mismatch': true});
+        } else {
+            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null);
+        }
         if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
             return this.lang.requiredField + ' !';
 

@@ -483,16 +483,7 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .$actionId.'\');showCalender(this);" /></td>';
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
             .'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
-    $frmStr .= '</tr >';
-    /*** Reference courrier externe ***/
-    $frmStr .= '<tr id="external_id_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
-            . '</label></td>';
-    $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="external_id" type="text" '
-            . 'id="external_id"/></td>';
-    $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '</tr>';
+    $frmStr .= '</tr >';    
 
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:'.$displayValue.';">';
@@ -522,6 +513,16 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
             .'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
+    $frmStr .= '</tr>';
+
+    /*** Reference courrier externe ***/
+    $frmStr .= '<tr id="external_id_tr" style="display:' . $displayValue . ';">';
+    $frmStr .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+            . '</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><input name="external_id" type="text" '
+            . 'id="external_id"/></td>';
+    $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '</tr>';
 
     /*** date de depart ***/

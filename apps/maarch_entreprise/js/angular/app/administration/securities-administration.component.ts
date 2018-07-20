@@ -32,9 +32,9 @@ export class SecuritiesAdministrationComponent implements OnInit {
         lockTime: { enabled: false, value: 0 },
         lockAttempts: { enabled: false, value: 0 },
     };
+    passwordRulesClone : any = {};
 
     passwordRulesList : any[] = [];
-    passwordRulesListClone : any[] = [];
 
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
@@ -55,45 +55,67 @@ export class SecuritiesAdministrationComponent implements OnInit {
         this.http.get(this.coreUrl + 'rest/passwordRules')
             .subscribe((data: any) => {
                 this.passwordRulesList = data.rules;
-                this.passwordRulesListClone = JSON.parse(JSON.stringify(this.passwordRulesList));
+
                 data.rules.forEach((rule: any) => {
+                    this.passwordRules[rule.label].enabled = rule.enabled;
                     this.passwordRules[rule.label].value = rule.value;
-                    this.passwordRules[rule.label].label = this.lang['password'+rule.label+'Required']
+                    this.passwordRules[rule.label].label = this.lang['password'+rule.label+'Required'];
+                    this.passwordRules[rule.label].id = rule.label;
 
                     this.loading = false;
                 });
+
+                this.passwordRulesClone = JSON.parse(JSON.stringify(this.passwordRules));
+
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
 
     cancelModification() {
-        this.passwordRulesList = JSON.parse(JSON.stringify(this.passwordRulesListClone));
+        this.passwordRules = JSON.parse(JSON.stringify(this.passwordRulesClone));
+        this.passwordRulesList.forEach((rule: any) => {
+            rule.enabled = this.passwordRules[rule.label].enabled;
+            rule.value = this.passwordRules[rule.label].value;
+        });
     }
 
-    checkModif() {
-        if (JSON.stringify(this.passwordRulesList) === JSON.stringify(this.passwordRulesListClone)) {
+    checkModif() { 
+        if (JSON.stringify(this.passwordRules) === JSON.stringify(this.passwordRulesClone)) {
             return true 
         } else {
            return false;
         }
     }
 
-    toggleRule(rule:any) {
-        rule.enabled = !rule.enabled;
-        if (rule.label == 'lockAttempts') {
-            this.passwordRulesList.forEach((rule2: any) => {
-                if (rule2.label == 'lockTime') {
-                    rule2.enabled = !rule2.enabled;
-                }
-            });
+    disabledForm() {
+        if (!this.passwordRules['lockTime'].enabled && !this.passwordRules['minLength'].enabled && !this.passwordRules['lockAttempts'].enabled && !this.passwordRules['renewal'].enabled && !this.passwordRules['historyLastUse'].enabled) {
+            return true;
+        } else {
+            false;
         }
     }
 
+    toggleRule(rule:any) {
+        rule.enabled = !rule.enabled;
+        this.passwordRulesList.forEach((rule2: any) => {
+            if (rule.id == 'lockAttempts' && (rule2.label == 'lockTime' || rule2.label == 'lockAttempts')) {
+                rule2.enabled = rule.enabled
+                this.passwordRules['lockTime'].enabled = rule.enabled;
+            } else if (rule.id == rule2.label) {
+                rule2.enabled = rule.enabled
+            }
+        });
+    }
+
     onSubmit() { 
+        this.passwordRulesList.forEach((rule: any) => {
+            rule.enabled = this.passwordRules[rule.label].enabled;
+            rule.value = this.passwordRules[rule.label].value;
+        });
         this.http.put(this.coreUrl + "rest/passwordRules", {rules:this.passwordRulesList})
             .subscribe((data: any) => {
-                this.passwordRulesListClone = JSON.parse(JSON.stringify(this.passwordRulesList));
+                this.passwordRulesClone = JSON.parse(JSON.stringify(this.passwordRules));
                 this.notify.success(this.lang.passwordRulesUpdated);
             }, (err: any) => {
                 this.notify.error(err.error.errors);

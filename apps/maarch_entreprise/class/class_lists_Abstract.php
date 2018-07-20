@@ -3324,17 +3324,10 @@ abstract class lists_Abstract extends Database
                     ) {
                         $sAction = \Action\models\ActionModel::getActionPageById(['id' => $this->params['defaultAction']]);
                         if ($sAction == 'visa_mail') {
-                            if (PROD_MODE) {
-                                $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
-                                    .'onClick="islockForSignatureBook(\''.$keyValue.'\', \''.$_SESSION['current_basket']['id'].'\', \''.$_SESSION['current_basket']['group_id'].'\', true);" width="'.$resultTheLine[$column]['size'].'%" '
-                                    .$class.'><div align="'.$resultTheLine[$column]['align'].'">'
-                                    .$columnValue.'</div></td>';
-                            } else {
-                                $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
-                                    .'onClick="islockForSignatureBook(\''.$keyValue.'\', \''.$_SESSION['current_basket']['id'].'\', \''.$_SESSION['current_basket']['group_id'].'\', false);" width="'.$resultTheLine[$column]['size'].'%" '
-                                    .$class.'><div align="'.$resultTheLine[$column]['align'].'">'
-                                    .$columnValue.'</div></td>';
-                            }
+                            $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
+                                .'onClick="islockForSignatureBook(\''.$keyValue.'\', \''.$_SESSION['current_basket']['id'].'\', \''.$_SESSION['current_basket']['group_id'].'\');" width="'.$resultTheLine[$column]['size'].'%" '
+                                .$class.'><div align="'.$resultTheLine[$column]['align'].'">'
+                                .$columnValue.'</div></td>';
                         } else {
                             $content .= '<td'.$columnStyle.' onmouseover="this.style.cursor=\'pointer\';" '
                                 .'onClick="validForm( \'page\', \''.$keyValue.'\', \''

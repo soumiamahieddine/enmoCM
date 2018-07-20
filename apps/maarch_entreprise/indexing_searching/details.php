@@ -667,43 +667,52 @@ if ($stmt->rowCount() == 0) {
                 $folder_id = str_replace(')', '', $folder_id);
             }
             //GET DATA ICON
-            echo '<th align="center" class="picto" >';
-
-            $iconLabel = $data[$key]['label'];
-            $iconLinkAttr = '';
-
-            if ($key == 'is_multicontacts') {
-                echo '<i class="fa fa-book fa-2x"></i>';
-            } elseif (isset($data[$key]['img'])) {
-                $iconCode = $data[$key]['img'];
-
-                $iconShow = "<i class='fa fa-{$iconCode} fa-2x' title='{$iconLabel}'></i>";
-
-                if ($folder_id != '') {
-                    $iconShow = "<a href='index.php?page=show_folder&module=folder&id={$folder_id}'>".$iconShow.'</a>';
-                } elseif (in_array($key, ['dest_contact_id', 'exp_contact_id'])) {
-                    $inputValue = $data[$key]['value'];
-                    $inputAddressValue = $data[$key]['address_value'];
-
-                    $iconShow = "<a href=\"#\" onclick=\"window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid={$inputValue}&addressid={$inputAddressValue}', 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
-                } elseif (in_array($key, ['dest_user_id', 'exp_user_id'])) {
-                    $inputValue = $data[$key]['value'];
-                    $inputAddressValue = $data[$key]['address_value'];
-
-                    $iconShow = "<a style='cursor:pointer;' onclick=\"window.open('index.php?display=true&page=user_info&id={$inputValue}', 'contact_info', 'height=400, width=600,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
-                }
-
-                echo $iconShow;
+            if($data[$key]['label'] == _BARCODE && empty($data[$key]['show_value'])){
+                echo '';
             } else {
-                echo "<i class='fa fa-question-circle fa-2x' title='{$iconLabel}'></i>";
+                echo '<th align="center" class="picto" >';
+
+                $iconLabel = $data[$key]['label'];
+                $iconLinkAttr = '';
+
+                if ($key == 'is_multicontacts') {
+                    echo '<i class="fa fa-book fa-2x"></i>';
+                } elseif (isset($data[$key]['img'])) {
+                    $iconCode = $data[$key]['img'];
+
+                    $iconShow = "<i class='fa fa-{$iconCode} fa-2x' title='{$iconLabel}'></i>";
+
+                    if ($folder_id != '') {
+                        $iconShow = "<a href='index.php?page=show_folder&module=folder&id={$folder_id}'>".$iconShow.'</a>';
+                    } elseif (in_array($key, ['dest_contact_id', 'exp_contact_id'])) {
+                        $inputValue = $data[$key]['value'];
+                        $inputAddressValue = $data[$key]['address_value'];
+
+                        $iconShow = "<a href=\"#\" onclick=\"window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid={$inputValue}&addressid={$inputAddressValue}', 'contact_info', 'height=800, width=1000,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
+                    } elseif (in_array($key, ['dest_user_id', 'exp_user_id'])) {
+                        $inputValue = $data[$key]['value'];
+                        $inputAddressValue = $data[$key]['address_value'];
+
+                        $iconShow = "<a style='cursor:pointer;' onclick=\"window.open('index.php?display=true&page=user_info&id={$inputValue}', 'contact_info', 'height=400, width=600,scrollbars=yes,resizable=yes');\">".$iconShow.'</a>';
+                    }
+
+                    echo $iconShow;
+                } else {
+                    echo "<i class='fa fa-question-circle fa-2x' title='{$iconLabel}'></i>";
+                }
+                echo '</th>';
             }
-            echo '</th>';
             // END DATA ICON
 
             //GET DATA LABEL
-            echo '<td align="left" width="200px">';
-            echo $data[$key]['label'];
-            echo '</td>';
+            if($data[$key]['label'] == _BARCODE && empty($data[$key]['show_value'])){
+                echo '';
+            } else {
+                echo '<td align="left" width="200px">';
+                echo $data[$key]['label'];
+                echo '</td>';
+            }
+            
             //END DATA LABEL
 
             //GET DATA INPUT
@@ -879,8 +888,11 @@ if ($stmt->rowCount() == 0) {
                 }
             } elseif ($data[$key]['display'] == 'textinput') {
                 $inputValue = $data[$key]['show_value'];
-
-                echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
+                if($data[$key]['label'] == _BARCODE && empty($inputValue)){
+                    echo '';
+                } else {
+                    echo "<input type='text' name='{$key}' id='{$key}' value='{$inputValue}' title='{$inputValue}' alt='{$inputValue}' size='40' class='{$disabledClass}' {$disabledAttr}/>";
+                }                
 
                 if ($key == 'type_id') {
                     $inputValue = $data[$key]['value'];

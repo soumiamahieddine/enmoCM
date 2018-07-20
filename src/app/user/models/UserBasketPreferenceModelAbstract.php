@@ -53,6 +53,22 @@ abstract class UserBasketPreferenceModelAbstract
         return true;
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::stringType($aArgs['set'], ['display', 'color']);
+
+        DatabaseModel::update([
+            'table' => 'users_baskets_preferences',
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['where', 'data']);

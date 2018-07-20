@@ -284,20 +284,6 @@ abstract class basket_Abstract extends Database
         return $arr;
     }
 
-    /**
-     * Loads the baskets secondary datas into session variables
-     *
-     */
-    public function loadBasketSecondary($userId, $groupId, $basketId)
-    {
-        $isSecondary = true;
-        $tmp = $this->get_baskets_data(
-            $basketId, $userId, $groupId, $isSecondary
-        );
-        
-        return $tmp;
-    }
-
     public function load_basket_abs($userId)
     { 
 	$db = new Database();
@@ -324,7 +310,6 @@ abstract class basket_Abstract extends Database
         }
         return $arr;
     }
-
 
     /**
      * Get the actions for a group in a basket.
@@ -844,16 +829,13 @@ abstract class basket_Abstract extends Database
 
         $db = new Database();
         $stmt = $db->query(
-            "select group_desc from "
-            . USERGROUPS_TABLE
-            . " where group_id = ?",array($groupId));
+            "select id, group_desc from usergroups where group_id = ?",array($groupId));
         $res = $stmt->fetchObject();
         $groupDesc = $res->group_desc;
 
         $tab['group_id'] = $groupId;
-
+        $tab['group_serial_id'] = $res->id;
         $tab['group_desc'] = $groupDesc;
-
         $tab['is_secondary'] = $isSecondary;
 		
         return $tab;
@@ -927,17 +909,20 @@ abstract class basket_Abstract extends Database
             || (!isset($_SESSION['user']['UserId']))
         ) {
             $stmt = $db->query(
-                "select group_id from " . USERGROUP_CONTENT_TABLE
-                . " where primary_group = 'Y' and user_id = ?",array($tmpUser));
+                "select group_id from usergroup_content where primary_group = 'Y' and user_id = ?",array($tmpUser));
 
+            $groups = [];
+            while ($res = $stmt->fetchObject()) {
+                $groups[] = $res->group_id;
+            }
+            $stmt = $db->query("select result_page, group_id from groupbasket where group_id in (?) and basket_id = ?", array($groups, $basketId));
             $res = $stmt->fetchObject();
             $primaryGroup = $res->group_id;
         } else {
             $primaryGroup = $_SESSION['user']['primarygroup'];
+            $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($primaryGroup,$basketId));
+            $res = $stmt->fetchObject();
         }
-        $stmt = $db->query("select result_page from groupbasket where group_id = ? and basket_id = ?", array($primaryGroup,$basketId));
-
-        $res = $stmt->fetchObject();
 
         $basketIdPage = $res->result_page;
         $tab['id_page'] = $basketIdPage;
@@ -975,30 +960,6 @@ abstract class basket_Abstract extends Database
         $tab['lock_sublist'] = '';
         
         return $tab;
-    }
-
-    /**
-     * Returns the number of baskets of a given user
-     * (Including the redirected baskets)
-     *
-     * @param  $userId string Owner of the baskets (identifier)
-     */
-    public function get_numbers_of_baskets($userId)
-    {
-        if ($userId == $_SESSION['user']['UserId']) {
-            return count($_SESSION['user']['baskets']);
-        } else {
-            $db = new Database();
-            $stmt = $db->query(
-                "SELECT gb.basket_id  FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-                . GROUPBASKET_TABLE . " gb WHERE uc.user_id = ? AND uc.primary_group = 'Y' AND uc.group_id = gb.group_id",array($userId));
-            $nb = $stmt->rowCount();
-            $stmt = $db->query(
-                "select basket_id from " . USER_ABS_TABLE
-                . " mu where new_user = ?",array($userId));
-
-            return $nb + $stmt->rowCount();
-        }
     }
 
     /**
@@ -1064,260 +1025,5 @@ abstract class basket_Abstract extends Database
             }
         }
         return false;
-    }
-    
-    /************** WF MANAGEMENT **************/
-    
-    /**
-     * Return true if it is the turn of the user in the WF
-     *
-     * @param $userId string the user ID
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @return boolean
-     */
-    public function isItMyTurnInTheWF($userId, $resId, $collId, $role='')
-    {
-        if ($role <> '') {
-            $itemMode = " and item_mode = '" . $role . "'";
-        }
-        $db = new Database();
-        $stmt = $db->query(
-            "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = ? and res_id = ? and item_id = "
-            . " and item_mode <> 'dest'"
-            . " and item_mode <> 'cc' ?"
-            . " and visible = 'Y'",array($collId,$resId,$userId,$itemMode)
-        );
-        $line = $stmt->fetchObject();
-        if ($line->res_id <> '') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Return array of roles of the user in the WF
-     *
-     * @param $userId string the user ID
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @return array of roles
-     */
-    public function whatAreMyRoleInTheWF($userId, $resId, $collId)
-    {
-        $roles = array();
-        $db = new Database();
-        $stmt = $db->query(
-            "select item_mode from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ? and item_id = ?"
-            . " and visible = 'Y'",array($collId,$resId,$userId)
-        );
-        while ($line = $stmt->fetchObject()) {
-            array_push($roles, $line->item_mode);
-        }
-        return $roles;
-    }
-    
-     /**
-     * Return the sequence of the user in the WF for a role
-     *
-     * @param $userId string the user ID
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @return integer sequence
-     */
-    public function whatIsMySequenceForMyRole($userId, $resId, $collId, $role)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select sequence from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_id = ?"
-            . " and item_mode = ?",array($collId,$resId,$userId,$role));
-        $line = $stmt->fetchObject();
-        if ($line->sequence <> '') {
-            return $line->sequence;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Return true if the there is someone before me in the WF
-     *
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @param $sequence integer sequence of the actual user in the WF
-     * @return boolean
-     */
-    public function isThereSomeoneBeforeMeInTheWF($resId, $collId, $role, $sequence)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and sequence < ?"
-            . " and (visible = 'N' or visible = '' or visible is null)",array($collId,$resId,$role,$sequence));
-        $line = $stmt->fetchObject();
-        if ($line->res_id <> '') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Return true if the there is someone after me in the WF
-     *
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @param $sequence integer sequence of the actual user in the WF
-     * @return boolean
-     */
-    public function isThereSomeoneAfterMeInTheWF($resId, $collId, $role, $sequence)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select res_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and sequence > ?"
-            . " and (visible = 'N' or visible = '' or visible is null)",array($collId,$resId,$role,$sequence));
-        $line = $stmt->fetchObject();
-        if ($line->res_id <> '') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Return array of the agent who is the next in the WF for the role
-     *
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @param $sequence integer sequence of the actual user in the WF
-     * @return string the agent
-     */
-    public function whoseTheNextInTheWF($resId, $collId, $role, $sequence)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select item_id, sequence from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and sequence > ?"
-            . " and (visible = 'N' or visible = '' or visible is null) order by sequence",array($collId,$resId,$role,$sequence));
-        $line = $stmt->fetchObject();
-        if ($line->item_id <> '') {
-            return $line->item_id;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Return array of the agent who is the previous in the WF for the role
-     *
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @param $sequence integer sequence of the actual user in the WF
-     * @return string the agent
-     */
-    public function whoseThePreviousInTheWF($resId, $collId, $role, $sequence)
-    {
-        $db = new Database();
-        $stmt = $db->query(
-            "select item_id, sequence from " . ENT_LISTINSTANCE
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and sequence < ?"
-            . " and (visible = 'N' or visible = '' or visible is null) order by sequence desc",array($collId,$resId,$role,$sequence));
-        $line = $stmt->fetchObject();
-        if ($line->item_id <> '') {
-            return $line->item_id;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * move agent in the WF
-     *
-     * @param $way string way to move in the WF : forward, back
-     * @param $collId string the collection
-     * @param $resId long the res ID
-     * @param $role string role in the WF
-     * @param $userId user ID to move
-     * @return nothing
-     */
-    public function moveInTheWF($way, $collId, $resId, $role, $userId)
-    {
-        if ($way == 'forward') {
-            $way = '>';
-            $oppositeWay = '<';
-        } elseif ($way == 'back') {
-            $way = '<';
-            $oppositeWay = '>';
-            $order = ' desc';
-        }
-        $db = new Database();
-        $stmt = $db->query(
-            "select item_id from " . ENT_LISTINSTANCE 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and (visible = 'N' or visible = '' or visible is null) "
-            . " and sequence ? ("
-                . " select sequence from " . ENT_LISTINSTANCE 
-                . " where coll_id = ?"
-                . " and res_id = ?"
-                . " and item_mode = ?"
-                . " and item_id = ?)"
-            . " order by sequence ?", array($collId,$resId,$role,$way,$collId,$resId,$role,$userId,$order));
-        //$db->show();exit;
-        $line = $stmt->fetchObject();
-        if ($line->item_id <> '') {
-            $stmt2 = $db->query(
-                "update " . ENT_LISTINSTANCE . " set visible = 'Y'" 
-                . " where coll_id = ?"
-                . " and res_id = ?"
-                . " and item_mode = ?"
-                . " and item_id = ?",array($collId,$resId,$role,$line->item_id));
-        }
-        $stmt = $db->query(
-            "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and item_id = ?",array($collId,$resId,$role,$userId));
-        //update to visible N everyone before or after me
-        $stmt = $db->query(
-            "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
-            . " where coll_id = ?"
-            . " and res_id = ?"
-            . " and item_mode = ?"
-            . " and sequence ? ("
-                . " select sequence from " . ENT_LISTINSTANCE 
-                . " where coll_id = ?"
-                . " and res_id = ?"
-                . " and item_mode = ?"
-                . " and item_id = ?)",array($collId,$resId,$role,$oppositeWay,$collId,$resId,$role,$userId));
-        //$db->show();exit;
     }
 }

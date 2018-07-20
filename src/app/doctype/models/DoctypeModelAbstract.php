@@ -32,7 +32,7 @@ class DoctypeModelAbstract
         return $firstLevel;
     }
 
-    public static function getById(array $aArgs = [])
+    public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
@@ -50,9 +50,7 @@ class DoctypeModelAbstract
             return [];
         }
 
-        $aReturn = $aReturn[0];
-       
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function create(array $aArgs)

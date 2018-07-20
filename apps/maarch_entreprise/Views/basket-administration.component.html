@@ -105,7 +105,7 @@
                         </ng-template>
                         <div class="col-md-6">
                             <mat-form-field style="margin-top:5px;">
-                                <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPage}}" [(ngModel)]="group.result_page" (change)="updateResultPage(group)">
+                                <mat-select id="actionPages" name="actionPages" placeholder="{{lang.resultPage}}" [(ngModel)]="group.result_page" (selectionChange)="updateResultPage(group)">
                                     <mat-option *ngFor="let page of resultPages" [value]="page.id">
                                         {{page.label}}
                                     </mat-option>

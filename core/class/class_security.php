@@ -363,6 +363,10 @@ class security extends Database
      */
     public function retrieve_version_table_from_coll_id($collId)
     {
+        if ($collId == 'letterbox_coll') {
+            return '';
+        }
+
         for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
             if ($_SESSION['collections'][$i]['id'] == $collId) {
                 return $_SESSION['collections'][$i]['version_table'];

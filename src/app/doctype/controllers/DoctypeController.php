@@ -27,12 +27,17 @@ use Resource\models\ResModel;
 
 class DoctypeController
 {
-    public function getById(Request $request, Response $response, $aArgs)
+    public function get(Request $request, Response $response)
+    {
+        $doctypes = DoctypeModel::get();
+
+        return $response->withJson(['doctypes' => $doctypes]);
+    }
+
+    public function getById(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::notEmpty()->validate($aArgs['id'])) {
-            return $response
-                ->withStatus(500)
-                ->withJson(['errors' => 'wrong format for id']);
+            return $response->withStatus(500)->withJson(['errors' => 'wrong format for id']);
         }
 
         $obj['doctype'] = DoctypeModel::getById(['id' => $aArgs['id']]);
@@ -44,7 +49,7 @@ class DoctypeController
                 $obj['doctype']['enabled'] = false;
             }
         }
-  
+
         $doctypeExt = DoctypeExtModel::getById(['id' => $obj['doctype']['type_id']]);
         $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
 

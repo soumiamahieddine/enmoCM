@@ -345,7 +345,7 @@ CREATE TABLE baskets
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   basket_order integer,
   color character varying(16),
-  basket_res_order character varying(255),
+  basket_res_order character varying(255) NOT NULL DEFAULT 'res_id DESC',
   flag_notif character varying(1),
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
@@ -2081,18 +2081,6 @@ CREATE TABLE unit_identifier
   res_id text NOT NULL,
   disposition text default NULL
 );
-
-DROP TABLE IF EXISTS users_baskets;
-CREATE TABLE users_baskets
-(
-  id serial NOT NULL,
-  user_serial_id integer NOT NULL,
-  basket_id character varying(32) NOT NULL,
-  group_id character varying(32) NOT NULL,
-  color character varying(16),
-  CONSTRAINT users_baskets_pkey PRIMARY KEY (id)
-)
-WITH (OIDS=FALSE);
 
 DROP TABLE IF EXISTS users_baskets_preferences;
 CREATE TABLE users_baskets_preferences

@@ -84,7 +84,7 @@ abstract class BasketModelAbstract
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif','basket_res_order']);
+        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif', 'basket_res_order']);
         
         DatabaseModel::update([
             'table'     => 'baskets',
@@ -92,7 +92,7 @@ abstract class BasketModelAbstract
                 'basket_name'       => $aArgs['basket_name'],
                 'basket_desc'       => $aArgs['basket_desc'],
                 'basket_clause'     => $aArgs['clause'],
-                'basket_res_order'  => $aArgs['basket_res_order'],
+                'basket_res_order'  => empty($aArgs['basket_res_order']) ? 'res_id DESC' : $aArgs['basket_res_order'],
                 'is_visible'        => $aArgs['isVisible'],
                 'flag_notif'        => $aArgs['flagNotif'],
                 'color'             => $aArgs['color'],
@@ -499,11 +499,10 @@ abstract class BasketModelAbstract
                 'data'      => [$group['group_id'], 'Y', 'IndexingBasket'],
                 'order_by'  => ['baskets.basket_order', 'baskets.basket_name']
             ]);
-            $coloredBaskets = DatabaseModel::select([
+            $coloredBaskets = UserBasketPreferenceModel::get([
                 'select'    => ['basket_id', 'color'],
-                'table'     => ['users_baskets'],
-                'where'     => ['user_serial_id = ?', 'group_id = ?', 'color is not null'],
-                'data'      => [$user['id'], $group['group_id']]
+                'where'     => ['user_serial_id = ?', 'group_serial_id = ?', 'color is not null'],
+                'data'      => [$user['id'], $group['id']]
             ]);
 
             foreach ($baskets as $kBasket => $basket) {
@@ -518,30 +517,14 @@ abstract class BasketModelAbstract
             }
 
             $regroupedBaskets[] = [
-                'groupId'     => $group['group_id'],
-                'groupDesc'   => $group['group_desc'],
-                'baskets'     => $baskets
+                'groupSerialId' => $group['id'],
+                'groupId'       => $group['group_id'],
+                'groupDesc'     => $group['group_desc'],
+                'baskets'       => $baskets
             ];
         }
 
         return $regroupedBaskets;
-    }
-
-    public static function getColoredBasketsByUserId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['id']]);
-
-        $coloredBaskets = DatabaseModel::select([
-            'select'    => ['basket_id', 'group_id', 'color'],
-            'table'     => ['users_baskets'],
-            'where'     => ['user_serial_id = ?', 'color is not null'],
-            'data'      => [$user['id']]
-        ]);
-
-        return $coloredBaskets;
     }
 
     public static function getBasketPages(array $aArgs = [])

@@ -391,14 +391,14 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $barcode = '';
     if(isset($data['barcode'])&& !empty($data['barcode'])) {
         $barcode = $data['barcode'];
+        $frm_str .= '<tr id="barcode_tr" style="display:' . $displayValue . ';">';
+        $frm_str .= '<td><label for="barcode" class="form_title" >'. _BARCODE . '</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '<td class="indexing_field"><input name="barcode" ' . 'type="text" id="barcode" value="'.$barcode.'" readonly="readonly" class="readonly"' . ' /></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .= '</tr>';
     }
-
-    $frm_str .= '<tr id="barcode_tr" style="display:' . $displayValue . ';">';
-    $frm_str .= '<td><label for="barcode" class="form_title" >'. _BARCODE . '</label></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '<td class="indexing_field"><input name="barcode" ' . 'type="text" id="barcode" value="'.$barcode.'" readonly="readonly" class="readonly"' . ' /></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '</tr>';
+    
     /*** Category ***/
     $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
@@ -556,20 +556,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     }
     $frm_str .= '" placeholder="JJ-MM-AAAA" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-    $frm_str .= '</tr >';
-    /*** Reference courrier ***/
-    $frm_str .= '<tr id="external_id_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
-            . '</label></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '<td class="indexing_field"><input name="external_id" type="text" value="';
-        if( isset($data['external_id']) && !empty($data['external_id']))
-        {
-            $frm_str .= $data['external_id'];
-        }                    
-        $frm_str .= '" id="external_id"/></td>';
-    $frm_str .= '<td>&nbsp;</td>';
-    $frm_str .= '</tr>';
+    $frm_str .= '</tr >';    
 
     /*** Author ***/
     $frm_str .= '<tr id="author_tr" style="display:'.$display_value.';">';
@@ -604,6 +591,20 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
      
+    /*** Reference courrier ***/
+    $frm_str .= '<tr id="external_id_tr" style="display:' . $display_value . ';">';
+    $frm_str .= '<td><label for="external_id" class="form_title" >' . _REFERENCE_MAIL
+            . '</label></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '<td class="indexing_field"><input name="external_id" type="text" value="';
+        if( isset($data['external_id']) && !empty($data['external_id']))
+        {
+            $frm_str .= $data['external_id'];
+        }                    
+        $frm_str .= '" id="external_id"/></td>';
+    $frm_str .= '<td>&nbsp;</td>';
+    $frm_str .= '</tr>';
+
     /*** Date de depart ***/
     $frm_str .= '<tr id="departure_date_tr" style="display:' . $displayValue
             . ';">';

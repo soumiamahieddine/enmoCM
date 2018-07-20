@@ -9,20 +9,20 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 	transform(value:string) {
 		this.removeTimer();
 		let d = new Date(value);
-		let dayNumber = ('0' + d.getDate()).slice(-2)
-		let monthNumber = ('0' + d.getMonth()).slice(-2)
-		let hourNumber = ('0' + d.getHours()).slice(-2)
-		let minuteNumber = ('0' + d.getMinutes()).slice(-2)
+		let dayNumber = ('0' + d.getDate()).slice(-2);
+		let monthNumber = ('0' + d.getMonth()).slice(-2);
+		let hourNumber = ('0' + d.getHours()).slice(-2);
+		let minuteNumber = ('0' + d.getMinutes()).slice(-2);
 		let now = new Date();
-		let month = new Array();
-		month[0] = "Jav.";
+		let month = [];
+		month[0] = "Jan.";
 		month[1] = "Fév.";
 		month[2] = "Mars";
 		month[3] = "Avr.";
 		month[4] = "Mai";
 		month[5] = "Juin";
 		month[6] = "Juil.";
-		month[7] = "Aoû.";
+		month[7] = "Août";
 		month[8] = "Sept.";
 		month[9] = "Oct.";
 		month[10] = "Nov.";
