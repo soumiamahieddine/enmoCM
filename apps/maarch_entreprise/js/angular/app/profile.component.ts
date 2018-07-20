@@ -754,9 +754,9 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                 data.rules.forEach((rule: any) => {
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
-                        this.passwordRules.minLength.value = rule.value;
-                        valArr.push(Validators.minLength(this.passwordRules.minLength.value));
+                        this.passwordRules.minLength.value = rule.value;   
                         if (rule.enabled) {
+                            valArr.push(Validators.minLength(this.passwordRules.minLength.value));
                             ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
                         }
                         
@@ -764,8 +764,8 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                     } else if (rule.label == 'complexityUpper') {
                         this.passwordRules.complexityUpper.enabled = rule.enabled;
                         this.passwordRules.complexityUpper.value = rule.value;
-                        valArr.push(this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }));
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                         
@@ -773,17 +773,17 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
                     } else if (rule.label == 'complexityNumber') {
                         this.passwordRules.complexityNumber.enabled = rule.enabled;
                         this.passwordRules.complexityNumber.value = rule.value;
-                        valArr.push(this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }));
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                         
 
                     } else if (rule.label == 'complexitySpecial') {
                         this.passwordRules.complexitySpecial.enabled = rule.enabled;
-                        this.passwordRules.complexitySpecial.value = rule.value;
-                        valArr.push(this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' }));
+                        this.passwordRules.complexitySpecial.value = rule.value;  
                         if (rule.enabled) {
+                            valArr.push(this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
                     } else if (rule.label == 'renewal') {
@@ -843,6 +843,11 @@ export class ProfileComponent extends AutoCompletePlugin implements OnInit {
     }
 
     getErrorMessage() {
+        if (this.firstFormGroup.controls['newPasswordCtrl'].value != this.firstFormGroup.controls['retypePasswordCtrl'].value) {
+            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors({'mismatch': true});
+        } else {
+            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null);
+        }
         if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
             return this.lang.requiredField + ' !';
 
