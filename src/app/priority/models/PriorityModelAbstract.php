@@ -21,13 +21,16 @@ abstract class PriorityModelAbstract
     public static function get(array $aArgs = [])
     {
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($aArgs, ['limit', 'offset']);
 
         $aReturn = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['priorities'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aReturn;

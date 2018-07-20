@@ -50,14 +50,11 @@ class CoreController
             foreach ($scriptsToInject as $value) {
                 if ($i == 0 && strstr($value, 'scripts.') !== false) {
                     $aInit['scriptsToinject'][] = $value;
-                }
-                if ($i == 1 && strstr($value, 'main.') !== false) {
+                } elseif ($i == 1 && strstr($value, 'main.') !== false) {
                     $aInit['scriptsToinject'][] = $value;
-                }
-                if ($i == 2 && strstr($value, 'runtime.') !== false) {
+                } elseif ($i == 2 && strstr($value, 'runtime.') !== false) {
                     $aInit['scriptsToinject'][] = $value;
-                }
-                if ($i == 3 && strstr($value, 'vendor.') !== false) {
+                } elseif ($i == 3 && strstr($value, 'vendor.') !== false) {
                     $aInit['scriptsToinject'][] = $value;
                 }
             }
