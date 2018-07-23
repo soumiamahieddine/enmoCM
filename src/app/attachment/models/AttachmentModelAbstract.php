@@ -155,6 +155,22 @@ abstract class AttachmentModelAbstract
         return true;
     }
 
+    public static function freezeAttachment(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['table', 'resId']);
+        ValidatorModel::stringType($aArgs, ['table']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+
+        DatabaseModel::update([
+            'table'     => $aArgs['table'],
+            'set'       => ['status' => 'FRZ'],
+            'where'     => ['res_id = ?'],
+            'data'      => [$aArgs['resId']]
+        ]);
+
+        return true;
+    }
+
     public static function setInSignatureBook(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'isVersion']);
