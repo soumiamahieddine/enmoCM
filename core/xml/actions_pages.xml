@@ -193,6 +193,17 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>sendToExternalSignatureBook</ID>
+        <LABEL>_SEND_TO_EXTERNAL_SB</LABEL>
+        <NAME>sendToExternalSignatureBook</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>confirm_folder_status</ID>
         <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
         <NAME>confirm_folder_status</NAME>

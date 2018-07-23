@@ -309,6 +309,7 @@ define('_MARK_AS_READ', 'Marquer comme lu');
 define('_MARK_AS_READ_DESC', 'Marque le document comme \'lu\' dans la bannette. Insère la donnée dans la table \'res_mark_as_read\' (utile si utilisée dans les clauses de bannettes).');
 define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
 define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
+define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe');
 define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
 define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
