@@ -215,7 +215,6 @@ class security extends Database
                     } else {
                         $ip = $_SERVER['REMOTE_ADDR'];
                     }
-                    $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
                     $_SESSION['user']['UserId'] = $s_login;
                     $_SESSION['user']['department'] = $array['department'];
                     $_SESSION['user']['thumbprint'] = $array['thumbprint'];
@@ -229,14 +228,7 @@ class security extends Database
                     );
                 }
 
-                $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-                if ($array['change_pass'] == 'Y' && !in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
-                    return array(
-                        'user' => $array,
-                        'error' => $error,
-                        'url' => 'index.php?trigger=changePass',
-                    );
-                } elseif (isset($_SESSION['requestUri'])
+                if (isset($_SESSION['requestUri'])
                     && trim($_SESSION['requestUri']) != ''
                     && !preg_match('/page=login/', $_SESSION['requestUri'])) {
                     return array(

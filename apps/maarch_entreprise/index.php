@@ -173,30 +173,36 @@ if (
     exit();
 }
 
-if ($_REQUEST['triggerAngular'] != 'changePass' || isset($_REQUEST['page'])) {
-    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
-        $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
-
-        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password']]);
-        if ($user['change_password'] == 'Y') {
-            header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-            exit();
-        } elseif (!empty($passwordRules['renewal'])) {
-            $currentDate = new \DateTime();
-            $lastModificationDate = new \DateTime($user['password_modification_date']);
-            $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
-
-            if ($currentDate > $lastModificationDate) {
-                header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-                exit();
-            }
-        }
-    }
-}
-
 if (isset($_REQUEST['display'])) {
     $core->insert_page();
     exit();
+}
+
+if (empty($_REQUEST['triggerAngular'])) {
+    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
+        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+
+//        if ($user['status'] == 'ABS') {
+//
+//        }
+        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+            $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
+            if ($user['change_password'] == 'Y') {
+                header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
+                exit();
+            } elseif (!empty($passwordRules['renewal'])) {
+                $currentDate = new \DateTime();
+                $lastModificationDate = new \DateTime($user['password_modification_date']);
+                $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
+
+                if ($currentDate > $lastModificationDate) {
+                    header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
+                    exit();
+                }
+            }
+        }
+    }
 }
 
 if (isset($_GET['show'])) {
