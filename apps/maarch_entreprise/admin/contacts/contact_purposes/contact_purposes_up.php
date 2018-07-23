@@ -243,10 +243,8 @@ if (isset($_REQUEST['valid'])) {
 		                    $core->build_menu($_SESSION['menu']);
 		                   ?>
 		                </ul>
-		                     <?php
-		                    echo '<div class="header_menu_blank">&nbsp;</div>';
-		                    echo '<div class="footer_menu"><a style="color:white;" href="'.$_SESSION['config']['businessappurl'].'index.php?page=maarch_credits">';
-		                    echo ''._MAARCH_CREDITS.'</a></div>';?>
+		                    <div class="header_menu_blank">&nbsp;</div>
+		                    <div class="footer_menu"><a onclick="triggerAngular('#/about-us')" style="cursor: pointer;color:white;float:right;"><?php echo _MAARCH_CREDITS ;?></a></div>
 		                </div>
 		            </div>
 	            <div><p id="ariane"><?php

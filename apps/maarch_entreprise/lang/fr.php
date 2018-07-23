@@ -1857,28 +1857,9 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) {
 if (!defined('_MAARCH_CREDITS')) {
     define('_MAARCH_CREDITS', 'A propos de Maarch ');
 }
-if (!defined('_MAARCH_LICENCE')) {
-    define('_MAARCH_LICENCE', 'Maarch est diffusé sous les termes de la');
-}
-if (!defined('_OFFICIAL_WEBSITE')) {
-    define('_OFFICIAL_WEBSITE', 'Site officiel');
-}
-if (!defined('_COMMUNITY')) {
-    define('_COMMUNITY', 'Communauté');
-}
-if (!defined('_DOCUMENTATION')) {
-    define('_DOCUMENTATION', 'Documentation');
-}
 if (!defined('_THANKS_TO_EXT_DEV')) {
     define('_THANKS_TO_EXT_DEV', "Maarch s'appuie sur quelques composants externes. Merci à leurs développeurs !");
 }
-if (!defined('_EXTERNAL_COMPONENTS')) {
-    define('_EXTERNAL_COMPONENTS', 'Composants externes');
-}
-if (!defined('_THANKS_TO_COMMUNITY')) {
-    define('_THANKS_TO_COMMUNITY', 'Et toute la communauté Maarch !');
-}
-
 if (!defined('_PROCESSING_DATE')) {
     define('_PROCESSING_DATE', 'Date limite de traitement');
 }
