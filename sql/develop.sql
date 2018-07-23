@@ -436,3 +436,6 @@ CREATE VIEW res_view_attachments AS
   filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;
+
+DELETE FROM status WHERE id = 'FRZ';
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FRZ', 'PJ gelée', 'Y', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
