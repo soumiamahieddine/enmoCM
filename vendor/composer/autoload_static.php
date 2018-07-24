@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
+class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
 {
     public static $files = array (
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
@@ -56,14 +56,12 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
-            'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
             'Priority\\' => 9,
             'Parameter\\' => 10,
         ),
         'N' => 
         array (
-            'Nyholm\\Psr7\\' => 12,
             'Notification\\' => 13,
             'Note\\' => 5,
         ),
@@ -73,7 +71,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'I' => 
         array (
-            'Interop\\Http\\Factory\\' => 21,
             'Interop\\Container\\' => 18,
         ),
         'H' => 
@@ -119,7 +116,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'B' => 
         array (
-            'Buzz\\' => 5,
             'Basket\\' => 7,
         ),
         'A' => 
@@ -194,10 +190,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -210,10 +202,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/../..' . '/src/app/parameter',
         ),
-        'Nyholm\\Psr7\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/nyholm/psr7/src',
-        ),
         'Notification\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/notification',
@@ -225,10 +213,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Link\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/link',
-        ),
-        'Interop\\Http\\Factory\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/http-interop/http-factory/src',
         ),
         'Interop\\Container\\' => 
         array (
@@ -327,10 +311,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/..' . '/clue/stream-filter/src',
         ),
-        'Buzz\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/kriswallsmith/buzz/lib',
-        ),
         'Basket\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/basket',
@@ -396,10 +376,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd::$classMap;
 
         }, null, ClassLoader::class);
     }
