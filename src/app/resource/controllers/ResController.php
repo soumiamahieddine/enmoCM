@@ -265,6 +265,7 @@ class ResController
                 try {
                     $pdf = new TcpdfFpdi('P', 'pt');
                     $nbPages = $pdf->setSourceFile($pathToDocument);
+                    $pdf->setPrintHeader(false);
                     for ($i = 1; $i <= $nbPages; $i++) {
                         $page = $pdf->importPage($i);
                         $size = $pdf->getTemplateSize($page);
