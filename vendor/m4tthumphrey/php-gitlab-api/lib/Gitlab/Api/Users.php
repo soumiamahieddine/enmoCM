@@ -1,7 +1,5 @@
 <?php namespace Gitlab\Api;
 
-use Symfony\Component\OptionsResolver\Options;
-
 class Users extends AbstractApi
 {
     /**
@@ -23,7 +21,7 @@ class Users extends AbstractApi
     public function all(array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $datetimeNormalizer = function (Options $resolver, \DateTimeInterface $value) {
+        $datetimeNormalizer = function (\DateTimeInterface $value) {
             return $value->format('c');
         };
 
@@ -252,50 +250,5 @@ class Users extends AbstractApi
     public function email($id)
     {
         return $this->get('user/emails/'.$this->encodePath($id));
-    }
-
-    /**
-     * @param int $user_id
-     * @return mixed
-     */
-    public function userImpersonationTokens($user_id)
-    {
-        return $this->get('users/'.$this->encodePath($user_id).'/impersonation_tokens');
-    }
-
-    /**
-     * @param int $user_id
-     * @param int $impersonation_token_id
-     * @return mixed
-     */
-    public function userImpersonationToken($user_id, $impersonation_token_id)
-    {
-        return $this->get('users/'.$this->encodePath($user_id).'/impersonation_tokens/'.$this->encodePath($impersonation_token_id));
-    }
-
-    /**
-     * @param int $user_id
-     * @param string $name
-     * @param array $scopes
-     * @param null $expires_at
-     * @return mixed
-     */
-    public function createImpersonationToken($user_id, $name, array $scopes, $expires_at = null)
-    {
-        return $this->post('users/'.$this->encodePath($user_id).'/impersonation_tokens', array(
-            'name' => $name,
-            'scopes' => $scopes,
-            'expires_at' => $expires_at
-        ));
-    }
-
-    /**
-     * @param int $user_id
-     * @param int $impersonation_token_id
-     * @return mixed
-     */
-    public function removeImpersonationToken($user_id, $impersonation_token_id)
-    {
-        return $this->delete('users/'.$this->encodePath($user_id).'/impersonation_tokens/'.$this->encodePath($impersonation_token_id));
     }
 }

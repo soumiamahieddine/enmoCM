@@ -1,6 +1,5 @@
 <?php namespace Gitlab\Api;
 
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
@@ -37,7 +36,7 @@ class MergeRequests extends AbstractApi
     public function all($project_id, array $parameters = [])
     {
         $resolver = $this->createOptionsResolver();
-        $datetimeNormalizer = function (Options $resolver, \DateTimeInterface $value) {
+        $datetimeNormalizer = function (\DateTimeInterface $value) {
             return $value->format('c');
         };
         $resolver->setDefined('iids')
@@ -68,8 +67,7 @@ class MergeRequests extends AbstractApi
             ->setAllowedTypes('created_before', \DateTimeInterface::class)
             ->setNormalizer('created_before', $datetimeNormalizer)
         ;
-        $resolver->setDefined('search');
-        
+
         return $this->get($this->getProjectPath($project_id, 'merge_requests'), $resolver->resolve($parameters));
     }
 
