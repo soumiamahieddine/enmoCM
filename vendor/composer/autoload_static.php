@@ -7,7 +7,6 @@ namespace Composer\Autoload;
 class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
 {
     public static $files = array (
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'ddc0a4d7e61c0286f0f8593b1903e894' => __DIR__ . '/..' . '/clue/stream-filter/src/functions.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
@@ -15,6 +14,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'p' => 
         array (
             'phpseclib\\' => 10,
@@ -34,6 +37,7 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\OptionsResolver\\' => 34,
             'Status\\' => 7,
             'SrcCore\\' => 8,
             'Slim\\' => 5,
@@ -49,12 +53,14 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
             'Priority\\' => 9,
             'Parameter\\' => 10,
         ),
         'N' => 
         array (
+            'Nyholm\\Psr7\\' => 12,
             'Notification\\' => 13,
             'Note\\' => 5,
         ),
@@ -64,6 +70,7 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'I' => 
         array (
+            'Interop\\Http\\Factory\\' => 21,
             'Interop\\Container\\' => 18,
         ),
         'H' => 
@@ -77,7 +84,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'G' => 
         array (
-            'GuzzleHttp\\Psr7\\' => 16,
             'Group\\' => 6,
         ),
         'F' => 
@@ -114,6 +120,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
         'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
@@ -133,6 +143,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\OptionsResolver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/options-resolver',
         ),
         'Status\\' => 
         array (
@@ -170,6 +184,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
+        'Psr\\Http\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -182,6 +200,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         array (
             0 => __DIR__ . '/../..' . '/src/app/parameter',
         ),
+        'Nyholm\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nyholm/psr7/src',
+        ),
         'Notification\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/notification',
@@ -193,6 +215,10 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'Link\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/link',
+        ),
+        'Interop\\Http\\Factory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/http-interop/http-factory/src',
         ),
         'Interop\\Container\\' => 
         array (
@@ -222,10 +248,6 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         'History\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/app/history',
-        ),
-        'GuzzleHttp\\Psr7\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
         'Group\\' => 
         array (
@@ -269,7 +291,7 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
         ),
         'Buzz\\' => 
         array (
-            0 => __DIR__ . '/..' . '/kriswallsmith/buzz/lib/Buzz',
+            0 => __DIR__ . '/..' . '/kriswallsmith/buzz/lib',
         ),
         'Basket\\' => 
         array (
@@ -322,8 +344,22 @@ class ComposerStaticInit3cf41326f2ce1ccc88c4676c4e39ea47
     );
 
     public static $classMap = array (
+        'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
         'OpenIDConnectClient' => __DIR__ . '/..' . '/jumbojett/openid-connect-php/OpenIDConnectClient.php',
         'OpenIDConnectClientException' => __DIR__ . '/..' . '/jumbojett/openid-connect-php/OpenIDConnectClient.php',
+        'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
+        'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
+        'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
+        'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
+        'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
+        'TCPDF_COLORS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_colors.php',
+        'TCPDF_FILTERS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_filters.php',
+        'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
+        'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
+        'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
+        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
+        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
+        'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -1,3 +1,5 @@
+[<-- Index](/doc/index.md)
+
 # Buzz middlewares
 
 If you want to modify the request or response somehow, a middleware is the way to
@@ -24,7 +26,7 @@ First we need to create a class that implements `Buzz\Middleware\MiddlewareInter
 
 use Buzz\Middleware\MiddlewareInterface;
 
-class UserAgentMiddleware extends MiddlewareInterface 
+class UserAgentMiddleware implements MiddlewareInterface 
 {
   // ...
 ``` 
@@ -68,7 +70,7 @@ use Buzz\Middleware\MiddlewareInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class UserAgentMiddleware extends MiddlewareInterface 
+class UserAgentMiddleware implements MiddlewareInterface 
 {
   public function handleRequest(RequestInterface $request, callable $next)
   {
@@ -83,3 +85,8 @@ class UserAgentMiddleware extends MiddlewareInterface
    }
 }
 ``` 
+
+
+---
+
+Continue reading about [Symfony integration](/doc/symfony.md).
