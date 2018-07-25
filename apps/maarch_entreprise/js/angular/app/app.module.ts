@@ -14,6 +14,7 @@ import { AboutUsComponent }                     from './about-us.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
+import { ActivateUserComponent }                from './activate-user.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { SaveNumericPackageComponent }          from './save-numeric-package.com
         SaveNumericPackageComponent,
         CustomSnackbarComponent,
         ConfirmModalComponent,
-        InfoChangePasswordModalComponent
+        InfoChangePasswordModalComponent,
+        ActivateUserComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
