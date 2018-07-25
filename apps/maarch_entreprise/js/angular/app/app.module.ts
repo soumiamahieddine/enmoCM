@@ -10,9 +10,11 @@ import { AppRoutingModule }                     from './app-routing.module';
 import { AdministrationModule }                 from './administration/administration.module';
 
 import { ProfileComponent }                     from './profile.component';
+import { AboutUsComponent }                     from './about-us.component';
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
+import { ActivateUserComponent }                from './activate-user.component';
 
 @NgModule({
     imports: [
@@ -23,13 +25,15 @@ import { SaveNumericPackageComponent }          from './save-numeric-package.com
     declarations: [
         AppComponent,
         ProfileComponent,
+        AboutUsComponent,
         PasswordModificationComponent,
         SignatureBookComponent,
         SafeUrlPipe,
         SaveNumericPackageComponent,
         CustomSnackbarComponent,
         ConfirmModalComponent,
-        InfoChangePasswordModalComponent
+        InfoChangePasswordModalComponent,
+        ActivateUserComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,

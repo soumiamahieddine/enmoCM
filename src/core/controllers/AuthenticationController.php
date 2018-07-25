@@ -16,11 +16,30 @@ namespace SrcCore\controllers;
 
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\PasswordModel;
+use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 class AuthenticationController
 {
+    public static function authentication()
+    {
+        $userId = null;
+        if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+            if (AuthenticationModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
+                $userId = $_SERVER['PHP_AUTH_USER'];
+            }
+        } else {
+            $cookie = SecurityModel::getCookieAuth();
+            if (!empty($cookie) && SecurityModel::cookieAuthentication($cookie)) {
+                SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+                $userId = $cookie['userId'];
+            }
+        }
+
+        return $userId;
+    }
+
     public static function handleFailedAuthentication(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);

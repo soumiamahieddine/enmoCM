@@ -277,19 +277,28 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<div>';
     $frm_str .= '<table width="95%" align="left" border="0">';
     // Displays the document indexes
-    foreach (array_keys($data) as $key) {
+    foreach (array_keys($data) as $key) {        
         if ($key != 'is_multicontacts' && $key != 'folder' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')) {
-            $frm_str .= '<tr>';
-            $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
-                .$data[$key]['label'].' :</span>';
-            if (isset($data[$key]['addon'])) {
-                $frm_str .= ' '.$data[$key]['addon'];
+            if($key == 'barcode' && empty($data[$key]['value'])) {
+                $frm_str .= '';
+            } else {
+                $frm_str .= '<tr>';
+                $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
+                    .$data[$key]['label'].' :</span>';
+                if (isset($data[$key]['addon'])) {
+                    $frm_str .= ' '.$data[$key]['addon'];
+                }
+                $frm_str .= '<td>';
             }
-            $frm_str .= '<td>';
+            
             if ($data[$key]['display'] == 'textinput') {
-                $frm_str .= '<input type="text" name="'.$key.'" id="'.$key
+                if($key == 'barcode' && empty($data[$key]['value'])) {
+                    $frm_str .= '';
+                } else{
+                    $frm_str .= '<input type="text" name="'.$key.'" id="'.$key
                     .'" value="'.$data[$key]['show_value']
                     .'" readonly="readonly" class="readonly" style="border:none;" />';
+                }                
             } elseif ($data[$key]['display'] == 'textarea') {
                 if ($key == 'is_multicontacts') {
                     $frm_str .= '<input type="hidden" name="'.$key.'" id="'.$key
@@ -322,9 +331,12 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             if ($key == 'type_id') {
                 $_SESSION['category_id_session'] = $data[$key]['value'];
             }
-
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
+            if($key == 'barcode' && empty($data[$key]['value'])) {
+                $frm_str .= '';
+            } else {
+                $frm_str .= '</td>';
+                $frm_str .= '</tr>';
+            }            
         }
     }
     if ($chrono_number != '' && _ID_TO_DISPLAY == 'res_id') {
@@ -887,15 +899,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $res_table = $sec->retrieve_table_from_coll($coll_id);
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
-    $other_txt = '';
-    $process_notes = '';
     $folder = '';
     $thesaurusList = '';
 
     for ($j = 0; $j < count($values_form); ++$j) {
-        if ($values_form[$j]['ID'] == 'process_notes') {
-            $process_notes = $values_form[$j]['VALUE'];
-        }
         if ($values_form[$j]['ID'] == 'folder') {
             $folder = $values_form[$j]['VALUE'];
         }
@@ -974,8 +981,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $_SESSION['redirect']['diff_list'] = array();
     unset($_SESSION['redirection']);
     unset($_SESSION['redirect']);
-    $db->query('UPDATE '.$table.' SET answer_type_bitmask = ?, process_notes = ?, other_answer_desc = ? WHERE res_id= ?',
-    array($bitmask, $process_notes, $other_txt, $arr_id[0]));
 
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
 }

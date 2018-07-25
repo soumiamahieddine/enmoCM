@@ -26,22 +26,11 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 require_once("src/core/lang/lang-{$language}.php");
 
 
-$app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true]]);
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $userId = null;
-    if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-        if (\SrcCore\models\AuthenticationModel::authentication(['userId' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
-            $userId = $_SERVER['PHP_AUTH_USER'];
-        }
-    } else {
-        $cookie = \SrcCore\models\SecurityModel::getCookieAuth();
-        if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
-            \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
-            $userId = $cookie['userId'];
-        }
-    }
+    $userId = \SrcCore\controllers\AuthenticationController::authentication();
 
     if (!empty($userId)) {
         $GLOBALS['userId'] = $userId;

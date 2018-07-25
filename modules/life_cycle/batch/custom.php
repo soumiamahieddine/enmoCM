@@ -207,15 +207,6 @@ function createPDI($resInContainer)
             }
             $identifier->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $reference->appendChild($identifier);
-            if (isset($resRecordset->coverage)) {
-                $coverage = $docXML->createElement(
-                    'COVERAGE', $resRecordset->coverage
-                );
-            } else {
-                $coverage = $docXML->createElement('COVERAGE', '');
-            }
-            $coverage->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $reference->appendChild($coverage);
             if (isset($resRecordset->doc_date)) {
                 $docDate = $docXML->createElement(
                     'DOC_DATE', $resRecordset->doc_date
@@ -400,15 +391,6 @@ function createPDI($resInContainer)
             }
             $relation->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $context->appendChild($relation);
-            if (isset($resRecordset->coverage)) {
-                $coverage = $docXML->createElement(
-                    'COVERAGE', $resRecordset->coverage
-                );
-            } else {
-                $coverage = $docXML->createElement('COVERAGE', '');
-            }
-            $coverage->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $context->appendChild($coverage);
             if (isset($resRecordset->rights)) {
                 $rights = $docXML->createElement(
                     'RIGHTS', $resRecordset->rights

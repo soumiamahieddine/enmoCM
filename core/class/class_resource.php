@@ -214,7 +214,6 @@
         $find_docserver_id = false;
         $find_path = false;
         $find_filename = false;
-        $find_offset = false;
         $find_fingerprint = false;
         $find_filesize = false;
         $find_status = false;
@@ -246,8 +245,6 @@
                 if (!preg_match("/^[\w-.]+.([a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9][a-zA-Z-0-9]?|maarch)$/", $data[$i]['value'])) {
                     $error .= _FILENAME_ERROR . ' ' . $data[$i]['value'] . '<br/>';
                 }
-            } elseif ($data[$i]['column'] == "offset_doc") {
-                $find_offset = true;
             } elseif ($data[$i]['column'] == 'fingerprint') {
                 $find_fingerprint  = true;
                 if (!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value'])) {
@@ -285,9 +282,6 @@
         if ($find_filename == false) {
             $error .= _MISSING_FILENAME.'<br/>';
         }
-        if ($find_offset == false) {
-            $error .= _MISSING_OFFSET.'<br/>';
-        }
         if ($find_fingerprint == false) {
             $error .= _MISSING_FINGERPRINT.'<br/>';
         }
@@ -323,7 +317,7 @@
         }
         $docserverAdr = array();
         $db = new Database();
-        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view
+        $query = "select res_id, docserver_id, path, filename, format, fingerprint, is_multi_docservers from " . $view
             . " where res_id = ? ". $whereClause;
         $stmt = $db->query($query, array($resId));
         if ($stmt->rowCount() > 0) {
@@ -339,12 +333,12 @@
                     if ($adrTable == 'adr_x') {
                         $adrTable = 'adr_letterbox';
                     }
-                    $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from "
+                    $query = "select res_id, docserver_id, path, filename, fingerprint, adr_priority from "
                         . $adrTable . " where res_id = ? order by adr_priority";
                     $stmt = $db->query($query, array($resId));
                     if ($stmt->rowCount() > 0) {
                         while ($line = $stmt->fetchObject()) {
-                            array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
+                            array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "adr_priority" => $line->adr_priority));
                         }
                     } else {
                         $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
@@ -355,7 +349,7 @@
                     return $control;
                 }
             } else {
-                array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
+                array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "adr_priority" => ""));
             }
             $control = array("status" => "ok", $docserverAdr, "error" => "");
             return $control;

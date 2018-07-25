@@ -631,7 +631,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'},
+        {id:'external_id_tr', type:'tr', state:'hide'},
+        {id:'external_id_mandatory', type:'tr', state:'hide'}
         ];
     }
     //Category = FOLDER_DOCUMENT

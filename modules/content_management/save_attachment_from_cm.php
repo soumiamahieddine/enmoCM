@@ -140,7 +140,6 @@ if ($arrayIsAllowed['status'] == false) {
                 array_push($_SESSION['data'], array( 'column' => "format", 			'value' => $fileInfos['format'], 					'type' => "string" ) );
                 array_push($_SESSION['data'], array( 'column' => "docserver_id", 	'value' => $storeResult['docserver_id'], 			'type' => "string" ) );
                 array_push($_SESSION['data'], array( 'column' => "status", 			'value' => 'TMP', 									'type' => "string" ) );
-                array_push($_SESSION['data'], array( 'column' => "offset_doc", 		'value' => ' ', 									'type' => "string" ) );
                 array_push($_SESSION['data'], array( 'column' => "title", 			'value' => $_SESSION['attachmentInfo'][$i]['title'], 	'type' => "string" ) );
                 array_push($_SESSION['data'], array( 'column' => "coll_id", 		'value' => $_SESSION['collection_id_choice'], 		'type' => "string" ) );
                 array_push($_SESSION['data'], array( 'column' => "res_id_master", 	'value' => $_SESSION['doc_id'], 					'type' => "integer") );

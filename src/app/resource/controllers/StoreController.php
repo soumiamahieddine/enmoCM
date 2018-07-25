@@ -232,11 +232,6 @@ class StoreController
         }
 
         $aArgs['data'][] = [
-            'column'    => 'offset_doc',
-            'value'     => '',
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
             'column'    => 'docserver_id',
             'value'     => $aArgs['docserverId'],
             'type'      => 'string'

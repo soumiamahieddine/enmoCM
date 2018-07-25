@@ -590,4 +590,14 @@ export const LANG_EN = {
     "chars"                             : "char(s)",
     "minutes"                           : "minute(s)",
     "password"                          : "Password", 
+    "aboutUs"                           : "About Maarch",
+    "thanksToCommunity"                 : "And all the Maarch's community !",
+    "thanksToExtDev"                    : "Maarch depend upon some external components. A thank-you to their developers !",
+    "externalComponents"                : "External components",
+    "documentation"                     : "Documentation",
+    "community"                         : "Community",
+    "officialWebsite"                   : "Official website",
+    "maarchLicence"                     : "Maarch is circulated under the terms of",
+    "groupeCompany"                     : ", Archiveco group company"
+
 };

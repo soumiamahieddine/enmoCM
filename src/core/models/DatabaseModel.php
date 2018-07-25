@@ -110,6 +110,13 @@ class DatabaseModel
             $orderBy = ' ORDER BY ' . implode(', ', $args['order_by']);
         }
 
+        if (empty($args['offset'])) {
+            $offset = '';
+        } else {
+            ValidatorModel::intType($args, ['offset']);
+            $offset = " OFFSET {$args['offset']}";
+        }
+
         if (empty($args['limit'])) {
             $limit = '';
         } else {
@@ -131,7 +138,7 @@ class DatabaseModel
             $limit = $limitData['limit'];
         }
 
-        $query = "SELECT {$select} FROM {$args['table']}{$where}{$groupBy}{$orderBy}{$limit}";
+        $query = "SELECT {$select} FROM {$args['table']}{$where}{$groupBy}{$orderBy}{$offset}{$limit}";
 
         $stmt = $db->query($query, $args['data']);
 

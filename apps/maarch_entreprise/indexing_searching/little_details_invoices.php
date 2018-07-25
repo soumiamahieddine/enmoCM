@@ -207,7 +207,6 @@ if (!empty($_SESSION['error'])) {
                 }
             }
 
-            // $processData = $is->get_process_data($collId, $resId);
             $status = $res->status;
             if (!empty($status)) {
                 require_once'core/class/class_manage_status.php';

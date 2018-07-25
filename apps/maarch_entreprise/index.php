@@ -173,34 +173,41 @@ if (
     exit();
 }
 
-if ($_REQUEST['triggerAngular'] != 'changePass' || isset($_REQUEST['page'])) {
-    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
-        $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
-
-        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password']]);
-        if ($user['change_password'] == 'Y') {
-            header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-            exit();
-        } elseif (!empty($passwordRules['renewal'])) {
-            $currentDate = new \DateTime();
-            $lastModificationDate = new \DateTime($user['password_modification_date']);
-            $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
-
-            if ($currentDate > $lastModificationDate) {
-                header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
-                exit();
-            }
-        }
-    }
-}
-
 if (isset($_REQUEST['display'])) {
     $core->insert_page();
     exit();
 }
 
+if (empty($_REQUEST['triggerAngular'])) {
+    if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
+        $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+        
+        if ($user['status'] == 'ABS') {
+            header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=activateUser');
+            exit();
+        }
+        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+            $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
+            if ($user['change_password'] == 'Y') {
+                header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
+                exit();
+            } elseif (!empty($passwordRules['renewal'])) {
+                $currentDate = new \DateTime();
+                $lastModificationDate = new \DateTime($user['password_modification_date']);
+                $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
+
+                if ($currentDate > $lastModificationDate) {
+                    header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=changePass');
+                    exit();
+                }
+            }
+        }
+    }
+}
+
 if (isset($_GET['show'])) {
-    $show = $_GET['show'];
+    $show = $_GET['show'];    
 } else {
     $show = 'true';
 }
@@ -351,12 +358,7 @@ if (file_exists($path)) {
             echo '<div id="return_previsualise_thes" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: fixed; top: 0; left: 0; z-index: 99999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';<input type="hidden" id="identifierDetailFrame" value="" /></div>';
 
 
-            if ($core->is_module_loaded('basket')
-                && isset($_SESSION['abs_user_status'])
-                && $_SESSION['abs_user_status'] == true) {
-                include
-                    'modules/basket/advert_missing.php';
-            } elseif (empty($_REQUEST['triggerAngular'])) {
+            if (empty($_REQUEST['triggerAngular'])) {
                 $core->insert_page();
             }
             ?>
@@ -382,11 +384,10 @@ if (file_exists($path)) {
     <?php
     if (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'changePass') {
         ?><script>triggerAngular('#/password-modification')</script><?php
+    } elseif (!empty($_REQUEST['triggerAngular']) && $_REQUEST['triggerAngular'] == 'activateUser') {
+        ?><script>triggerAngular('#/activate-user')</script><?php
     } elseif ($_SESSION['user']['UserId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
-        ?>
-        <script>triggerAngular('#/administration')</script>
-    <?php
-
+        ?><script>triggerAngular('#/administration')</script><?php
     }
     ?>
 </html>

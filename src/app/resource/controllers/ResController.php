@@ -20,6 +20,8 @@ use Docserver\models\DocserverModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
+use setasign\Fpdi\TcpdfFpdi;
+use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
 use SrcCore\models\ValidatorModel;
 use History\controllers\HistoryController;
@@ -70,7 +72,7 @@ class ResController
         $mandatoryColumns = ['type_id'];
         foreach ($data['data'] as $value) {
             foreach ($mandatoryColumns as $columnKey => $column) {
-                if ($column == $value['column']) {
+                if ($column == $value['column'] && !empty($value['value'])) {
                     unset($mandatoryColumns[$columnKey]);
                 }
             }
@@ -180,7 +182,7 @@ class ResController
         }
 
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
-        $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
         if (empty($document) || empty($extDocument)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
@@ -213,7 +215,79 @@ class ResController
         }
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
-        $fileContent = file_get_contents($pathToDocument);
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
+        if ($loadedXml) {
+            $watermark = (array)$loadedXml->FEATURES->watermark;
+            if ($watermark['enabled'] == 'true') {
+
+                $text = "watermark by {$GLOBALS['userId']}";
+                if (!empty($watermark['text'])) {
+                    $text = $watermark['text'];
+                    preg_match_all('/\[(.*?)\]/i', $watermark['text'], $matches);
+
+                    foreach ($matches[1] as $value) {
+                        $tmp = '';
+                        if ($value == 'date_now') {
+                            $tmp = date('d-m-Y');
+                        } elseif ($value == 'hour_now') {
+                            $tmp = date('H:i');
+                        } elseif($value == 'alt_identifier'){
+                            $tmp = $extDocument['alt_identifier'];
+                        } else {
+                            $backFromView = ResModel::getOnView(['select' => $value, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+                            if (!empty($backFromView[0][$value])) {
+                                $tmp = $backFromView[0][$value];
+                            }
+                        }
+                        $text = str_replace("[{$value}]", $tmp, $text);
+                    }
+                }
+
+                $color = ['192', '192', '192']; //RGB
+                if (!empty($watermark['text_color'])) {
+                    $rawColor = explode(',', $watermark['text_color']);
+                    $color = count($rawColor) == 3 ? $rawColor : $color;
+                }
+
+                $font = ['helvetica', '10']; //Familly Size
+                if (!empty($watermark['font'])) {
+                    $rawFont = explode(',', $watermark['font']);
+                    $font = count($rawFont) == 2 ? $rawFont : $font;
+                }
+
+                $position = [30, 35, 0, 0.5]; //X Y Angle Opacity
+                if (!empty($watermark['position'])) {
+                    $rawPosition = explode(',', $watermark['position']);
+                    $position = count($rawPosition) == 4 ? $rawPosition : $position;
+                }
+
+                try {
+                    $pdf = new TcpdfFpdi('P', 'pt');
+                    $nbPages = $pdf->setSourceFile($pathToDocument);
+                    $pdf->setPrintHeader(false);
+                    for ($i = 1; $i <= $nbPages; $i++) {
+                        $page = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($page);
+                        $pdf->AddPage($size['orientation'], $size);
+                        $pdf->useImportedPage($page);
+                        $pdf->SetFont($font[0], '', $font[1]);
+                        $pdf->SetTextColor($color[0], $color[1], $color[2]);
+                        $pdf->SetAlpha($position[3]);
+                        $pdf->Rotate($position[2]);
+                        $pdf->Text($position[0], $position[1], $text);
+                    }
+                    $fileContent = $pdf->Output('', 'S');
+                } catch (\Exception $e) {
+                    $fileContent = null;
+                }
+            }
+        }
+
+
+        if (empty($fileContent)) {
+            $fileContent = file_get_contents($pathToDocument);
+        }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }

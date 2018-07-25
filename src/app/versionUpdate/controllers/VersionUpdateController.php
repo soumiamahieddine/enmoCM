@@ -28,7 +28,7 @@ class VersionUpdateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $client = new Client('https://labs.maarch.org/api/v4/');
+        $client = Client::create('https://labs.maarch.org/api/v4/');
         try {
             $tags = $client->api('tags')->all('12');
         } catch (\Exception $e) {

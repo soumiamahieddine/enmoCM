@@ -320,33 +320,6 @@ try {
         );
         $signataire = $stmt2->fetchObject();
 
-        #### Nature réponse ####
-        switch ($selectedFile->answer_type_bitmask) {
-            case "000000":
-                $answer = '';
-                break;
-            case "000001":
-                $answer = _SIMPLE_MAIL;
-                break;
-            case "000010":
-                $answer = _REGISTERED_MAIL;
-                break;
-            case "000100":
-                $answer = _DIRECT_CONTACT;
-                break;
-            case "001000":
-                $answer = _EMAIL;
-                break;
-            case "010000":
-                $answer = _FAX;
-                break;
-            case "100000":
-                $answer = _ANSWER;
-                break;
-            default:
-                $answer = '';
-        }        
-
         array_push($arrayAttachments, array( "identifier" => $signed_response->identifier, "typist" => strtoupper($signataire->lastname) . " " . ucfirst($signataire->firstname), "creation_date" => format_date_db($signed_response->creation_date, "", $GLOBALS['databasetype'])));
 
         #### Nombre de Projet de réponse ####
