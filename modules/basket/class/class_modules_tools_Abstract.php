@@ -103,7 +103,6 @@ abstract class basket_Abstract extends Database
     {
         $_SESSION['user']['baskets'] = [];
 
-        $this->_loadActivityUser($userData['UserId']);
         $this->_loadBasketsPages();
         $user = \User\models\UserModel::getByUserId(['userId' => $userData['UserId'], 'select' => ['id']]);
 
@@ -425,26 +424,6 @@ abstract class basket_Abstract extends Database
             $_SESSION['current_basket']['lock_sublist'] = $_SESSION['user']['baskets'][$ind]['lock_suvlist'];
             $_SESSION['current_basket']['group_id'] = $_SESSION['user']['baskets'][$ind]['group_id'];
             $_SESSION['current_basket']['group_desc'] = $_SESSION['user']['baskets'][$ind]['group_desc'];
-        }
-    }
-
-    /**
-     * Loads status from users and create var when he's missing.
-     *
-     */
-    protected function _loadActivityUser($userId)
-    {
-        if ( isset($userId) ) {
-            $db = new Database();
-            $stmt = $db->query(
-                "SELECT status from " . USERS_TABLE . " where user_id=?",array($userId));
-            $line = $stmt-> fetchObject();
-
-            if ($line->status == 'ABS') {
-                $_SESSION['abs_user_status'] = true;
-            } else {
-                $_SESSION['abs_user_status'] = false;
-            }
         }
     }
 
