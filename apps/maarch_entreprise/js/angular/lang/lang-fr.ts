@@ -287,7 +287,7 @@ export const LANG_FR = {
     "menus"                             : "Menus",
     "minute"                            : "Minute",
     "missingAdvert"                     : "Ce compte est actuellement défini en mode 'absent' et les courriers sont redirigés vers un autre utilisateur.",
-    "missingAdvert2"                    : "Si vous desirez vous connecter avec ce compte, le mode 'absent' sera alors supprimé.<br/> La redirection des courriers arrivera à son terme et l'application sera réactivée",
+    "missingAdvert2"                    : "Si vous desirez vous connecter avec ce compte, le mode 'absent' sera alors supprimé.",
     "missingAdvertTitle"                : "Gestion des absences",
     "missingChoose"                     : "Souhaitez-vous continuer?",
     "modificationSaved"                 : "Modification enregistrée",
