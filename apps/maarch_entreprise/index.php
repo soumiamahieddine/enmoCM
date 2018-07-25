@@ -360,8 +360,7 @@ if (file_exists($path)) {
             if ($core->is_module_loaded('basket')
                 && isset($_SESSION['abs_user_status'])
                 && $_SESSION['abs_user_status'] == true) {
-                include
-                    'modules/basket/advert_missing.php';
+                include 'modules/basket/advert_missing.php';
             } elseif (empty($_REQUEST['triggerAngular'])) {
                 $core->insert_page();
             }
