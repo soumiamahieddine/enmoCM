@@ -8,7 +8,11 @@ function triggerAngular(locationToGo) {
         success: function(answer) {
             angularGlobals = answer;
 
-            $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+            if ($j('#inner_content').length > 0) {
+                $j('#inner_content').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+            } else {
+                $j('#loadingContent').html('<i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>');
+            }
 
             if (!alreadyLoaded) {
                 var head = document.getElementsByTagName('head')[0];
@@ -48,20 +52,6 @@ function triggerAngular(locationToGo) {
 
 function changeLocationToAngular(locationToGo) {
     location.href = locationToGo;
-}
-
-function successNotification(message) {
-    $j('#resultInfo').html(message).removeClass().addClass('alert alert-success alert-dismissible');
-    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-        $j("#resultInfo").slideUp(500);
-    });
-}
-
-function errorNotification(message) {
-    $j('#resultInfo').html(message).removeClass().addClass('alert alert-danger alert-dismissible');
-    $j("#resultInfo").fadeTo(3000, 500).slideUp(500, function() {
-        $j("#resultInfo").slideUp(500);
-    });
 }
 
 function lockDocument(resId) {

@@ -34,6 +34,14 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
 
     if (!empty($userId)) {
         $GLOBALS['userId'] = $userId;
+        $route = $request->getAttribute('route');
+        if (!empty($route)) {
+            $currentRoute = $route->getPattern();
+            $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+            if (!$r['isRouteAvailable']) {
+                return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+            }
+        }
         $response = $next($request, $response);
         return $response;
     } else {

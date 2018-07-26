@@ -18,38 +18,41 @@ declare var angularGlobals: any;
 })
 export class PasswordModificationComponent implements OnInit {
 
-    private _mobileQueryListener: () => void;
-    mobileQuery: MediaQueryList;
+    private _mobileQueryListener    : () => void;
+    mobileQuery                     : MediaQueryList;
     dialogRef                       : MatDialogRef<any>;
     config                          : any       = {};
-    coreUrl: string;
-    ruleText: string = '';
-    otherRuleText: string;
-    lang: any = LANG;
-    loading: boolean = false;
-    user: any = {};
-    hidePassword: Boolean = true;
 
-    passLength: any = false;
-    passwordRules: any = {
-        minLength: { enabled: false, value: 0 },
-        complexityUpper: { enabled: false, value: 0 },
-        complexityNumber: { enabled: false, value: 0 },
-        complexitySpecial: { enabled: false, value: 0 },
-        renewal: { enabled: false, value: 0 },
-        historyLastUse: {enabled:false, value:0},
+    coreUrl         : string;
+    lang            : any       = LANG;
+    loading         : boolean   = false;
+
+    user            : any       = {};
+    ruleText        : string    = '';
+    otherRuleText   : string;
+    hidePassword    : boolean   = true;
+    passLength      : any       = false;
+    arrValidator    : any[]     = [];
+    validPassword   : boolean   = false;
+    matchPassword   : boolean   = false;
+    isLinear        : boolean   = false;
+    firstFormGroup  : FormGroup;
+
+    passwordRules   : any = {
+        minLength           : { enabled: false, value: 0 },
+        complexityUpper     : { enabled: false, value: 0 },
+        complexityNumber    : { enabled: false, value: 0 },
+        complexitySpecial   : { enabled: false, value: 0 },
+        renewal             : { enabled: false, value: 0 },
+        historyLastUse      : { enabled: false, value: 0 },
     };
 
-    passwordModel: any = {
-        currentPassword: "",
-        newPassword: "",
-        reNewPassword: "",
+    passwordModel   : any = {
+        currentPassword : "",
+        newPassword     : "",
+        reNewPassword   : "",
     };
-    arrValidator: any[] = [];
-    validPassword: Boolean = false;
-    matchPassword: Boolean = false;
-    isLinear = false;
-    firstFormGroup: FormGroup;
+
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService, private _formBuilder: FormBuilder, public dialog: MatDialog) {
         $j("link[href='merged_css.php']").remove();
@@ -59,19 +62,8 @@ export class PasswordModificationComponent implements OnInit {
         this.user = angularGlobals.user;
     }
 
-    regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } => {
-            if (!control.value) {
-                return null;
-            }
-            const valid = regex.test(control.value);
-            return valid ? null : error;
-        };
-    }
-
     prepare() {
         $j("link[href='merged_css.php']").remove();
-        //$j('#header').remove();
         $j('#footer').remove();
         $j('#inner_content').remove();
         $j('#inner_content_contact').parent('div').remove();
@@ -104,28 +96,20 @@ export class PasswordModificationComponent implements OnInit {
                 valArr.push(Validators.required);
                 
                 data.rules.forEach((rule: any) => {
-
-
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
                         this.passwordRules.minLength.value = rule.value;
-                        
                         if (rule.enabled) {
                             valArr.push(Validators.minLength(this.passwordRules.minLength.value));
                             ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
                         }
-                        
-
                     } else if (rule.label == 'complexityUpper') {
                         this.passwordRules.complexityUpper.enabled = rule.enabled;
                         this.passwordRules.complexityUpper.value = rule.value;
-                        
                         if (rule.enabled) {
                             valArr.push(this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
-
                     } else if (rule.label == 'complexityNumber') {
                         this.passwordRules.complexityNumber.enabled = rule.enabled;
                         this.passwordRules.complexityNumber.value = rule.value;
@@ -133,18 +117,13 @@ export class PasswordModificationComponent implements OnInit {
                             valArr.push(this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
-
                     } else if (rule.label == 'complexitySpecial') {
                         this.passwordRules.complexitySpecial.enabled = rule.enabled;
                         this.passwordRules.complexitySpecial.value = rule.value;
-                        
                         if (rule.enabled) {
                             valArr.push(this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
-
                     } else if (rule.label == 'renewal') {
                         this.passwordRules.renewal.enabled = rule.enabled;
                         this.passwordRules.renewal.value = rule.value;
@@ -178,18 +157,26 @@ export class PasswordModificationComponent implements OnInit {
                 '',
                 Validators.compose([Validators.required])
             ]
-
         }, {
-                validator: this.matchValidator
-            });
+            validator: this.matchValidator
+        });
+    }
+
+    regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            const valid = regex.test(control.value);
+            return valid ? null : error;
+        };
     }
 
     matchValidator(group: FormGroup) {
-
         if (group.controls['newPasswordCtrl'].value == group.controls['retypePasswordCtrl'].value) {
             return false;
         } else {
-            group.controls['retypePasswordCtrl'].setErrors({'mismatch': true})
+            group.controls['retypePasswordCtrl'].setErrors({'mismatch': true});
             return {'mismatch': true};
         }
     }
@@ -202,21 +189,16 @@ export class PasswordModificationComponent implements OnInit {
         }
         if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('required')) {
             return this.lang.requiredField + ' !';
-
         } else if (this.firstFormGroup.controls['newPasswordCtrl'].hasError('minlength') && this.passwordRules.minLength.enabled) {
             return this.passwordRules.minLength.value + ' ' + this.lang.passwordminLength + ' !';
-
         } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexityUpper !== undefined && this.passwordRules.complexityUpper.enabled) {
             return this.lang.passwordcomplexityUpper + ' !';
-
         } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexityNumber !== undefined && this.passwordRules.complexityNumber.enabled) {
             return this.lang.passwordcomplexityNumber + ' !';
-
         } else if (this.firstFormGroup.controls['newPasswordCtrl'].errors != null && this.firstFormGroup.controls['newPasswordCtrl'].errors.complexitySpecial !== undefined && this.passwordRules.complexitySpecial.enabled) {
             return this.lang.passwordcomplexitySpecial + ' !';
-
         } else {
-            this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null)
+            this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null);
             this.validPassword = true;
             return '';
         }
@@ -227,7 +209,7 @@ export class PasswordModificationComponent implements OnInit {
         this.passwordModel.newPassword = this.firstFormGroup.controls['newPasswordCtrl'].value;
         this.passwordModel.reNewPassword = this.firstFormGroup.controls['retypePasswordCtrl'].value;
         this.http.put(this.coreUrl + "rest/currentUser/password", this.passwordModel)
-            .subscribe((data: any) => {
+            .subscribe(() => {
                 this.config = {data:{state:'END'},disableClose: true};
                 this.dialogRef = this.dialog.open(InfoChangePasswordModalComponent, this.config);
             }, (err: any) => {
@@ -244,7 +226,8 @@ export class PasswordModificationComponent implements OnInit {
     templateUrl: "../../../Views/info-change-password-modal.component.html"
 })
 export class InfoChangePasswordModalComponent {
-    lang: any = LANG;
+
+    lang    : any = LANG;
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<InfoChangePasswordModalComponent>) {
     }

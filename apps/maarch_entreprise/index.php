@@ -181,12 +181,13 @@ if (isset($_REQUEST['display'])) {
 if (empty($_REQUEST['triggerAngular'])) {
     if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
         $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
-        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-        
+
         if ($user['status'] == 'ABS') {
             header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=activateUser');
             exit();
         }
+
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
         if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
             $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
             if ($user['change_password'] == 'Y') {
@@ -362,6 +363,7 @@ if (file_exists($path)) {
                 $core->insert_page();
             }
             ?>
+            <div id="loadingContent"></div>
             <my-app></my-app>
         </div>
         <p id="footer">

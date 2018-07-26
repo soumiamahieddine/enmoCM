@@ -431,6 +431,9 @@ class UserController
         }
 
         $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['status']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
 
         return $response->withJson(['status' => $user['status']]);
     }
