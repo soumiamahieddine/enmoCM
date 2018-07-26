@@ -5,6 +5,7 @@ import { NotificationService } from './notification.service';
 import { LANG } from './translate.component';
 
 declare var angularGlobals: any;
+declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "../../../Views/activate-user.component.html",
@@ -22,6 +23,7 @@ export class ActivateUserComponent implements OnInit {
 
 
     constructor( media: MediaMatcher, changeDetectorRef: ChangeDetectorRef, public http: HttpClient, private notify: NotificationService){
+        $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         this.mobileQuery.addListener(this._mobileQueryListener);
