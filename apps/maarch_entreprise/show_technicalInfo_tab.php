@@ -81,6 +81,7 @@ $db = new Database();
     $fileName = $res->filename;
     $creationDate = functions::format_date_db($res->creation_date, false);
     $fingerprint = $res->fingerprint;
+    $workBatch = $res->work_batch;
     $isMultiDs = $res->is_multi_docservers;
     if ($isMultiDs == 'Y') {
         $adr = array();
@@ -139,6 +140,12 @@ $db = new Database();
                 </th>
                 <td align="left"><?php echo _FINGERPRINT; ?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>"  title="<?php functions::xecho($fingerprint); ?>" alt="<?php functions::xecho($fingerprint); ?>" /></td>
+
+                <th align="left" class="picto">
+                    <i class="fa fa-cogs fa-2x" title="<?php echo _WORK_BATCH; ?>"></i>
+                </th>
+                <td align="left"><?php echo _WORK_BATCH; ?> :</td>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($workBatch); ?>" title="<?php functions::xecho($workBatch); ?>" alt="<?php functions::xecho($workBatch); ?>" /></td>
             </tr>
         </table>
         <br>
@@ -208,25 +215,6 @@ $db = new Database();
                     </th>
                     <td align="left" width="200px"><?php echo _FILE; ?> :</td>
                     <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fileName); ?>" /></td>
-                </tr>
-                <tr>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _FORMAT; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($format); ?>"/></td>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _FINGERPRINT; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($fingerprint); ?>" /></td>
-                </tr>
-                <tr>
-                    <th align="left" class="picto">
-                        &nbsp;
-                    </th>
-                    <td align="left" width="200px"><?php echo _ADR_PRIORITY; ?> :</td>
-                    <td><input type="text" class="readonly" readonly="readonly" value="1" /></td>
                 </tr>
             </table>
             <?php

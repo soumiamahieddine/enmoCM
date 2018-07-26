@@ -251,7 +251,6 @@
     <id>view_technical_infos</id>
     <name>_VIEW_TECHNICAL_INFORMATIONS</name>
     <comment>_VIEW_TECHNICAL_INFORMATIONS</comment>
-    <servicepage>view_technical_infos.php</servicepage>
     <servicetype>use</servicetype>
     <system_service>false</system_service>
     <enabled>true</enabled>

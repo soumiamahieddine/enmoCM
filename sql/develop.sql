@@ -211,7 +211,6 @@ ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS envelop_id;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS approver;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS approver;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS approver;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS work_batch;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS work_batch;
 ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS work_batch;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_ingoing;
@@ -280,6 +279,7 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
     r.offset_doc,
     r.filesize,
     r.status,
+    r.work_batch,
     r.doc_date,
     r.description,
     r.source,
