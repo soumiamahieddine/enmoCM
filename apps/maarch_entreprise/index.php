@@ -233,9 +233,9 @@ if (empty($_SESSION['current_basket'])) {
     $_SESSION['save_list']['template'] = "";
 }
 
-$cookie = \SrcCore\models\SecurityModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
-    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+$cookie = \SrcCore\models\AuthenticationModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
+    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
 } else {
     header('location: index.php?display=true&page=logout&logout=true');
 }

@@ -35,7 +35,6 @@ use SrcCore\controllers\PasswordController;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
-use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;

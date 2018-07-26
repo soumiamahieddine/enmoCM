@@ -16,7 +16,6 @@ namespace SrcCore\controllers;
 
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\PasswordModel;
-use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -30,9 +29,9 @@ class AuthenticationController
                 $userId = $_SERVER['PHP_AUTH_USER'];
             }
         } else {
-            $cookie = SecurityModel::getCookieAuth();
-            if (!empty($cookie) && SecurityModel::cookieAuthentication($cookie)) {
-                SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+            $cookie = AuthenticationModel::getCookieAuth();
+            if (!empty($cookie) && AuthenticationModel::cookieAuthentication($cookie)) {
+                AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
                 $userId = $cookie['userId'];
             }
         }
