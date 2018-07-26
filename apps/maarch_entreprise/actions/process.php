@@ -278,7 +278,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<table width="95%" align="left" border="0">';
     // Displays the document indexes
     foreach (array_keys($data) as $key) {
-        if (($key != 'is_multicontacts' && $key != 'folder' && $key != 'barcode') || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y') || ($key == 'barcode' && !empty($data[$key]['value'])) ) {            
+        if (!in_array($key, ['is_multicontacts', 'barcode', 'external_id','folder']) || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y') || (in_array($key, ['barcode', 'external_id']) && !empty($data[$key]['value']))) {
             $frm_str .= '<tr>';
             $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
                 .$data[$key]['label'].' :</span>';
