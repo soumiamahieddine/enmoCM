@@ -1,0 +1,11 @@
+
+<form ngNoForm name="choose_query" id="choose_query" method="post" action="index.php?display=true&amp;dir=indexing_searching&amp;page=search_adv_result">
+    <mat-form-field class="col-md-6">
+        <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple">
+        <input type="hidden" name="meta[]" value="welcome#welcome#welcome">
+        <input type="hidden" name="baskets_clause" value="true">
+        <input matInput id="text" type="text" name="welcome" placeholder="{{lang.search}}" required>
+        <span matSuffix><mat-icon class="fa fa-search"></mat-icon></span>
+        <input type="submit" name="submit" value="" style="display:none">
+    </mat-form-field>
+</form>

@@ -6,19 +6,18 @@
         <button mat-button (click)="snav.toggle()" *ngIf="!mobileMode">
             <mat-icon class="maarchLogo" [svgIcon]="mobileQuery.matches ? 'maarchLogoOnly' : 'maarchLogo'"></mat-icon>
         </button>
-        <h1 class="admin-toolbar-title">{{lang.aboutUs}}
+        <h1 class="admin-toolbar-title">{{lang.welcomeInGEC}}
             <!-- <small [class.hide-for-mobile]="mobileQuery.matches">{{user.firstname}} {{user.lastname}}</small> -->
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <search-home style="width:28%"></search-home>
         <menu-top></menu-top>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false">
-            <menu-nav></menu-nav>
+            <basket-home [homeData]="homeData"></basket-home>
             <mat-divider></mat-divider>
-            <mat-divider></mat-divider>
-            <menu-shortcut></menu-shortcut>
         </mat-sidenav>
         <mat-sidenav-content>
             <div *ngIf="loading" style="display:flex;height:100%;">
@@ -26,7 +25,7 @@
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
                 <div class="col-sm-8">
-                    <h3>{{lang.aboutUs}}</h3>
+                    <h3>Maarch Courrier</h3>
                     <hr/>
                     <p><em>Copyright &copy; 2008-2018 Maarch SAS {{lang.groupeCompany}}</em></p>
                     <p>{{lang.maarchLicence}}

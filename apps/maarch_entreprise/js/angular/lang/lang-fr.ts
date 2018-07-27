@@ -627,6 +627,7 @@ export const LANG_FR = {
     "community"                         : "Communauté",
     "officialWebsite"                   : "Site officiel",
     "maarchLicence"                     : "Maarch est diffusé sous les termes de la",
-    "groupeCompany"                     : "société du groupe Archiveco"
+    "groupeCompany"                     : "société du groupe Archiveco",
+    "welcomeInGEC"                      : "Bienvenue dans votre Gestion Electronique de Courriers",
 
 };

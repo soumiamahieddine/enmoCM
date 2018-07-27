@@ -1,0 +1,19 @@
+<mat-nav-list *ngIf="homeData!=null">
+
+    <mat-list>
+        <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
+            <h4 *ngIf="regroupedBasket.baskets[0]"><mat-icon mat-list-icon class="fa fa-users"></mat-icon> {{regroupedBasket.groupDesc}}</h4>
+
+            <mat-list-item *ngFor="let basket of regroupedBasket.baskets" [ngStyle]="{'color': basket.color}">
+                <mat-icon mat-list-icon class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" title="{{basket.resourceNumber}}"></mat-icon>
+                <a href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}&groupId={{regroupedBasket.groupId}}">
+                    <span mat-line title="{{basket.basket_desc}}"> {{basket.basket_name}}
+                        <span *ngIf="basket.redirected"> ({{lang.redirectedTo}} {{basket.redirectedUser}})</span>
+                    </span>
+                </a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-list>
+
+</mat-nav-list>
