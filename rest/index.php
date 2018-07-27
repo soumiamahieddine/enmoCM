@@ -156,6 +156,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 
+//Home
+$app->get('/home', \Home\controllers\HomeController::class . ':get');
+
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');

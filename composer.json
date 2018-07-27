@@ -13,6 +13,7 @@
             "Folder\\"            : "src/app/folder/",
             "Group\\"             : "src/app/group/",
             "History\\"           : "src/app/history/",
+            "Home\\"              : "src/app/home/",
             "Link\\"              : "src/app/link/",
             "Note\\"              : "src/app/note/",
             "Notification\\"      : "src/app/notification/",
