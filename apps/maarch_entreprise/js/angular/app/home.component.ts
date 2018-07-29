@@ -20,7 +20,7 @@ export class HomeComponent extends AutoCompletePlugin implements OnInit {
 
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
-    mobileMode                      : boolean   = false;
+    mobileMode: boolean   = false;
     coreUrl: string;
     lang: any = LANG;
 

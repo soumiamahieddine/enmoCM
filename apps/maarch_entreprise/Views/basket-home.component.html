@@ -1,19 +1,35 @@
-<mat-nav-list *ngIf="homeData!=null">
+<mat-nav-list>
 
     <mat-list>
         <ng-container *ngFor="let regroupedBasket of homeData.regroupedBaskets">
-            <h4 *ngIf="regroupedBasket.baskets[0]"><mat-icon mat-list-icon class="fa fa-users"></mat-icon> {{regroupedBasket.groupDesc}}</h4>
+            <h4 *ngIf="regroupedBasket.baskets[0]" class="mat-toolbar mat-primary" style="padding-left:5px"><mat-icon mat-list-icon class="fa fa-users"></mat-icon> {{regroupedBasket.groupDesc}}</h4>
 
             <mat-list-item *ngFor="let basket of regroupedBasket.baskets" [ngStyle]="{'color': basket.color}">
-                <mat-icon mat-list-icon class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" title="{{basket.resourceNumber}}"></mat-icon>
-                <a href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}&groupId={{regroupedBasket.groupId}}">
-                    <span mat-line title="{{basket.basket_desc}}"> {{basket.basket_name}}
-                        <span *ngIf="basket.redirected"> ({{lang.redirectedTo}} {{basket.redirectedUser}})</span>
-                    </span>
+                <mat-icon mat-list-icon *ngIf="!basket.redirected" class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" title="{{basket.resourceNumber}}"></mat-icon>
+                <mat-icon mat-list-icon *ngIf="basket.redirected" class="fa fa-share" matBadge="{{basket.resourceNumber}}" matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" title="{{basket.resourceNumber}}"></mat-icon>
+                <a *ngIf="!basket.redirected" href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}&groupId={{regroupedBasket.groupId}}">
+                    <span mat-line title="{{basket.basket_desc}}">&nbsp;{{basket.basket_name}}</span>
                 </a>
+                <span *ngIf="basket.redirected" style="cursor:not-allowed">
+                    <span mat-line title="{{basket.basket_desc}}">&nbsp;{{basket.basket_name}}</span>
+                    <h6> ({{lang.redirectedTo}} {{basket.redirectedUser}})</h6>
+                </span>
             </mat-list-item>
             <mat-divider></mat-divider>
         </ng-container>
+
+        <ng-container *ngIf="homeData.assignedBaskets.length>0">
+            <h4 class="mat-toolbar mat-primary" style="padding-left:5px">Autres bannettes</h4>
+            <mat-list-item *ngFor="let basket of homeData.assignedBaskets">
+                <mat-icon mat-list-icon class="fa fa-inbox" matBadge="{{basket.resourceNumber}}" matBadgeColor="warn" [matBadgeHidden]="basket.resourceNumber==0" title="{{basket.resourceNumber}}"></mat-icon>
+                <a href="index.php?page=view_baskets&module=basket&baskets={{basket.basket_id}}_{{basket.basket_owner}}&groupId=">
+                    <span mat-line title="{{basket.basket_desc}}">&nbsp;{{basket.basket_name}} <h6>({{basket.userToDisplay}})</h6></span>
+                </a>
+            </mat-list-item>
+        </ng-container>
+
     </mat-list>
+
+    <h4 *ngIf="homeData.regroupedBaskets.length==0 && homeData.assignedBaskets.length==0">Aucune bannette disponible</h4>
 
 </mat-nav-list>

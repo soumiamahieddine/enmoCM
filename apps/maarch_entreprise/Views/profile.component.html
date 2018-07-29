@@ -10,6 +10,7 @@
             <small [class.hide-for-mobile]="mobileQuery.matches">{{user.firstname}} {{user.lastname}}</small>
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <search-home></search-home>
         <menu-top></menu-top>
         <button mat-icon-button (click)="snav2.toggle()">
             <mat-icon class="fa fa-2x" [ngClass]="[snav2.opened ? 'fa-chevron-right' : 'fa-chevron-left']"></mat-icon>

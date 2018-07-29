@@ -10,13 +10,13 @@
             <!-- <small [class.hide-for-mobile]="mobileQuery.matches">{{user.firstname}} {{user.lastname}}</small> -->
         </h1>
         <span style="flex: 1 1 auto;"></span>
-        <search-home style="width:28%"></search-home>
+        <search-home></search-home>
         <menu-top></menu-top>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
             autoFocus="false">
-            <basket-home [homeData]="homeData"></basket-home>
+            <basket-home *ngIf="homeData" [homeData]="homeData"></basket-home>
             <mat-divider></mat-divider>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -24,80 +24,7 @@
                 <mat-spinner style="margin:auto;"></mat-spinner>
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
-                <div class="col-sm-8">
-                    <h3>Maarch Courrier</h3>
-                    <hr/>
-                    <p><em>Copyright &copy; 2008-2018 Maarch SAS {{lang.groupeCompany}}</em></p>
-                    <p>{{lang.maarchLicence}}
-                        <a target="blank" href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a>.</p>
-                    <div>
-                        <ul>
-                            <li>{{lang.officialWebsite}} : <a target="blank" href="https://maarch.com/">www.maarch.com</a></li>
-                            <li>{{lang.community}} : <a target="blank" href="https://community.maarch.org/">community.maarch.org</a></li>
-                            <li>{{lang.documentation}} : <a target="blank" href="https://wiki.maarch.org/Accueil">wiki.maarch.org</a></li>
-                        </ul>
-                    </div>
-                    <p>&nbsp;</p>
-                    <h3>{{lang.externalComponents}}</h3>
-                    <hr/>
-                    <em>{{lang.thanksToExtDev}}</em>
-                    <p>&nbsp;</p>
-                    <ul>
-                        <li><a target="blank" href="https://angular.io/">Angular</a></li>
-                        <li><a target="blank" href="http://getbootstrap.com/">Bootstrap</a></li>
-                        <li><a target="blank" href="http://www.chartjs.org/">Chart.js</a></li>
-                        <li><a target="blank" href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li>
-                        <li><a target="blank" href="http://www.fpdf.org/">Fpdf</a></li>
-                        <li><a target="blank" href="http://www.setasign.de/products/pdf-php-solutions/fpdi/">fpdi</a></li>
-                        <li><a target="blank" href="https://jquery.com/">Jquery</a></li>
-                        <li><a target="blank" href="https://github.com/running-coder/jquery-typeahead">Jquery Typeahead</a></li>
-                        <li><a target="blank" href="http://logging.apache.org/log4php/">log4php</a></li>
-                        <li><a target="blank" href="http://chir.ag/tech/download/pdfb">Pdfb</a></li>
-                        <li><a target="blank" href="http://www.foolabs.com/xpdf/">Pdftotext</a></li>
-                        <li><a target="blank" href="http://www.prototypejs.org/">Prototype</a></li>
-                        <li><a target="blank" href="http://script.aculo.us/">Script.aculo.us</a></li>
-                        <li><a target="blank" href="http://tafel.developpez.com">Tafel Tree</a></li>
-                        <li><a target="blank" href="http://www.tinybutstrong.com/">Tiny But Strong</a></li>
-                        <li><a target="blank" href="http://www.tinymce.com/">TinyMCE</a></li>
-                        <li><a target="blank" href="http://framework.zend.com/">Zend Lucene Search</a></li>
-                    </ul>
-                </div>
-    
-                <div class="col-sm-4">
-                    <h3>Credits</h3>
-                    <hr/>
-                    <ul>
-                        <li>Florian AZIZIAN</li>
-                        <li>Damien BUREL</li>
-                        <li>Bruno CARLIN</li>
-                        <li>Carole COTIN</li>
-                        <li>Driss DEMIRAY</li>
-                        <li>Gaël DE VILLEBLANCHE</li>
-                        <li>Mathieu DONZEL</li>
-                        <li>Jean-Louis ERCOLANI</li>
-                        <li>Claire FIGUERAS</li>
-                        <li>Laurent GIOVANNONI</li>
-                        <li>Henri QUENEAU</li>
-                        <li>Kader KANE</li>
-                        <li>Yves-Christian KPAKPO</li>
-                        <li>Sébastien NANABONDJA</li>
-                        <li>Fodé NDIAYE</li>
-                        <li>Cédric NDOUMBA</li>
-                        <li>Alex ORLUC</li>
-                        <li>Thomas PENARUIZ</li>
-                        <li>Alexandre STEFANOVIC</li>
-                        <li>Serge THIERRY-MIEG</li>
-                        <li>Cyril VAZQUEZ</li>
-                        <li>Arnaud VEBER</li>
-                        <li>Loic VINET</li>
-                        <br>
-                        <li><em>{{lang.thanksToCommunity}}</em></li>
-                    </ul>
-                    <p>&nbsp;</p>
-                    <div class="img_credits_maarch_box">
-                        <img src="static.php?filename=maarch_box.svg" />
-                    </div>
-                </div>
+                Aucune bannette sélectionnée
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
