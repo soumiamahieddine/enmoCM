@@ -83,6 +83,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'Http\\Client\\Common\\' => 19,
             'Http\\Client\\' => 12,
             'Http\\Adapter\\Guzzle6\\' => 21,
+            'Home\\' => 5,
             'History\\' => 8,
         ),
         'G' => 
@@ -250,6 +251,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Http\\Adapter\\Guzzle6\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/guzzle6-adapter/src',
+        ),
+        'Home\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/home',
         ),
         'History\\' => 
         array (

@@ -194,7 +194,12 @@ class Database extends functions
         try {
             $this->pdo = new PDO($this->dsn, $this->user, $this->password, $options);
         } catch (PDOException $PDOException) {
-            $this->error = $PDOException->getMessage();
+            try {
+                $options[PDO::ATTR_PERSISTENT] = false;
+                $this->pdo = new PDO($this->dsn, $this->user, $this->password, $options);
+            } catch (\PDOException $PDOException) {
+                $this->error = $PDOException->getMessage();
+            }
         }
         
         if ($this->error && strstr($this->error, '08006') <> '') {

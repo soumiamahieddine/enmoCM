@@ -35,7 +35,6 @@ use SrcCore\controllers\PasswordController;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
-use SrcCore\models\SecurityModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
@@ -432,6 +431,9 @@ class UserController
         }
 
         $user = UserModel::getByUserId(['userId' => $aArgs['userId'], 'select' => ['status']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
 
         return $response->withJson(['status' => $user['status']]);
     }

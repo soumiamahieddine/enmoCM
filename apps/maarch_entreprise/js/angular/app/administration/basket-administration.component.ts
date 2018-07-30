@@ -97,9 +97,6 @@ export class BasketAdministrationComponent implements OnInit {
                             //this.basket.basket_res_order = this.basket.basket_res_order.substring(0,this.basket.basket_res_order.indexOf(" DESC"));
                             this.orderColumnsSelected = this.basket.basket_res_order.split(',');
 
-                            this.orderColumnsSelected.forEach((column: any, i: number) => {
-                                this.orderColumnsSelected[i] = this.orderColumnsSelected[i].substring(0,this.orderColumnsSelected[i].indexOf(" DESC"));
-                            });
                             this.columnsFormControl.setValue(this.orderColumnsSelected);
                             this.selection = this.orderColumnsSelected;
                         }
@@ -174,9 +171,6 @@ export class BasketAdministrationComponent implements OnInit {
 
     onSubmit() {
         if(this.orderColumnsSelected !== null && this.orderColumnsSelected.length > 0){
-            this.orderColumnsSelected.forEach((column: any, i: number) => {
-                this.orderColumnsSelected[i] += ' DESC'
-            });
             this.basket.basket_res_order = this.orderColumnsSelected.join(',')
         } else {
             this.basket.basket_res_order = '';

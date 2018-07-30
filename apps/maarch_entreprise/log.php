@@ -172,7 +172,7 @@ if (!empty($_SESSION['error'])) {
                 $res = $sec->login($login, $password);
                 $_SESSION['user'] = $res['user'];
                 if (empty($res['error'])) {
-                    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+                    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                     \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                     $user = \User\models\UserModel::getByUserId(['userId' => $login, 'select' => ['id']]);
                     \User\models\UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
@@ -216,7 +216,7 @@ if (!empty($_SESSION['error'])) {
                 $res = $sec->login($login, $password, 'ldap');
                 $_SESSION['user'] = $res['user'];
                 if ($res['error'] == '') {
-                    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+                    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                 } else {
                     $_SESSION['error'] = $res['error'];
                 }
@@ -247,7 +247,7 @@ if (!empty($_SESSION['error'])) {
         $res = $sec->login($login, $password);
         $_SESSION['user'] = $res['user'];
         if (empty($res['error'])) {
-            \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $login]);
+            \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
             \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
             $core->load_menu($_SESSION['modules']);
         } else {

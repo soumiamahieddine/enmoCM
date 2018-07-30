@@ -15,8 +15,8 @@
 namespace SrcCore\controllers;
 
 use SrcCore\models\AuthenticationModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
-use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -30,14 +30,50 @@ class AuthenticationController
                 $userId = $_SERVER['PHP_AUTH_USER'];
             }
         } else {
-            $cookie = SecurityModel::getCookieAuth();
-            if (!empty($cookie) && SecurityModel::cookieAuthentication($cookie)) {
-                SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+            $cookie = AuthenticationModel::getCookieAuth();
+            if (!empty($cookie) && AuthenticationModel::cookieAuthentication($cookie)) {
+                AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
                 $userId = $cookie['userId'];
             }
         }
 
         return $userId;
+    }
+
+    public static function isRouteAvailable(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['userId', 'currentRoute']);
+        ValidatorModel::stringType($aArgs, ['userId', 'currentRoute']);
+
+        if ($aArgs['currentRoute'] != '/initialize') {
+            $user = UserModel::getByUserId(['select' => ['status', 'change_password'], 'userId' => $aArgs['userId']]);
+
+            if ($user['status'] == 'ABS' && $aArgs['currentRoute'] != "/users/{id}/status") {
+                return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
+            }
+
+            if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/currentUser/password'])) {
+                $loggingMethod = CoreConfigModel::getLoggingMethod();
+
+                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
+
+                    $passwordRules = PasswordModel::getEnabledRules();
+                    if ($user['change_password'] == 'Y') {
+                        return ['isRouteAvailable' => false, 'errors' => 'User must change his password'];
+                    } elseif (!empty($passwordRules['renewal'])) {
+                        $currentDate = new \DateTime();
+                        $lastModificationDate = new \DateTime($user['password_modification_date']);
+                        $lastModificationDate->add(new \DateInterval("P{$passwordRules['renewal']}D"));
+
+                        if ($currentDate > $lastModificationDate) {
+                            return ['isRouteAvailable' => false, 'errors' => 'User must change his password'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return ['isRouteAvailable' => true];
     }
 
     public static function handleFailedAuthentication(array $aArgs)

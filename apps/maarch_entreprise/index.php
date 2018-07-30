@@ -181,12 +181,13 @@ if (isset($_REQUEST['display'])) {
 if (empty($_REQUEST['triggerAngular'])) {
     if ($_REQUEST['page'] != 'login' && $_REQUEST['page'] != 'log' && $_REQUEST['page'] != 'logout' && !empty($_SESSION['user']['UserId'])) {
         $user = \User\models\UserModel::getByUserId(['userId' => $_SESSION['user']['UserId'], 'select' => ['password_modification_date', 'change_password', 'status']]);
-        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-        
+
         if ($user['status'] == 'ABS') {
             header('location: '.$_SESSION['config']['businessappurl'].'index.php?triggerAngular=activateUser');
             exit();
         }
+
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
         if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo'])) {
             $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
             if ($user['change_password'] == 'Y') {
@@ -233,9 +234,9 @@ if (empty($_SESSION['current_basket'])) {
     $_SESSION['save_list']['template'] = "";
 }
 
-$cookie = \SrcCore\models\SecurityModel::getCookieAuth(); // New Authentication System
-if (!empty($cookie) && \SrcCore\models\SecurityModel::cookieAuthentication($cookie)) {
-    \SrcCore\models\SecurityModel::setCookieAuth(['userId' => $cookie['userId']]);
+$cookie = \SrcCore\models\AuthenticationModel::getCookieAuth(); // New Authentication System
+if (!empty($cookie) && \SrcCore\models\AuthenticationModel::cookieAuthentication($cookie)) {
+    \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
 } else {
     header('location: index.php?display=true&page=logout&logout=true');
 }
@@ -362,6 +363,7 @@ if (file_exists($path)) {
                 $core->insert_page();
             }
             ?>
+            <div id="loadingContent"></div>
             <my-app></my-app>
         </div>
         <p id="footer">

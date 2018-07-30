@@ -34,6 +34,14 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
 
     if (!empty($userId)) {
         $GLOBALS['userId'] = $userId;
+        $route = $request->getAttribute('route');
+        if (!empty($route)) {
+            $currentRoute = $route->getPattern();
+            $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+            if (!$r['isRouteAvailable']) {
+                return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+            }
+        }
         $response = $next($request, $response);
         return $response;
     } else {
@@ -147,6 +155,9 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+
+//Home
+$app->get('/home', \Home\controllers\HomeController::class . ':get');
 
 //Jnlp
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');

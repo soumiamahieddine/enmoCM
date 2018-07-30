@@ -86,7 +86,7 @@ if (isset($_GET['logout']) && $_GET['logout']) {
 } else {
     $logoutExtension = "";
 }
-\SrcCore\models\SecurityModel::deleteCookieAuth();
+\SrcCore\models\AuthenticationModel::deleteCookieAuth();
 
 if (isset($webSSOurl) && $webSSOurl <> '') {
     header("location: " . $webSSOurl);

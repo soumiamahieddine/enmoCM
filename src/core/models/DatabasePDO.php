@@ -56,12 +56,13 @@ class DatabasePDO
         if (file_exists($path)) {
             $loadedXml = simplexml_load_file($path);
             if ($loadedXml) {
-                $server = (string)$loadedXml->CONFIG->databaseserver;
-                $port = (string)$loadedXml->CONFIG->databaseserverport;
-                $name = (string)$loadedXml->CONFIG->databasename;
-                $user = (string)$loadedXml->CONFIG->databaseuser;
-                $password = (string)$loadedXml->CONFIG->databasepassword;
+                $server     = (string)$loadedXml->CONFIG->databaseserver;
+                $port       = (string)$loadedXml->CONFIG->databaseserverport;
+                $name       = (string)$loadedXml->CONFIG->databasename;
+                $user       = (string)$loadedXml->CONFIG->databaseuser;
+                $password   = (string)$loadedXml->CONFIG->databasepassword;
                 self::$type = (string)$loadedXml->CONFIG->databasetype;
+
                 if (self::$type == 'POSTGRESQL') {
                     $formattedDriver = 'pgsql';
                 } elseif (self::$type == 'MYSQL') {
@@ -97,7 +98,12 @@ class DatabasePDO
         try {
             self::$pdo = new \PDO($dsn, $user, $password, $options);
         } catch (\PDOException $PDOException) {
-            throw new \Exception($PDOException->getMessage());
+            try {
+                $options[\PDO::ATTR_PERSISTENT] = false;
+                self::$pdo = new \PDO($dsn, $user, $password, $options);
+            } catch (\PDOException $PDOException) {
+                throw new \Exception($PDOException->getMessage());
+            }
         }
 
         if (self::$type == 'ORACLE') {

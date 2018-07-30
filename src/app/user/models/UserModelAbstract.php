@@ -14,8 +14,8 @@
 
 namespace User\models;
 
+use SrcCore\models\AuthenticationModel;
 use SrcCore\models\DatabaseModel;
-use SrcCore\models\SecurityModel;
 use SrcCore\models\ValidatorModel;
 
 require_once 'core/class/Url.php';
@@ -78,7 +78,7 @@ abstract class UserModelAbstract
                 'status'                        => 'OK',
                 'change_password'               => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
                 'loginmode'                     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
-                'password'                      => SecurityModel::getPasswordHash('maarch'),
+                'password'                      => AuthenticationModel::getPasswordHash('maarch'),
                 'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ]
         ]);
@@ -173,7 +173,7 @@ abstract class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'                      => SecurityModel::getPasswordHash($aArgs['password']),
+                'password'                      => AuthenticationModel::getPasswordHash($aArgs['password']),
                 'password_modification_date'    => 'CURRENT_TIMESTAMP',
                 'change_password'               => 'N',
             ],
@@ -192,7 +192,7 @@ abstract class UserModelAbstract
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'                      => SecurityModel::getPasswordHash('maarch'),
+                'password'                      => AuthenticationModel::getPasswordHash('maarch'),
                 'change_password'               => 'Y',
                 'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ],

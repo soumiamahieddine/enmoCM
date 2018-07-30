@@ -27,7 +27,8 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     statusId                        : string    = "";
     resId                           : string    = "";
     chrono                          : string    = "";
-
+    resIdList                       : string[]  = [];
+    chronoList                      : string[]  = [];
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, private notify: NotificationService) {
         super(http, ['statuses']);
@@ -51,21 +52,43 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
         var body = {
             "status": this.statusId
         };
-        if (this.resId != "") {
-            body["resId"] = [this.resId];
-        } else if (this.chrono != "") {
-            body["chrono"] = [this.chrono];
-        }
+        if (this.resIdList.length > 0) {
+            body["resId"] = this.resIdList;
+        } else if (this.chronoList.length > 0) {
+            body["chrono"] = this.chronoList;
+        }        
 
         this.http.put(this.coreUrl + "rest/res/resource/status", body)
             .subscribe(() => {
                 this.resId = "";
                 this.chrono = "";
                 this.statusId = "";
+                this.resIdList = [];
+                this.chronoList = [];
                 this.notify.success(this.lang.modificationSaved);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    addResId()  :void {
+        this.resIdList.push(this.resId);
+        this.resId = ""
+    }
+
+    addChrono() :void { 
+        this.chronoList.push(this.chrono);
+        this.chrono = "";
+    }
+
+    removeResId(resId: string) :void {
+        var resIdIndex = this.resIdList.indexOf(resId);
+        this.resIdList.splice(resIdIndex,1);
+    }
+
+    removeChrono(chrono: string)  :void {
+        var chronoIndex = this.chronoList.indexOf(chrono);
+        this.chronoList.splice(chronoIndex,1);
     }
 
     resetInput(e: any) {

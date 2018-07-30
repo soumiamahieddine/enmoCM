@@ -22,6 +22,11 @@ import { MenuNavComponent }                     from './menu/menu-nav.component'
 import { MenuTopComponent }                     from './menu/menu-top.component';
 import { MenuShortcutComponent }                from './menu/menu-shortcut.component';
 
+/*SEARCH*/
+import { SearchHomeComponent }                        from './search/search-home.component';
+
+/*SEARCH*/
+import { BasketHomeComponent }                        from './basket/basket-home.component';
 
 @NgModule({
     imports: [
@@ -38,6 +43,8 @@ import { MenuShortcutComponent }                from './menu/menu-shortcut.compo
         MenuNavComponent,
         MenuTopComponent,
         MenuShortcutComponent,
+        SearchHomeComponent,
+        BasketHomeComponent,
         TimeAgoPipe
     ],
     exports: [
@@ -46,6 +53,8 @@ import { MenuShortcutComponent }                from './menu/menu-shortcut.compo
         MenuNavComponent,
         MenuTopComponent,
         MenuShortcutComponent,
+        SearchHomeComponent,
+        BasketHomeComponent,
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,

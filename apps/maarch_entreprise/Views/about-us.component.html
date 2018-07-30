@@ -10,10 +10,8 @@
             <!-- <small [class.hide-for-mobile]="mobileQuery.matches">{{user.firstname}} {{user.lastname}}</small> -->
         </h1>
         <span style="flex: 1 1 auto;"></span>
+        <search-home></search-home>
         <menu-top></menu-top>
-        <button mat-icon-button (click)="snav2.toggle()">
-            <mat-icon class="fa fa-2x" [ngClass]="[snav2.opened ? 'fa-chevron-right' : 'fa-chevron-left']"></mat-icon>
-        </button>
     </mat-toolbar>
     <mat-sidenav-container class="admin-sidenav-container" [style.marginTop.px]="mobileMode ? 56 : 0">
         <mat-sidenav #snav [mode]="mobileMode ? 'over' : 'side'" [fixedInViewport]="mobileMode" fixedTopGap="56" [opened]="mobileMode ? false : true"
@@ -29,7 +27,7 @@
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
                 <div class="col-sm-8">
-                    <h3>{{lang.aboutUs}}</h3>
+                    <h3>Maarch Courrier V{{applicationMinorVersion}} </h3>
                     <hr/>
                     <p><em>Copyright &copy; 2008-2018 Maarch SAS {{lang.groupeCompany}}</em></p>
                     <p>{{lang.maarchLicence}}

@@ -80,7 +80,8 @@ import {
     MatChipsModule,
     MatStepperModule,
     MatRadioModule,
-    MatSliderModule
+    MatSliderModule,
+    MatBadgeModule
 } from '@angular/material';
 
 import { CdkTableModule } from '@angular/cdk/table';
@@ -118,6 +119,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatStepperModule,
         MatRadioModule,
         MatSliderModule,
+        MatBadgeModule,
         DndModule.forRoot()
     ],
     exports: [
@@ -151,6 +153,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         MatStepperModule,
         MatRadioModule,
         MatSliderModule,
+        MatBadgeModule,
         DndModule
     ],
     providers: [

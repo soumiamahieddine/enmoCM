@@ -144,7 +144,7 @@ class PasswordModel
             'table'     => 'password_history',
             'columnsValues'     => [
                 'user_serial_id'    => $aArgs['userSerialId'],
-                'password'          => SecurityModel::getPasswordHash($aArgs['password'])
+                'password'          => AuthenticationModel::getPasswordHash($aArgs['password'])
             ],
         ]);
 
