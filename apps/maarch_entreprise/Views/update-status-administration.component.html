@@ -28,10 +28,10 @@
                             <mat-form-field>
                                     <input matInput name="chrono" title="{{lang.chronoNumber}}" placeholder="{{lang.chronoNumber}}" [(ngModel)]="chrono">                                
                             </mat-form-field>                            
-                            <div class="row">                
+                            <div class="row" style="margin-left:0px;">                
                                 <div class="form-group">
                                     <div class="col-md-12 text-left" style="padding:10px;">
-                                        <button mat-raised-button [disabled]="!chrono" type="button" color="primary" (click)="addChrono()" style="position:relative;left:15px;">{{lang.add}}</button>
+                                        <button mat-raised-button [disabled]="!chrono" type="button" color="primary" (click)="addChrono()" >{{lang.add}}</button>
                                     </div>
                                 </div>
                                 <mat-chip-list [(ngModel)]="chronoList" name="chronoChips" #chipList>
@@ -50,10 +50,10 @@
                             <mat-form-field>
                                     <input type="number" id="" matInput name="resId" title="{{lang.resId}}" placeholder="{{lang.resId}}" [(ngModel)]="resId">                                
                             </mat-form-field>
-                            <div class="row">                
+                            <div class="row" style="margin-left:0px;">                
                                 <div class="form-group">
                                     <div class="col-md-12 text-left" style="padding:10px;">
-                                        <button mat-raised-button [disabled]="!resId" color="primary" type="button" (click)="addResId();" style="position:relative;left:15px;">{{lang.add}}</button>
+                                        <button mat-raised-button [disabled]="!resId" color="primary" type="button" (click)="addResId();">{{lang.add}}</button>
                                     </div>
                                 </div>
                                 <mat-chip-list [(ngModel)]="resIdList" name="resIdChips" #chipList>
