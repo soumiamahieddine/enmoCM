@@ -603,19 +603,7 @@ abstract class business_app_tools_Abstract extends Database
     {
         // Compare version value beetwen version base xml file and version base
         // value in the database
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
-            . $xmlVersionBase
-        )
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                  . DIRECTORY_SEPARATOR . $xmlVersionBase;
-        } else {
-            $path = $xmlVersionBase;
-        }
-        $xmlBase = simplexml_load_file($path);
+        $xmlBase = simplexml_load_file($xmlVersionBase);
         //Find value in the xml database_version tag
         if ($xmlBase) {
             $_SESSION['maarch_entreprise']
