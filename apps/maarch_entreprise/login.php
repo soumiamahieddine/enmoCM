@@ -77,7 +77,7 @@ $core->load_modules_services($_SESSION['modules']);
 //Reading base version
 $businessAppTools->compare_base_version(
     'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-    .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'database_version.xml'
+    .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'applicationVersion.xml'
 );
 
 //LGI TEST FOR SMARTPHONE

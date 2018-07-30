@@ -91,6 +91,7 @@ export const LANG_EN = {
     "createdOn"                         : "Created on",
     "createScriptNotification"          : "Create the script",
     "currentPsw"                        : "Current password",
+    "currentApplicationVersion"         : "Current application version",
     "currentVersion"                    : "Current version",
     "date"                              : "Date",
     "day"                               : "Day",
@@ -220,6 +221,7 @@ export const LANG_EN = {
     "memberUsersCopy"                   : "Copy users member",
     "menus"                             : "Menus",
     "minute"                            : "Minute",
+    "minorVersion"                      : "Minor Version",
     "missingAdvert"                     : "This account is currently defined as absent and the mails are redirected to an other user.",
     "missingAdvert2"                    : "If you want to connect with this account, the 'absent' mode will be deleted then.",
     "missingAdvertTitle"                : "Absences management",
@@ -594,14 +596,14 @@ export const LANG_EN = {
     "chars"                             : "char(s)",
     "minutes"                           : "minute(s)",
     "password"                          : "Password", 
-    "aboutUs"                           : "About Maarch",
+    "aboutUs"                           : "About Maarch Courrier",
     "thanksToCommunity"                 : "And all the Maarch's community !",
-    "thanksToExtDev"                    : "Maarch depend upon some external components. A thank-you to their developers !",
+    "thanksToExtDev"                    : "Maarch Courrier depend upon some external components. A thank-you to their developers !",
     "externalComponents"                : "External components",
     "documentation"                     : "Documentation",
     "community"                         : "Community",
     "officialWebsite"                   : "Official website",
-    "maarchLicence"                     : "Maarch is circulated under the terms of",
+    "maarchLicence"                     : "Maarch Courrier is circulated under the terms of",
     "groupeCompany"                     : ", Archiveco group company"
 
 };

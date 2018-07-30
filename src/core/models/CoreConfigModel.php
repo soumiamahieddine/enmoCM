@@ -61,6 +61,20 @@ class CoreConfigModel
         return 'Maarch Courrier';
     }
 
+    public static function getApplicationVersion()
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/applicationVersion.xml']);
+
+        if ($loadedXml) {
+            return [
+                        'applicationVersion'       =>  (string) $loadedXml->databaseVersion,
+                        'applicationMinorVersion'  =>  (string) $loadedXml->databaseMinorVersion,
+                    ];
+        }
+
+        return '';
+    }
+
     public static function getLanguage()
     {
         $availableLanguages = ['en', 'fr'];

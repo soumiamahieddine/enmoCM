@@ -36,7 +36,8 @@ class CoreController
 
         $aInit['scriptsToinject'] = [];
         $scriptsToInject = [];
-
+        $appVersion = CoreConfigModel::getApplicationVersion();
+        $aInit['applicationMinorVersion'] = $appVersion['applicationMinorVersion'];
         $scripts = scandir('dist');
         foreach ($scripts as $value) {
             if (strstr($value, 'runtime.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {

@@ -22,6 +22,7 @@ export class AboutUsComponent extends AutoCompletePlugin implements OnInit {
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
     mobileMode                      : boolean   = false;
+    applicationMinorVersion              : string;
     coreUrl: string;
     lang: any = LANG;
 
@@ -33,7 +34,7 @@ export class AboutUsComponent extends AutoCompletePlugin implements OnInit {
 
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public http: HttpClient, public dialog: MatDialog) {
         super(http, ['users']);
-        this.mobileMode = angularGlobals.mobileMode;
+        this.mobileMode = angularGlobals.mobileMode;        
         $j("link[href='merged_css.php']").remove();
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -58,7 +59,7 @@ export class AboutUsComponent extends AutoCompletePlugin implements OnInit {
     ngOnInit(): void {
         this.prepareProfile();
         this.coreUrl = angularGlobals.coreUrl;
-
+        this.applicationMinorVersion = angularGlobals.applicationMinorVersion;
         this.loading = false;
 
     }
