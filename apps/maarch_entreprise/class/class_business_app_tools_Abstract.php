@@ -607,7 +607,7 @@ abstract class business_app_tools_Abstract extends Database
         //Find value in the xml database_version tag
         if ($xmlBase) {
             $_SESSION['maarch_entreprise']
-                ['xml_versionbase'] = (string) $xmlBase->database_version;
+                ['xml_versionbase'] = (string) $xmlBase->databaseVersion;
         } else {
             $_SESSION['maarch_entreprise']['xml_versionbase'] = 'none';
         }
