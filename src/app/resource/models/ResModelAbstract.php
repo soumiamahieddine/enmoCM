@@ -169,6 +169,31 @@ abstract class ResModelAbstract
         return true;
     }
 
+    public static function getLastResources(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['number', 'select']);
+        ValidatorModel::intType($aArgs, ['number']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $resources = DatabaseModel::select([
+            'select'    => $aArgs['select'],
+            'table'     => ['history, res_letterbox, mlb_coll_ext'],
+            'where'     => [
+                'history.record_id IS NOT NULL', 'history.record_id != ?',
+                'CAST(history.record_id AS INT) = res_letterbox.res_id',
+                'mlb_coll_ext.res_id = res_letterbox.res_id',
+                'history.event_id != ?', 'history.event_id NOT LIKE ?',
+                'history.table_name IN (?)', 'res_letterbox.status != ?'
+            ],
+            'data'      => ['none', 'linkup', 'attach%', ['res_letterbox', 'res_view_letterbox'], 'DEL'],
+            'group_by'  => ['res_letterbox.res_id'],
+            'order_by'  => ['MAX(history.event_date) DESC'],
+            'limit'     => $aArgs['number']
+        ]);
+
+        return $resources;
+    }
+
     public static function isLock(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'userId']);

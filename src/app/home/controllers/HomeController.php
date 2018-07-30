@@ -15,6 +15,7 @@
 namespace Home\controllers;
 
 use Basket\models\BasketModel;
+use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
@@ -74,6 +75,11 @@ class HomeController
             $assignedBaskets[$key]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $assignedBasket['user_abs'], 'clause' => $basket['basket_clause']]);
         }
 
-        return $response->withJson(['regroupedBaskets' => $regroupedBaskets, 'assignedBaskets' => $assignedBaskets]);
+        $lastResources = ResModel::getLastResources([
+            'select' => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date'],
+            'number' => 5
+        ]);
+
+        return $response->withJson(['regroupedBaskets' => $regroupedBaskets, 'assignedBaskets' => $assignedBaskets, 'lastResources' => $lastResources]);
     }
 }

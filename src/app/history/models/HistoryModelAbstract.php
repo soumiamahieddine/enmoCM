@@ -28,10 +28,10 @@ abstract class HistoryModelAbstract
         $aHistories = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['history'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy'],
-            'limit'     => $aArgs['limit']
+            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
+            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
+            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
         return $aHistories;
