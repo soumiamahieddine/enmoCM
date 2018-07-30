@@ -68,7 +68,7 @@
                                 <div class="col-md-6 col-xs-6 text-center">
                                     <mat-form-field >
                                         <mat-select #columnPrio placeholder="{{lang.defaultSort}}" [formControl]="columnsFormControl" name="basket_res_order" multiple required>
-                                                <mat-option #columnTargeted *ngFor="let column of orderColumns" (click)="onOrderChange(column,columnTargeted.selected)" [value] ="column" [disabled]="columnPrio.selected.length == 2 && !columnTargeted.selected" >{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
+                                                <mat-option #columnTargeted *ngFor="let column of orderColumns" (click)="onOrderChange(column,columnTargeted.selected)" [value] ="column" [disabled]="columnPrio.selected.length == 1 && !columnTargeted.selected" >{{langVarName[orderColumns.indexOf(column)]}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>                                        
