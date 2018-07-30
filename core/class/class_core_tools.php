@@ -1884,12 +1884,7 @@ class core_tools extends functions
      */
     public function load_footer()
     {
-        /*echo _MEP_VERSION.', <b>database release : '.functions::xssafe($_SESSION['maarch_entreprise']['xml_versionbase']).'</b> ';
-        if (!empty($_SESSION['maarch_entreprise']['database_version_minor'])) {
-            echo ' tag : '.functions::xssafe($_SESSION['maarch_entreprise']['database_version_minor']);
-        }*/
         echo ' '._POWERED_BY.' 2018 ';
-        //. functions::xssafe($this->show_page_stat())
     }
 
     /**
