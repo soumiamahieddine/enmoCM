@@ -171,24 +171,25 @@ abstract class ResModelAbstract
 
     public static function getLastResources(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['number', 'select']);
-        ValidatorModel::intType($aArgs, ['number']);
+        ValidatorModel::notEmpty($aArgs, ['limit', 'userId', 'select']);
+        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::stringType($aArgs, ['userId']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $resources = DatabaseModel::select([
             'select'    => $aArgs['select'],
             'table'     => ['history, res_letterbox, mlb_coll_ext'],
             'where'     => [
+                'history.user_id = ?', 'history.table_name IN (?)',
                 'history.record_id IS NOT NULL', 'history.record_id != ?',
-                'CAST(history.record_id AS INT) = res_letterbox.res_id',
-                'mlb_coll_ext.res_id = res_letterbox.res_id',
                 'history.event_id != ?', 'history.event_id NOT LIKE ?',
-                'history.table_name IN (?)', 'res_letterbox.status != ?'
+                'CAST(history.record_id AS INT) = res_letterbox.res_id',
+                'mlb_coll_ext.res_id = res_letterbox.res_id', 'res_letterbox.status != ?'
             ],
-            'data'      => ['none', 'linkup', 'attach%', ['res_letterbox', 'res_view_letterbox'], 'DEL'],
-            'group_by'  => ['res_letterbox.res_id'],
+            'data'      => [$aArgs['userId'], ['res_letterbox', 'res_view_letterbox'], 'none', 'linkup', 'attach%', 'DEL'],
+            'group_by'  => ['res_letterbox.res_id', 'mlb_coll_ext.alt_identifier'],
             'order_by'  => ['MAX(history.event_date) DESC'],
-            'limit'     => $aArgs['number']
+            'limit'     => $aArgs['limit']
         ]);
 
         return $resources;

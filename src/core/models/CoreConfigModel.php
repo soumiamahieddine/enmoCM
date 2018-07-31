@@ -67,12 +67,12 @@ class CoreConfigModel
 
         if ($loadedXml) {
             return [
-                        'applicationVersion'       =>  (string) $loadedXml->databaseVersion,
-                        'applicationMinorVersion'  =>  (string) $loadedXml->databaseMinorVersion,
-                    ];
+                'applicationVersion'       =>  (string) $loadedXml->databaseVersion,
+                'applicationMinorVersion'  =>  (string) $loadedXml->databaseMinorVersion,
+            ];
         }
 
-        return '';
+        return [];
     }
 
     public static function getLanguage()
