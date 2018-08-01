@@ -12,6 +12,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "../../../../Views/update-status-administration.component.html",
+    styleUrls: ['../../../../css/update-status-administration.component.css'],
     providers: [NotificationService]
 })
 export class UpdateStatusAdministrationComponent extends AutoCompletePlugin implements OnInit {
@@ -72,12 +73,16 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     }
 
     addResId()  :void {
-        this.resIdList.push(this.resId);
+        if(this.resIdList.indexOf(this.resId)){
+            this.resIdList.push(this.resId);
+        }        
         this.resId = ""
     }
 
     addChrono() :void { 
-        this.chronoList.push(this.chrono);
+        if(this.chronoList.indexOf(this.chrono)){
+            this.chronoList.push(this.chrono);
+        }
         this.chrono = "";
     }
 
