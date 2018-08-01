@@ -223,7 +223,7 @@ export const LANG_EN = {
     "missingAdvert"                     : "This account is currently defined as absent.",
     "missingAdvert2"                    : "If you want to connect with this account, the 'absent' mode will be deleted then.",
     "missingAdvertTitle"                : "Absences management",
-    "missingChoose"                     : "Do you want to continue ?",
+    "missingChoose"                     : "Do you want to reactivate your account ?",
     "modificationSaved"                 : "Modification has been saved",
     "module"                            : "Module",
     "modules"                           : "Modules",
