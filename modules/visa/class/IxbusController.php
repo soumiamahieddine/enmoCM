@@ -35,7 +35,7 @@ class IxbusController
                             <CreateSession xmlns="http://www.srci.fr">
                             <NomUtilisateur>'.$config['data']['userId'].'</NomUtilisateur>
                             <MotdePasse>'.$config['data']['password'].'</MotdePasse>
-                            <OrganisationID>'.$config['data']['organizationId'].'</OrganisationID>
+                            <OrganisationID>'.(int)$config['data']['organizationId'].'</OrganisationID>
                             </CreateSession>
                         </soap:Body>
                         </soap:Envelope>';
@@ -59,7 +59,10 @@ class IxbusController
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
 
-        return $rawResponse;
+        $data = simplexml_load_string($rawResponse);
+        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
+
+        return $response;
     }
 
     public static function getInitializeDatas($config)

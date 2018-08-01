@@ -8,6 +8,7 @@
         <userId></userId>
         <password></password>
         <url></url>
+        <organizationId></organizationId>
     </signatoryBook>
     <signatoryBook>
         <id>iParapheur</id>
