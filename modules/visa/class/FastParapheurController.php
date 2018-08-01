@@ -13,7 +13,7 @@
  */
 
 
-class fastParapheurController
+class FastParapheurController
 {
     public static function getInitializeDatas()
     {
@@ -50,7 +50,7 @@ class fastParapheurController
 
     public static function getModal()
     {
-        $initializeDatas = fastParapheurController::getInitializeDatas();
+        $initializeDatas = FastParapheurController::getInitializeDatas();
 
         $html ='<div align="center">';
         $html .='<input type="button" name="cancel" id="cancel" class="button" value="valider"/>';

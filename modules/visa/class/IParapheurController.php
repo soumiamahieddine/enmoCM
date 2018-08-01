@@ -8,12 +8,12 @@
  */
 
 /**
- * @brief Ixbus Controller
+ * @brief iParapheur Controller
  * @author dev@maarch.org
  */
 
 
-class IxbusController
+class IParapheurController
 {
     public static function getInitializeDatas()
     {
@@ -50,7 +50,7 @@ class IxbusController
 
     public static function getModal()
     {
-        $initializeDatas = IxbusController::getInitializeDatas();
+        $initializeDatas = IParapheurController::getInitializeDatas();
 
         $html ='<div align="center">';
         $html .='<input type="button" name="cancel" id="cancel" class="button" value="valider"/>';
