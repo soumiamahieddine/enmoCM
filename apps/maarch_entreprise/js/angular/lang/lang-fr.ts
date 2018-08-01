@@ -287,7 +287,6 @@ export const LANG_FR = {
     "memberUsersCopy"                   : "Utilisateur(s) en copie membre(s)",
     "menus"                             : "Menus",
     "minute"                            : "Minute",
-    "minorVersion"                      : "Version mineure",
     "missingAdvert"                     : "Ce compte est actuellement défini en mode 'absent'.",
     "missingAdvert2"                    : "Si vous desirez vous connecter avec ce compte, le mode 'absent' sera alors supprimé.",
     "missingAdvertTitle"                : "Gestion des absences",
