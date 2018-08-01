@@ -25,7 +25,7 @@ class IxbusController
                 </storeResourceRequest>
             </soap:Body>
         </soap:Envelope>';
-            
+
         $opts = [
         CURLOPT_URL => '',
         CURLOPT_HTTPHEADER => [
@@ -48,7 +48,7 @@ class IxbusController
         return $rawResponse;
     }
 
-    public static function getModal()
+    public static function getModal(array $config)
     {
         $initializeDatas = IxbusController::getInitializeDatas();
 

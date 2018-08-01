@@ -16,22 +16,32 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     if (file_exists($path)) {
         $loadedXml = simplexml_load_file($path);
         if ($loadedXml) {
-            $config['id'] = (string)$loadedXml->signatoryBookEnabled;
+            $config['id']               = (string)$loadedXml->signatoryBookEnabled;
+            $config['validatedStatus']  = (string)$loadedXml->validatedStatus;
+            $config['refusedStatus']    = (string)$loadedXml->refusedStatus;
+            foreach ($loadedXml->signatoryBook as $value) {
+                if ($value->id == $config['id']) {
+                    $config['data'] = (array)$value;
+                }
+            }
         }
     }
 
-    if ($config['id'] == 'ixbus') {
-        include_once 'modules/visa/class/IxbusController.php';
+    $html = '';
+    if (!empty($config)) {
+        if ($config['id'] == 'ixbus') {
+            include_once 'modules/visa/class/IxbusController.php';
 
-        $html = IxbusController::getModal();
-    } elseif ($config['id'] == 'iParapheur') {
-        include_once 'modules/visa/class/iParapheurController.php';
+            $html = IxbusController::getModal($config);
+        } elseif ($config['id'] == 'iParapheur') {
+            include_once 'modules/visa/class/iParapheurController.php';
 
-        $html = iParapheurController::getModal();
-    } elseif ($config['id'] == 'fastParapheur') {
-        include_once 'modules/visa/class/fastParapheurController.php';
+            $html = iParapheurController::getModal($config);
+        } elseif ($config['id'] == 'fastParapheur') {
+            include_once 'modules/visa/class/fastParapheurController.php';
 
-        $html = fastParapheurController::getModal();
+            $html = fastParapheurController::getModal($config);
+        }
     }
 
     return addslashes($html);
