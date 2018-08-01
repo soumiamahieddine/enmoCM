@@ -607,7 +607,7 @@ abstract class business_app_tools_Abstract extends Database
         //Find value in the xml database_version tag
         if ($xmlBase) {
             $_SESSION['maarch_entreprise']
-                ['xml_versionbase'] = (string) $xmlBase->databaseVersion;
+                ['xml_versionbase'] = (string) $xmlBase->majorVersion;
         } else {
             $_SESSION['maarch_entreprise']['xml_versionbase'] = 'none';
         }
@@ -621,7 +621,7 @@ abstract class business_app_tools_Abstract extends Database
         } else {
             $vbg = $stmt->fetchObject();
             $_SESSION['maarch_entreprise']['database_version'] = substr($vbg->param_value_string, 0, 5);
-            $_SESSION['maarch_entreprise']['database_version_minor'] = (string) $xmlBase->databaseMinorVersion;
+            $_SESSION['maarch_entreprise']['database_version_minor'] = (string) $xmlBase->minorVersion;
         }
         //If this two parameters is not find, this is the end of this function
         if ($_SESSION['maarch_entreprise']['xml_versionbase'] <> 'none' ) {
