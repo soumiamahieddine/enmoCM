@@ -2,12 +2,36 @@
 
 $confirm = true;
 
-$etapes = ['send'];
+$etapes = ['form'];
+
+function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode)
+{
+    if (file_exists("custom/{$_SESSION['custom_override_id']}/modules/visa/xml/remoteSignatoryBooks.xml")) {
+        $path = "custom/{$_SESSION['custom_override_id']}/modules/visa/xml/remoteSignatoryBooks.xml";
+    } else {
+        $path = 'modules/visa/xml/remoteSignatoryBooks.xml';
+    }
+
+    $config = [];
+    if (file_exists($path)) {
+        $loadedXml = simplexml_load_file($path);
+        if ($loadedXml) {
+            $config['id'] = (string)$loadedXml->signatoryBookEnabled;
+        }
+    }
+
+    if ($config['id'] == 'ixbus') {
+        include_once 'modules/visa/class/IxbusController.php';
+
+        $html = IxbusController::getModal();
+    }
+
+    return addslashes($html);
+}
 
 function manage_send($aId)
 {
     $result = '';
-
 
     $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
                         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
