@@ -34,11 +34,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
             $html = IxbusController::getModal($config);
         } elseif ($config['id'] == 'iParapheur') {
-            include_once 'modules/visa/class/iParapheurController.php';
+            include_once 'modules/visa/class/IParapheurController.php';
 
             $html = iParapheurController::getModal($config);
         } elseif ($config['id'] == 'fastParapheur') {
-            include_once 'modules/visa/class/fastParapheurController.php';
+            include_once 'modules/visa/class/FastParapheurController.php';
 
             $html = fastParapheurController::getModal($config);
         }
