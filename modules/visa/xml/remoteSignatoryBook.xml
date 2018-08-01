@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <signatoryBookEnabled>ixbus</signatoryBookEnabled>
+    <signatoryBook>
+        <id>ixbus</id>
+        <userId></userId>
+        <password></password>
+        <url></url>
+    </signatoryBook>
+    <signatoryBook>
+        <id>iParapheur</id>
+        <userId></userId>
+        <password></password>
+        <url></url>
+    </signatoryBook>
+    <signatoryBook>
+        <id>fastParapheur</id>
+        <userId></userId>
+        <password></password>
+        <url></url>
+    </signatoryBook>
+</root>
