@@ -151,6 +151,7 @@ if (count($indexes) > 0) {
                 .$indexes[$key]['label'].'</label></td>';
         $opt_indexes .= '<td>&nbsp;</td>';
         $opt_indexes .= '<td class="indexing_field">';
+        $valueCustom = null;
         if ($indexes[$key]['type_field'] == 'input') {
             if ($indexes[$key]['type'] == 'date') {
                 $opt_indexes .= '<input name="'.functions::xssafe($key).'" type="text" id="'
@@ -170,16 +171,18 @@ if (count($indexes) > 0) {
                 $opt_indexes .= '<textarea name="'.functions::xssafe($key).'" type="text" id="'
                         .$key.'" value="';
                 if (isset($values_fields->{$key})) {
-                    $opt_indexes .= functions::show_string(
-                            functions::xssafe($values_fields->{$key}), true
-                        );
+                    $valueCustom = functions::show_string(
+                        functions::xssafe($values_fields->{$key}), true
+                    );
+                    $opt_indexes .= $valueCustom;
                 } elseif ($indexes[$key]['default_value'] != false) {
-                    $opt_indexes .= functions::show_string(
-                            functions::xssafe($indexes[$key]['default_value']), true
-                        );
+                    $valueCustom = functions::show_string(
+                        functions::xssafe($indexes[$key]['default_value']), true
+                    );
+                    $opt_indexes .= $valueCustom;
                 }
                 $opt_indexes .= '" onclick="clear_error(\'frm_error_'
-                        .$id_action.'\');"></textarea>';
+                        .$id_action.'\');">'.$valueCustom.'</textarea>';
             }
         } else {
             $opt_indexes .= '<select name="'.functions::xssafe($key).'" id="'.functions::xssafe($key).'" >';
