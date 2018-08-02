@@ -63,7 +63,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             }
         }
 
-        \Attachment\models\AttachmentModel::freezeAttachment(['resId' => $attachmentToFreeze, 'table' => 'res_attachments']);
+        foreach ($attachmentToFreeze as $resId => $externalId) {
+            \Attachment\modelsx\AttachmentModel::freezeAttachment(['resId' => $resId, 'table' => 'res_attachments', 'externalId' => $externalId]);
+        }
     }
 
     return ['result' => $result, 'history_msg' => ''];
