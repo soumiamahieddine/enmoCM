@@ -81,6 +81,28 @@ abstract class AttachmentModelAbstract
         return $nextSequenceId;
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if (empty($aArgs['isVersion'])) {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+
+        DatabaseModel::update([
+            'table' => $table,
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function getConvertedPdfById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
