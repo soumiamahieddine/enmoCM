@@ -47,32 +47,27 @@ function check_form($form_id, $values)
 function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form)
 {
     $result = '';
-
     $config = getXml();
 
     foreach ($arr_id as $value) {
         if (!empty($config)) {
             if ($config['id'] == 'ixbus') {
                 include_once 'modules/visa/class/IxbusController.php';
-    
-                $html .= IxbusController::getModal($config);
+                $attachmentToFreeze = IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $value]);
             } elseif ($config['id'] == 'iParapheur') {
                 include_once 'modules/visa/class/IParapheurController.php';
-    
-                $html .= IParapheurController::getModal($config);
+                $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $value]);
             } elseif ($config['id'] == 'fastParapheur') {
                 include_once 'modules/visa/class/FastParapheurController.php';
-    
-                $html .= FastParapheurController::getModal($config);
+                $attachmentToFreeze = FastParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $value]);
             }
         }
 
-        IxbusController::sendDatas(['config' => $config, 'resIdMaster' => $value]);
+        \Attachment\models\AttachmentModel::freezeAttachment(['resId' => $attachmentToFreeze, 'table' => 'res_attachments']);
     }
 
     return ['result' => $result, 'history_msg' => ''];
 }
-
 
 function getXml()
 {

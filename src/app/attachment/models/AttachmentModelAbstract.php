@@ -181,12 +181,12 @@ abstract class AttachmentModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['table', 'resId']);
         ValidatorModel::stringType($aArgs, ['table']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::arrayType($aArgs, ['resId']);
 
         DatabaseModel::update([
             'table'     => $aArgs['table'],
             'set'       => ['status' => 'FRZ'],
-            'where'     => ['res_id = ?'],
+            'where'     => ['res_id in (?)'],
             'data'      => [$aArgs['resId']]
         ]);
 

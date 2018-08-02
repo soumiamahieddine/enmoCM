@@ -261,5 +261,5 @@ if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
 }
 
 if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {
-    define('_SELECT_MESSAGE_MODEL_IXBUS', "Choisissez un circuit");
+    define('_SELECT_MESSAGE_MODEL_IXBUS', "Choose a circuit");
 }
