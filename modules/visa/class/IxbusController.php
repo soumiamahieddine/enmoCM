@@ -43,12 +43,12 @@ class IxbusController
         $opts = [
         CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
         CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
+        'content-type:text/xml;charset="utf-8"',
         'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "SOAPAction: \"http://www.srci.fr/CreateSession\""
+        'Cache-Control: no-cache',
+        'Pragma: no-cache',
+        'Content-length: ' . strlen($xmlPostString),
+        'SOAPAction: "http://www.srci.fr/CreateSession"'
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
