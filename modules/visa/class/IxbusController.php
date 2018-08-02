@@ -49,26 +49,12 @@ class IxbusController
                         </soap:Body>
                         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset="utf-8"',
-        'accept:text/xml',
-        'Cache-Control: no-cache',
-        'Pragma: no-cache',
-        'Content-length: ' . strlen($xmlPostString),
-        'SOAPAction: "http://www.srci.fr/CreateSession"'
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
+        $data = \SrcCore\models\CurlModel::execSOAP([
+            'xmlPostString' => $xmlPostString,
+            'url'           => 'http://parapheur.orleans.fr/parapheurws/service.asmx',
+            'soapAction'    => 'http://www.srci.fr/CreateSession'
+        ]);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
 
         return $response;

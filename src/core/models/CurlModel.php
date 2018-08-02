@@ -64,6 +64,33 @@ class CurlModel
         return json_decode($rawResponse, true);
     }
 
+    public static function execSOAP(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['xmlPostString', 'url', 'soapAction']);
+        ValidatorModel::stringType($aArgs, ['xmlPostString', 'url', 'soapAction']);
+
+        $opts = [
+            CURLOPT_URL             => $aArgs['url'],
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => $aArgs['xmlPostString'],
+            CURLOPT_HTTPHEADER      => [
+                'content-type:text/xml;charset="utf-8"',
+                'accept:text/xml',
+                'Cache-Control: no-cache',
+                'Pragma: no-cache',
+                'Content-length: ' . strlen($aArgs['xmlPostString']),
+                "SOAPAction: \"{$aArgs['soapAction']}\""
+            ]
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $opts);
+        $rawResponse = curl_exec($curl);
+
+        return simplexml_load_string($rawResponse);
+    }
+
     public static function getConfigByCallId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['curlCallId']);
