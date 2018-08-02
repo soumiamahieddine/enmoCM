@@ -26,6 +26,11 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
             }
         }
     }
+    $config['getFormData'] = [
+        'pathManageAction'  => $path_manage_action,
+        'actionId'          => $id_action,
+        'mode'              => $mode
+    ];
 
     $html = '';
     if (!empty($config)) {
@@ -47,7 +52,12 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     return addslashes($html);
 }
 
-function manage_form($aId)
+function check_form($form_id,$values)
+{
+    return true;
+}
+
+function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form)
 {
     $result = '';
 

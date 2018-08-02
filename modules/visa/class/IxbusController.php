@@ -19,10 +19,18 @@ class IxbusController
     {
         $initializeDatas = IxbusController::getInitializeDatas($config);
 
-        $html ='<div align="center">';
-        $html .='<input type="button" name="cancel" id="cancel" class="button" value="valider"/>';
+        $html = '<form name="sendToExternalSB" id="sendToExternalSB" method="post" class="forms" action="#">';
+        $html .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
+        $html .= '<select id="nature"><option value="val1">Valeur 1</option><option value="val2">Valeur 2</option><option value="val3">Valeur 3</option></select>';
+
+        $html .='<div align="center">';
+        $html .=' <input type="button" name="validate" id="validate" value="Valider" class="button" ' .
+                'onclick="valid_action_form(\'sendToExternalSB\', \'' . $config['getFormData']['pathManageAction'] .
+                '\', \'' . $config['getFormData']['actionId'] . '\', \'value\', \'res_letterbox\', \'null\', \'letterbox_coll\', \'' .
+                $config['getFormData']['mode'] . '\');" />';
         $html .='<input type="button" name="cancel" id="cancel" class="button" value="annuler"/>';
         $html .='</div>';
+        $html .='</form>';
 
         return $html;
     }
