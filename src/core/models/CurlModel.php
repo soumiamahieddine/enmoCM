@@ -66,7 +66,7 @@ class CurlModel
 
     public static function execSOAP(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['xmlPostString', 'url', 'soapAction']);
+        ValidatorModel::notEmpty($aArgs, ['xmlPostString', 'url']);
         ValidatorModel::stringType($aArgs, ['xmlPostString', 'url', 'soapAction']);
         ValidatorModel::arrayType($aArgs, ['options']);
 
@@ -81,19 +81,23 @@ class CurlModel
                 'Cache-Control: no-cache',
                 'Pragma: no-cache',
                 'Content-length: ' . strlen($aArgs['xmlPostString']),
-                "SOAPAction: \"{$aArgs['soapAction']}\""
             ]
         ];
 
+        if (!empty($aArgs['soapAction'])) {
+            $opts[CURLOPT_HTTPHEADER][] = "SOAPAction: \"{$aArgs['soapAction']}\"";
+        }
         if (!empty($aArgs['options'])) {
-            $opts = array_merge($opts, $aArgs['options']);
+            foreach ($aArgs['options'] as $key => $option) {
+                $opts[$key] = $option;
+            }
         }
 
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
         $rawResponse = curl_exec($curl);
 
-        return simplexml_load_string($rawResponse);
+        return ['response' => simplexml_load_string($rawResponse), 'infos' => curl_getinfo($curl)];
     }
 
     public static function getConfigByCallId(array $aArgs)

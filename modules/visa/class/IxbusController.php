@@ -55,7 +55,7 @@ class IxbusController
             'soapAction'    => 'http://www.srci.fr/CreateSession'
         ]);
 
-        $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
+        $response = $data['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->CreateSessionResponse;
 
         return $response;
     }
