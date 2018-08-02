@@ -40,7 +40,7 @@ class ContactGroupController
             }
             $contactsGroups[$key]['position'] = $key;
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-            $contactsGroups[$key]['nbContacts'] = ContactGroupController::getFormattedListById(['id' => $contactsGroup['id']])['nbContacts'];
+            $contactsGroups[$key]['nbContacts'] = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
         }
         
         return $response->withJson(['contactsGroups' => array_values($contactsGroups)]);
@@ -59,9 +59,8 @@ class ContactGroupController
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactList = ContactGroupController::getFormattedListById(['id' => $aArgs['id']]);
-        $contactsGroup['contacts'] = $contactList['list'];
-        $contactsGroup['nbContacts'] = $contactList['nbContacts'];
+        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
+        $contactsGroup['nbContacts'] = count($contactsGroup['contacts']);
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
     }
@@ -267,7 +266,7 @@ class ContactGroupController
             }
         }
 
-        return ['list' => $contacts, 'nbContacts' => count($contacts)];
+        return ['list' => $contacts];
     }
 
     public static function getFormattedContact(array $aArgs)
