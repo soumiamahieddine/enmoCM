@@ -68,6 +68,7 @@ class CurlModel
     {
         ValidatorModel::notEmpty($aArgs, ['xmlPostString', 'url', 'soapAction']);
         ValidatorModel::stringType($aArgs, ['xmlPostString', 'url', 'soapAction']);
+        ValidatorModel::arrayType($aArgs, ['options']);
 
         $opts = [
             CURLOPT_URL             => $aArgs['url'],
@@ -83,6 +84,10 @@ class CurlModel
                 "SOAPAction: \"{$aArgs['soapAction']}\""
             ]
         ];
+
+        if (!empty($aArgs['options'])) {
+            $opts = array_merge($opts, $aArgs['options']);
+        }
 
         $curl = curl_init();
         curl_setopt_array($curl, $opts);
