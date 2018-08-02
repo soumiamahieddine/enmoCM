@@ -87,7 +87,7 @@ abstract class AttachmentModelAbstract
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
 
-        if (empty($aArgs['isVersion'])) {
+        if (!empty($aArgs['isVersion'])) {
             $table = 'res_version_attachments';
         } else {
             $table = 'res_attachments';
