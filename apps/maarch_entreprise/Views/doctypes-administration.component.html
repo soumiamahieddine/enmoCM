@@ -106,7 +106,7 @@
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
                                     <button mat-raised-button [disabled]="!firstLevelForm.form.valid" color="primary" (click)="saveFirstLevel()">{{lang.save}}</button>
-                                    <button type="button" mat-raised-button *ngIf="!creationMode" [disabled]="!firstLevelForm.form.valid"
+                                    <button type="button" mat-raised-button *ngIf="!creationMode" [disabled]="!firstLevelForm.form.valid || currentFirstLevel.hasChildren"
                                         color="warn" (click)="removeFirstLevel()">{{lang.delete}}</button>
                                     <button type="button" mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>
@@ -152,7 +152,7 @@
                             <div class="form-group">
                                 <div class="col-md-12 text-center" style="padding:10px;">
                                     <button mat-raised-button [disabled]="!secondLevelForm.form.valid" color="primary" (click)="saveSecondLevel()">{{lang.save}}</button>
-                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!secondLevelForm.form.valid"
+                                    <button mat-raised-button *ngIf="!creationMode" [disabled]="!secondLevelForm.form.valid || currentSecondLevel.hasChildren"
                                         color="warn" (click)="removeSecondLevel()">{{lang.delete}}</button>
                                     <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
                                 </div>

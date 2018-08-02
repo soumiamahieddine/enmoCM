@@ -45,12 +45,22 @@ class SecondLevelModelAbstract
             'data'   => [$aArgs['id']]
             ]
         );
-
+        
         if (empty($aReturn[0])) {
             return [];
         }
 
+        $children = DatabaseModel::select(
+            [
+            'select' => ['type_id'],
+            'table'  => ['doctypes'],
+            'where'  => ['doctypes_second_level_id = ?'],
+            'data'   => [$aArgs['id']]
+            ]
+        );
+
         $aReturn = $aReturn[0];
+        $aReturn['hasChildren'] = count($children) > 0 ? true : false;
        
         return $aReturn;
     }
