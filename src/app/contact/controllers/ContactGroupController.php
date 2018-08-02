@@ -40,8 +40,9 @@ class ContactGroupController
             }
             $contactsGroups[$key]['position'] = $key;
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
+            $contactsGroups[$key]['nbContacts'] = ContactGroupController::getFormattedListById(['id' => $contactsGroup['id']])['nbContacts'];
         }
-
+        
         return $response->withJson(['contactsGroups' => array_values($contactsGroups)]);
     }
 
@@ -58,7 +59,9 @@ class ContactGroupController
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
+        $contactList = ContactGroupController::getFormattedListById(['id' => $aArgs['id']]);
+        $contactsGroup['contacts'] = $contactList['list'];
+        $contactsGroup['nbContacts'] = $contactList['nbContacts'];
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
     }
@@ -264,7 +267,7 @@ class ContactGroupController
             }
         }
 
-        return ['list' => $contacts];
+        return ['list' => $contacts, 'nbContacts' => count($contacts)];
     }
 
     public static function getFormattedContact(array $aArgs)
