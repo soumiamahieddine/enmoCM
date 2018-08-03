@@ -290,7 +290,7 @@ export const LANG_FR = {
     "missingAdvert"                     : "Ce compte est actuellement défini en mode 'absent'.",
     "missingAdvert2"                    : "Si vous desirez vous connecter avec ce compte, le mode 'absent' sera alors supprimé.",
     "missingAdvertTitle"                : "Gestion des absences",
-    "missingChoose"                     : "Souhaitez-vous réactiver votre compte?",
+    "missingChoose"                     : "Souhaitez-vous réactiver votre compte ?",
     "modificationSaved"                 : "Modification enregistrée",
     "module"                            : "Module",
     "modules"                           : "Modules",

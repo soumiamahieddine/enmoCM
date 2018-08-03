@@ -44,7 +44,7 @@ class FirstLevelModelAbstract
             'where'  => ['doctypes_first_level_id = ?'],
             'data'   => [$aArgs['id']]
             ]
-        );        
+        );
 
         if (empty($aReturn[0])) {
             return [];
