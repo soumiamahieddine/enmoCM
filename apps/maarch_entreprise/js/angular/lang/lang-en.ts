@@ -603,6 +603,8 @@ export const LANG_EN = {
     "community"                         : "Community",
     "officialWebsite"                   : "Official website",
     "maarchLicence"                     : "Maarch Courrier is circulated under the terms of",
-    "groupeCompany"                     : ", Archiveco group company"
+    "groupeCompany"                     : ", Archiveco group company",
+    "myLastResources"                   : "My last mails",
+    "shortcut"                          : "Shortcut"
 
 };

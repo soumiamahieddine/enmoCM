@@ -631,5 +631,7 @@ export const LANG_FR = {
     "maarchLicence"                     : "Maarch Courrier est diffusé sous les termes de la",
     "groupeCompany"                     : "société du groupe Archiveco",
     "welcomeInGEC"                      : "Bienvenue dans votre Gestion Electronique de Courriers",
+    "myLastResources"                   : "Mes derniers courriers",
+    "shortcut"                          : "Raccourcis",
 
 };

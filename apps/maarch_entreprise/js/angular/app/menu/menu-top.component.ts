@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input  } from '@angular/core';
 import { LANG } from '../translate.component';
 
 declare function $j(selector: any) : any;
@@ -15,7 +15,7 @@ export class MenuTopComponent implements OnInit {
     lang       : any       = LANG;
     user       : any       = {};
     mobileMode : boolean   = false;
-
+    @Input() homeData: any;
 
     constructor() {
         this.mobileMode = angularGlobals.mobileMode;
