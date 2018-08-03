@@ -73,14 +73,14 @@ export class UpdateStatusAdministrationComponent extends AutoCompletePlugin impl
     }
 
     addResId()  :void {
-        if(this.resIdList.indexOf(this.resId)){
+        if(this.resIdList.indexOf(this.resId) == -1){
             this.resIdList.push(this.resId);
         }        
         this.resId = ""
     }
 
     addChrono() :void { 
-        if(this.chronoList.indexOf(this.chrono)){
+        if(this.chronoList.indexOf(this.chrono) == -1){
             this.chronoList.push(this.chrono);
         }
         this.chrono = "";
