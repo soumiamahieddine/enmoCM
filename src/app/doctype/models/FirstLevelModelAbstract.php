@@ -50,7 +50,17 @@ class FirstLevelModelAbstract
             return [];
         }
 
+        $children = DatabaseModel::select(
+            [
+            'select' => ['doctypes_second_level_id'],
+            'table'  => ['doctypes_second_level'],
+            'where'  => ['doctypes_first_level_id = ?'],
+            'data'   => [$aArgs['id']]
+            ]
+        );
+
         $aReturn = $aReturn[0];
+        $aReturn['hasChildren'] = count($children) > 0 ? true : false;
        
         return $aReturn;
     }

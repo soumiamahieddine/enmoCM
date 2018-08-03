@@ -76,8 +76,9 @@ class HomeController
         }
 
         $lastResources = ResModel::getLastResources([
-            'select' => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date'],
-            'number' => 5
+            'select'    => ['res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.creation_date', 'mlb_coll_ext.alt_identifier'],
+            'limit'     => 5,
+            'userId'    => $GLOBALS['userId']
         ]);
 
         return $response->withJson(['regroupedBaskets' => $regroupedBaskets, 'assignedBaskets' => $assignedBaskets, 'lastResources' => $lastResources]);

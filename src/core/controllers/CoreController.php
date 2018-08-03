@@ -29,6 +29,7 @@ class CoreController
         $aInit = [];
         $aInit['coreUrl'] = str_replace('rest/', '', \Url::coreurl());
         $aInit['applicationName'] = CoreConfigModel::getApplicationName();
+        $aInit['applicationMinorVersion'] = CoreConfigModel::getApplicationVersion()['applicationMinorVersion'];
         $aInit['lang'] = CoreConfigModel::getLanguage();
         $aInit['user'] = UserModel::getByUserId(['userId' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $aInit['user']['groups'] = UserModel::getGroupsByUserId(['userId' => $GLOBALS['userId']]);
@@ -36,8 +37,6 @@ class CoreController
 
         $aInit['scriptsToinject'] = [];
         $scriptsToInject = [];
-        $appVersion = CoreConfigModel::getApplicationVersion();
-        $aInit['applicationMinorVersion'] = $appVersion['applicationMinorVersion'];
         $scripts = scandir('dist');
         foreach ($scripts as $value) {
             if (strstr($value, 'runtime.') !== false || strstr($value, 'main.') !== false || strstr($value, 'vendor.') !== false || strstr($value, 'scripts.') !== false) {

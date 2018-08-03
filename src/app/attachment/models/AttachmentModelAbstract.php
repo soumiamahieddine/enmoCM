@@ -81,6 +81,28 @@ abstract class AttachmentModelAbstract
         return $nextSequenceId;
     }
 
+    public static function update(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::boolType($aArgs, ['isVersion']);
+
+        if (!empty($aArgs['isVersion'])) {
+            $table = 'res_version_attachments';
+        } else {
+            $table = 'res_attachments';
+        }
+
+        DatabaseModel::update([
+            'table' => $table,
+            'set'   => $aArgs['set'],
+            'where' => $aArgs['where'],
+            'data'  => $aArgs['data']
+        ]);
+
+        return true;
+    }
+
     public static function getConvertedPdfById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -157,13 +179,13 @@ abstract class AttachmentModelAbstract
 
     public static function freezeAttachment(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['table', 'resId']);
-        ValidatorModel::stringType($aArgs, ['table']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($aArgs, ['table', 'resId', 'externalId']);
+        ValidatorModel::stringType($aArgs, ['table', 'externalId']);
+        ValidatorModel::intType($aArgs, ['resId']);
 
         DatabaseModel::update([
             'table'     => $aArgs['table'],
-            'set'       => ['status' => 'FRZ'],
+            'set'       => ['status' => 'FRZ', 'external_id' => $aArgs['externalId']],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

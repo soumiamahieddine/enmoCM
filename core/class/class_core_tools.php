@@ -1884,7 +1884,7 @@ class core_tools extends functions
      */
     public function load_footer()
     {
-        echo ' '._POWERED_BY.' 2018 ';
+        echo 'Powered by Maarch&trade; 2018';
     }
 
     /**

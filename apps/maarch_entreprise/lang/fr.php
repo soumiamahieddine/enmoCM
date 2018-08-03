@@ -3989,9 +3989,6 @@ if (!defined('_PUT_IN_COPY')) {
 if (!defined('_PUT_IN_COPY_DESC')) {
     define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
 }
-if (!defined('_POWERED_BY')) {
-    define('_POWERED_BY', 'Powered by Maarch&trade;.');
-}
 if (!defined('_LINK_TO_DOC')) {
     define('_LINK_TO_DOC', 'Lier à un document');
 }

@@ -44,7 +44,7 @@
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
                     <ng-container matColumnDef="label">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;">{{lang.label}}</mat-header-cell>
-                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> {{element.label}} </mat-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="mobileQuery.matches" style="flex:2;"> <span matBadge="{{element.nbContacts}}" matBadgeOverlap="false"> {{element.label}} </span> </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="description">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.description}}</mat-header-cell>

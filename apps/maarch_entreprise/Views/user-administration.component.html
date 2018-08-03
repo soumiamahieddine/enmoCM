@@ -200,7 +200,7 @@
                                                 color="primary"></mat-checkbox>
                                         </mat-icon>
                                         <h4 mat-line [attr.color]="basket.userToDisplay != '' ? 'primary': ''" style="display: flex;align-items: center;">
-                                            <span (click)="selectionBaskets.toggle(basket);" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
+                                            <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}}" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
                                                 {{basket.basket_name}}
                                                 <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                                             </span>
@@ -213,7 +213,7 @@
                                                 <button *ngIf="!basket.allowed" color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);toggleBasket(true)">
                                                     <mat-icon class="fa fa-check"></mat-icon>
                                                 </button>
-                                                <button [matMenuTriggerFor]="menu2" mat-icon-button matTooltip="{{lang.redirectBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);">
+                                                <!--<button [matMenuTriggerFor]="menu2" mat-icon-button matTooltip="{{lang.redirectBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);">
                                                     <mat-icon class="fa fa-reply"></mat-icon>
                                                 </button>
                                                 <mat-menu #menu2="matMenu">
@@ -233,7 +233,7 @@
                                                             </mat-option>
                                                         </mat-autocomplete>
                                                     </mat-form-field>
-                                                </mat-menu>
+                                                </mat-menu>-->
                                             </span>
                                         </h4>
                                     </mat-list-item>

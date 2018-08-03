@@ -3929,9 +3929,6 @@ if (!defined('_ADD_LINKS')) {
 if (!defined('_PUT_IN_COPY')) {
     define('_PUT_IN_COPY', 'Add on copy');
 }
-if (!defined('_POWERED_BY')) {
-    define('_POWERED_BY', 'Powered by Maarch&trade;.');
-}
 if (!defined('_LINK_TO_DOC')) {
     define('_LINK_TO_DOC', 'link to a document');
 }

@@ -123,7 +123,7 @@
         <mat-sidenav *ngIf="!creationMode" #snav2 [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
             fixedTopGap="56" position='end' [opened]="mobileQuery.matches ? false : true" style="overflow-x:hidden;width:40%;">
             <mat-list>
-                <h3 mat-subheader>{{lang.relatedContacts}}</h3>
+                <h3 mat-subheader>{{lang.relatedContacts}} : {{contactsGroup.nbContacts}} </h3>
             </mat-list>
             <div class="row" style="margin:0px;">
                 <div class="col-md-6 col-xs-6">

@@ -255,7 +255,7 @@ class NotificationController
         ]);
     }
 
-    protected function control(array $aArgs, string $mode)
+    protected function control($aArgs, $mode)
     {
         $errors = [];
 

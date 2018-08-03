@@ -259,3 +259,7 @@ if (!defined('_REQUESTED_SIGNATURE')) {
 if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
     define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
 }
+
+if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {
+    define('_SELECT_MESSAGE_MODEL_IXBUS', "Choose a circuit");
+}

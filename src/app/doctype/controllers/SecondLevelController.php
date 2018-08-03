@@ -32,7 +32,7 @@ class SecondLevelController
         }
 
         $obj['secondLevel'] = SecondLevelModel::getById(['id' => $aArgs['id']]);
-
+        
         if (!empty($obj['secondLevel'])) {
             if ($obj['secondLevel']['enabled'] == 'Y') {
                 $obj['secondLevel']['enabled'] = true;

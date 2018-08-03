@@ -27,6 +27,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     creationMode: boolean;
     contactsGroup: any = {};
     contactTypes: any = {};
+    nbContact   : number;
 
     contactTypeSearch: string;
 
@@ -112,7 +113,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 this.http.get(this.coreUrl + 'rest/contactsGroups/' + params['id'])
                     .subscribe((data: any) => {
                         this.contactsGroup = data.contactsGroup;
-
+                        this.nbContact = this.contactsGroup.nbContacts;
                         setTimeout(() => {
                             this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);
                             this.dataSourceAdded.paginator = this.paginatorAdded;

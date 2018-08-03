@@ -20,15 +20,15 @@
             </div>
             <mat-card *ngIf="!loading" class="card-app-content">
                 <form class="form-horizontal" (ngSubmit)="onSubmit()" #updateStatusForm="ngForm">                    
-                    <mat-tab-group (selectedTabChange)="resetInput($event)">
-                        <mat-tab label="{{lang.chronoNumber}}">
+                    <mat-tab-group (selectedTabChange)="resetInput($event)" >
+                        <mat-tab label="{{lang.chronoNumber}}" >
                             <div class="alert alert-info" role="alert">
                                 {{lang.updateStatusInformationsChrono}}
                             </div>
                             <mat-form-field>
                                     <input matInput name="chrono" title="{{lang.chronoNumber}}" placeholder="{{lang.chronoNumber}}" [(ngModel)]="chrono">                                
                             </mat-form-field>                            
-                            <div class="row" style="margin-left:0px;">                
+                            <div class="row">                
                                 <div class="form-group">
                                     <div class="col-md-12 text-left" style="padding:10px;">
                                         <button mat-raised-button [disabled]="!chrono" type="button" color="primary" (click)="addChrono()" >{{lang.add}}</button>
@@ -43,14 +43,14 @@
                             </div>
                             <mat-divider></mat-divider>
                         </mat-tab>
-                        <mat-tab label="{{lang.resId}}">
+                        <mat-tab label="{{lang.resId}}" >
                             <div class="alert alert-info" role="alert">
                                 {{lang.updateStatusInformationsGed}}
                             </div>
                             <mat-form-field>
                                     <input type="number" id="" matInput name="resId" title="{{lang.resId}}" placeholder="{{lang.resId}}" [(ngModel)]="resId">                                
                             </mat-form-field>
-                            <div class="row" style="margin-left:0px;">                
+                            <div class="row">                
                                 <div class="form-group">
                                     <div class="col-md-12 text-left" style="padding:10px;">
                                         <button mat-raised-button [disabled]="!resId" color="primary" type="button" (click)="addResId();">{{lang.add}}</button>
