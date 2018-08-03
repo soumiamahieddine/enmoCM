@@ -132,6 +132,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         this.http.post(this.coreUrl + 'rest/contactsGroups/' + this.contactsGroup.id + '/contacts', { 'contacts': this.selection.selected })
             .subscribe((data: any) => {
                 this.notify.success(this.lang.contactAdded);
+                this.nbContact = this.nbContact + this.selection.selected.length;
                 this.selection.clear();
                 elem.textContent = this.lang.add;
                 this.contactsGroup = data.contactsGroup;
@@ -181,7 +182,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
                 this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
                 this.contactsGroup.contacts[row].position = row;
                 this.contactsGroup.contacts.splice(lastElement, 1);
-
+                this.nbContact = this.nbContact - 1;
                 this.dataSourceAdded = new MatTableDataSource(this.contactsGroup.contacts);
                 this.dataSourceAdded.paginator = this.paginatorAdded;
                 this.dataSourceAdded.sort = this.sortAdded;
