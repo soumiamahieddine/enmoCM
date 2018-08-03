@@ -171,6 +171,12 @@
                                         <button [matMenuTriggerFor]="menu" mat-icon-button matTooltip="{{ lang.redirectBaskets }}">
                                             <mat-icon class="fa fa-reply"></mat-icon>
                                         </button>
+                                        <button color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="toggleBasket(false)">
+                                            <mat-icon class="fa fa-ban"></mat-icon>
+                                        </button>
+                                        <button color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="toggleBasket(true)">
+                                            <mat-icon class="fa fa-check"></mat-icon>
+                                        </button>
                                         <mat-menu #menu="matMenu">
                                             <mat-form-field style="padding:10px;width:200px !important;">
                                                 <input (click)="$event.stopPropagation()" type="text" placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
@@ -200,40 +206,9 @@
                                                 color="primary"></mat-checkbox>
                                         </mat-icon>
                                         <h4 mat-line [attr.color]="basket.userToDisplay != '' ? 'primary': ''" style="display: flex;align-items: center;">
-                                            <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}}" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
+                                            <span (click)="selectionBaskets.toggle(basket);" matTooltip="{{basket.basket_name}} [{{basket.group_desc}}]" [ngStyle]="{'opacity': basket.allowed ? '1' : '0.5'}" style="flex: 2;overflow: hidden;text-overflow: ellipsis;">
                                                 {{basket.basket_name}}
-                                                <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
-                                            </span>
-
-                                            <span id="{{basket.basket_id}}_{{basket.group_id}}" style="display:none;flex:1;background: white;text-align: right">
-                                                <i class="fa fa-ellipsis-v" style="opacity: 0.2;"></i>
-                                                <button *ngIf="basket.allowed" color="warn" mat-icon-button matTooltip="{{lang.disableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);toggleBasket(false)">
-                                                    <mat-icon class="fa fa-ban"></mat-icon>
-                                                </button>
-                                                <button *ngIf="!basket.allowed" color="accent" mat-icon-button matTooltip="{{lang.enableBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);toggleBasket(true)">
-                                                    <mat-icon class="fa fa-check"></mat-icon>
-                                                </button>
-                                                <!--<button [matMenuTriggerFor]="menu2" mat-icon-button matTooltip="{{lang.redirectBasket}}" (click)="selectionBaskets.clear();selectionBaskets.select(basket);">
-                                                    <mat-icon class="fa fa-reply"></mat-icon>
-                                                </button>
-                                                <mat-menu #menu2="matMenu">
-                                                    <mat-form-field style="padding:10px;width:200px !important;">
-                                                        <input (click)="$event.stopPropagation()" type="text" placeholder="{{ lang.users }}" matInput [matAutocomplete]="auto" [formControl]="userCtrl">
-                                                        <mat-autocomplete #auto="matAutocomplete">
-                                                            <mat-option *ngFor="let user of filteredUsers | async" [value]="user.id" (click)="addBasketRedirection(user.id)">
-                                                                <p mat-line matTooltip="{{ user.otherInfo }}">
-                                                                    <span class="col-xm-1">
-                                                                        <mat-icon color="primary" class="fa fa-user fa-2x" style="margin-right:0px;"></mat-icon>
-                                                                    </span>
-                                                                    <span class="col-xm-11">
-                                                                        {{ user.idToDisplay }}
-                                                                        <small>{{ user.otherInfo }}</small>
-                                                                    </span>
-                                                                </p>
-                                                            </mat-option>
-                                                        </mat-autocomplete>
-                                                    </mat-form-field>
-                                                </mat-menu>-->
+                                            <span class="label label-primary" style="font-weight:normal">{{basket.group_desc}}</span>
                                             </span>
                                         </h4>
                                     </mat-list-item>
