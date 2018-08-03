@@ -320,6 +320,7 @@ export const LANG_EN = {
     "redirectModelInfo"                 : "This user is in diffusion list model of this entity.",
     "redirects"                         : "Redirections",
     "reinitPassword"                    : "Reset password",
+    "relatedContactNumber"              : "Number of contacts related",
     "relatedUsers"                      : "Related users",
     "relatedBaskets"                    : "Related basket(s)",
     "removeUserRedirect"                : "Remove user (diffusion list + diffusion model entity)",
