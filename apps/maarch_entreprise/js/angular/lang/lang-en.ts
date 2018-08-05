@@ -605,6 +605,9 @@ export const LANG_EN = {
     "maarchLicence"                     : "Maarch Courrier is circulated under the terms of",
     "groupeCompany"                     : ", Archiveco group company",
     "myLastResources"                   : "My last mails",
-    "shortcut"                          : "Shortcut"
+    "shortcut"                          : "Shortcut",
+    "searchMails"                       : "Search mails",
+    "noAvailableBasket"                 : "No available basket",
+    "othersBaskets"                     : "Others baskets",
 
 };

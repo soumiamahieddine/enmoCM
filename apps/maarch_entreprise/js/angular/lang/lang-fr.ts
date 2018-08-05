@@ -633,5 +633,8 @@ export const LANG_FR = {
     "welcomeInGEC"                      : "Bienvenue dans votre Gestion Electronique de Courriers",
     "myLastResources"                   : "Mes derniers courriers",
     "shortcut"                          : "Raccourcis",
+    "searchMails"                       : "Rechercher des courriers",
+    "noAvailableBasket"                 : "Aucune bannette disponible",
+    "othersBaskets"                     : "Autres bannettes",
 
 };
