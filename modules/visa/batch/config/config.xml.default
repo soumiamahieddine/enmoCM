@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <CONFIG>
+        <MaarchDirectory>/var/www/MaarchCourrier/</MaarchDirectory>
+		<CustomId>cs_maarch_v2</CustomId>
+        <TmpDirectory>/var/www/MaarchCourrier/modules/visa/batch/tmp/</TmpDirectory>
+        <validatedStatus>VAL</validatedStatus>
+        <refusedStatus>COU</refusedStatus>
+    </CONFIG>
+    <LOG4PHP>
+        <enabled>true</enabled>
+        <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+        <Log4PhpBusinessCode>sendmail</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/MaarchCourrier/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+    </LOG4PHP>
+</ROOT>

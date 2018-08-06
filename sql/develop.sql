@@ -132,6 +132,12 @@ ALTER TABLE users ADD COLUMN failed_authentication INTEGER DEFAULT 0;
 ALTER TABLE users DROP COLUMN IF EXISTS locked_until;
 ALTER TABLE users ADD COLUMN locked_until TIMESTAMP without time zone;
 
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS external_id;
+ALTER TABLE res_attachments ADD COLUMN external_id character varying(255) DEFAULT NULL::character varying;
+
+ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS external_id;
+ALTER TABLE res_version_attachments ADD COLUMN external_id character varying(255) DEFAULT NULL::character varying;
+
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;
@@ -428,13 +434,13 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, signatory_user_serial_id
   FROM res_version_attachments
   UNION ALL
   SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, folders_system_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user,
+  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, signatory_user_serial_id
   FROM res_attachments;
 

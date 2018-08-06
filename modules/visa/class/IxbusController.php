@@ -295,4 +295,13 @@ class IxbusController
 
         return $attachmentToFreeze;
     }
+
+    public static function retrieveSignedMails($aArgs)
+    {
+
+        // Si besoin, ajouter un attribut 'note' à l'objet $aArgs['idsToRetrieve']['noVersion']['resId'][]
+        // retourne seulement les mails récupérés
+
+        return $aArgs['idsToRetrieve'];
+    }
 }
