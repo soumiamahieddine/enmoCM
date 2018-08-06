@@ -1356,8 +1356,6 @@ CREATE TABLE res_letterbox
   locker_user_id character varying(255) DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
   confidentiality character(1),
-  tnl_path character varying(255) DEFAULT NULL::character varying,
-  tnl_filename character varying(255) DEFAULT NULL::character varying,
   convert_result character varying(10) DEFAULT NULL::character varying,
   convert_attempts integer DEFAULT NULL::integer,
   fulltext_result character varying(10) DEFAULT NULL::character varying,
@@ -1375,15 +1373,15 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE adr_letterbox
 (
+  id serial NOT NULL,
   res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
   docserver_id character varying(32) NOT NULL,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
   fingerprint character varying(255) DEFAULT NULL::character varying,
-  adr_priority integer NOT NULL,
-  adr_type character varying(32) NOT NULL DEFAULT 'DOC'::character varying,
-  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (res_id, docserver_id)
+  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type)
 )
 WITH (OIDS=FALSE);
 

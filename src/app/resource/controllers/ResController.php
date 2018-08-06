@@ -87,6 +87,15 @@ class ResController
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $resId,
+            'eventType' => 'ADD',
+            'info'      => _DOC_ADDED,
+            'moduleId'  => 'res',
+            'eventId'   => 'resadd',
+        ]);
+
         return $response->withJson(['resId' => $resId]);
     }
 
@@ -197,7 +206,7 @@ class ResController
             if (!empty($attachment[0])) {
                 $attachmentTodisplay = $attachment[0];
                 $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
-                $isVersion = (empty($attachmentTodisplay['res_id']) ? true : false);
+                $isVersion = empty($attachmentTodisplay['res_id']);
 
                 $convertedAttachment = AttachmentModel::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'id' => $id, 'isVersion' => $isVersion]);
                 if (!empty($convertedAttachment)) {
@@ -284,7 +293,6 @@ class ResController
             }
         }
 
-
         if (empty($fileContent)) {
             $fileContent = file_get_contents($pathToDocument);
         }
@@ -298,6 +306,15 @@ class ResController
 
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $aArgs['resId'],
+            'eventType' => 'VIEW',
+            'info'      => _DOC_DISPLAYING . " : {$aArgs['resId']}",
+            'moduleId'  => 'res',
+            'eventId'   => 'resview',
+        ]);
 
         return $response->withHeader('Content-Type', $mimeType);
     }

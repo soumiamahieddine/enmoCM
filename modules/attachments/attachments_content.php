@@ -318,6 +318,29 @@ if (isset($_POST['add']) && $_POST['add']) {
                                     $_SESSION['data'],
                                     $_SESSION['config']['databasetype']
                                 );
+                                if ($attachment_types == 'outgoing_mail') {
+                                    $extDocument = \Resource\models\ResModel::getExtById(['select' => ['category_id'], 'resId' => $_SESSION['doc_id']]);
+
+                                    if ($extDocument['category_id'] == 'outgoing') {
+                                        $attachment = \Attachment\models\AttachmentModel::getOnView([
+                                            'select'    => ['res_id'],
+                                            'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                                            'data'      => [$_SESSION['doc_id'], 'outgoing_mail', ['DEL', 'OBS']],
+                                            'limit'     => 1
+                                        ]);
+                                        if (!empty($attachment[0]) && $attachment[0]['res_id'] == $id) {
+                                            \Resource\models\AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?'], 'data' => [$_SESSION['doc_id'], 'TNL']]);
+                                            \Resource\controllers\ConvertThumbnailController::convert([
+                                                'collId'            => 'letterbox_coll',
+                                                'resId'             => $_SESSION['doc_id'],
+                                                'outgoingId'        => $id,
+                                                'isOutgoingVersion' => false
+                                            ]);
+                                        }
+                                    }
+
+                                }
+
                                 //copie de la version PDF de la pièce si mode de conversion sur le client
                                 if ($_SESSION['upfile'][$numAttach]['fileNamePdfOnTmp'] != '' && empty($templateOffice)) {
                                     //case onlyConvert
@@ -791,6 +814,27 @@ if (isset($_POST['add']) && $_POST['add']) {
             } else {
                 $stmt = $db->query("UPDATE res_version_attachments SET status = 'OBS' WHERE res_id = ?", array($previous_attachment->res_id_version));
             }
+            if ($previous_attachment->attachment_type == 'outgoing_mail') {
+                $extDocument = \Resource\models\ResModel::getExtById(['select' => ['category_id'], 'resId' => $_SESSION['doc_id']]);
+
+                if ($extDocument['category_id'] == 'outgoing') {
+                    $attachment = \Attachment\models\AttachmentModel::getOnView([
+                        'select'    => ['res_id', 'res_id_version'],
+                        'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                        'data'      => [$_SESSION['doc_id'], 'outgoing_mail', ['DEL', 'OBS']],
+                        'limit'     => 1
+                    ]);
+                    if (!empty($attachment[0]) && ($attachment[0]['res_id'] == $previous_attachment->res_id || $attachment[0]['res_id_version'] == $previous_attachment->res_id_version)) {
+                        \Resource\models\AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?'], 'data' => [$_SESSION['doc_id'], 'TNL']]);
+                        \Resource\controllers\ConvertThumbnailController::convert([
+                            'collId'            => 'letterbox_coll',
+                            'resId'             => $_SESSION['doc_id'],
+                            'outgoingId'        => $id,
+                            'isOutgoingVersion' => true
+                        ]);
+                    }
+                }
+            }
         }
     } else {
         $is_new_version = false;
@@ -897,6 +941,27 @@ if (isset($_POST['add']) && $_POST['add']) {
             $stmt = $db->query('UPDATE res_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
         } else {
             $stmt = $db->query('UPDATE res_version_attachments SET '.$set_update.' WHERE res_id = :res_id', $arrayPDO);
+        }
+        if ($_SESSION['upfile'][0]['upAttachment'] != false) {
+            $attachment = \Attachment\models\AttachmentModel::getOnView([
+                'select'    => ['res_id', 'res_id_version', 'attachment_type'],
+                'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
+                'data'      => [$_SESSION['doc_id'], 'outgoing_mail', ['DEL', 'OBS']],
+                'limit'     => 1
+            ]);
+            if (!empty($attachment[0]) && in_array($_REQUEST['res_id'], [$attachment[0]['res_id'], $attachment[0]['res_id_version']])) {
+                $extDocument = \Resource\models\ResModel::getExtById(['select' => ['category_id'], 'resId' => $_SESSION['doc_id']]);
+
+                if ($extDocument['category_id'] == 'outgoing') {
+                    \Resource\models\AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?'], 'data' => [$_SESSION['doc_id'], 'TNL']]);
+                    \Resource\controllers\ConvertThumbnailController::convert([
+                        'collId'            => 'letterbox_coll',
+                        'resId'             => $_SESSION['doc_id'],
+                        'outgoingId'        => $id,
+                        'isOutgoingVersion' => ($_REQUEST['relation'] != 1)
+                    ]);
+                }
+            }
         }
     }
     //copie de la version PDF de la pièce si mode de conversion sur le client

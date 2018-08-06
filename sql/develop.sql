@@ -132,6 +132,29 @@ ALTER TABLE users ADD COLUMN failed_authentication INTEGER DEFAULT 0;
 ALTER TABLE users DROP COLUMN IF EXISTS locked_until;
 ALTER TABLE users ADD COLUMN locked_until TIMESTAMP without time zone;
 
+/* Convert */
+DROP TABLE IF EXISTS adr_letterbox;
+CREATE TABLE adr_letterbox
+(
+  id serial NOT NULL,
+  res_id bigint NOT NULL,
+  type character varying(32) NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) NOT NULL,
+  filename character varying(255) NOT NULL,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (id),
+  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type)
+)
+WITH (OIDS=FALSE);
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'tnl_path') = 1 THEN
+    INSERT INTO adr_letterbox (res_id, type, docserver_id, path, filename) SELECT res_id, 'TNL', 'TNL_MLB', tnl_path, tnl_filename FROM res_letterbox WHERE tnl_path IS NOT NULL AND tnl_path != 'ERR'
+    ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
+    ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
+  END IF;
+END$$;
+
 /* Refactoring */
 DROP VIEW IF EXISTS af_view_customer_target_view;
 DROP VIEW IF EXISTS af_view_customer_view;

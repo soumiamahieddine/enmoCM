@@ -7,8 +7,12 @@
 
 	$tnl = new thumbnails();
 	if (empty($advanced)) {
-		if (isset($_REQUEST['tablename'])) $path = $tnl->getPathTnl($resId, $collId,$_REQUEST['tablename']);
-		else $path = $tnl->getPathTnl($resId, $collId); // Old Behaviour
+		if (isset($_REQUEST['tablename'])) {
+		    $path = $tnl->getPathTnl($resId, $collId,$_REQUEST['tablename']);
+        }
+		else {
+		    $path = $tnl->getPathTnl($resId, $collId);
+		}
 	} else {
 		$path = $tnl->getTnlPathWithColl(['resId' => $resId, 'collId' => $collId]); // New Behaviour
 	}

@@ -135,72 +135,28 @@ class thumbnails
 		}
 	}
 	
-	public function getPathTnl($res_id, $coll_id, $table_name = false){
-		if (empty($res_id)) return '';
-		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR 
-		. "class_security.php");
-		require_once 'core/class/docservers_controler.php';
-		$docserversControler = new docservers_controler();
-		$sec = new security();
-	
-		$table = "";
-		if (isset($coll_id) 
-			&& !empty($coll_id)
-		) {
-		   $table = $sec->retrieve_table_from_coll(
-				$coll_id
-			);
-		} else {
-			$table = $_SESSION['collections'][0]['table'];
-		}
-		if ($table_name) $table = $table_name;
-		$db = new Database();
-		
-		$query = "select docserver_id from docservers where is_readonly = 'N' and coll_id = ? and docserver_type_id = 'TNL'";
-			   
-		$stmt = $db->query($query, array($coll_id));
-		$docserverId = $stmt->fetchObject()->docserver_id;
-				
-		$docserver = $docserversControler->get($docserverId);
-		
-		
-		$query = "select category_id from mlb_coll_ext"
-			   . " where res_id = ?";
-			   
-		$stmt = $db->query($query, array($res_id));
+	public function getPathTnl($res_id, $coll_id, $table_name = false)
+    {
+		if (empty($res_id)) {
+		    return '';
+        }
 
-		$catId = $stmt->fetchObject()->category_id;
+        $tnlAdr = \Resource\models\AdrModel::getTypedDocumentAdrByResId([
+            'select'    => ['docserver_id', 'path', 'filename'],
+            'resId'     => $res_id,
+            'type'      => 'TNL'
+        ]);
+        if (empty($tnlAdr)) {
+            return '';
+        }
+        $docserver = \Docserver\models\DocserverModel::getByDocserverId([
+            'select'        => ['path_template'],
+            'docserverId'   => $tnlAdr['docserver_id']
+        ]);
+        $tnlPath = str_replace("#", DIRECTORY_SEPARATOR , $tnlAdr['path']);
+        $path = $docserver['path_template'] . DIRECTORY_SEPARATOR . $tnlPath . $tnlAdr['filename'];
+        $path = str_replace("//", "/", $path);
 
-		$query = "SELECT res_id, filename FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
-                    . "and res_id_master = ? and attachment_type = 'outgoing_mail' order by res_id desc";
-			   
-		$stmt = $db->query($query, array($res_id));
-
-		$isOutgoingPj = $stmt->fetchObject();
-
-		if($catId == 'outgoing' && !empty($isOutgoingPj)){
-			// $stmt = $db->query("SELECT tnl_path, tnl_filename FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP') AND type_id = '1'", array($res_id));
-				$stmtPdf = $db->query(
-                    "SELECT tnl_path, tnl_filename
-                     FROM res_attachments
-                     WHERE filename=? AND (status = 'TRA' or status = 'A_TRA')", array(substr($isOutgoingPj->filename, 0, strrpos($isOutgoingPj->filename, ".")).'.pdf')
-                );
-
-                $linePdf = $stmtPdf->fetchObject();
-                if(!empty($linePdf)){
-                    $data = $linePdf;
-                }
-		}else{
-			$stmt = $db->query("SELECT tnl_path, tnl_filename FROM $table WHERE res_id = ?", array($res_id));
-			$data = $stmt->fetchObject();
-		}
-		
-		$tnlPath = str_replace("#", DIRECTORY_SEPARATOR , $data->tnl_path);
-		$tnlFilename = $data->tnl_filename;
-		if ($tnlFilename == '-1') $tnlFilename = '';
-		$path=$docserver->path_template . DIRECTORY_SEPARATOR . $tnlPath . $tnlFilename;
-		$path = str_replace("//","/",$path);
-		
 		return $path;
 	}
 
