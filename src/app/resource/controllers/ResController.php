@@ -20,6 +20,7 @@ use Docserver\models\DocserverModel;
 use Group\controllers\GroupController;
 use Note\models\NoteModel;
 use Group\models\ServiceModel;
+use Resource\models\AdrModel;
 use setasign\Fpdi\TcpdfFpdi;
 use SrcCore\models\CoreConfigModel;
 use Status\models\StatusModel;
@@ -315,6 +316,43 @@ class ResController
             'moduleId'  => 'res',
             'eventId'   => 'resview',
         ]);
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function getThumbnailContent(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
+            'select'    => ['docserver_id', 'path', 'filename'],
+            'resId'     => $aArgs['resId'],
+            'type'      => 'TNL'
+        ]);
+        if (empty($tnlAdr)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Thumbnail does not exist']);
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr['docserver_id'], 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr['path']) . $tnlAdr['filename'];
+
+        $fileContent = file_get_contents($pathToThumbnail);
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Thumbnail not found on docserver']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToThumbnail);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         return $response->withHeader('Content-Type', $mimeType);
     }
